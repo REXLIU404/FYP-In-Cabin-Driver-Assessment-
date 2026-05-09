@@ -1,0 +1,6 @@
+case,window_id,vision_available,telemetry_available,telemetry_age_s,expected_system_health,expected_evidence
+Full evidence low risk,1,1,1,0,FULL,Low observed risk
+Full evidence elevated risk,3,1,1,0,FULL,Combined or branch-dominant evidence
+Telemetry missing,4,1,0,999,DEGRADED,Partial evidence: vision only
+Vision missing,5,0,1,0,DEGRADED,Partial evidence: telemetry only
+Telemetry stale,6,1,1,4,DEGRADED,Partial evidence: stale telemetry
