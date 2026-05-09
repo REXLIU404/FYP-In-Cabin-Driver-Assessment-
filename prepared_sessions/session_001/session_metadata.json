@@ -1,0 +1,8 @@
+{
+  "session_id": "session_001",
+  "description": "Prepared monitoring session for prototype validation",
+  "delta_t_seconds": 2,
+  "start_time": "10:00:00",
+  "frame_source": "prepared_frames",
+  "telemetry_source": "prepared_records"
+}
