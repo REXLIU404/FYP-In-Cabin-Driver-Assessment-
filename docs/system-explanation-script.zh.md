@@ -6,7 +6,7 @@
 
 ## 2. 输入来源
 
-当前 prototype 使用 `prepared_sessions/session_001` 作为 Prepared Session Dataset。这个 folder 提供一组已经准备好的 visual frames、telemetry records、timestamps 和 missing/stale cases。
+当前 prototype 使用 `ai/prototype-data/prepared_sessions/session_001` 作为 Prepared Session Dataset。这个 folder 提供一组已经准备好的 visual frames、telemetry records、timestamps 和 missing/stale cases。
 
 它不是随机模拟输出，而是用于复现一段固定的 monitoring session，让系统可以按 window 顺序读取输入，稳定验证 runtime pipeline。
 

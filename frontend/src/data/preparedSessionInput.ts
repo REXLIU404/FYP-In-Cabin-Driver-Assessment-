@@ -3,8 +3,8 @@ import type {
   TelemetryFeatures,
   VisualClassProbability,
 } from "../types";
-import metadataRaw from "../../prepared_sessions/session_001/session_metadata.json?raw";
-import telemetryCsv from "../../prepared_sessions/session_001/telemetry.csv?raw";
+import metadataRaw from "../../../ai/prototype-data/prepared_sessions/session_001/session_metadata.json?raw";
+import telemetryCsv from "../../../ai/prototype-data/prepared_sessions/session_001/telemetry.csv?raw";
 
 interface PreparedSessionMetadata {
   session_id: string;

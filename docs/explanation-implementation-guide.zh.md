@@ -9,7 +9,7 @@
 
 ## 1. 前端 MVP 当前实现方式
 
-前端现在使用 `prepared_sessions/session_001` 中的 prepared monitoring session 作为输入源。系统按 window 顺序读取 prepared frames 与 telemetry records，并在前端 MVP 中用 deterministic prototype inference 生成与后续后端一致的结构化输出。每个窗口包含：
+前端现在使用 `ai/prototype-data/prepared_sessions/session_001` 中的 prepared monitoring session 作为输入源。系统按 window 顺序读取 prepared frames 与 telemetry records，并在前端 MVP 中用 deterministic prototype inference 生成与后续后端一致的结构化输出。每个窗口包含：
 
 - `P_distraction`：驾驶员分心概率，范围 0-1。
 - `P_telemetry_anomaly`：遥测异常概率，范围 0-1。
@@ -19,7 +19,7 @@
 - `RiskScore`：融合后的风险分数，前端展示为 0-100。
 - `latency_ms`：当前窗口推理或模拟推理延迟。
 
-`src/utils/riskLogic.ts` 仍保留 `buildExplanation()` 作为 session log 兼容字段。当前 UI 的 Explanation 页面优先使用结构化字段和 rule-based badges，不依赖大段自然语言文本。`DominantEvidence` 判断当前风险主要来自哪个分支：
+`ai/src/riskLogic.ts` 仍保留 `buildExplanation()` 作为 session log 兼容字段。当前 UI 的 Explanation 页面优先使用结构化字段和 rule-based badges，不依赖大段自然语言文本。`DominantEvidence` 判断当前风险主要来自哪个分支：
 
 - `Vision-dominant`：视觉分心概率明显高于遥测异常概率。
 - `Telemetry-dominant`：遥测异常概率明显高于视觉分心概率。

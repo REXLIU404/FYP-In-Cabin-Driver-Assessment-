@@ -1,7 +1,25 @@
-# FYP In-Cabin Driver Assessment
+# In-Cabin Multi-Modal Driver Monitoring & Risk Assessment
 
 Functional React + TypeScript MVP prototype for the FYP multi-modal driver risk
 assessment framework.
+
+## Logical Structure
+
+```text
+frontend/
+  React/Vite dashboard, browser runtime, local session logging, export helpers
+backend/
+  Backend/API integration boundary for future FastAPI/WebSocket/model serving
+ai/
+  Shared risk contract, late-fusion logic, evidence rules, prepared prototype data
+docs/
+  Prototype explanation, UI screenshots, and presentation support documents
+prototype-tests/
+  Lightweight manual smoke-test checklist for the prototype
+```
+
+The root keeps project-level tooling only: `package.json`, `vite.config.ts`,
+`tsconfig.json`, `eslint.config.js`, `README.md`, and `Changelog.md`.
 
 The prototype implements the report and guidebook baseline:
 
