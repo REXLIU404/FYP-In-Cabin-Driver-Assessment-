@@ -12,7 +12,7 @@ import { useSessionLog } from "./hooks/useSessionLog";
 import type { AppConfig } from "./types";
 import { exportSessionLogCSV, exportSessionLogJSON } from "./utils/export";
 import { loadActiveSession, loadConfig, saveConfig } from "./utils/persistence";
-import { buildRiskUpdate } from "./utils/riskLogic";
+import { buildRiskUpdate } from "../../ai/src/riskLogic";
 import { ConfigurationView } from "./views/ConfigurationView";
 import { ExplanationView } from "./views/ExplanationView";
 import { LiveMonitor } from "./views/LiveMonitor";
@@ -103,7 +103,7 @@ export default function App() {
       <main className="main-shell">
         <header className="topbar">
           <div>
-            <h1>Late-Fusion Multi-Modal Driver Risk Assessment</h1>
+            <h1>In-Cabin Multi-Modal Driver Monitoring & Risk Assessment</h1>
           </div>
           <div className="topbar-actions">
             <button

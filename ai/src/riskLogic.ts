@@ -7,7 +7,7 @@ import type {
   RiskLevel,
   RiskUpdate,
   SystemHealth,
-} from "../types";
+} from "./types";
 import { determineEvidenceType } from "./evidence";
 
 export const DEFAULT_CONFIG: AppConfig = {

@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-05-21
+
+- Reorganized the project into logical `frontend/`, `backend/`, and `ai/` layers while keeping project-level tooling at the repository root.
+- Moved the React/Vite dashboard into `frontend/`, the risk contract and fusion/evidence logic into `ai/src/`, and prepared prototype session data into `ai/prototype-data/`.
+- Added layer-level README files plus a `prototype-tests/` smoke-test checklist to document the new structure and validation flow.
+- Updated Vite, TypeScript, ESLint, README, and prototype documentation paths to match the layered layout.
+- Updated the dashboard and project title to `In-Cabin Multi-Modal Driver Monitoring & Risk Assessment`.
+
 ## 2026-05-07
 
 - Rebuilt the React MVP visual styling toward the supplied standalone DMS dashboard reference: light operator dashboard shell, white sidebar, compact navigation, subtle card borders, smaller typography, and indigo active state.

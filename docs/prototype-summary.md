@@ -17,25 +17,25 @@ The prototype displays the fused score on a 0-100 scale, maps it into `Low`, `Me
 
 ## Completed Core Modules
 
-1. Risk Logic Engine: [riskLogic.ts](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/src/utils/riskLogic.ts)
+1. Risk Logic Engine: [riskLogic.ts](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ai/src/riskLogic.ts)
    - `computeRiskScore()`, `mapRiskLevel()`, `mapAlertSeverity()`, `mapSystemHealth()`, `determineDominantEvidence()`, and `buildRiskUpdate()`.
 
-2. Prepared Session Adapter: [preparedSessionInput.ts](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/src/data/preparedSessionInput.ts)
-   - Parses `prepared_sessions/session_001/telemetry.csv`, constructs ordered monitoring windows, and supplies deterministic prototype inference outputs for the runtime contract.
+2. Prepared Session Adapter: [preparedSessionInput.ts](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/frontend/src/data/preparedSessionInput.ts)
+   - Parses `ai/prototype-data/prepared_sessions/session_001/telemetry.csv`, constructs ordered monitoring windows, and supplies deterministic prototype inference outputs for the runtime contract.
 
-3. Monitoring Session Engine: [App.tsx](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/src/App.tsx)
+3. Monitoring Session Engine: [App.tsx](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/frontend/src/App.tsx)
    - Reads prepared session windows in timestamp order and advances them through `setInterval` using `deltaT`.
 
-4. Camera Preview Module: [useCameraPreview.ts](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/src/hooks/useCameraPreview.ts)
+4. Camera Preview Module: [useCameraPreview.ts](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/frontend/src/hooks/useCameraPreview.ts)
    - Uses `getUserMedia`, handles idle/requesting/live/denied/error, and releases tracks on stop.
 
-5. Local Persistence Layer: [persistence.ts](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/src/utils/persistence.ts)
+5. Local Persistence Layer: [persistence.ts](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/frontend/src/utils/persistence.ts)
    - Implements Create, Read, Update, and Delete with `localStorage`.
 
-6. Five-Interface Dashboard: [App.tsx](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/src/App.tsx)
+6. Five-Interface Dashboard: [App.tsx](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/frontend/src/App.tsx)
    - Live Monitor, Signal Inspector, Risk Trends, Explanation, and Configuration.
 
-7. Export Module: [export.ts](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/src/utils/export.ts)
+7. Export Module: [export.ts](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/frontend/src/utils/export.ts)
    - Exports session logs as JSON and CSV, with `Enable Evidence Interpretation` controlling whether evidence fields are included.
 
 ## How To Use
@@ -63,7 +63,7 @@ npm run dev
 
 ## Scope Boundary
 
-This implementation is a frontend-only FYP1 MVP. Camera preview demonstrates the visual input interface, while risk values come from the prepared session dataset under `prepared_sessions/session_001`. It does not include video upload, AI training, real MobileNetV3/XGBoost inference, FastAPI, WebSocket, SQLite, or vehicle-grade deployment.
+This implementation is a frontend-first FYP1 MVP. Camera preview demonstrates the visual input interface, while risk values come from the prepared session dataset under `ai/prototype-data/prepared_sessions/session_001`. The `backend/` layer is currently an integration boundary, not a running service. The prototype does not include video upload, AI training, real MobileNetV3/XGBoost inference, FastAPI, WebSocket, SQLite, or vehicle-grade deployment.
 
 ## Export Schema
 

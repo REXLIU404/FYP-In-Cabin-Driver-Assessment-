@@ -15,8 +15,8 @@ import {
   getEvidenceType,
   getMatchedEvidenceRule,
   getRelativeEvidence,
-} from "../utils/evidence";
-import { computeRiskContributions } from "../utils/riskLogic";
+} from "../../../ai/src/evidence";
+import { computeRiskContributions } from "../../../ai/src/riskLogic";
 
 interface ExplanationViewProps {
   selectedRecord: RiskUpdate;

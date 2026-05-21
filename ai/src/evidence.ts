@@ -1,4 +1,4 @@
-import type { DominantEvidence, RiskUpdate, SystemHealth } from "../types";
+import type { DominantEvidence, RiskUpdate, SystemHealth } from "./types";
 
 export const EVIDENCE_GAP = 0.15;
 

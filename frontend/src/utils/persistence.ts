@@ -1,5 +1,5 @@
 import type { AppConfig, RiskUpdate, SessionMeta } from "../types";
-import { DEFAULT_CONFIG } from "./riskLogic";
+import { DEFAULT_CONFIG } from "../../../ai/src/riskLogic";
 
 const SESSION_INDEX_KEY = "session_index";
 const ACTIVE_SESSION_KEY = "active_session";

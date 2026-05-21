@@ -2,7 +2,7 @@ import { Flag, Search } from "lucide-react";
 import { Pill } from "../components/Pill";
 import { TelemetrySummary } from "../components/TelemetrySummary";
 import type { RiskUpdate } from "../types";
-import { getEvidenceType, getRelativeEvidence } from "../utils/evidence";
+import { getEvidenceType, getRelativeEvidence } from "../../../ai/src/evidence";
 import { formatPercent, formatRiskScore } from "../utils/format";
 
 interface SignalInspectorProps {

@@ -3,7 +3,7 @@ import { DistributionChart } from "../components/DistributionChart";
 import { Pill } from "../components/Pill";
 import { TrendChart } from "../components/TrendChart";
 import type { DistributionDatum, RiskLevel, RiskUpdate } from "../types";
-import { getEvidenceType } from "../utils/evidence";
+import { getEvidenceType } from "../../../ai/src/evidence";
 import { formatRiskScore, formatTimestamp } from "../utils/format";
 
 interface RiskTrendsProps {

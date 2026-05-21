@@ -3,7 +3,6 @@ export type AlertSeverity = "NORMAL" | "CAUTION" | "HIGH_ALERT";
 export type SystemHealth = "FULL" | "DEGRADED" | "UNAVAILABLE";
 export type OperationMode = "PREPARED_SESSION_RUNTIME";
 export type FreshnessStatus = "fresh" | "stale" | "missing";
-export type CameraStatus = "idle" | "requesting" | "live" | "denied" | "error";
 
 export type DominantEvidence =
   | "Vision-dominant"
@@ -77,9 +76,4 @@ export interface AppConfig {
   thresholdHigh: number;
   freshnessTolerance: number;
   enableEvidenceInterpretation: boolean;
-}
-
-export interface DistributionDatum {
-  label: string;
-  count: number;
 }

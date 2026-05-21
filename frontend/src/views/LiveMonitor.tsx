@@ -7,7 +7,7 @@ import { TelemetrySummary } from "../components/TelemetrySummary";
 import { TrendChart } from "../components/TrendChart";
 import type { useCameraPreview } from "../hooks/useCameraPreview";
 import type { RiskUpdate } from "../types";
-import { getEvidenceType } from "../utils/evidence";
+import { getEvidenceType } from "../../../ai/src/evidence";
 import { formatTimestamp } from "../utils/format";
 
 interface LiveMonitorProps {
