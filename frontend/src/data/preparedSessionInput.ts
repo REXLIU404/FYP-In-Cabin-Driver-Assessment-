@@ -53,23 +53,90 @@ const clamp = (value: number) => Math.min(1, Math.max(0, value));
 const round3 = (value: number) => Number(value.toFixed(3));
 
 const visualClasses = (
-  normal: number,
-  away: number,
-  phone: number,
-  down: number,
+  safe: number,
+  textingRight: number,
+  phoneRight: number,
+  textingLeft: number,
+  phoneLeft: number,
+  radio: number,
+  drinking: number,
+  reaching: number,
+  makeup: number,
+  passenger: number,
 ): VisualClassProbability[] => [
-  { label: "normal_driving", probability: normal },
-  { label: "looking_away", probability: away },
-  { label: "phone_use", probability: phone },
-  { label: "head_down", probability: down },
+  { label: "safe_driving", probability: safe },
+  { label: "texting_right", probability: textingRight },
+  { label: "phone_right", probability: phoneRight },
+  { label: "texting_left", probability: textingLeft },
+  { label: "phone_left", probability: phoneLeft },
+  { label: "operating_radio", probability: radio },
+  { label: "drinking", probability: drinking },
+  { label: "reaching_behind", probability: reaching },
+  { label: "hair_makeup", probability: makeup },
+  { label: "talking_to_passenger", probability: passenger },
 ];
 
 const preparedVisualEvidence: Record<string, VisualClassProbability[]> = {
-  "frame_0001.jpg": visualClasses(0.88, 0.05, 0.02, 0.05),
-  "frame_0002.jpg": visualClasses(0.78, 0.11, 0.04, 0.07),
-  "frame_0003.jpg": visualClasses(0.55, 0.24, 0.13, 0.08),
-  "frame_0004.jpg": visualClasses(0.22, 0.36, 0.31, 0.11),
-  "frame_0006.jpg": visualClasses(0.28, 0.31, 0.27, 0.14),
+  "frame_0001.jpg": visualClasses(
+    0.88,
+    0.02,
+    0.01,
+    0.01,
+    0.01,
+    0.03,
+    0.01,
+    0.01,
+    0.01,
+    0.01,
+  ),
+  "frame_0002.jpg": visualClasses(
+    0.78,
+    0.04,
+    0.03,
+    0.02,
+    0.02,
+    0.06,
+    0.02,
+    0.01,
+    0.01,
+    0.01,
+  ),
+  "frame_0003.jpg": visualClasses(
+    0.55,
+    0.07,
+    0.05,
+    0.04,
+    0.03,
+    0.08,
+    0.04,
+    0.05,
+    0.03,
+    0.06,
+  ),
+  "frame_0004.jpg": visualClasses(
+    0.22,
+    0.25,
+    0.18,
+    0.08,
+    0.07,
+    0.06,
+    0.04,
+    0.05,
+    0.02,
+    0.03,
+  ),
+  "frame_0006.jpg": visualClasses(
+    0.28,
+    0.1,
+    0.08,
+    0.14,
+    0.11,
+    0.08,
+    0.06,
+    0.09,
+    0.03,
+    0.03,
+  ),
 };
 
 const inferDistraction = (
@@ -78,8 +145,10 @@ const inferDistraction = (
 ): number => {
   if (!visionAvailable) return 0;
   const classes = preparedVisualEvidence[frameFile] ?? [];
-  const normal = classes.find((item) => item.label === "normal_driving");
-  return round3(1 - (normal?.probability ?? 1));
+  const safe = classes.find(
+    (item) => item.label === "safe_driving" || item.label === "normal_driving",
+  );
+  return round3(1 - (safe?.probability ?? 1));
 };
 
 const inferTelemetryAnomaly = (record: PreparedTelemetryRecord): number => {

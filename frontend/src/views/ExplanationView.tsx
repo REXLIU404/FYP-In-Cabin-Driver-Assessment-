@@ -32,6 +32,27 @@ const evidenceChartLabels: Record<DominantEvidence, string> = {
   "Low observed risk": "Low risk",
 };
 
+const visualLabelMap: Record<string, string> = {
+  safe_driving: "Safe Driving",
+  normal_driving: "Safe Driving",
+  texting_right: "Texting (Right)",
+  phone_right: "Phone Call (Right)",
+  texting_left: "Texting (Left)",
+  phone_left: "Phone Call (Left)",
+  operating_radio: "Operating Radio",
+  drinking: "Drinking",
+  reaching_behind: "Reaching Behind",
+  hair_makeup: "Hair and Makeup",
+  talking_to_passenger: "Talking to Passenger",
+};
+
+const telemetryLabelMap: Record<string, string> = {
+  lane_deviation: "Lane Offset Deviation",
+  brake_usage: "Brake Pressure Anomaly",
+  acceleration: "Excessive Acceleration",
+  steering_angle: "Erratic Steering",
+};
+
 const titleCaseToken = (value: string) =>
   value
     .toLowerCase()
@@ -41,7 +62,7 @@ const titleCaseToken = (value: string) =>
 
 const getTopVisualCue = (record: RiskUpdate) => {
   const visualCues = record.visual_top_classes.filter(
-    (item) => item.label !== "normal_driving",
+    (item) => !["safe_driving", "normal_driving"].includes(item.label),
   );
   const candidates =
     visualCues.length > 0 ? visualCues : record.visual_top_classes;
@@ -112,42 +133,42 @@ export function ExplanationView({
           </div>
 
           <div className="evidence-type-block">
-            <span>Evidence Type</span>
+            <span>Dominant Risk Factor</span>
             <strong>{formatEvidenceType(evidenceType)}</strong>
-            <small>Relative Evidence: {relativeEvidence}</small>
+            <small>Relative Modality Split: {relativeEvidence}</small>
           </div>
 
           <div className="summary-metric-grid">
             <div>
-              <span>P_distraction</span>
+              <span>Driver Inattention</span>
               <strong>{formatProbability(selectedRecord.P_distraction)}</strong>
             </div>
             <div>
-              <span>P_telemetry_anomaly</span>
+              <span>Vehicle Anomaly</span>
               <strong>
                 {formatProbability(selectedRecord.P_telemetry_anomaly)}
               </strong>
             </div>
             <div>
-              <span>RiskScore</span>
+              <span>Overall Risk Score</span>
               <strong>{formatRiskScore(selectedRecord.RiskScore)}</strong>
             </div>
             <div>
-              <span>RiskLevel</span>
+              <span>Safety Risk Level</span>
               <Pill
                 label={selectedRecord.RiskLevel}
                 tone={selectedRecord.RiskLevel}
               />
             </div>
             <div>
-              <span>AlertStatus</span>
+              <span>Warning Status</span>
               <Pill
                 label={titleCaseToken(selectedRecord.AlertSeverity)}
                 tone={selectedRecord.AlertSeverity}
               />
             </div>
             <div>
-              <span>SystemHealth</span>
+              <span>Sensor Integrity</span>
               <Pill
                 label={titleCaseToken(selectedRecord.SystemHealth)}
                 tone={selectedRecord.SystemHealth}
@@ -166,30 +187,30 @@ export function ExplanationView({
 
           <div className="evidence-metrics">
             <div>
-              <span>P_distraction</span>
+              <span>Driver Inattention</span>
               <strong>
                 {formatProbability(selectedRecord.P_distraction)}
                 <small>{formatPercent(selectedRecord.P_distraction)}</small>
               </strong>
             </div>
             <div>
-              <span>Top visual cue</span>
+              <span>Primary Distraction Cue</span>
               <strong>
-                {visualCue?.label ?? "unavailable"}
+                {visualCue ? (visualLabelMap[visualCue.label] ?? visualCue.label) : "unavailable"}
                 {visualCue ? (
                   <small>{formatPercent(visualCue.probability)}</small>
                 ) : null}
               </strong>
             </div>
             <div>
-              <span>Freshness</span>
+              <span>Camera Status</span>
               <Pill
                 label={selectedRecord.modality_freshness.vision}
                 tone={selectedRecord.modality_freshness.vision}
               />
             </div>
             <div>
-              <span>Contribution</span>
+              <span>Score Contribution</span>
               <strong>{formatContribution(contributions.vision)}</strong>
             </div>
           </div>
@@ -198,14 +219,13 @@ export function ExplanationView({
         <section className="panel contribution-panel">
           <div className="section-header">
             <div>
-              <p className="eyebrow">RiskScore Contribution</p>
+              <p className="eyebrow">Risk Score Synthesis</p>
               <h2>Weighted contribution from each branch</h2>
             </div>
           </div>
 
           <div className="contribution-formula">
-            RiskScore = {formatWeight(config.weightVision)} x P_distraction +{" "}
-            {formatWeight(config.weightTelemetry)} x P_telemetry_anomaly
+            Risk Score = ({formatWeight(config.weightVision)} × Inattention) + ({formatWeight(config.weightTelemetry)} × Vehicle Anomaly)
           </div>
 
           <div
@@ -224,20 +244,20 @@ export function ExplanationView({
           </div>
 
           <div className="contribution-equation">
-            <span>Vision {Math.round(contributions.vision)}</span>
+            <span>Visual Inattention {Math.round(contributions.vision)}</span>
             <strong>+</strong>
-            <span>Telemetry {Math.round(contributions.telemetry)}</span>
+            <span>Vehicle Anomaly {Math.round(contributions.telemetry)}</span>
             <strong>=</strong>
-            <span>RiskScore {formatRiskScore(selectedRecord.RiskScore)}</span>
+            <span>Overall Risk Score {formatRiskScore(selectedRecord.RiskScore)}</span>
           </div>
 
           <div className="contribution-labels">
-            <span>Vision contribution {Math.round(contributions.vision)}</span>
+            <span>Inattention Contribution: {Math.round(contributions.vision)}</span>
             <span>
-              Telemetry contribution {Math.round(contributions.telemetry)}
+              Vehicle Anomaly Contribution: {Math.round(contributions.telemetry)}
             </span>
             <span>
-              Total RiskScore {formatRiskScore(selectedRecord.RiskScore)}
+              Total Risk Score: {formatRiskScore(selectedRecord.RiskScore)}
             </span>
           </div>
         </section>
@@ -286,7 +306,7 @@ export function ExplanationView({
 
           <div className="evidence-metrics">
             <div>
-              <span>P_telemetry_anomaly</span>
+              <span>Vehicle Anomaly</span>
               <strong>
                 {formatProbability(selectedRecord.P_telemetry_anomaly)}
                 <small>
@@ -295,23 +315,23 @@ export function ExplanationView({
               </strong>
             </div>
             <div>
-              <span>Top telemetry cue</span>
+              <span>Primary Telemetry Driver</span>
               <strong>
-                {telemetryCue?.label ?? "unavailable"}
+                {telemetryCue ? (telemetryLabelMap[telemetryCue.label] ?? telemetryCue.label) : "unavailable"}
                 {telemetryCue ? (
                   <small>{formatPercent(telemetryCue.value)}</small>
                 ) : null}
               </strong>
             </div>
             <div>
-              <span>Freshness</span>
+              <span>Telemetry Status</span>
               <Pill
                 label={selectedRecord.modality_freshness.telemetry}
                 tone={selectedRecord.modality_freshness.telemetry}
               />
             </div>
             <div>
-              <span>Contribution</span>
+              <span>Score Contribution</span>
               <strong>{formatContribution(contributions.telemetry)}</strong>
             </div>
           </div>

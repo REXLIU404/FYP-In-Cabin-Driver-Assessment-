@@ -43,6 +43,7 @@ export function CameraPreview({
           <strong>{statusText[status]}</strong>
         </div>
       ) : null}
+
       <div className="camera-actions">
         <button
           type="button"
@@ -60,3 +61,4 @@ export function CameraPreview({
     </div>
   );
 }
+

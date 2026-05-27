@@ -13,7 +13,7 @@
 
 - `P_distraction`：驾驶员分心概率，范围 0-1。
 - `P_telemetry_anomaly`：遥测异常概率，范围 0-1。
-- `visual_top_classes`：视觉分类概率，例如 `normal_driving`、`phone_use`、`looking_away`。
+- `visual_top_classes`：视觉分类概率，例如 `safe_driving`、`texting_right`、`phone_right`、`operating_radio`、`drinking`、`reaching_behind`、`talking_to_passenger`。
 - `telemetry_features`：速度、加速度、方向盘角、刹车使用、车道偏移等。
 - `modality_freshness`：视觉和遥测分支是 `fresh`、`stale` 还是 `missing`。
 - `RiskScore`：融合后的风险分数，前端展示为 0-100。
@@ -43,14 +43,14 @@
 
 ```json
 {
-  "text": "Vision-dominant: phone_use probability is high and telemetry anomaly is moderate.",
+  "text": "Vision-dominant: texting_right probability is high and telemetry anomaly is moderate.",
   "dominant_evidence": "Vision-dominant",
   "risk_score": 72.4,
   "vision": {
     "p_distraction": 0.81,
     "top_classes": [
-      { "label": "phone_use", "probability": 0.54 },
-      { "label": "looking_away", "probability": 0.22 }
+      { "label": "texting_right", "probability": 0.54 },
+      { "label": "phone_right", "probability": 0.22 }
     ]
   },
   "telemetry": {
@@ -75,8 +75,8 @@
 MVP 阶段使用 `visual_top_classes` 作为解释证据。FYP2 接入真实 MobileNetV3 后，建议保留同样的数据字段：
 
 1. 取 softmax 输出中概率最高的 3-5 个类别。
-2. 使用 `P_distraction = 1 - P(normal_driving)` 作为分心风险概率。
-3. 如果 `phone_use`、`looking_away`、`head_down` 等类别概率高，就在解释文本中说明视觉分支推动风险。
+2. 使用 `P_distraction = 1 - P(safe_driving)`，或等价地累加所有非 `safe_driving` 类别概率，作为分心风险概率。
+3. 如果 `texting_right`、`phone_right`、`operating_radio`、`drinking`、`reaching_behind`、`talking_to_passenger` 等类别概率高，就在解释文本中说明视觉分支推动风险。
 4. 可选增强：使用 Grad-CAM 生成热力图，帮助说明视觉模型关注的图像区域。
 
 注意：Grad-CAM 是可选项，不应成为 MVP 的必需功能。当前 dashboard 只需要 top class probabilities 就能解释视觉分支的主要证据。

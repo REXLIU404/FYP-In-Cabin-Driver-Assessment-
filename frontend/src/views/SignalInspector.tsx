@@ -71,22 +71,22 @@ export function SignalInspector({
 
         <div className="stat-list stat-list--compact">
           <div>
-            <span>RiskScore</span>
+            <span>Overall Risk Score</span>
             <strong>{formatRiskScore(selectedRecord.RiskScore)}</strong>
           </div>
           <div>
-            <span>RiskLevel</span>
+            <span>Safety Risk Level</span>
             <Pill
               label={selectedRecord.RiskLevel}
               tone={selectedRecord.RiskLevel}
             />
           </div>
           <div>
-            <span>Evidence Type</span>
+            <span>Dominant Risk Factor</span>
             <strong>{evidenceType}</strong>
           </div>
           <div>
-            <span>Relative Evidence</span>
+            <span>Relative Modality Split</span>
             <strong>{relativeEvidence}</strong>
           </div>
         </div>
@@ -133,33 +133,33 @@ export function SignalInspector({
 
         <div className="stat-list stat-list--compact">
           <div>
-            <span>P_distraction</span>
+            <span>Driver Inattention</span>
             <strong>{formatPercent(selectedRecord.P_distraction)}</strong>
           </div>
           <div>
-            <span>P_telemetry_anomaly</span>
+            <span>Vehicle Anomaly</span>
             <strong>{formatPercent(selectedRecord.P_telemetry_anomaly)}</strong>
           </div>
           <div>
-            <span>Vision freshness</span>
+            <span>Camera Modality Status</span>
             <Pill
               label={selectedRecord.modality_freshness.vision}
               tone={selectedRecord.modality_freshness.vision}
             />
           </div>
           <div>
-            <span>Telemetry freshness</span>
+            <span>Telemetry Modality Status</span>
             <Pill
               label={selectedRecord.modality_freshness.telemetry}
               tone={selectedRecord.modality_freshness.telemetry}
             />
           </div>
           <div>
-            <span>Latency</span>
+            <span>Processing Latency</span>
             <strong>{selectedRecord.latency_ms} ms</strong>
           </div>
           <div>
-            <span>Flag</span>
+            <span>Flag Status</span>
             <strong>{selectedRecord.flagged ? "Flagged" : "None"}</strong>
           </div>
         </div>

@@ -55,7 +55,7 @@ RiskScore = weighted(P_distraction, P_telemetry_anomaly) x 100
   "p_distraction": 0.11,
   "p_telemetry_anomaly": 0.12,
   "dominant_evidence": "combined",
-  "top_visual_class": "normal_driving",
+  "top_visual_class": "safe_driving",
   "top_telemetry_cue": "speed",
   "latency_ms": 42
 }
