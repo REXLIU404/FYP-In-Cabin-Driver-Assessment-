@@ -725,6 +725,13 @@ tbody tr.is-high-risk {
   border-bottom: 1px solid var(--line);
 }
 
+.evidence-metrics > .evidence-metrics__stacked {
+  display: grid;
+  justify-content: stretch;
+  align-items: start;
+  gap: 10px;
+}
+
 .rule-list span,
 .evidence-metrics span {
   color: var(--muted);
@@ -743,6 +750,49 @@ tbody tr.is-high-risk {
   margin-top: 2px;
   color: var(--muted);
   font-size: 0.74rem;
+}
+
+.feature-contribution-list {
+  display: grid;
+  gap: 8px;
+}
+
+.feature-contribution-row {
+  display: grid;
+  gap: 5px;
+}
+
+.feature-contribution-row__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.feature-contribution-row__meta strong,
+.feature-contribution-row__meta span {
+  font-size: 0.82rem;
+}
+
+.feature-contribution-row__meta span {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.feature-contribution-row__track {
+  height: 6px;
+  overflow: hidden;
+  background: #e2e8f0;
+  border-radius: 999px;
+}
+
+.feature-contribution-row__bar {
+  height: 100%;
+  background: var(--blue);
+  border-radius: inherit;
+}
+
+.feature-contribution-row__bar--negative {
+  background: #94a3b8;
 }
 
 .rule-badge {

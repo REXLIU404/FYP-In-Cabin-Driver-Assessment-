@@ -134,7 +134,7 @@ const buildExplanation = (
     return `Vision evidence is driving the ${riskLevel.toLowerCase()} risk output because P_distraction (${asPercent(pD)}) is materially higher than P_telemetry_anomaly (${asPercent(pT)}).`;
   }
   if (dominant === "Telemetry-dominant") {
-    return `Telemetry anomaly evidence is driving the ${riskLevel.toLowerCase()} risk output because P_telemetry_anomaly (${asPercent(pT)}) is materially higher than P_distraction (${asPercent(pD)}).`;
+    return `Telemetry non-safe behaviour evidence is driving the ${riskLevel.toLowerCase()} risk output because P_telemetry_anomaly (${asPercent(pT)}) is materially higher than P_distraction (${asPercent(pD)}).`;
   }
   if (dominant === "Combined evidence") {
     return `Vision and telemetry evidence are both contributing to the ${riskLevel.toLowerCase()} risk output.`;
@@ -202,6 +202,8 @@ export const buildRiskUpdate = (
     },
     latency_ms: window.latency_ms,
     visual_top_classes: window.visual_top_classes,
+    telemetry_behavior_classes: window.telemetry_behavior_classes,
+    telemetry_feature_contributions: window.telemetry_feature_contributions,
     telemetry_features: window.telemetry_features,
     explanation: buildExplanation(
       dominant,

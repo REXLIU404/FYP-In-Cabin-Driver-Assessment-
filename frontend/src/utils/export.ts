@@ -1,4 +1,4 @@
-import type { DominantEvidence, RiskUpdate, TelemetryFeatures } from "../types";
+import type { DominantEvidence, RiskUpdate } from "../types";
 
 interface ExportOptions {
   includeEvidenceInterpretation: boolean;
@@ -30,21 +30,19 @@ const getTopVisualClass = (record: RiskUpdate) => {
   return top?.label ?? "unavailable";
 };
 
-const telemetryCueScores = (telemetry: TelemetryFeatures) => [
-  { label: "speed", value: Math.max(0, (telemetry.speed - 45) / 45) },
-  { label: "acceleration", value: Math.abs(telemetry.acceleration) / 3 },
-  { label: "steering_angle", value: Math.abs(telemetry.steering_angle) / 18 },
-  { label: "brake_usage", value: telemetry.brake_usage },
-  { label: "lane_deviation", value: telemetry.lane_deviation },
-];
+const getTelemetryProbability = (record: RiskUpdate, label: string) =>
+  record.telemetry_behavior_classes.find((item) => item.label === label)
+    ?.probability ?? 0;
 
-const getTopTelemetryCue = (record: RiskUpdate) => {
-  if (!record.telemetry_features) return "unavailable";
+const getTopTelemetryBehavior = (record: RiskUpdate) =>
+  [...record.telemetry_behavior_classes].sort(
+    (a, b) => b.probability - a.probability,
+  )[0]?.label ?? "unavailable";
 
-  return telemetryCueScores(record.telemetry_features).sort(
-    (a, b) => b.value - a.value,
-  )[0].label;
-};
+const getTopTelemetryFeatureContribution = (record: RiskUpdate) =>
+  [...(record.telemetry_feature_contributions ?? [])].sort(
+    (a, b) => Math.abs(b.contribution) - Math.abs(a.contribution),
+  )[0];
 
 const baseExportRecord = (record: RiskUpdate) => ({
   window_id: record.window_id,
@@ -58,7 +56,14 @@ const evidenceExportRecord = (record: RiskUpdate) => ({
   p_telemetry_anomaly: record.P_telemetry_anomaly,
   dominant_evidence: dominantEvidenceLabel[record.DominantEvidence],
   top_visual_class: getTopVisualClass(record),
-  top_telemetry_cue: getTopTelemetryCue(record),
+  top_telemetry_behavior: getTopTelemetryBehavior(record),
+  top_telemetry_feature:
+    getTopTelemetryFeatureContribution(record)?.feature ?? "unavailable",
+  top_telemetry_feature_contribution:
+    getTopTelemetryFeatureContribution(record)?.contribution ?? "",
+  p_telemetry_safe: getTelemetryProbability(record, "Safe"),
+  p_telemetry_aggressive: getTelemetryProbability(record, "Aggressive"),
+  p_telemetry_distracted: getTelemetryProbability(record, "Distracted"),
   latency_ms: record.latency_ms,
 });
 
@@ -111,7 +116,12 @@ export const exportSessionLogCSV = (
         "p_telemetry_anomaly",
         "dominant_evidence",
         "top_visual_class",
-        "top_telemetry_cue",
+        "top_telemetry_behavior",
+        "top_telemetry_feature",
+        "top_telemetry_feature_contribution",
+        "p_telemetry_safe",
+        "p_telemetry_aggressive",
+        "p_telemetry_distracted",
         "latency_ms",
       ]
     : ["window_id", "risk_score", "risk_level"];

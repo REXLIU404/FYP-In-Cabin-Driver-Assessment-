@@ -80,12 +80,12 @@ export function LiveMonitor({
             </div>
             <div className="modality-grid">
               <ModalityCard
-                title="P_distraction"
+                title="Visual Distraction"
                 probability={latest.P_distraction}
                 freshness={latest.modality_freshness.vision}
               />
               <ModalityCard
-                title="P_telemetry_anomaly"
+                title="Telemetry Non-Safe"
                 probability={latest.P_telemetry_anomaly}
                 freshness={latest.modality_freshness.telemetry}
               />
@@ -98,7 +98,7 @@ export function LiveMonitor({
         <div className="section-header">
           <div>
             <p className="eyebrow">Telemetry Summary</p>
-            <h2>Structured input</h2>
+            <h2>Vehicle-dynamics input</h2>
           </div>
           <Database size={20} />
         </div>
