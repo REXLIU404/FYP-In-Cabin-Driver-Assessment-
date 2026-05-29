@@ -31,7 +31,7 @@ Prepared session folder
 每个 window 会生成两个 branch-level probability：
 
 - `P_distraction`：视觉分支估计驾驶员分心概率。
-- `P_telemetry_anomaly`：遥测分支估计车辆行为异常概率。
+- `P_telemetry_anomaly`：遥测分支基于 vehicle-dynamics features 输出 `P(Safe)`、`P(Aggressive)`、`P(Distracted)` 后，用 `1 - P(Safe)` 得到的 non-safe behaviour probability。
 
 系统使用 weighted late fusion：
 
@@ -56,7 +56,10 @@ RiskScore = weighted(P_distraction, P_telemetry_anomaly) x 100
   "p_telemetry_anomaly": 0.12,
   "dominant_evidence": "combined",
   "top_visual_class": "safe_driving",
-  "top_telemetry_cue": "speed",
+  "top_telemetry_behavior": "Safe",
+  "p_telemetry_safe": 0.82,
+  "p_telemetry_aggressive": 0.08,
+  "p_telemetry_distracted": 0.10,
   "latency_ms": 42
 }
 ```

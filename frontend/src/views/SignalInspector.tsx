@@ -71,22 +71,22 @@ export function SignalInspector({
 
         <div className="stat-list stat-list--compact">
           <div>
-            <span>Overall Risk Score</span>
+            <span>RiskScore</span>
             <strong>{formatRiskScore(selectedRecord.RiskScore)}</strong>
           </div>
           <div>
-            <span>Safety Risk Level</span>
+            <span>RiskLevel</span>
             <Pill
               label={selectedRecord.RiskLevel}
               tone={selectedRecord.RiskLevel}
             />
           </div>
           <div>
-            <span>Dominant Risk Factor</span>
+            <span>Evidence Type</span>
             <strong>{evidenceType}</strong>
           </div>
           <div>
-            <span>Relative Modality Split</span>
+            <span>Relative Evidence</span>
             <strong>{relativeEvidence}</strong>
           </div>
         </div>
@@ -117,7 +117,7 @@ export function SignalInspector({
         <div className="section-header">
           <div>
             <p className="eyebrow">Telemetry Branch</p>
-            <h2>3. Telemetry features</h2>
+            <h2>3. Vehicle-dynamics features</h2>
           </div>
         </div>
         <TelemetrySummary telemetry={selectedRecord.telemetry_features} />
@@ -133,33 +133,33 @@ export function SignalInspector({
 
         <div className="stat-list stat-list--compact">
           <div>
-            <span>Driver Inattention</span>
+            <span>P_distraction</span>
             <strong>{formatPercent(selectedRecord.P_distraction)}</strong>
           </div>
           <div>
-            <span>Vehicle Anomaly</span>
+            <span>Telemetry non-safe risk</span>
             <strong>{formatPercent(selectedRecord.P_telemetry_anomaly)}</strong>
           </div>
           <div>
-            <span>Camera Modality Status</span>
+            <span>Vision freshness</span>
             <Pill
               label={selectedRecord.modality_freshness.vision}
               tone={selectedRecord.modality_freshness.vision}
             />
           </div>
           <div>
-            <span>Telemetry Modality Status</span>
+            <span>Telemetry freshness</span>
             <Pill
               label={selectedRecord.modality_freshness.telemetry}
               tone={selectedRecord.modality_freshness.telemetry}
             />
           </div>
           <div>
-            <span>Processing Latency</span>
+            <span>Latency</span>
             <strong>{selectedRecord.latency_ms} ms</strong>
           </div>
           <div>
-            <span>Flag Status</span>
+            <span>Flag</span>
             <strong>{selectedRecord.flagged ? "Flagged" : "None"}</strong>
           </div>
         </div>

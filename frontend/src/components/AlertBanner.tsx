@@ -21,8 +21,8 @@ export function AlertBanner({ latest }: AlertBannerProps) {
       <div>
         <strong>Current Monitoring Status</strong>
         <span>
-          Overall Risk Score: {formatRiskScore(latest.RiskScore)} | Inattention:{" "}
-          {formatPercent(latest.P_distraction)} | Vehicle Anomaly:{" "}
+          RiskScore: {formatRiskScore(latest.RiskScore)} | Visual distraction:{" "}
+          {formatPercent(latest.P_distraction)} | Telemetry non-safe:{" "}
           {formatPercent(latest.P_telemetry_anomaly)}
         </span>
       </div>

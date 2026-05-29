@@ -179,7 +179,7 @@ button {
 
 .main-shell {
   min-width: 0;
-  padding: 12px;
+  padding: clamp(16px, 2vw, 24px);
 }
 
 .topbar {
@@ -188,7 +188,7 @@ button {
   justify-content: space-between;
   align-items: center;
   gap: 18px;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
 }
 
 .topbar h1,
@@ -258,8 +258,8 @@ button {
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 14px;
-  margin-bottom: 10px;
-  padding: 10px 14px;
+  margin-bottom: 18px;
+  padding: 14px 16px;
   background: #ecfdf5;
   border: 1px solid #bbf7d0;
   border-radius: 8px;
@@ -382,7 +382,7 @@ button {
 
 .camera-preview {
   position: relative;
-  min-height: 240px;
+  min-height: 330px;
   overflow: hidden;
   background: #d8e0ea;
   border: 1px solid var(--line);
@@ -393,7 +393,7 @@ button {
   display: block;
   width: 100%;
   height: 100%;
-  min-height: 240px;
+  min-height: 330px;
   object-fit: cover;
   background: #d8e0ea;
 }
@@ -433,7 +433,7 @@ button {
 .risk-gauge__ring {
   display: grid;
   place-items: center;
-  width: min(160px, 70vw);
+  width: min(210px, 70vw);
   aspect-ratio: 1;
   border-radius: 50%;
 }
@@ -540,7 +540,7 @@ button {
 .trend-chart,
 .distribution-chart {
   width: 100%;
-  min-height: 180px;
+  min-height: 240px;
 }
 
 .window-list {
@@ -611,6 +611,86 @@ button {
   height: 100%;
   background: var(--blue);
   border-radius: inherit;
+}
+
+.vehicle-dynamics {
+  display: grid;
+  gap: 12px;
+}
+
+.vehicle-dynamics__row {
+  display: grid;
+  gap: 7px;
+  padding: 11px 13px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.vehicle-dynamics__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.vehicle-dynamics__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #475569;
+  font-weight: 700;
+}
+
+.vehicle-dynamics__label svg {
+  color: #64748b;
+}
+
+.vehicle-dynamics__value {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.vehicle-dynamics__note {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: #16a34a;
+}
+
+.vehicle-dynamics__note.is-watch {
+  color: #d97706;
+}
+
+.vehicle-dynamics__note.is-alert {
+  color: #dc2626;
+}
+
+.vehicle-dynamics__track {
+  height: 8px;
+  overflow: hidden;
+  background: #e5e7eb;
+  border-radius: 999px;
+}
+
+.vehicle-dynamics__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: #22c55e;
+  transition: width 0.3s ease;
+}
+
+.vehicle-dynamics__fill.is-watch {
+  background: #f59e0b;
+}
+
+.vehicle-dynamics__fill.is-alert {
+  background: #ef4444;
 }
 
 .table-wrap {
@@ -725,6 +805,13 @@ tbody tr.is-high-risk {
   border-bottom: 1px solid var(--line);
 }
 
+.evidence-metrics > .evidence-metrics__stacked {
+  display: grid;
+  justify-content: stretch;
+  align-items: start;
+  gap: 10px;
+}
+
 .rule-list span,
 .evidence-metrics span {
   color: var(--muted);
@@ -743,6 +830,49 @@ tbody tr.is-high-risk {
   margin-top: 2px;
   color: var(--muted);
   font-size: 0.74rem;
+}
+
+.feature-contribution-list {
+  display: grid;
+  gap: 8px;
+}
+
+.feature-contribution-row {
+  display: grid;
+  gap: 5px;
+}
+
+.feature-contribution-row__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.feature-contribution-row__meta strong,
+.feature-contribution-row__meta span {
+  font-size: 0.82rem;
+}
+
+.feature-contribution-row__meta span {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.feature-contribution-row__track {
+  height: 6px;
+  overflow: hidden;
+  background: #e2e8f0;
+  border-radius: 999px;
+}
+
+.feature-contribution-row__bar {
+  height: 100%;
+  background: var(--blue);
+  border-radius: inherit;
+}
+
+.feature-contribution-row__bar--negative {
+  background: #94a3b8;
 }
 
 .rule-badge {
@@ -811,7 +941,7 @@ tbody tr.is-high-risk {
 }
 
 .configuration-panel {
-  width: 100%;
+  width: min(1120px, 100%);
 }
 
 .config-sections {
@@ -998,348 +1128,3 @@ tbody tr.is-high-risk {
     border-top: 1px solid var(--line);
   }
 }
-
-/* Automotive Console styling extensions */
-
-.text-warning {
-  color: var(--amber) !important;
-}
-
-.bg-primary {
-  background: var(--blue) !important;
-}
-
-.bg-warning {
-  background: var(--amber) !important;
-}
-
-.bg-danger {
-  background: var(--red) !important;
-}
-
-.bg-success {
-  background: var(--green) !important;
-}
-
-/* Telemetry console custom cockpit dials */
-.telemetry-console {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-}
-
-.telemetry-bar-card {
-  padding: 12px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.telemetry-bar-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.telemetry-bar-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--muted);
-  font-weight: 600;
-  font-size: 0.85rem;
-}
-
-.telemetry-icon {
-  color: var(--muted);
-}
-
-.telemetry-bar-info strong {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--text);
-}
-
-.telemetry-bar-info strong small {
-  font-size: 0.72rem;
-  color: var(--muted);
-  font-weight: 500;
-}
-
-.telemetry-meter-track {
-  height: 6px;
-  background: #cbd5e1;
-  border-radius: 4px;
-  overflow: hidden;
-  position: relative;
-}
-
-.telemetry-meter-fill {
-  height: 100%;
-  transition: width 0.3s ease;
-  border-radius: inherit;
-}
-
-/* Steering Bidirectional Tracker */
-.telemetry-steering-track {
-  overflow: visible;
-  height: 6px;
-  background: #cbd5e1;
-  border-radius: 4px;
-}
-
-.steering-center-mark {
-  position: absolute;
-  left: 50%;
-  top: -3px;
-  width: 2px;
-  height: 12px;
-  background: var(--muted);
-  transform: translateX(-50%);
-}
-
-.steering-pointer {
-  position: absolute;
-  top: -4px;
-  width: 14px;
-  height: 14px;
-  background: var(--blue);
-  border: 2px solid #ffffff;
-  border-radius: 50%;
-  transform: translateX(-50%);
-  transition: left 0.3s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-}
-
-/* Live Camera HUD Overlay */
-.hud-overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 16px;
-  z-index: 2;
-  font-family: monospace;
-}
-
-.hud-header {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.7);
-  background: rgba(15, 23, 42, 0.6);
-  padding: 4px 8px;
-  border-radius: 4px;
-  letter-spacing: 1px;
-}
-
-.hud-target-box {
-  position: absolute;
-  left: 50%;
-  top: 45%;
-  width: 160px;
-  height: 160px;
-  transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  transition: border-color 0.25s ease;
-}
-
-.hud-target-box--focused {
-  border: 1px dashed rgba(16, 185, 129, 0.6);
-}
-
-.hud-target-box--alert {
-  border: 1px dashed rgba(220, 38, 38, 0.8);
-  animation: hud-shake 0.3s ease infinite alternate;
-}
-
-.hud-corners {
-  position: absolute;
-  inset: -2px;
-  pointer-events: none;
-}
-
-/* Custom CSS borders for HUD tracking corners */
-.hud-corners::before,
-.hud-corners::after,
-.hud-target-box::before,
-.hud-target-box::after {
-  content: '';
-  position: absolute;
-  width: 12px;
-  height: 12px;
-}
-
-/* Bounding box corners */
-.hud-target-box--focused .hud-corners::before {
-  top: 0; left: 0;
-  border-top: 3px solid var(--green);
-  border-left: 3px solid var(--green);
-}
-.hud-target-box--focused .hud-corners::after {
-  top: 0; right: 0;
-  border-top: 3px solid var(--green);
-  border-right: 3px solid var(--green);
-}
-.hud-target-box--focused.hud-target-box::before {
-  bottom: 0; left: 0;
-  border-bottom: 3px solid var(--green);
-  border-left: 3px solid var(--green);
-}
-.hud-target-box--focused.hud-target-box::after {
-  bottom: 0; right: 0;
-  border-bottom: 3px solid var(--green);
-  border-right: 3px solid var(--green);
-}
-
-/* Distracted box corners (Red Alert) */
-.hud-target-box--alert .hud-corners::before {
-  top: 0; left: 0;
-  border-top: 3px solid var(--red);
-  border-left: 3px solid var(--red);
-}
-.hud-target-box--alert .hud-corners::after {
-  top: 0; right: 0;
-  border-top: 3px solid var(--red);
-  border-right: 3px solid var(--red);
-}
-.hud-target-box--alert.hud-target-box::before {
-  bottom: 0; left: 0;
-  border-bottom: 3px solid var(--red);
-  border-left: 3px solid var(--red);
-}
-.hud-target-box--alert.hud-target-box::after {
-  bottom: 0; right: 0;
-  border-bottom: 3px solid var(--red);
-  border-right: 3px solid var(--red);
-}
-
-.hud-crosshair {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 10px;
-  height: 10px;
-  transform: translate(-50%, -50%);
-}
-
-.hud-crosshair::before,
-.hud-crosshair::after {
-  content: '';
-  position: absolute;
-  background: rgba(255, 255, 255, 0.4);
-}
-
-.hud-crosshair::before {
-  left: 4px; top: 0; width: 2px; height: 10px;
-}
-.hud-crosshair::after {
-  left: 0; top: 4px; width: 10px; height: 2px;
-}
-
-.hud-status-badge {
-  position: absolute;
-  bottom: -28px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 6px;
-  font-size: 0.68rem;
-  border-radius: 4px;
-  color: #ffffff;
-  background: rgba(15, 23, 42, 0.85);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-}
-
-.hud-target-box--focused .hud-status-badge {
-  border-left: 3px solid var(--green);
-}
-
-.hud-target-box--alert .hud-status-badge {
-  border-left: 3px solid var(--red);
-}
-
-.hud-alert-banner {
-  align-self: center;
-  background: rgba(220, 38, 38, 0.9);
-  color: #ffffff;
-  padding: 6px 14px;
-  border-radius: 4px;
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  animation: hud-blink 1s infinite;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
-
-@keyframes hud-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}
-
-@keyframes hud-shake {
-  0% { transform: translate(-50%, -50%) rotate(0deg); }
-  50% { transform: translate(-49%, -51%) rotate(0.5deg); }
-  100% { transform: translate(-51%, -49%) rotate(-0.5deg); }
-}
-
-/* Sleek speedometer-like gauge modifications */
-.risk-gauge {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: var(--shadow);
-}
-
-.risk-gauge__ring {
-  box-shadow: inset 0 0 10px rgba(0,0,0,0.03), 0 4px 12px rgba(0,0,0,0.04);
-  position: relative;
-  background-color: var(--line);
-}
-
-.risk-gauge__ring::after {
-  content: '';
-  position: absolute;
-  width: 92%;
-  height: 92%;
-  border-radius: 50%;
-  border: 1px dashed rgba(15, 23, 42, 0.08);
-  pointer-events: none;
-}
-
-.risk-gauge__value {
-  width: 82%;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.06);
-  border: 1px solid var(--line);
-}
-
-/* Two-column layout for screenshot optimization */
-.page-grid--live-cols {
-  display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.7fr);
-  gap: 16px;
-  align-items: start;
-}
-
-.live-column-left,
-.live-column-right {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-@media (max-width: 1100px) {
-  .page-grid--live-cols {
-    grid-template-columns: 1fr;
-  }
-}
-

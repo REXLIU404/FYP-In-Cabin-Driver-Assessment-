@@ -16,14 +16,27 @@ export interface VisualClassProbability {
   probability: number;
 }
 
+export type TelemetryBehaviorLabel = "Safe" | "Aggressive" | "Distracted";
+
+export interface TelemetryBehaviorProbability {
+  label: TelemetryBehaviorLabel;
+  probability: number;
+}
+
+export interface TelemetryFeatureContribution {
+  feature: keyof TelemetryFeatures;
+  contribution: number;
+}
+
 export interface TelemetryFeatures {
-  speed: number;
-  acceleration: number;
+  speed_kmph: number;
+  accel_x: number;
+  accel_y: number;
+  brake_pressure: number;
   steering_angle: number;
-  brake_usage: number;
+  throttle: number;
   lane_deviation: number;
-  road_type: string;
-  traffic_condition: string;
+  headway_distance: number;
 }
 
 export interface PreparedSessionWindow {
@@ -33,6 +46,8 @@ export interface PreparedSessionWindow {
   vision_status: FreshnessStatus;
   telemetry_status: FreshnessStatus;
   visual_top_classes: VisualClassProbability[];
+  telemetry_behavior_classes: TelemetryBehaviorProbability[];
+  telemetry_feature_contributions: TelemetryFeatureContribution[];
   telemetry_features: TelemetryFeatures | null;
   latency_ms: number;
 }
@@ -55,6 +70,8 @@ export interface RiskUpdate {
   };
   latency_ms: number;
   visual_top_classes: VisualClassProbability[];
+  telemetry_behavior_classes: TelemetryBehaviorProbability[];
+  telemetry_feature_contributions?: TelemetryFeatureContribution[];
   telemetry_features: TelemetryFeatures | null;
   explanation: string;
   flagged?: boolean;
