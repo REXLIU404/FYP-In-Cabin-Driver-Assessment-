@@ -321,14 +321,11 @@ export function ExplanationView({
                   ? (telemetryBehaviorLabelMap[telemetryBehavior.label] ??
                     telemetryBehavior.label)
                   : "unavailable"}
-              </strong>
-            </div>
-            <div>
-              <span>Behaviour Score</span>
-              <strong>
-                {telemetryBehavior
-                  ? formatPercent(telemetryBehavior.probability)
-                  : "unavailable"}
+                {telemetryBehavior ? (
+                  <small>
+                    {formatPercent(telemetryBehavior.probability)} confidence
+                  </small>
+                ) : null}
               </strong>
             </div>
             <div>

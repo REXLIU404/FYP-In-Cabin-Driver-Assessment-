@@ -613,6 +613,86 @@ button {
   border-radius: inherit;
 }
 
+.vehicle-dynamics {
+  display: grid;
+  gap: 12px;
+}
+
+.vehicle-dynamics__row {
+  display: grid;
+  gap: 7px;
+  padding: 11px 13px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.vehicle-dynamics__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.vehicle-dynamics__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #475569;
+  font-weight: 700;
+}
+
+.vehicle-dynamics__label svg {
+  color: #64748b;
+}
+
+.vehicle-dynamics__value {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.vehicle-dynamics__note {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: #16a34a;
+}
+
+.vehicle-dynamics__note.is-watch {
+  color: #d97706;
+}
+
+.vehicle-dynamics__note.is-alert {
+  color: #dc2626;
+}
+
+.vehicle-dynamics__track {
+  height: 8px;
+  overflow: hidden;
+  background: #e5e7eb;
+  border-radius: 999px;
+}
+
+.vehicle-dynamics__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: #22c55e;
+  transition: width 0.3s ease;
+}
+
+.vehicle-dynamics__fill.is-watch {
+  background: #f59e0b;
+}
+
+.vehicle-dynamics__fill.is-alert {
+  background: #ef4444;
+}
+
 .table-wrap {
   overflow-x: auto;
 }
