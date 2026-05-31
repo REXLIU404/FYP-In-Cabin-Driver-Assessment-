@@ -5,3 +5,8 @@ tsconfig.tsbuildinfo
 *.local
 .playwright-cli
 .vscode
+
+# backend runtime artifacts
+backend/*.db
+backend/**/__pycache__/
+*.db
