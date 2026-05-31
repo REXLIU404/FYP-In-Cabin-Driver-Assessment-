@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Pause, Play, RotateCw } from "lucide-react";
 import { AlertBanner } from "./components/AlertBanner";
 import { Sidebar, type ViewKey } from "./components/Sidebar";
@@ -13,6 +13,11 @@ import type { AppConfig } from "./types";
 import { exportSessionLogCSV, exportSessionLogJSON } from "./utils/export";
 import { loadActiveSession, loadConfig, saveConfig } from "./utils/persistence";
 import { buildRiskUpdate } from "../../ai/src/riskLogic";
+import {
+  initAlertState,
+  updateAlertState,
+  type AlertFsmState,
+} from "../../ai/src/alertFsm";
 import { ConfigurationView } from "./views/ConfigurationView";
 import { ExplanationView } from "./views/ExplanationView";
 import { LiveMonitor } from "./views/LiveMonitor";
@@ -31,6 +36,7 @@ export default function App() {
   const [selectedWindowId, setSelectedWindowId] = useState(1);
   const camera = useCameraPreview();
   const { log, append, flag, reset } = useSessionLog(sessionId);
+  const alertFsmRef = useRef<AlertFsmState>(initAlertState());
 
   const fallbackRecord = useMemo(
     () =>
@@ -59,7 +65,11 @@ export default function App() {
       log[log.length - 1],
       nextWindowId,
     );
-    append(record);
+    // Alert State Manager: apply the wall-clock AlertSeverity FSM on top of the
+    // per-window instantaneous severity (temporal hysteresis / anti-flicker).
+    const fsm = updateAlertState(alertFsmRef.current, record.RiskLevel, Date.now());
+    alertFsmRef.current = fsm;
+    append({ ...record, AlertSeverity: fsm.severity });
     setSelectedWindowId(record.window_id);
     setCursor((current) => (current + 1) % PREPARED_SESSION_WINDOWS.length);
   }, [append, config, cursor, log, sessionId]);
@@ -82,6 +92,7 @@ export default function App() {
   const restartSession = () => {
     monitoring.pause();
     reset();
+    alertFsmRef.current = initAlertState();
     setCursor(0);
     setSelectedWindowId(1);
     monitoring.start();
