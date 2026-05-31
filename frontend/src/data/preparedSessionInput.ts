@@ -1,5 +1,7 @@
 import type {
   PreparedSessionWindow,
+  TelemetryBehaviorProbability,
+  TelemetryFeatureContribution,
   TelemetryFeatures,
   VisualClassProbability,
 } from "../types";
@@ -22,13 +24,17 @@ interface PreparedTelemetryRecord {
   vision_available: boolean;
   telemetry_available: boolean;
   telemetry_age_s: number;
-  speed: number;
-  acceleration: number;
+  speed_kmph: number;
+  accel_x: number;
+  accel_y: number;
+  brake_pressure: number;
   steering_angle: number;
-  brake_usage: number;
+  throttle: number;
   lane_deviation: number;
-  road_type: string;
-  traffic_condition: string;
+  headway_distance: number;
+  p_safe: number;
+  p_aggressive: number;
+  p_distracted: number;
 }
 
 export const PREPARED_SESSION_METADATA = JSON.parse(
@@ -49,27 +55,93 @@ const parseCsv = (source: string) => {
 
 const toNumber = (value: string) => Number(value);
 const toBoolean = (value: string) => value === "1";
-const clamp = (value: number) => Math.min(1, Math.max(0, value));
 const round3 = (value: number) => Number(value.toFixed(3));
 
 const visualClasses = (
-  normal: number,
-  away: number,
-  phone: number,
-  down: number,
+  safe: number,
+  textingRight: number,
+  phoneRight: number,
+  textingLeft: number,
+  phoneLeft: number,
+  radio: number,
+  drinking: number,
+  reaching: number,
+  makeup: number,
+  passenger: number,
 ): VisualClassProbability[] => [
-  { label: "normal_driving", probability: normal },
-  { label: "looking_away", probability: away },
-  { label: "phone_use", probability: phone },
-  { label: "head_down", probability: down },
+  { label: "safe_driving", probability: safe },
+  { label: "texting_right", probability: textingRight },
+  { label: "phone_right", probability: phoneRight },
+  { label: "texting_left", probability: textingLeft },
+  { label: "phone_left", probability: phoneLeft },
+  { label: "operating_radio", probability: radio },
+  { label: "drinking", probability: drinking },
+  { label: "reaching_behind", probability: reaching },
+  { label: "hair_makeup", probability: makeup },
+  { label: "talking_to_passenger", probability: passenger },
 ];
 
 const preparedVisualEvidence: Record<string, VisualClassProbability[]> = {
-  "frame_0001.jpg": visualClasses(0.88, 0.05, 0.02, 0.05),
-  "frame_0002.jpg": visualClasses(0.78, 0.11, 0.04, 0.07),
-  "frame_0003.jpg": visualClasses(0.55, 0.24, 0.13, 0.08),
-  "frame_0004.jpg": visualClasses(0.22, 0.36, 0.31, 0.11),
-  "frame_0006.jpg": visualClasses(0.28, 0.31, 0.27, 0.14),
+  "frame_0001.jpg": visualClasses(
+    0.88,
+    0.02,
+    0.01,
+    0.01,
+    0.01,
+    0.03,
+    0.01,
+    0.01,
+    0.01,
+    0.01,
+  ),
+  "frame_0002.jpg": visualClasses(
+    0.78,
+    0.04,
+    0.03,
+    0.02,
+    0.02,
+    0.06,
+    0.02,
+    0.01,
+    0.01,
+    0.01,
+  ),
+  "frame_0003.jpg": visualClasses(
+    0.55,
+    0.07,
+    0.05,
+    0.04,
+    0.03,
+    0.08,
+    0.04,
+    0.05,
+    0.03,
+    0.06,
+  ),
+  "frame_0004.jpg": visualClasses(
+    0.22,
+    0.25,
+    0.18,
+    0.08,
+    0.07,
+    0.06,
+    0.04,
+    0.05,
+    0.02,
+    0.03,
+  ),
+  "frame_0006.jpg": visualClasses(
+    0.28,
+    0.1,
+    0.08,
+    0.14,
+    0.11,
+    0.08,
+    0.06,
+    0.09,
+    0.03,
+    0.03,
+  ),
 };
 
 const inferDistraction = (
@@ -78,26 +150,65 @@ const inferDistraction = (
 ): number => {
   if (!visionAvailable) return 0;
   const classes = preparedVisualEvidence[frameFile] ?? [];
-  const normal = classes.find((item) => item.label === "normal_driving");
-  return round3(1 - (normal?.probability ?? 1));
+  const safe = classes.find(
+    (item) => item.label === "safe_driving" || item.label === "normal_driving",
+  );
+  return round3(1 - (safe?.probability ?? 1));
+};
+
+const telemetryBehaviorClasses = (
+  record: PreparedTelemetryRecord,
+): TelemetryBehaviorProbability[] => {
+  if (!record.telemetry_available) return [];
+
+  return [
+    { label: "Safe", probability: record.p_safe },
+    { label: "Aggressive", probability: record.p_aggressive },
+    { label: "Distracted", probability: record.p_distracted },
+  ];
+};
+
+const preparedTelemetryFeatureContributions: Record<
+  number,
+  TelemetryFeatureContribution[]
+> = {
+  1: [
+    { feature: "headway_distance", contribution: 0.12 },
+    { feature: "brake_pressure", contribution: 0.06 },
+    { feature: "lane_deviation", contribution: -0.03 },
+  ],
+  2: [
+    { feature: "headway_distance", contribution: 0.1 },
+    { feature: "steering_angle", contribution: 0.07 },
+    { feature: "lane_deviation", contribution: 0.05 },
+  ],
+  3: [
+    { feature: "brake_pressure", contribution: 0.22 },
+    { feature: "accel_x", contribution: 0.18 },
+    { feature: "throttle", contribution: 0.15 },
+  ],
+  5: [
+    { feature: "speed_kmph", contribution: 0.16 },
+    { feature: "steering_angle", contribution: 0.11 },
+    { feature: "throttle", contribution: 0.1 },
+  ],
+  6: [
+    { feature: "brake_pressure", contribution: 0.24 },
+    { feature: "steering_angle", contribution: 0.2 },
+    { feature: "headway_distance", contribution: 0.14 },
+  ],
+};
+
+const telemetryFeatureContributions = (
+  record: PreparedTelemetryRecord,
+): TelemetryFeatureContribution[] => {
+  if (!record.telemetry_available) return [];
+  return preparedTelemetryFeatureContributions[record.window_id] ?? [];
 };
 
 const inferTelemetryAnomaly = (record: PreparedTelemetryRecord): number => {
   if (!record.telemetry_available) return 0;
-
-  const speedRisk = clamp((record.speed - 45) / 45);
-  const accelerationRisk = clamp(Math.abs(record.acceleration) / 3);
-  const steeringRisk = clamp(Math.abs(record.steering_angle) / 18);
-  const brakeRisk = clamp(record.brake_usage);
-  const laneRisk = clamp(record.lane_deviation);
-
-  return round3(
-    speedRisk * 0.08 +
-      accelerationRisk * 0.18 +
-      steeringRisk * 0.22 +
-      brakeRisk * 0.24 +
-      laneRisk * 0.28,
-  );
+  return round3(1 - record.p_safe);
 };
 
 const buildTimestamp = (time: string) =>
@@ -112,13 +223,17 @@ const parsePreparedRecord = (
   vision_available: toBoolean(row.vision_available),
   telemetry_available: toBoolean(row.telemetry_available),
   telemetry_age_s: toNumber(row.telemetry_age_s),
-  speed: toNumber(row.speed),
-  acceleration: toNumber(row.acceleration),
+  speed_kmph: toNumber(row.speed_kmph),
+  accel_x: toNumber(row.accel_x),
+  accel_y: toNumber(row.accel_y),
+  brake_pressure: toNumber(row.brake_pressure),
   steering_angle: toNumber(row.steering_angle),
-  brake_usage: toNumber(row.brake_usage),
+  throttle: toNumber(row.throttle),
   lane_deviation: toNumber(row.lane_deviation),
-  road_type: row.road_type,
-  traffic_condition: row.traffic_condition,
+  headway_distance: toNumber(row.headway_distance),
+  p_safe: toNumber(row.p_safe),
+  p_aggressive: toNumber(row.p_aggressive),
+  p_distracted: toNumber(row.p_distracted),
 });
 
 const telemetryFeatures = (
@@ -127,13 +242,14 @@ const telemetryFeatures = (
   if (!record.telemetry_available) return null;
 
   return {
-    speed: record.speed,
-    acceleration: record.acceleration,
+    speed_kmph: record.speed_kmph,
+    accel_x: record.accel_x,
+    accel_y: record.accel_y,
+    brake_pressure: record.brake_pressure,
     steering_angle: record.steering_angle,
-    brake_usage: record.brake_usage,
+    throttle: record.throttle,
     lane_deviation: record.lane_deviation,
-    road_type: record.road_type,
-    traffic_condition: record.traffic_condition,
+    headway_distance: record.headway_distance,
   };
 };
 
@@ -159,6 +275,8 @@ export const PREPARED_SESSION_WINDOWS: PreparedSessionWindow[] = preparedRows
       record.vision_available && record.frame_file
         ? (preparedVisualEvidence[record.frame_file] ?? [])
         : [],
+    telemetry_behavior_classes: telemetryBehaviorClasses(record),
+    telemetry_feature_contributions: telemetryFeatureContributions(record),
     telemetry_features: telemetryFeatures(record),
     latency_ms: 38 + record.window_id * 4,
   }));

@@ -78,7 +78,7 @@ export function TrendChart({ history }: TrendChartProps) {
           <Line
             type="monotone"
             dataKey="telemetry"
-            name="P_telemetry_anomaly (%)"
+            name="Telemetry non-safe (%)"
             stroke="#059669"
             strokeWidth={2}
             dot={false}

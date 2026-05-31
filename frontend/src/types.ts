@@ -9,6 +9,9 @@ export type {
   RiskUpdate,
   SessionMeta,
   SystemHealth,
+  TelemetryBehaviorLabel,
+  TelemetryBehaviorProbability,
+  TelemetryFeatureContribution,
   TelemetryFeatures,
   VisualClassProbability,
 } from "../../ai/src/types";

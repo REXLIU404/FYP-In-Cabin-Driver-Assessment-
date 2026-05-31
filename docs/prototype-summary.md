@@ -5,7 +5,7 @@
 The updated FYP report, final consolidated guidebook, and MVP prototype guidebook describe a frontend-only FYP1 MVP for in-cabin driver risk monitoring. The MVP combines two modality-level outputs:
 
 - `P_distraction` from a driver-facing visual branch.
-- `P_telemetry_anomaly` from a structured telemetry branch.
+- `P_telemetry_anomaly` from a structured vehicle-dynamics branch, defined in this prototype as `1 - P(Safe)` from telemetry behaviour probabilities `P(Safe)`, `P(Aggressive)`, and `P(Distracted)`.
 
 The core decision is weighted late fusion:
 
@@ -67,6 +67,6 @@ This implementation is a frontend-first FYP1 MVP. Camera preview demonstrates th
 
 ## Export Schema
 
-When `Enable Evidence Interpretation` is enabled, JSON and CSV exports include `window_id`, `risk_score`, `risk_level`, `p_distraction`, `p_telemetry_anomaly`, `dominant_evidence`, `top_visual_class`, `top_telemetry_cue`, and `latency_ms`.
+When `Enable Evidence Interpretation` is enabled, JSON and CSV exports include `window_id`, `risk_score`, `risk_level`, `p_distraction`, `p_telemetry_anomaly`, `dominant_evidence`, `top_visual_class`, telemetry behaviour probabilities, and `latency_ms`.
 
 When it is disabled, exports include only `window_id`, `risk_score`, and `risk_level`.

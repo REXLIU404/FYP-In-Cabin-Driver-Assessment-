@@ -3,7 +3,7 @@ import { CameraPreview } from "../components/CameraPreview";
 import { ModalityCard } from "../components/ModalityCard";
 import { Pill } from "../components/Pill";
 import { ScoreGauge } from "../components/ScoreGauge";
-import { TelemetrySummary } from "../components/TelemetrySummary";
+import { VehicleDynamics } from "../components/VehicleDynamics";
 import { TrendChart } from "../components/TrendChart";
 import type { useCameraPreview } from "../hooks/useCameraPreview";
 import type { RiskUpdate } from "../types";
@@ -80,12 +80,12 @@ export function LiveMonitor({
             </div>
             <div className="modality-grid">
               <ModalityCard
-                title="P_distraction"
+                title="Visual Distraction"
                 probability={latest.P_distraction}
                 freshness={latest.modality_freshness.vision}
               />
               <ModalityCard
-                title="P_telemetry_anomaly"
+                title="Telemetry Non-Safe"
                 probability={latest.P_telemetry_anomaly}
                 freshness={latest.modality_freshness.telemetry}
               />
@@ -97,12 +97,12 @@ export function LiveMonitor({
       <section className="panel">
         <div className="section-header">
           <div>
-            <p className="eyebrow">Telemetry Summary</p>
-            <h2>Structured input</h2>
+            <p className="eyebrow">Vehicle Signals</p>
+            <h2>What the car is doing now</h2>
           </div>
           <Database size={20} />
         </div>
-        <TelemetrySummary telemetry={latest.telemetry_features} />
+        <VehicleDynamics telemetry={latest.telemetry_features} />
       </section>
 
       <section className="panel">

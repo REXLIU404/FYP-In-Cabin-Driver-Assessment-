@@ -24,7 +24,8 @@ The root keeps project-level tooling only: `package.json`, `vite.config.ts`,
 The prototype implements the report and guidebook baseline:
 
 - weighted late-fusion risk scoring from `P_distraction` and
-  `P_telemetry_anomaly`, displayed as a 0-100 `RiskScore`
+  `P_telemetry_anomaly` (`1 - P(Safe)` from telemetry behaviour probabilities),
+  displayed as a 0-100 `RiskScore`
 - `RiskScore`, `RiskLevel`, `DominantEvidence`, `AlertSeverity`, `SystemHealth`,
   and freshness payloads
 - Live Monitor, Risk Trends, Signal Inspector, Explanation, and Configuration

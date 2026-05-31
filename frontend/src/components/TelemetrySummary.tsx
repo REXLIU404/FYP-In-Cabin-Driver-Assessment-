@@ -14,11 +14,14 @@ export function TelemetrySummary({ telemetry }: TelemetrySummaryProps) {
   }
 
   const rows = [
-    ["Speed", `${telemetry.speed} km/h`],
-    ["Acceleration", `${telemetry.acceleration.toFixed(1)} m/s2`],
+    ["Speed", `${telemetry.speed_kmph.toFixed(1)} km/h`],
+    ["Accel X", `${telemetry.accel_x.toFixed(2)} m/s2`],
+    ["Accel Y", `${telemetry.accel_y.toFixed(2)} m/s2`],
+    ["Brake pressure", telemetry.brake_pressure.toFixed(1)],
     ["Steering", `${telemetry.steering_angle.toFixed(1)} deg`],
-    ["Brake usage", telemetry.brake_usage.toFixed(2)],
+    ["Throttle", telemetry.throttle.toFixed(1)],
     ["Lane deviation", telemetry.lane_deviation.toFixed(2)],
+    ["Headway", `${telemetry.headway_distance.toFixed(1)} m`],
   ];
 
   return (

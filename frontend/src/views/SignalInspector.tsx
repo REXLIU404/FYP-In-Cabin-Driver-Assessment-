@@ -117,7 +117,7 @@ export function SignalInspector({
         <div className="section-header">
           <div>
             <p className="eyebrow">Telemetry Branch</p>
-            <h2>3. Telemetry features</h2>
+            <h2>3. Vehicle-dynamics features</h2>
           </div>
         </div>
         <TelemetrySummary telemetry={selectedRecord.telemetry_features} />
@@ -137,7 +137,7 @@ export function SignalInspector({
             <strong>{formatPercent(selectedRecord.P_distraction)}</strong>
           </div>
           <div>
-            <span>P_telemetry_anomaly</span>
+            <span>Telemetry non-safe risk</span>
             <strong>{formatPercent(selectedRecord.P_telemetry_anomaly)}</strong>
           </div>
           <div>
