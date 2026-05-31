@@ -1,0 +1,11 @@
+
+ RUN  v2.1.9 /Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1
+
+ ✓ ai/src/alertFsm.test.ts (7 tests) 3ms
+ ✓ ai/src/riskLogic.test.ts (16 tests) 3ms
+
+ Test Files  2 passed (2)
+      Tests  23 passed (23)
+   Start at  20:02:20
+   Duration  294ms (transform 69ms, setup 0ms, collect 72ms, tests 6ms, environment 0ms, prepare 105ms)
+

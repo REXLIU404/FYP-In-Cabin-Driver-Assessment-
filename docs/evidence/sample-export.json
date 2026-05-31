@@ -1,0 +1,101 @@
+{
+  "session_id": "S001",
+  "records": [
+    {
+      "session_id": "S001",
+      "window_id": 1,
+      "timestamp": "2026-05-31T12:02:58.733134+00:00",
+      "P_distraction": 0.12,
+      "P_telemetry_anomaly": 0.18,
+      "RiskScore": 15.0,
+      "RiskLevel": "Low",
+      "DominantEvidence": "Low observed risk",
+      "AlertSeverity": "NORMAL",
+      "SystemHealth": "FULL",
+      "operation_mode": "PREPARED_SESSION_RUNTIME",
+      "modality_freshness": {
+        "vision": "fresh",
+        "telemetry": "fresh"
+      },
+      "latency_ms": 0,
+      "visual_top_classes": [],
+      "telemetry_behavior_classes": [],
+      "telemetry_feature_contributions": [],
+      "telemetry_features": null,
+      "explanation": "The current window is below the low-risk threshold.",
+      "flagged": false
+    },
+    {
+      "session_id": "S001",
+      "window_id": 2,
+      "timestamp": "2026-05-31T12:02:58.743145+00:00",
+      "P_distraction": 0.22,
+      "P_telemetry_anomaly": 0.28,
+      "RiskScore": 25.0,
+      "RiskLevel": "Low",
+      "DominantEvidence": "Low observed risk",
+      "AlertSeverity": "NORMAL",
+      "SystemHealth": "FULL",
+      "operation_mode": "PREPARED_SESSION_RUNTIME",
+      "modality_freshness": {
+        "vision": "fresh",
+        "telemetry": "fresh"
+      },
+      "latency_ms": 0,
+      "visual_top_classes": [],
+      "telemetry_behavior_classes": [],
+      "telemetry_feature_contributions": [],
+      "telemetry_features": null,
+      "explanation": "The current window is below the low-risk threshold.",
+      "flagged": false
+    },
+    {
+      "session_id": "S001",
+      "window_id": 3,
+      "timestamp": "2026-05-31T12:02:58.752025+00:00",
+      "P_distraction": 0.35,
+      "P_telemetry_anomaly": 0.82,
+      "RiskScore": 58.5,
+      "RiskLevel": "Medium",
+      "DominantEvidence": "Telemetry-dominant",
+      "AlertSeverity": "CAUTION",
+      "SystemHealth": "FULL",
+      "operation_mode": "PREPARED_SESSION_RUNTIME",
+      "modality_freshness": {
+        "vision": "fresh",
+        "telemetry": "fresh"
+      },
+      "latency_ms": 0,
+      "visual_top_classes": [],
+      "telemetry_behavior_classes": [],
+      "telemetry_feature_contributions": [],
+      "telemetry_features": null,
+      "explanation": "Telemetry non-safe behaviour is driving the medium risk output.",
+      "flagged": true
+    },
+    {
+      "session_id": "S001",
+      "window_id": 4,
+      "timestamp": "2026-05-31T12:02:58.760429+00:00",
+      "P_distraction": 0.78,
+      "P_telemetry_anomaly": 0.0,
+      "RiskScore": 78.0,
+      "RiskLevel": "High",
+      "DominantEvidence": "Partial evidence",
+      "AlertSeverity": "HIGH_ALERT",
+      "SystemHealth": "DEGRADED",
+      "operation_mode": "PREPARED_SESSION_RUNTIME",
+      "modality_freshness": {
+        "vision": "fresh",
+        "telemetry": "missing"
+      },
+      "latency_ms": 0,
+      "visual_top_classes": [],
+      "telemetry_behavior_classes": [],
+      "telemetry_feature_contributions": [],
+      "telemetry_features": null,
+      "explanation": "Output is based on partial evidence; one modality is stale or missing.",
+      "flagged": false
+    }
+  ]
+}
