@@ -11,6 +11,7 @@ Each artifact maps to a figure slot in `Chapter5_Technical_Implementation_SPEC.d
 | `sample-export.json` | Fig 5.9 (§5.5) | Backend JSON export of a session |
 | `sample-export.csv` | Fig 5.9 (§5.5) | Backend CSV export of a session |
 | `inference-pipeline.png` | Fig 5.5 (§5.4.1) | Real-time-ready inference/fusion pipeline (one Δt cycle) |
+| `alert-fsm-state-diagram.png` | Ch4 System Behavioural Design + Fig 5.8 (§5.4.4) | AlertSeverity FSM states + wall-clock transitions (2s/10s hysteresis) |
 
 UI screenshots for §5.3 / §5.4 figures live in `../ui-screenshots/` (live-monitor, signal-inspector,
 risk-trends, explanation, configuration).
