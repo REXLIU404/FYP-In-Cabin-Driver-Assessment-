@@ -10,3 +10,6 @@ tsconfig.tsbuildinfo
 backend/*.db
 backend/**/__pycache__/
 *.db
+
+# local report assembly artifacts
+docs/chapter5_report_ready/
