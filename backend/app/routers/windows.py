@@ -5,6 +5,7 @@ POST a window -> MockAIProvider -> late fusion -> risk_update -> persist + cache
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from .. import cache, fusion, models
@@ -42,12 +43,14 @@ def add_window(session_id: str, w: WindowInput, db: Session = Depends(get_db)):
     )
     alert = fusion.map_alert_severity(level)
 
-    window_id = (
-        db.query(models.InferenceRecord)
+    # Use max(window_id)+1 (not count+1) so ids stay unique even after a
+    # window has been deleted from the middle of the session.
+    last_id = (
+        db.query(func.max(models.InferenceRecord.window_id))
         .filter_by(session_id=session_id)
-        .count()
-        + 1
+        .scalar()
     )
+    window_id = (last_id or 0) + 1
     ts = w.timestamp or datetime.now(timezone.utc).isoformat()
 
     ru = RiskUpdate(
