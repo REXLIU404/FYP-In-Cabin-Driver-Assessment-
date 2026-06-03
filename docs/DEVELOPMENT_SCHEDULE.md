@@ -17,9 +17,9 @@ checkout as of 2026-06-01.
 | Frontend dashboard | Five views under `frontend/src/views/`; camera preview, trends, explanation, config, local session log | Implemented for FYP1 MVP | Keep UI stable; do not redesign during FYP1 closeout |
 | Risk logic | `ai/src/riskLogic.ts`, `ai/src/evidence.ts`, `ai/src/alertFsm.ts`; frontend tests show 23/23 passing | Implemented and tested | Preserve 0-100 RiskScore, 30/60 thresholds, full DominantEvidence strings |
 | AlertSeverity FSM | Wall-clock FSM in TypeScript runtime orchestration; FSM diagram and tests exist | Implemented in frontend/runtime layer | Do not claim backend wall-clock FSM unless added later |
-| Session persistence | Frontend localStorage CRUD/export; backend FastAPI + SQLite CRUD/export; backend pytest passes | Implemented at two prototype layers | Add localStorage quota guard before FYP1 freeze |
+| Session persistence | Frontend localStorage CRUD/export with `MAX_SESSION_RECORDS=500` quota guard; backend FastAPI + SQLite CRUD/export; backend pytest passes | Implemented at two prototype layers; ✅ quota guard done (commit 765d061) | Done — localStorage now caps to most-recent 500 windows |
 | Backend service | `backend/app/` FastAPI, SQLAlchemy, SQLite, Pydantic schemas, MockAIProvider, CRUD/export | Tested prototype backend layer | Keep as additive FYP2 layer until frontend polling is added |
-| Prepared replay | `ai/prototype-data/prepared_sessions/session_001/telemetry.csv` currently has 6 replay windows | Incomplete versus MVP guidebook target | Expand to 25-28 windows covering all required risk/evidence cases |
+| Prepared replay | `ai/prototype-data/prepared_sessions/session_001/telemetry.csv` now has 25 replay windows; coverage asserted by `preparedSessionInput.test.ts` | ✅ Done (commit 765d061) — all RiskLevel / 5 DominantEvidence / SystemHealth + recovery covered | Keep stable; regenerate deterministically if scenarios change |
 | EDA artifacts | Vision and telemetry EDA artifacts exist in the sibling EDA workspace, not fully copied into this prototype repo | Available but needs linkage/selection | Reference or copy final report figures intentionally; avoid duplicate stale artifacts |
 | Real models | No `vision.onnx`, `.pt`, `telemetry.pkl`, or trained model metrics in this repo | FYP2 pending | Present as designed until trained artifacts and metrics exist |
 | Frontend-backend connection | React still runs standalone; backend is not wired into UI | Pending | Add optional backend mode after FYP1 closeout, not before |
@@ -30,17 +30,17 @@ checkout as of 2026-06-01.
 |---|---|---|
 | S1 - Business + Data Understanding | Problem statement, data inventory, rubric mapping | Done for FYP1 report scope |
 | S2 - Data Understanding | Vision EDA, telemetry EDA, gap analysis | EDA artifacts exist in the EDA workspace; select final figures for report/evidence |
-| S3 - Data Preparation | Vision metadata/splits; telemetry feature engineering/splits | Data-prep artifacts exist outside this prototype repo; current prototype replay still needs 25-28-window expansion |
+| S3 - Data Preparation | Vision metadata/splits; telemetry feature engineering/splits | Data-prep artifacts exist outside this prototype repo; prototype replay expanded to 25 windows ✅ |
 | S4 - Modelling | MobileNetV3 fine-tune; XGBoost multiclass model | Not started in this repo; no trained model artifacts |
 | S5 - Fusion + Evaluation | Late fusion, thresholds, calibration, metric reporting | Rule-based fusion implemented and tested; real-model calibration not done |
 | S6 - Evaluation + Deployment | Backend integration, alert FSM, session logging | Backend prototype and frontend FSM/logging are implemented; frontend-backend polling and backend alert-event persistence remain pending |
 | S7 - Deployment | End-to-end testing, viva prep, report finalisation | FYP1 viva/report can proceed with prototype evidence; FYP2 full E2E waits for real models |
 
 **Net position:** the frontend MVP and a backend prototype scaffold are already
-implemented and tested. The immediate critical path is not model training; it is
-FYP1 closeout: replay coverage, persistence guard, evidence refresh, and
-report-safe wording. The FYP2 critical path is model training, provider wiring,
-REST polling, evaluation, and optional WebSocket push.
+implemented and tested. FYP1 closeout is mostly done — replay coverage ✅,
+persistence guard ✅, and frontend + backend test-evidence refresh ✅; only
+report-safe wording (Chapter 5) remains. The FYP2 critical path is model
+training, provider wiring, REST polling, evaluation, and optional WebSocket push.
 
 ---
 
@@ -50,10 +50,10 @@ This is the next development block before starting large FYP2 model work.
 
 | Timebox | Owner | Tasks | Exit evidence |
 |---|---|---|---|
-| D0 half-day | orchestrator + guardrail-reviewer | Clean planning/docs wording; decide whether to keep `.claude/agents/` local or tracked; do not commit `.claude/settings.local.json` | Clean `git status`; no local-only config staged |
-| D1 AM | frontend-dev | Add `MAX_SESSION_RECORDS = 500` quota guard to `frontend/src/utils/persistence.ts` | Updated code; no behaviour regression |
-| D1 PM | risk-logic-dev + frontend-dev | Expand prepared replay to 25-28 windows covering Low, Medium, High, Vision-dominant, Telemetry-dominant, Combined evidence, Partial evidence, Low observed risk, DEGRADED, and final recovery | `telemetry.csv` has 25+ data rows; dashboard trends show richer session |
-| D2 AM | qa-runner | Run `npm test`; run backend pytest; optionally run typecheck/build if time allows | Refreshed `docs/evidence/frontend-tests.txt` and `docs/evidence/backend-pytest.txt` |
+| ~~D0 half-day~~ ✅ | orchestrator + guardrail-reviewer | Clean planning/docs wording; keep `.claude/` local; never commit `.claude/settings.local.json` | ✅ Done — `.claude/` gitignored; local-only config never staged |
+| ~~D1 AM~~ ✅ | frontend-dev | Add `MAX_SESSION_RECORDS = 500` quota guard to `frontend/src/utils/persistence.ts` | ✅ Done (commit 765d061) — guard added; window_id regression caught by Codex, fixed + tested |
+| ~~D1 PM~~ ✅ | risk-logic-dev + frontend-dev | Expand prepared replay to 25-28 windows covering Low, Medium, High, Vision-dominant, Telemetry-dominant, Combined evidence, Partial evidence, Low observed risk, DEGRADED, and final recovery | ✅ Done (commit 765d061) — 25 windows; coverage asserted via real `buildRiskUpdate` in `preparedSessionInput.test.ts` |
+| ~~D2 AM~~ ✅ | qa-runner | Run `npm test`; run backend pytest; typecheck/build | ✅ Done — tsc 0 / vitest 32 / vite build ok / pytest 1; `docs/evidence/frontend-tests.txt` + `backend-pytest.txt` refreshed |
 | D2 PM | report-writer + guardrail-reviewer | Refresh Chapter 5 wording and evidence mapping; ensure backend is described as a tested prototype layer, not production | Report text aligns with current code/evidence |
 | D3 | orchestrator + Codex review gate | Fix review findings, commit only intended files, push after user approval | Clean reviewed commit set |
 

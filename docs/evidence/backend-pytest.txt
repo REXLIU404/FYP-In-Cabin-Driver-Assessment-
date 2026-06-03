@@ -1,3 +1,6 @@
+# Backend test evidence — captured 2026-06-03 22:13
+# Command (from backend/): PYTHONPATH=. ../.venv/bin/python -m pytest tests/test_api.py -v
+
 ============================= test session starts ==============================
 platform darwin -- Python 3.13.3, pytest-9.0.3, pluggy-1.6.0 -- /Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python
 cachedir: .pytest_cache
@@ -13,4 +16,4 @@ tests/test_api.py::test_full_crud_and_fusion PASSED                      [100%]
     from starlette.testclient import TestClient as TestClient  # noqa
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-========================= 1 passed, 1 warning in 1.16s =========================
+========================= 1 passed, 1 warning in 2.77s =========================
