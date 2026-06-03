@@ -30,6 +30,8 @@ _CSV_COLUMNS = [
 
 @router.get("/{session_id}/export")
 def export_session(session_id: str, format: str = "json", db: Session = Depends(get_db)):
+    if format not in ("json", "csv"):
+        raise HTTPException(400, "format must be 'json' or 'csv'")
     if not db.get(models.SessionMeta, session_id):
         raise HTTPException(404, "session not found")
     recs = (

@@ -11,7 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from . import models  # noqa: F401  (register ORM models on Base)
 from .db import Base, engine
-from .routers import export, risk, sessions, windows
+from .routers import export, risk, sessions, status, windows
 
 
 @asynccontextmanager
@@ -36,7 +36,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-for r in (sessions.router, windows.router, risk.router, export.router):
+for r in (
+    sessions.router,
+    windows.router,
+    risk.router,
+    status.router,
+    export.router,
+):
     app.include_router(r)
 
 

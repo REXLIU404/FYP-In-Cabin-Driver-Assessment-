@@ -102,3 +102,20 @@ class SessionOut(BaseModel):
     id: str
     created_at: str
     total_windows: int
+
+
+class SystemStatusOut(BaseModel):
+    """Backend-only System Status Manager payload (NOT part of the shared
+    RiskUpdate contract). Honestly reports that no trained models are loaded."""
+
+    session_id: str
+    exists: bool
+    total_windows: int
+    latest_window_id: Optional[int] = None
+    latest_system_health: Optional[SystemHealth] = None
+    latest_alert_severity: Optional[AlertSeverity] = None
+    ai_provider: str
+    models_loaded: bool
+    cache_warm: bool
+    database_scheme: str
+    server_time: str

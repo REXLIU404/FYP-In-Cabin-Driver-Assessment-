@@ -6,6 +6,9 @@ tsconfig.tsbuildinfo
 .playwright-cli
 .vscode
 
+# local agent team config — keep out of the pushed repo
+.claude/
+
 # backend runtime artifacts
 backend/*.db
 backend/**/__pycache__/

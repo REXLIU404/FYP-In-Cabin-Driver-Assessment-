@@ -4,7 +4,24 @@ Backend integration boundary for the in-cabin driver assessment prototype.
 
 ## Current State
 
-This repository currently runs as a frontend-first FYP1 MVP. No FastAPI, WebSocket, database, or model-serving backend has been implemented yet.
+A FastAPI + SQLAlchemy + SQLite **walking skeleton** is implemented under `app/` (FYP2 layer):
+
+- `app/main.py` — FastAPI app, CORS, lifespan table creation.
+- `app/routers/` — CRUD for `sessions` and `windows`, plus `risk` (latest fused `RiskUpdate`) and `export` (JSON/CSV).
+- `app/fusion.py` — Python port of the late-fusion logic, kept in sync with `../ai/reference/risk_logic.py`.
+- `app/schemas.py` — Pydantic v2 models mirroring `../ai/src/types.ts`.
+- `app/providers/mock_ai.py` — `MockAIProvider` that echoes prepared probabilities (NOT a trained model).
+
+Models are still **not trained**, and the FYP1 React prototype runs fully standalone — it does not
+yet call this backend. This layer is additive and exists to demonstrate the FYP2 integration boundary.
+
+### Run
+
+```bash
+# from backend/
+uvicorn app.main:app --reload --port 8000        # Swagger UI: http://127.0.0.1:8000/docs
+PYTHONPATH=. ../.venv/bin/python -m pytest tests/test_api.py -v
+```
 
 ## Intended Responsibilities
 

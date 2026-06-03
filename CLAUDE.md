@@ -8,7 +8,9 @@ FYP prototype: an **In-Cabin Multi-Modal Driver Risk Assessment** dashboard. Two
 evidence branches — vision-based distraction and telemetry-based driving-behaviour risk — are
 combined by **decision-level late fusion** into a `RiskScore` / `RiskLevel` / `DominantEvidence`
 and surfaced through a five-view React dashboard. FYP1 (current) is a frontend-only prototype
-driven by a deterministic prepared-session replay; the backend and trained models are FYP2.
+driven by a deterministic prepared-session replay. An additive FYP2 backend (FastAPI + SQLite
+walking skeleton, `backend/app/`) now exists but is **not** wired into the React app; trained
+models are still FYP2.
 
 ## Commands
 
@@ -33,6 +35,13 @@ npx vitest run -t "escalates to HIGH_ALERT"
 
 Tests live in `ai/src/**/*.test.ts`. `vitest.config.ts` sets `root: "."` and the include glob —
 without it, vitest would inherit `vite.config.ts`'s `frontend` root and find no tests.
+
+Backend (FYP2 skeleton — run from `backend/`, deps in `requirements.txt`, venv at repo-root `.venv`):
+
+```bash
+uvicorn app.main:app --reload --port 8000              # serve API; Swagger at /docs
+PYTHONPATH=. ../.venv/bin/python -m pytest tests/test_api.py -v   # e2e tests
+```
 
 ## Architecture (the parts that need multiple files to understand)
 
@@ -75,9 +84,16 @@ run real camera + prepared telemetry without trained models.
   throttle, lane_deviation, headway_distance` (dataset: `Driver_Behavior.csv`). The contract also
   carries `telemetry_behavior_classes` (3-class breakdown) and `telemetry_feature_contributions`.
 - **Vision = 10 State Farm-style classes**; `P_distraction = 1 − P(safe_driving)`.
-- **Models are NOT trained** and there is **no Python backend** (only `backend/README.md`). The
-  prototype derives both probabilities deterministically from the prepared CSV. Present model work
-  as *designed*, not done, unless you verify otherwise.
+- **Models are NOT trained.** The vision (MobileNetV3) and telemetry (multiclass XGBoost) branches
+  are *designed* for FYP2; the prototype derives both probabilities deterministically from the
+  prepared CSV. Present model work as *designed*, not done, unless you verify otherwise.
+- **A Python backend now EXISTS** (FYP2 walking skeleton, FastAPI + SQLAlchemy + SQLite under
+  `backend/app/`): CRUD routers (`sessions`, `windows`, `risk`, `export`), a Python port of the
+  fusion logic (`fusion.py`, kept in sync with `ai/reference/risk_logic.py`), Pydantic schemas
+  mirroring `ai/src/types.ts`, and a `MockAIProvider` that echoes prepared probabilities (NOT a
+  trained model). Run it from `backend/`; tests are `backend/tests/test_api.py` (pytest). The
+  FYP1 frontend prototype still runs fully standalone and does **not** depend on this backend —
+  the backend is an additive FYP2 layer, not wired into the React app yet.
 - **AlertSeverity is a real FSM**, not a direct mapping: HIGH_ALERT needs RiskLevel High sustained
   ≥ 2s (wall-clock `Date.now()`, not window count); recovery to NORMAL needs Low sustained ≥ 10s.
   When changing risk logic or the FSM, update the tests in `ai/src/*.test.ts`.

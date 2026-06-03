@@ -2,17 +2,13 @@
 
 POST a window -> MockAIProvider -> late fusion -> risk_update -> persist + cache.
 """
-from datetime import datetime, timezone
-
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from .. import cache, fusion, models
-from ..config import settings
+from .. import cache, inference, models
 from ..db import get_db
-from ..providers.mock_ai import mock_ai
-from ..schemas import ModalityFreshness, RiskUpdate, WindowInput
+from ..schemas import RiskUpdate, WindowInput
 
 router = APIRouter(prefix="/api/sessions", tags=["windows"])
 
@@ -27,22 +23,6 @@ def add_window(session_id: str, w: WindowInput, db: Session = Depends(get_db)):
     if not db.get(models.SessionMeta, session_id):
         raise HTTPException(404, "session not found")
 
-    out = mock_ai.infer(w)
-    score = fusion.compute_risk_score(
-        out["P_distraction"],
-        out["P_telemetry_anomaly"],
-        settings.weight_vision,
-        settings.weight_telemetry,
-        out["vision_status"],
-        out["telemetry_status"],
-    )
-    level = fusion.map_risk_level(score)
-    health = fusion.map_system_health(out["vision_status"], out["telemetry_status"])
-    dominant = fusion.determine_dominant_evidence(
-        out["P_distraction"], out["P_telemetry_anomaly"], score, health
-    )
-    alert = fusion.map_alert_severity(level)
-
     # Use max(window_id)+1 (not count+1) so ids stay unique even after a
     # window has been deleted from the middle of the session.
     last_id = (
@@ -51,41 +31,20 @@ def add_window(session_id: str, w: WindowInput, db: Session = Depends(get_db)):
         .scalar()
     )
     window_id = (last_id or 0) + 1
-    ts = w.timestamp or datetime.now(timezone.utc).isoformat()
 
-    ru = RiskUpdate(
-        session_id=session_id,
-        window_id=window_id,
-        timestamp=ts,
-        P_distraction=out["P_distraction"],
-        P_telemetry_anomaly=out["P_telemetry_anomaly"],
-        RiskScore=score,
-        RiskLevel=level,
-        DominantEvidence=dominant,
-        AlertSeverity=alert,
-        SystemHealth=health,
-        modality_freshness=ModalityFreshness(
-            vision=out["vision_status"], telemetry=out["telemetry_status"]
-        ),
-        latency_ms=out["latency_ms"],
-        visual_top_classes=out["visual_top_classes"],
-        telemetry_behavior_classes=out["telemetry_behavior_classes"],
-        telemetry_feature_contributions=out["telemetry_feature_contributions"],
-        telemetry_features=out["telemetry_features"],
-        explanation=fusion.build_explanation(dominant, level),
-    )
+    ru = inference.run_inference(session_id, window_id, w)
 
     rec = models.InferenceRecord(
         session_id=session_id,
         window_id=window_id,
-        timestamp=ts,
+        timestamp=ru.timestamp,
         p_distraction=ru.P_distraction,
         p_telemetry_anomaly=ru.P_telemetry_anomaly,
-        risk_score=score,
-        risk_level=level,
-        dominant_evidence=dominant,
-        alert_severity=alert,
-        system_health=health,
+        risk_score=ru.RiskScore,
+        risk_level=ru.RiskLevel,
+        dominant_evidence=ru.DominantEvidence,
+        alert_severity=ru.AlertSeverity,
+        system_health=ru.SystemHealth,
         latency_ms=ru.latency_ms,
         flagged=False,
         payload=ru.model_dump(),

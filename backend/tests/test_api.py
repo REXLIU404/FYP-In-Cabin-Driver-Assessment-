@@ -75,11 +75,28 @@ def test_full_crud_and_fusion():
     flagged = client.patch("/api/sessions/T001/windows/1/flag?flagged=true").json()
     assert flagged["flagged"] is True
 
+    # System status: reports honest model + provider state
+    status = client.get("/api/sessions/T001/system-status").json()
+    assert status["exists"] is True
+    assert status["total_windows"] == 2
+    assert status["latest_window_id"] == 2
+    assert status["latest_system_health"] == "DEGRADED"
+    assert status["ai_provider"] == "MockAIProvider"
+    assert status["models_loaded"] is False
+    assert status["cache_warm"] is True
+    assert status["database_scheme"] == "sqlite"
+
     # Export
     assert client.get("/api/sessions/T001/export?format=json").status_code == 200
     csv_resp = client.get("/api/sessions/T001/export?format=csv")
     assert "RiskScore" in csv_resp.text
+    # Invalid export format is rejected explicitly
+    assert client.get("/api/sessions/T001/export?format=xml").status_code == 400
 
     # Delete
     assert client.delete("/api/sessions/T001").status_code == 204
     assert client.get("/api/sessions/T001").status_code == 404
+    # System status for an unknown session still responds (exists=False)
+    gone = client.get("/api/sessions/T001/system-status").json()
+    assert gone["exists"] is False
+    assert gone["total_windows"] == 0
