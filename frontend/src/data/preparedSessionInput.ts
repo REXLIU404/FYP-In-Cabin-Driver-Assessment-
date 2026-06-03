@@ -81,66 +81,35 @@ const visualClasses = (
   { label: "talking_to_passenger", probability: passenger },
 ];
 
+// Each frame maps to ONE deterministic vision distribution, so P_distraction
+// (= 1 - safe_driving) is fixed per frame. Probabilities sum to 1. Frame names
+// are semantic prototypes (the UI shows the live camera, not these frames), so
+// they need no backing image file. See ai/prototype-data/.../missing_cases.csv
+// for the per-window expected risk/evidence matrix these produce.
 const preparedVisualEvidence: Record<string, VisualClassProbability[]> = {
-  "frame_0001.jpg": visualClasses(
-    0.88,
-    0.02,
-    0.01,
-    0.01,
-    0.01,
-    0.03,
-    0.01,
-    0.01,
-    0.01,
-    0.01,
+  // calm, eyes-on-road (P_distraction ~= 0.07)
+  "frame_safe_a.jpg": visualClasses(
+    0.93, 0.0076, 0.0078, 0.0078, 0.0078, 0.0078, 0.0078, 0.0078, 0.0078, 0.0078,
   ),
-  "frame_0002.jpg": visualClasses(
-    0.78,
-    0.04,
-    0.03,
-    0.02,
-    0.02,
-    0.06,
-    0.02,
-    0.01,
-    0.01,
-    0.01,
+  // mostly attentive (P_distraction ~= 0.13)
+  "frame_safe_b.jpg": visualClasses(
+    0.87, 0.0118, 0.0118, 0.0118, 0.0118, 0.0238, 0.0118, 0.0118, 0.0118, 0.0236,
   ),
-  "frame_0003.jpg": visualClasses(
-    0.55,
-    0.07,
-    0.05,
-    0.04,
-    0.03,
-    0.08,
-    0.04,
-    0.05,
-    0.03,
-    0.06,
+  // mild distraction (P_distraction ~= 0.30)
+  "frame_mild.jpg": visualClasses(
+    0.7, 0.0214, 0.0214, 0.0214, 0.0214, 0.0644, 0.0214, 0.0214, 0.0429, 0.0643,
   ),
-  "frame_0004.jpg": visualClasses(
-    0.22,
-    0.25,
-    0.18,
-    0.08,
-    0.07,
-    0.06,
-    0.04,
-    0.05,
-    0.02,
-    0.03,
+  // texting, hand off wheel (P_distraction ~= 0.60)
+  "frame_texting.jpg": visualClasses(
+    0.4, 0.2, 0.04, 0.12, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04,
   ),
-  "frame_0006.jpg": visualClasses(
-    0.28,
-    0.1,
-    0.08,
-    0.14,
-    0.11,
-    0.08,
-    0.06,
-    0.09,
-    0.03,
-    0.03,
+  // phone to ear (P_distraction ~= 0.70)
+  "frame_phone.jpg": visualClasses(
+    0.3, 0.0467, 0.2331, 0.0467, 0.14, 0.0467, 0.0467, 0.0467, 0.0467, 0.0467,
+  ),
+  // severe, head turned (P_distraction ~= 0.82)
+  "frame_severe.jpg": visualClasses(
+    0.18, 0.154, 0.1537, 0.1025, 0.1025, 0.0512, 0.0512, 0.1025, 0.0512, 0.0512,
   ),
 };
 
@@ -168,34 +137,56 @@ const telemetryBehaviorClasses = (
   ];
 };
 
+// Keyed by window_id; matches the scenario phases in telemetry.csv. Safe windows
+// carry no dominant risk driver, so they are intentionally absent (-> []).
 const preparedTelemetryFeatureContributions: Record<
   number,
   TelemetryFeatureContribution[]
 > = {
-  1: [
-    { feature: "headway_distance", contribution: 0.12 },
-    { feature: "brake_pressure", contribution: 0.06 },
-    { feature: "lane_deviation", contribution: -0.03 },
+  5: [
+    { feature: "lane_deviation", contribution: 0.06 },
+    { feature: "steering_angle", contribution: 0.05 },
+    { feature: "throttle", contribution: 0.04 },
   ],
-  2: [
-    { feature: "headway_distance", contribution: 0.1 },
-    { feature: "steering_angle", contribution: 0.07 },
-    { feature: "lane_deviation", contribution: 0.05 },
-  ],
-  3: [
+  8: [
     { feature: "brake_pressure", contribution: 0.22 },
     { feature: "accel_x", contribution: 0.18 },
     { feature: "throttle", contribution: 0.15 },
   ],
-  5: [
-    { feature: "speed_kmph", contribution: 0.16 },
-    { feature: "steering_angle", contribution: 0.11 },
-    { feature: "throttle", contribution: 0.1 },
-  ],
-  6: [
+  9: [
     { feature: "brake_pressure", contribution: 0.24 },
+    { feature: "accel_x", contribution: 0.19 },
+    { feature: "throttle", contribution: 0.16 },
+  ],
+  10: [
+    { feature: "brake_pressure", contribution: 0.26 },
     { feature: "steering_angle", contribution: 0.2 },
-    { feature: "headway_distance", contribution: 0.14 },
+    { feature: "accel_x", contribution: 0.17 },
+  ],
+  11: [
+    { feature: "steering_angle", contribution: 0.26 },
+    { feature: "lane_deviation", contribution: 0.2 },
+    { feature: "accel_x", contribution: 0.16 },
+  ],
+  12: [
+    { feature: "accel_x", contribution: 0.18 },
+    { feature: "throttle", contribution: 0.14 },
+    { feature: "brake_pressure", contribution: 0.12 },
+  ],
+  13: [
+    { feature: "accel_x", contribution: 0.12 },
+    { feature: "steering_angle", contribution: 0.1 },
+    { feature: "lane_deviation", contribution: 0.09 },
+  ],
+  16: [
+    { feature: "steering_angle", contribution: 0.2 },
+    { feature: "brake_pressure", contribution: 0.16 },
+    { feature: "lane_deviation", contribution: 0.12 },
+  ],
+  18: [
+    { feature: "brake_pressure", contribution: 0.18 },
+    { feature: "accel_x", contribution: 0.14 },
+    { feature: "throttle", contribution: 0.12 },
   ],
 };
 

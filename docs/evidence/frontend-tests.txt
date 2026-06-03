@@ -1,11 +1,18 @@
+# Frontend test evidence — captured 2026-06-02 21:25
+# Commands: npx tsc --noEmit ; npx vitest run
 
+$ npx tsc --noEmit
+(no type errors — exit 0)
+
+$ npx vitest run
  RUN  v2.1.9 /Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1
 
- ✓ ai/src/alertFsm.test.ts (7 tests) 3ms
+ ✓ ai/src/alertFsm.test.ts (7 tests) 2ms
  ✓ ai/src/riskLogic.test.ts (16 tests) 3ms
+ ✓ frontend/src/utils/persistence.test.ts (3 tests) 2ms
+ ✓ frontend/src/data/preparedSessionInput.test.ts (6 tests) 2ms
 
- Test Files  2 passed (2)
-      Tests  23 passed (23)
-   Start at  20:02:20
-   Duration  294ms (transform 69ms, setup 0ms, collect 72ms, tests 6ms, environment 0ms, prepare 105ms)
-
+ Test Files  4 passed (4)
+      Tests  32 passed (32)
+   Start at  21:25:09
+   Duration  271ms (transform 75ms, setup 0ms, collect 124ms, tests 9ms, environment 0ms, prepare 265ms)

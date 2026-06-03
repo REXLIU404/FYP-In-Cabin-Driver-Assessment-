@@ -11,7 +11,12 @@ import { useMonitoringSession } from "./hooks/useMonitoringSession";
 import { useSessionLog } from "./hooks/useSessionLog";
 import type { AppConfig } from "./types";
 import { exportSessionLogCSV, exportSessionLogJSON } from "./utils/export";
-import { loadActiveSession, loadConfig, saveConfig } from "./utils/persistence";
+import {
+  loadActiveSession,
+  loadConfig,
+  nextWindowId,
+  saveConfig,
+} from "./utils/persistence";
 import { buildRiskUpdate } from "../../ai/src/riskLogic";
 import {
   initAlertState,
@@ -57,13 +62,13 @@ export default function App() {
   const appendNextWindow = useCallback(() => {
     const window =
       PREPARED_SESSION_WINDOWS[cursor % PREPARED_SESSION_WINDOWS.length];
-    const nextWindowId = log.length + 1;
+    const lastRecord = log[log.length - 1];
     const record = buildRiskUpdate(
       window,
       sessionId,
       config,
-      log[log.length - 1],
-      nextWindowId,
+      lastRecord,
+      nextWindowId(log),
     );
     // Alert State Manager: apply the wall-clock AlertSeverity FSM on top of the
     // per-window instantaneous severity (temporal hysteresis / anti-flicker).
