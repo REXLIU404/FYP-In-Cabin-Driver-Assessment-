@@ -6,6 +6,11 @@ const ACTIVE_SESSION_KEY = "active_session";
 const APP_CONFIG_KEY = "app_config";
 const sessionKey = (sessionId: string) => `session_log:${sessionId}`;
 
+// localStorage quota guard: keep at most the most recent N windows per session
+// so a long replay cannot grow the stored log without bound. Trend/Inspector
+// views read from this log, so the cap is a sliding window over recent history.
+export const MAX_SESSION_RECORDS = 500;
+
 const canUseStorage = () =>
   typeof window !== "undefined" && Boolean(window.localStorage);
 
@@ -27,10 +32,23 @@ const writeJson = (key: string, value: unknown) => {
 export const loadSessionLog = (sessionId: string): RiskUpdate[] =>
   readJson<RiskUpdate[]>(sessionKey(sessionId), []);
 
+// Next monotonic window id. Derived from the most recent record's id, NOT the
+// log length: the MAX_SESSION_RECORDS cap holds the log at a fixed size, so a
+// length-based id would repeat once the cap is reached. (Records are appended
+// in order, so the last element always carries the highest id.)
+export const nextWindowId = (log: RiskUpdate[]): number =>
+  (log[log.length - 1]?.window_id ?? 0) + 1;
+
 export const appendRecord = (sessionId: string, record: RiskUpdate) => {
   const log = loadSessionLog(sessionId);
-  writeJson(sessionKey(sessionId), [...log, record]);
-  upsertSessionMeta(sessionId, log.length + 1);
+  const next = [...log, record];
+  // Drop the oldest windows once the cap is exceeded (keep the latest N).
+  const capped =
+    next.length > MAX_SESSION_RECORDS
+      ? next.slice(next.length - MAX_SESSION_RECORDS)
+      : next;
+  writeJson(sessionKey(sessionId), capped);
+  upsertSessionMeta(sessionId, capped.length);
 };
 
 export const flagWindow = (

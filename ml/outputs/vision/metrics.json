@@ -1,0 +1,461 @@
+{
+  "model": "mobilenet_v3_large (ImageNet-pretrained, fine-tuned)",
+  "branch": "vision",
+  "classes": [
+    "c0",
+    "c1",
+    "c2",
+    "c3",
+    "c4",
+    "c5",
+    "c6",
+    "c7",
+    "c8",
+    "c9"
+  ],
+  "class_names": [
+    "normal_driving",
+    "texting_right",
+    "talking_phone_right",
+    "texting_left",
+    "talking_phone_left",
+    "operating_radio",
+    "drinking",
+    "reaching_behind",
+    "hair_makeup",
+    "talking_to_passenger"
+  ],
+  "num_classes": 10,
+  "split_sizes": {
+    "train": 15899,
+    "val": 2868,
+    "test": 3657
+  },
+  "split_note": "driver-grouped (no subject leakage across splits)",
+  "augmentation_note": "no horizontal flip (left/right hand is label-bearing)",
+  "epochs": 5,
+  "batch_size": 64,
+  "lr": 0.0008,
+  "device": "mps",
+  "train_seconds_total": 1098.6,
+  "best_val_acc": 0.897489539748954,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.2297968798801392,
+      "val_acc": 0.801255230125523,
+      "val_macro_f1": 0.7676142162540476,
+      "seconds": 220.2
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.030726435312884003,
+      "val_acc": 0.7590655509065551,
+      "val_macro_f1": 0.7465215808362518,
+      "seconds": 228.0
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.015558974601893419,
+      "val_acc": 0.8744769874476988,
+      "val_macro_f1": 0.8663944056553576,
+      "seconds": 221.9
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.002752990785925294,
+      "val_acc": 0.8894700139470014,
+      "val_macro_f1": 0.8853253663618107,
+      "seconds": 212.7
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.0012553951579900536,
+      "val_acc": 0.897489539748954,
+      "val_macro_f1": 0.8906507716026614,
+      "seconds": 215.6
+    }
+  ],
+  "metrics": {
+    "val": {
+      "accuracy": 0.897489539748954,
+      "macro_f1": 0.8906507716026614,
+      "weighted_f1": 0.8946965156214346,
+      "per_class": {
+        "c0:normal_driving": {
+          "precision": 0.6845238095238095,
+          "recall": 0.7876712328767124,
+          "f1": 0.732484076433121,
+          "support": 292.0
+        },
+        "c1:texting_right": {
+          "precision": 0.9931506849315068,
+          "recall": 0.9863945578231292,
+          "f1": 0.9897610921501706,
+          "support": 294.0
+        },
+        "c2:talking_phone_right": {
+          "precision": 0.9554794520547946,
+          "recall": 0.9087947882736156,
+          "f1": 0.9315525876460768,
+          "support": 307.0
+        },
+        "c3:texting_left": {
+          "precision": 0.9930795847750865,
+          "recall": 0.9795221843003413,
+          "f1": 0.9862542955326461,
+          "support": 293.0
+        },
+        "c4:talking_phone_left": {
+          "precision": 0.888235294117647,
+          "recall": 0.9805194805194806,
+          "f1": 0.9320987654320988,
+          "support": 308.0
+        },
+        "c5:operating_radio": {
+          "precision": 0.9929328621908127,
+          "recall": 0.9623287671232876,
+          "f1": 0.9773913043478261,
+          "support": 292.0
+        },
+        "c6:drinking": {
+          "precision": 0.9130434782608695,
+          "recall": 0.98989898989899,
+          "f1": 0.9499192245557351,
+          "support": 297.0
+        },
+        "c7:reaching_behind": {
+          "precision": 0.9153846153846154,
+          "recall": 0.8439716312056738,
+          "f1": 0.8782287822878229,
+          "support": 282.0
+        },
+        "c8:hair_makeup": {
+          "precision": 0.7635782747603834,
+          "recall": 0.9637096774193549,
+          "f1": 0.8520499108734403,
+          "support": 248.0
+        },
+        "c9:talking_to_passenger": {
+          "precision": 0.950354609929078,
+          "recall": 0.5254901960784314,
+          "f1": 0.6767676767676768,
+          "support": 255.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          230,
+          0,
+          0,
+          0,
+          37,
+          1,
+          0,
+          0,
+          18,
+          6
+        ],
+        [
+          0,
+          290,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          3,
+          0
+        ],
+        [
+          0,
+          0,
+          279,
+          0,
+          0,
+          0,
+          27,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          2,
+          287,
+          1,
+          1,
+          0,
+          2,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          2,
+          302,
+          0,
+          1,
+          2,
+          0,
+          0
+        ],
+        [
+          7,
+          1,
+          1,
+          0,
+          0,
+          281,
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          294,
+          0,
+          3,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          238,
+          44,
+          0
+        ],
+        [
+          1,
+          1,
+          7,
+          0,
+          0,
+          0,
+          0,
+          0,
+          239,
+          0
+        ],
+        [
+          97,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0,
+          17,
+          4,
+          134
+        ]
+      ]
+    },
+    "test": {
+      "accuracy": 0.8988241728192508,
+      "macro_f1": 0.8746408408872671,
+      "weighted_f1": 0.8855770474648978,
+      "per_class": {
+        "c0:normal_driving": {
+          "precision": 0.810204081632653,
+          "recall": 0.9211136890951276,
+          "f1": 0.8621064060803475,
+          "support": 431.0
+        },
+        "c1:texting_right": {
+          "precision": 0.9813084112149533,
+          "recall": 0.9,
+          "f1": 0.9388971684053651,
+          "support": 350.0
+        },
+        "c2:talking_phone_right": {
+          "precision": 0.989041095890411,
+          "recall": 1.0,
+          "f1": 0.9944903581267218,
+          "support": 361.0
+        },
+        "c3:texting_left": {
+          "precision": 0.9851851851851852,
+          "recall": 0.9803439803439803,
+          "f1": 0.9827586206896551,
+          "support": 407.0
+        },
+        "c4:talking_phone_left": {
+          "precision": 0.9482758620689655,
+          "recall": 0.9746835443037974,
+          "f1": 0.9612983770287141,
+          "support": 395.0
+        },
+        "c5:operating_radio": {
+          "precision": 0.90744920993228,
+          "recall": 0.9901477832512315,
+          "f1": 0.9469964664310954,
+          "support": 406.0
+        },
+        "c6:drinking": {
+          "precision": 0.9101941747572816,
+          "recall": 0.9894459102902374,
+          "f1": 0.9481668773704172,
+          "support": 379.0
+        },
+        "c7:reaching_behind": {
+          "precision": 0.850253807106599,
+          "recall": 0.9940652818991098,
+          "f1": 0.9165526675786594,
+          "support": 337.0
+        },
+        "c8:hair_makeup": {
+          "precision": 0.7664473684210527,
+          "recall": 0.8321428571428572,
+          "f1": 0.797945205479452,
+          "support": 280.0
+        },
+        "c9:talking_to_passenger": {
+          "precision": 0.7264957264957265,
+          "recall": 0.2733118971061093,
+          "f1": 0.397196261682243,
+          "support": 311.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          397,
+          0,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0,
+          31
+        ],
+        [
+          1,
+          315,
+          0,
+          0,
+          0,
+          0,
+          34,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          361,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          3,
+          1,
+          399,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          5,
+          0,
+          0,
+          4,
+          385,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          4,
+          0,
+          0,
+          0,
+          0,
+          402,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          2,
+          2,
+          0,
+          0,
+          375,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          335,
+          0,
+          0
+        ],
+        [
+          9,
+          0,
+          0,
+          0,
+          18,
+          18,
+          0,
+          1,
+          233,
+          1
+        ],
+        [
+          72,
+          3,
+          0,
+          0,
+          2,
+          18,
+          2,
+          58,
+          71,
+          85
+        ]
+      ]
+    }
+  },
+  "data_root": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-",
+  "torch_version": "2.12.0"
+}

@@ -1,6 +1,10 @@
-case,window_id,vision_available,telemetry_available,telemetry_age_s,expected_system_health,expected_evidence
-Full evidence low risk,1,1,1,0,FULL,Low observed risk
-Full evidence elevated risk,3,1,1,0,FULL,Combined or branch-dominant evidence
-Telemetry missing,4,1,0,999,DEGRADED,Partial evidence: vision only
-Vision missing,5,0,1,0,DEGRADED,Partial evidence: telemetry only
-Telemetry stale,6,1,1,4,DEGRADED,Partial evidence: stale telemetry
+case,window_id,vision_available,telemetry_available,telemetry_age_s,expected_risk_level,expected_system_health,expected_dominant_evidence
+Calm baseline (low risk),1,1,1,0,Low,FULL,Low observed risk
+Visual distraction emerging,7,1,1,0,Medium,FULL,Vision-dominant
+Aggressive telemetry high risk,10,1,1,0,High,FULL,Telemetry-dominant
+Telemetry missing (vision only),14,1,0,999,Medium,DEGRADED,Partial evidence
+Vision missing (telemetry only),15,0,1,0,High,DEGRADED,Partial evidence
+Telemetry stale,16,1,1,4,Medium,DEGRADED,Partial evidence
+Both modalities missing,17,0,0,999,Low,UNAVAILABLE,Partial evidence
+Combined evidence,19,1,1,0,Medium,FULL,Combined evidence
+Recovery sustained low,25,1,1,0,Low,FULL,Low observed risk

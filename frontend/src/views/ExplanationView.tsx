@@ -32,6 +32,37 @@ const evidenceChartLabels: Record<DominantEvidence, string> = {
   "Low observed risk": "Low risk",
 };
 
+const visualLabelMap: Record<string, string> = {
+  safe_driving: "Safe Driving",
+  normal_driving: "Safe Driving",
+  texting_right: "Texting (Right)",
+  phone_right: "Phone Call (Right)",
+  texting_left: "Texting (Left)",
+  phone_left: "Phone Call (Left)",
+  operating_radio: "Operating Radio",
+  drinking: "Drinking",
+  reaching_behind: "Reaching Behind",
+  hair_makeup: "Hair and Makeup",
+  talking_to_passenger: "Talking to Passenger",
+};
+
+const telemetryBehaviorLabelMap: Record<string, string> = {
+  Safe: "Safe",
+  Aggressive: "Aggressive",
+  Distracted: "Distracted",
+};
+
+const telemetryFeatureLabelMap: Record<string, string> = {
+  speed_kmph: "Speed",
+  accel_x: "Longitudinal Accel",
+  accel_y: "Lateral Accel",
+  brake_pressure: "Brake Pressure",
+  steering_angle: "Steering Angle",
+  throttle: "Throttle",
+  lane_deviation: "Lane Deviation",
+  headway_distance: "Headway Distance",
+};
+
 const titleCaseToken = (value: string) =>
   value
     .toLowerCase()
@@ -41,33 +72,25 @@ const titleCaseToken = (value: string) =>
 
 const getTopVisualCue = (record: RiskUpdate) => {
   const visualCues = record.visual_top_classes.filter(
-    (item) => item.label !== "normal_driving",
+    (item) => !["safe_driving", "normal_driving"].includes(item.label),
   );
   const candidates =
     visualCues.length > 0 ? visualCues : record.visual_top_classes;
   return [...candidates].sort((a, b) => b.probability - a.probability)[0];
 };
 
-const getTelemetrySignals = (record: RiskUpdate) => {
-  const telemetry = record.telemetry_features;
+const getTopTelemetryBehavior = (record: RiskUpdate) =>
+  [...record.telemetry_behavior_classes].sort(
+    (a, b) => b.probability - a.probability,
+  )[0];
 
-  if (!telemetry) {
-    return [];
-  }
+const getTopTelemetryFeatureContributions = (record: RiskUpdate) =>
+  [...(record.telemetry_feature_contributions ?? [])]
+    .sort((a, b) => Math.abs(b.contribution) - Math.abs(a.contribution))
+    .slice(0, 3);
 
-  return [
-    { label: "lane_deviation", value: telemetry.lane_deviation },
-    { label: "brake_usage", value: telemetry.brake_usage },
-    {
-      label: "acceleration",
-      value: Math.min(1, telemetry.acceleration / 3),
-    },
-    {
-      label: "steering_angle",
-      value: Math.min(1, Math.abs(telemetry.steering_angle) / 18),
-    },
-  ];
-};
+const formatSignedContribution = (value: number) =>
+  `${value >= 0 ? "+" : ""}${value.toFixed(2)}`;
 
 export function ExplanationView({
   selectedRecord,
@@ -83,10 +106,13 @@ export function ExplanationView({
     selectedRecord.modality_freshness.telemetry,
   );
   const visualCue = getTopVisualCue(selectedRecord);
-  const telemetrySignals = getTelemetrySignals(selectedRecord);
-  const telemetryCue = [...telemetrySignals].sort(
-    (a, b) => b.value - a.value,
-  )[0];
+  const telemetryBehavior = getTopTelemetryBehavior(selectedRecord);
+  const telemetryFeatureContributions =
+    getTopTelemetryFeatureContributions(selectedRecord);
+  const maxTelemetryContribution = Math.max(
+    0.01,
+    ...telemetryFeatureContributions.map((item) => Math.abs(item.contribution)),
+  );
   const evidenceType = getEvidenceType(selectedRecord, config.thresholdLow);
   const matchedRule = getMatchedEvidenceRule(evidenceType, config.thresholdLow);
   const relativeEvidence = getRelativeEvidence(selectedRecord);
@@ -123,7 +149,7 @@ export function ExplanationView({
               <strong>{formatProbability(selectedRecord.P_distraction)}</strong>
             </div>
             <div>
-              <span>P_telemetry_anomaly</span>
+              <span>Telemetry Non-Safe Risk</span>
               <strong>
                 {formatProbability(selectedRecord.P_telemetry_anomaly)}
               </strong>
@@ -173,9 +199,11 @@ export function ExplanationView({
               </strong>
             </div>
             <div>
-              <span>Top visual cue</span>
+              <span>Primary Distraction Cue</span>
               <strong>
-                {visualCue?.label ?? "unavailable"}
+                {visualCue
+                  ? (visualLabelMap[visualCue.label] ?? visualCue.label)
+                  : "unavailable"}
                 {visualCue ? (
                   <small>{formatPercent(visualCue.probability)}</small>
                 ) : null}
@@ -204,8 +232,9 @@ export function ExplanationView({
           </div>
 
           <div className="contribution-formula">
-            RiskScore = {formatWeight(config.weightVision)} x P_distraction +{" "}
-            {formatWeight(config.weightTelemetry)} x P_telemetry_anomaly
+            RiskScore = {formatWeight(config.weightVision)} x Visual Distraction
+            + {formatWeight(config.weightTelemetry)} x Telemetry Non-Safe
+            Behaviour
           </div>
 
           <div
@@ -224,9 +253,9 @@ export function ExplanationView({
           </div>
 
           <div className="contribution-equation">
-            <span>Vision {Math.round(contributions.vision)}</span>
+            <span>Visual Distraction {Math.round(contributions.vision)}</span>
             <strong>+</strong>
-            <span>Telemetry {Math.round(contributions.telemetry)}</span>
+            <span>Telemetry Non-Safe {Math.round(contributions.telemetry)}</span>
             <strong>=</strong>
             <span>RiskScore {formatRiskScore(selectedRecord.RiskScore)}</span>
           </div>
@@ -234,7 +263,7 @@ export function ExplanationView({
           <div className="contribution-labels">
             <span>Vision contribution {Math.round(contributions.vision)}</span>
             <span>
-              Telemetry contribution {Math.round(contributions.telemetry)}
+              Telemetry non-safe contribution {Math.round(contributions.telemetry)}
             </span>
             <span>
               Total RiskScore {formatRiskScore(selectedRecord.RiskScore)}
@@ -286,7 +315,21 @@ export function ExplanationView({
 
           <div className="evidence-metrics">
             <div>
-              <span>P_telemetry_anomaly</span>
+              <span>Current Behaviour</span>
+              <strong>
+                {telemetryBehavior
+                  ? (telemetryBehaviorLabelMap[telemetryBehavior.label] ??
+                    telemetryBehavior.label)
+                  : "unavailable"}
+                {telemetryBehavior ? (
+                  <small>
+                    {formatPercent(telemetryBehavior.probability)} confidence
+                  </small>
+                ) : null}
+              </strong>
+            </div>
+            <div>
+              <span>Telemetry Non-Safe Risk</span>
               <strong>
                 {formatProbability(selectedRecord.P_telemetry_anomaly)}
                 <small>
@@ -294,14 +337,45 @@ export function ExplanationView({
                 </small>
               </strong>
             </div>
-            <div>
-              <span>Top telemetry cue</span>
-              <strong>
-                {telemetryCue?.label ?? "unavailable"}
-                {telemetryCue ? (
-                  <small>{formatPercent(telemetryCue.value)}</small>
-                ) : null}
-              </strong>
+            <div className="evidence-metrics__stacked">
+              <span>Feature Contribution</span>
+              {telemetryFeatureContributions.length > 0 ? (
+                <div className="feature-contribution-list">
+                  {telemetryFeatureContributions.map((item) => (
+                    <div
+                      className="feature-contribution-row"
+                      key={item.feature}
+                    >
+                      <div className="feature-contribution-row__meta">
+                        <strong>
+                          {telemetryFeatureLabelMap[item.feature] ??
+                            item.feature}
+                        </strong>
+                        <span>{formatSignedContribution(item.contribution)}</span>
+                      </div>
+                      <div className="feature-contribution-row__track">
+                        <div
+                          className={
+                            item.contribution >= 0
+                              ? "feature-contribution-row__bar"
+                              : "feature-contribution-row__bar feature-contribution-row__bar--negative"
+                          }
+                          style={{
+                            width: `${Math.max(
+                              8,
+                              (Math.abs(item.contribution) /
+                                maxTelemetryContribution) *
+                                100,
+                            )}%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <strong>unavailable</strong>
+              )}
             </div>
             <div>
               <span>Freshness</span>

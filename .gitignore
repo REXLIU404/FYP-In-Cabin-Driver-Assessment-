@@ -5,3 +5,14 @@ tsconfig.tsbuildinfo
 *.local
 .playwright-cli
 .vscode
+
+# local agent team config — keep out of the pushed repo
+.claude/
+
+# backend runtime artifacts
+backend/*.db
+backend/**/__pycache__/
+*.db
+
+# local report assembly artifacts
+docs/chapter5_report_ready/
