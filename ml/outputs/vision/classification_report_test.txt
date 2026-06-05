@@ -1,0 +1,16 @@
+                         precision    recall  f1-score   support
+
+      c0:normal_driving     0.8102    0.9211    0.8621       431
+       c1:texting_right     0.9813    0.9000    0.9389       350
+ c2:talking_phone_right     0.9890    1.0000    0.9945       361
+        c3:texting_left     0.9852    0.9803    0.9828       407
+  c4:talking_phone_left     0.9483    0.9747    0.9613       395
+     c5:operating_radio     0.9074    0.9901    0.9470       406
+            c6:drinking     0.9102    0.9894    0.9482       379
+     c7:reaching_behind     0.8503    0.9941    0.9166       337
+         c8:hair_makeup     0.7664    0.8321    0.7979       280
+c9:talking_to_passenger     0.7265    0.2733    0.3972       311
+
+               accuracy                         0.8988      3657
+              macro avg     0.8875    0.8855    0.8746      3657
+           weighted avg     0.8930    0.8988    0.8856      3657
