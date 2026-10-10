@@ -1,5 +1,7 @@
 # 系统解释文稿
 
+> 历史快照：本文保留初始审计/旧 prototype 的状态与规划。2026-10-05 已接通实时 camera、已训练模型、后端与 UI；telemetry 仍为 prepared replay。当前完成情况见 [IMPLEMENTATION_PROGRESS.zh.md](IMPLEMENTATION_PROGRESS.zh.md)，启动与边界见 [LIVE_RUNTIME_GUIDE.zh.md](LIVE_RUNTIME_GUIDE.zh.md)。其他模型对比已按用户要求暂停。
+
 ## 1. 系统目标
 
 本系统是一个 in-cabin driver risk assessment prototype，目标是在监控过程中把驾驶员视觉状态和车辆遥测状态结合起来，输出一个可解释的风险判断。系统关注的不是单一模型结果，而是多模态风险评估流程。

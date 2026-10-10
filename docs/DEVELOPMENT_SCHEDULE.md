@@ -1,5 +1,7 @@
 # Development Schedule - In-Cabin Multi-Modal Driver Risk Assessment
 
+> 历史快照：本文保留初始审计/旧 prototype 的状态与规划。2026-10-05 已接通实时 camera、已训练模型、后端与 UI；telemetry 仍为 prepared replay。当前完成情况见 [IMPLEMENTATION_PROGRESS.zh.md](IMPLEMENTATION_PROGRESS.zh.md)，启动与边界见 [LIVE_RUNTIME_GUIDE.zh.md](LIVE_RUNTIME_GUIDE.zh.md)。其他模型对比已按用户要求暂停。
+
 Derived from `Final_Consolidated_Guidebook_v2.docx` and
 `Final_MVP_Prototype_Guidebook.docx`, then reconciled against the current
 checkout as of 2026-06-01.
