@@ -88,7 +88,8 @@ export const loadConfig = (): AppConfig => {
   );
   const merged = { ...DEFAULT_CONFIG, ...saved };
   const operationMode =
-    saved.operationMode === DEFAULT_CONFIG.operationMode
+    saved.operationMode === "LIVE_MODEL_RUNTIME" ||
+    saved.operationMode === "PREPARED_SESSION_RUNTIME"
       ? saved.operationMode
       : DEFAULT_CONFIG.operationMode;
   const enableEvidenceInterpretation =

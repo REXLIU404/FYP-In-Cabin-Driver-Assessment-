@@ -16,10 +16,14 @@ export function ModalityCard({
   return (
     <div className="modality-card">
       <span>{title}</span>
-      <strong>{formatPercent(probability)}</strong>
+      <strong>
+        {freshness === "missing" ? "—" : formatPercent(probability)}
+      </strong>
       <div>
         <Pill label={freshness} tone={freshness} />
-        <small>{probability.toFixed(2)}</small>
+        <small>
+          {freshness === "missing" ? "No input" : probability.toFixed(2)}
+        </small>
       </div>
     </div>
   );

@@ -10,6 +10,7 @@ interface RiskTrendsProps {
   history: RiskUpdate[];
   selectedWindowId: number;
   thresholdLow: number;
+  thresholdHigh: number;
   onSelectWindow: (windowId: number) => void;
 }
 
@@ -25,6 +26,7 @@ export function RiskTrends({
   history,
   selectedWindowId,
   thresholdLow,
+  thresholdHigh,
   onSelectWindow,
 }: RiskTrendsProps) {
   return (
@@ -37,7 +39,11 @@ export function RiskTrends({
           </div>
           <BarChart3 size={20} />
         </div>
-        <TrendChart history={history} />
+        <TrendChart
+          history={history}
+          thresholdLow={thresholdLow}
+          thresholdHigh={thresholdHigh}
+        />
       </section>
 
       <section className="panel">

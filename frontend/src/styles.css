@@ -1128,3 +1128,61 @@ tbody tr.is-high-risk {
     border-top: 1px solid var(--line);
   }
 }
+
+.runtime-panel {
+  display: grid;
+  gap: 12px;
+}
+.runtime-controls {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.runtime-controls .field {
+  min-width: 210px;
+}
+.runtime-controls select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: white;
+  color: #0f172a;
+}
+.runtime-panel p {
+  margin: 0;
+  line-height: 1.5;
+}
+.runtime-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  font-size: 13px;
+  color: #475569;
+}
+.runtime-panel code {
+  overflow-wrap: anywhere;
+  font-size: 11px;
+}
+.runtime-error {
+  padding: 12px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: #991b1b;
+}
+.runtime-warning {
+  padding: 12px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+  color: #92400e;
+}
+.empty-state {
+  padding: 24px;
+}
+.empty-state > .camera-preview {
+  max-width: 640px;
+  margin-top: 20px;
+}

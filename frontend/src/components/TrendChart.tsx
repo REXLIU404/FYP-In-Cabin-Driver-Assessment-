@@ -14,14 +14,26 @@ import { formatRiskScore } from "../utils/format";
 
 interface TrendChartProps {
   history: RiskUpdate[];
+  thresholdLow?: number;
+  thresholdHigh?: number;
 }
 
-export function TrendChart({ history }: TrendChartProps) {
+export function TrendChart({
+  history,
+  thresholdLow = 30,
+  thresholdHigh = 60,
+}: TrendChartProps) {
   const data = history.map((record) => ({
     window: record.window_id,
-    risk: record.RiskScore,
-    vision: record.P_distraction * 100,
-    telemetry: record.P_telemetry_anomaly * 100,
+    risk: record.SystemHealth === "UNAVAILABLE" ? null : record.RiskScore,
+    vision:
+      record.modality_freshness.vision === "missing"
+        ? null
+        : record.P_distraction * 100,
+    telemetry:
+      record.modality_freshness.telemetry === "missing"
+        ? null
+        : record.P_telemetry_anomaly * 100,
   }));
 
   return (
@@ -40,16 +52,16 @@ export function TrendChart({ history }: TrendChartProps) {
             tickFormatter={(value) => Number(value).toFixed(0)}
           />
           <ReferenceLine
-            y={30}
+            y={thresholdLow}
             stroke="#f59e0b"
             strokeDasharray="5 5"
-            label="30"
+            label={String(thresholdLow)}
           />
           <ReferenceLine
-            y={60}
+            y={thresholdHigh}
             stroke="#ef4444"
             strokeDasharray="5 5"
-            label="60"
+            label={String(thresholdHigh)}
           />
           <Tooltip
             formatter={(value, name) =>

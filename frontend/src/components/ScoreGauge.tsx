@@ -3,23 +3,30 @@ import { formatRiskScore } from "../utils/format";
 interface ScoreGaugeProps {
   score: number;
   label: string;
+  thresholdLow?: number;
+  thresholdHigh?: number;
 }
 
-const getScoreColor = (score: number) => {
-  if (score >= 60) {
+const getScoreColor = (score: number, low: number, high: number) => {
+  if (score >= high) {
     return "#dc2626";
   }
 
-  if (score >= 30) {
+  if (score >= low) {
     return "#d97706";
   }
 
   return "#15803d";
 };
 
-export function ScoreGauge({ score, label }: ScoreGaugeProps) {
+export function ScoreGauge({
+  score,
+  label,
+  thresholdLow = 30,
+  thresholdHigh = 60,
+}: ScoreGaugeProps) {
   const degrees = (Math.max(0, Math.min(100, score)) / 100) * 360;
-  const color = getScoreColor(score);
+  const color = getScoreColor(score, thresholdLow, thresholdHigh);
 
   return (
     <div

@@ -18,6 +18,8 @@ interface LiveMonitorProps {
   isMonitoring: boolean;
   camera: ReturnType<typeof useCameraPreview>;
   thresholdLow: number;
+  thresholdHigh: number;
+  stale?: boolean;
 }
 
 export function LiveMonitor({
@@ -28,8 +30,19 @@ export function LiveMonitor({
   isMonitoring,
   camera,
   thresholdLow,
+  thresholdHigh,
+  stale = false,
 }: LiveMonitorProps) {
   const evidenceType = getEvidenceType(latest, thresholdLow);
+  const visionFreshness =
+    stale && latest.modality_freshness.vision !== "missing"
+      ? "stale"
+      : latest.modality_freshness.vision;
+  const telemetryFreshness =
+    stale && latest.modality_freshness.telemetry !== "missing"
+      ? "stale"
+      : latest.modality_freshness.telemetry;
+  const health = stale ? "UNAVAILABLE" : latest.SystemHealth;
 
   return (
     <div className="page-grid page-grid--live">
@@ -72,22 +85,42 @@ export function LiveMonitor({
           />
 
           <div className="risk-summary">
-            <ScoreGauge score={latest.RiskScore} label="RiskScore" />
-            <div className="risk-badges">
-              <Pill label={latest.RiskLevel} tone={latest.RiskLevel} />
-              <Pill label={evidenceType} />
-              <Pill label={latest.AlertSeverity} tone={latest.AlertSeverity} />
-            </div>
+            {stale || latest.SystemHealth === "UNAVAILABLE" ? (
+              <div className="empty-state">
+                <h2>Assessment unavailable</h2>
+                <p>
+                  Waiting for fresh input. Previous evidence remains available
+                  in Signal Inspector.
+                </p>
+              </div>
+            ) : (
+              <>
+                <ScoreGauge
+                  score={latest.RiskScore}
+                  label="RiskScore"
+                  thresholdLow={thresholdLow}
+                  thresholdHigh={thresholdHigh}
+                />
+                <div className="risk-badges">
+                  <Pill label={latest.RiskLevel} tone={latest.RiskLevel} />
+                  <Pill label={evidenceType} />
+                  <Pill
+                    label={latest.AlertSeverity}
+                    tone={latest.AlertSeverity}
+                  />
+                </div>
+              </>
+            )}
             <div className="modality-grid">
               <ModalityCard
                 title="Visual Distraction"
                 probability={latest.P_distraction}
-                freshness={latest.modality_freshness.vision}
+                freshness={visionFreshness}
               />
               <ModalityCard
                 title="Telemetry Non-Safe"
                 probability={latest.P_telemetry_anomaly}
-                freshness={latest.modality_freshness.telemetry}
+                freshness={telemetryFreshness}
               />
             </div>
           </div>
@@ -98,7 +131,11 @@ export function LiveMonitor({
         <div className="section-header">
           <div>
             <p className="eyebrow">Vehicle Signals</p>
-            <h2>What the car is doing now</h2>
+            <h2>Prepared telemetry replay</h2>
+            <p>
+              Recorded scenario features, not live vehicle sensors. Values below
+              belong to the latest saved window.
+            </p>
           </div>
           <Database size={20} />
         </div>
@@ -116,24 +153,18 @@ export function LiveMonitor({
         <div className="stat-list">
           <div>
             <span>SystemHealth</span>
-            <Pill label={latest.SystemHealth} tone={latest.SystemHealth} />
+            <Pill label={health} tone={health} />
           </div>
           <div>
             <span>Vision freshness</span>
-            <Pill
-              label={latest.modality_freshness.vision}
-              tone={latest.modality_freshness.vision}
-            />
+            <Pill label={visionFreshness} tone={visionFreshness} />
           </div>
           <div>
             <span>Telemetry freshness</span>
-            <Pill
-              label={latest.modality_freshness.telemetry}
-              tone={latest.modality_freshness.telemetry}
-            />
+            <Pill label={telemetryFreshness} tone={telemetryFreshness} />
           </div>
           <div>
-            <span>Latency</span>
+            <span>Server processing (before DB commit)</span>
             <strong>{latest.latency_ms} ms</strong>
           </div>
         </div>
@@ -147,7 +178,11 @@ export function LiveMonitor({
           </div>
           <Video size={20} />
         </div>
-        <TrendChart history={history.slice(-12)} />
+        <TrendChart
+          history={history.slice(-12)}
+          thresholdLow={thresholdLow}
+          thresholdHigh={thresholdHigh}
+        />
       </section>
     </div>
   );

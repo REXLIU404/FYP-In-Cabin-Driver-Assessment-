@@ -49,6 +49,25 @@ export function ConfigurationView({
       <div className="config-sections">
         <section className="config-section">
           <h3>Runtime Configuration</h3>
+          <p>
+            Changing settings pauses monitoring. The next start creates a
+            session with the new configuration.
+          </p>
+          <label className="field">
+            <span>Target inference FPS (camera preview requests 30 FPS)</span>
+            <input
+              type="number"
+              min="1"
+              max="30"
+              value={config.inferenceFps}
+              disabled={isMonitoring}
+              onChange={(e) =>
+                patchConfig({
+                  inferenceFps: clamp(Number(e.target.value) || 1, 1, 30),
+                })
+              }
+            />
+          </label>
           <div className="action-strip">
             <button
               type="button"
@@ -139,18 +158,25 @@ export function ConfigurationView({
         <section className="config-section">
           <h3>Output Options</h3>
           <div className="output-options">
-            <label className="checkbox-field">
-              <input
-                type="checkbox"
-                checked={config.enableEvidenceInterpretation}
-                onChange={(event) =>
-                  patchConfig({
-                    enableEvidenceInterpretation: event.target.checked,
-                  })
-                }
-              />
-              <span>Enable Evidence Interpretation</span>
-            </label>
+            {config.operationMode === "PREPARED_SESSION_RUNTIME" ? (
+              <label className="checkbox-field">
+                <input
+                  type="checkbox"
+                  checked={config.enableEvidenceInterpretation}
+                  onChange={(event) =>
+                    patchConfig({
+                      enableEvidenceInterpretation: event.target.checked,
+                    })
+                  }
+                />
+                <span>Enable Evidence Interpretation</span>
+              </label>
+            ) : (
+              <p>
+                Exports contain all persisted model evidence, source labels,
+                model versions and the session fusion configuration.
+              </p>
+            )}
             <div className="action-strip">
               <button
                 type="button"

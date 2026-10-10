@@ -5,15 +5,26 @@ import { Pill } from "./Pill";
 
 interface AlertBannerProps {
   latest: RiskUpdate;
+  stale?: boolean;
 }
 
-export function AlertBanner({ latest }: AlertBannerProps) {
-  const Icon =
-    latest.SystemHealth === "UNAVAILABLE"
-      ? WifiOff
-      : latest.AlertSeverity === "NORMAL"
-        ? CheckCircle2
-        : AlertTriangle;
+export function AlertBanner({ latest, stale = false }: AlertBannerProps) {
+  if (stale || latest.SystemHealth === "UNAVAILABLE") {
+    return (
+      <section className="alert-banner runtime-warning">
+        <WifiOff size={22} />
+        <div>
+          <strong>No current assessment</strong>
+          <span>
+            {stale
+              ? "Last result is historical; waiting for fresh evidence."
+              : "Both input branches are missing."}
+          </span>
+        </div>
+      </section>
+    );
+  }
+  const Icon = latest.AlertSeverity === "NORMAL" ? CheckCircle2 : AlertTriangle;
 
   return (
     <section className={`alert-banner alert-banner--${latest.AlertSeverity}`}>
