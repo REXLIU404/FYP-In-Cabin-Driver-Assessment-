@@ -16,3 +16,6 @@ backend/**/__pycache__/
 
 # local report assembly artifacts
 docs/chapter5_report_ready/
+
+# Private Claude export manifests, source archives and recovered conversations
+.local/claude-recovery/
