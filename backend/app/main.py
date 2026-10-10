@@ -5,33 +5,35 @@ Run from the backend/ directory:
 Swagger UI: http://127.0.0.1:8000/docs
 """
 from contextlib import asynccontextmanager
+from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from . import models  # noqa: F401  (register ORM models on Base)
-from .db import Base, engine
+from .db import initialize_database
+from .config import settings
 from .routers import export, risk, sessions, status, windows
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    Base.metadata.create_all(bind=engine)
+    initialize_database()
     yield
 
 
 app = FastAPI(
     title="In-Cabin Driver Risk Assessment API",
     version="0.1.0",
-    description="Backend skeleton: session CRUD, late-fusion risk scoring (MockAIProvider), SQLite persistence, JSON/CSV export.",
+    description="Trained MobileNetV3 ONNX + XGBoost inference, temporal fusion, SQLite sessions and replay mode.",
     lifespan=lifespan,
 )
 
-# Allow the local frontend to call the API in FYP2 (frontend stays on
-# localStorage by default in FYP1; this does not change the prototype).
+# Local development uses a Vite proxy; explicit origins also allow direct API use.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.cors_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -49,3 +51,18 @@ for r in (
 @app.get("/api/health", tags=["health"])
 def health() -> dict:
     return {"status": "ok"}
+
+
+@app.get("/api/models", tags=["health"])
+def models_status():
+    from .providers.trained import get_provider, ModelUnavailable
+    try:
+        return {"models_loaded": True, **get_provider().info}
+    except ModelUnavailable as exc:
+        raise HTTPException(503, str(exc)) from exc
+
+
+# After `npm run build`, one local server serves both API and production UI.
+_dist = Path(__file__).resolve().parents[2] / "dist"
+if _dist.is_dir():
+    app.mount("/", StaticFiles(directory=_dist, html=True), name="frontend")

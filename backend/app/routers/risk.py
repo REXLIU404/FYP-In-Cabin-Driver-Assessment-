@@ -12,9 +12,7 @@ router = APIRouter(prefix="/api/sessions", tags=["risk"])
 
 @router.get("/{session_id}/risk/latest", response_model=RiskUpdate)
 def latest_risk(session_id: str, db: Session = Depends(get_db)):
-    cached = cache.get_latest(session_id)
-    if cached is not None:
-        return cached
+    # Authoritative indexed read also works across independent server processes.
     rec = (
         db.query(models.InferenceRecord)
         .filter_by(session_id=session_id)

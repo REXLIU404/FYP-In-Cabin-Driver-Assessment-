@@ -10,6 +10,7 @@ from sqlalchemy import (
     ForeignKey,
     Integer,
     String,
+    UniqueConstraint,
 )
 from sqlalchemy.orm import relationship
 
@@ -22,6 +23,10 @@ class SessionMeta(Base):
     id = Column(String, primary_key=True)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     description = Column(String, default="")
+    next_window_id = Column(Integer, nullable=False, default=0, server_default="0")
+    operation_mode = Column(String, nullable=False, default="PREPARED_SESSION_RUNTIME", server_default="PREPARED_SESSION_RUNTIME")
+    runtime_state = Column(JSON, nullable=False, default=dict, server_default="{}")
+    runtime_config = Column(JSON, nullable=False, default=dict, server_default="{}")
 
     records = relationship(
         "InferenceRecord",
@@ -33,12 +38,15 @@ class SessionMeta(Base):
 
 class InferenceRecord(Base):
     __tablename__ = "inference_records"
+    __table_args__ = (UniqueConstraint("session_id", "window_id"), UniqueConstraint("session_id", "request_id"))
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     session_id = Column(
         String, ForeignKey("sessions.id", ondelete="CASCADE"), index=True
     )
     window_id = Column(Integer, index=True)
+    request_id = Column(String, nullable=True)
+    request_hash = Column(String, nullable=True)
     timestamp = Column(String)
 
     # Branch outputs and fused result (RiskScore on the 0-100 scale)

@@ -1,9 +1,4 @@
-"""System Status Manager: backend-level health for one session.
-
-Surfaces the latest fused health/severity, the active AI provider, and — honestly
-— that no trained models are loaded yet (MockAIProvider echoes prepared
-probabilities). This is a backend-only payload, not the shared RiskUpdate.
-"""
+"""Persisted session status plus model readiness in the serving worker."""
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends
@@ -17,10 +12,6 @@ from ..providers.mock_ai import mock_ai
 from ..schemas import SystemStatusOut
 
 router = APIRouter(prefix="/api/sessions", tags=["system-status"])
-
-# Flip to True only once real ONNX/XGBoost providers replace MockAIProvider.
-_MODELS_LOADED = False
-
 
 @router.get("/{session_id}/system-status", response_model=SystemStatusOut)
 def system_status(session_id: str, db: Session = Depends(get_db)):
@@ -43,6 +34,11 @@ def system_status(session_id: str, db: Session = Depends(get_db)):
             .first()
         )
 
+    live = bool(sess and sess.operation_mode == "LIVE_MODEL_RUNTIME")
+    model_info = {}
+    if live:
+        from ..providers.trained import loaded_model_info
+        model_info = loaded_model_info()
     return SystemStatusOut(
         session_id=session_id,
         exists=exists,
@@ -50,9 +46,10 @@ def system_status(session_id: str, db: Session = Depends(get_db)):
         latest_window_id=latest.window_id if latest else None,
         latest_system_health=latest.system_health if latest else None,
         latest_alert_severity=latest.alert_severity if latest else None,
-        ai_provider=mock_ai.name,
-        models_loaded=_MODELS_LOADED,
+        ai_provider=(latest.payload.get("provenance", {}).get("provider", mock_ai.name) if latest else ("MobileNetV3ONNX+XGBoost" if sess and sess.operation_mode == "LIVE_MODEL_RUNTIME" else mock_ai.name)),
+        models_loaded=bool(model_info),
         cache_warm=cache.get_latest(session_id) is not None,
         database_scheme=settings.database_url.split(":", 1)[0],
         server_time=datetime.now(timezone.utc).isoformat(),
+        model_info=model_info,
     )
