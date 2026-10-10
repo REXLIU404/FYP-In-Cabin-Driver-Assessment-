@@ -1,0 +1,272 @@
+{
+  "environment": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "processor": "arm",
+    "python": "3.13.3",
+    "torch": "2.12.0",
+    "onnxruntime": "1.26.0",
+    "threads": 2,
+    "mps_available": false
+  },
+  "command_config": {
+    "mode": "evaluate",
+    "data_root": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-",
+    "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/vision/mobilenetv3_large_vision.pt",
+    "onnx": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/vision/mobilenetv3_large_vision.onnx",
+    "output": "/Users/liu/.codex/worktrees/d39a/FYP-In-Cabin-Driver-Assessment--1/docs/fyp2/evidence/vision_smoke.json",
+    "threads": 2,
+    "warmup": 20,
+    "iterations": 100,
+    "batch": 16,
+    "split": "test",
+    "limit": 20,
+    "parity_samples": 20
+  },
+  "split_audit": {
+    "metadata_sha256": "b4f8e90dec769bb419eaa490aea869668bed6484089cebe4d545c7667baa8ea4",
+    "driver_overlap": {
+      "train_val": [],
+      "train_test": [],
+      "val_test": []
+    },
+    "driver_counts": {
+      "train": 18,
+      "val": 4,
+      "test": 4
+    },
+    "rows": {
+      "train": 15899,
+      "test": 3657,
+      "val": 2868
+    }
+  },
+  "evaluation": {
+    "split": "test",
+    "runtime": "onnxruntime_cpu",
+    "checkpoint_sha256": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+    "onnx_sha256": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "preprocess": "PIL RGB, bilinear Resize(224,224), ToTensor, ImageNet mean/std",
+    "seconds_including_decode_and_parity": 0.5234834580041934,
+    "samples": 20,
+    "accuracy": 0.9,
+    "macro_f1": 0.6575757575757576,
+    "per_class": {
+      "0": {
+        "precision": 1.0,
+        "recall": 0.8333333333333334,
+        "f1-score": 0.9090909090909091,
+        "support": 6.0
+      },
+      "1": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 0.0
+      },
+      "2": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 4.0
+      },
+      "3": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 3.0
+      },
+      "4": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1-score": 0.6666666666666666,
+        "support": 1.0
+      },
+      "5": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 1.0
+      },
+      "6": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 2.0
+      },
+      "7": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 2.0
+      },
+      "8": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 1.0
+      },
+      "9": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 0.0
+      },
+      "accuracy": 0.9,
+      "macro avg": {
+        "precision": 0.65,
+        "recall": 0.6833333333333333,
+        "f1-score": 0.6575757575757576,
+        "support": 20.0
+      },
+      "weighted avg": {
+        "precision": 0.925,
+        "recall": 0.9,
+        "f1-score": 0.9060606060606059,
+        "support": 20.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        5,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        4,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "distraction_threshold": 0.5,
+    "binary_distraction_recall": 1.0,
+    "safe_false_positive_rate": 0.16666666666666666,
+    "binary_brier_score": 0.035480789840221405
+  },
+  "onnx_parity": {
+    "samples": 16,
+    "max_abs_logit_difference": 2.6702880859375e-05,
+    "max_abs_probability_difference": 1.7285346984863281e-06,
+    "argmax_disagreements": 0,
+    "sampling": "seed42 class-stratified",
+    "classes": [
+      "c0",
+      "c2",
+      "c3",
+      "c4",
+      "c5",
+      "c6",
+      "c7",
+      "c8"
+    ]
+  }
+}

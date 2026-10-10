@@ -1,0 +1,72 @@
+{
+  "id": "PYTEST",
+  "argv": [
+    "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+    "-m",
+    "pytest",
+    "backend/tests",
+    "-vv",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd/pytest"
+  ],
+  "cwd": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1",
+  "start_utc": "2026-10-09T11:45:20.800412+00:00",
+  "duration_s": 18.455,
+  "timeout_s": 120,
+  "exit_code": 0,
+  "environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "TMPDIR": "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd",
+    "PYTHONPATH": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/backend",
+    "DRA_DATABASE_URL": "sqlite:////var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd/fallback.db",
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "VECLIB_MAXIMUM_THREADS": "2"
+  },
+  "log": "evidence/PYTEST.log"
+}
+
+============================= test session starts ==============================
+platform darwin -- Python 3.13.3, pytest-9.0.3, pluggy-1.6.0 -- /Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python
+rootdir: /Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1
+plugins: anyio-4.13.0
+collecting ... collected 28 items
+
+backend/tests/test_api.py::test_full_crud_and_fusion PASSED              [  3%]
+backend/tests/test_audit_regressions.py::test_primary_probability_bounds_are_enforced PASSED [  7%]
+backend/tests/test_audit_regressions.py::test_provider_status_matches_replay_behavior PASSED [ 10%]
+backend/tests/test_audit_regressions.py::test_latest_reflects_flag_update PASSED [ 14%]
+backend/tests/test_audit_regressions.py::test_latest_falls_back_after_deletion PASSED [ 17%]
+backend/tests/test_audit_regressions.py::test_latest_is_empty_after_all_windows_deleted PASSED [ 21%]
+backend/tests/test_audit_regressions.py::test_concurrent_writers_receive_unique_window_ids PASSED [ 25%]
+backend/tests/test_audit_regressions.py::test_invalid_timestamp_is_rejected PASSED [ 28%]
+backend/tests/test_audit_regressions.py::test_old_capture_timestamp_cannot_be_full_health PASSED [ 32%]
+backend/tests/test_audit_regressions.py::test_first_high_window_observes_alert_sustain_period PASSED [ 35%]
+backend/tests/test_audit_regressions.py::test_second_window_uses_vision_ema PASSED [ 39%]
+backend/tests/test_audit_regressions.py::test_invalid_measurements_are_rejected[negative-latency] PASSED [ 42%]
+backend/tests/test_audit_regressions.py::test_invalid_measurements_are_rejected[class-probability-over-one] PASSED [ 46%]
+backend/tests/test_live_inference.py::test_real_models_persist_latest_flag_export_and_idempotency PASSED [ 50%]
+backend/tests/test_live_inference.py::test_bad_frame_does_not_create_result_or_fallback PASSED [ 53%]
+backend/tests/test_live_inference.py::test_missing_expired_and_out_of_order_inputs PASSED [ 57%]
+backend/tests/test_live_inference.py::test_wrong_mode_and_invalid_config PASSED [ 60%]
+backend/tests/test_live_inference.py::test_missing_artifacts_are_503 PASSED [ 64%]
+backend/tests/test_live_inference.py::test_missing_inference_dependency_is_503[PIL] PASSED [ 67%]
+backend/tests/test_live_inference.py::test_missing_inference_dependency_is_503[numpy] PASSED [ 71%]
+backend/tests/test_live_inference.py::test_missing_inference_dependency_is_503[onnxruntime] PASSED [ 75%]
+backend/tests/test_live_inference.py::test_missing_inference_dependency_is_503[xgboost] PASSED [ 78%]
+backend/tests/test_live_inference.py::test_historical_live_record_does_not_imply_models_loaded PASSED [ 82%]
+backend/tests/test_live_inference.py::test_sequence_never_reuses_deleted_id_and_survives_cache_reset PASSED [ 85%]
+backend/tests/test_live_inference.py::test_fsm_sequence_and_gap_reset PASSED [ 89%]
+backend/tests/test_live_inference.py::test_pil_service_preprocess_matches_training_notebook PASSED [ 92%]
+backend/tests/test_migration.py::test_legacy_database_migration_preserves_rows_and_allocates_above_old_max PASSED [ 96%]
+backend/tests/test_restart.py::test_worker_restart_preserves_independent_session_state PASSED [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 28 passed, 1 warning in 12.83s ========================

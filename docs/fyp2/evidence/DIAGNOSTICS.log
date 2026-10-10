@@ -1,0 +1,201 @@
+{
+  "id": "DIAGNOSTICS",
+  "argv": [
+    "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+    "/tmp/fyp2_audit_diagnostics.py"
+  ],
+  "cwd": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1",
+  "start_utc": "2026-10-09T17:03:04.247046+00:00",
+  "duration_s": 3.555,
+  "timeout_s": 30,
+  "exit_code": 0,
+  "environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "TMPDIR": "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd",
+    "PYTHONPATH": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/backend",
+    "DRA_DATABASE_URL": "sqlite:////var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd/fallback.db",
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "VECLIB_MAXIMUM_THREADS": "2"
+  },
+  "log": "evidence/DIAGNOSTICS.log"
+}
+
+{
+  "executed_utc": "2026-10-09T17:03:07.785498+00:00",
+  "scope": "Small read-only deterministic diagnostics of existing functions; no test definitions changed, no inference benchmark, no DB connection",
+  "cases": [
+    {
+      "id": "UT-FUS-CLEAN",
+      "expected": 50,
+      "observed": 50.0,
+      "status": "TEST_PASSED"
+    },
+    {
+      "id": "E3-01",
+      "expected": 90,
+      "observed": 90.0,
+      "status": "TEST_PASSED"
+    },
+    {
+      "id": "E3-02",
+      "expected": 10,
+      "observed": 10.0,
+      "status": "TEST_PASSED"
+    },
+    {
+      "id": "E3-04",
+      "expected": 65.2,
+      "observed": 65.2,
+      "status": "TEST_PASSED"
+    },
+    {
+      "id": "E3-05",
+      "expected": 34.8,
+      "observed": 34.8,
+      "status": "TEST_PASSED"
+    },
+    {
+      "id": "E3-06",
+      "expected": 50,
+      "observed": 50.0,
+      "status": "TEST_PASSED"
+    },
+    {
+      "id": "E3-03",
+      "expected": "unavailable without a valid-looking numeric Low/NORMAL assessment",
+      "observed": {
+        "RiskScore": 0.0,
+        "RiskLevel": "Low",
+        "SystemHealth": "UNAVAILABLE",
+        "AlertSeverity": "NORMAL",
+        "DominantEvidence": "Partial evidence"
+      },
+      "status": "TEST_FAILED"
+    },
+    {
+      "id": "UT-FUS-ZERO-WEIGHT",
+      "expected": "no usable weighted evidence => unavailable",
+      "observed": {
+        "RiskScore": 0.0,
+        "RiskLevel": "Low",
+        "SystemHealth": "DEGRADED"
+      },
+      "status": "TEST_FAILED"
+    },
+    {
+      "id": "UT-TIME-FRESH-2.999",
+      "expected": "fresh",
+      "observed": "fresh",
+      "status": "TEST_PASSED"
+    },
+    {
+      "id": "UT-TIME-FRESH-3",
+      "expected": "fresh",
+      "observed": "fresh",
+      "status": "TEST_PASSED"
+    },
+    {
+      "id": "UT-TIME-FRESH-3.001",
+      "expected": "stale",
+      "observed": "stale",
+      "status": "TEST_PASSED"
+    },
+    {
+      "id": "UT-FUS-BOUNDARY-29.9",
+      "expected": "Low",
+      "observed": "Low",
+      "status": "TEST_PASSED"
+    },
+    {
+      "id": "UT-FUS-BOUNDARY-30",
+      "expected": "Medium",
+      "observed": "Medium",
+      "status": "TEST_PASSED"
+    },
+    {
+      "id": "UT-FUS-BOUNDARY-59.9",
+      "expected": "Medium",
+      "observed": "Medium",
+      "status": "TEST_PASSED"
+    },
+    {
+      "id": "UT-FUS-BOUNDARY-60",
+      "expected": "High",
+      "observed": "High",
+      "status": "TEST_PASSED"
+    },
+    {
+      "id": "UT-TIME-FSM-0",
+      "expected": "CAUTION",
+      "observed": "CAUTION",
+      "status": "TEST_PASSED"
+    },
+    {
+      "id": "UT-TIME-FSM-1.999",
+      "expected": "CAUTION",
+      "observed": "CAUTION",
+      "status": "TEST_PASSED"
+    },
+    {
+      "id": "UT-TIME-FSM-2",
+      "expected": "HIGH_ALERT",
+      "observed": "HIGH_ALERT",
+      "status": "TEST_PASSED"
+    },
+    {
+      "id": "UT-TIME-FSM-3",
+      "expected": "HIGH_ALERT",
+      "observed": "HIGH_ALERT",
+      "status": "TEST_PASSED"
+    },
+    {
+      "id": "UT-TIME-FSM-5",
+      "expected": "HIGH_ALERT",
+      "observed": "HIGH_ALERT",
+      "status": "TEST_PASSED"
+    },
+    {
+      "id": "UT-TIME-FSM-7",
+      "expected": "HIGH_ALERT",
+      "observed": "HIGH_ALERT",
+      "status": "TEST_PASSED"
+    },
+    {
+      "id": "UT-TIME-FSM-9",
+      "expected": "HIGH_ALERT",
+      "observed": "HIGH_ALERT",
+      "status": "TEST_PASSED"
+    },
+    {
+      "id": "UT-TIME-FSM-11",
+      "expected": "HIGH_ALERT",
+      "observed": "HIGH_ALERT",
+      "status": "TEST_PASSED"
+    },
+    {
+      "id": "UT-TIME-FSM-12.999",
+      "expected": "HIGH_ALERT",
+      "observed": "HIGH_ALERT",
+      "status": "TEST_PASSED"
+    },
+    {
+      "id": "UT-TIME-FSM-13",
+      "expected": "NORMAL",
+      "observed": "NORMAL",
+      "status": "TEST_PASSED"
+    },
+    {
+      "id": "E3-DRIFT-COUNTEREXAMPLE",
+      "expected": "formula correct but original delta<=.15 target unmet",
+      "observed": {
+        "R_full": 0.5,
+        "R_vision_missing": 0.9,
+        "delta": 0.4,
+        "formula_pass": true,
+        "original_target_met": false
+      },
+      "status": "PARTIALLY_VERIFIED"
+    }
+  ]
+}
