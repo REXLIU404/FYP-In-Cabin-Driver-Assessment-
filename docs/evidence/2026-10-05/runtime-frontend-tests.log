@@ -1,0 +1,17 @@
+
+> fyp-in-cabin-driver-assessment@0.1.0 test
+> vitest run
+
+
+ RUN  v2.1.9 /Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1
+
+ ✓ ai/src/alertFsm.test.ts (7 tests) 2ms
+ ✓ frontend/src/utils/persistence.test.ts (3 tests) 3ms
+ ✓ ai/src/riskLogic.test.ts (16 tests) 3ms
+ ✓ frontend/src/data/preparedSessionInput.test.ts (6 tests) 2ms
+
+ Test Files  4 passed (4)
+      Tests  32 passed (32)
+   Start at  16:35:31
+   Duration  280ms (transform 107ms, setup 0ms, collect 182ms, tests 10ms, environment 1ms, prepare 195ms)
+

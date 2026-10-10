@@ -19,3 +19,6 @@ docs/chapter5_report_ready/
 
 # Private Claude export manifests, source archives and recovered conversations
 .local/claude-recovery/
+
+# local run output (Playwright screenshots, ad-hoc exports) — not tracked
+output/
