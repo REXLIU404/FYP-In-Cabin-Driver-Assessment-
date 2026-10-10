@@ -28,8 +28,8 @@ describe("AlertSeverity FSM", () => {
   });
 
   it("holds HIGH_ALERT while risk stays Low for less than recover window", () => {
-    let s = { severity: "HIGH_ALERT", highSince: 0, lowSince: null } as const;
-    let next = updateAlertState(s, "Low", 5000);
+    const s = { severity: "HIGH_ALERT", highSince: 0, lowSince: null } as const;
+    const next = updateAlertState(s, "Low", 5000);
     expect(next.severity).toBe("HIGH_ALERT"); // 5s < 10s recover
     expect(next.lowSince).toBe(5000);
   });

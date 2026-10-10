@@ -11,7 +11,8 @@ import type {
 import { determineEvidenceType } from "./evidence";
 
 export const DEFAULT_CONFIG: AppConfig = {
-  operationMode: "PREPARED_SESSION_RUNTIME",
+  operationMode: "LIVE_MODEL_RUNTIME",
+  inferenceFps: 10,
   deltaT: 2,
   weightVision: 0.5,
   weightTelemetry: 0.5,

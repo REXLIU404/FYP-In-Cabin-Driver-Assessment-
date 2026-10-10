@@ -1,7 +1,7 @@
 export type RiskLevel = "Low" | "Medium" | "High";
 export type AlertSeverity = "NORMAL" | "CAUTION" | "HIGH_ALERT";
 export type SystemHealth = "FULL" | "DEGRADED" | "UNAVAILABLE";
-export type OperationMode = "PREPARED_SESSION_RUNTIME";
+export type OperationMode = "PREPARED_SESSION_RUNTIME" | "LIVE_MODEL_RUNTIME";
 export type FreshnessStatus = "fresh" | "stale" | "missing";
 
 export type DominantEvidence =
@@ -75,12 +75,34 @@ export interface RiskUpdate {
   telemetry_features: TelemetryFeatures | null;
   explanation: string;
   flagged?: boolean;
+  provenance?: {
+    provider?: string;
+    vision_source?: string;
+    telemetry_source?: string;
+    vision_model_sha256?: string;
+    telemetry_model_sha256?: string;
+    request_id?: string;
+    captured_at?: string | null;
+    telemetry_timestamp?: string | null;
+    P_distraction_raw?: number;
+    P_telemetry_raw?: number;
+    timing_ms?: Record<string, number>;
+    fusion_config?: {
+      weight_vision: number;
+      weight_telemetry: number;
+      threshold_low: number;
+      threshold_high: number;
+      ema_alpha: number;
+      freshness_tolerance_s: number;
+    };
+  };
 }
 
 export interface SessionMeta {
   id: string;
   created_at: string;
   total_windows: number;
+  operation_mode?: OperationMode;
 }
 
 export interface AppConfig {
@@ -93,4 +115,5 @@ export interface AppConfig {
   thresholdHigh: number;
   freshnessTolerance: number;
   enableEvidenceInterpretation: boolean;
+  inferenceFps: number;
 }
