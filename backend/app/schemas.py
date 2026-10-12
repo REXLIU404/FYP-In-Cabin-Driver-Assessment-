@@ -132,15 +132,32 @@ class LiveInput(BaseModel):
 
 
 class RiskUpdate(BaseModel):
+    """The canonical per-window record. Availability contract (mirrors
+    ai/src/types.ts):
+
+        assessment_available == (RiskScore is not None)
+                             == (SystemHealth != "UNAVAILABLE")
+
+    and, when False, RiskScore / RiskLevel / DominantEvidence / AlertSeverity
+    are all None together - a window with no usable evidence is never reported as
+    a fabricated 0 / "Low" / "NORMAL". When True, all four are present.
+
+    Do NOT give the four nullable fields a default in the class body
+    (``RiskLevel: Optional[RiskLevel] = None``): the assignment rebinds the
+    class-scope name ``RiskLevel`` - the module-level ``Literal`` alias - and
+    pydantic then demands ``None`` for every value. They are required-but-nullable.
+    """
+
     session_id: str
     window_id: int
     timestamp: str
+    assessment_available: bool  # before any number, so it is read first
     P_distraction: float
     P_telemetry_anomaly: float
-    RiskScore: float  # 0-100
-    RiskLevel: RiskLevel
-    DominantEvidence: DominantEvidence
-    AlertSeverity: AlertSeverity
+    RiskScore: Optional[float]  # 0-100; None when unavailable
+    RiskLevel: Optional[RiskLevel]
+    DominantEvidence: Optional[DominantEvidence]
+    AlertSeverity: Optional[AlertSeverity]
     SystemHealth: SystemHealth
     operation_mode: OperationMode = "PREPARED_SESSION_RUNTIME"
     modality_freshness: ModalityFreshness
@@ -152,6 +169,52 @@ class RiskUpdate(BaseModel):
     explanation: str = ""
     flagged: bool = False
     provenance: dict = Field(default_factory=dict)
+
+    @model_validator(mode="before")
+    @classmethod
+    def derive_and_normalise_legacy(cls, data):
+        """Defence 1 - rows and producers that predate ``assessment_available``.
+
+        Every read path (windows.py, risk.py, status.py) rebuilds this model from
+        the stored JSON blob, so a pre-existing row must still validate. When the
+        key is absent the flag is derived from the two signals that used to carry
+        it, and any window that is unavailable by either signal is rewritten to
+        the canonical unavailable form:
+
+        * legacy rows stored a fabricated ``0 / "Low" / "NORMAL"`` next to
+          ``SystemHealth == "UNAVAILABLE"``;
+        * a producer can emit ``RiskScore is None`` while still labelling the
+          window DEGRADED/NORMAL (e.g. a zero fusion weight on the only fresh
+          branch) - the score being None is what makes it unavailable.
+
+        When the key IS present nothing is rewritten: the strict check below
+        decides, so a producer that contradicts its own flag fails loudly."""
+        if (isinstance(data, dict) and "assessment_available" not in data
+                and "RiskScore" in data and "SystemHealth" in data):
+            available = data["RiskScore"] is not None and data["SystemHealth"] != "UNAVAILABLE"
+            data = {**data, "assessment_available": available}
+            if not available:
+                data.update(RiskScore=None, RiskLevel=None, DominantEvidence=None,
+                            AlertSeverity=None, SystemHealth="UNAVAILABLE")
+        return data
+
+    @model_validator(mode="after")
+    def availability_invariant(self):
+        """Defence 2 - enforce the contract on every instance."""
+        values = (self.RiskScore, self.RiskLevel, self.DominantEvidence, self.AlertSeverity)
+        if self.assessment_available:
+            if any(v is None for v in values):
+                raise ValueError("an available assessment must carry RiskScore, RiskLevel, "
+                                 "DominantEvidence and AlertSeverity")
+            if self.SystemHealth == "UNAVAILABLE":
+                raise ValueError("assessment_available is true but SystemHealth is UNAVAILABLE")
+        else:
+            if any(v is not None for v in values):
+                raise ValueError("an unavailable assessment must have RiskScore, RiskLevel, "
+                                 "DominantEvidence and AlertSeverity all null")
+            if self.SystemHealth != "UNAVAILABLE":
+                raise ValueError("assessment_available is false but SystemHealth is not UNAVAILABLE")
+        return self
 
 
 class SessionCreate(BaseModel):
@@ -176,8 +239,12 @@ class SystemStatusOut(BaseModel):
     exists: bool
     total_windows: int
     latest_window_id: Optional[int] = None
+    # None = "no record yet"; False = "a record exists but carries no assessment".
+    latest_assessment_available: Optional[bool] = None
+    latest_risk_score: Optional[float] = None
     latest_system_health: Optional[SystemHealth] = None
     latest_alert_severity: Optional[AlertSeverity] = None
+    open_fault_events: int = 0  # populated by the fault-event work (Task 7)
     ai_provider: str
     models_loaded: bool
     cache_warm: bool

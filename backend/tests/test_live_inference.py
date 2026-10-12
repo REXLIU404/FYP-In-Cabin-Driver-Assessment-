@@ -96,8 +96,16 @@ def test_missing_expired_and_out_of_order_inputs(api):
     client, _ = api
     sid = live_session(client)
     missing = {"request_id": "empty"}
-    result = client.post(f"/api/sessions/{sid}/infer", json=missing).json()
+    response = client.post(f"/api/sessions/{sid}/infer", json=missing)
+    assert response.status_code == 201, response.text
+    result = response.json()
+    # Full "no evidence" contract: nothing fused, so nothing invented (no 0 / Low / NORMAL).
+    assert result["assessment_available"] is False
+    for name in ("RiskScore", "RiskLevel", "DominantEvidence", "AlertSeverity"):
+        assert result[name] is None, name
     assert result["SystemHealth"] == "UNAVAILABLE"
+    assert result["assessment_available"] == (result["RiskScore"] is not None) == (result["SystemHealth"] != "UNAVAILABLE")
+    assert result["modality_freshness"] == {"vision": "missing", "telemetry": "missing"}
     data = payload("current")
     assert client.post(f"/api/sessions/{sid}/infer", json=data).status_code == 201
     old = {**payload("old"), "captured_at": "2000-01-01T00:00:00+00:00"}

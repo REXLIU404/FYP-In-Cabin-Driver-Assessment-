@@ -3,7 +3,7 @@ falling back to the most recent persisted record)."""
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from .. import cache, models
+from .. import models
 from ..db import get_db
 from ..schemas import RiskUpdate
 
@@ -19,6 +19,8 @@ def latest_risk(session_id: str, db: Session = Depends(get_db)):
         .order_by(models.InferenceRecord.window_id.desc())
         .first()
     )
+    # 404 = no record at all. A record whose window had no usable evidence is a
+    # 200 with assessment_available=false; the two must stay distinguishable.
     if not rec:
         raise HTTPException(404, "no risk update available for this session")
     return RiskUpdate(**{**rec.payload, "flagged": rec.flagged})

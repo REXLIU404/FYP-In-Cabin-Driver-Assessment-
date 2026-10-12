@@ -52,11 +52,14 @@ class InferenceRecord(Base):
     # Branch outputs and fused result (RiskScore on the 0-100 scale)
     p_distraction = Column(Float)
     p_telemetry_anomaly = Column(Float)
+    # risk_score / risk_level / dominant_evidence / alert_severity are nullable on
+    # purpose: a window with no usable evidence stores NULL, never 0 / Low / NORMAL.
     risk_score = Column(Float)
     risk_level = Column(String)
     dominant_evidence = Column(String)
     alert_severity = Column(String)
     system_health = Column(String)
+    assessment_available = Column(Boolean, nullable=False, default=True, server_default="1")
     latency_ms = Column(Integer)
     flagged = Column(Boolean, default=False)
 

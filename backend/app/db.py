@@ -37,7 +37,11 @@ def initialize_database():
             "runtime_state": "JSON NOT NULL DEFAULT '{}'",
             "runtime_config": "JSON NOT NULL DEFAULT '{}'",
         },
-        "inference_records": {"request_id": "VARCHAR", "request_hash": "VARCHAR"},
+        "inference_records": {
+            "request_id": "VARCHAR",
+            "request_hash": "VARCHAR",
+            "assessment_available": "BOOLEAN NOT NULL DEFAULT 1",
+        },
     }
     with engine.begin() as conn:
         for table, columns in additions.items():
@@ -51,6 +55,44 @@ def initialize_database():
             raise RuntimeError("Existing duplicate window IDs need manual reconciliation before migration; no records were deleted")
         conn.execute(text("CREATE UNIQUE INDEX IF NOT EXISTS uq_record_session_window ON inference_records(session_id, window_id)"))
         conn.execute(text("CREATE UNIQUE INDEX IF NOT EXISTS uq_record_session_request ON inference_records(session_id, request_id)"))
+        _backfill_assessment_available(conn)
+
+
+# SQLite does not promise to evaluate AND terms left to right, and json_*() raises
+# on malformed text, so every payload predicate sits behind this CASE. json_set()
+# on a NULL / malformed payload yields NULL (or an error), which would erase the
+# stored blob - hence the guard is mandatory, not defensive.
+_PAYLOAD_IS_OBJECT = "CASE WHEN payload IS NOT NULL AND json_valid(payload) THEN json_type(payload) = 'object' ELSE 0 END"
+_NO_FLAG_YET = "CASE WHEN payload IS NOT NULL AND json_valid(payload) THEN json_extract(payload, '$.assessment_available') IS NULL ELSE 0 END"
+_UNAVAILABLE_ROW = "(system_health = 'UNAVAILABLE' OR CASE WHEN payload IS NOT NULL AND json_valid(payload) THEN json_extract(payload, '$.SystemHealth') = 'UNAVAILABLE' ELSE 0 END)"
+_HAS_SCORE = "CASE WHEN payload IS NOT NULL AND json_valid(payload) THEN json_extract(payload, '$.RiskScore') IS NOT NULL ELSE 0 END"
+
+
+def _backfill_assessment_available(conn) -> None:
+    """Rewrite pre-existing rows to the nullable availability contract.
+
+    Idempotent, and never deletes or NULLs a payload. ``json('true')`` /
+    ``json('false')`` (not 1 / 0) keep the stored blob a real JSON boolean:
+    export streams the blob as-is, so an integer would reach clients as
+    ``"assessment_available": 1`` for migrated rows but ``true`` for new ones."""
+    # 1. A no-evidence row was stored as a fabricated 0 / Low / NORMAL. Null the
+    #    four values (columns and blob) and mark it unavailable. Must run first:
+    #    step 2 would otherwise see its non-null RiskScore of 0.0 and call it assessed.
+    conn.execute(text(
+        "UPDATE inference_records SET payload = json_set(payload, "
+        "'$.RiskScore', json('null'), '$.RiskLevel', json('null'), "
+        "'$.DominantEvidence', json('null'), '$.AlertSeverity', json('null'), "
+        "'$.assessment_available', json('false')) "
+        f"WHERE {_PAYLOAD_IS_OBJECT} AND {_NO_FLAG_YET} AND {_UNAVAILABLE_ROW}"))
+    conn.execute(text(
+        "UPDATE inference_records SET assessment_available = 0, risk_score = NULL, "
+        "risk_level = NULL, dominant_evidence = NULL, alert_severity = NULL "
+        f"WHERE {_UNAVAILABLE_ROW}"))
+    # 2. Everything else that is a recognisable assessment (has a score) is available.
+    conn.execute(text(
+        "UPDATE inference_records SET payload = json_set(payload, "
+        "'$.assessment_available', json('true')) "
+        f"WHERE {_PAYLOAD_IS_OBJECT} AND {_NO_FLAG_YET} AND {_HAS_SCORE}"))
 
 
 def get_db() -> Iterator[Session]:

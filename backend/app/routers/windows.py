@@ -65,7 +65,8 @@ def _save_window(db, sid, w, *, mode, provenance=None, request_id=None, digest=N
             session_id=sid, window_id=number, request_id=request_id, request_hash=digest,
             timestamp=ru.timestamp, p_distraction=ru.P_distraction, p_telemetry_anomaly=ru.P_telemetry_anomaly,
             risk_score=ru.RiskScore, risk_level=ru.RiskLevel, dominant_evidence=ru.DominantEvidence,
-            alert_severity=ru.AlertSeverity, system_health=ru.SystemHealth, latency_ms=ru.latency_ms,
+            alert_severity=ru.AlertSeverity, system_health=ru.SystemHealth,
+            assessment_available=ru.assessment_available, latency_ms=ru.latency_ms,
             flagged=False, payload=ru.model_dump(),
         )
         db.add(rec)
@@ -138,4 +139,8 @@ def delete_window(session_id: str, window_id: int, db: Session = Depends(get_db)
         raise HTTPException(404, "window not found")
     db.delete(rec)
     db.commit()
-    cache.clear(session_id)
+    # Only the cached record itself goes stale; deleting an older window must not
+    # cool a cache that still holds the (unchanged) latest one.
+    cached = cache.get_latest(session_id)
+    if cached is not None and cached.window_id == window_id:
+        cache.clear(session_id)

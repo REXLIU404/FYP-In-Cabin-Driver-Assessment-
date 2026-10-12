@@ -44,9 +44,12 @@ def system_status(session_id: str, db: Session = Depends(get_db)):
         exists=exists,
         total_windows=total,
         latest_window_id=latest.window_id if latest else None,
+        latest_assessment_available=bool(latest.assessment_available) if latest else None,
+        latest_risk_score=latest.risk_score if latest else None,
         latest_system_health=latest.system_health if latest else None,
         latest_alert_severity=latest.alert_severity if latest else None,
-        ai_provider=(latest.payload.get("provenance", {}).get("provider", mock_ai.name) if latest else ("MobileNetV3ONNX+XGBoost" if sess and sess.operation_mode == "LIVE_MODEL_RUNTIME" else mock_ai.name)),
+        # A hand-written legacy row may have no payload (or no provenance) at all.
+        ai_provider=(((latest.payload or {}).get("provenance") or {}).get("provider", mock_ai.name) if latest else ("MobileNetV3ONNX+XGBoost" if sess and sess.operation_mode == "LIVE_MODEL_RUNTIME" else mock_ai.name)),
         models_loaded=bool(model_info),
         cache_warm=cache.get_latest(session_id) is not None,
         database_scheme=settings.database_url.split(":", 1)[0],
