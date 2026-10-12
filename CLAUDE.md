@@ -104,7 +104,7 @@ in `useCameraPreview`; API access in `frontend/src/api`; demo persistence in `ut
   ≥ 2s (wall-clock `Date.now()`, not window count); recovery to NORMAL needs Low sustained ≥ 10s.
   When changing risk logic or the FSM, update the tests in `ai/src/*.test.ts`.
 
-## Scope guardrails (from AGENTS.md — keep the project on-route)
+## Scope guardrails (keep the project on-route)
 
 - Exactly two risk dimensions; **decision-level late fusion only** (never early/feature fusion).
 - Fusion weights (`w_v`, `w_t`, default 0.5/0.5, sum = 1) are **transparent design parameters**,
@@ -119,7 +119,7 @@ in `useCameraPreview`; API access in `frontend/src/api`; demo persistence in `ut
 
 ## Source of truth & docs
 
-`AGENTS.md` contains the applicable project instructions. Check current files rather than
+This file (`CLAUDE.md`) contains the applicable project instructions. Check current files rather than
 assuming an older copied spec is still present. Current runtime status and startup instructions
 are in `docs/IMPLEMENTATION_PROGRESS.zh.md` and `docs/LIVE_RUNTIME_GUIDE.zh.md`.
 `PROJECT_MEMORY.md` and the `.docx` guidebooks on the user's Desktop are higher-level design memory.
