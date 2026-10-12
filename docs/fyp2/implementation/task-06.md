@@ -190,3 +190,71 @@ python3 <scratch>/mut/run.py         # 结果文件 <scratch>/mut/mutation-resul
 - **Task 7（故障事件）**：`api/client.ts` 的 `request()` 仍对非风险端点保留 `as T`；风险记录端点已归一化。Task 7 若在 `useLiveSession` 加重试 / 停止态，注意 `history` 里的记录已经是 canonical（`assessment_available` 必有）。`useLiveSession` 当前的 `[404, 409, 422, 503].includes(err.status)` 重试策略与「D02 失败策略」表不一致，属于 Task 7 的范围，本 task 未动。
 - **Task 8 / 9**：`frontend/src/utils/export.ts` 现在导出 `buildSessionLogJSON / buildSessionLogCSV` 纯函数，可直接断言；新增导出列一律**追加**。`frontend/src/testing/records.ts` 是可复用的测试构造器（经真实 `buildRiskUpdate`）。
 - **Task 10（最终门禁）**：本 task 的三个数字是 pytest 504/0、vitest 390/0、tsc 0。`IT-UI-01` 的 grep 守卫（`ai/src/availability.test.ts`）会在以后有人把 `getEvidenceType(` 或 `.toFixed(` 重新写进这些视图时变红。
+
+---
+
+# 修复轮 1（review 发现：`riskDistribution.ts` 的两个可用性守卫没有测试保护）
+
+## 发现
+
+审查者对 `frontend/src/views/riskDistribution.ts` 自行做了两个变异，**390/390 仍然全绿**：
+
+- **M-A**：去掉三个等级桶里的 `assessed(record) &&`
+- **M-F**：去掉 `is-high-risk` 里的 `isAssessmentAvailable(record) &&`
+
+生产代码是对的，缺的是防御可见性。具体失败场景：`normalizeRiskUpdate` 对「自带标志但自相矛盾」的记录有意原样放行（第 7 节 C.5），例如后端 bug 送来 `assessment_available: false` 同时 `RiskLevel: "High"`。没有守卫时，这条记录会同时落进 High 桶和 Unavailable 桶，四个计数之和变成 `history.length + 1`（正是 `UT-DIST-01` 要保护的不变式），其表格行同时带 `is-high-risk is-unavailable`。我原来的 M2 把「去守卫」和「去 Unavailable 桶」捆在一起，4 个红灯全部来自去桶，守卫从未被单独隔离过。
+
+## 增加了什么
+
+**只加测试，`riskDistribution.ts` 一个字节没改**（`git diff --quiet HEAD -- frontend/src/views/riskDistribution.ts` 为空）。`frontend/src/views/riskTrends.test.ts` 新增 `describe("self-contradictory records: the availability guards are not decorative")`，4 项（文件 10 -> 14 项）：
+
+1. fixture 自检：构造的记录确实同时是 `RiskLevel: "High"` 与 `assessment_available: false`（由真实 `makeRecord` 加 `assessment_available: false` 展开得到）。
+2. `distribution()` 在 `[assessedLow, canonicalUnavailable, contradictory]` 上：`Low 1 / Medium 0 / High 0 / Unavailable 2`，四项之和恰为 `history.length`（3）——矛盾记录**只在 Unavailable 桶里计一次**。
+3. 矛盾记录的行 class 含 `is-unavailable` 且**不含** `is-high-risk`。
+4. 额外：反方向的矛盾（`assessment_available: true` 但 `RiskLevel: null`）也恰好计一次（守卫 `assessed()` 的第二半 `&& record.RiskLevel !== null`；去掉它这条记录会被计 0 次，之和变 N-1）。
+
+## 红灯确认（审查者的 M-A、M-F，加一个额外的 M-B）
+
+每次变异前后都用 `git checkout -- frontend/src/views/riskDistribution.ts` 还原，并确认该文件 `git status` 为空。
+
+```bash
+export TMPDIR=$(mktemp -d)
+# M-A: 去掉 `assessed(record) &&`（三个等级桶）
+./node_modules/.bin/vitest run --no-cache
+#  × self-contradictory records: the availability guards are not decorative >
+#    distribution() still sums to history.length: the record counts ONCE, in Unavailable only
+#  Test Files 1 failed | 14 passed (15); Tests 1 failed | 393 passed (394)
+
+# M-F: 去掉 `isAssessmentAvailable(record) &&`（is-high-risk）
+./node_modules/.bin/vitest run --no-cache
+#  × self-contradictory records: the availability guards are not decorative >
+#    the row is is-unavailable and NOT is-high-risk
+#  Test Files 1 failed | 14 passed (15); Tests 1 failed | 393 passed (394)
+
+# M-B（额外）: 去掉 assessed() 里的 `&& record.RiskLevel !== null`
+./node_modules/.bin/vitest run --no-cache
+#  × ... > the opposite contradiction (available but RiskLevel null) also counts exactly once
+#  Test Files 1 failed | 14 passed (15); Tests 1 failed | 393 passed (394)
+```
+
+三个变异各只让**一个、且是对应的**新测试变红（守卫被隔离了）；还原后 `git status` 只剩 `riskTrends.test.ts` 的修改。
+
+## 修复后的门禁
+
+```bash
+export TMPDIR=$(mktemp -d)
+./node_modules/.bin/vitest run --no-cache
+#  ✓ frontend/src/views/riskTrends.test.ts (14 tests)
+#  Test Files 15 passed (15); Tests 394 passed (394)      # 390 + 4
+./node_modules/.bin/tsc --noEmit; echo "tsc exit $?"      # -> tsc exit 0
+./node_modules/.bin/eslint ai frontend; echo "eslint exit $?"   # -> eslint exit 0
+./node_modules/.bin/prettier --check frontend/src/views/riskTrends.test.ts   # -> All matched files use Prettier code style!
+```
+
+| 门禁 | 修复前 | 修复后 |
+|---|---|---|
+| vitest | 390 passed / 0 failed | **394 passed / 0 failed** |
+| tsc | 0 errors | **0 errors** |
+| pytest | 504 / 0 | 未触碰后端，不变 |
+
+第 6 节「vitest 390」与第 9 节对 Task 10 的数字交代，以本节为准更新为 **394**；第 5 节的变异清单 M1..M17 另增 M-A / M-F / M-B 三项。

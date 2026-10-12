@@ -87,3 +87,56 @@ describe("riskRowClassName: unavailable rows are not styled like ordinary ones",
     expect(riskRowClassName(low, 1)).not.toContain("is-selected");
   });
 });
+
+describe("self-contradictory records: the availability guards are not decorative", () => {
+  // normalizeRiskUpdate deliberately lets a record that carries its own
+  // assessment_available flag through unchanged, so a backend bug can hand the UI
+  // `assessment_available: false` together with a non-null RiskLevel. The flag
+  // wins: such a record is unassessed, and must be counted and styled as one.
+  const assessedLow = makeRecord("fresh", "fresh", 1, {
+    P_distraction: 0.05,
+    P_telemetry_anomaly: 0.05,
+  });
+  const canonicalUnavailable = makeRecord("missing", "missing", 2);
+  const contradictory = {
+    ...makeRecord("fresh", "fresh", 3, {
+      P_distraction: 0.9,
+      P_telemetry_anomaly: 0.9,
+    }),
+    assessment_available: false,
+  };
+  const history = [assessedLow, canonicalUnavailable, contradictory];
+
+  it("fixture sanity: the contradictory record really says High and unavailable at once", () => {
+    expect(contradictory.RiskLevel).toBe("High");
+    expect(contradictory.assessment_available).toBe(false);
+  });
+
+  it("distribution() still sums to history.length: the record counts ONCE, in Unavailable only", () => {
+    const counts = asCounts(history);
+    expect(counts.Low).toBe(1);
+    expect(counts.Medium).toBe(0);
+    // Not 1: a High bucket that ignored availability would also take it.
+    expect(counts.High).toBe(0);
+    expect(counts.Unavailable).toBe(2);
+    const total = counts.Low + counts.Medium + counts.High + counts.Unavailable;
+    expect(total).toBe(history.length);
+  });
+
+  it("the row is is-unavailable and NOT is-high-risk", () => {
+    const cls = riskRowClassName(contradictory, 99);
+    expect(cls).toContain("is-unavailable");
+    expect(cls).not.toContain("is-high-risk");
+  });
+
+  it("the opposite contradiction (available but RiskLevel null) also counts exactly once", () => {
+    const noLevel = { ...assessedLow, window_id: 4, RiskLevel: null };
+    expect(noLevel.assessment_available).toBe(true);
+    const counts = asCounts([assessedLow, noLevel]);
+    expect(counts.Low).toBe(1);
+    expect(counts.Unavailable).toBe(1);
+    expect(counts.Low + counts.Medium + counts.High + counts.Unavailable).toBe(
+      2,
+    );
+  });
+});
