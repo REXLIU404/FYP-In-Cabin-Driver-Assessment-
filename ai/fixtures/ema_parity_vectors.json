@@ -1,0 +1,418 @@
+[
+  {
+    "id": "first-window-keeps-provider-precision",
+    "description": "A seed is emitted exactly as the provider produced it. The backend does not round it; the TypeScript port used to round it to 3 dp (0.123456789 -> 0.123).",
+    "config": {
+      "ema_alpha": 0.35,
+      "weight_vision": 0.6,
+      "weight_telemetry": 0.4
+    },
+    "windows": [
+      {
+        "vision_status": "fresh",
+        "P_distraction": 0.123456789,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.1
+      }
+    ],
+    "expect": [
+      {
+        "P_distraction": 0.123456789,
+        "P_telemetry_anomaly": 0.1,
+        "assessment_available": true,
+        "RiskScore": 11.4,
+        "SystemHealth": "FULL"
+      }
+    ]
+  },
+  {
+    "id": "seed-on-first-sample",
+    "description": "0.2 then 1.0 smooths to 0.48. Seeding the chain at 0 would give 0.3955.",
+    "config": {
+      "ema_alpha": 0.35,
+      "weight_vision": 0.6,
+      "weight_telemetry": 0.4
+    },
+    "windows": [
+      {
+        "vision_status": "fresh",
+        "P_distraction": 0.2,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.1
+      },
+      {
+        "vision_status": "fresh",
+        "P_distraction": 1.0,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.1
+      }
+    ],
+    "expect": [
+      {
+        "P_distraction": 0.2,
+        "P_telemetry_anomaly": 0.1,
+        "assessment_available": true,
+        "RiskScore": 16.0,
+        "SystemHealth": "FULL"
+      },
+      {
+        "P_distraction": 0.48,
+        "P_telemetry_anomaly": 0.1,
+        "assessment_available": true,
+        "RiskScore": 32.8,
+        "SystemHealth": "FULL"
+      }
+    ]
+  },
+  {
+    "id": "consecutive-fresh-run",
+    "description": "A run of consecutive fresh windows smooths every window after the seed, each rounded half up to 3 dp.",
+    "config": {
+      "ema_alpha": 0.35,
+      "weight_vision": 0.6,
+      "weight_telemetry": 0.4
+    },
+    "windows": [
+      {
+        "vision_status": "fresh",
+        "P_distraction": 0.2,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.1
+      },
+      {
+        "vision_status": "fresh",
+        "P_distraction": 1.0,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.1
+      },
+      {
+        "vision_status": "fresh",
+        "P_distraction": 0.0,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.1
+      },
+      {
+        "vision_status": "fresh",
+        "P_distraction": 0.5,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.1
+      },
+      {
+        "vision_status": "fresh",
+        "P_distraction": 0.5,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.1
+      }
+    ],
+    "expect": [
+      {
+        "P_distraction": 0.2,
+        "P_telemetry_anomaly": 0.1,
+        "assessment_available": true,
+        "RiskScore": 16.0,
+        "SystemHealth": "FULL"
+      },
+      {
+        "P_distraction": 0.48,
+        "P_telemetry_anomaly": 0.1,
+        "assessment_available": true,
+        "RiskScore": 32.8,
+        "SystemHealth": "FULL"
+      },
+      {
+        "P_distraction": 0.312,
+        "P_telemetry_anomaly": 0.1,
+        "assessment_available": true,
+        "RiskScore": 22.7,
+        "SystemHealth": "FULL"
+      },
+      {
+        "P_distraction": 0.378,
+        "P_telemetry_anomaly": 0.1,
+        "assessment_available": true,
+        "RiskScore": 26.7,
+        "SystemHealth": "FULL"
+      },
+      {
+        "P_distraction": 0.421,
+        "P_telemetry_anomaly": 0.1,
+        "assessment_available": true,
+        "RiskScore": 29.3,
+        "SystemHealth": "FULL"
+      }
+    ]
+  },
+  {
+    "id": "first-fresh-after-stale-reseeds",
+    "description": "The window after a stale one re-seeds (0.6 as-is). The TypeScript port used to smooth from the stale window's stored 0.9 and emit 0.795.",
+    "config": {
+      "ema_alpha": 0.35,
+      "weight_vision": 0.6,
+      "weight_telemetry": 0.4
+    },
+    "windows": [
+      {
+        "vision_status": "fresh",
+        "P_distraction": 0.2,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.1
+      },
+      {
+        "vision_status": "stale",
+        "P_distraction": 0.9,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.1
+      },
+      {
+        "vision_status": "fresh",
+        "P_distraction": 0.6,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.1
+      },
+      {
+        "vision_status": "fresh",
+        "P_distraction": 0.6,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.1
+      }
+    ],
+    "expect": [
+      {
+        "P_distraction": 0.2,
+        "P_telemetry_anomaly": 0.1,
+        "assessment_available": true,
+        "RiskScore": 16.0,
+        "SystemHealth": "FULL"
+      },
+      {
+        "P_distraction": 0.9,
+        "P_telemetry_anomaly": 0.1,
+        "assessment_available": true,
+        "RiskScore": 42.2,
+        "SystemHealth": "DEGRADED"
+      },
+      {
+        "P_distraction": 0.6,
+        "P_telemetry_anomaly": 0.1,
+        "assessment_available": true,
+        "RiskScore": 40.0,
+        "SystemHealth": "FULL"
+      },
+      {
+        "P_distraction": 0.6,
+        "P_telemetry_anomaly": 0.1,
+        "assessment_available": true,
+        "RiskScore": 40.0,
+        "SystemHealth": "FULL"
+      }
+    ]
+  },
+  {
+    "id": "first-fresh-after-missing-reseeds",
+    "description": "A missing vision window emits 0 and breaks the chain; the next fresh window re-seeds.",
+    "config": {
+      "ema_alpha": 0.35,
+      "weight_vision": 0.6,
+      "weight_telemetry": 0.4
+    },
+    "windows": [
+      {
+        "vision_status": "fresh",
+        "P_distraction": 0.4,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.1
+      },
+      {
+        "vision_status": "missing",
+        "P_distraction": 0.9,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.1
+      },
+      {
+        "vision_status": "fresh",
+        "P_distraction": 0.8,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.1
+      },
+      {
+        "vision_status": "fresh",
+        "P_distraction": 0.8,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.1
+      }
+    ],
+    "expect": [
+      {
+        "P_distraction": 0.4,
+        "P_telemetry_anomaly": 0.1,
+        "assessment_available": true,
+        "RiskScore": 28.0,
+        "SystemHealth": "FULL"
+      },
+      {
+        "P_distraction": 0.0,
+        "P_telemetry_anomaly": 0.1,
+        "assessment_available": true,
+        "RiskScore": 10.0,
+        "SystemHealth": "DEGRADED"
+      },
+      {
+        "P_distraction": 0.8,
+        "P_telemetry_anomaly": 0.1,
+        "assessment_available": true,
+        "RiskScore": 52.0,
+        "SystemHealth": "FULL"
+      },
+      {
+        "P_distraction": 0.8,
+        "P_telemetry_anomaly": 0.1,
+        "assessment_available": true,
+        "RiskScore": 52.0,
+        "SystemHealth": "FULL"
+      }
+    ]
+  },
+  {
+    "id": "unavailable-window-with-fresh-vision-reseeds",
+    "description": "w_v=0, w_t=1 and telemetry missing: vision is fresh but nothing carries weight, so the window is unavailable and must not seed the next one.",
+    "config": {
+      "ema_alpha": 0.35,
+      "weight_vision": 0.0,
+      "weight_telemetry": 1.0
+    },
+    "windows": [
+      {
+        "vision_status": "fresh",
+        "P_distraction": 0.4,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.5
+      },
+      {
+        "vision_status": "fresh",
+        "P_distraction": 0.9,
+        "telemetry_status": "missing",
+        "P_telemetry_anomaly": 0.0
+      },
+      {
+        "vision_status": "fresh",
+        "P_distraction": 0.6,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.5
+      }
+    ],
+    "expect": [
+      {
+        "P_distraction": 0.4,
+        "P_telemetry_anomaly": 0.5,
+        "assessment_available": true,
+        "RiskScore": 50.0,
+        "SystemHealth": "FULL"
+      },
+      {
+        "P_distraction": 0.575,
+        "P_telemetry_anomaly": 0.0,
+        "assessment_available": false,
+        "RiskScore": null,
+        "SystemHealth": "UNAVAILABLE"
+      },
+      {
+        "P_distraction": 0.6,
+        "P_telemetry_anomaly": 0.5,
+        "assessment_available": true,
+        "RiskScore": 50.0,
+        "SystemHealth": "FULL"
+      }
+    ]
+  },
+  {
+    "id": "half-up-tie-in-the-ema",
+    "description": "alpha 0.5 from a 0.0 seed to 0.125 is exactly 0.0625, a tie at 3 dp: half up gives 0.063, banker's rounding 0.062.",
+    "config": {
+      "ema_alpha": 0.5,
+      "weight_vision": 0.6,
+      "weight_telemetry": 0.4
+    },
+    "windows": [
+      {
+        "vision_status": "fresh",
+        "P_distraction": 0.0,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.1
+      },
+      {
+        "vision_status": "fresh",
+        "P_distraction": 0.125,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.1
+      }
+    ],
+    "expect": [
+      {
+        "P_distraction": 0.0,
+        "P_telemetry_anomaly": 0.1,
+        "assessment_available": true,
+        "RiskScore": 4.0,
+        "SystemHealth": "FULL"
+      },
+      {
+        "P_distraction": 0.063,
+        "P_telemetry_anomaly": 0.1,
+        "assessment_available": true,
+        "RiskScore": 7.8,
+        "SystemHealth": "FULL"
+      }
+    ]
+  },
+  {
+    "id": "telemetry-probability-is-not-rounded",
+    "description": "pT 0.1237 is used as-is: the score is 34.9. Rounding it to 0.124 first (the TypeScript port used to) fused to 35.0.",
+    "config": {
+      "ema_alpha": 0.35,
+      "weight_vision": 0.6,
+      "weight_telemetry": 0.4
+    },
+    "windows": [
+      {
+        "vision_status": "fresh",
+        "P_distraction": 0.5,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.1237
+      }
+    ],
+    "expect": [
+      {
+        "P_distraction": 0.5,
+        "P_telemetry_anomaly": 0.1237,
+        "assessment_available": true,
+        "RiskScore": 34.9,
+        "SystemHealth": "FULL"
+      }
+    ]
+  },
+  {
+    "id": "half-up-tie-in-the-score",
+    "description": "pD 0.916, pT 0.769 fuse to exactly 84.25: half up gives 84.3, banker's rounding 84.2.",
+    "config": {
+      "ema_alpha": 0.35,
+      "weight_vision": 0.5,
+      "weight_telemetry": 0.5
+    },
+    "windows": [
+      {
+        "vision_status": "fresh",
+        "P_distraction": 0.916,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.769
+      }
+    ],
+    "expect": [
+      {
+        "P_distraction": 0.916,
+        "P_telemetry_anomaly": 0.769,
+        "assessment_available": true,
+        "RiskScore": 84.3,
+        "SystemHealth": "FULL"
+      }
+    ]
+  }
+]

@@ -12,6 +12,9 @@ greater than ``FUSION_EPSILON``. Otherwise there is no evidence to fuse and the
 score, level and dominant evidence are ``None`` and the health is
 ``UNAVAILABLE`` - the pipeline never invents a "safe" reading (0 / Low).
 """
+import math
+from decimal import ROUND_HALF_UP, Decimal
+
 from .config import settings
 
 EVIDENCE_GAP = 0.15
@@ -32,6 +35,24 @@ def freshness_weight(status: str) -> float:
 
 def _clamp(v: float) -> float:
     return max(0.0, min(1.0, v))
+
+
+def round_half_up(value: float, places: int) -> float:
+    """Round half UP on the shortest decimal representation of ``value``.
+
+    Python's built-in ``round`` is banker's rounding (84.25 -> 84.2) while the
+    TypeScript port used ``toFixed`` (84.25 -> 84.3), so the two disagreed on about
+    4% of inputs and, because ``RuntimeConfig`` allows float thresholds, could even
+    disagree on the RiskLevel (a 30.25 score against a 30.3 threshold). Both ports
+    now round the ``repr`` of the double with ROUND_HALF_UP, so what is printed is
+    what is rounded (29.95, whose binary value sits just below the tie, is 30.0);
+    ``roundHalfUp`` in ``ai/src/riskLogic.ts`` is the identical algorithm. Inputs
+    here are never negative; for a negative value this rounds half away from
+    zero."""
+    if not math.isfinite(value):
+        return value
+    quantum = Decimal(f"1e-{places}")
+    return float(Decimal(str(value)).quantize(quantum, rounding=ROUND_HALF_UP))
 
 
 def effective_weights(
@@ -58,16 +79,17 @@ def compute_risk_score(
     telemetry_status: str = "fresh",
 ) -> float | None:
     """Eq. 2 (freshness-aware). Reduces to the baseline weighted sum when both
-    modalities are fresh and weights sum to 1. Returns a 0-100 score rounded to
-    1 decimal place, or ``None`` - never 0 - when the effective denominator is
-    <= FUSION_EPSILON (nothing to fuse; 0 would read as "safe")."""
+    modalities are fresh and weights sum to 1. Returns a 0-100 score rounded half
+    up to 1 decimal place (``round_half_up``), or ``None`` - never 0 - when the
+    effective denominator is <= FUSION_EPSILON (nothing to fuse; 0 would read as
+    "safe")."""
     eff_v, eff_t, total = effective_weights(
         weight_vision, weight_telemetry, vision_status, telemetry_status
     )
     if total <= FUSION_EPSILON:
         return None
     score = (eff_v * _clamp(p_distraction) + eff_t * _clamp(p_telemetry_anomaly)) / total
-    return round(score * 100, 1)
+    return round_half_up(score * 100, 1)
 
 
 def map_risk_level(score: float | None, low: float | None = None, high: float | None = None) -> str | None:

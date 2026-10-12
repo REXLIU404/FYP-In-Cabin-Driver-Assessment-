@@ -334,5 +334,69 @@
       "health": "FULL",
       "dominant": "Combined evidence"
     }
+  },
+  {
+    "id": "F-R1",
+    "pd": 0.916,
+    "pt": 0.769,
+    "wv": 0.5,
+    "wt": 0.5,
+    "vision": "fresh",
+    "telemetry": "fresh",
+    "expect": {
+      "available": true,
+      "score": 84.3,
+      "level": "High",
+      "health": "FULL",
+      "dominant": "Combined evidence"
+    }
+  },
+  {
+    "id": "F-R2",
+    "pd": 0.2995,
+    "pt": 0.2995,
+    "wv": 0.5,
+    "wt": 0.5,
+    "vision": "fresh",
+    "telemetry": "fresh",
+    "expect": {
+      "available": true,
+      "score": 30,
+      "level": "Medium",
+      "health": "FULL",
+      "dominant": "Combined evidence"
+    }
+  },
+  {
+    "id": "F-R3",
+    "pd": 0.299,
+    "pt": 0.3,
+    "wv": 0.5,
+    "wt": 0.5,
+    "vision": "fresh",
+    "telemetry": "fresh",
+    "expect": {
+      "available": true,
+      "score": 30,
+      "level": "Medium",
+      "health": "FULL",
+      "dominant": "Combined evidence"
+    }
+  },
+  {
+    "id": "F-R4",
+    "pd": 0.2,
+    "pt": 0.245,
+    "wv": 0.5,
+    "wt": 0.5,
+    "vision": "fresh",
+    "telemetry": "fresh",
+    "expect": {
+      "available": true,
+      "score": 22.3,
+      "level": "Low",
+      "health": "FULL",
+      "dominant": "Low observed risk"
+    }
   }
 ]

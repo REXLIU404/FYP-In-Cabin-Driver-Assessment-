@@ -12,6 +12,15 @@ import type { AlertSeverity, RiskLevel } from "./types";
  *  - Escalate to HIGH_ALERT only after RiskLevel has stayed High for >= sustainMs.
  *  - Auto-recover to NORMAL only after RiskLevel has stayed Low for >= recoverMs.
  *  - Medium maps to CAUTION (genuine, immediate).
+ *  - A window with NO assessment (`level === null`) suspends the timers and
+ *    leaves the held severity alone: the dead interval is credited towards
+ *    neither the sustain nor the recovery, and an active alert is neither
+ *    escalated nor cleared by missing evidence. Mirrors `_step_alert_fsm` in
+ *    backend/app/inference.py.
+ *
+ * `AlertFsmState.severity` is never null; nullability exists only at the emitted
+ * RiskUpdate boundary, where the caller must emit `AlertSeverity: null` for a
+ * window whose `RiskLevel` is null instead of copying `severity` onto it.
  */
 
 export const ALERT_SUSTAIN_MS = 2000; // High must persist >= 2s before HIGH_ALERT
@@ -36,12 +45,20 @@ export const initAlertState = (): AlertFsmState => ({
 
 export const updateAlertState = (
   prev: AlertFsmState,
-  level: RiskLevel,
+  level: RiskLevel | null,
   now: number,
   options: AlertFsmOptions = {},
 ): AlertFsmState => {
   const sustainMs = options.sustainMs ?? ALERT_SUSTAIN_MS;
   const recoverMs = options.recoverMs ?? ALERT_RECOVER_MS;
+
+  if (level === null) {
+    // Suspend, not freeze: dropping both streaks means the first assessed
+    // window afterwards re-anchors them to itself, so the interruption is
+    // credited toward neither timer. Without this branch a null level would
+    // fall through to the Low branch below and start the recovery timer.
+    return { severity: prev.severity, highSince: null, lowSince: null };
+  }
 
   if (level === "High") {
     const highSince = prev.highSince ?? now;

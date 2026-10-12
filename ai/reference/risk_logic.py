@@ -23,7 +23,9 @@ test_fusion_vectors.py checks this module AND backend/app/fusion.py against it, 
 this specification cannot drift silently from the TypeScript implementation.
 """
 from __future__ import annotations
+import math
 from dataclasses import dataclass
+from decimal import ROUND_HALF_UP, Decimal
 
 # ---- thresholds & weights (transparent prototype parameters) ----
 THRESHOLD_LOW = 30.0      # RiskScore < 30  -> Low
@@ -39,6 +41,18 @@ FUSION_EPSILON = 1e-9
 
 def clamp01(x: float) -> float:
     return max(0.0, min(1.0, x))
+
+
+def round_half_up(value: float, places: int) -> float:
+    """Round half UP on the shortest decimal representation of ``value``.
+
+    Every implementation of this specification (backend/app/fusion.py and
+    ai/src/riskLogic.ts) rounds the same way, so a score such as 84.25 is 84.3
+    everywhere. The built-in ``round`` is banker's rounding (84.25 -> 84.2) and
+    JavaScript's ``toFixed`` rounds the exact binary value, so neither is used."""
+    if not math.isfinite(value):
+        return value
+    return float(Decimal(str(value)).quantize(Decimal(f"1e-{places}"), rounding=ROUND_HALF_UP))
 
 
 def freshness_weight(status: str) -> float:
@@ -69,7 +83,7 @@ def compute_risk_score(
 ) -> float | None:
     """
     Freshness-weighted decision-level late fusion, returned on a 0..100 scale
-    rounded to 1 decimal place.
+    rounded half up to 1 decimal place.
 
         eff_v = w_vision    * fw(vision_status)
         eff_t = w_telemetry * fw(telemetry_status)
@@ -82,7 +96,7 @@ def compute_risk_score(
     if total <= FUSION_EPSILON:
         return None
     score = (eff_v * clamp01(p_distraction) + eff_t * clamp01(p_telemetry_anomaly)) / total * 100
-    return round(score, 1)
+    return round_half_up(score, 1)
 
 
 def map_risk_level(
@@ -136,10 +150,25 @@ def determine_dominant_evidence(
 
 
 def ema(current: float, previous: float | None, alpha: float = EMA_ALPHA) -> float:
-    """Exponential moving average anti-jitter smoothing."""
+    """Exponential moving average anti-jitter smoothing of P_distraction.
+
+    Seed convention (seed-on-first-sample): when ``previous`` is None the sample
+    is its own previous value, so it is emitted as-is at full provider precision -
+    it is NOT rounded and NOT pulled towards 0. (0.2 -> 1.0 therefore smooths to
+    0.48; seeding at 0 would give 0.3955.) Only a smoothed value is rounded, half
+    up to 3 decimals.
+
+    Re-initialisation convention: the chain is only valid across CONSECUTIVE
+    windows whose vision evidence was fresh. A caller must pass ``previous=None``
+    - re-seeding, no smoothing - for the first fresh window after any window whose
+    vision was stale or missing, after any window with no assessment (the
+    effective denominator was zero), and after a gap longer than the freshness
+    tolerance. backend/app/inference.py does all of this; ai/src/riskLogic.ts does
+    the first two (it has no wall clock, so no gap rule). This function is
+    stateless and relies on the caller for it."""
     if previous is None:
-        return round(current, 3)
-    return round(alpha * current + (1 - alpha) * previous, 3)
+        return current
+    return round_half_up(alpha * current + (1 - alpha) * previous, 3)
 
 
 @dataclass
@@ -157,8 +186,8 @@ def build_risk_update(pD, pT, w_v=0.5, w_t=0.5, v="fresh", t="fresh") -> RiskUpd
     score = compute_risk_score(pD, pT, w_v, w_t, v, t)
     health = map_system_health(v, t, w_vision=w_v, w_telemetry=w_t)
     return RiskUpdate(
-        P_distraction=round(pD, 3),
-        P_telemetry_anomaly=round(pT, 3),
+        P_distraction=round_half_up(pD, 3),
+        P_telemetry_anomaly=round_half_up(pT, 3),
         assessment_available=score is not None,
         RiskScore=score,
         RiskLevel=map_risk_level(score),

@@ -7,6 +7,7 @@ import {
   determineDominantEvidence,
   mapRiskLevel,
   mapSystemHealth,
+  roundHalfUp,
 } from "./riskLogic";
 import type {
   DominantEvidence,
@@ -19,7 +20,7 @@ import type {
 /**
  * Cross-language numeric oracle.
  *
- * `ai/fixtures/fusion_vectors.json` is the single source of truth for the 21
+ * `ai/fixtures/fusion_vectors.json` is the single source of truth for the 25
  * verified fusion vectors; `backend/tests/test_fusion_vectors.py` reads the same
  * file. Every expectation below comes from that JSON only - no constant is
  * imported from the implementation to build an expectation, so a drift in
@@ -52,9 +53,9 @@ const THRESHOLD_HIGH = 60;
 const EVIDENCE_GAP = 0.15;
 
 describe("fusion_vectors.json shape (contract shared with the Python port)", () => {
-  it("holds the 21 verified rows with unique ids", () => {
-    expect(vectors).toHaveLength(21);
-    expect(new Set(vectors.map((v) => v.id)).size).toBe(21);
+  it("holds the 25 verified rows with unique ids", () => {
+    expect(vectors).toHaveLength(25);
+    expect(new Set(vectors.map((v) => v.id)).size).toBe(25);
   });
 
   it("every row carries the full field set", () => {
@@ -161,5 +162,58 @@ describe("rounding order is load-bearing (F-T5)", () => {
   it("the unrounded value would have been Low (so the row has teeth)", () => {
     const unrounded = ((0.5 * 0.29951 + 0.5 * 0.29951) / 1) * 100;
     expect(unrounded).toBeLessThan(THRESHOLD_LOW);
+  });
+});
+
+describe("rounding mode: half up on the decimal representation (F-R1..F-R4)", () => {
+  // Exact decimal ties. Python's round() gave 84.2 / 29.9 / 22.2 for these and the
+  // old toFixed gave 29.9 for the 29.95 pair, so each row separates the ports.
+  // The raw score is hard-coded so a change in how it is computed cannot hide.
+  const ties: Record<
+    string,
+    { raw: number; bankers: number; expected: number }
+  > = {
+    "F-R1": { raw: 84.25, bankers: 84.2, expected: 84.3 },
+    "F-R2": { raw: 29.95, bankers: 29.9, expected: 30 },
+    "F-R3": { raw: 29.95, bankers: 29.9, expected: 30 },
+    "F-R4": { raw: 22.25, bankers: 22.2, expected: 22.3 },
+  };
+
+  it.each(Object.keys(ties))("%s is an exact tie that rounds up", (id) => {
+    const v = vectors.find((row) => row.id === id);
+    expect(v).toBeDefined();
+    if (!v) return;
+    const { raw, bankers, expected } = ties[id];
+    const unrounded = ((v.wv * v.pd + v.wt * v.pt) / (v.wv + v.wt)) * 100;
+    expect(unrounded).toBe(raw);
+    expect(bankers).not.toBe(expected);
+    expect(
+      computeRiskScore(v.pd, v.pt, v.wv, v.wt, v.vision, v.telemetry),
+    ).toBe(expected);
+    expect(expected).toBe(v.expect.score);
+  });
+
+  it("a tie can change the level: 29.95 is Medium, not Low (F-R2)", () => {
+    expect(computeRiskScore(0.2995, 0.2995)).toBe(30);
+    expect(mapRiskLevel(30, THRESHOLD_LOW, THRESHOLD_HIGH)).toBe("Medium");
+  });
+
+  it.each([
+    [84.25, 1, 84.3],
+    [0.125, 2, 0.13],
+    [2.675, 2, 2.68],
+    [1.005, 2, 1.01],
+    [0.4125, 3, 0.413],
+    [0.4124999, 3, 0.412],
+    [0.0005, 3, 0.001],
+    [0.0004999, 3, 0],
+    [1e-7, 3, 0],
+    [5e-7, 6, 0.000001],
+    [0, 1, 0],
+    [100, 1, 100],
+    // 17 digits: parsing 27.849999999999998e1 lands exactly on the tie (278.5).
+    [27.849999999999998, 1, 27.8],
+  ])("roundHalfUp(%s, %i) = %s", (value, places, expected) => {
+    expect(roundHalfUp(value, places)).toBe(expected);
   });
 });
