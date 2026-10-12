@@ -1,12 +1,25 @@
 """Decision-level late fusion and risk interpretation.
 
 Python port of the framework-agnostic risk-logic layer (ai/src/riskLogic.ts +
-ai/src/evidence.ts). The formulas and thresholds are identical so the backend
-produces the same risk_update as the TypeScript prototype.
+ai/src/availability.ts + ai/src/evidence.ts). The formulas, thresholds and the
+availability contract are identical so the backend produces the same
+risk_update as the TypeScript implementation. ``ai/fixtures/fusion_vectors.json``
+is the cross-language oracle both ports are tested against.
+
+Availability contract: a window is *available* exactly when the effective
+fusion denominator ``w_v * fw(vision) + w_t * fw(telemetry)`` is strictly
+greater than ``FUSION_EPSILON``. Otherwise there is no evidence to fuse and the
+score, level and dominant evidence are ``None`` and the health is
+``UNAVAILABLE`` - the pipeline never invents a "safe" reading (0 / Low).
 """
 from .config import settings
 
 EVIDENCE_GAP = 0.15
+
+# Tolerance for "the effective denominator is zero". RuntimeConfig accepts
+# weights whose sum is off by up to 1e-6, so a literal `== 0` test would let a
+# near-zero denominator through and divide by it. Always compare `<=`.
+FUSION_EPSILON = 1e-9
 
 
 def freshness_weight(status: str) -> float:
@@ -21,6 +34,21 @@ def _clamp(v: float) -> float:
     return max(0.0, min(1.0, v))
 
 
+def effective_weights(
+    w_v: float,
+    w_t: float,
+    vision_status: str,
+    telemetry_status: str,
+) -> tuple[float, float, float]:
+    """The one place the fusion denominator is computed: ``(eff_v, eff_t, total)``.
+
+    Score, health, dominant evidence and the explanation all read this, so they
+    cannot disagree about whether a window is assessable."""
+    eff_v = w_v * freshness_weight(vision_status)
+    eff_t = w_t * freshness_weight(telemetry_status)
+    return eff_v, eff_t, eff_v + eff_t
+
+
 def compute_risk_score(
     p_distraction: float,
     p_telemetry_anomaly: float,
@@ -28,19 +56,26 @@ def compute_risk_score(
     weight_telemetry: float,
     vision_status: str = "fresh",
     telemetry_status: str = "fresh",
-) -> float:
+) -> float | None:
     """Eq. 2 (freshness-aware). Reduces to the baseline weighted sum when both
-    modalities are fresh and weights sum to 1. Returns a 0-100 score."""
-    eff_v = weight_vision * freshness_weight(vision_status)
-    eff_t = weight_telemetry * freshness_weight(telemetry_status)
-    total = eff_v + eff_t
-    if total == 0:
-        return 0.0  # guard: no usable modality
+    modalities are fresh and weights sum to 1. Returns a 0-100 score rounded to
+    1 decimal place, or ``None`` - never 0 - when the effective denominator is
+    <= FUSION_EPSILON (nothing to fuse; 0 would read as "safe")."""
+    eff_v, eff_t, total = effective_weights(
+        weight_vision, weight_telemetry, vision_status, telemetry_status
+    )
+    if total <= FUSION_EPSILON:
+        return None
     score = (eff_v * _clamp(p_distraction) + eff_t * _clamp(p_telemetry_anomaly)) / total
     return round(score * 100, 1)
 
 
-def map_risk_level(score: float, low: float | None = None, high: float | None = None) -> str:
+def map_risk_level(score: float | None, low: float | None = None, high: float | None = None) -> str | None:
+    """Maps a (rounded) score to a level. The None check comes FIRST: Python
+    raises TypeError on ``None < 30`` (the opposite failure mode to JavaScript,
+    where it is silently ``true``), and an unavailable window has no level."""
+    if score is None:
+        return None
     low = settings.threshold_low if low is None else low
     high = settings.threshold_high if high is None else high
     if score < low:
@@ -50,8 +85,22 @@ def map_risk_level(score: float, low: float | None = None, high: float | None = 
     return "High"
 
 
-def map_system_health(vision_status: str, telemetry_status: str) -> str:
-    if vision_status == "missing" and telemetry_status == "missing":
+def map_system_health(
+    vision_status: str,
+    telemetry_status: str,
+    weight_vision: float = 0.5,
+    weight_telemetry: float = 0.5,
+) -> str:
+    """Health is derived from the effective fusion denominator, not from
+    counting ``missing`` flags:
+
+        denominator <= FUSION_EPSILON          -> UNAVAILABLE
+        else any branch not "fresh"            -> DEGRADED
+        else                                   -> FULL
+
+    The FULL / DEGRADED boundary looks only at freshness, never at the weights."""
+    _, _, total = effective_weights(weight_vision, weight_telemetry, vision_status, telemetry_status)
+    if total <= FUSION_EPSILON:
         return "UNAVAILABLE"
     if vision_status != "fresh" or telemetry_status != "fresh":
         return "DEGRADED"
@@ -61,11 +110,18 @@ def map_system_health(vision_status: str, telemetry_status: str) -> str:
 def determine_dominant_evidence(
     p_distraction: float,
     p_telemetry_anomaly: float,
-    risk_score: float,
+    risk_score: float | None,
     system_health: str,
     low: float | None = None,
     gap: float = EVIDENCE_GAP,
-) -> str:
+) -> str | None:
+    """Ordered decision tree. Availability is checked FIRST: without it the
+    `system_health != "FULL"` branch below would shield the score comparison
+    and silently label a no-evidence window "Partial evidence". Call with
+    keyword arguments for ``low`` / ``gap`` so a positional slip cannot
+    misalign them."""
+    if risk_score is None or system_health == "UNAVAILABLE":
+        return None
     low = settings.threshold_low if low is None else low
     if system_health != "FULL":
         return "Partial evidence"
@@ -76,13 +132,71 @@ def determine_dominant_evidence(
     return "Vision-dominant" if p_distraction > p_telemetry_anomaly else "Telemetry-dominant"
 
 
-def map_alert_severity(level: str) -> str:
-    """Per-window instantaneous severity. The wall-clock AlertSeverity FSM
-    (hysteresis) is applied by the orchestration layer, not here."""
+def map_alert_severity(level: str | None) -> str | None:
+    """NOT CALLED ANYWHERE - DO NOT WIRE THIS UP. The AlertSeverity FSM (2 s
+    High sustain, 10 s Low recovery, unavailable suspension) lives in
+    ``inference.py``. This direct mapping turns High into HIGH_ALERT with no
+    sustain, so calling it from the pipeline would silently delete the 2 s
+    gate. Kept (this phase removes no functionality) with a None guard so an
+    unavailable window yields None instead of a KeyError."""
+    if level is None:
+        return None
     return {"Low": "NORMAL", "Medium": "CAUTION", "High": "HIGH_ALERT"}[level]
 
 
-def build_explanation(dominant: str, level: str) -> str:
+def describe_unavailable_cause(
+    vision_status: str | None = None,
+    telemetry_status: str | None = None,
+    weight_vision: float | None = None,
+    weight_telemetry: float | None = None,
+) -> str:
+    """Names which side(s) left the effective fusion denominator at zero. Only
+    meaningful for unavailable windows, where every branch is either missing or
+    carries zero fusion weight. When the statuses are not supplied (legacy
+    two-argument callers) a generic cause is returned."""
+    generic = "no input branch carries usable evidence (each is missing or has zero fusion weight)"
+    if vision_status is None or telemetry_status is None:
+        return generic
+    if vision_status == "missing" and telemetry_status == "missing":
+        return "both the vision and telemetry inputs are missing"
+    wv = 0.5 if weight_vision is None else weight_vision
+    wt = 0.5 if weight_telemetry is None else weight_telemetry
+
+    def branch_reason(name: str, status: str, weight: float) -> str | None:
+        if status == "missing":
+            return f"the {name} input is missing"
+        if weight * freshness_weight(status) <= FUSION_EPSILON:
+            return f"the {name} branch has zero fusion weight"
+        return None
+
+    reasons = [
+        r
+        for r in (
+            branch_reason("vision", vision_status, wv),
+            branch_reason("telemetry", telemetry_status, wt),
+        )
+        if r is not None
+    ]
+    return " and ".join(reasons) if reasons else generic
+
+
+def build_explanation(
+    dominant: str | None,
+    level: str | None,
+    vision_status: str | None = None,
+    telemetry_status: str | None = None,
+    weight_vision: float | None = None,
+    weight_telemetry: float | None = None,
+) -> str:
+    # Availability first. The unavailable text deliberately names no level and
+    # never falls through to the "below the low-risk threshold" claim, which
+    # would otherwise be rendered (and exported) for a window with no evidence.
+    if dominant is None or level is None:
+        cause = describe_unavailable_cause(vision_status, telemetry_status, weight_vision, weight_telemetry)
+        return (
+            f"No risk assessment is available because {cause}, "
+            "so the effective fusion denominator is zero and there is no evidence to fuse."
+        )
     lvl = level.lower()
     if dominant == "Vision-dominant":
         return f"Vision evidence is driving the {lvl} risk output."
@@ -92,4 +206,7 @@ def build_explanation(dominant: str, level: str) -> str:
         return f"Vision and telemetry evidence both contribute to the {lvl} risk output."
     if dominant == "Partial evidence":
         return "Output is based on partial evidence; one modality is stale or missing."
-    return "The current window is below the low-risk threshold."
+    if dominant == "Low observed risk":
+        return "The current window is below the low-risk threshold."
+    # An unrecognised dominant value must not be reported as low risk.
+    return "The dominant evidence type is not recognised, so no explanation is available."

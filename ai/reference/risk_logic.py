@@ -6,9 +6,21 @@ risk-scoring engine. The FYP1 dashboard runs the identical algorithm client-side
 in TypeScript (ai/src/riskLogic.ts) to render the live demo; this Python module is
 the same maths in the AI-inference-layer language, and is fully runnable/testable.
 
+Availability contract (mirrors ai/src/availability.ts): a window is *available*
+exactly when the effective fusion denominator
+    w_vision * fw(vision_status) + w_telemetry * fw(telemetry_status)
+is strictly greater than FUSION_EPSILON. Otherwise there is no evidence to fuse:
+RiskScore / RiskLevel / DominantEvidence are None, SystemHealth is "UNAVAILABLE"
+and assessment_available is False. The engine never invents a "safe" reading
+(0 / Low) for a window it could not assess.
+
 Only the branch probability INPUTS (P_distraction, P_telemetry_anomaly) are mocked
 in FYP1 (prepared values standing in for the untrained MobileNetV3 / XGBoost).
 The fusion engine below is REAL working code, not a mock.
+
+Cross-language oracle: ai/fixtures/fusion_vectors.json. backend/tests/
+test_fusion_vectors.py checks this module AND backend/app/fusion.py against it, so
+this specification cannot drift silently from the TypeScript implementation.
 """
 from __future__ import annotations
 from dataclasses import dataclass
@@ -18,6 +30,11 @@ THRESHOLD_LOW = 30.0      # RiskScore < 30  -> Low
 THRESHOLD_HIGH = 60.0     # RiskScore >= 60 -> High
 EVIDENCE_GAP = 0.15       # |pD - pT| below this -> Combined evidence
 EMA_ALPHA = 0.35          # temporal smoothing coefficient
+
+# Tolerance for "the effective denominator is zero". Runtime configs accept
+# weights whose sum is off by up to 1e-6, so a literal `== 0` test would let a
+# near-zero denominator through and divide by it. Always compare `<=`.
+FUSION_EPSILON = 1e-9
 
 
 def clamp01(x: float) -> float:
@@ -29,6 +46,19 @@ def freshness_weight(status: str) -> float:
     return {"fresh": 1.0, "stale": 0.45, "missing": 0.0}.get(status, 1.0)
 
 
+def effective_weights(
+    w_vision: float,
+    w_telemetry: float,
+    vision_status: str,
+    telemetry_status: str,
+) -> tuple[float, float, float]:
+    """The one place the fusion denominator is computed: (eff_v, eff_t, total).
+    Score, health and dominant evidence all read this, so they cannot disagree."""
+    eff_v = w_vision * freshness_weight(vision_status)
+    eff_t = w_telemetry * freshness_weight(telemetry_status)
+    return eff_v, eff_t, eff_v + eff_t
+
+
 def compute_risk_score(
     p_distraction: float,
     p_telemetry_anomaly: float,
@@ -36,24 +66,32 @@ def compute_risk_score(
     w_telemetry: float = 0.5,
     vision_status: str = "fresh",
     telemetry_status: str = "fresh",
-) -> float:
+) -> float | None:
     """
-    Freshness-weighted decision-level late fusion, returned on a 0..100 scale.
+    Freshness-weighted decision-level late fusion, returned on a 0..100 scale
+    rounded to 1 decimal place.
 
         eff_v = w_vision    * fw(vision_status)
         eff_t = w_telemetry * fw(telemetry_status)
         RiskScore = (eff_v * pD + eff_t * pT) / (eff_v + eff_t) * 100
+
+    Returns None - never 0 - when eff_v + eff_t <= FUSION_EPSILON (both branches
+    missing, or every branch that has evidence carries zero weight).
     """
-    eff_v = w_vision * freshness_weight(vision_status)
-    eff_t = w_telemetry * freshness_weight(telemetry_status)
-    total = eff_v + eff_t
-    if total == 0:
-        return 0.0
+    eff_v, eff_t, total = effective_weights(w_vision, w_telemetry, vision_status, telemetry_status)
+    if total <= FUSION_EPSILON:
+        return None
     score = (eff_v * clamp01(p_distraction) + eff_t * clamp01(p_telemetry_anomaly)) / total * 100
     return round(score, 1)
 
 
-def map_risk_level(score: float, low: float = THRESHOLD_LOW, high: float = THRESHOLD_HIGH) -> str:
+def map_risk_level(
+    score: float | None, low: float = THRESHOLD_LOW, high: float = THRESHOLD_HIGH
+) -> str | None:
+    # None check FIRST: Python raises TypeError on `None < 30` (JavaScript silently
+    # yields true). An unavailable window has no level.
+    if score is None:
+        return None
     if score < low:
         return "Low"
     if score < high:
@@ -61,8 +99,16 @@ def map_risk_level(score: float, low: float = THRESHOLD_LOW, high: float = THRES
     return "High"
 
 
-def map_system_health(vision_status: str, telemetry_status: str) -> str:
-    if vision_status == "missing" and telemetry_status == "missing":
+def map_system_health(
+    vision_status: str,
+    telemetry_status: str,
+    w_vision: float = 0.5,
+    w_telemetry: float = 0.5,
+) -> str:
+    """denominator <= FUSION_EPSILON -> UNAVAILABLE; else any branch not fresh ->
+    DEGRADED; else FULL. FULL/DEGRADED looks only at freshness, never at weights."""
+    _, _, total = effective_weights(w_vision, w_telemetry, vision_status, telemetry_status)
+    if total <= FUSION_EPSILON:
         return "UNAVAILABLE"
     if vision_status != "fresh" or telemetry_status != "fresh":
         return "DEGRADED"
@@ -72,12 +118,14 @@ def map_system_health(vision_status: str, telemetry_status: str) -> str:
 def determine_dominant_evidence(
     p_distraction: float,
     p_telemetry_anomaly: float,
-    risk_score: float,
+    risk_score: float | None,
     system_health: str,
     low: float = THRESHOLD_LOW,
     gap: float = EVIDENCE_GAP,
-) -> str:
-    """Ordered 5-type decision tree."""
+) -> str | None:
+    """Ordered decision tree. Availability is checked FIRST (None => no evidence)."""
+    if risk_score is None or system_health == "UNAVAILABLE":
+        return None
     if system_health != "FULL":
         return "Partial evidence"
     if risk_score < low:
@@ -98,18 +146,20 @@ def ema(current: float, previous: float | None, alpha: float = EMA_ALPHA) -> flo
 class RiskUpdate:
     P_distraction: float
     P_telemetry_anomaly: float
-    RiskScore: float
-    RiskLevel: str
-    DominantEvidence: str
+    assessment_available: bool
+    RiskScore: float | None
+    RiskLevel: str | None
+    DominantEvidence: str | None
     SystemHealth: str
 
 
 def build_risk_update(pD, pT, w_v=0.5, w_t=0.5, v="fresh", t="fresh") -> RiskUpdate:
     score = compute_risk_score(pD, pT, w_v, w_t, v, t)
-    health = map_system_health(v, t)
+    health = map_system_health(v, t, w_vision=w_v, w_telemetry=w_t)
     return RiskUpdate(
         P_distraction=round(pD, 3),
         P_telemetry_anomaly=round(pT, 3),
+        assessment_available=score is not None,
         RiskScore=score,
         RiskLevel=map_risk_level(score),
         DominantEvidence=determine_dominant_evidence(pD, pT, score, health),
@@ -136,3 +186,12 @@ if __name__ == "__main__":
     print("  -> RiskScore       =", ru2.RiskScore, "/ 100  (vision-only re-normalised)")
     print("  -> SystemHealth    =", ru2.SystemHealth)
     print("  -> DominantEvidence=", ru2.DominantEvidence)
+
+    # ---- Unavailable example: both branches missing -> nothing to fuse ----
+    print("\nUnavailable example (vision AND telemetry missing, w 0.5/0.5):")
+    ru3 = build_risk_update(0.0, 0.0, w_v=0.5, w_t=0.5, v="missing", t="missing")
+    print("  -> assessment_available =", ru3.assessment_available)
+    print("  -> RiskScore       =", ru3.RiskScore, "(None, never 0)")
+    print("  -> RiskLevel       =", ru3.RiskLevel)
+    print("  -> DominantEvidence=", ru3.DominantEvidence)
+    print("  -> SystemHealth    =", ru3.SystemHealth)
