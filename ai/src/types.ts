@@ -58,10 +58,18 @@ export interface RiskUpdate {
   timestamp: string;
   P_distraction: number;
   P_telemetry_anomaly: number;
-  RiskScore: number;
-  RiskLevel: RiskLevel;
-  DominantEvidence: DominantEvidence;
-  AlertSeverity: AlertSeverity;
+  /**
+   * False when the effective fusion denominator is zero (no usable evidence).
+   * Then RiskScore / RiskLevel / DominantEvidence / AlertSeverity are all null
+   * and SystemHealth is "UNAVAILABLE" - never a fabricated 0 / Low / NORMAL.
+   * Invariant: assessment_available === (RiskScore !== null)
+   *                                  === (SystemHealth !== "UNAVAILABLE").
+   */
+  assessment_available: boolean;
+  RiskScore: number | null;
+  RiskLevel: RiskLevel | null;
+  DominantEvidence: DominantEvidence | null;
+  AlertSeverity: AlertSeverity | null;
   SystemHealth: SystemHealth;
   operation_mode: OperationMode;
   modality_freshness: {

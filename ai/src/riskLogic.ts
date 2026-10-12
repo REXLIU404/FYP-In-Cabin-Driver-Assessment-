@@ -9,6 +9,11 @@ import type {
   SystemHealth,
 } from "./types";
 import { determineEvidenceType } from "./evidence";
+import {
+  FUSION_EPSILON,
+  effectiveFusionDenominator,
+  freshnessWeight,
+} from "./availability";
 
 export const DEFAULT_CONFIG: AppConfig = {
   operationMode: "LIVE_MODEL_RUNTIME",
@@ -32,12 +37,13 @@ const alertSeverityMap: Record<RiskLevel, AlertSeverity> = {
   High: "HIGH_ALERT",
 };
 
-const freshnessWeight = (status: FreshnessStatus) => {
-  if (status === "missing") return 0;
-  if (status === "stale") return 0.45;
-  return 1;
-};
-
+/**
+ * Freshness-weighted late fusion on a 0-100 scale, rounded to 1 decimal place.
+ *
+ * Returns `null` - never 0 - when the effective fusion denominator is zero
+ * (both branches missing, or every branch that has evidence carries zero
+ * weight): there is nothing to fuse, and 0 would read as "safe".
+ */
 export const computeRiskScore = (
   pD: number,
   pT: number,
@@ -45,19 +51,26 @@ export const computeRiskScore = (
   weightTelemetry = 0.5,
   visionStatus: FreshnessStatus = "fresh",
   telemetryStatus: FreshnessStatus = "fresh",
-) => {
-  const effectiveVision = weightVision * freshnessWeight(visionStatus);
-  const effectiveTelemetry = weightTelemetry * freshnessWeight(telemetryStatus);
-  const total = effectiveVision + effectiveTelemetry;
+): number | null => {
+  const { effVision, effTelemetry, denominator } = effectiveFusionDenominator(
+    weightVision,
+    weightTelemetry,
+    visionStatus,
+    telemetryStatus,
+  );
 
-  if (total === 0) return 0;
+  if (denominator <= FUSION_EPSILON) return null;
 
   return round1(
-    ((effectiveVision * clamp(pD) + effectiveTelemetry * clamp(pT)) / total) *
-      100,
+    ((effVision * clamp(pD) + effTelemetry * clamp(pT)) / denominator) * 100,
   );
 };
 
+/**
+ * Per-branch share of the fused score. `null` when the assessment is
+ * unavailable (zero effective denominator): there are no contributions to
+ * report, and `{0, 0, 0}` would be a fabricated reading.
+ */
 export const computeRiskContributions = (
   pD: number,
   pT: number,
@@ -65,17 +78,18 @@ export const computeRiskContributions = (
   weightTelemetry = 0.5,
   visionStatus: FreshnessStatus = "fresh",
   telemetryStatus: FreshnessStatus = "fresh",
-) => {
-  const effectiveVision = weightVision * freshnessWeight(visionStatus);
-  const effectiveTelemetry = weightTelemetry * freshnessWeight(telemetryStatus);
-  const total = effectiveVision + effectiveTelemetry;
+): { vision: number; telemetry: number; total: number } | null => {
+  const { effVision, effTelemetry, denominator } = effectiveFusionDenominator(
+    weightVision,
+    weightTelemetry,
+    visionStatus,
+    telemetryStatus,
+  );
 
-  if (total === 0) {
-    return { vision: 0, telemetry: 0, total: 0 };
-  }
+  if (denominator <= FUSION_EPSILON) return null;
 
-  const vision = ((effectiveVision * clamp(pD)) / total) * 100;
-  const telemetry = ((effectiveTelemetry * clamp(pT)) / total) * 100;
+  const vision = ((effVision * clamp(pD)) / denominator) * 100;
+  const telemetry = ((effTelemetry * clamp(pT)) / denominator) * 100;
 
   return {
     vision: round1(vision),
@@ -84,21 +98,45 @@ export const computeRiskContributions = (
   };
 };
 
+/**
+ * Maps a (rounded) score to a level. The null check comes FIRST: in JavaScript
+ * `null < 30` is `true`, so letting null reach the comparison would report an
+ * unavailable window as "Low".
+ */
 export const mapRiskLevel = (
-  score: number,
+  score: number | null,
   low = DEFAULT_CONFIG.thresholdLow,
   high = DEFAULT_CONFIG.thresholdHigh,
-): RiskLevel => (score < low ? "Low" : score < high ? "Medium" : "High");
+): RiskLevel | null => {
+  if (score === null) return null;
+  return score < low ? "Low" : score < high ? "Medium" : "High";
+};
 
-export const mapAlertSeverity = (level: RiskLevel): AlertSeverity =>
-  alertSeverityMap[level];
+export const mapAlertSeverity = (
+  level: RiskLevel | null,
+): AlertSeverity | null => (level === null ? null : alertSeverityMap[level]);
 
+/**
+ * Health is derived from the effective fusion denominator, not from counting
+ * `missing` flags:
+ *   denominator <= FUSION_EPSILON          -> UNAVAILABLE
+ *   else any branch not "fresh"            -> DEGRADED
+ *   else                                   -> FULL
+ * The FULL / DEGRADED boundary looks only at freshness, never at the weights.
+ */
 export const mapSystemHealth = (
   visionStatus: FreshnessStatus,
   telemetryStatus: FreshnessStatus,
+  weightVision = 0.5,
+  weightTelemetry = 0.5,
 ): SystemHealth => {
-  if (visionStatus === "missing" && telemetryStatus === "missing")
-    return "UNAVAILABLE";
+  const { denominator } = effectiveFusionDenominator(
+    weightVision,
+    weightTelemetry,
+    visionStatus,
+    telemetryStatus,
+  );
+  if (denominator <= FUSION_EPSILON) return "UNAVAILABLE";
   if (visionStatus !== "fresh" || telemetryStatus !== "fresh")
     return "DEGRADED";
   return "FULL";
@@ -109,15 +147,22 @@ export const determineDominantEvidence = (
   pT: number,
   visionStatus: FreshnessStatus,
   telemetryStatus: FreshnessStatus,
-  riskScore: number,
+  riskScore: number | null,
   lowThreshold = DEFAULT_CONFIG.thresholdLow,
   gap = 0.15,
-): DominantEvidence => {
+  weightVision = 0.5,
+  weightTelemetry = 0.5,
+): DominantEvidence | null => {
   return determineEvidenceType({
     pDistraction: pD,
     pTelemetry: pT,
     riskScore,
-    systemHealth: mapSystemHealth(visionStatus, telemetryStatus),
+    systemHealth: mapSystemHealth(
+      visionStatus,
+      telemetryStatus,
+      weightVision,
+      weightTelemetry,
+    ),
     thresholdLow: lowThreshold,
     gap,
   });
@@ -125,12 +170,56 @@ export const determineDominantEvidence = (
 
 const asPercent = (value: number) => `${Math.round(value * 100)}%`;
 
+/**
+ * Names which side(s) left the effective fusion denominator at zero. Only
+ * called for unavailable windows, where every branch is either missing or
+ * carries zero fusion weight.
+ */
+const describeUnavailableCause = (
+  visionStatus: FreshnessStatus,
+  telemetryStatus: FreshnessStatus,
+  weightVision: number,
+  weightTelemetry: number,
+) => {
+  if (visionStatus === "missing" && telemetryStatus === "missing") {
+    return "both the vision and telemetry inputs are missing";
+  }
+  const branchReason = (
+    name: string,
+    status: FreshnessStatus,
+    weight: number,
+  ) => {
+    if (status === "missing") return `the ${name} input is missing`;
+    if (weight * freshnessWeight(status) <= FUSION_EPSILON)
+      return `the ${name} branch has zero fusion weight`;
+    return null;
+  };
+  const reasons = [
+    branchReason("vision", visionStatus, weightVision),
+    branchReason("telemetry", telemetryStatus, weightTelemetry),
+  ].filter((reason): reason is string => reason !== null);
+  return reasons.join(" and ");
+};
+
 const buildExplanation = (
-  dominant: DominantEvidence,
-  riskLevel: RiskLevel,
+  dominant: DominantEvidence | null,
+  riskLevel: RiskLevel | null,
   pD: number,
   pT: number,
+  visionStatus: FreshnessStatus,
+  telemetryStatus: FreshnessStatus,
+  weightVision: number,
+  weightTelemetry: number,
 ) => {
+  // Availability first. The unavailable text deliberately names no level.
+  if (dominant === null || riskLevel === null) {
+    return `No risk assessment is available because ${describeUnavailableCause(
+      visionStatus,
+      telemetryStatus,
+      weightVision,
+      weightTelemetry,
+    )}, so the effective fusion denominator is zero and there is no evidence to fuse.`;
+  }
   if (dominant === "Vision-dominant") {
     return `Vision evidence is driving the ${riskLevel.toLowerCase()} risk output because P_distraction (${asPercent(pD)}) is materially higher than P_telemetry_anomaly (${asPercent(pT)}).`;
   }
@@ -171,10 +260,14 @@ export const buildRiskUpdate = (
     window.vision_status,
     window.telemetry_status,
   );
+  // Round happens inside computeRiskScore, so the level is mapped from the
+  // ROUNDED score (e.g. 29.951 -> 30 -> Medium).
   const level = mapRiskLevel(score, config.thresholdLow, config.thresholdHigh);
   const systemHealth = mapSystemHealth(
     window.vision_status,
     window.telemetry_status,
+    config.weightVision,
+    config.weightTelemetry,
   );
   const dominant = determineDominantEvidence(
     smoothedDistraction,
@@ -183,6 +276,9 @@ export const buildRiskUpdate = (
     window.telemetry_status,
     score,
     config.thresholdLow,
+    undefined,
+    config.weightVision,
+    config.weightTelemetry,
   );
 
   return {
@@ -191,6 +287,7 @@ export const buildRiskUpdate = (
     timestamp: window.timestamp,
     P_distraction: smoothedDistraction,
     P_telemetry_anomaly: telemetryAnomaly,
+    assessment_available: score !== null,
     RiskScore: score,
     RiskLevel: level,
     DominantEvidence: dominant,
@@ -211,6 +308,10 @@ export const buildRiskUpdate = (
       level,
       smoothedDistraction,
       telemetryAnomaly,
+      window.vision_status,
+      window.telemetry_status,
+      config.weightVision,
+      config.weightTelemetry,
     ),
   };
 };

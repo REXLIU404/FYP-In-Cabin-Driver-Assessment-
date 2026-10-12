@@ -26,8 +26,42 @@ describe("computeRiskScore (freshness-weighted late fusion)", () => {
     expect(computeRiskScore(0.8, 0.2, 0.5, 0.5, "fresh", "missing")).toBe(80);
   });
 
-  it("both modalities missing -> 0 (no evidence)", () => {
-    expect(computeRiskScore(0.8, 0.9, 0.5, 0.5, "missing", "missing")).toBe(0);
+  it("both modalities missing -> null (no evidence is not a 0 reading)", () => {
+    expect(
+      computeRiskScore(0.8, 0.9, 0.5, 0.5, "missing", "missing"),
+    ).toBeNull();
+  });
+
+  it("w_v=1, w_t=0 with vision missing -> null (zero effective weight)", () => {
+    expect(
+      computeRiskScore(0.8, 0.9, 1.0, 0.0, "missing", "fresh"),
+    ).toBeNull();
+  });
+
+  it("w_v=0, w_t=1 with telemetry missing -> null (zero effective weight)", () => {
+    expect(
+      computeRiskScore(0.8, 0.9, 0.0, 1.0, "fresh", "missing"),
+    ).toBeNull();
+  });
+
+  it("zero weight on the surviving branch is still null, never 0", () => {
+    // Vision fresh but weight 0, telemetry missing: nothing carries weight.
+    expect(computeRiskScore(0.8, 0.9, 0.0, 1.0, "fresh", "missing")).not.toBe(0);
+  });
+
+  it("zero weight on a missing branch is harmless (F-Z3: available)", () => {
+    expect(computeRiskScore(0.1, 0.9, 1.0, 0.0, "fresh", "missing")).toBe(10);
+  });
+
+  it("stale branches are down-weighted to 0.45 and re-normalised", () => {
+    // (0.5*0.45*0.1 + 0.5*0.9) / (0.5*0.45 + 0.5) = 0.65172 -> 65.2
+    expect(computeRiskScore(0.1, 0.9, 0.5, 0.5, "stale", "fresh")).toBe(65.2);
+  });
+});
+
+describe("mapRiskLevel with an unavailable score", () => {
+  it("null -> null (not Low: null < 30 is true in JS)", () => {
+    expect(mapRiskLevel(null)).toBeNull();
   });
 });
 
@@ -38,6 +72,21 @@ describe("mapSystemHealth", () => {
     expect(mapSystemHealth("fresh", "missing")).toBe("DEGRADED"));
   it("both missing -> UNAVAILABLE", () =>
     expect(mapSystemHealth("missing", "missing")).toBe("UNAVAILABLE"));
+  it("stale + stale -> DEGRADED (stale still carries 0.45 weight)", () =>
+    expect(mapSystemHealth("stale", "stale")).toBe("DEGRADED"));
+
+  // Zero-denominator cases: health follows the effective denominator, not a
+  // count of `missing` flags.
+  it("w_v=1 w_t=0, vision missing, telemetry fresh -> UNAVAILABLE", () =>
+    expect(mapSystemHealth("missing", "fresh", 1.0, 0.0)).toBe("UNAVAILABLE"));
+  it("w_v=0 w_t=1, vision fresh, telemetry missing -> UNAVAILABLE", () =>
+    expect(mapSystemHealth("fresh", "missing", 0.0, 1.0)).toBe("UNAVAILABLE"));
+  it("w_v=1 w_t=0, vision fresh, telemetry missing -> DEGRADED (available)", () =>
+    expect(mapSystemHealth("fresh", "missing", 1.0, 0.0)).toBe("DEGRADED"));
+  it("zero weight with both branches fresh -> FULL (weights never demote)", () =>
+    expect(mapSystemHealth("fresh", "fresh", 1.0, 0.0)).toBe("FULL"));
+  it("both weights zero -> UNAVAILABLE even when both fresh", () =>
+    expect(mapSystemHealth("fresh", "fresh", 0.0, 0.0)).toBe("UNAVAILABLE"));
 });
 
 describe("determineEvidenceType (dominant-evidence decision tree)", () => {
