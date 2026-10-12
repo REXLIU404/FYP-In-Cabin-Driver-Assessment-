@@ -1,0 +1,1574 @@
+{
+  "purpose": "Check whether the deployed provider is globally constant on known source-domain inputs; 3 first test rows per class, not a representative accuracy estimate.",
+  "models": {
+    "provider": "MobileNetV3ONNX+XGBoost",
+    "vision": {
+      "architecture": "mobilenet_v3_large",
+      "sha256": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+      "runtime": "onnxruntime_cpu",
+      "classes": [
+        "safe_driving",
+        "texting_right",
+        "talking_phone_right",
+        "texting_left",
+        "talking_phone_left",
+        "operating_radio",
+        "drinking",
+        "reaching_behind",
+        "hair_makeup",
+        "talking_to_passenger"
+      ],
+      "input": "RGB NCHW float32 224x224",
+      "mean": [
+        0.485,
+        0.456,
+        0.406
+      ],
+      "std": [
+        0.229,
+        0.224,
+        0.225
+      ]
+    },
+    "telemetry": {
+      "architecture": "xgboost",
+      "sha256": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+      "classes": [
+        "Safe",
+        "Aggressive",
+        "Distracted"
+      ],
+      "features": [
+        "speed_kmph",
+        "accel_x",
+        "accel_y",
+        "brake_pressure",
+        "steering_angle",
+        "throttle",
+        "lane_deviation",
+        "headway_distance"
+      ],
+      "iteration_range": [
+        0,
+        91
+      ]
+    },
+    "scope": "Frontal-camera inference is experimental; source dataset metrics do not validate frontal reliability"
+  },
+  "samples": [
+    {
+      "source_filename": "img_100191.jpg",
+      "split": "test",
+      "truth": "safe_driving",
+      "prediction": "safe_driving",
+      "top_probability": 1.0,
+      "source_image_sha256": "5e76713c12e1a9645a12dc565f4b8d23d74ac0b350dffb36bfec36beacaa512c",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 1.0
+        },
+        {
+          "label": "texting_right",
+          "probability": 6.709756361633623e-11
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 7.097984422443915e-10
+        },
+        {
+          "label": "texting_left",
+          "probability": 3.084681121645616e-10
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 7.1729944033094295e-12
+        },
+        {
+          "label": "operating_radio",
+          "probability": 1.082925216167041e-08
+        },
+        {
+          "label": "drinking",
+          "probability": 7.300489206218952e-12
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 1.6620392562227693e-11
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 8.71761105143698e-13
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 4.283666477089554e-11
+        }
+      ]
+    },
+    {
+      "source_filename": "img_10053.jpg",
+      "split": "test",
+      "truth": "safe_driving",
+      "prediction": "safe_driving",
+      "top_probability": 0.9932894110679626,
+      "source_image_sha256": "fe838978b1fb8ce463570478f86e8940edf2a802147877c932922848add6adc1",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 0.9932894110679626
+        },
+        {
+          "label": "texting_right",
+          "probability": 0.0006022501620464027
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 0.00010271032806485891
+        },
+        {
+          "label": "texting_left",
+          "probability": 6.880857836222276e-05
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 0.0001649440819164738
+        },
+        {
+          "label": "operating_radio",
+          "probability": 8.902508852770552e-06
+        },
+        {
+          "label": "drinking",
+          "probability": 1.2857115507358685e-05
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 7.32838743715547e-05
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 0.005431223660707474
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 0.00024562820908613503
+        }
+      ]
+    },
+    {
+      "source_filename": "img_10092.jpg",
+      "split": "test",
+      "truth": "safe_driving",
+      "prediction": "safe_driving",
+      "top_probability": 0.9999979734420776,
+      "source_image_sha256": "9032b848848ee7056fda57149d8848e237fe1e121351c3c88dbb8cf72e8685da",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 0.9999979734420776
+        },
+        {
+          "label": "texting_right",
+          "probability": 6.57751542121332e-08
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 7.285712921856202e-09
+        },
+        {
+          "label": "texting_left",
+          "probability": 1.0074568734808054e-07
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 1.5853345303185051e-09
+        },
+        {
+          "label": "operating_radio",
+          "probability": 3.2208689049184613e-07
+        },
+        {
+          "label": "drinking",
+          "probability": 6.072767844145233e-10
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 6.907684451107343e-07
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 9.814269397168118e-09
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 7.589806045871228e-07
+        }
+      ]
+    },
+    {
+      "source_filename": "img_100045.jpg",
+      "split": "test",
+      "truth": "texting_right",
+      "prediction": "texting_right",
+      "top_probability": 0.9999617338180542,
+      "source_image_sha256": "240ace3e7ffebd2a3f9dd761f1c2899c200757740aa23a6026bafda744f929b6",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 2.0659709498715984e-09
+        },
+        {
+          "label": "texting_right",
+          "probability": 0.9999617338180542
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 1.8863346440411988e-06
+        },
+        {
+          "label": "texting_left",
+          "probability": 3.60582307621371e-05
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 1.0001903305578708e-08
+        },
+        {
+          "label": "operating_radio",
+          "probability": 2.338250482125659e-08
+        },
+        {
+          "label": "drinking",
+          "probability": 2.9338232820919075e-07
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 1.7560116916115476e-08
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 2.2643311226033802e-08
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 1.6218033582759972e-09
+        }
+      ]
+    },
+    {
+      "source_filename": "img_100153.jpg",
+      "split": "test",
+      "truth": "texting_right",
+      "prediction": "texting_right",
+      "top_probability": 0.9999867677688599,
+      "source_image_sha256": "a7af8fd166ae007150ef70f47077c8ffb91ad919124d702e4bbca4fd1d2d01ea",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 1.1106729971288587e-06
+        },
+        {
+          "label": "texting_right",
+          "probability": 0.9999867677688599
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 5.088254965812666e-06
+        },
+        {
+          "label": "texting_left",
+          "probability": 9.586489824187083e-08
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 1.375465519259933e-08
+        },
+        {
+          "label": "operating_radio",
+          "probability": 1.4909762313664032e-08
+        },
+        {
+          "label": "drinking",
+          "probability": 6.737899184372509e-06
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 4.076749604564611e-08
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 1.9806977036296303e-07
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 4.035553402559344e-08
+        }
+      ]
+    },
+    {
+      "source_filename": "img_100230.jpg",
+      "split": "test",
+      "truth": "texting_right",
+      "prediction": "drinking",
+      "top_probability": 0.9202848672866821,
+      "source_image_sha256": "f0c9c3987f48ae55b3522840d059b8475dc2dee7b52c0213df834b947dd16d3a",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 2.162157943530474e-05
+        },
+        {
+          "label": "texting_right",
+          "probability": 0.07866262644529343
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 0.0005564580787904561
+        },
+        {
+          "label": "texting_left",
+          "probability": 1.0467424544913229e-05
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 2.099177618219983e-05
+        },
+        {
+          "label": "operating_radio",
+          "probability": 3.3385538699803874e-05
+        },
+        {
+          "label": "drinking",
+          "probability": 0.9202848672866821
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 5.9077050536870956e-05
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 0.00034552058787085116
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 4.914454166282667e-06
+        }
+      ]
+    },
+    {
+      "source_filename": "img_10048.jpg",
+      "split": "test",
+      "truth": "talking_phone_right",
+      "prediction": "talking_phone_right",
+      "top_probability": 0.9999973773956299,
+      "source_image_sha256": "988285c1ef9fae2a8a292b5774cf9af446dbe933b6e434603bc5067ef823308e",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 4.6602593783973134e-08
+        },
+        {
+          "label": "texting_right",
+          "probability": 9.43905931194422e-09
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 0.9999973773956299
+        },
+        {
+          "label": "texting_left",
+          "probability": 4.3418799111627493e-10
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 3.0891006419508926e-10
+        },
+        {
+          "label": "operating_radio",
+          "probability": 5.763865384977862e-09
+        },
+        {
+          "label": "drinking",
+          "probability": 2.3744260033708997e-06
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 1.620083400766248e-09
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 2.7539789471120457e-07
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 1.2589367770488025e-08
+        }
+      ]
+    },
+    {
+      "source_filename": "img_100784.jpg",
+      "split": "test",
+      "truth": "talking_phone_right",
+      "prediction": "talking_phone_right",
+      "top_probability": 0.999998927116394,
+      "source_image_sha256": "872efa3d04f927d6a1d6e074d2a0dbfde536d70fcd797d61f90c2c7318c58cc9",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 1.0925010940354696e-07
+        },
+        {
+          "label": "texting_right",
+          "probability": 3.949219617993549e-09
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 0.999998927116394
+        },
+        {
+          "label": "texting_left",
+          "probability": 7.408696989230634e-10
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 2.1485699330803243e-10
+        },
+        {
+          "label": "operating_radio",
+          "probability": 5.2221955648690255e-09
+        },
+        {
+          "label": "drinking",
+          "probability": 9.437868015993445e-07
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 5.388397728012251e-09
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 5.2345438206202743e-08
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 6.463956037094931e-09
+        }
+      ]
+    },
+    {
+      "source_filename": "img_101086.jpg",
+      "split": "test",
+      "truth": "talking_phone_right",
+      "prediction": "talking_phone_right",
+      "top_probability": 0.9999523162841797,
+      "source_image_sha256": "40dd9fa41a6ded9362a913973cbac34d1749e436fc6a228cd1f913b2eaaa2924",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 1.965376441148692e-06
+        },
+        {
+          "label": "texting_right",
+          "probability": 2.7558988335840695e-07
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 0.9999523162841797
+        },
+        {
+          "label": "texting_left",
+          "probability": 8.999075262750011e-09
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 9.091374764125248e-09
+        },
+        {
+          "label": "operating_radio",
+          "probability": 1.485292955294426e-07
+        },
+        {
+          "label": "drinking",
+          "probability": 3.822754661086947e-05
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 8.607281642980524e-08
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 6.20207129031769e-06
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 6.801778340559395e-07
+        }
+      ]
+    },
+    {
+      "source_filename": "img_100749.jpg",
+      "split": "test",
+      "truth": "texting_left",
+      "prediction": "texting_left",
+      "top_probability": 0.9999974966049194,
+      "source_image_sha256": "8601d0660bd15aa1efe22a6ba57be22a8d566a75251b0c32393d63bc1087440d",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 1.3406516927716439e-06
+        },
+        {
+          "label": "texting_right",
+          "probability": 8.735750611776893e-07
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 1.9686240193550475e-08
+        },
+        {
+          "label": "texting_left",
+          "probability": 0.9999974966049194
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 7.574757887596206e-08
+        },
+        {
+          "label": "operating_radio",
+          "probability": 1.1071499983472677e-07
+        },
+        {
+          "label": "drinking",
+          "probability": 2.038694102424188e-09
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 1.5502231720532222e-09
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 1.2966522078272646e-08
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 3.0522006255750966e-08
+        }
+      ]
+    },
+    {
+      "source_filename": "img_100927.jpg",
+      "split": "test",
+      "truth": "texting_left",
+      "prediction": "texting_left",
+      "top_probability": 0.9999998807907104,
+      "source_image_sha256": "46a79b0635c418429d1506279c87e88030ae391c1d4dea4492effa02abefa16c",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 6.185949530390644e-08
+        },
+        {
+          "label": "texting_right",
+          "probability": 3.983805285656672e-09
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 7.27052595905775e-09
+        },
+        {
+          "label": "texting_left",
+          "probability": 0.9999998807907104
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 4.764599825790583e-09
+        },
+        {
+          "label": "operating_radio",
+          "probability": 1.731492282885938e-09
+        },
+        {
+          "label": "drinking",
+          "probability": 2.681776190005536e-10
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 2.6963167809590516e-10
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 8.93775747856651e-11
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 7.312040729845481e-12
+        }
+      ]
+    },
+    {
+      "source_filename": "img_101087.jpg",
+      "split": "test",
+      "truth": "texting_left",
+      "prediction": "texting_left",
+      "top_probability": 1.0,
+      "source_image_sha256": "bb271aba09db4b7a415532086d029b33ab9d5b3c06e168f70131b9d2700cc929",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 3.16520115672958e-10
+        },
+        {
+          "label": "texting_right",
+          "probability": 9.71178762410041e-11
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 4.555175681097978e-11
+        },
+        {
+          "label": "texting_left",
+          "probability": 1.0
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 2.01795513632419e-09
+        },
+        {
+          "label": "operating_radio",
+          "probability": 8.476529478329553e-10
+        },
+        {
+          "label": "drinking",
+          "probability": 2.2347347496814995e-12
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 1.3178166023697369e-11
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 3.006569299079942e-11
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 8.319644452525754e-12
+        }
+      ]
+    },
+    {
+      "source_filename": "img_100529.jpg",
+      "split": "test",
+      "truth": "talking_phone_left",
+      "prediction": "talking_phone_left",
+      "top_probability": 0.9999960660934448,
+      "source_image_sha256": "548f5eb37ba6be4e6c0e1da69fcc911d8e3e88050ac40e52941201ed5c268621",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 1.1082661188765996e-07
+        },
+        {
+          "label": "texting_right",
+          "probability": 1.2373786439923151e-08
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 3.1015895274322247e-06
+        },
+        {
+          "label": "texting_left",
+          "probability": 5.148455670678231e-07
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 0.9999960660934448
+        },
+        {
+          "label": "operating_radio",
+          "probability": 3.281548588418559e-09
+        },
+        {
+          "label": "drinking",
+          "probability": 1.5678440945521288e-07
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 1.8493115372386626e-10
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 1.4500214717827475e-07
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 4.597024982899711e-08
+        }
+      ]
+    },
+    {
+      "source_filename": "img_100530.jpg",
+      "split": "test",
+      "truth": "talking_phone_left",
+      "prediction": "talking_phone_left",
+      "top_probability": 0.9256742596626282,
+      "source_image_sha256": "d8379e891361f7bafd20eb4b85d340ec3dfc63333bbf473fa4ad4e12e2c45deb",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 0.06936511397361755
+        },
+        {
+          "label": "texting_right",
+          "probability": 1.5511676565438393e-06
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 0.0008225574274547398
+        },
+        {
+          "label": "texting_left",
+          "probability": 0.0005635208799503744
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 0.9256742596626282
+        },
+        {
+          "label": "operating_radio",
+          "probability": 7.272000220837072e-05
+        },
+        {
+          "label": "drinking",
+          "probability": 0.0034973728470504284
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 1.3753439134234213e-06
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 4.397469410832855e-07
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 1.1098527465946972e-06
+        }
+      ]
+    },
+    {
+      "source_filename": "img_101366.jpg",
+      "split": "test",
+      "truth": "talking_phone_left",
+      "prediction": "talking_phone_left",
+      "top_probability": 0.9941600561141968,
+      "source_image_sha256": "5b29416858fcb34181612d4247c91f3bbcdd6ec1010e18fcaa05095806d0d1f7",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 0.0034806260373443365
+        },
+        {
+          "label": "texting_right",
+          "probability": 5.695612799172523e-07
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 0.00019233091734349728
+        },
+        {
+          "label": "texting_left",
+          "probability": 8.840504597174004e-05
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 0.9941600561141968
+        },
+        {
+          "label": "operating_radio",
+          "probability": 1.793852607079316e-05
+        },
+        {
+          "label": "drinking",
+          "probability": 0.002059059450402856
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 2.905576934608689e-07
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 2.989841050293762e-07
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 3.378831365807855e-07
+        }
+      ]
+    },
+    {
+      "source_filename": "img_10000.jpg",
+      "split": "test",
+      "truth": "operating_radio",
+      "prediction": "operating_radio",
+      "top_probability": 1.0,
+      "source_image_sha256": "afc24b0d21d5ca107275f32737b8bc654cc446f08137d78454b05f59611d142c",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 4.2615269646439913e-10
+        },
+        {
+          "label": "texting_right",
+          "probability": 6.043677711065065e-12
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 1.0978878917100587e-10
+        },
+        {
+          "label": "texting_left",
+          "probability": 6.812504987213641e-12
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 8.635635262432828e-11
+        },
+        {
+          "label": "operating_radio",
+          "probability": 1.0
+        },
+        {
+          "label": "drinking",
+          "probability": 9.080776408598723e-11
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 1.6655269177712206e-11
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 5.463276315717525e-13
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 1.1233245236774714e-12
+        }
+      ]
+    },
+    {
+      "source_filename": "img_100270.jpg",
+      "split": "test",
+      "truth": "operating_radio",
+      "prediction": "operating_radio",
+      "top_probability": 1.0,
+      "source_image_sha256": "731d0ceeee60372f9e7c2d3381f381210cb1a13d77d79d11e0975d0d028d0db8",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 5.04691149982861e-11
+        },
+        {
+          "label": "texting_right",
+          "probability": 1.337050262173456e-12
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 5.3561818175174025e-11
+        },
+        {
+          "label": "texting_left",
+          "probability": 4.043904534151155e-12
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 3.5841996037788704e-11
+        },
+        {
+          "label": "operating_radio",
+          "probability": 1.0
+        },
+        {
+          "label": "drinking",
+          "probability": 4.2283026038814064e-12
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 7.990462458362657e-12
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 1.1989294106118376e-11
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 2.051436624739278e-11
+        }
+      ]
+    },
+    {
+      "source_filename": "img_100472.jpg",
+      "split": "test",
+      "truth": "operating_radio",
+      "prediction": "operating_radio",
+      "top_probability": 1.0,
+      "source_image_sha256": "0f4fd449a172dec2f1dcdae61d46e6a451e88d0b76ccef8647b3925d6718cf2d",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 1.749055544494893e-12
+        },
+        {
+          "label": "texting_right",
+          "probability": 8.472180747752522e-14
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 4.319386428391914e-12
+        },
+        {
+          "label": "texting_left",
+          "probability": 1.3043666353181743e-13
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 2.2305657754878583e-12
+        },
+        {
+          "label": "operating_radio",
+          "probability": 1.0
+        },
+        {
+          "label": "drinking",
+          "probability": 3.5627143596395072e-12
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 5.729757488782961e-13
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 5.018890017531542e-15
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 5.470562289841899e-14
+        }
+      ]
+    },
+    {
+      "source_filename": "img_100065.jpg",
+      "split": "test",
+      "truth": "drinking",
+      "prediction": "drinking",
+      "top_probability": 0.9999998807907104,
+      "source_image_sha256": "40a5785dca1e5e40484034d85a80783d5f33cb2a2835424c1d01fae16c4d7ed2",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 1.7904127069812148e-09
+        },
+        {
+          "label": "texting_right",
+          "probability": 2.6520661222662056e-09
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 1.7143877073522162e-07
+        },
+        {
+          "label": "texting_left",
+          "probability": 1.6772398747644246e-10
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 7.114333566704545e-09
+        },
+        {
+          "label": "operating_radio",
+          "probability": 1.2993979225939256e-09
+        },
+        {
+          "label": "drinking",
+          "probability": 0.9999998807907104
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 1.7306660271554364e-10
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 7.680523772535253e-09
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 3.3487709133472876e-11
+        }
+      ]
+    },
+    {
+      "source_filename": "img_100241.jpg",
+      "split": "test",
+      "truth": "drinking",
+      "prediction": "drinking",
+      "top_probability": 0.9999151229858398,
+      "source_image_sha256": "31adb19f648f50ed63da8b5516621bd9706387db06cc0d829308aaba09a8f24d",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 2.4359476356039522e-06
+        },
+        {
+          "label": "texting_right",
+          "probability": 6.144689450593432e-07
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 1.6234253052971326e-05
+        },
+        {
+          "label": "texting_left",
+          "probability": 5.961502392892726e-05
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 5.409222467278596e-06
+        },
+        {
+          "label": "operating_radio",
+          "probability": 4.974550620318041e-07
+        },
+        {
+          "label": "drinking",
+          "probability": 0.9999151229858398
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 2.2064700289092798e-08
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 3.6990326357511094e-09
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 1.642812968993823e-10
+        }
+      ]
+    },
+    {
+      "source_filename": "img_10046.jpg",
+      "split": "test",
+      "truth": "drinking",
+      "prediction": "drinking",
+      "top_probability": 0.9994813799858093,
+      "source_image_sha256": "3ba78f51a51d57750cee3a58360d3aa6de81d8f4c8455a1b8248b42735bbb874",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 1.7093270798795857e-05
+        },
+        {
+          "label": "texting_right",
+          "probability": 7.1546382969245315e-06
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 0.0001757221616571769
+        },
+        {
+          "label": "texting_left",
+          "probability": 0.0003072430263273418
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 1.0220387594017666e-05
+        },
+        {
+          "label": "operating_radio",
+          "probability": 6.364641649270197e-07
+        },
+        {
+          "label": "drinking",
+          "probability": 0.9994813799858093
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 4.536924222975358e-07
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 6.238487770815482e-08
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 8.275581109273844e-09
+        }
+      ]
+    },
+    {
+      "source_filename": "img_100393.jpg",
+      "split": "test",
+      "truth": "reaching_behind",
+      "prediction": "reaching_behind",
+      "top_probability": 1.0,
+      "source_image_sha256": "eb39e581c5cecf5f1eb8ddfbe644f6d3555f64f9b2f3fcca066a9c947885782c",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 6.827368781511399e-17
+        },
+        {
+          "label": "texting_right",
+          "probability": 9.523484711138086e-16
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 1.4511778204548908e-15
+        },
+        {
+          "label": "texting_left",
+          "probability": 2.2710154795727525e-18
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 1.5070582251115923e-16
+        },
+        {
+          "label": "operating_radio",
+          "probability": 5.2652266141764304e-17
+        },
+        {
+          "label": "drinking",
+          "probability": 1.749759369581755e-16
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 1.0
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 3.376273327755641e-14
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 6.0100104688938505e-15
+        }
+      ]
+    },
+    {
+      "source_filename": "img_100408.jpg",
+      "split": "test",
+      "truth": "reaching_behind",
+      "prediction": "reaching_behind",
+      "top_probability": 1.0,
+      "source_image_sha256": "00ba0eca414aed8dd4c1d8f01e7c27e8180056b570758f32c90a4b60d45ae9fa",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 9.471087319195383e-18
+        },
+        {
+          "label": "texting_right",
+          "probability": 3.557483453675388e-17
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 1.2942386824848871e-16
+        },
+        {
+          "label": "texting_left",
+          "probability": 1.0145258414333219e-19
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 1.6322923772353856e-17
+        },
+        {
+          "label": "operating_radio",
+          "probability": 2.9094192074756128e-18
+        },
+        {
+          "label": "drinking",
+          "probability": 1.323909435990205e-17
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 1.0
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 2.1109841932348767e-15
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 1.3965585949170917e-15
+        }
+      ]
+    },
+    {
+      "source_filename": "img_100455.jpg",
+      "split": "test",
+      "truth": "reaching_behind",
+      "prediction": "reaching_behind",
+      "top_probability": 1.0,
+      "source_image_sha256": "8761c4c23a33a4bed41446e65b61574bd6651fd9b8aa13504afdb3e9bbc828b4",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 1.3698197849458527e-13
+        },
+        {
+          "label": "texting_right",
+          "probability": 4.8889125576654854e-14
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 4.753965216684709e-15
+        },
+        {
+          "label": "texting_left",
+          "probability": 2.589520538983877e-16
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 3.4082295091632936e-14
+        },
+        {
+          "label": "operating_radio",
+          "probability": 3.1377802916718323e-13
+        },
+        {
+          "label": "drinking",
+          "probability": 6.966314732102102e-14
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 1.0
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 9.983767285115519e-15
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 1.0714206994213212e-14
+        }
+      ]
+    },
+    {
+      "source_filename": "img_100446.jpg",
+      "split": "test",
+      "truth": "hair_makeup",
+      "prediction": "hair_makeup",
+      "top_probability": 0.9999747276306152,
+      "source_image_sha256": "b22b967f392e149bbc49cc2da675beda58945dccd9bd4d3fe995c07f47128644",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 6.435450927710917e-07
+        },
+        {
+          "label": "texting_right",
+          "probability": 8.23294321605772e-09
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 1.5671917935833335e-05
+        },
+        {
+          "label": "texting_left",
+          "probability": 2.805521148729895e-07
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 6.767624540771067e-07
+        },
+        {
+          "label": "operating_radio",
+          "probability": 3.345997583892313e-06
+        },
+        {
+          "label": "drinking",
+          "probability": 8.818522445608323e-08
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 4.800937745130796e-07
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 0.9999747276306152
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 4.0685445128474385e-06
+        }
+      ]
+    },
+    {
+      "source_filename": "img_100467.jpg",
+      "split": "test",
+      "truth": "hair_makeup",
+      "prediction": "talking_phone_left",
+      "top_probability": 0.6166964173316956,
+      "source_image_sha256": "3ccb15d321c1ddc9a56198ac723281b20618e553a5f0adc7096a6aefd1a390d6",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 0.00021455790556501597
+        },
+        {
+          "label": "texting_right",
+          "probability": 4.7865414671832696e-06
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 8.25042006908916e-05
+        },
+        {
+          "label": "texting_left",
+          "probability": 0.0011263182386755943
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 0.6166964173316956
+        },
+        {
+          "label": "operating_radio",
+          "probability": 0.3812006711959839
+        },
+        {
+          "label": "drinking",
+          "probability": 0.0006079938029870391
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 1.1881822501891293e-05
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 2.8080334232072346e-05
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 2.6785141017171554e-05
+        }
+      ]
+    },
+    {
+      "source_filename": "img_100743.jpg",
+      "split": "test",
+      "truth": "hair_makeup",
+      "prediction": "operating_radio",
+      "top_probability": 0.7903086543083191,
+      "source_image_sha256": "d592a55e8cc5da622c226f2fc9caf9b2f9651d18c766be0e4e216098a9111881",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 0.0003833493101410568
+        },
+        {
+          "label": "texting_right",
+          "probability": 2.021540694840951e-06
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 6.478363502537832e-06
+        },
+        {
+          "label": "texting_left",
+          "probability": 0.0005091700586490333
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 0.20872806012630463
+        },
+        {
+          "label": "operating_radio",
+          "probability": 0.7903086543083191
+        },
+        {
+          "label": "drinking",
+          "probability": 3.0348817745107226e-05
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 4.6655050027766265e-06
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 1.402169255015906e-05
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 1.3090847460262012e-05
+        }
+      ]
+    },
+    {
+      "source_filename": "img_101293.jpg",
+      "split": "test",
+      "truth": "talking_to_passenger",
+      "prediction": "reaching_behind",
+      "top_probability": 0.8187164664268494,
+      "source_image_sha256": "7ca614ca6799d48b667871e1e77a6c08c55cb3d47385045f509ade88074d1b8c",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 9.050384687725455e-05
+        },
+        {
+          "label": "texting_right",
+          "probability": 0.000728805607650429
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 0.004955828655511141
+        },
+        {
+          "label": "texting_left",
+          "probability": 4.369559064798523e-06
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 2.535590283514466e-05
+        },
+        {
+          "label": "operating_radio",
+          "probability": 0.10984846204519272
+        },
+        {
+          "label": "drinking",
+          "probability": 0.005595841910690069
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 0.8187164664268494
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 0.0014679700834676623
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 0.05856643617153168
+        }
+      ]
+    },
+    {
+      "source_filename": "img_101611.jpg",
+      "split": "test",
+      "truth": "talking_to_passenger",
+      "prediction": "talking_to_passenger",
+      "top_probability": 0.5110225677490234,
+      "source_image_sha256": "ef5b2a1ac2fba6391717a1f9d17bcb9e0999fe5cba53a27b5a53adf94aeafa71",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 0.17017142474651337
+        },
+        {
+          "label": "texting_right",
+          "probability": 0.0012747949222102761
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 0.002313647186383605
+        },
+        {
+          "label": "texting_left",
+          "probability": 0.02126106061041355
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 0.28064024448394775
+        },
+        {
+          "label": "operating_radio",
+          "probability": 0.007169422227889299
+        },
+        {
+          "label": "drinking",
+          "probability": 0.001482896157540381
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 0.0013674987712875009
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 0.00329643115401268
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 0.5110225677490234
+        }
+      ]
+    },
+    {
+      "source_filename": "img_10224.jpg",
+      "split": "test",
+      "truth": "talking_to_passenger",
+      "prediction": "reaching_behind",
+      "top_probability": 0.4297318756580353,
+      "source_image_sha256": "6f479e8f23dd799efc09a4cc0b3ec7620d7bff566919eb477231a7a98c05c53d",
+      "visual_probabilities": [
+        {
+          "label": "safe_driving",
+          "probability": 0.01253402978181839
+        },
+        {
+          "label": "texting_right",
+          "probability": 0.14666788280010223
+        },
+        {
+          "label": "talking_phone_right",
+          "probability": 0.06727107614278793
+        },
+        {
+          "label": "texting_left",
+          "probability": 0.00041878927731886506
+        },
+        {
+          "label": "talking_phone_left",
+          "probability": 0.0006355051300488412
+        },
+        {
+          "label": "operating_radio",
+          "probability": 0.1604916751384735
+        },
+        {
+          "label": "drinking",
+          "probability": 0.06377812474966049
+        },
+        {
+          "label": "reaching_behind",
+          "probability": 0.4297318756580353
+        },
+        {
+          "label": "hair_makeup",
+          "probability": 0.09923233836889267
+        },
+        {
+          "label": "talking_to_passenger",
+          "probability": 0.01923869363963604
+        }
+      ]
+    }
+  ],
+  "correct": 25,
+  "total": 30,
+  "predicted_labels": [
+    "drinking",
+    "hair_makeup",
+    "operating_radio",
+    "reaching_behind",
+    "safe_driving",
+    "talking_phone_left",
+    "talking_phone_right",
+    "talking_to_passenger",
+    "texting_left",
+    "texting_right"
+  ]
+}

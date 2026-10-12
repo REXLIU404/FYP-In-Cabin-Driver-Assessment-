@@ -1,0 +1,123 @@
+Browser tab: 1473715718, Title: "In-Cabin Multi-Modal Driver Monitoring & Risk Assessment", URL: "http://127.0.0.1:8008/".
+0 AXWebArea In-Cabin Multi-Modal Driver Monitoring & Risk Assessment, URL: 127.0.0.1:8008/
+	1 container root
+		2 container
+			3 image
+			4 text Driver Risk MVP Dashboard
+			5 button (expanded) Description: Collapse sidebar, Secondary Actions: Collapse
+				6 image
+			7 container Dashboard views
+				8 button Live Monitor
+					9 image
+					10 text Live Monitor
+				11 button Signal Inspector
+					12 image
+					13 text Signal Inspector
+				14 button Risk Trends
+					15 image
+					16 text Risk Trends
+				17 button Explanation
+					18 image
+					19 text Explanation
+				20 button Configuration
+					21 image
+					22 text Configuration
+		23 container
+			24 heading In-Cabin Multi-Modal Driver Monitoring & Risk Assessment, Value: 1
+				25 text In-Cabin Multi-Modal Driver Monitoring & Risk Assessment
+			26 button Start Monitoring
+				27 image
+				28 text Start Monitoring
+			29 button (disabled) Pause
+				30 image
+				31 text Pause
+			32 button New Session
+				33 image
+				34 text New Session
+			35 container
+				36 text Data mode
+				37 pop up button (collapsed, settable) Description: Data mode, Value: Live trained models, Secondary Actions: Expand
+					38 menu
+						39 (selected) Live trained models
+						40 Prepared replay demo
+			41 button Refresh saved sessions
+			42 container
+				43 text Saved live sessions
+				44 pop up button (collapsed, settable) Description: Saved live sessions, Value: Select a session…, Secondary Actions: Expand
+					45 menu
+						46 (selected) Select a session…
+						62 S8d4e616a597b4dd5973d31a9ad417049 · 811 windows
+						63 S9540e6b97c804e23a71b6b6edf8d80f5 · 134 windows
+						64 S85c09da3b43d44ea820ab246cec175cb · 413 windows
+			47 text Vision: camera → trained MobileNetV3 · Telemetry: prepared raw features → trained XGBoost. Frontal-camera accuracy is experimental.
+			48 text Camera:  idle Inference: —  FPS · target  10 Request round trip:  —  ms Visible history:  500  /  811  persisted · export includes all windows
+			65 text Latest result is stale. Historical values are retained; there is no current risk assessment.
+			66 text EXPLANATION
+			67 heading Current Window Explanation, Value: 2
+				68 text Current Window Explanation
+			69 image
+			70 text Evidence Type
+			71 text COMBINED EVIDENCE
+			72 container
+				73 text Relative Evidence:  Vision and telemetry balanced
+			74 text P_distraction
+			75 text 1.00
+			76 text Telemetry Non-Safe Risk
+			77 text 1.00
+			78 text RiskScore
+			79 text 100.0 / 100
+			80 text RiskLevel High AlertStatus High Alert SystemHealth Full
+			81 text VISION EVIDENCE CARD
+			82 heading Vision Evidence, Value: 2
+				83 text Vision Evidence
+			84 text P_distraction
+			85 container
+				86 text 1.00 100%
+			87 text Primary Distraction Cue
+			88 container
+				89 text Hair and Makeup 100%
+			90 text Freshness fresh Contribution
+			91 text 50 / 100
+			92 text RISKSCORE CONTRIBUTION
+			93 heading Weighted contribution from each branch, Value: 2
+				94 text Weighted contribution from each branch
+			95 container
+				96 text RiskScore =  0.5  x Visual Distraction +  0.5  x Telemetry Non-Safe Behaviour
+			97 container Vision and telemetry contribution to RiskScore
+			98 text Visual Distraction  50
+			99 text +
+			100 text Telemetry Non-Safe  50
+			101 text =
+			102 text RiskScore  100.0 / 100 Vision contribution  50 Telemetry non-safe contribution  50 Total RiskScore  100.0 / 100
+			103 container
+				104 text DECISION RULE
+				105 heading Matched Evidence Rule, Value: 2
+					106 text Matched Evidence Rule
+				107 image
+				108 text Combined evidence abs(P_distraction - P_telemetry_anomaly) < 0.15 Active inputs Vision + Telemetry available Vision-dominant Telemetry-dominant Combined evidence Partial evidence Low observed risk
+			109 container
+				110 text TELEMETRY EVIDENCE CARD
+				111 heading Telemetry Evidence, Value: 2
+					112 text Telemetry Evidence
+				113 text Current Behaviour Aggressive
+				114 container
+					115 text 100%  confidence
+				116 text Telemetry Non-Safe Risk 1.00
+				117 text 100%
+				118 text Feature Contribution unavailable Freshness fresh Contribution 50 / 100
+			119 container
+				120 text SESSION EVIDENCE DISTRIBUTION
+				121 heading Evidence types in current session, Value: 2
+					122 text Evidence types in current session
+				123 image
+				124 image
+					125 text Telemetry
+					126 text Partial
+					127 text Low risk
+					128 text 0
+					129 text 55
+					130 text 110
+					131 text 165
+					132 text 220
+
+The focused UI element is 17 button Explanation

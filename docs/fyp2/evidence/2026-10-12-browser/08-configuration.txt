@@ -1,0 +1,93 @@
+Browser tab: 1473715718, Title: "In-Cabin Multi-Modal Driver Monitoring & Risk Assessment", URL: "http://127.0.0.1:8008/".
+0 AXWebArea In-Cabin Multi-Modal Driver Monitoring & Risk Assessment, URL: 127.0.0.1:8008/
+	1 container root
+		2 container
+			3 image
+			4 text Driver Risk MVP Dashboard
+			5 button (expanded) Description: Collapse sidebar, Secondary Actions: Collapse
+				6 image
+			7 container Dashboard views
+				8 button Live Monitor
+					9 image
+					10 text Live Monitor
+				11 button Signal Inspector
+					12 image
+					13 text Signal Inspector
+				14 button Risk Trends
+					15 image
+					16 text Risk Trends
+				17 button Explanation
+					18 image
+					19 text Explanation
+				20 button Configuration
+					21 image
+					22 text Configuration
+		23 container
+			24 heading In-Cabin Multi-Modal Driver Monitoring & Risk Assessment, Value: 1
+				25 text In-Cabin Multi-Modal Driver Monitoring & Risk Assessment
+			26 button Start Monitoring
+				27 image
+				28 text Start Monitoring
+			29 button (disabled) Pause
+				30 image
+				31 text Pause
+			32 button New Session
+				33 image
+				34 text New Session
+			35 container
+				36 text Data mode
+				37 pop up button (collapsed, settable) Description: Data mode, Value: Live trained models, Secondary Actions: Expand
+					38 menu
+						39 (selected) Live trained models
+						40 Prepared replay demo
+			41 button Refresh saved sessions
+			42 container
+				43 text Saved live sessions
+				44 pop up button (collapsed, settable) Description: Saved live sessions, Value: Select a session…, Secondary Actions: Expand
+					45 menu
+						46 (selected) Select a session…
+						62 S8d4e616a597b4dd5973d31a9ad417049 · 811 windows
+						63 S9540e6b97c804e23a71b6b6edf8d80f5 · 134 windows
+						64 S85c09da3b43d44ea820ab246cec175cb · 413 windows
+			47 text Vision: camera → trained MobileNetV3 · Telemetry: prepared raw features → trained XGBoost. Frontal-camera accuracy is experimental.
+			48 text Camera:  idle Inference: —  FPS · target  10 Request round trip:  —  ms Visible history:  500  /  811  persisted · export includes all windows
+			65 text Latest result is stale. Historical values are retained; there is no current risk assessment.
+			66 text CONFIGURATION
+			67 heading Runtime configuration and output, Value: 2
+				68 text Runtime configuration and output
+			69 image
+			70 container
+				71 heading Runtime Configuration, Value: 3
+					72 text Runtime Configuration
+				73 text Changing settings pauses monitoring. The next start creates a session with the new configuration. Target inference FPS (camera preview requests 30 FPS)
+				74 stepper (settable, integer) Target inference FPS (camera preview requests 30 FPS), Value: 10
+				75 button Start Monitoring
+					76 image
+					77 text Start Monitoring
+				78 button (disabled) Pause
+					79 image
+					80 text Pause
+				81 button Restart Session
+					82 image
+					83 text Restart Session
+			84 container
+				85 heading Risk Fusion Parameters, Value: 3
+					86 text Risk Fusion Parameters
+				87 text Vision Weight:  0.50
+				88 slider (settable, float) Vision Weight: 0.50, Value: 0.5
+				89 text Telemetry Weight:  0.50
+				90 slider (settable, float) Telemetry Weight: 0.50, Value: 0.5
+				91 text Low / Medium Threshold
+				92 stepper (settable, integer) Low / Medium Threshold, Value: 30
+				93 text Medium / High Threshold
+				94 stepper (settable, integer) Medium / High Threshold, Value: 60
+			95 container
+				96 heading Output Options, Value: 3
+					97 text Output Options
+				98 text Exports contain all persisted model evidence, source labels, model versions and the session fusion configuration.
+				99 button Export JSON
+					100 image
+					101 text Export JSON
+				102 button Export CSV
+
+The focused UI element is 20 button Configuration
