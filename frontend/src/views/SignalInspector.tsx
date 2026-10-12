@@ -2,8 +2,14 @@ import { Flag, Search } from "lucide-react";
 import { Pill } from "../components/Pill";
 import { TelemetrySummary } from "../components/TelemetrySummary";
 import type { RiskUpdate } from "../types";
-import { getEvidenceType, getRelativeEvidence } from "../../../ai/src/evidence";
-import { formatPercent, formatRiskScore } from "../utils/format";
+import { getRelativeEvidence } from "../../../ai/src/evidence";
+import { resolveDominantEvidence } from "../utils/display";
+import {
+  UNAVAILABLE_LABEL,
+  formatBranchPercent,
+  formatProbability,
+  formatRiskScore,
+} from "../utils/format";
 
 interface SignalInspectorProps {
   history: RiskUpdate[];
@@ -20,7 +26,7 @@ export function SignalInspector({
   onSelectWindow,
   onToggleFlag,
 }: SignalInspectorProps) {
-  const evidenceType = getEvidenceType(selectedRecord, thresholdLow);
+  const evidenceType = resolveDominantEvidence(selectedRecord, thresholdLow);
   const relativeEvidence = getRelativeEvidence(selectedRecord);
 
   return (
@@ -46,6 +52,9 @@ export function SignalInspector({
               onClick={() => onSelectWindow(record.window_id)}
             >
               <span>Window {record.window_id}</span>
+              {record.assessment_available ? null : (
+                <Pill label={null} tone="unavailable" />
+              )}
             </button>
           ))}
         </div>
@@ -83,7 +92,7 @@ export function SignalInspector({
           </div>
           <div>
             <span>Evidence Type</span>
-            <strong>{evidenceType}</strong>
+            <strong>{evidenceType ?? UNAVAILABLE_LABEL}</strong>
           </div>
           <div>
             <span>Relative Evidence</span>
@@ -107,7 +116,7 @@ export function SignalInspector({
               <div className="bar-track">
                 <div style={{ width: `${item.probability * 100}%` }} />
               </div>
-              <strong>{item.probability.toFixed(2)}</strong>
+              <strong>{formatProbability(item.probability)}</strong>
             </div>
           ))}
         </div>
@@ -134,11 +143,21 @@ export function SignalInspector({
         <div className="stat-list stat-list--compact">
           <div>
             <span>P_distraction</span>
-            <strong>{formatPercent(selectedRecord.P_distraction)}</strong>
+            <strong>
+              {formatBranchPercent(
+                selectedRecord.P_distraction,
+                selectedRecord.modality_freshness.vision,
+              )}
+            </strong>
           </div>
           <div>
             <span>Telemetry non-safe risk</span>
-            <strong>{formatPercent(selectedRecord.P_telemetry_anomaly)}</strong>
+            <strong>
+              {formatBranchPercent(
+                selectedRecord.P_telemetry_anomaly,
+                selectedRecord.modality_freshness.telemetry,
+              )}
+            </strong>
           </div>
           <div>
             <span>Vision freshness</span>

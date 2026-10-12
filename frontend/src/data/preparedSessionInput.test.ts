@@ -26,9 +26,40 @@ describe("prepared session replay coverage", () => {
     expect(records.length).toBeGreaterThanOrEqual(25);
   });
 
-  it("exercises every RiskLevel", () => {
+  it("exercises every RiskLevel, plus null for the unassessable window", () => {
+    // Window 17 has neither branch, so its RiskLevel is null - not a fabricated
+    // "Low". The set is therefore the three levels AND null.
     const levels = new Set(records.map((r) => r.RiskLevel));
-    expect(levels).toEqual(new Set(["Low", "Medium", "High"]));
+    expect(levels).toEqual(new Set(["Low", "Medium", "High", null]));
+  });
+
+  it("has exactly one unavailable window (window 17), with all four fields null", () => {
+    const unavailable = records.filter((r) => !r.assessment_available);
+    expect(unavailable).toHaveLength(1);
+    const [window17] = unavailable;
+    expect(window17.window_id).toBe(17);
+    expect(window17).toMatchObject({
+      RiskScore: null,
+      RiskLevel: null,
+      DominantEvidence: null,
+      AlertSeverity: null,
+      SystemHealth: "UNAVAILABLE",
+    });
+    // The other 24 windows are all assessed.
+    expect(records.filter((r) => r.assessment_available)).toHaveLength(24);
+  });
+
+  it("pins the demo values that changed when the temporal layer was aligned to the backend", () => {
+    // Task 5 moved 11 of 25 windows (7, 9, 16, 18-25): half-up rounding at
+    // exact ties, plus the EMA re-seeding after a stale / missing / unavailable
+    // window. These are the headline ones; the data was NOT edited to keep the
+    // old numbers.
+    const at = (id: number) => records[id - 1];
+    expect([at(16).RiskScore, at(16).RiskLevel]).toEqual([62.5, "High"]);
+    expect([at(18).RiskScore, at(18).RiskLevel]).toEqual([70, "High"]);
+    expect(at(19).DominantEvidence).toBe("Vision-dominant");
+    expect(at(7).RiskScore).toBe(31);
+    expect(at(9).RiskScore).toBe(68.1);
   });
 
   it("exercises every DominantEvidence type", () => {

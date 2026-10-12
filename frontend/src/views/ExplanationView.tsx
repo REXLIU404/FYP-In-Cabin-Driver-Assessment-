@@ -1,36 +1,30 @@
 import { BarChart3, FileText, Scale } from "lucide-react";
 import { DistributionChart } from "../components/DistributionChart";
 import { Pill } from "../components/Pill";
-import type { AppConfig, DominantEvidence, RiskUpdate } from "../types";
+import type { AppConfig, RiskUpdate } from "../types";
 import {
+  UNAVAILABLE_LABEL,
+  formatBranchProbability,
   formatContribution,
+  formatFixed,
   formatPercent,
-  formatProbability,
   formatRiskScore,
 } from "../utils/format";
+import { evidenceDistribution } from "../utils/display";
+import { buildExplanationModel } from "./explanationModel";
 import {
   evidenceTypes,
   formatEvidenceType,
   getActiveInputSummary,
-  getEvidenceType,
   getMatchedEvidenceRule,
   getRelativeEvidence,
 } from "../../../ai/src/evidence";
-import { computeRiskContributions } from "../../../ai/src/riskLogic";
 
 interface ExplanationViewProps {
   selectedRecord: RiskUpdate;
   history: RiskUpdate[];
   config: AppConfig;
 }
-
-const evidenceChartLabels: Record<DominantEvidence, string> = {
-  "Vision-dominant": "Vision",
-  "Telemetry-dominant": "Telemetry",
-  "Combined evidence": "Combined",
-  "Partial evidence": "Partial",
-  "Low observed risk": "Low risk",
-};
 
 const visualLabelMap: Record<string, string> = {
   safe_driving: "Safe Driving",
@@ -90,21 +84,20 @@ const getTopTelemetryFeatureContributions = (record: RiskUpdate) =>
     .slice(0, 3);
 
 const formatSignedContribution = (value: number) =>
-  `${value >= 0 ? "+" : ""}${value.toFixed(2)}`;
+  `${value >= 0 ? "+" : ""}${formatFixed(value, 2)}`;
 
 export function ExplanationView({
   selectedRecord,
   history,
   config,
 }: ExplanationViewProps) {
-  const contributions = computeRiskContributions(
-    selectedRecord.P_distraction,
-    selectedRecord.P_telemetry_anomaly,
-    config.weightVision,
-    config.weightTelemetry,
-    selectedRecord.modality_freshness.vision,
-    selectedRecord.modality_freshness.telemetry,
-  );
+  // Reached through `selectedRecord`, not `latest`: a user can pick an unassessed
+  // window in Signal Inspector and switch here. The model nulls everything that
+  // would otherwise be fabricated for it (see explanationModel.ts).
+  const { unavailable, contributions, contributionIssue, evidenceType } =
+    buildExplanationModel(selectedRecord, config);
+  const visionFreshness = selectedRecord.modality_freshness.vision;
+  const telemetryFreshness = selectedRecord.modality_freshness.telemetry;
   const visualCue = getTopVisualCue(selectedRecord);
   const telemetryBehavior = getTopTelemetryBehavior(selectedRecord);
   const telemetryFeatureContributions =
@@ -113,17 +106,12 @@ export function ExplanationView({
     0.01,
     ...telemetryFeatureContributions.map((item) => Math.abs(item.contribution)),
   );
-  const evidenceType = getEvidenceType(selectedRecord, config.thresholdLow);
   const matchedRule = getMatchedEvidenceRule(evidenceType, config.thresholdLow);
   const relativeEvidence = getRelativeEvidence(selectedRecord);
   const activeInputs = getActiveInputSummary(selectedRecord);
-  const evidenceDistribution = evidenceTypes.map((type) => ({
-    label: evidenceChartLabels[type],
-    count: history.filter(
-      (record) => getEvidenceType(record, config.thresholdLow) === type,
-    ).length,
-  }));
-  const formatWeight = (weight: number) => Number(weight.toFixed(2)).toString();
+  const evidenceChartData = evidenceDistribution(history, config.thresholdLow);
+  const formatWeight = (weight: number) =>
+    Number(formatFixed(weight, 2)).toString();
 
   return (
     <div className="page-grid page-grid--explanation">
@@ -137,21 +125,42 @@ export function ExplanationView({
             <FileText size={20} />
           </div>
 
+          {unavailable ? (
+            <p className="runtime-warning" role="status">
+              Window {selectedRecord.window_id} has no assessment: neither
+              branch contributed usable evidence, so RiskScore, RiskLevel,
+              Evidence Type and Alert status are not reported for it. Branch
+              values below are shown as recorded.
+            </p>
+          ) : null}
+
           <div className="evidence-type-block">
             <span>Evidence Type</span>
-            <strong>{formatEvidenceType(evidenceType)}</strong>
+            <strong>
+              {evidenceType === null
+                ? UNAVAILABLE_LABEL
+                : formatEvidenceType(evidenceType)}
+            </strong>
             <small>Relative Evidence: {relativeEvidence}</small>
           </div>
 
           <div className="summary-metric-grid">
             <div>
               <span>P_distraction</span>
-              <strong>{formatProbability(selectedRecord.P_distraction)}</strong>
+              <strong>
+                {formatBranchProbability(
+                  selectedRecord.P_distraction,
+                  visionFreshness,
+                )}
+              </strong>
             </div>
             <div>
               <span>Telemetry Non-Safe Risk</span>
               <strong>
-                {formatProbability(selectedRecord.P_telemetry_anomaly)}
+                {formatBranchProbability(
+                  selectedRecord.P_telemetry_anomaly,
+                  telemetryFreshness,
+                )}
               </strong>
             </div>
             <div>
@@ -168,7 +177,11 @@ export function ExplanationView({
             <div>
               <span>AlertStatus</span>
               <Pill
-                label={titleCaseToken(selectedRecord.AlertSeverity)}
+                label={
+                  selectedRecord.AlertSeverity === null
+                    ? null
+                    : titleCaseToken(selectedRecord.AlertSeverity)
+                }
                 tone={selectedRecord.AlertSeverity}
               />
             </div>
@@ -194,8 +207,13 @@ export function ExplanationView({
             <div>
               <span>P_distraction</span>
               <strong>
-                {formatProbability(selectedRecord.P_distraction)}
-                <small>{formatPercent(selectedRecord.P_distraction)}</small>
+                {formatBranchProbability(
+                  selectedRecord.P_distraction,
+                  visionFreshness,
+                )}
+                {visionFreshness === "missing" ? null : (
+                  <small>{formatPercent(selectedRecord.P_distraction)}</small>
+                )}
               </strong>
             </div>
             <div>
@@ -211,14 +229,15 @@ export function ExplanationView({
             </div>
             <div>
               <span>Freshness</span>
-              <Pill
-                label={selectedRecord.modality_freshness.vision}
-                tone={selectedRecord.modality_freshness.vision}
-              />
+              <Pill label={visionFreshness} tone={visionFreshness} />
             </div>
             <div>
               <span>Contribution</span>
-              <strong>{formatContribution(contributions.vision)}</strong>
+              <strong>
+                {contributions === null
+                  ? UNAVAILABLE_LABEL
+                  : formatContribution(contributions.vision)}
+              </strong>
             </div>
           </div>
         </section>
@@ -237,38 +256,60 @@ export function ExplanationView({
             Behaviour
           </div>
 
-          <div
-            className="contribution-bar"
-            aria-label="Vision and telemetry contribution to RiskScore"
-          >
-            <div
-              className="contribution-bar__vision"
-              style={{ width: `${contributions.vision}%` }}
-            />
-            <div
-              className="contribution-bar__telemetry"
-              style={{ width: `${contributions.telemetry}%` }}
-            />
-            <div className="contribution-bar__remainder" />
-          </div>
+          {contributions === null ? (
+            <p className="runtime-warning" role="status">
+              No contribution breakdown:{" "}
+              {contributionIssue === "no_assessment"
+                ? "this window has no assessment, so there is no RiskScore to split between the branches."
+                : contributionIssue === "weights_differ"
+                  ? "the fusion weights in scope are not the ones this record was produced with, so a split would not add up to its stored RiskScore."
+                  : "the fusion weights in scope leave no evidence to split."}
+            </p>
+          ) : (
+            <>
+              <div
+                className="contribution-bar"
+                aria-label="Vision and telemetry contribution to RiskScore"
+              >
+                <div
+                  className="contribution-bar__vision"
+                  style={{ width: `${contributions.vision}%` }}
+                />
+                <div
+                  className="contribution-bar__telemetry"
+                  style={{ width: `${contributions.telemetry}%` }}
+                />
+                <div className="contribution-bar__remainder" />
+              </div>
 
-          <div className="contribution-equation">
-            <span>Visual Distraction {Math.round(contributions.vision)}</span>
-            <strong>+</strong>
-            <span>Telemetry Non-Safe {Math.round(contributions.telemetry)}</span>
-            <strong>=</strong>
-            <span>RiskScore {formatRiskScore(selectedRecord.RiskScore)}</span>
-          </div>
+              <div className="contribution-equation">
+                <span>
+                  Visual Distraction {formatFixed(contributions.vision, 0)}
+                </span>
+                <strong>+</strong>
+                <span>
+                  Telemetry Non-Safe {formatFixed(contributions.telemetry, 0)}
+                </span>
+                <strong>=</strong>
+                <span>
+                  RiskScore {formatRiskScore(selectedRecord.RiskScore)}
+                </span>
+              </div>
 
-          <div className="contribution-labels">
-            <span>Vision contribution {Math.round(contributions.vision)}</span>
-            <span>
-              Telemetry non-safe contribution {Math.round(contributions.telemetry)}
-            </span>
-            <span>
-              Total RiskScore {formatRiskScore(selectedRecord.RiskScore)}
-            </span>
-          </div>
+              <div className="contribution-labels">
+                <span>
+                  Vision contribution {formatFixed(contributions.vision, 0)}
+                </span>
+                <span>
+                  Telemetry non-safe contribution{" "}
+                  {formatFixed(contributions.telemetry, 0)}
+                </span>
+                <span>
+                  Total RiskScore {formatRiskScore(selectedRecord.RiskScore)}
+                </span>
+              </div>
+            </>
+          )}
         </section>
       </div>
 
@@ -331,10 +372,15 @@ export function ExplanationView({
             <div>
               <span>Telemetry Non-Safe Risk</span>
               <strong>
-                {formatProbability(selectedRecord.P_telemetry_anomaly)}
-                <small>
-                  {formatPercent(selectedRecord.P_telemetry_anomaly)}
-                </small>
+                {formatBranchProbability(
+                  selectedRecord.P_telemetry_anomaly,
+                  telemetryFreshness,
+                )}
+                {telemetryFreshness === "missing" ? null : (
+                  <small>
+                    {formatPercent(selectedRecord.P_telemetry_anomaly)}
+                  </small>
+                )}
               </strong>
             </div>
             <div className="evidence-metrics__stacked">
@@ -351,7 +397,9 @@ export function ExplanationView({
                           {telemetryFeatureLabelMap[item.feature] ??
                             item.feature}
                         </strong>
-                        <span>{formatSignedContribution(item.contribution)}</span>
+                        <span>
+                          {formatSignedContribution(item.contribution)}
+                        </span>
                       </div>
                       <div className="feature-contribution-row__track">
                         <div
@@ -379,14 +427,15 @@ export function ExplanationView({
             </div>
             <div>
               <span>Freshness</span>
-              <Pill
-                label={selectedRecord.modality_freshness.telemetry}
-                tone={selectedRecord.modality_freshness.telemetry}
-              />
+              <Pill label={telemetryFreshness} tone={telemetryFreshness} />
             </div>
             <div>
               <span>Contribution</span>
-              <strong>{formatContribution(contributions.telemetry)}</strong>
+              <strong>
+                {contributions === null
+                  ? UNAVAILABLE_LABEL
+                  : formatContribution(contributions.telemetry)}
+              </strong>
             </div>
           </div>
         </section>
@@ -399,7 +448,7 @@ export function ExplanationView({
             </div>
             <BarChart3 size={20} />
           </div>
-          <DistributionChart data={evidenceDistribution} />
+          <DistributionChart data={evidenceChartData} />
         </section>
       </aside>
     </div>

@@ -1,5 +1,9 @@
 import type { FreshnessStatus } from "../types";
-import { formatPercent } from "../utils/format";
+import {
+  NO_INPUT_LABEL,
+  formatPercent,
+  formatProbability,
+} from "../utils/format";
 import { Pill } from "./Pill";
 
 interface ModalityCardProps {
@@ -22,7 +26,9 @@ export function ModalityCard({
       <div>
         <Pill label={freshness} tone={freshness} />
         <small>
-          {freshness === "missing" ? "No input" : probability.toFixed(2)}
+          {freshness === "missing"
+            ? NO_INPUT_LABEL
+            : formatProbability(probability)}
         </small>
       </div>
     </div>

@@ -1,7 +1,12 @@
-import { formatRiskScore } from "../utils/format";
+import {
+  UNAVAILABLE_LABEL,
+  formatFixed,
+  formatRiskScore,
+} from "../utils/format";
 
 interface ScoreGaugeProps {
-  score: number;
+  /** `null` is an unassessed window: the gauge renders empty, never at 0. */
+  score: number | null;
   label: string;
   thresholdLow?: number;
   thresholdHigh?: number;
@@ -25,12 +30,18 @@ export function ScoreGauge({
   thresholdLow = 30,
   thresholdHigh = 60,
 }: ScoreGaugeProps) {
-  const degrees = (Math.max(0, Math.min(100, score)) / 100) * 360;
-  const color = getScoreColor(score, thresholdLow, thresholdHigh);
+  const degrees =
+    score === null ? 0 : (Math.max(0, Math.min(100, score)) / 100) * 360;
+  const color =
+    score === null
+      ? "#94a3b8"
+      : getScoreColor(score, thresholdLow, thresholdHigh);
 
   return (
     <div
-      className="risk-gauge"
+      className={
+        score === null ? "risk-gauge risk-gauge--unavailable" : "risk-gauge"
+      }
       aria-label={`${label}: ${formatRiskScore(score)}`}
     >
       <div
@@ -40,8 +51,8 @@ export function ScoreGauge({
         }}
       >
         <div className="risk-gauge__value">
-          <span>{score.toFixed(1)}</span>
-          <small>/100</small>
+          <span>{score === null ? "—" : formatFixed(score, 1)}</span>
+          <small>{score === null ? UNAVAILABLE_LABEL : "/100"}</small>
         </div>
       </div>
       <div className="risk-gauge__label">{label}</div>

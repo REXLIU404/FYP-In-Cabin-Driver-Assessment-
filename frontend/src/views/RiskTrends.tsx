@@ -2,9 +2,14 @@ import { BarChart3 } from "lucide-react";
 import { DistributionChart } from "../components/DistributionChart";
 import { Pill } from "../components/Pill";
 import { TrendChart } from "../components/TrendChart";
-import type { DistributionDatum, RiskLevel, RiskUpdate } from "../types";
-import { getEvidenceType } from "../../../ai/src/evidence";
-import { formatRiskScore, formatTimestamp } from "../utils/format";
+import type { RiskUpdate } from "../types";
+import { resolveDominantEvidence } from "../utils/display";
+import {
+  UNAVAILABLE_LABEL,
+  formatRiskScore,
+  formatTimestamp,
+} from "../utils/format";
+import { distribution, riskRowClassName } from "./riskDistribution";
 
 interface RiskTrendsProps {
   history: RiskUpdate[];
@@ -13,14 +18,6 @@ interface RiskTrendsProps {
   thresholdHigh: number;
   onSelectWindow: (windowId: number) => void;
 }
-
-const riskLevels: RiskLevel[] = ["Low", "Medium", "High"];
-
-const distribution = (history: RiskUpdate[]): DistributionDatum[] =>
-  riskLevels.map((label) => ({
-    label,
-    count: history.filter((record) => record.RiskLevel === label).length,
-  }));
 
 export function RiskTrends({
   history,
@@ -74,10 +71,7 @@ export function RiskTrends({
               {[...history].reverse().map((record) => (
                 <tr
                   key={record.window_id}
-                  className={[
-                    record.window_id === selectedWindowId ? "is-selected" : "",
-                    record.RiskLevel === "High" ? "is-high-risk" : "",
-                  ].join(" ")}
+                  className={riskRowClassName(record, selectedWindowId)}
                   onClick={() => onSelectWindow(record.window_id)}
                 >
                   <td>{record.window_id}</td>
@@ -92,7 +86,10 @@ export function RiskTrends({
                       tone={record.AlertSeverity}
                     />
                   </td>
-                  <td>{getEvidenceType(record, thresholdLow)}</td>
+                  <td>
+                    {resolveDominantEvidence(record, thresholdLow) ??
+                      UNAVAILABLE_LABEL}
+                  </td>
                   <td>
                     {record.flagged ? (
                       <Pill label="flagged" tone="flagged" />

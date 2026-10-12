@@ -1,4 +1,8 @@
 import type { AppConfig, RiskUpdate, SessionMeta } from "../types";
+import {
+  normalizeRiskUpdate,
+  type StoredRiskUpdate,
+} from "../../../ai/src/availability";
 import { DEFAULT_CONFIG } from "../../../ai/src/riskLogic";
 
 const SESSION_INDEX_KEY = "session_index";
@@ -29,8 +33,23 @@ const writeJson = (key: string, value: unknown) => {
   window.localStorage.setItem(key, JSON.stringify(value));
 };
 
-export const loadSessionLog = (sessionId: string): RiskUpdate[] =>
-  readJson<RiskUpdate[]>(sessionKey(sessionId), []);
+// localStorage is an untrusted boundary: what it holds may predate the nullable
+// contract (no `assessment_available`, an unassessable window stored as
+// 0 / Low / NORMAL / UNAVAILABLE) or be corrupt. Everything read as a risk
+// record goes through `normalizeRiskUpdate`, so the rest of the app only ever
+// sees canonical records. Entries that are not record-shaped are dropped rather
+// than allowed to crash a view.
+const isStoredRecord = (value: unknown): value is StoredRiskUpdate =>
+  typeof value === "object" &&
+  value !== null &&
+  typeof (value as { window_id?: unknown }).window_id === "number";
+
+export const loadSessionLog = (sessionId: string): RiskUpdate[] => {
+  const stored = readJson<unknown>(sessionKey(sessionId), []);
+  return Array.isArray(stored)
+    ? stored.filter(isStoredRecord).map(normalizeRiskUpdate)
+    : [];
+};
 
 // Next monotonic window id. Derived from the most recent record's id, NOT the
 // log length: the MAX_SESSION_RECORDS cap holds the log at a fixed size, so a

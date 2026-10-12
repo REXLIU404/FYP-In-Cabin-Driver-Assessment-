@@ -10,7 +10,8 @@ import {
   YAxis,
 } from "recharts";
 import type { RiskUpdate } from "../types";
-import { formatRiskScore } from "../utils/format";
+import { formatFixed } from "../utils/format";
+import { buildTrendSeries, formatTrendTooltip } from "./trendSeries";
 
 interface TrendChartProps {
   history: RiskUpdate[];
@@ -23,18 +24,7 @@ export function TrendChart({
   thresholdLow = 30,
   thresholdHigh = 60,
 }: TrendChartProps) {
-  const data = history.map((record) => ({
-    window: record.window_id,
-    risk: record.SystemHealth === "UNAVAILABLE" ? null : record.RiskScore,
-    vision:
-      record.modality_freshness.vision === "missing"
-        ? null
-        : record.P_distraction * 100,
-    telemetry:
-      record.modality_freshness.telemetry === "missing"
-        ? null
-        : record.P_telemetry_anomaly * 100,
-  }));
+  const data = buildTrendSeries(history);
 
   return (
     <div className="trend-chart" aria-label="Risk score timeline">
@@ -49,7 +39,7 @@ export function TrendChart({
             domain={[0, 100]}
             tickLine={false}
             axisLine={false}
-            tickFormatter={(value) => Number(value).toFixed(0)}
+            tickFormatter={(value) => formatFixed(Number(value), 0)}
           />
           <ReferenceLine
             y={thresholdLow}
@@ -63,12 +53,12 @@ export function TrendChart({
             strokeDasharray="5 5"
             label={String(thresholdHigh)}
           />
+          {/* filterNull={false}: a null point (an unassessed window, a missing
+              branch) must reach the formatter and read "Unavailable" instead of
+              being silently left out of the tooltip. */}
           <Tooltip
-            formatter={(value, name) =>
-              name === "RiskScore"
-                ? formatRiskScore(Number(value))
-                : `${Number(value).toFixed(1)}%`
-            }
+            filterNull={false}
+            formatter={(value, name) => formatTrendTooltip(value, name)}
           />
           <Legend />
           <Line
@@ -78,6 +68,7 @@ export function TrendChart({
             stroke="#111827"
             strokeWidth={3}
             dot={false}
+            connectNulls={false}
           />
           <Line
             type="monotone"
@@ -86,6 +77,7 @@ export function TrendChart({
             stroke="#2563eb"
             strokeWidth={2}
             dot={false}
+            connectNulls={false}
           />
           <Line
             type="monotone"
@@ -94,6 +86,7 @@ export function TrendChart({
             stroke="#059669"
             strokeWidth={2}
             dot={false}
+            connectNulls={false}
           />
         </LineChart>
       </ResponsiveContainer>

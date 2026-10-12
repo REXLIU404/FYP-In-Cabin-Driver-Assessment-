@@ -109,3 +109,65 @@ export const getDisplayState = (
   if (!isAssessmentAvailable(record)) return "unavailable";
   return opts.stale ? "stale" : "available";
 };
+
+/**
+ * A risk record as it may arrive from an UNTRUSTED boundary (localStorage, or a
+ * response from an older backend): everything in `RiskUpdate` except that
+ * `assessment_available` may be absent.
+ */
+export type StoredRiskUpdate = Omit<RiskUpdate, "assessment_available"> & {
+  assessment_available?: boolean;
+};
+
+/**
+ * Availability of a record that may predate the `assessment_available` flag.
+ *
+ * If the record carries the flag, that is the answer. Otherwise it is derived
+ * from the two fields that existed before it: `RiskScore !== null` AND
+ * `SystemHealth !== "UNAVAILABLE"`.
+ *
+ * The derivation is the only correct one. The two tempting one-liners fail in
+ * opposite directions on a legacy row:
+ *   !record.assessment_available          -> every legacy row is "unavailable"
+ *                                            (stored history vanishes from the UI)
+ *   record.assessment_available === false -> every legacy row is "available",
+ *                                            including a both-missing window that
+ *                                            was stored as 0 / Low / NORMAL /
+ *                                            UNAVAILABLE.
+ */
+export const deriveAssessmentAvailable = (
+  record: Pick<StoredRiskUpdate, "RiskScore" | "SystemHealth"> & {
+    assessment_available?: boolean;
+  },
+): boolean =>
+  typeof record.assessment_available === "boolean"
+    ? record.assessment_available
+    : record.RiskScore != null && record.SystemHealth !== "UNAVAILABLE";
+
+/**
+ * The single normalisation applied at every untrusted boundary (the localStorage
+ * reader and the API client).
+ *
+ * A record that already carries `assessment_available` is returned as it is:
+ * the backend is the canonical producer, and quietly "repairing" a record that
+ * contradicts its own flag would hide a backend bug. Only a legacy record (no
+ * flag) is migrated: availability is derived (see above) and, for an unassessable
+ * window, the four nullable fields are set to null in place of the fabricated
+ * `0 / Low / NORMAL / "Partial evidence"` the old pipeline stored.
+ */
+export const normalizeRiskUpdate = (raw: StoredRiskUpdate): RiskUpdate => {
+  const flag = raw.assessment_available;
+  if (typeof flag === "boolean") return { ...raw, assessment_available: flag };
+
+  if (deriveAssessmentAvailable(raw)) {
+    return { ...raw, assessment_available: true };
+  }
+  return {
+    ...raw,
+    assessment_available: false,
+    RiskScore: null,
+    RiskLevel: null,
+    DominantEvidence: null,
+    AlertSeverity: null,
+  };
+};

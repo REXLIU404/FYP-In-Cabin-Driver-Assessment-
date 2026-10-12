@@ -1,9 +1,8 @@
-import type {
-  AppConfig,
-  RiskUpdate,
-  SessionMeta,
-  TelemetryFeatures,
-} from "../types";
+import type { AppConfig, SessionMeta, TelemetryFeatures } from "../types";
+import {
+  normalizeRiskUpdate,
+  type StoredRiskUpdate,
+} from "../../../ai/src/availability";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "";
 export class ApiError extends Error {
@@ -37,6 +36,9 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
         response.status,
       );
     }
+    // Untrusted boundary: the body is not validated here. Endpoints that return
+    // risk records pass the result through `normalizeRiskUpdate` below; the
+    // other response shapes (sessions, model status) are not safety-relevant.
     return (await response.json()) as T;
   } finally {
     clearTimeout(timeout);
@@ -59,6 +61,9 @@ export interface LivePayload {
   telemetry_timestamp: string | null;
   telemetry_source: "prepared_replay" | "missing";
 }
+const asRecords = (raw: StoredRiskUpdate[]) =>
+  raw.map((record) => normalizeRiskUpdate(record));
+
 export const api = {
   models: (signal?: AbortSignal) => request<ModelStatus>("/models", { signal }),
   create: (config: AppConfig, signal?: AbortSignal) =>
@@ -80,25 +85,27 @@ export const api = {
       }),
     }),
   infer: (sid: string, payload: LivePayload, signal: AbortSignal) =>
-    request<RiskUpdate>(`/sessions/${encodeURIComponent(sid)}/infer`, {
+    request<StoredRiskUpdate>(`/sessions/${encodeURIComponent(sid)}/infer`, {
       method: "POST",
       body: JSON.stringify(payload),
       signal,
-    }),
+    }).then(normalizeRiskUpdate),
   sessions: () => request<SessionMeta[]>("/sessions?limit=100"),
   session: (sid: string) =>
     request<SessionMeta>(`/sessions/${encodeURIComponent(sid)}`),
   latest: (sid: string) =>
-    request<RiskUpdate>(`/sessions/${encodeURIComponent(sid)}/risk/latest`),
+    request<StoredRiskUpdate>(
+      `/sessions/${encodeURIComponent(sid)}/risk/latest`,
+    ).then(normalizeRiskUpdate),
   windows: (sid: string, after = 0) =>
-    request<RiskUpdate[]>(
+    request<StoredRiskUpdate[]>(
       `/sessions/${encodeURIComponent(sid)}/windows?after=${after}&limit=500`,
-    ),
+    ).then(asRecords),
   flag: (sid: string, id: number, flagged: boolean) =>
-    request<RiskUpdate>(
+    request<StoredRiskUpdate>(
       `/sessions/${encodeURIComponent(sid)}/windows/${id}/flag?flagged=${flagged}`,
       { method: "PATCH" },
-    ),
+    ).then(normalizeRiskUpdate),
   exportUrl: (sid: string, format: "json" | "csv") =>
     `${API_BASE}/api/sessions/${encodeURIComponent(sid)}/export?format=${format}`,
 };

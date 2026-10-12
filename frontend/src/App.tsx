@@ -20,11 +20,8 @@ import {
   saveConfig,
 } from "./utils/persistence";
 import { buildRiskUpdate } from "../../ai/src/riskLogic";
-import {
-  initAlertState,
-  updateAlertState,
-  type AlertFsmState,
-} from "../../ai/src/alertFsm";
+import { initAlertState, type AlertFsmState } from "../../ai/src/alertFsm";
+import { applyAlertState } from "./utils/alertOverlay";
 import { ConfigurationView } from "./views/ConfigurationView";
 import { ExplanationView } from "./views/ExplanationView";
 import { LiveMonitor } from "./views/LiveMonitor";
@@ -57,13 +54,11 @@ export default function App() {
       replayLog.log[replayLog.log.length - 1],
       nextWindowId(replayLog.log),
     );
-    const fsm = updateAlertState(
-      alertFsmRef.current,
-      record.RiskLevel,
-      Date.now(),
-    );
-    alertFsmRef.current = fsm;
-    replayLog.append({ ...record, AlertSeverity: fsm.severity });
+    // The FSM overlays a severity on assessed windows only: an unassessed window
+    // (RiskLevel null) keeps AlertSeverity null instead of inheriting the held one.
+    const overlaid = applyAlertState(record, alertFsmRef.current, Date.now());
+    alertFsmRef.current = overlaid.state;
+    replayLog.append(overlaid.record);
     setSelectedWindowId(record.window_id);
     setCursor((old) => (old + 1) % PREPARED_SESSION_WINDOWS.length);
   }, [config, cursor, replayId, replayLog]);

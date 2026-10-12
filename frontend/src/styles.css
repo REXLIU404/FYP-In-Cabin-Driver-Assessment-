@@ -275,6 +275,13 @@ button {
   border-color: #fecaca;
 }
 
+/* An unassessed window. Without its own rule an unknown modifier falls back to
+   the base (green) banner, and "no assessment" would look like "all clear". */
+.alert-banner--unavailable {
+  background: #f1f5f9;
+  border: 1px dashed #94a3b8;
+}
+
 .alert-banner strong,
 .alert-banner span {
   display: block;
@@ -461,6 +468,10 @@ button {
   font-weight: 800;
 }
 
+.risk-gauge--unavailable .risk-gauge__value {
+  color: var(--muted);
+}
+
 .modality-grid,
 .telemetry-grid,
 .stat-list,
@@ -535,6 +546,14 @@ button {
   color: #7f1d1d;
   background: #fee2e2;
   border-color: #fecaca;
+}
+
+/* "No assessment": deliberately neither green, amber nor red. A null level or
+   alert resolves to this tone; it must not fall through to the neutral pill. */
+.pill--unavailable {
+  color: #475569;
+  background: #f8fafc;
+  border: 1px dashed #94a3b8;
 }
 
 .trend-chart,
@@ -727,6 +746,12 @@ tbody tr.is-selected {
 
 tbody tr.is-high-risk {
   background: #fff1f2;
+}
+
+tbody tr.is-unavailable {
+  color: var(--muted);
+  background: #f8fafc;
+  font-style: italic;
 }
 
 .explanation-summary,
@@ -1171,6 +1196,10 @@ tbody tr.is-high-risk {
   border: 1px solid #fecaca;
   border-radius: 8px;
   color: #991b1b;
+}
+.config-grid__notice {
+  grid-column: 1 / -1;
+  margin: 0;
 }
 .runtime-warning {
   padding: 12px;

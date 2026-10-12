@@ -7,8 +7,8 @@ import { VehicleDynamics } from "../components/VehicleDynamics";
 import { TrendChart } from "../components/TrendChart";
 import type { useCameraPreview } from "../hooks/useCameraPreview";
 import type { RiskUpdate } from "../types";
-import { getEvidenceType } from "../../../ai/src/evidence";
 import { formatTimestamp } from "../utils/format";
+import { buildLiveMonitorModel } from "./liveMonitorModel";
 
 interface LiveMonitorProps {
   latest: RiskUpdate;
@@ -33,16 +33,15 @@ export function LiveMonitor({
   thresholdHigh,
   stale = false,
 }: LiveMonitorProps) {
-  const evidenceType = getEvidenceType(latest, thresholdLow);
-  const visionFreshness =
-    stale && latest.modality_freshness.vision !== "missing"
-      ? "stale"
-      : latest.modality_freshness.vision;
-  const telemetryFreshness =
-    stale && latest.modality_freshness.telemetry !== "missing"
-      ? "stale"
-      : latest.modality_freshness.telemetry;
-  const health = stale ? "UNAVAILABLE" : latest.SystemHealth;
+  // Everything below is the record's OWN value (see liveMonitorModel.ts): `stale`
+  // describes the record's age and must not rewrite what the record says.
+  const {
+    displayState,
+    systemHealth,
+    vision: visionFreshness,
+    telemetry: telemetryFreshness,
+    evidenceType,
+  } = buildLiveMonitorModel(latest, stale, thresholdLow);
 
   return (
     <div className="page-grid page-grid--live">
@@ -85,12 +84,22 @@ export function LiveMonitor({
           />
 
           <div className="risk-summary">
-            {stale || latest.SystemHealth === "UNAVAILABLE" ? (
+            {displayState === "unavailable" ? (
               <div className="empty-state">
                 <h2>Assessment unavailable</h2>
                 <p>
-                  Waiting for fresh input. Previous evidence remains available
+                  This window has no usable evidence, so no RiskScore, RiskLevel
+                  or alert is reported for it. Earlier windows remain available
                   in Signal Inspector.
+                </p>
+              </div>
+            ) : displayState === "stale" ? (
+              <div className="empty-state">
+                <h2>Latest result is stale</h2>
+                <p>
+                  Waiting for fresh input. The last assessment is historical and
+                  is not shown as current; it remains available in Signal
+                  Inspector.
                 </p>
               </div>
             ) : (
@@ -153,7 +162,15 @@ export function LiveMonitor({
         <div className="stat-list">
           <div>
             <span>SystemHealth</span>
-            <Pill label={health} tone={health} />
+            <Pill label={systemHealth} tone={systemHealth} />
+          </div>
+          <div>
+            <span>Result age</span>
+            {stale ? (
+              <Pill label="Stale" tone="stale" />
+            ) : (
+              <Pill label="Current" tone="fresh" />
+            )}
           </div>
           <div>
             <span>Vision freshness</span>

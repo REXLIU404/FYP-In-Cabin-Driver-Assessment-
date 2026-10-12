@@ -1,9 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
   assertAvailabilityInvariant,
+  deriveAssessmentAvailable,
   effectiveFusionDenominator,
   getDisplayState,
   isAssessmentAvailable,
+  normalizeRiskUpdate,
+  type StoredRiskUpdate,
 } from "./availability";
 import {
   DEFAULT_CONFIG,
@@ -26,6 +29,21 @@ import type {
   PreparedSessionWindow,
   RiskUpdate,
 } from "./types";
+// Source text of the components the grep-style guards below inspect. `?raw` is
+// resolved by Vite at test time, so no filesystem API (and no @types/node) is
+// needed.
+import alertBannerSource from "../../frontend/src/components/AlertBanner.tsx?raw";
+import configurationViewSource from "../../frontend/src/views/ConfigurationView.tsx?raw";
+import explanationViewSource from "../../frontend/src/views/ExplanationView.tsx?raw";
+import exportSource from "../../frontend/src/utils/export.ts?raw";
+import formatSource from "../../frontend/src/utils/format.ts?raw";
+import liveMonitorModelSource from "../../frontend/src/views/liveMonitorModel.ts?raw";
+import liveMonitorSource from "../../frontend/src/views/LiveMonitor.tsx?raw";
+import modalityCardSource from "../../frontend/src/components/ModalityCard.tsx?raw";
+import riskTrendsSource from "../../frontend/src/views/RiskTrends.tsx?raw";
+import scoreGaugeSource from "../../frontend/src/components/ScoreGauge.tsx?raw";
+import signalInspectorSource from "../../frontend/src/views/SignalInspector.tsx?raw";
+import trendSeriesSource from "../../frontend/src/components/trendSeries.ts?raw";
 
 const STATUSES: FreshnessStatus[] = ["fresh", "stale", "missing"];
 const WEIGHT_PAIRS: Array<[number, number]> = [
@@ -376,5 +394,148 @@ describe("unavailable explanation names the cause and never mentions a level", (
   it("an available window keeps its level wording", () => {
     const r = makeRecord("fresh", "fresh");
     expect(r.explanation).toMatch(/medium risk output/);
+  });
+});
+
+describe("deriveAssessmentAvailable: the legacy-record predicate", () => {
+  // A record stored before the nullable contract has no `assessment_available`.
+  // The two tempting one-liners both fail on it:
+  //   !record.assessment_available        -> every legacy row "unavailable"
+  //   record.assessment_available === false -> every legacy row "available"
+  const legacy = (
+    RiskScore: number | null,
+    SystemHealth: "FULL" | "DEGRADED" | "UNAVAILABLE",
+  ) => ({ RiskScore, SystemHealth });
+
+  it("a legacy assessed row (42.0 / DEGRADED) is available", () =>
+    expect(deriveAssessmentAvailable(legacy(42, "DEGRADED"))).toBe(true));
+  it("a legacy genuine zero (0 / FULL) is available", () =>
+    expect(deriveAssessmentAvailable(legacy(0, "FULL"))).toBe(true));
+  it("a legacy fabricated zero (0 / UNAVAILABLE) is NOT available", () =>
+    expect(deriveAssessmentAvailable(legacy(0, "UNAVAILABLE"))).toBe(false));
+  it("a null score is not available whatever the health says", () =>
+    expect(deriveAssessmentAvailable(legacy(null, "FULL"))).toBe(false));
+  it("an explicit flag wins over derivation", () => {
+    expect(
+      deriveAssessmentAvailable({
+        ...legacy(42, "FULL"),
+        assessment_available: false,
+      }),
+    ).toBe(false);
+    expect(
+      deriveAssessmentAvailable({
+        ...legacy(null, "UNAVAILABLE"),
+        assessment_available: true,
+      }),
+    ).toBe(true);
+  });
+});
+
+describe("normalizeRiskUpdate", () => {
+  const canonicalAvailable = makeRecord("fresh", "fresh");
+  const canonicalUnavailable = makeRecord("missing", "missing");
+  const strip = (record: RiskUpdate): StoredRiskUpdate => {
+    const copy: Partial<RiskUpdate> = { ...record };
+    delete copy.assessment_available;
+    return copy as StoredRiskUpdate;
+  };
+
+  it("a canonical record is returned unchanged", () => {
+    expect(normalizeRiskUpdate(canonicalAvailable)).toEqual(canonicalAvailable);
+    expect(normalizeRiskUpdate(canonicalUnavailable)).toEqual(
+      canonicalUnavailable,
+    );
+  });
+
+  it("a legacy assessed row gains assessment_available = true and keeps its values", () => {
+    const out = normalizeRiskUpdate(strip(canonicalAvailable));
+    expect(out).toEqual(canonicalAvailable);
+  });
+
+  it("a legacy fabricated 0/Low/NORMAL/UNAVAILABLE row becomes the canonical unavailable record", () => {
+    const fabricated: StoredRiskUpdate = {
+      ...strip(canonicalUnavailable),
+      RiskScore: 0,
+      RiskLevel: "Low",
+      DominantEvidence: "Partial evidence",
+      AlertSeverity: "NORMAL",
+    };
+    const out = normalizeRiskUpdate(fabricated);
+    expect(out).toMatchObject({
+      assessment_available: false,
+      RiskScore: null,
+      RiskLevel: null,
+      DominantEvidence: null,
+      AlertSeverity: null,
+      SystemHealth: "UNAVAILABLE",
+    });
+    expect(() => assertAvailabilityInvariant(out)).not.toThrow();
+  });
+
+  it("a record that carries the flag is NOT rewritten - a backend bug stays visible", () => {
+    const contradictory: RiskUpdate = {
+      ...canonicalUnavailable,
+      RiskScore: 12,
+    };
+    expect(normalizeRiskUpdate(contradictory).RiskScore).toBe(12);
+    expect(() =>
+      assertAvailabilityInvariant(normalizeRiskUpdate(contradictory)),
+    ).toThrow(/RiskScore/);
+  });
+});
+
+describe("IT-UI-01: the frontend renders the canonical record and recomputes nothing", () => {
+  const strip = (source: string) =>
+    // Comments may legitimately mention the forbidden strings; only code counts.
+    source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:])\/\/.*$/gm, "$1");
+
+  it('LiveMonitor.tsx and AlertBanner.tsx no longer contain SystemHealth === "UNAVAILABLE"', () => {
+    for (const source of [liveMonitorSource, alertBannerSource]) {
+      expect(source).not.toContain('SystemHealth === "UNAVAILABLE"');
+    }
+  });
+
+  it("LiveMonitor.tsx does not fabricate a health value from the stale flag", () => {
+    const code = strip(liveMonitorSource);
+    expect(code).not.toMatch(/stale\s*\?\s*"UNAVAILABLE"/);
+    // ...nor rewrite modality_freshness to "stale" when the record is merely old.
+    expect(code).not.toMatch(/stale\s*&&[^;]*modality_freshness/);
+  });
+
+  it("both former rewrite sites use the shared three-state getDisplayState helper", () => {
+    // LiveMonitor reaches it through its model, AlertBanner through the banner
+    // class helper and directly.
+    expect(liveMonitorSource).toContain("buildLiveMonitorModel");
+    expect(liveMonitorModelSource).toContain("getDisplayState");
+    expect(alertBannerSource).toContain("getDisplayState");
+  });
+
+  it("no view recomputes DominantEvidence with getEvidenceType", () => {
+    for (const source of [
+      liveMonitorSource,
+      signalInspectorSource,
+      riskTrendsSource,
+      explanationViewSource,
+    ]) {
+      expect(strip(source)).not.toMatch(/getEvidenceType\s*\(/);
+    }
+  });
+
+  it("risk display goes through formatFixed / roundHalfUp, never the binary-rounding method", () => {
+    for (const source of [
+      formatSource,
+      exportSource,
+      scoreGaugeSource,
+      modalityCardSource,
+      alertBannerSource,
+      liveMonitorSource,
+      signalInspectorSource,
+      riskTrendsSource,
+      explanationViewSource,
+      configurationViewSource,
+      trendSeriesSource,
+    ]) {
+      expect(strip(source)).not.toMatch(/\.toFixed\(/);
+    }
   });
 });

@@ -1,5 +1,8 @@
 import { Download, Pause, Play, RotateCw, Settings } from "lucide-react";
 import type { AppConfig } from "../types";
+import { roundHalfUp } from "../../../ai/src/riskLogic";
+import { zeroWeightNotice } from "../utils/display";
+import { formatFixed } from "../utils/format";
 
 interface ConfigurationViewProps {
   config: AppConfig;
@@ -32,9 +35,14 @@ export function ConfigurationView({
     const weightVision = clamp(value, 0, 1);
     patchConfig({
       weightVision,
-      weightTelemetry: Number((1 - weightVision).toFixed(2)),
+      weightTelemetry: roundHalfUp(1 - weightVision, 2),
     });
   };
+
+  const weightNotice = zeroWeightNotice(
+    config.weightVision,
+    config.weightTelemetry,
+  );
 
   return (
     <section className="panel configuration-panel">
@@ -98,7 +106,7 @@ export function ConfigurationView({
           <h3>Risk Fusion Parameters</h3>
           <div className="config-grid">
             <label className="field">
-              <span>Vision Weight: {config.weightVision.toFixed(2)}</span>
+              <span>Vision Weight: {formatFixed(config.weightVision, 2)}</span>
               <input
                 type="range"
                 min="0"
@@ -112,7 +120,9 @@ export function ConfigurationView({
             </label>
 
             <label className="field">
-              <span>Telemetry Weight: {config.weightTelemetry.toFixed(2)}</span>
+              <span>
+                Telemetry Weight: {formatFixed(config.weightTelemetry, 2)}
+              </span>
               <input
                 type="range"
                 min="0"
@@ -124,6 +134,12 @@ export function ConfigurationView({
                 }
               />
             </label>
+
+            {weightNotice === null ? null : (
+              <p className="runtime-warning config-grid__notice" role="status">
+                {weightNotice}
+              </p>
+            )}
 
             <label className="field">
               <span>Low / Medium Threshold</span>
