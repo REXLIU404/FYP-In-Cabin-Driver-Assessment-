@@ -40,6 +40,14 @@
 | `docs/CLAUDE_HANDOFF_PROMPT.zh.md`、`docs/FYP2_CLAUDE_DEVELOPMENT_HANDBOOK.zh.md` | 实施计划 + roadmap |
 | `docs/PROJECT_ASSESSMENT_AND_TEST_PLAN.zh.md` | 审计 03 / 04 与 Codex 独立审阅（E1–E5 命名以审计为准） |
 
-## 待用户确认是否删除
+## 已删除（2026-10-13，用户批准）
 
-`Changelog.md`、`backend/COMPLETION_PLAN.md`、`docs/prototype-summary.md`、`docs/system-explanation-script.zh.md`、`docs/figma-wireframe-fit-analysis.md`：没有任何文档引用它们，内容已被取代。确认前保留。
+以下 5 个文件没有任何文档或代码引用，内容已被取代，经用户批准删除。需要时可从 git 历史取回（例如 `git show 9632812:Changelog.md`）：
+
+- `Changelog.md`
+- `backend/COMPLETION_PLAN.md`
+- `docs/prototype-summary.md`
+- `docs/system-explanation-script.zh.md`
+- `docs/figma-wireframe-fit-analysis.md`
+
+审计证据 `docs/fyp2/evidence/source_inventory.json` 与 `repository_discovery.json` 中仍有这些路径。那是审计当时的文件清单与 git status 快照，不被任何程序读取，作为历史记录保持原样。

@@ -48,8 +48,8 @@
 | 现行 | `README.md`、`CLAUDE.md`、`PROJECT_MEMORY.md`、`backend/README.md`、`docs/plans/…completion.md`、`docs/fyp2/implementation/*`、`docs/fyp2/release/RELEASE_MANIFEST.md`、`docs/fyp2/review/*`、`docs/LIVE_RUNTIME_GUIDE.zh.md`、`docs/explanation-implementation-guide.zh.md` | 保留（`LIVE_RUNTIME_GUIDE` 内容停在 10-09，Task 9 / 10 时更新） |
 | 审计包（冻结证据） | `docs/fyp2/00`–`08`、`audit_manifest.json`、`docs/fyp2/evidence/*`、`docs/fyp2/{task_plan,findings,progress}.md`（首轮审计员的工作笔记） | 保留原位：Codex 审阅按路径与哈希引用它们，移动会断链 |
 | 报告证据 | `docs/evidence/`（按日期的 Chapter 5 证据） | 保留 |
-| 零引用、已被取代 | `Changelog.md`（05-21，19 行）、`backend/COMPLETION_PLAN.md`（06-03，被计划取代） | **建议删除** |
-| 零引用、历史快照 | `docs/prototype-summary.md`、`docs/system-explanation-script.zh.md`、`docs/figma-wireframe-fit-analysis.md` | 建议删除；若报告或答辩还要用，改为归档 |
+| 零引用、已被取代 | `Changelog.md`（05-21，19 行）、`backend/COMPLETION_PLAN.md`（06-03，被计划取代） | **已删除**（2026-10-13，用户批准） |
+| 零引用、历史快照 | `docs/prototype-summary.md`、`docs/system-explanation-script.zh.md`、`docs/figma-wireframe-fit-analysis.md` | **已删除**（2026-10-13，用户批准） |
 | 被审计包引用的历史快照 | `docs/DEVELOPMENT_SCHEDULE.md`、`docs/IMPLEMENTATION_PROGRESS.zh.md`、`docs/CLAUDE_HANDOFF_PROMPT.zh.md`、`docs/FYP2_CLAUDE_DEVELOPMENT_HANDBOOK.zh.md`、`docs/PROJECT_ASSESSMENT_AND_TEST_PLAN.zh.md` | **不删**（审计证据引用）；在 `docs/README.md` 索引中标为「已被取代的历史快照」 |
 | 已修正的数据 | `ai/prototype-data/.../missing_cases.csv` | 不是文档，属 F1，阶段 1 修 |
 
