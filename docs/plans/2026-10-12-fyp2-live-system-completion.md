@@ -41,7 +41,9 @@
 
   机理：`inference.py:13-18` 对任何提供了时间戳的分支永远只返回 `stale`、不会变 `missing`，所以任意旧的证据会一直以 0.45 权重参与融合、持续累积 sustained-High，最终触发 `HIGH_ALERT`。D01 修好之后这个洞会**看起来像已经解决**。
 
-  **R1 新发现，显著改变风险画像**：Live 主运行时**目前根本到不了 stale**。`trained.py:122-123` 只会输出 `fresh`（有输入）或 `missing`（无输入），而前端对两路都打 `new Date()` 当时间戳 —— 所以 Live 路径里 `age` 恒为 ~0。**D13 只能经由保留的 replay 路径或直接 POST `/windows` 触发，不是主运行时的在役缺陷。**
+  ~~**R1 新发现，显著改变风险画像**：Live 主运行时**目前根本到不了 stale**。`trained.py:122-123` 只会输出 `fresh`（有输入）或 `missing`（无输入），而前端对两路都打 `new Date()` 当时间戳 —— 所以 Live 路径里 `age` 恒为 ~0。**D13 只能经由保留的 replay 路径或直接 POST `/windows` 触发，不是主运行时的在役缺陷。**~~
+
+  **R4 更正（Codex 独立审阅 R08 判 INCORRECT，已核实）**：上一段是错的。`run_inference` 用 `provenance.captured_at` / `telemetry_timestamp` **重新判定** freshness（`backend/app/inference.py:107-108`），不依赖 provider 给的 `fresh`。`backend/tests/test_live_inference.py:114-118` 本身就断言：旧 `captured_at` 经 `POST /infer` 得到 `stale` 与 `DEGRADED`。正常浏览器操作下 age 接近 0，但网络或处理延迟超过 3 秒、客户端时钟偏差、或任何直接调用 `/infer` 的客户端都能让 Live 出现 stale。**因此 D13 在 Live 主运行时可达**，其优先级由「System Freeze 前再决定」提升为待用户裁定的政策项（见 R4 记录）。
 
   **本阶段的义务（不是修复，是留证）**：
   1. Task 5 必须新增 `UT-TIME-06 (stale-only stream)`：用注入时钟喂一串**只有 stale 证据**、分数持续在 High 区间的窗口，断言并记录**当前**行为（即会累积到 `HIGH_ALERT`）。该测试是行为快照，不是期望行为 —— 测试名与注释必须写明这是已知限制的留证。
@@ -921,7 +923,7 @@ cd .. && npx vitest run && npx tsc --noEmit && npx eslint .
 | 5 | 退避表不自洽 | 只发生两次退避：2000 / 4000 ms。10000 ms 上限在 3 次投递下不可达，`backoffMs` 类型收紧为 `1 | 2` |
 | 6 | 前后端 CSV 空值不一致 | 统一为**空单元格**（原前端写字面量 `unavailable`）。消歧义由 `assessment_available=false` + `SystemHealth=UNAVAILABLE` 承担，布尔一律小写 |
 | 7 | EMA seed 约定未核实 | 已核实三份实现，**发现两处真实分歧**（首帧是否 round3；stale 后是否重新 seed）。裁定以 Python 为准，Task 5 Step 3b 改 TS |
-| 8 | prepared 行能否真触发 missing | **原说法错误**。CSV 的 `vision_available` 在 Live 模式下根本不被消费；UNAVAILABLE 需显式关摄像头；`stale` 在 Live 完全不可达 |
+| 8 | prepared 行能否真触发 missing | **原说法错误**。CSV 的 `vision_available` 在 Live 模式下根本不被消费；UNAVAILABLE 需显式关摄像头；~~`stale` 在 Live 完全不可达~~（**R4 更正**：可达，见 Global Constraints 的 D13 段） |
 | 9 | 重试幂等 | 新增「重试身份」小节：整个 payload 在首投前冻结，重试逐字节重发 |
 | 10 | D13 | 不修复，但作为已知限制追踪：新增 `UT-TIME-06` 行为快照测试 + 证据归档 + 禁止对外声称已解决 |
 | 11 | canonical RiskUpdate | 列为硬约束。当前违规点（五视图重算 `DominantEvidence`、`LiveMonitor.tsx:45` 伪造 `SystemHealth`）由 Task 6 修 |
@@ -940,6 +942,28 @@ cd .. && npx vitest run && npx tsc --noEmit && npx eslint .
 | 7 | 计划结构 | Task 10 只做 Live E2E；新增 **Task 10A**（模型替换与集成验证），排在 Task 10 之后 |
 | 8 | 对外陈述 | 构造场景下的融合结果不得作为现实世界多模态风险准确率陈述 |
 | 9 | 发布与回滚 | 版本化发布 + 受控回滚，不覆盖现有稳定产物 |
+
+## R4 修订记录（2026-10-13）：Codex 独立审阅之后
+
+来源：`docs/fyp2/review/CODEX_INDEPENDENT_AUDIT_REVIEW_2026-10-13.md`（下称「审阅」，编号 R01–R32）。阶段化的执行顺序见 `.planning/system-track/task_plan.md`。
+
+**结论**：Tasks 1–6 的修复被确认成立（R04、R05、R11、R12、R13），**不需要重做**。计划需要一处事实更正、若干补测，以及三个新的待决政策项。
+
+| # | 审阅编号 | 问题 | 处理 |
+|---|---|---|---|
+| 1 | R08 | 「Live 到不了 stale」是错的 | 已在 Global Constraints、R1 #8、风险表更正。**审阅修复批次**中：`TASK_1_TO_6_SUMMARY.md` 加勘误；`UT-TIME-06` 的 docstring 与 source-string guard 改为完整 pipeline 的可反证测试（UT/IT-LIVE-AGE：经 `/infer` 的 2.999 / 3 / 3.001 s 边界与 30 天旧帧） |
+| 2 | R30 | F4、F1 | 「等 Codex 审阅」的前提已解除。F4（ROUND_HALF_UP 写回 Global Constraints 与 SDD `global-constraints.md`）与 F1（`missing_cases.csv` W16/17/19）进入审阅修复批次 |
+| 3 | R13 | 只有 `captured_at` 有 HTTP gap 测试 | 审阅修复批次补 `telemetry_timestamp` 的对称测试 |
+| 4 | R05 | 缺 near-epsilon 的 API 级变异防线 | 审阅修复批次补 IT-EPS：权重 1e-10 / 1e-9 / 1.1e-9，另一路 missing，双向 |
+| 5 | R16 | 失败恢复的必测场景 | Task 7 / 8 的 DoD 追加，见 DoD 表 |
+| 6 | R02、R17、R31 | 门禁原始日志、逐 ID 对账、NULL 导出 | Task 10 的 DoD 追加，见 DoD 表 |
+| 7 | R09 | D13 最大证据年龄 / stale-only 守卫 | **待用户裁定**。审阅定为 P0 / P1，但明确不替需求发明阈值 |
+| 8 | R10 | 相等时间戳 + 新 UUID 的重复证据能推进告警 | **待用户裁定**：重复证据是否算持续的新观察 |
+| 9 | R14 | `DominantEvidence` 不接收权重，可能与加权贡献相反 | **待用户裁定**：定义为 raw strength 还是 weighted contribution。改语义需动三份实现与共享夹具，并修正报告与 UI 文案 |
+| 10 | R16 | `MAX_ATTEMPTS_PER_REQUEST = 3` 被质疑为任意值 | 保留。这是用户裁定的 D02 Option 1，文档按「明确需求」陈述 |
+| 11 | — | E2–E5（融合 / 时序层评估）由谁负责 | **建议系统轨道**，待用户确认。ML 分支停在 `efb3ea6`，那里是 Tasks 1–6 之前的旧融合代码；复用系统代码也与 R3 决定一致 |
+
+**审阅没有逐项回答提示词中的 D-A…D-F。** 从 R30、R31、R17 能间接读出：ROUND_HALF_UP、迁移改写历史行（需披露）、不引入 jsdom，这三项未被推翻。其余 Ruling 视为未被质疑。
 
 ## 执行顺序与依赖
 
@@ -970,6 +994,8 @@ Task 1  冻结基线 / 工作目录 / lint / manifest
                                                           无候选时可先用稳定模型自检）
 ```
 
+**R4 插入**：Task 7 开工前先完成「审阅修复批次」（F4、R08 更正与测试、F1、`telemetry_timestamp` 对称测试、IT-EPS）。R4 的三个待决政策项（R09、R10、R14）裁定后，各自作为独立 task 插入，位置在开工时确定。
+
 **串行约束**：2 → 3 → 4 是硬串行（契约先立、再移植、再落库）。**可并行**：Task 6 只依赖 Task 2，可与 3/4/5 并行；但按 SDD 规则实现 agent 不并行派发，顺序按上图深度优先即可。
 
 **批量机会**：Task 1 的 Step 3（eslint ignores 加一项）与 Step 5（requirements 补四行）是同形小改，与 Step 2 的 CLAUDE.md 两处引用清理合并为一次派发。
@@ -986,18 +1012,18 @@ Task 1  冻结基线 / 工作目录 / lint / manifest
 | **4** | `conftest.py` 提供 tmp DB fixture 且新测试全部使用它；`RiskUpdate` 前置 + 后置两个 validator 都在；历史行读取不 500（`test_migration.py` 三行 fixture 验证）；`json('true')` 而非 `1`；CSV 表头含 `assessment_available`；`UT-FUS-03` / `UT-FUS-ZERO-WEIGHT` / `EX-NULL-01` / `ST-STATUS-01` 全绿 |
 | **5** | `UT-TIME-01..06` 全绿（`06` 是 D13 行为快照，断言当前行为）；`UT-EMA-PARITY-01` 绿；unavailable 不写 `None` 进 `state['severity']`；新增 state 键全部进 gap-reset 元组；`test_audit_regressions.py:139` 与 `test_restart.py:44` **仍绿**（证明没误动 Python EMA） |
 | **6** | `npx tsc --noEmit` **清零**；五个视图与 `ExplanationView` 都有 unavailable 分支；`LiveMonitor.tsx:45` 伪造 `SystemHealth` 已删除；视图读 `record.DominantEvidence` 而非重算；grep 断言 `SystemHealth === "UNAVAILABLE"` 不再出现在 `LiveMonitor.tsx`/`AlertBanner.tsx`；`.pill--unavailable` 样式存在；`preparedSessionInput.test.ts:31` 更新为 4 元集并绿 |
-| **7** | `fault_events` 表无 FK、有唯一索引、用显式 `CREATE TABLE IF NOT EXISTS`；`record_fault` 绑 `db.get_bind()` 且在 `rollback()` 之后调用；DB 故障时文件 sink 有记录且原始异常原样抛出；`ST-FAIL-01/02/03/04` + `ST-RECOVER-01` 全绿；会话删除后 fault 仍可查 |
-| **8** | `retryPolicy.ts` 与 `liveLoop.ts` 为纯模块、node 环境可测；3 次投递后停止且不再排定时器；重试 payload 深度相等（同 request_id + 同帧 + 同时间戳）；pause-abort 不计数；`retry()` 不新建会话；时钟偏移有专属 category 与文案；UI 有可见 stopped 面板 + 手动 Retry |
+| **7** | `fault_events` 表无 FK、有唯一索引、用显式 `CREATE TABLE IF NOT EXISTS`；`record_fault` 绑 `db.get_bind()` 且在 `rollback()` 之后调用；DB 故障时文件 sink 有记录且原始异常原样抛出；`ST-FAIL-01/02/03/04` + `ST-RECOVER-01` 全绿；会话删除后 fault 仍可查。**R4 追加（审阅 R16）**：原生 ORT 运行期异常、单分支失败、DB commit 失败各有分类与测试；**每个 eligible 请求都有成功或失败的持久 outcome**，并为 logging ≥ 99% 写明两个分母（成功预测的持久化率、全部 outcome 的记录率），不得用 stored / stored 自证 |
+| **8** | `retryPolicy.ts` 与 `liveLoop.ts` 为纯模块、node 环境可测；3 次投递后停止且不再排定时器；重试 payload 深度相等（同 request_id + 同帧 + 同时间戳）；pause-abort 不计数；`retry()` 不新建会话；时钟偏移有专属 category 与文案；UI 有可见 stopped 面板 + 手动 Retry。**R4 追加（审阅 IT-RETRY-IDENTITY）**：commit 之后 response 丢失、再以同 UUID 同 payload 重发 → DB 恰好一行、时序状态只推进一次；同 UUID 改 payload → 409 |
 | **9** | `PREPARED_RAW_TELEMETRY` 导出存在且 Live 路径改用它；游标单调可注入、同一输入序列可复现；`loadConfig` 不会把用户静默带回 replay；replay 调用点在 `RiskLevel` 为 null 时不破坏不变式；`prototype-tests/README.md` 改为 Live 端到端清单 |
-| **10** | `npm run typecheck` 存在并接入 `npm test`；`test_live_e2e.py` 在单 uvicorn + 静态 `dist/` 上跑通，断言 UI 值 == `/risk/latest` == 导出行；显式 stop camera 以触达 UNAVAILABLE；`requires_models` 跳过数显式打印；四道门禁全绿；三个模型 SHA256 与 Task 1 基线**逐一相等**；证据归档到 `docs/evidence/<date>/live-e2e/` |
+| **10** | `npm run typecheck` 存在并接入 `npm test`；`test_live_e2e.py` 在单 uvicorn + 静态 `dist/` 上跑通，断言 UI 值 == `/risk/latest` == 导出行；显式 stop camera 以触达 UNAVAILABLE；`requires_models` 跳过数显式打印；四道门禁全绿；三个模型 SHA256 与 Task 1 基线**逐一相等**；证据归档到 `docs/evidence/<date>/live-e2e/`。**R4 追加（审阅 R02、R17、R31）**：对账从 6 个单元格扩为**逐 ID 全行**（API 保存 = DB = latest = 同窗口 UI = 导出行）；门禁原始日志带 version / env / argv / exit / skips；capture → 预处理 → 模型 → commit → 网络 → render 分段计时（`windows.py:62` 的计时早于 commit，前端 `requestMs` 不含 render，所以目前未证明 ≤ 1 s）；`freeze_manifest.py` 在 `FYP_DATA_ROOT` 错误时不得静默回退；导出遇 NULL / 畸形 payload 有测试与守卫 |
 | **10A** | provider 只经 runtime manifest 加载，代码中不再写死模型名、架构名或文件名，且有测试证明 provider 不读评估文件；稳定基线有自己的 runtime manifest，与候选走同一加载路径；预处理不支持、输出语义不符、类别映射或契约冒烟检查失败、路径逃逸、哈希不符时**一律拒绝加载**，每种情况各有测试；离线评估器复用 `TrainedProvider` / 融合 / EMA / Alert FSM，不起服务器、不写开发数据库，输出四层分开的对比报告，包含 ECE、Brier、RiskScore 与 L/M/H 分布、权重与阈值敏感性、FSM 行为；报告不含「RiskScore 更准确」一类表述；版本化发布与回滚流程已文档化，并在临时目录演练过一次（不触碰稳定产物）；Task 10 的 Live E2E 仍全绿；三个基线 SHA256 不变。**不要求执行正式替换** |
 
 ## 剩余技术风险
 
 | 风险 | 影响 | 缓解 |
 |---|---|---|
-| **D13 过期证据可无限累积告警** | 中（Live 主运行时不可达，但 replay / 直接 API 可达） | 不修；`UT-TIME-06` 留证；报告列为已知限制 |
-| **Live 永远到不了 `stale`** | 中 —— `DEGRADED`-by-staleness 这条分支在主运行时是死路，`ST-FAIL-01` 的 stale 步骤无机制 | Task 9 考虑透传 `telemetry_age_s`；否则在报告里写明 stale 仅存在于 replay |
+| **D13 过期证据可无限累积告警** | **高（R4 更正：Live 主运行时可达）** —— 旧 `captured_at` 经 `/infer` 即为 stale，且永不变 missing | `UT-TIME-06` 留证；最大证据年龄 / stale-only 守卫的政策**待用户裁定**（R4）；裁定前报告列为已知限制 |
+| ~~**Live 永远到不了 `stale`**~~ | **R4：该风险的前提不成立**（Codex R08）。stale 在 Live 可达，所以 `ST-FAIL-01` 的 stale 步骤可以用旧 `captured_at` 经 `/infer` 构造 | 阶段 1 用完整 pipeline 测试（UT/IT-LIVE-AGE）替换 source-string guard |
 | **`tsc` 抓不到静默比较** | 高 —— 五处 `=== "High"` / `=== "NORMAL"` 之类编译通过但语义错 | Task 6 用 grep 断言 + 抽纯函数单测补网 |
 | **无 DOM 测试环境** | 中 —— 组件渲染断言只能靠 Playwright | 已决定不引入 jsdom；IT-UI-01 的渲染部分由 Task 10 承担 |
 | **`requires_models` 静默跳过** | 中 —— 干净检出上五个最重的 live 测试 SKIP 而 pytest 退 0 | Task 10 显式打印跳过数；新测试不依赖权重 |
