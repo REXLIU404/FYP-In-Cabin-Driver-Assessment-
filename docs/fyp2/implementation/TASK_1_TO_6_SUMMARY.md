@@ -3,6 +3,31 @@
 > 分支 `fyp2/live-system`，工作树 `/Users/liu/Desktop/FYP2-Live-System`，起点 `dev_cc@845b43a`，终点 `1edb923`。
 > 2026-10-12。本文件**不**宣告系统完成 —— Task 7–10 仍未开始。
 
+## 勘误（2026-10-13，Codex R08）
+
+本文第 7 节有两条说法经 Codex 独立审阅（R08）判为 **INCORRECT**，并已独立核实确为错误。原文仍保留在第 7 节（加了删除线），更正集中在此。
+
+**哪两条说法错了**
+
+1. 第 7 节第 1 条中的「该路径在 Live 主运行时不可达（`trained.py` 只输出 fresh 或 missing），但可经保留的回放路径或直接 POST `/windows` 触发」。
+2. 第 7 节第 2 条整条：「Live 主运行时永远到不了 `stale`……因此『因过期而 DEGRADED』这条分支在主运行时是死路」。
+
+**正确事实**
+
+freshness 不是 provider 说了算。`run_inference` 不采用 provider 报告的 `fresh`，而是用 `provenance.captured_at` / `telemetry_timestamp` 对服务端处理时刻**重新判定**：年龄严格大于 3 s 即为 `stale`。所以 `trained.py` 只输出 fresh / missing，并不能推出 Live 到不了 stale。前端给帧打当前时间，只说明正常操作下年龄接近 0；网络或处理延迟超过 3 s、客户端时钟偏差、或任何直接调用 `POST /infer` 的客户端，都会让 Live 路径出现 `stale` 与 `DEGRADED`，并由此进入 D13（stale 永不变 missing，持续以 0.45 权重累积 sustained-High，最终 HIGH_ALERT）。**D13 在 Live 主运行时可达。**
+
+**证据**
+
+- `backend/app/inference.py:107-108`：`vstatus` / `tstatus` 由 `freshness(…, provenance.get("captured_at") or w.timestamp, …)` 与 `freshness(…, provenance.get("telemetry_timestamp") or w.timestamp, …)` 计算。
+- `backend/tests/test_live_inference.py:114-117`：一个 `captured_at` 为 2000 年的帧经 `POST /infer` 得到 `modality_freshness.vision == "stale"` 与 `SystemHealth == "DEGRADED"`。该测试依赖真实模型文件（`requires_models`），模型缺失时跳过。
+- 阶段 1 P1-2 新增 `IT-LIVE-AGE`（`backend/tests/test_temporal_contract.py`）：同样经 `POST /infer`，provider 用 stub，**不依赖模型权重**，覆盖 2.999 / 3.000 / 3.001 s 边界、30 天旧帧，以及 D13 在 Live 路径上的行为快照。
+
+**影响**
+
+D13 的风险被说小了：本文把它描述成只在回放路径可达的限制，实际上它是 Live 主运行时的在役行为。Codex 将 R08 定为 **P0**，D13 本身（R09）定为 **P0 / P1**。最大证据年龄 / stale-only 守卫的政策仍**待用户裁定**；裁定之前，报告与任何对外陈述都不得声称系统已处理过期证据，也不得声称 D13 仅限回放。
+
+---
+
 ## 状态词汇
 
 本文严格区分五种状态，不混用：
@@ -183,8 +208,8 @@ Task 5 的 tsc 从 35 降到 34 **不是修好了一个错误**：`updateAlertSt
 
 以下是**系统性限制**，不是待修的缺陷，必须在报告与答辩中如实陈述。
 
-1. **D13：过期证据可无限累积告警时长。** 对任何提供了时间戳的分支，freshness 判定永远只返回 `stale`、不会变成 `missing`，所以任意旧的证据都会持续以 0.45 权重参与融合并累积 sustained-High，最终触发 `HIGH_ALERT`。`UT-TIME-06` 记录了这个**当前行为**，测试名含 `known_limitation`。**该路径在 Live 主运行时不可达**（`trained.py` 只输出 fresh 或 missing），但可经保留的回放路径或直接 POST `/windows` 触发。**系统尚未实现最大证据年龄。**
-2. **Live 主运行时永远到不了 `stale`。** 前端对两路证据都打 `new Date()` 时间戳，且 `trained.py` 只输出 fresh/missing。因此「因过期而 DEGRADED」这条分支在主运行时是死路。
+1. **D13：过期证据可无限累积告警时长。** 对任何提供了时间戳的分支，freshness 判定永远只返回 `stale`、不会变成 `missing`，所以任意旧的证据都会持续以 0.45 权重参与融合并累积 sustained-High，最终触发 `HIGH_ALERT`。`UT-TIME-06` 记录了这个**当前行为**，测试名含 `known_limitation`。~~**该路径在 Live 主运行时不可达**（`trained.py` 只输出 fresh 或 missing），但可经保留的回放路径或直接 POST `/windows` 触发。~~ **（此句错误，见文首「勘误」节：该路径在 Live 主运行时可达。）** **系统尚未实现最大证据年龄。**
+2. ~~**Live 主运行时永远到不了 `stale`。** 前端对两路证据都打 `new Date()` 时间戳，且 `trained.py` 只输出 fresh/missing。因此「因过期而 DEGRADED」这条分支在主运行时是死路。~~ **（整条错误，已被文首「勘误」节推翻：stale 在 Live 可达。）**
 3. **前端未经 UI 层验证。** 没有 DOM 测试；Recharts 的空值渲染是假设；CSS 是 grep 验证；Live 模式未对真实后端运行。
 4. **相等时间戳可累积告警时长。** `windows.py:55` 用严格 `<` 做乱序判定，所以重复的同一时刻证据可以通过。`UT-TIME-05` 记录了这个行为。
 5. **`ROUND_HALF_UP` 的影响面大于最初估计。** 最初按 4% 估计（旧 Python 与旧 TS 之间的分歧率）。实测相对旧 Python 改变了 **17.0%** 的分数，相对旧 TS 改变了 **13.0%**，**556 个网格点的 RiskLevel 发生改变**。两种语言现在精确一致，这是契约要求；但分数口径变了。
@@ -250,6 +275,7 @@ Task 5 的 tsc 从 35 降到 34 **不是修好了一个错误**：`updateAlertSt
 - 生产者的 epsilon 边界「已被端到端测试」—— 见 F3。
 - NaN 缺口「已由 Task 4 关闭」—— 它从未被处理，只是当前不可达。
 - 过期证据（D13）「已被处理」—— 没有。
+- D13「只在 replay 可达」/ Live「到不了 stale」—— 错误，见文首「勘误」节（Codex R08）：stale 在 Live 可达，D13 是主运行时的在役行为。
 - 组件渲染「有测试覆盖」—— 只有抽出的纯函数有。
 - 变异检验「证明了每一道防线」—— 有 3 个变异存活。
 - 系统「已完成」—— Task 7–10 未开始。

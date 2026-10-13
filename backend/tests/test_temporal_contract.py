@@ -11,6 +11,8 @@ UT-TIME-01  FSM boundaries                       UT-TIME-04  unavailable is not 
 UT-TIME-02  freshness / gap / UTC offsets        UT-TIME-05  identical captured_at   (known limitation)
 UT-TIME-03  EMA seed convention                  UT-TIME-06  stale-only stream, D13  (known limitation)
 UT-EMA-PARITY-01  Python half; the TypeScript half is ai/src/emaParity.test.ts
+IT-LIVE-AGE  evidence age through POST /infer: the 3 s boundary, a 30-day-old frame, and the
+             D13 snapshot on the Live path (needs no model weights; the provider is stubbed)
 """
 import json
 from datetime import datetime, timedelta, timezone
@@ -604,8 +606,11 @@ def test_ut_time_06_stale_only_stream_still_reaches_high_alert_known_limitation_
     one-minute-old one. This asserts what the code does today so the limitation is on
     record; do NOT read it as 'stale evidence is handled'.
 
-    It is unreachable from the Live runtime: trained.py only emits fresh / missing
-    (see the source guard below), so it needs a replay input or a direct POST /windows."""
+    It IS reachable from the Live runtime. run_inference re-derives freshness from
+    provenance.captured_at / telemetry_timestamp (inference.py), so whatever the provider
+    labels a branch, an evidence timestamp more than 3 s older than the server's processing
+    time comes out 'stale'. The tests under IT-LIVE-AGE below drive the same behaviour through
+    POST /infer."""
     s = Stream()
     old = (at(0) - age).isoformat()
     records = [s.tick(ms, HIGH, provenance={"captured_at": old, "telemetry_timestamp": old})
@@ -619,13 +624,130 @@ def test_ut_time_06_stale_only_stream_still_reaches_high_alert_known_limitation_
     assert [r.AlertSeverity for r in records] == ["CAUTION", "CAUTION", "HIGH_ALERT", "HIGH_ALERT"]
 
 
-def test_ut_time_06_source_guard_the_trained_provider_never_emits_stale():
-    """Why UT-TIME-06 is unreachable from Live. If this fails, the provider started
-    reporting 'stale' and D13 is no longer a replay-only limitation: revisit it."""
-    source = (REPO_ROOT / "backend/app/providers/trained.py").read_text(encoding="utf-8")
-    assert "stale" not in source
-    assert 'vision_status="fresh" if data.image_base64 is not None else "missing"' in source
-    assert 'telemetry_status="fresh" if data.telemetry_features is not None else "missing"' in source
+# --------------------------------------------------------------- IT-LIVE-AGE
+# The deleted "source guard" asserted that trained.py contains no "stale" and called D13
+# unreachable from Live. That inference was wrong: freshness is not the provider's call.
+# run_inference re-derives it from the evidence timestamps, so a Live request whose
+# captured_at / telemetry_timestamp is older than 3 s at processing time is 'stale' even
+# though the provider reported the branch as present. These tests prove it end to end
+# through POST /infer, on a stubbed provider, so they need no model weights.
+TELEMETRY_FEATURES = {"speed_kmph": 52, "accel_x": 0.7, "accel_y": 0.2, "brake_pressure": 20,
+                      "steering_angle": 7.5, "throttle": 40, "lane_deviation": 0.21,
+                      "headway_distance": 18}
+
+
+class _RequestDrivenStubProvider:
+    """Stands in for the trained provider with its status logic: a branch is 'fresh' (and
+    scores High) exactly when the request carried that branch's input, 'missing' otherwise.
+    Unlike _StubProvider it can report telemetry as fresh. It never reports 'stale': the
+    pipeline must work that out from the timestamps, which is what IT-LIVE-AGE checks."""
+
+    def infer(self, data):
+        has_image = data.image_base64 is not None
+        has_telemetry = data.telemetry_features is not None
+        window = WindowInput(P_distraction=1.0 if has_image else 0.0,
+                             P_telemetry_anomaly=1.0 if has_telemetry else 0.0,
+                             vision_status="fresh" if has_image else "missing",
+                             telemetry_status="fresh" if has_telemetry else "missing",
+                             telemetry_features=data.telemetry_features)
+        provenance = {"provider": "RequestDrivenStubProvider", "request_id": data.request_id,
+                      "vision_source": "camera_frame" if has_image else "missing",
+                      "telemetry_source": data.telemetry_source,
+                      "captured_at": data.captured_at, "telemetry_timestamp": data.telemetry_timestamp}
+        return window, provenance
+
+
+def _live_age_session(client, monkeypatch, sid):
+    from app.providers import trained
+    monkeypatch.setattr(trained, "get_provider", lambda: _RequestDrivenStubProvider())
+    created = client.post("/api/sessions", json={"session_id": sid, "operation_mode": "LIVE_MODEL_RUNTIME"})
+    assert created.status_code == 201, created.text
+    return sid
+
+
+def _live_age_request(request_id, vision_stamp, telemetry_stamp):
+    return {"request_id": request_id, "image_base64": "stub-frame", "captured_at": vision_stamp.isoformat(),
+            "telemetry_features": TELEMETRY_FEATURES, "telemetry_timestamp": telemetry_stamp.isoformat(),
+            "telemetry_source": "prepared_replay"}
+
+
+@pytest.mark.parametrize("branch", ["vision", "telemetry"])
+@pytest.mark.parametrize("age_ms,expected,health", [
+    (2999, "fresh", "FULL"), (3000, "fresh", "FULL"), (3001, "stale", "DEGRADED")])
+def test_it_live_age_freshness_boundary_is_rederived_from_the_evidence_timestamp_through_infer(
+        api, fake_clock, monkeypatch, branch, age_ms, expected, health):
+    """The 3 s tolerance is strict (> 3): 2.999 s and 3.000 s are fresh, 3.001 s is stale.
+    The provider says 'fresh' every time; only the timestamp can turn a branch stale. The
+    other branch is a fresh control (age 0), so a flipped status is attributable to its own
+    timestamp, and DEGRADED can only come from the aged branch."""
+    client, _ = api
+    sid = _live_age_session(client, monkeypatch, f"live-age-{branch}-{age_ms}")
+    fake_clock.set(0)  # the server processes the request at at(0)
+    aged, current = at(0) - timedelta(milliseconds=age_ms), at(0)
+    stamps = {"vision": current, "telemetry": current, branch: aged}
+    response = client.post(f"/api/sessions/{sid}/infer",
+                           json=_live_age_request("boundary", stamps["vision"], stamps["telemetry"]))
+    assert response.status_code == 201, response.text
+    record = response.json()
+    control = "telemetry" if branch == "vision" else "vision"
+    assert record["modality_freshness"][branch] == expected
+    assert record["modality_freshness"][control] == "fresh"
+    assert record["SystemHealth"] == health
+    assert record["assessment_available"] is True
+    assert record["provenance"]["captured_at" if branch == "vision" else "telemetry_timestamp"] == aged.isoformat()
+
+
+@pytest.mark.parametrize("branch", ["vision", "telemetry"])
+def test_it_live_age_a_30_day_old_frame_is_stale_and_degraded_but_still_assessed(
+        api, fake_clock, monkeypatch, branch):
+    """One branch is 30 days old, the other is current. The old branch is 'stale', not
+    'missing': it keeps a fusion weight, so the window is DEGRADED yet still carries a score."""
+    client, _ = api
+    sid = _live_age_session(client, monkeypatch, f"live-age-30d-{branch}")
+    fake_clock.set(0)
+    old, current = at(0) - timedelta(days=30), at(0)
+    stamps = {"vision": current, "telemetry": current, branch: old}
+    response = client.post(f"/api/sessions/{sid}/infer",
+                           json=_live_age_request("thirty-days", stamps["vision"], stamps["telemetry"]))
+    assert response.status_code == 201, response.text
+    record = response.json()
+    control = "telemetry" if branch == "vision" else "vision"
+    assert record["modality_freshness"][branch] == "stale"
+    assert record["modality_freshness"][control] == "fresh"
+    assert record["SystemHealth"] == "DEGRADED"
+    assert record["assessment_available"] is True
+    assert record["RiskScore"] == 100.0 and record["RiskLevel"] == "High"
+    stored = client.get(f"/api/sessions/{sid}/windows").json()
+    assert [r["modality_freshness"] for r in stored] == [record["modality_freshness"]]
+
+
+def test_it_live_age_stale_only_stream_still_reaches_high_alert_through_infer_known_limitation_d13(
+        api, fake_clock, monkeypatch):
+    """BEHAVIOUR SNAPSHOT for decision D13 on the LIVE path - NOT desired behaviour.
+
+    The Live counterpart of UT-TIME-06, driven through POST /infer. Every frame, and every
+    telemetry reading, is 30 days old at processing time, and each stamp is newer than the
+    last (so the out-of-order guard accepts them) and different from it (so this is not the
+    identical-timestamp case of UT-TIME-05). Both branches are 'stale', never 'missing', so
+    they keep their fusion weight, the score stays High, and the server clock advancing
+    1000 ms per request is enough to sustain High for 2 s and latch HIGH_ALERT. The system
+    has no maximum evidence age; do NOT read this as 'stale evidence is handled'."""
+    client, _ = api
+    sid = _live_age_session(client, monkeypatch, "live-age-d13")
+    records = []
+    for index, ms in enumerate((0, 1000, 2000)):
+        fake_clock.set(ms)
+        stamp = at(ms) - timedelta(days=30)
+        response = client.post(f"/api/sessions/{sid}/infer", json=_live_age_request(f"old{index}", stamp, stamp))
+        assert response.status_code == 201, response.text  # 409 would mean the guard caught it
+        records.append(response.json())
+    assert len({r["provenance"]["captured_at"] for r in records}) == 3
+    for record in records:
+        assert record["modality_freshness"] == {"vision": "stale", "telemetry": "stale"}
+        assert record["SystemHealth"] == "DEGRADED"
+        assert record["assessment_available"] is True
+        assert record["RiskScore"] == 100.0 and record["RiskLevel"] == "High"
+    assert [r["AlertSeverity"] for r in records] == ["CAUTION", "CAUTION", "HIGH_ALERT"]
 
 
 # ------------------------------------------------------- UT-EMA-PARITY-01 (Python)

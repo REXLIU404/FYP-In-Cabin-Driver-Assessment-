@@ -18,7 +18,7 @@
 
 - **RiskScore 量纲 0–100**，阈值 `low=30` / `high=60`（`score < 30` Low，`30 ≤ score < 60` Medium，`score ≥ 60` High）。**先 round 到 1 位小数，再映射等级** —— 顺序不可换。
 - **舍入规则：统一为 ROUND_HALF_UP（阶段 1 F4 写回）**。RiskScore 保留 **1 位**小数，EMA 平滑值保留 **3 位**小数。
-  - **实现位置（已存在）**：Python 在 `backend/app/fusion.py` 与 `ai/reference/risk_logic.py` 中的 `round_half_up(value, places)`，做法是 `Decimal(str(value)).quantize(..., rounding=ROUND_HALF_UP)`；TypeScript 在 `ai/src/riskLogic.ts` 导出的 `roundHalfUp(value, places)`。三种语言逐值一致。
+  - **实现位置（已存在）**：Python 在 `backend/app/fusion.py` 与 `ai/reference/risk_logic.py` 中的 `round_half_up(value, places)`，做法是 `Decimal(str(value)).quantize(..., rounding=ROUND_HALF_UP)`；TypeScript 在 `ai/src/riskLogic.ts` 导出的 `roundHalfUp(value, places)`。两种语言（Python、TypeScript）、三份实现逐值一致。
   - **禁止**：在 score、概率、EMA 值上使用 Python 内置 `round()`（banker's rounding），或 JS 的 `toFixed` / `Math.round(v*100)`。前端显示 score、概率、EMA 值一律用 `roundHalfUp`。后续任何 task（含 Task 7–10 的实现与测试）不得重新引入这些写法，否则跨语言分歧回归。
   - **这是有意的数值改变（Codex 审阅 R30 确认），不是 bug**：相对旧 Python 实现改变了约 17.0% 的分数网格，相对旧 TS 实现约 13.0%，有 556 个网格点的 RiskLevel 改变（1,001×1,001 网格）。
   - **来源**：Task 5 的控制者裁定（SDD ledger），Codex 审阅 R30 确认，阶段 1 F4 写回本计划与 SDD `global-constraints.md`。Task 5 小节及其 SDD brief 中「不要顺手整理 EMA 的舍入」一句是旧指示，已被本条取代，以本条为准。
@@ -56,7 +56,7 @@
   3. 报告与任何对外陈述**不得声称系统已完整处理过期证据**。
   4. 在 System Freeze 前再决定是否实现 Maximum Evidence Age 或 Stale-Only Alert Guard；该决定不属于本 10 个 task。
 - **不删除任何现有功能**。prepared-probability replay 保留给回归测试与向后兼容，只降级、不移除。
-- 三份融合实现必须同步：`ai/src/riskLogic.ts` + `ai/src/evidence.ts`（权威）、`backend/app/fusion.py`、`ai/reference/risk_logic.py`（报告引用的语言无关规范，**零 importer，不会有任何测试因它漂移而失败**）。
+- 三份融合实现必须同步：`ai/src/riskLogic.ts` + `ai/src/evidence.ts`（权威）、`backend/app/fusion.py`、`ai/reference/risk_logic.py`（报告引用的语言无关规范）。**它现在有测试守护**（阶段 1 P1-2 更正，此前写作「零 importer，不会有任何测试因它漂移而失败」）：`backend/tests/test_fusion_vectors.py` 经 importlib 加载它，`backend/tests/test_temporal_contract.py` 再从前者 import 它；把它的 `round_half_up` 改成内置 `round`，会让 pytest 失败（Codex 审阅在 `e326449` 实测 25 个；F4 追加舍入用例之后，P1-2 在 `9db6e2a` 的干净归档上复测为 27 个）。
 - **门禁命令（精确形式，阶段 1 F4 更新）**：在 `/Users/liu/Desktop/FYP2-Live-System` 下依次运行
   ```
   export PYTHONDONTWRITEBYTECODE=1
@@ -345,7 +345,7 @@ git commit -m "chore: restore AGENTS.md, freeze release manifest, fix lint scope
 
 - [ ] **Step 2：确认测试失败**
 
-Run: `npx vitest run ai/src/fusionVectors.test.ts ai/src/availability.test.ts`
+Run: `./node_modules/.bin/vitest run --no-cache ai/src/fusionVectors.test.ts ai/src/availability.test.ts`
 Expected: FAIL —— `availability.ts` 不存在；`F-U1` 现在返回 `0` 而非 `null`；`F-Z1`/`F-Z2` 现在返回 `DEGRADED` 而非 `UNAVAILABLE`。
 
 - [ ] **Step 3：实现 `ai/src/availability.ts` 与 `ai/src/types.ts`**
@@ -364,7 +364,7 @@ Expected: FAIL —— `availability.ts` 不存在；`F-U1` 现在返回 `0` 而�
 
 - [ ] **Step 6：跑测试与类型检查**
 
-Run: `npx vitest run && npx tsc --noEmit`
+Run: `./node_modules/.bin/vitest run --no-cache && ./node_modules/.bin/tsc --noEmit`
 Expected: 夹具与 availability 全绿。**`tsc` 预期会报大量错误** —— 那是 Task 6 的工作面，此刻把错误清单记进 `findings` 供 Task 6 使用，不要在本 task 修视图。
 
 - [ ] **Step 7：Commit**
@@ -520,7 +520,8 @@ Run: `pytest tests -q` → 期望全绿，含新用例。`test_live_inference.py
 - `UT-TIME-03`：`alpha=0.35`，raw `0.2 → 1.0` 的第二个平滑值 `0.48`（**断言 seed-on-first-sample 约定**；seed-at-0 会得 `0.3955`）。
 - **`UT-TIME-04`（新，关键）**：High@0 → unavailable@1000 → High@2000。断言**不**升级为 HIGH_ALERT —— unavailable 区间不得计入 2 秒 sustain。
 - **`UT-TIME-05`（Review Focus #4）**：连续三个窗口携带**完全相同**的 `captured_at`。`windows.py:55` 用的是严格 `<`，相等时间戳能通过，于是重复的旧证据可以累积告警时长。断言当前行为并记录为已知限制（完整的 D13 策略不在本阶段范围）。
-- **`UT-TIME-06`（R1 新增 —— D13 留证，非期望行为）**：用注入时钟喂一串**只有 stale 证据**、分数持续落在 High 区间的窗口，断言当前行为 —— sustained-High 计时会照常累积并最终升到 `HIGH_ALERT`。测试名必须含 `known_limitation`，docstring 必须写明：这是 D13 的行为快照，不是期望行为，系统**尚未**实现最大证据年龄。注意该路径在 Live 主运行时不可达（`trained.py` 只输出 fresh/missing），测试需直接驱动 `run_inference` 或走 `/windows`。
+- **`UT-TIME-06`（R1 新增 —— D13 留证，非期望行为）**：用注入时钟喂一串**只有 stale 证据**、分数持续落在 High 区间的窗口，断言当前行为 —— sustained-High 计时会照常累积并最终升到 `HIGH_ALERT`。测试名必须含 `known_limitation`，docstring 必须写明：这是 D13 的行为快照，不是期望行为，系统**尚未**实现最大证据年龄。~~注意该路径在 Live 主运行时不可达（`trained.py` 只输出 fresh/missing），测试需直接驱动 `run_inference` 或走 `/windows`。~~
+  **R4 更正（Codex R08）**：该路径在 Live 主运行时**可达**。`run_inference` 用 `provenance.captured_at` / `telemetry_timestamp` **重新判定** freshness（`backend/app/inference.py:107-108`），不依赖 provider 报告的 `fresh`；证据时间戳距服务端处理时刻超过 3 s 即为 `stale`（严格 `>`），与 `trained.py` 输出什么无关。`UT-TIME-06` 本身仍直接驱动 `run_inference`；Live 路径的对应测试是阶段 1 的 `IT-LIVE-AGE`（`backend/tests/test_temporal_contract.py`，经 `POST /api/sessions/{sid}/infer`，provider 用 stub，不依赖模型权重）。
 - **`UT-EMA-PARITY-01`（R1 新增）**：同一串输入分别跑 Python `run_inference` 与 TS `buildRiskUpdate`，断言 `P_distraction` 逐窗口相等。至少覆盖三种情形：首帧（Python 不 round / TS round3 的分歧点）、stale 之后的第一个 fresh 窗口（Python 重新 seed / TS 继续 EMA 的分歧点）、以及连续 fresh 序列。以 Python 语义为准。
 
 - [ ] **Step 2：确认失败** — `UT-TIME-04` 预期 FAIL（现在会升级）。
@@ -610,7 +611,7 @@ grep 证实：**没有任何视图读 `record.DominantEvidence`**。全前端只
 
 - [ ] **Step 7：跑三道门禁，Commit**
 
-Run: `npx vitest run && npx tsc --noEmit && npx eslint ai frontend` —— 三者全绿才算完成。
+Run: `./node_modules/.bin/vitest run --no-cache && ./node_modules/.bin/tsc --noEmit && ./node_modules/.bin/eslint .` —— 三者全绿才算完成。
 
 ---
 
@@ -765,9 +766,11 @@ prepared telemetry 游标是 `Math.floor((Date.now() - startedAt.current) / 2000
 | telemetry `missing` | ✅ 可达 | 游标落在 CSV 第 14 或 17 行（`telemetry_features === null`） |
 | vision `missing` | ⚠️ 仅靠摄像头 | `captureFrame()` 返回 null（摄像头关闭 / 未就绪）。CSV 第 15 行**不起作用** |
 | 两路皆 `missing`（UNAVAILABLE） | ⚠️ 需同时满足 | 摄像头关闭 **且** 游标在第 14 / 17 行 |
-| 任一路 `stale` | ❌ **不可达** | 两路时间戳都打 `new Date()`，且 `trained.py` 只输出 fresh/missing |
+| 任一路 `stale` | ~~❌ **不可达**~~ ✅ **可达**（**R4 更正**，Codex R08） | ~~两路时间戳都打 `new Date()`，且 `trained.py` 只输出 fresh/missing~~ `captured_at` / `telemetry_timestamp` 距服务端处理时刻超过 3 s：网络或处理延迟、客户端时钟偏差、或任何直接调用 `/infer` 的客户端。`inference.py:107-108` 按时间戳重新判定，不依赖 provider 报告的状态 |
 
-**因此 `ST-FAIL-01` 的 UNAVAILABLE 场景需要显式关闭摄像头，不是「自然到达」**；而「age to stale」这一步在 Live 里**没有任何机制**，只能走保留的 replay 路径或直接 POST `/windows`。Task 10 的端到端脚本必须显式 stop camera，并在断言里说明这一点。这同时解释了为什么 D13 不是主运行时的在役缺陷。
+**因此 `ST-FAIL-01` 的 UNAVAILABLE 场景需要显式关闭摄像头，不是「自然到达」**；~~而「age to stale」这一步在 Live 里**没有任何机制**，只能走保留的 replay 路径或直接 POST `/windows`。~~ Task 10 的端到端脚本必须显式 stop camera，并在断言里说明这一点。~~这同时解释了为什么 D13 不是主运行时的在役缺陷。~~
+
+**R4 更正（Codex R08）**：划掉的两句是错的。「age to stale」在 Live 里**有**触发条件：`captured_at` / `telemetry_timestamp` 距服务端处理时刻超过 3 s，即可经 `POST /infer` 得到 `stale` 与 `DEGRADED`（`backend/app/inference.py:107-108`；`backend/tests/test_live_inference.py:114-117` 本身就断言这一点；阶段 1 的 `IT-LIVE-AGE` 在不依赖模型权重的情况下复现了 2.999 / 3.000 / 3.001 s 边界与 30 天旧帧）。因此 `ST-FAIL-01` 的 stale 步骤可以用旧 `captured_at` 经 `/infer` 构造，**D13 在 Live 主运行时可达**，是在役缺陷而不是仅限 replay 的限制。UNAVAILABLE 仍需显式关闭摄像头这一点不受影响。
 
 - [ ] **Step 3：不要让回访用户悄悄启动到 replay**
 
@@ -815,10 +818,13 @@ vitest **不做类型检查**，而仓库里没有任何 script 或 CI 步骤跑
 - [ ] **Step 4：跑完整门禁并归档证据**
 
 ```bash
-export TMPDIR=$(mktemp -d); export PYTHONDONTWRITEBYTECODE=1
+cd /Users/liu/Desktop/FYP2-Live-System
+export PYTHONDONTWRITEBYTECODE=1
 npm run build
-cd backend && PYTHONPATH=. ../.venv/bin/python -m pytest tests -q -p no:cacheprovider
-cd .. && npx vitest run && npx tsc --noEmit && npx eslint .
+(cd backend && TMPDIR=$(mktemp -d) PYTHONPATH=. ../.venv/bin/python -m pytest tests -q -p no:cacheprovider)
+./node_modules/.bin/vitest run --no-cache
+./node_modules/.bin/tsc --noEmit
+./node_modules/.bin/eslint .
 ```
 
 把四份输出、端到端截图、导出的 JSON/CSV、以及 Task 1 的 manifest 一并写进 `docs/evidence/<date>/live-e2e/`。**不要**写进 `output/`（已 git-ignored 并按用户要求删除）。
@@ -965,7 +971,7 @@ cd .. && npx vitest run && npx tsc --noEmit && npx eslint .
 | # | 审阅编号 | 问题 | 处理 |
 |---|---|---|---|
 | 1 | R08 | 「Live 到不了 stale」是错的 | 已在 Global Constraints、R1 #8、风险表更正。**审阅修复批次**中：`TASK_1_TO_6_SUMMARY.md` 加勘误；`UT-TIME-06` 的 docstring 与 source-string guard 改为完整 pipeline 的可反证测试（UT/IT-LIVE-AGE：经 `/infer` 的 2.999 / 3 / 3.001 s 边界与 30 天旧帧） |
-| 2 | R30 | F4、F1 | 「等 Codex 审阅」的前提已解除。F4（ROUND_HALF_UP 写回 Global Constraints 与 SDD `global-constraints.md`）与 F1（`missing_cases.csv` W16/17/19）进入审阅修复批次 |
+| 2 | R30 | F4、F1 | 「等 Codex 审阅」的前提已解除。**F4 已完成**（`f289d66`、`9632812`：ROUND_HALF_UP 写回 Global Constraints 与 SDD `global-constraints.md`）；**F1 仍在本批待做**（`missing_cases.csv` W16/17/19） |
 | 3 | R13 | 只有 `captured_at` 有 HTTP gap 测试 | 审阅修复批次补 `telemetry_timestamp` 的对称测试 |
 | 4 | R05 | 缺 near-epsilon 的 API 级变异防线 | 审阅修复批次补 IT-EPS：权重 1e-10 / 1e-9 / 1.1e-9，另一路 missing，双向 |
 | 5 | R16 | 失败恢复的必测场景 | Task 7 / 8 的 DoD 追加，见 DoD 表 |
