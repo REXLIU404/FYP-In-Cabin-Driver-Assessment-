@@ -69,7 +69,7 @@
 - **状态：** pending
 
 ### 阶段 5：需用户裁定的政策项（裁定后再实现）
-- [ ] **R09 / D13**：最大证据可用年龄 / stale-only 告警守卫。Codex 定为 P0 / P1，但**不替用户发明阈值**
+- [ ] **R09 / D13：已裁定 A**（2026-10-13，用户本人确认；待实施）：过期证据按 missing 计分，provenance 保留 `{modality}_expired` / `{modality}_age_s`；运行时不再产出 stale，0.45 只留给历史记录；阈值 = `freshness_tolerance_s`，默认 3 s、可配 (0, 30]，只称设计阈值，须用 PERF-01 与 2 / 3 / 5 s 敏感性复核。实施时同步改：IT-LIVE-AGE 3001 ms / 30 天 / D13 快照、两条 gap 测试第 1 步（改 fake clock）、F1 W16（62.5 → 60.0）、Task 8 重试窗口的预期
 - [ ] **R10**：相等时间戳、新 UUID 的重复证据是否算「持续新观察」
 - [ ] **R14**：`DominantEvidence` 的语义 —— raw strength 还是 weighted contribution。现算法不接收权重，w=.3/.7 时可能标「Vision-dominant」而 telemetry 贡献更大。改语义要动三份实现 + 夹具
 - **状态：** pending（等待裁定）

@@ -22,7 +22,11 @@
   - **禁止**：在 score、概率、EMA 值上使用 Python 内置 `round()`（banker's rounding），或 JS 的 `toFixed` / `Math.round(v*100)`。前端显示 score、概率、EMA 值一律用 `roundHalfUp`。后续任何 task（含 Task 7–10 的实现与测试）不得重新引入这些写法，否则跨语言分歧回归。
   - **这是有意的数值改变（Codex 审阅 R30 确认），不是 bug**：相对旧 Python 实现改变了约 17.0% 的分数网格，相对旧 TS 实现约 13.0%，有 556 个网格点的 RiskLevel 改变（1,001×1,001 网格）。
   - **来源**：Task 5 的控制者裁定（SDD ledger），Codex 审阅 R30 确认，阶段 1 F4 写回本计划与 SDD `global-constraints.md`。Task 5 小节及其 SDD brief 中「不要顺手整理 EMA 的舍入」一句是旧指示，已被本条取代，以本条为准。
-- **freshness 权重**：`fresh=1.0`、`stale=0.45`、`missing=0.0`；容差 3 秒，`age > 3` 才是 stale（3.000s 仍 fresh，严格 `>`）。
+- **freshness 权重**：`fresh=1.0`、`stale=0.45`、`missing=0.0`；容差 3 秒，`age > 3` 才是 stale（3.000s 仍 fresh，严格 `>`）。**这是现行代码，阶段 5 按裁定 A 改变：**
+  - **裁定 A（D13 / Codex R09；2026-10-13 用户本人确认）**：证据年龄超过 `freshness_tolerance_s` 即**过期**，按 `missing` 计分（权重 0），但**保留原因**：provenance 记 `{modality}_expired = true` 与 `{modality}_age_s`，使「因过期不可用」与「未收到输入」可区分。两路都缺失或过期时，仍是 `assessment_available=false`、四个风险字段为 null、`SystemHealth = UNAVAILABLE`（D01 不变）。
+  - 运行时不再产出 `stale`。0.45 只保留给**历史 stale 记录**的读取与渲染（三份融合实现都留着它，stale 夹具标为 legacy）。界面的「最新显示结果已过时」提示（`useLiveSession.ts` 的显示年龄、`LiveMonitor` 的 "Latest result is stale"）保留，它与 0.45 这个模型输入权重不是一回事。
+  - 阈值复用 `RuntimeConfig.freshness_tolerance_s`：**默认 3 s，按会话可配 (0, 30]**（`schemas.py:97`）。复用字段不等于把它冻结在 3 s。
+  - 3 s 只能称为**设计阈值**：由 2 s 遥测周期加 ≤ 1 s 端到端目标推导；Euro NCAP 的 3–4 s 与 EU ADDW 的 3.5 s 只是类比，两者都不规定数据年龄。**不得称为经过验证的安全阈值**。须用 PERF-01 实测的 capture → fusion 延迟复核，并做 2 / 3 / 5 s 敏感性测试。
 - **有效分母** `denominator = w_v·fw(vision_status) + w_t·fw(telemetry_status)`。`RuntimeConfig` 允许权重和偏离 1 达 `1e-6`，因此判零必须用**声明过的 epsilon**（`FUSION_EPSILON = 1e-9`），不能写 `== 0`。
 - **EMA** `alpha=0.35`，仅在 vision 为 `fresh` 且存在 previous 值时应用。**seed 约定 = seed-on-first-sample**（首帧 raw 直接作为 previous）；`0.2 → 1.0` 的第二个平滑值是 `0.48`（seed-at-0 会得 `0.3955`）。**R1 已对三份实现逐一核实，发现两处真实分歧，Task 5 必须消除**：
 
@@ -50,11 +54,15 @@
 
   **R4 更正（Codex 独立审阅 R08 判 INCORRECT，已核实）**：上一段是错的。`run_inference` 用 `provenance.captured_at` / `telemetry_timestamp` **重新判定** freshness（`backend/app/inference.py:107-108`），不依赖 provider 给的 `fresh`。`backend/tests/test_live_inference.py:114-117` 本身就断言：旧 `captured_at` 经 `POST /infer` 得到 `stale` 与 `DEGRADED`。正常浏览器操作下 age 接近 0，但网络或处理延迟超过 3 秒、客户端时钟偏差、或任何直接调用 `/infer` 的客户端都能让 Live 出现 stale。**因此 D13 在 Live 主运行时可达**，其优先级由「System Freeze 前再决定」提升为待用户裁定的政策项（见 R4 记录）。
 
+  **裁定 A（2026-10-13，用户本人确认）**：D13 的政策已定，见上面「freshness 权重」一条；在阶段 5 实施，此前代码不变，`UT-TIME-06` 仍钉当前行为。两点限制须同时记住：
+  - 只靠过期关不掉 `UT-TIME-05`：持续阈值 2 s 小于 3 s，同一证据在 3 s 内重复提交仍会累积到 `HIGH_ALERT`。「旧证据不推进告警计时」需要 R10 的观察身份 / 证据时钟，**R10 与 R14 仍待裁定**。
+  - 阶段 5 落地时，以下测试与数值会如实变化（它们现在钉的是当前行为，届时会响亮失败，不会空过）：`IT-LIVE-AGE` 的 3001 ms 用例、30 天用例与 D13 快照改为期望 `missing` + `{modality}_expired = true`；两条 gap 测试（`captured_at` 版与 telemetry 版）第 1 步依赖「只有 stale 证据仍得 High」，须改用 fake clock；F1 的 `missing_cases.csv` W16 随之重算（62.5 → 60.0）；Task 8 中距采集超过 3 s 才成功的重试窗口，将从 stale / DEGRADED 变为过期。
+
   **本阶段的义务（不是修复，是留证）**：
   1. Task 5 必须新增 `UT-TIME-06 (stale-only stream)`：用注入时钟喂一串**只有 stale 证据**、分数持续在 High 区间的窗口，断言并记录**当前**行为（即会累积到 `HIGH_ALERT`）。该测试是行为快照，不是期望行为 —— 测试名与注释必须写明这是已知限制的留证。
   2. Task 10 的证据归档必须包含该测试输出。
   3. 报告与任何对外陈述**不得声称系统已完整处理过期证据**。
-  4. 在 System Freeze 前再决定是否实现 Maximum Evidence Age 或 Stale-Only Alert Guard；该决定不属于本 10 个 task。
+  4. ~~在 System Freeze 前再决定是否实现 Maximum Evidence Age 或 Stale-Only Alert Guard；该决定不属于本 10 个 task。~~ **已裁定 A**（2026-10-13），在阶段 5 实施。
 - **不删除任何现有功能**。prepared-probability replay 保留给回归测试与向后兼容，只降级、不移除。
 - 三份融合实现必须同步：`ai/src/riskLogic.ts` + `ai/src/evidence.ts`（权威）、`backend/app/fusion.py`、`ai/reference/risk_logic.py`（报告引用的语言无关规范）。**它现在有测试守护**（阶段 1 P1-2 更正，此前写作「零 importer，不会有任何测试因它漂移而失败」）：`backend/tests/test_fusion_vectors.py` 经 importlib 加载它，`backend/tests/test_temporal_contract.py` 再从前者 import 它；把它的 `round_half_up` 改成内置 `round`，会让 pytest 失败（Codex 审阅在 `e326449` 实测 25 个；F4 追加舍入用例之后，P1-2 在 `9db6e2a` 的干净归档上复测为 27 个）。
 - **门禁命令（精确形式，阶段 1 F4 更新）**：在 `/Users/liu/Desktop/FYP2-Live-System` 下依次运行
@@ -1019,7 +1027,7 @@ npm run build
 | 4 | R05 | 缺 near-epsilon 的 API 级变异防线 | 审阅修复批次补 IT-EPS：权重 1e-10 / 1e-9 / 1.1e-9，另一路 missing，双向 |
 | 5 | R16 | 失败恢复的必测场景 | Task 7 / 8 的 DoD 追加，见 DoD 表 |
 | 6 | R02、R17、R31 | 门禁原始日志、逐 ID 对账、NULL 导出 | Task 10 的 DoD 追加，见 DoD 表 |
-| 7 | R09 | D13 最大证据年龄 / stale-only 守卫 | **待用户裁定**。审阅定为 P0 / P1，但明确不替需求发明阈值 |
+| 7 | R09 | D13 最大证据年龄 / stale-only 守卫 | **已裁定 A**（2026-10-13，用户本人确认）：过期按 missing 计分并保留原因，阈值是可配的设计阈值（默认 3 s，(0, 30]），见 Global Constraints。阶段 5 实施 |
 | 8 | R10 | 相等时间戳 + 新 UUID 的重复证据能推进告警 | **待用户裁定**：重复证据是否算持续的新观察 |
 | 9 | R14 | `DominantEvidence` 不接收权重，可能与加权贡献相反 | **待用户裁定**：定义为 raw strength 还是 weighted contribution。改语义需动三份实现与共享夹具，并修正报告与 UI 文案 |
 | 10 | R16 | `MAX_ATTEMPTS_PER_REQUEST = 3` 被质疑为任意值 | 保留。这是用户裁定的 D02 Option 1，文档按「明确需求」陈述 |
