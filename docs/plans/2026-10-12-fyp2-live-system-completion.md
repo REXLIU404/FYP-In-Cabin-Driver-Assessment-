@@ -34,8 +34,8 @@
 - **遥测 8 特征固定顺序**：`speed_kmph, accel_x, accel_y, brake_pressure, steering_angle, throttle, lane_deviation, headway_distance`。
 - 只做 **decision-level late fusion**。权重是透明设计参数，不是学习出来的安全权重；`RiskLevel` 是派生的运行等级，不是事故严重度标签。
 - 数据库只用 **SQLite**。不得引入 Flask-SocketIO / APScheduler / Hydra / OmegaConf。
-- **本阶段不做任何模型工作**：不训练、不调参、不加 ResNet18 / RF / LR、不跑 E1–E5。这些属于并行的 ML 开发轨道。
-- **模型 checkpoint 必须原封不动（R1 新增，硬约束）**：`ml/outputs/vision/mobilenetv3_large_vision.onnx`（SHA256 `b3a42e8d…`）、`mobilenetv3_large_vision.pt`（`196ca7b1…`）、`ml/outputs/telemetry/xgb_telemetry.json`（`9802cb06…`）**只读**。任何 task 都不得覆写、移动、重新导出或重新量化它们。Task 1 的 manifest 记录基线哈希；Task 10 的最终门禁必须重新计算并断言三个哈希未变。模型文件保持 git-ignored —— 只记哈希，不入库。
+- **本阶段不做任何模型工作**：不训练、不调参、不加 ResNet18 / RF / LR、不跑 E1–E5。这些属于并行的 ML 开发轨道。**R3 补充**：Task 10A 同样**不训练、不调参**，它只对 ML 轨道交付的冻结候选模型包做兼容性检查与离线影子评估。遥测的部署模型固定为 XGBoost；Random Forest 与 Logistic Regression **只用于 benchmark，运行时永不加载**。
+- **模型 checkpoint 必须原封不动（R1 新增，硬约束）**：`ml/outputs/vision/mobilenetv3_large_vision.onnx`（SHA256 `b3a42e8d…`）、`mobilenetv3_large_vision.pt`（`196ca7b1…`）、`ml/outputs/telemetry/xgb_telemetry.json`（`9802cb06…`）**只读**。任何 task 都不得覆写、移动、重新导出或重新量化它们。Task 1 的 manifest 记录基线哈希；Task 10 的最终门禁必须重新计算并断言三个哈希未变。模型文件保持 git-ignored —— 只记哈希，不入库。**R3 补充**：Task 10A 引入的版本化发布同样受此约束 —— 任何候选模型都以**新的版本目录**发布，绝不覆盖、移动或改写这三个稳定产物；Task 10A 的门禁同样要断言三个基线哈希未变。
 - **后端产出 canonical RiskUpdate（R1 新增，硬约束）**：`RiskScore` / `RiskLevel` / `DominantEvidence` / `AlertSeverity` / `SystemHealth` / `assessment_available` 的**唯一**产出方是后端 `inference.run_inference()`。前端**只渲染**该记录，不得自行重算风险评估。当前违规点：五个视图全都用 `getEvidenceType()` 重算 `DominantEvidence`，`ExplanationView` 还用 `computeRiskContributions()` 重算贡献度，`LiveMonitor.tsx:45` 更是凭前端的 `stale` 标志伪造 `SystemHealth = "UNAVAILABLE"`。Task 6 必须全部改为读记录字段；`ai/src` 的纯函数保留给保留的 replay 路径与单元测试使用。
 - **D13（证据最大可用年龄 / stale-only 告警累积）不在本阶段修复，但必须作为「已知限制」显式追踪 —— R1 强化。**
 
@@ -808,13 +808,96 @@ cd .. && npx vitest run && npx tsc --noEmit && npx eslint .
 
 把四份输出、端到端截图、导出的 JSON/CSV、以及 Task 1 的 manifest 一并写进 `docs/evidence/<date>/live-e2e/`。**不要**写进 `output/`（已 git-ignored 并按用户要求删除）。
 
+**R3 边界**：Task 10 只做 Live 端到端，始终针对**稳定模型**运行，不包含任何候选模型或离线影子评估（那属于 Task 10A）。Task 10 的 Live E2E 同时是 Task 10A provider 改造的**回归基线**。
+
 - [ ] **Step 5：Commit**
+
+---
+
+## Task 10A：模型替换与集成验证（系统侧离线影子评估）—— R3 新增
+
+> 本节记录 2026-10-13 用户拍板的决定及其影响。**这里只立范围、决定、前置条件与 DoD**；具体接口与步骤在 Task 10A 开工时再细化成可执行的 brief，届时不再重新讨论下面「已拍板的决定」。
+
+**目的（用户裁定 B）**：为报告提供一套**可辩护、有文档**的模型替换流程，重点是**影子评估与对比证据**。线上可能一直保留现有 MobileNetV3，**正式替换那一步未必执行**。因此 Task 10A 的 DoD 必须在**不执行替换**的情况下也能完成。
+
+### 已拍板的决定（不得再议）
+
+1. **方案 = 系统侧离线影子评估**（三个候选方案中的方案 1）。否决「后端实时双模型影子推理」（推理延迟翻倍、要改 schema、要动刚稳定的 Live 管线，且本项目没有真正的生产环境）与「评估全部放在 ML 分支」（会产生第四份融合实现，且走不到运行时的预处理路径）。
+2. **只有视觉模型是替换候选**。遥测的部署模型固定为 **XGBoost**；**RF 与 LR 只做 benchmark**，运行时永不加载。
+3. **视觉 provider 使用独立的 runtime manifest**，执行严格的校验：预处理、类别映射、输入/输出契约、路径、哈希。provider 不再写死模型名称、架构名或文件名。
+4. **`runtime_manifest.json` 与 `evaluation_metrics.json` 分离**。runtime manifest 只描述加载、预处理、输入/输出契约、类别映射与产物完整性；评估指标（如 `macro_f1`）只作为实验证据，**不是**加载的前提条件，provider 不得读取它。
+5. **离线评估器复用现有的 `TrainedProvider`、融合逻辑、EMA 与 Alert FSM**，不在 ML 轨道重复实现。
+6. **分工**：Codex（ML 轨道）交付**冻结的候选模型包**与评估产物；系统轨道负责兼容性检查，以及「稳定 vs 候选」的对比评估。
+7. **Task 10（Live E2E）与离线影子评估分开**。
+8. **基于构造场景的融合结果，不得作为现实世界多模态风险预测准确率来陈述。**
+9. **版本化模型发布 + 受控回滚**，不覆盖现有稳定产物。
+10. 全部在本机运行，不接 CI；线上模型在用户明确批准之前**绝不替换**。
+
+### 决定带来的影响
+
+**对系统代码**：
+
+- 需要去掉的硬编码：`backend/app/providers/trained.py:24`（provider 名）、`:34-35`（文件名）、`:64`、`:67`（架构名）；`backend/app/routers/status.py:52`（provider 名回退值）。
+- `scripts/freeze_manifest.py:50-62` 的 `MODEL_BASELINE` 是稳定基线的路径与哈希记录，**应保留**，它正是「预期的冻结产物」的来源之一。但发布清单冻结需要能额外记录版本化发布的模型。
+- 现在 `trained.py:36-37` 从 `metrics.json` 读类别与特征顺序，即评估文件兼任了运行时契约。分离后，provider 只读 runtime manifest，并要有测试钉住「provider 不读评估文件」。
+- **稳定基线也需要一份 runtime manifest**（以新文件补写，不改动模型产物），这样稳定模型与候选模型走**同一条**加载路径，不留两套代码。
+- provider 改造会触及 Live 推理路径，所以必须以 Task 10 的 Live E2E 作为回归基线。这也是 Task 10A 排在 Task 10 之后的原因。
+- `DRA_MODEL_ROOT` 是进程级设置（`config.py`，`env_prefix="DRA_"`）。离线评估器应在**独立进程内**直接调用 provider，**不起服务器、不写开发数据库**。这是「隔离的本地 A/B 评估」，**不是**生产环境的并行影子部署。
+- 每条记录已带 `vision_model_sha256` / `telemetry_model_sha256`（provenance 与 CSV 导出），可据此区分每条记录由哪个模型产出，包括跨越一次模型切换的会话。
+
+**对模型契约（ML 轨道导出候选之前就必须知道）**：
+
+- **元数据校验 ≠ 模型行为校验**。现有加载检查（`trained.py:38` 类别码、`:50` 输入形状、`:60` 预热输出形状）只核对元数据「声称」的内容。如果导出的模型类别索引顺序不同，元数据照样写 `c0…c9`，加载会成功，`P_distraction = 1 − P(c0)` 却会悄悄算错。因此必须：
+  - 保留并校验训练时的 `class_to_idx`（现有 `.pt` 中存有 `classes` 与 `idx_to_name`，见 `ml/vision/train_vision.ipynb` cell 20）；
+  - 用一份**冻结、带标注的契约冒烟数据集**做行为检查（例如每个类别的预测众数必须等于该类别）；
+  - 冒烟数据集**不得取自最终 held-out test set**，test set 也不得反复用于选型或调试；数据本身不入公开仓库，只记录样本 ID 与文件哈希。
+- **预处理契约必须声明，不支持的一律拒绝加载**。运行时目前只实现一套预处理（`trained.py:87-92`）：RGB → 直接缩放到 224×224（PIL `BILINEAR`，**不裁剪**）→ `/255` → ImageNet mean/std → NCHW float32。现有 MobileNetV3 的验证变换 `Resize((224,224))` + `Normalize(ImageNet)`（notebook cell 9）与之一致。**ResNet18 常见的 `Resize(256)` + `CenterCrop(224)` 属于不同的预处理，会被拒绝加载**；ML 轨道若希望候选能进入影子评估，必须用与运行时相同的验证变换。
+- **输出语义必须声明**。运行时对 ONNX 输出做 softmax（`trained.py:106-107`）。如果候选模型导出的是概率而不是 logits，形状检查拦不住，结果会被二次 softmax 压平。manifest 必须声明输出是 logits。
+- 训练 notebook 默认写线上路径（`ml/telemetry/train_telemetry.ipynb:466`、`ml/vision/train_vision.ipynb:827`、`:850`），候选必须输出到 `ml/outputs/runs/<run_id>/`（已写入 ML 轨道 prompt）。
+
+**对产物完整性**：
+
+- 校验 `model_path`：拒绝任何逃逸出候选包根目录的路径，包括路径遍历与基于符号链接的逃逸。
+- **与现有开发环境的冲突需要调和**：本工作树里三个稳定模型文件本身就是指向主仓库的符号链接。containment 规则必须保住「候选包不能逃逸」的安全意图，同时不误伤稳定配置。具体规则在开工时确定，见下方「开工时须确定」。
+- 对照**预期的冻结产物**校验 SHA-256。区分两件事：manifest 内自报的哈希只能发现意外损坏；与经批准的发布清单比对才能发现被替换。
+- 「产物完整性校验」与「不同架构之间的行为对比」是两件不同的事，报告中分开陈述。
+
+**对评估与对外陈述**：
+
+- 证据严格分四层：
+  1. 分支级单模态模型评估；
+  2. 构造场景下的融合评估；
+  3. 运行时鲁棒性评估；
+  4. Live / replay 端到端集成测试（由 Task 10 承担）。
+- 视觉模型替换后必须重新检查：概率校准（ECE、Brier）、RiskScore 分布、Low/Medium/High 分布、融合权重敏感性、阈值敏感性、Alert FSM 行为。基线与候选必须使用**同一组、固定的**成对输入。
+- **模型准确率提升 ≠ 融合风险评估必然改善。** 没有同步的多模态风险真值，只能陈述「分类表现、校准、分数稳定性、运行时行为发生了哪些变化」，**不能**声称新模型的 RiskScore 更准确。构造场景只能证明运行一致性、敏感性与实现正确性。
+
+**对部署与回滚**（仅当用户批准替换时才执行；不执行替换时，用临时目录演练一次切换与回滚，全程不触碰稳定产物）：
+
+- 完整闭环：明确的审批关卡 → 稳定产物备份 → 候选晋级 → 晋级后回归测试 → 基线复核 → 发布清单冻结 → 回滚验证。
+- **不预设需要替换的文件数量**。如果候选需要不同的预处理，那就不是换文件，而是改代码，必须另立任务。
+
+### 前置条件
+
+- Task 10 完成（Live E2E 作为 provider 改造的回归基线）。
+- ML 轨道交付至少一个**冻结的候选模型包**及其评估产物（含带样本 ID 的 test 预测）。没有候选时，可以先完成 manifest 化的 provider 与评估器，并用**稳定模型对自身**跑通全流程作为自检。
+
+### 开工时须确定（记录在此，不在本阶段决定）
+
+1. runtime manifest 放在哪里：`ml/` 归 ML 轨道的文件范围，`backend/` 归系统轨道，需避免两条分支修改同一文件。
+2. 符号链接 / containment 规则如何与现有的稳定模型符号链接共存。
+3. 遥测是否也改用 runtime manifest，以统一加载路径（遥测不做替换）。
+4. 构造场景的配对规则：需固定随机种子、冻结，且基线与候选完全相同。
+5. 契约冒烟数据集的来源 split、规模与判定阈值。
+
+- [ ] **Step 1–N**：开工时由 brief 细化。
+- [ ] **Commit**：每个完成项一个本地 commit，规则同其他 task。
 
 ---
 
 ## Self-Review
 
-**1. Spec coverage.** A01（unavailable 契约）→ Task 2/3/4/5；A02（冻结与可复现包）→ Task 1；A03（跨语言公式/EMA/FSM/freshness 独立测试）→ Task 2/3/5 + 共享夹具；A04（可观测错误事件与故障恢复）→ Task 7/8；A05（可复现端到端）→ Task 9/10。B01→Task 2/3/4；B02→Task 2/3；B03→Task 7；B04→Task 10；B05→Task 1。D01→Task 2–6；D02→Task 7/8；D11（replay 架构）→ Task 9。**未覆盖且已声明**：D03（五模型 HPO）、D04–D10、D12、E1–E5、PERF-01/02、UAT-01..05 —— 均为用户确认的 P1，不在本阶段。D13 显式声明不在范围。
+**1. Spec coverage.** A01（unavailable 契约）→ Task 2/3/4/5；A02（冻结与可复现包）→ Task 1；A03（跨语言公式/EMA/FSM/freshness 独立测试）→ Task 2/3/5 + 共享夹具；A04（可观测错误事件与故障恢复）→ Task 7/8；A05（可复现端到端）→ Task 9/10。B01→Task 2/3/4；B02→Task 2/3；B03→Task 7；B04→Task 10；B05→Task 1。D01→Task 2–6；D02→Task 7/8；D11（replay 架构）→ Task 9。**未覆盖且已声明**：D03（五模型 HPO）、D04–D10、D12、E1–E5、PERF-01/02、UAT-01..05 —— 均为用户确认的 P1，不在本阶段。D13 显式声明不在范围。**R3**：模型替换与集成验证由新增的 Task 10A 承担（不含训练与调参，这些仍属 ML 轨道）。
 
 **2. 类型一致性。** `assessment_available` / `FUSION_EPSILON` / `effectiveFusionDenominator` / `effective_weights` / `record_fault` / `MAX_ATTEMPTS_PER_REQUEST` / `classifyFailure` 在各 task 的 Interfaces 块中签名一致。`mapSystemHealth` 的权重参数在两种语言里都带 0.5/0.5 默认值，以保持既有两参调用点可编译。
 
@@ -844,6 +927,20 @@ cd .. && npx vitest run && npx tsc --noEmit && npx eslint .
 | 11 | canonical RiskUpdate | 列为硬约束。当前违规点（五视图重算 `DominantEvidence`、`LiveMonitor.tsx:45` 伪造 `SystemHealth`）由 Task 6 修 |
 | 12 | 模型 checkpoint | 列为硬约束，三个文件只读。Task 1 记基线哈希，Task 10 重算并断言未变 |
 
+## R3 决策记录（2026-10-13）：模型替换与集成验证
+
+| # | 问题 | 裁定 |
+|---|---|---|
+| 1 | 模型替换流程的目的 | **B**：为报告提供可辩护、有文档的替换流程，重点是影子评估与对比证据；正式替换未必执行 |
+| 2 | 替换范围 | 只有视觉模型是候选；遥测部署固定为 XGBoost；RF / LR 只做 benchmark |
+| 3 | 整体方案 | **系统侧离线影子评估**，复用 `TrainedProvider`、融合、EMA、Alert FSM；否决后端实时双模型影子推理，也否决把评估全部放在 ML 分支 |
+| 4 | 元数据 | `runtime_manifest.json` 与 `evaluation_metrics.json` 分离；provider 不读评估文件，不写死模型名 |
+| 5 | 视觉 provider 校验 | 预处理、类别映射、输入/输出、路径、哈希全部严格校验；不支持的预处理拒绝加载 |
+| 6 | 分工 | Codex 交付冻结的候选模型包与评估产物；系统轨道做兼容性检查与「稳定 vs 候选」评估 |
+| 7 | 计划结构 | Task 10 只做 Live E2E；新增 **Task 10A**（模型替换与集成验证），排在 Task 10 之后 |
+| 8 | 对外陈述 | 构造场景下的融合结果不得作为现实世界多模态风险准确率陈述 |
+| 9 | 发布与回滚 | 版本化发布 + 受控回滚，不覆盖现有稳定产物 |
+
 ## 执行顺序与依赖
 
 ```
@@ -867,13 +964,17 @@ Task 1  冻结基线 / 工作目录 / lint / manifest
    │                        Task 9  Live-only 范围   （需要 6 和 8 都落地）
    │                             │
    └─────────────────────────────┴─► Task 10  测试基础设施 + 端到端
+                                          │
+                                          └─► Task 10A  模型替换与集成验证（R3）
+                                                        （另需 ML 轨道交付冻结候选模型包；
+                                                          无候选时可先用稳定模型自检）
 ```
 
 **串行约束**：2 → 3 → 4 是硬串行（契约先立、再移植、再落库）。**可并行**：Task 6 只依赖 Task 2，可与 3/4/5 并行；但按 SDD 规则实现 agent 不并行派发，顺序按上图深度优先即可。
 
 **批量机会**：Task 1 的 Step 3（eslint ignores 加一项）与 Step 5（requirements 补四行）是同形小改，与 Step 2 的 CLAUDE.md 两处引用清理合并为一次派发。
 
-## Definition of Done（Task 1–10）
+## Definition of Done（Task 1–10 与 10A）
 
 每个 task 的 DoD = 下表全部满足 + 该 task 的全部 `- [ ]` 步骤勾完 + task review 通过（spec ✅ 且 quality approved）。
 
@@ -889,6 +990,7 @@ Task 1  冻结基线 / 工作目录 / lint / manifest
 | **8** | `retryPolicy.ts` 与 `liveLoop.ts` 为纯模块、node 环境可测；3 次投递后停止且不再排定时器；重试 payload 深度相等（同 request_id + 同帧 + 同时间戳）；pause-abort 不计数；`retry()` 不新建会话；时钟偏移有专属 category 与文案；UI 有可见 stopped 面板 + 手动 Retry |
 | **9** | `PREPARED_RAW_TELEMETRY` 导出存在且 Live 路径改用它；游标单调可注入、同一输入序列可复现；`loadConfig` 不会把用户静默带回 replay；replay 调用点在 `RiskLevel` 为 null 时不破坏不变式；`prototype-tests/README.md` 改为 Live 端到端清单 |
 | **10** | `npm run typecheck` 存在并接入 `npm test`；`test_live_e2e.py` 在单 uvicorn + 静态 `dist/` 上跑通，断言 UI 值 == `/risk/latest` == 导出行；显式 stop camera 以触达 UNAVAILABLE；`requires_models` 跳过数显式打印；四道门禁全绿；三个模型 SHA256 与 Task 1 基线**逐一相等**；证据归档到 `docs/evidence/<date>/live-e2e/` |
+| **10A** | provider 只经 runtime manifest 加载，代码中不再写死模型名、架构名或文件名，且有测试证明 provider 不读评估文件；稳定基线有自己的 runtime manifest，与候选走同一加载路径；预处理不支持、输出语义不符、类别映射或契约冒烟检查失败、路径逃逸、哈希不符时**一律拒绝加载**，每种情况各有测试；离线评估器复用 `TrainedProvider` / 融合 / EMA / Alert FSM，不起服务器、不写开发数据库，输出四层分开的对比报告，包含 ECE、Brier、RiskScore 与 L/M/H 分布、权重与阈值敏感性、FSM 行为；报告不含「RiskScore 更准确」一类表述；版本化发布与回滚流程已文档化，并在临时目录演练过一次（不触碰稳定产物）；Task 10 的 Live E2E 仍全绿；三个基线 SHA256 不变。**不要求执行正式替换** |
 
 ## 剩余技术风险
 
@@ -903,6 +1005,10 @@ Task 1  冻结基线 / 工作目录 / lint / manifest
 | **`RuntimeConfig` 是 `extra="forbid"` 且按会话持久化** | 低中 —— 加字段会让旧会话用新默认值回放 | Task 5 提常量时避免进 `RuntimeConfig`；若必须进，加迁移说明 |
 | **unavailable 窗口仍占 window_id** | 低 —— 影响 Week 7「accepted request counts reconcile」 | 在 DoD 里要求显式声明计数口径 |
 | **主仓库直接开发，无隔离** | 中 —— 没有工作树兜底，误操作直接落在 dev_cc | 每 task 独立 commit；禁止 reset/clean；commit 需授权 |
+| **候选模型类别顺序错位（R3）** | 高 —— 元数据照样写 `c0…c9`，加载成功，`1 − P(c0)` 静默算错 | Task 10A 加冻结的契约冒烟数据集做行为检查，并要求候选包保留训练时的 `class_to_idx` |
+| **候选预处理或输出语义不一致（R3）** | 高 —— 形状检查拦不住，模型照常输出错误概率 | runtime manifest 声明预处理与输出语义，不支持的拒绝加载；**须在 ML 轨道导出候选前告知**（如 ResNet18 的 `CenterCrop`） |
+| **符号链接 containment 误伤稳定配置（R3）** | 中 —— 稳定模型在本工作树中本身就是符号链接 | Task 10A 开工时确定兼容规则，并用测试覆盖两种情况 |
+| **构造场景结果被过度陈述（R3）** | 中 —— 报告可能把运行一致性写成风险准确率 | 证据分四层；Task 10A 的 DoD 禁止「RiskScore 更准确」一类表述 |
 
 ## 建议的第一个编码包
 
