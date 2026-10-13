@@ -38,3 +38,7 @@
 - 独立核实 R08 属实（`inference.py:107-108` 按 `captured_at` / `telemetry_timestamp` 重判 freshness）
 - 用户确认 E2–E5 归系统轨道，并下令开工阶段 1
 - 发现计划第 510 行（Task 5 的 UT-TIME-06 规格）与第 755 行（Task 9 可达性表）仍写着 stale「不可达」，R4 未覆盖，并入 R08 更正项
+- P1-1 F4 完成：`f289d66`、`9632812`（修复轮补 TS EMA 舍入测试），验收 PASS `9db6e2a`
+- 用户批准删除 5 份零引用旧文档：`2000ffb`
+- P1-2 R08 完成：`c7391b5`，评审 clean；IT-LIVE-AGE 共 9 个用例经 `/infer`，替换了编码错误前提的 source guard
+- 门禁：pytest 518 / vitest 397 / tsc 0 / eslint 0

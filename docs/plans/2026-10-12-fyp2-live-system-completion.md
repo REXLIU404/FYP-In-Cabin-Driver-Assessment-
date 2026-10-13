@@ -48,7 +48,7 @@
 
   ~~**R1 新发现，显著改变风险画像**：Live 主运行时**目前根本到不了 stale**。`trained.py:122-123` 只会输出 `fresh`（有输入）或 `missing`（无输入），而前端对两路都打 `new Date()` 当时间戳 —— 所以 Live 路径里 `age` 恒为 ~0。**D13 只能经由保留的 replay 路径或直接 POST `/windows` 触发，不是主运行时的在役缺陷。**~~
 
-  **R4 更正（Codex 独立审阅 R08 判 INCORRECT，已核实）**：上一段是错的。`run_inference` 用 `provenance.captured_at` / `telemetry_timestamp` **重新判定** freshness（`backend/app/inference.py:107-108`），不依赖 provider 给的 `fresh`。`backend/tests/test_live_inference.py:114-118` 本身就断言：旧 `captured_at` 经 `POST /infer` 得到 `stale` 与 `DEGRADED`。正常浏览器操作下 age 接近 0，但网络或处理延迟超过 3 秒、客户端时钟偏差、或任何直接调用 `/infer` 的客户端都能让 Live 出现 stale。**因此 D13 在 Live 主运行时可达**，其优先级由「System Freeze 前再决定」提升为待用户裁定的政策项（见 R4 记录）。
+  **R4 更正（Codex 独立审阅 R08 判 INCORRECT，已核实）**：上一段是错的。`run_inference` 用 `provenance.captured_at` / `telemetry_timestamp` **重新判定** freshness（`backend/app/inference.py:107-108`），不依赖 provider 给的 `fresh`。`backend/tests/test_live_inference.py:114-117` 本身就断言：旧 `captured_at` 经 `POST /infer` 得到 `stale` 与 `DEGRADED`。正常浏览器操作下 age 接近 0，但网络或处理延迟超过 3 秒、客户端时钟偏差、或任何直接调用 `/infer` 的客户端都能让 Live 出现 stale。**因此 D13 在 Live 主运行时可达**，其优先级由「System Freeze 前再决定」提升为待用户裁定的政策项（见 R4 记录）。
 
   **本阶段的义务（不是修复，是留证）**：
   1. Task 5 必须新增 `UT-TIME-06 (stale-only stream)`：用注入时钟喂一串**只有 stale 证据**、分数持续在 High 区间的窗口，断言并记录**当前**行为（即会累积到 `HIGH_ALERT`）。该测试是行为快照，不是期望行为 —— 测试名与注释必须写明这是已知限制的留证。
@@ -280,7 +280,7 @@ git rev-parse --short HEAD && git branch --show-current   # 期望 845b43a / fyp
 
 `eslint.config.js` 的 `ignores` 只有 `["dist", "node_modules", ".venv"]`，于是 `eslint .` 会走进 `.claude/worktrees/…` 去 lint 陈旧副本并报错。加入 `".claude"`。
 
-验证：`npx eslint .` 退出 0（修复前在存在工作树时报 2 个 `prefer-const`，来源是工作树里的旧 `alertFsm.test.ts`）。
+验证：`./node_modules/.bin/eslint .` 退出 0（修复前在存在工作树时报 2 个 `prefer-const`，来源是工作树里的旧 `alertFsm.test.ts`）。
 
 - [ ] **Step 4：写 freeze manifest 脚本**
 
@@ -295,7 +295,7 @@ git rev-parse --short HEAD && git branch --show-current   # 期望 845b43a / fyp
 ```bash
 export TMPDIR=$(mktemp -d); export PYTHONDONTWRITEBYTECODE=1
 cd backend && PYTHONPATH=. ../.venv/bin/python -m pytest tests -q -p no:cacheprovider
-cd .. && npx vitest run && npx tsc --noEmit && npx eslint .
+cd .. && ./node_modules/.bin/vitest run --no-cache && ./node_modules/.bin/tsc --noEmit && ./node_modules/.bin/eslint .
 ```
 
 期望：pytest 28 passed、vitest 32 passed、tsc 无错、eslint 退出 0。把输出与 manifest 一并写入 `docs/fyp2/release/RELEASE_MANIFEST.md`。
@@ -416,7 +416,7 @@ Expected: FAIL —— `F-U1` 返回 `0.0`、`F-Z1`/`F-Z2` 返回 `DEGRADED`。
 
 - [ ] **Step 4：同步 `ai/reference/risk_logic.py`**
 
-逐函数照搬相同改动，包括 `:109` 对 `map_system_health` 的位置参数调用。这个模块 **零 importer、零测试覆盖**，却被文档声明为报告引用的语言无关规范 —— 不同步它，报告里的 Eq.1/Eq.2 叙述就和实现分叉，而且不会有任何测试报错。更新 `__main__` 的 worked example（:120-138）使其打印新的 unavailable 情形。
+逐函数照搬相同改动，包括 `:109` 对 `map_system_health` 的位置参数调用。~~这个模块 **零 importer、零测试覆盖**，却被文档声明为报告引用的语言无关规范 —— 不同步它，报告里的 Eq.1/Eq.2 叙述就和实现分叉，而且不会有任何测试报错。~~ **（阶段 1 更正：Task 3 之后它已被 `test_fusion_vectors.py` 经 importlib 加载并有测试守护，见 Global Constraints。）**更新 `__main__` 的 worked example（:120-138）使其打印新的 unavailable 情形。
 
 - [ ] **Step 5：跑测试**
 
@@ -572,7 +572,7 @@ Run: `pytest tests -q` → 期望全绿，含新用例。`test_live_inference.py
 
 **Interfaces:** Consumes Task 2 的 `ai/src/availability.ts`
 
-**本 task 最重要的事实：`tsc` 抓不全。** strict 模式会在算术、索引、prop 处大声报错（`formatRiskScore` 的 6 个调用点、`ScoreGauge.score`、所有 `Pill` 的 label/tone、`evidence.ts:46`、`export.ts:57`、`App.tsx:62`），但每一个**比较和过滤**都编译通过且静默失败：`RiskTrends.tsx:22` 的 `record.RiskLevel === label`、`:79` 的 `=== "High"`、`AlertBanner.tsx:27` 的 `=== "NORMAL"`、`TrendChart.tsx:28` 已经可空的三元、以及 `App.tsx:66` 把 `AlertSeverity: fsm.severity` spread 覆盖掉 null。**把 `npx tsc --noEmit` 当完成信号的计划会把这五个全部放过去。**
+**本 task 最重要的事实：`tsc` 抓不全。** strict 模式会在算术、索引、prop 处大声报错（`formatRiskScore` 的 6 个调用点、`ScoreGauge.score`、所有 `Pill` 的 label/tone、`evidence.ts:46`、`export.ts:57`、`App.tsx:62`），但每一个**比较和过滤**都编译通过且静默失败：`RiskTrends.tsx:22` 的 `record.RiskLevel === label`、`:79` 的 `=== "High"`、`AlertBanner.tsx:27` 的 `=== "NORMAL"`、`TrendChart.tsx:28` 已经可空的三元、以及 `App.tsx:66` 把 `AlertSeverity: fsm.severity` spread 覆盖掉 null。**把 `./node_modules/.bin/tsc --noEmit` 当完成信号的计划会把这五个全部放过去。**
 
 - [ ] **Step 1：写失败测试（纯函数优先）**
 
@@ -970,7 +970,7 @@ npm run build
 
 | # | 审阅编号 | 问题 | 处理 |
 |---|---|---|---|
-| 1 | R08 | 「Live 到不了 stale」是错的 | 已在 Global Constraints、R1 #8、风险表更正。**审阅修复批次**中：`TASK_1_TO_6_SUMMARY.md` 加勘误；`UT-TIME-06` 的 docstring 与 source-string guard 改为完整 pipeline 的可反证测试（UT/IT-LIVE-AGE：经 `/infer` 的 2.999 / 3 / 3.001 s 边界与 30 天旧帧） |
+| 1 | R08 | 「Live 到不了 stale」是错的 | 已在 Global Constraints、R1 #8、风险表更正。**已完成（P1-2，`c7391b5`）**：`TASK_1_TO_6_SUMMARY.md` 加勘误；`UT-TIME-06` 的 docstring 与 source-string guard 改为完整 pipeline 的可反证测试（UT/IT-LIVE-AGE：经 `/infer` 的 2.999 / 3 / 3.001 s 边界与 30 天旧帧） |
 | 2 | R30 | F4、F1 | 「等 Codex 审阅」的前提已解除。**F4 已完成**（`f289d66`、`9632812`：ROUND_HALF_UP 写回 Global Constraints 与 SDD `global-constraints.md`）；**F1 仍在本批待做**（`missing_cases.csv` W16/17/19） |
 | 3 | R13 | 只有 `captured_at` 有 HTTP gap 测试 | 审阅修复批次补 `telemetry_timestamp` 的对称测试 |
 | 4 | R05 | 缺 near-epsilon 的 API 级变异防线 | 审阅修复批次补 IT-EPS：权重 1e-10 / 1e-9 / 1.1e-9，另一路 missing，双向 |
@@ -1025,12 +1025,12 @@ Task 1  冻结基线 / 工作目录 / lint / manifest
 
 | Task | Definition of Done |
 |---|---|
-| **1** | `pwd`/`branch`/`HEAD` 三连核实输出已记入 ledger；`CLAUDE.md` 不再引用 AGENTS.md；`npx eslint .` 退出 0（存在工作树时也是）；`scripts/freeze_manifest.py` 可运行且输出含三个模型 SHA256 + split 哈希 + 实装依赖版本；`backend/requirements.lock.txt` 存在；四道基线门禁（pytest 28 / vitest 32 / tsc clean / eslint clean）复现并写入 `docs/fyp2/release/RELEASE_MANIFEST.md` |
-| **2** | `ai/fixtures/fusion_vectors.json` 含且仅含 21 行；`ai/src/fusionVectors.test.ts` 与 `availability.test.ts` 全绿；`computeRiskScore` 两路缺失返回 `null`；`(1.0,0.0)+vision missing` 返回 `UNAVAILABLE`；`npx vitest run` 绿（`tsc` 此刻**允许**报错，错误清单记入 ledger 移交 Task 6） |
+| **1** | `pwd`/`branch`/`HEAD` 三连核实输出已记入 ledger；`CLAUDE.md` 不再引用 AGENTS.md；`./node_modules/.bin/eslint .` 退出 0（存在工作树时也是）；`scripts/freeze_manifest.py` 可运行且输出含三个模型 SHA256 + split 哈希 + 实装依赖版本；`backend/requirements.lock.txt` 存在；四道基线门禁（pytest 28 / vitest 32 / tsc clean / eslint clean）复现并写入 `docs/fyp2/release/RELEASE_MANIFEST.md` |
+| **2** | `ai/fixtures/fusion_vectors.json` 含且仅含 21 行；`ai/src/fusionVectors.test.ts` 与 `availability.test.ts` 全绿；`computeRiskScore` 两路缺失返回 `null`；`(1.0,0.0)+vision missing` 返回 `UNAVAILABLE`；`./node_modules/.bin/vitest run --no-cache` 绿（`tsc` 此刻**允许**报错，错误清单记入 ledger 移交 Task 6） |
 | **3** | `backend/tests/test_fusion_vectors.py` 读**同一份** JSON 且全绿；`fusion.py` 与 `ai/reference/risk_logic.py` 两份都改且语义一致；`map_alert_severity` 加 None 守卫 + 「勿接线」注释；`pytest tests -q` 全绿（28 + 新增） |
 | **4** | `conftest.py` 提供 tmp DB fixture 且新测试全部使用它；`RiskUpdate` 前置 + 后置两个 validator 都在；历史行读取不 500（`test_migration.py` 三行 fixture 验证）；`json('true')` 而非 `1`；CSV 表头含 `assessment_available`；`UT-FUS-03` / `UT-FUS-ZERO-WEIGHT` / `EX-NULL-01` / `ST-STATUS-01` 全绿 |
 | **5** | `UT-TIME-01..06` 全绿（`06` 是 D13 行为快照，断言当前行为）；`UT-EMA-PARITY-01` 绿；unavailable 不写 `None` 进 `state['severity']`；新增 state 键全部进 gap-reset 元组；`test_audit_regressions.py:139` 与 `test_restart.py:44` **仍绿**（证明没误动 Python EMA） |
-| **6** | `npx tsc --noEmit` **清零**；五个视图与 `ExplanationView` 都有 unavailable 分支；`LiveMonitor.tsx:45` 伪造 `SystemHealth` 已删除；视图读 `record.DominantEvidence` 而非重算；grep 断言 `SystemHealth === "UNAVAILABLE"` 不再出现在 `LiveMonitor.tsx`/`AlertBanner.tsx`；`.pill--unavailable` 样式存在；`preparedSessionInput.test.ts:31` 更新为 4 元集并绿 |
+| **6** | `./node_modules/.bin/tsc --noEmit` **清零**；五个视图与 `ExplanationView` 都有 unavailable 分支；`LiveMonitor.tsx:45` 伪造 `SystemHealth` 已删除；视图读 `record.DominantEvidence` 而非重算；grep 断言 `SystemHealth === "UNAVAILABLE"` 不再出现在 `LiveMonitor.tsx`/`AlertBanner.tsx`；`.pill--unavailable` 样式存在；`preparedSessionInput.test.ts:31` 更新为 4 元集并绿 |
 | **7** | `fault_events` 表无 FK、有唯一索引、用显式 `CREATE TABLE IF NOT EXISTS`；`record_fault` 绑 `db.get_bind()` 且在 `rollback()` 之后调用；DB 故障时文件 sink 有记录且原始异常原样抛出；`ST-FAIL-01/02/03/04` + `ST-RECOVER-01` 全绿；会话删除后 fault 仍可查。**R4 追加（审阅 R16）**：原生 ORT 运行期异常、单分支失败、DB commit 失败各有分类与测试；**每个 eligible 请求都有成功或失败的持久 outcome**，并为 logging ≥ 99% 写明两个分母（成功预测的持久化率、全部 outcome 的记录率），不得用 stored / stored 自证 |
 | **8** | `retryPolicy.ts` 与 `liveLoop.ts` 为纯模块、node 环境可测；3 次投递后停止且不再排定时器；重试 payload 深度相等（同 request_id + 同帧 + 同时间戳）；pause-abort 不计数；`retry()` 不新建会话；时钟偏移有专属 category 与文案；UI 有可见 stopped 面板 + 手动 Retry。**R4 追加（审阅 IT-RETRY-IDENTITY）**：commit 之后 response 丢失、再以同 UUID 同 payload 重发 → DB 恰好一行、时序状态只推进一次；同 UUID 改 payload → 409 |
 | **9** | `PREPARED_RAW_TELEMETRY` 导出存在且 Live 路径改用它；游标单调可注入、同一输入序列可复现；`loadConfig` 不会把用户静默带回 replay；replay 调用点在 `RiskLevel` 为 null 时不破坏不变式；`prototype-tests/README.md` 改为 Live 端到端清单 |
