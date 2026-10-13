@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { buildRiskUpdate, DEFAULT_CONFIG } from "../../../ai/src/riskLogic";
 import missingCasesCsv from "../../../ai/prototype-data/prepared_sessions/session_001/missing_cases.csv?raw";
+import telemetryCsv from "../../../ai/prototype-data/prepared_sessions/session_001/telemetry.csv?raw";
 import type { RiskUpdate } from "../types";
 import { PREPARED_SESSION_WINDOWS } from "./preparedSessionInput";
 
@@ -83,6 +84,42 @@ describe("missing_cases.csv layout", () => {
         .filter((cell) => !/^(\d+\.\d)?$/.test(cell)),
     ).toEqual([]);
   });
+});
+
+// The matrix's input columns restate telemetry.csv. Checked here as well, so a
+// change to the replay input cannot leave the matrix describing a row that no
+// longer exists (e.g. W16's age moving from 4 to 9 still scores 62.5).
+const telemetryLines = telemetryCsv
+  .split(/\r?\n/)
+  .filter((line) => line !== "");
+const telemetryHeader = telemetryLines[0].split(",");
+const telemetryRows = telemetryLines
+  .slice(1)
+  .map(
+    (line): Record<string, string> =>
+      Object.fromEntries(
+        line.split(",").map((cell, index) => [telemetryHeader[index], cell]),
+      ),
+  );
+const INPUT_COLUMNS = [
+  "vision_available",
+  "telemetry_available",
+  "telemetry_age_s",
+] as const;
+
+describe("missing_cases.csv input columns equal telemetry.csv", () => {
+  it.each(matrix.map((row) => [row.window_id, row] as const))(
+    "W%s",
+    (windowId, row) => {
+      const source = telemetryRows.find((r) => r.window_id === windowId);
+      if (source === undefined) {
+        throw new Error(`window ${windowId} is not in telemetry.csv`);
+      }
+      const pick = (r: Record<string, string>) =>
+        Object.fromEntries(INPUT_COLUMNS.map((name) => [name, r[name]]));
+      expect(pick(row)).toEqual(pick(source));
+    },
+  );
 });
 
 describe("missing_cases.csv expectations equal the real replay output", () => {

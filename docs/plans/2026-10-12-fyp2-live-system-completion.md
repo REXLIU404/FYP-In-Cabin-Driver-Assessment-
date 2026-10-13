@@ -1022,7 +1022,7 @@ npm run build
 | # | 审阅编号 | 问题 | 处理 |
 |---|---|---|---|
 | 1 | R08 | 「Live 到不了 stale」是错的 | 已在 Global Constraints、R1 #8、风险表更正。**已完成（P1-2，`c7391b5`）**：`TASK_1_TO_6_SUMMARY.md` 加勘误；`UT-TIME-06` 的 docstring 与 source-string guard 改为完整 pipeline 的可反证测试（UT/IT-LIVE-AGE：经 `/infer` 的 2.999 / 3 / 3.001 s 边界与 30 天旧帧） |
-| 2 | R30 | F4、F1 | 「等 Codex 审阅」的前提已解除。**F4 已完成**（`f289d66`、`9632812`：ROUND_HALF_UP 写回 Global Constraints 与 SDD `global-constraints.md`）；**F1 仍在本批待做**（`missing_cases.csv` W16/17/19） |
+| 2 | R30 | F4、F1 | 「等 Codex 审阅」的前提已解除。**F4 已完成**（`f289d66`、`9632812`：ROUND_HALF_UP 写回 Global Constraints 与 SDD `global-constraints.md`）；**F1 已完成**（P1-5，`239f7c2`：9 行重核，`missingCases.test.ts` 让矩阵不能再悄悄过期） |
 | 3 | R13 | 只有 `captured_at` 有 HTTP gap 测试 | **已完成（P1-3，`d83782d`）**：`test_out_of_order_guard_survives_a_gap_for_telemetry`，与 `captured_at` 版逐步对称 |
 | 4 | R05 | 缺 near-epsilon 的 API 级变异防线 | **已完成（P1-4，`2c07d79`）**：IT-EPS，权重 1e-10 / 1e-9 / 1.1e-9，另一路 missing，双向；杀死 producer 的 `>=` 与 `> 0` 变异 |
 | 5 | R16 | 失败恢复的必测场景 | Task 7 / 8 的 DoD 追加，见 DoD 表 |

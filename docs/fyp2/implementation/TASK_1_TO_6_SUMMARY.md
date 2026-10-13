@@ -172,7 +172,7 @@ Task 5 的 tsc 从 35 降到 34 **不是修好了一个错误**：`updateAlertSt
 
 ### Important
 
-**F1 —— 期望回放矩阵已过期。**
+**F1 —— 期望回放矩阵已过期。** **（已解决：阶段 1 P1-5，`239f7c2`；9 行全部按真实回放流水线重核，新增 `frontend/src/data/missingCases.test.ts` 逐行比对输出列，控制者补充了输入列对 `telemetry.csv` 的比对）**
 `ai/prototype-data/prepared_sessions/session_001/missing_cases.csv` 被 `preparedSessionInput.ts:87` 称为「逐窗口期望风险/证据矩阵」，其 9 行中有 3 行错误：
 
 | 窗口 | 矩阵写的 | 实际值 |

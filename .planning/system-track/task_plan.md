@@ -43,8 +43,8 @@
 - [x] **R13 补测**（`d83782d`，评审 clean）：`telemetry_timestamp` 的对称 HTTP gap 测试（F2 遗留 minor 4）。变异 M2 下它是 telemetry 水位线唯一的行为防线；两条 gap 测试都依赖 D13 现状（stale-only 仍得 High），阶段 5 落地证据年龄策略时第 1 步会响亮失败，届时改用 fake clock
 - [x] **R05 补测**（`2c07d79`，评审 clean）：IT-EPS —— 经 API 的 near-epsilon 权重（1e-10 / 1e-9 / 1.1e-9），杀死 producer 的 `>` → `>=` 与 `> 0` 变异（改动前旧测试集在两种变异下都全绿）
 - [x] **P1-6 TS 舍入违规**（`b53f007`，评审 clean）：`asPercent` 与 `formatPercent` 改为先在小数上 half-up 再放大；`round3` 改为 half-up。回放 25 个窗口 + 25 条记录（含解释文本）改动前后逐字节相同（SHA-256 一致），停止条件未触发
-- [ ] **F1 / R30**：同步 `missing_cases.csv` W16/17/19 期望值与最新契约
-- **状态：** pending
+- [x] **F1 / R30**（`239f7c2`，评审 clean）：`missing_cases.csv` 9 行按真实回放流水线重核（错的正是 W16 / W17 / W19 三行），新增 `expected_risk_score` 与 `expected_assessment_available` 两列；`missingCases.test.ts` 逐行比对输出列与输入列。W16 依赖现行 stale 档，阶段 5 实施裁定 A 时会如实变红（62.5 → 60.0）
+- **状态：** complete（2026-10-14）
 
 ### 阶段 2：Task 7 + Task 8（失败恢复，按计划 + R16 补充）
 - [ ] Task 7 `fault_events`：在计划 DoD 之外补 —— 原生 ORT 运行期异常的分类、单分支失败、DB commit 失败；**每个 eligible 请求都有成功或失败的持久 outcome**（为 logging ≥ 99% 定义两个分母）
