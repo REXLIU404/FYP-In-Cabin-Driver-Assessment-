@@ -521,7 +521,7 @@ Run: `pytest tests -q` → 期望全绿，含新用例。`test_live_inference.py
 
 **不能把挂起逻辑搭在现有 gap 分支上**：`:31` 比较的 `last_processed_ms` 在 `:58` 对**每个**窗口（含 unavailable）都更新，所以一段 60 秒的无证据窗口在 gap 逻辑看来是「持续处理中」。
 
-**新加的每个 state 键都必须进 `:32` 的 pop 元组**，否则它会越过 gap 重置、并且因为 `runtime_state` 是持久化 JSON 列（`models.py:28`）而越过 worker 重启活下来 —— 症状是几小时后恢复的会话带着陈旧的 HIGH_ALERT 锁存，而没有任何测试失败。
+**新加的「时序记忆」键（streak、锁存、EMA 链）都必须进 `:32` 的 pop 元组**（现为 `inference.TEMPORAL_STATE_KEYS`），否则它会越过 gap 重置、并且因为 `runtime_state` 是持久化 JSON 列（`models.py:28`）而越过 worker 重启活下来 —— 症状是几小时后恢复的会话带着陈旧的 HIGH_ALERT 锁存，而没有任何测试失败。**反过来，`inference.EVIDENCE_WATERMARK_KEYS`（`captured_at`、`telemetry_timestamp`，乱序守卫的 watermark）绝不能加入该元组**：它们必须跨 gap、跨重启保留，否则一次暂停之后更旧的证据会被重新接受（`test_out_of_order_guard_survives_a_gap` 守住这一点）。
 
 `:57` 的 `previous_vision=pd if vstatus == "fresh" else None` 会在「unavailable 但 vision fresh」（`w_v=0, w_t=1`、telemetry missing）时继续累积 EMA 链 —— 要一并切断。
 

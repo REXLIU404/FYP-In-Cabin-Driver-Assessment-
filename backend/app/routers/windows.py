@@ -50,7 +50,7 @@ def _save_window(db, sid, w, *, mode, provenance=None, request_id=None, digest=N
             return existing
         state = dict(sess.runtime_state or {})
         if provenance:
-            for key in ("captured_at", "telemetry_timestamp"):
+            for key in inference.EVIDENCE_WATERMARK_KEYS:
                 stamp, previous = provenance.get(key), state.get(key)
                 if stamp and previous and datetime.fromisoformat(stamp) < datetime.fromisoformat(previous):
                     raise HTTPException(409, "Out-of-order evidence timestamp")

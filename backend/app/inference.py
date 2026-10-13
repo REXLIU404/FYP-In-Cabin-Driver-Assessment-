@@ -11,10 +11,12 @@ from .schemas import ModalityFreshness, RiskUpdate, RuntimeConfig, WindowInput
 ALERT_SUSTAIN_MS = 2000   # High must persist this long before HIGH_ALERT
 ALERT_RECOVER_MS = 10000  # Low must persist this long before a latched alert clears
 
-# EVERY key of the temporal memory. A gap longer than the freshness tolerance
-# wipes all of them. ``runtime_state`` is a persisted JSON column, so a key that is
+# The temporal-memory keys: the ones a gap longer than the freshness tolerance
+# CLEARS. ``runtime_state`` is a persisted JSON column, so a temporal key that is
 # missing from this tuple survives the gap AND a worker restart: the symptom is a
 # session resuming hours later with a stale HIGH_ALERT latch and no failing test.
+# Every new key that carries *temporal memory* (streaks, latches, the EMA chain)
+# must be listed here.
 # ``severity`` is the pre-Task-5 name of ``last_severity``; it is only still listed
 # (and read as a fallback) so rows persisted by an older worker are wiped too.
 TEMPORAL_STATE_KEYS = (
@@ -26,6 +28,14 @@ TEMPORAL_STATE_KEYS = (
     "unavailable_since",
     "last_processed_ms",
 )
+
+# The out-of-order guard's watermarks, written into the same persisted
+# ``runtime_state`` by ``routers/windows.py``. They are deliberately NOT in
+# ``TEMPORAL_STATE_KEYS`` and must never be added to it: they have to survive a gap
+# and a worker restart. A gap that wiped them would let evidence older than the
+# newest one already accepted be taken again after any pause - the guard would
+# silently stop guarding. ``test_out_of_order_guard_survives_a_gap`` pins this.
+EVIDENCE_WATERMARK_KEYS = ("captured_at", "telemetry_timestamp")
 
 
 def default_config():

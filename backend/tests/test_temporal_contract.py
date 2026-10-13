@@ -341,6 +341,14 @@ def test_the_temporal_key_list_covers_every_key_the_fsm_ever_writes():
     assert seen <= set(inference.TEMPORAL_STATE_KEYS)
 
 
+def test_watermark_keys_are_disjoint_from_temporal_keys():
+    """The out-of-order guard's watermarks must survive a gap, so they may never be
+    among the keys a gap clears. The expected value is written out here, not taken
+    from the implementation."""
+    assert inference.EVIDENCE_WATERMARK_KEYS == ("captured_at", "telemetry_timestamp")
+    assert set(inference.EVIDENCE_WATERMARK_KEYS) & set(inference.TEMPORAL_STATE_KEYS) == set()
+
+
 def test_runtime_state_survives_a_json_round_trip_like_the_persisted_column():
     s = Stream()
     s.severities([(0, HIGH), (1000, HIGH), (2000, HIGH)])
@@ -513,6 +521,73 @@ def test_ut_time_05_identical_captured_at_is_accepted_and_accumulates_alert_time
     older = client.post("/api/sessions/live-ut05/infer",
                         json={"request_id": "older", "captured_at": (at(0) - timedelta(milliseconds=1)).isoformat()})
     assert older.status_code == 409
+
+
+def test_out_of_order_guard_survives_a_gap(api, api_factory, monkeypatch):
+    """Through POST /infer: a pause longer than the freshness tolerance clears the
+    temporal memory, but must NOT clear the evidence watermark. If it did, the next
+    OLDER frame would be accepted (201) instead of refused (409).
+
+    The long pause is simulated by moving the persisted ``last_processed_ms`` 60 s
+    into the past; nothing sleeps. All frame stamps are in the past, so
+    ``normalize_timestamp`` accepts them."""
+    from app import models
+    from app.providers import trained
+    monkeypatch.setattr(trained, "get_provider", lambda: _StubProvider())
+    client, _ = api
+    sid = "live-f2"
+    created = client.post("/api/sessions", json={"session_id": sid, "operation_mode": "LIVE_MODEL_RUNTIME"})
+    assert created.status_code == 201, created.text
+
+    def infer(request_id, stamp):
+        return client.post(f"/api/sessions/{sid}/infer",
+                           json={"request_id": request_id, "captured_at": stamp.isoformat()})
+
+    def persisted_state():
+        with api_factory() as db:
+            return dict(db.get(models.SessionMeta, sid).runtime_state or {})
+
+    def record_count():
+        with api_factory() as db:
+            return db.query(models.InferenceRecord).filter_by(session_id=sid).count()
+
+    # 1. The first frame sets the watermark.
+    first_stamp = at(10_000)
+    response = infer("f2-frame1", first_stamp)
+    assert response.status_code == 201, response.text
+    state = persisted_state()
+    assert state.get("captured_at") == first_stamp.isoformat()
+    high_since_before_gap = state["high_since"]
+    assert high_since_before_gap is not None
+
+    # 2. A long pause: the last processed window was a minute ago.
+    with api_factory() as db:
+        sess = db.get(models.SessionMeta, sid)
+        paused = dict(sess.runtime_state)
+        paused["last_processed_ms"] -= 60_000
+        sess.runtime_state = paused
+        db.commit()
+    assert persisted_state()["last_processed_ms"] == paused["last_processed_ms"]
+
+    # 3. A newer frame is accepted, and run_inference sees the gap.
+    second_stamp = at(20_000)
+    response = infer("f2-frame2", second_stamp)
+    assert response.status_code == 201, response.text
+    state = persisted_state()
+    # Control: the gap really did clear the temporal memory (the High streak was
+    # re-anchored to this window). Without this the test could pass vacuously.
+    assert state["high_since"] > high_since_before_gap
+
+    # 4. ...and the watermark is still there, holding the newest accepted stamp.
+    assert state.get("captured_at") == second_stamp.isoformat()
+    accepted = record_count()
+    assert accepted == 2
+
+    # 5. An older frame is refused and leaves nothing behind.
+    response = infer("f2-frame3", at(15_000))
+    assert response.status_code == 409, response.text
+    assert record_count() == accepted
+    assert persisted_state()["captured_at"] == second_stamp.isoformat()
 
 
 # --------------------------------------------------------- UT-TIME-06 (limitation)
