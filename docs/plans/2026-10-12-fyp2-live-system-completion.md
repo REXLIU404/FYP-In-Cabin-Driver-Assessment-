@@ -716,6 +716,13 @@ export function classifyFailure(err: unknown):
 export function backoffMs(attemptIndex: 1 | 2): number;   // 2000 / 4000
 ```
 
+**R7 裁定（2026-10-14，Task 8 开工前；依据 Task 7 实际落地的后端）**：
+1. **类别**：503 保持 `models_unavailable`。新增 `conflict_mode`（会话模式不符的 409，不可重试，计数）；新增 `clock_skew`（422，且 detail 含 `timestamp is in the future`），不可重试，直接停止，并给出看得懂的文案。
+2. **乱序帧的 409**（`Out-of-order evidence timestamp`，后端类别为 `out_of_order_evidence`）归为 `conflict_stale_frame`，`retryable: false`、`counted: false`：丢弃这一帧，下一 tick 照常继续，不再让一个迟到的帧停掉会话。hash 冲突的 409 仍立即停止。
+3. **尝试序号**：每次投递都带 `X-Attempt-Index`，首发 1、自动重试 2、3。手动 `retry()` 沿用同一冻结 payload 与 `request_id`，序号接着数（4、5 …）；若从 1 重新开始，再失败时会被 fault 表的唯一键折叠掉。手动重试失败时保持停止态。`exhausted` 不上报。
+4. **按状态码分类，不依赖响应体**：500 的响应体随原因不同（`model_runtime` 是 JSON，存储错误与未知错误是纯文本）。
+5. 「重试与新鲜度的交互」与 IT-RETRY-IDENTITY 落为后端测试 **IT-RETRY-STALE** 与 **IT-RETRY-IDENTITY**。前者断言**现行**行为（stale / DEGRADED），并注明阶段 5 按裁定 A 实施后会变为过期。
+
 **为什么要抽成纯模块**：`vitest.config.ts` 是 `environment: "node"`，没有 jsdom、没有 `@testing-library`，而且 include glob 只有 `*.test.ts` —— 新建的 `*.test.tsx` 会被**静默跳过且退出 0**。把策略与循环抽出 React 是零新依赖的路线；Task 10 再决定要不要引入 jsdom。
 
 - [ ] **Step 1：写失败测试**
