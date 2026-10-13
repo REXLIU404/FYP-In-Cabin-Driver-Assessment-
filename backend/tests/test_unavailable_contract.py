@@ -234,8 +234,9 @@ def test_partial_evidence_with_positive_denominator_stays_available(api, weights
 # ``available = denominator > FUSION_EPSILON`` (FUSION_EPSILON = 1e-9). The fusion
 # layer's own epsilon edge is pinned in test_fusion_vectors.py, but nothing drove
 # the producer through the public API: ``>`` -> ``>=`` or ``> 0`` left the whole
-# suite green. The consequence is not silent: a denominator in (1e-10 .. 1e-9]
-# would make ``assessment_available`` contradict ``RiskScore is None`` and the
+# suite green. The consequence is not silent: a denominator in (0, 1e-9] under
+# ``> 0``, or exactly 1e-9 under ``>=``, would make ``assessment_available``
+# contradict ``RiskScore is None`` and the
 # schema's ``after`` validator would turn /windows into a 500 instead of an
 # unavailable record. RuntimeConfig accepts (eps, 1 - eps): the weights sum to 1
 # within 1e-6.
