@@ -229,6 +229,81 @@ def test_partial_evidence_with_positive_denominator_stays_available(api, weights
     assert_identity(body)
 
 
+# ------------------------------------------------------------------------ IT-EPS
+# Codex R05. The producer decides availability on one line,
+# ``available = denominator > FUSION_EPSILON`` (FUSION_EPSILON = 1e-9). The fusion
+# layer's own epsilon edge is pinned in test_fusion_vectors.py, but nothing drove
+# the producer through the public API: ``>`` -> ``>=`` or ``> 0`` left the whole
+# suite green. The consequence is not silent: a denominator in (1e-10 .. 1e-9]
+# would make ``assessment_available`` contradict ``RiskScore is None`` and the
+# schema's ``after`` validator would turn /windows into a 500 instead of an
+# unavailable record. RuntimeConfig accepts (eps, 1 - eps): the weights sum to 1
+# within 1e-6.
+#
+# Two mirror directions, each with the ONLY fresh branch carrying the tiny weight
+# (so the effective denominator is exactly that weight):
+#   "vision-tiny":    w_v = eps, w_t = 1 - eps; vision fresh, telemetry missing
+#   "telemetry-tiny": w_v = 1 - eps, w_t = eps; vision missing, telemetry fresh
+# Expected values are literals; nothing is imported from the implementation.
+EPS_CASES = {
+    "vision-tiny": dict(
+        weights=lambda eps: (eps, 1 - eps), tiny_key="weight_vision",
+        window=dict(pd=0.8, pt=0.2, v="fresh", t="missing"),
+        freshness={"vision": "fresh", "telemetry": "missing"}),
+    "telemetry-tiny": dict(
+        weights=lambda eps: (1 - eps, eps), tiny_key="weight_telemetry",
+        window=dict(pd=0.2, pt=0.8, v="missing", t="fresh"),
+        freshness={"vision": "missing", "telemetry": "fresh"}),
+}
+
+
+def _eps_run(client, direction, eps, label):
+    """Create a fresh session with ``(eps, 1 - eps)`` weights (201 asserted inside
+    ``new_session``), post the one window (201 asserted inside ``post_window``) and
+    return ``(session_id, response_body)``. Every call uses its own session."""
+    case = EPS_CASES[direction]
+    sid = new_session(client, f"eps-{direction}-{label}", case["weights"](eps))
+    body = post_window(client, sid, **case["window"])
+    # The tiny weight really travelled through the public API into the producer.
+    assert body["provenance"]["fusion_config"][case["tiny_key"]] == eps
+    assert body["modality_freshness"] == case["freshness"]
+    return sid, body
+
+
+@pytest.mark.parametrize("direction", ["vision-tiny", "telemetry-tiny"])
+@pytest.mark.parametrize("eps, label", [(1e-10, "below"), (1e-9, "at-boundary")],
+                         ids=["1e-10", "1e-9"])
+def test_effective_weight_at_or_below_epsilon_is_unavailable_not_a_server_error(
+        api, direction, eps, label):
+    # The boundary is ``<=``: a denominator of exactly 1e-9 is still "nothing to fuse".
+    client, _ = api
+    sid, body = _eps_run(client, direction, eps, label)
+    assert body["assessment_available"] is False
+    assert body["RiskScore"] is None
+    assert body["RiskLevel"] is None
+    assert body["DominantEvidence"] is None
+    assert body["AlertSeverity"] is None
+    assert body["SystemHealth"] == "UNAVAILABLE"
+    assert_unavailable(body)
+    # The stored record, not just the response, carries the same unavailable shape.
+    assert client.get(f"/api/sessions/{sid}/risk/latest").json() == body
+    assert client.get(f"/api/sessions/{sid}/windows").json() == [body]
+
+
+@pytest.mark.parametrize("direction", ["vision-tiny", "telemetry-tiny"])
+def test_effective_weight_just_above_epsilon_is_an_available_degraded_assessment(api, direction):
+    client, _ = api
+    sid, body = _eps_run(client, direction, 1.1e-9, "above")
+    assert body["assessment_available"] is True
+    assert body["SystemHealth"] == "DEGRADED"
+    assert body["RiskScore"] == 80.0
+    assert body["RiskLevel"] == "High"
+    assert body["AlertSeverity"] == "CAUTION"  # first High window: not yet sustained
+    assert body["DominantEvidence"] == "Partial evidence"
+    assert_identity(body)
+    assert client.get(f"/api/sessions/{sid}/risk/latest").json() == body
+
+
 def _jpeg_b64():
     from PIL import Image
     buffer = io.BytesIO()
