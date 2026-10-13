@@ -5,6 +5,7 @@ from sqlalchemy import create_engine, event, inspect, text
 from sqlalchemy.orm import Session, declarative_base, sessionmaker
 
 from .config import settings
+from .faults import ensure_schema as ensure_fault_schema
 
 # check_same_thread=False is required for SQLite under a threaded ASGI server.
 engine = create_engine(
@@ -56,6 +57,9 @@ def initialize_database():
         conn.execute(text("CREATE UNIQUE INDEX IF NOT EXISTS uq_record_session_window ON inference_records(session_id, window_id)"))
         conn.execute(text("CREATE UNIQUE INDEX IF NOT EXISTS uq_record_session_request ON inference_records(session_id, request_id)"))
         _backfill_assessment_available(conn)
+        # Explicit DDL, not Base.metadata.create_all: fault_events carries no foreign
+        # key (it must outlive its session) and has a single description, in faults.py.
+        ensure_fault_schema(conn)
 
 
 # SQLite does not promise to evaluate AND terms left to right, and json_*() raises

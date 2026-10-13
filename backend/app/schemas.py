@@ -231,6 +231,25 @@ class SessionOut(BaseModel):
     operation_mode: OperationMode = "PREPARED_SESSION_RUNTIME"
 
 
+class FaultEventOut(BaseModel):
+    """One failed ``/infer`` attempt. ``session_id`` is not a foreign key: the row
+    outlives the session it failed in (and may name a session that never existed)."""
+
+    id: int
+    session_id: Optional[str]
+    request_id: Optional[str]
+    attempt_index: Optional[int]  # as told by the client (X-Attempt-Index); None = unparseable
+    origin: str
+    error_category: str
+    http_status: Optional[int]
+    retryable: bool
+    detail: str
+    recovery_status: Literal["open", "recovered", "exhausted"]
+    recovered_by_request_id: Optional[str]
+    occurred_at: str
+    recovered_at: Optional[str]
+
+
 class SystemStatusOut(BaseModel):
     """Latest persisted evidence and current worker readiness for this session.
     Latest health is historical; it is not a claim of current stream freshness."""
@@ -244,7 +263,7 @@ class SystemStatusOut(BaseModel):
     latest_risk_score: Optional[float] = None
     latest_system_health: Optional[SystemHealth] = None
     latest_alert_severity: Optional[AlertSeverity] = None
-    open_fault_events: int = 0  # populated by the fault-event work (Task 7)
+    open_fault_events: int  # faults of this session not yet followed by a new committed record
     ai_provider: str
     models_loaded: bool
     cache_warm: bool

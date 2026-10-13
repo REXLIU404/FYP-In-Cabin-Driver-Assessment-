@@ -14,7 +14,7 @@ from fastapi.staticfiles import StaticFiles
 from . import models  # noqa: F401  (register ORM models on Base)
 from .db import initialize_database
 from .config import settings
-from .routers import export, risk, sessions, status, windows
+from .routers import export, faults, risk, sessions, status, windows
 
 
 @asynccontextmanager
@@ -44,8 +44,13 @@ for r in (
     risk.router,
     status.router,
     export.router,
+    faults.router,
 ):
     app.include_router(r)
+
+# Make the /infer failures the route itself cannot see (schema 422, stray exceptions)
+# observable. Responses are unchanged; see routers/faults.py.
+faults.install_exception_handlers(app)
 
 
 @app.get("/api/health", tags=["health"])

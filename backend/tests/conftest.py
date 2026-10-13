@@ -14,6 +14,11 @@ Two jobs:
    ``tmp_path``, ``get_db`` overridden, the lifespan skipped (it would initialise
    the *global* engine) and the module-global output cache cleared on teardown.
 
+3. Keep fault events out of the real ``backend/logs/``. A failed ``/infer`` appends a
+   line to the fault sink file, and a module-level fixture such as the one in
+   ``test_audit_regressions.py`` overrides only ``get_db``. The autouse fixture
+   below therefore redirects the sink's default path for EVERY test.
+
 The pre-existing ``api`` fixture in ``test_audit_regressions.py`` has the same
 ``(client, session_id)`` contract and, being module-level, takes precedence in
 the modules that use it. New tests use only this one.
@@ -32,14 +37,24 @@ os.environ["DRA_DATABASE_URL"] = "sqlite:///" + os.path.join(_SCRATCH_DIR, "impo
 atexit.register(shutil.rmtree, _SCRATCH_DIR, ignore_errors=True)
 
 
+@pytest.fixture(autouse=True)
+def _fault_sink_in_tmp(tmp_path, monkeypatch):
+    """No test may append to the real ``backend/logs/fault_events.log``."""
+    from app import faults
+
+    monkeypatch.setattr(faults, "DEFAULT_SINK_PATH", tmp_path / "default-sink" / "fault_events.log")
+
+
 @pytest.fixture
 def api_factory(tmp_path):
     """A ``sessionmaker`` bound to a fresh, tmp_path-scoped database with the
-    current schema, and the app's ``get_db`` dependency pointed at it."""
+    current schema, and the app's ``get_db`` dependency pointed at it. The fault
+    sink is pointed at ``tmp_path / 'fault_events.log'``."""
     from sqlalchemy import create_engine, event
     from sqlalchemy.orm import sessionmaker
 
     from app.db import Base, get_db
+    from app.faults import FaultSink, ensure_schema, get_fault_sink
     from app.main import app
 
     engine = create_engine(
@@ -56,13 +71,21 @@ def api_factory(tmp_path):
 
     factory = sessionmaker(bind=engine)
     Base.metadata.create_all(engine)
+    # create_all does not know fault_events (it is deliberately not on Base); the same
+    # function initialize_database() uses builds it, so there is one description.
+    with engine.begin() as conn:
+        ensure_schema(conn)
 
     def isolated_db():
         with factory() as db:
             yield db
 
+    def isolated_sink():
+        return FaultSink(tmp_path / "fault_events.log")
+
     old_overrides = dict(app.dependency_overrides)
     app.dependency_overrides[get_db] = isolated_db
+    app.dependency_overrides[get_fault_sink] = isolated_sink
     try:
         yield factory
     finally:

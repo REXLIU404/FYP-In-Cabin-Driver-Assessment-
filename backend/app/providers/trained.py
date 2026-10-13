@@ -9,11 +9,24 @@ import time
 from datetime import datetime, timezone
 
 from ..config import settings
+from ..faults import ORIGIN_TELEMETRY_MODEL, ORIGIN_VISION_MODEL
 from ..schemas import LiveInput, WindowInput
 
 
 class ModelUnavailable(RuntimeError):
-    pass
+    """The models cannot be had at all: an artifact is missing, an inference dependency
+    is missing or fails to load, or the metadata does not match the runtime contract.
+    Retrying cannot help -> HTTP 503, ``models_unavailable``."""
+
+
+class ModelRuntimeError(RuntimeError):
+    """A loaded model failed WHILE RUNNING: the runtime raised, or its output was
+    non-finite or the wrong shape. A later attempt can succeed -> HTTP 500,
+    ``model_runtime``. ``origin`` says which branch failed."""
+
+    def __init__(self, message: str, *, origin: str):
+        super().__init__(message)
+        self.origin = origin
 
 
 class InvalidFrame(ValueError):
@@ -100,9 +113,13 @@ class TrainedProvider:
             x = self.preprocess(data.image_base64)
             timing["preprocess_ms"] = (time.perf_counter() - started) * 1000
             before = time.perf_counter()
-            logits = self.vision.run(None, {self.input_name: x})[0][0]
-            if not np.isfinite(logits).all():
-                raise ModelUnavailable("Vision model produced non-finite output")
+            try:
+                logits = np.asarray(self.vision.run(None, {self.input_name: x})[0][0], dtype=np.float32)
+            except Exception as exc:
+                raise ModelRuntimeError("Vision model failed during inference", origin=ORIGIN_VISION_MODEL) from exc
+            if logits.shape != (len(self.labels),) or not np.isfinite(logits).all():
+                raise ModelRuntimeError("Vision model produced non-finite or wrongly shaped output",
+                                        origin=ORIGIN_VISION_MODEL)
             exp = np.exp(logits - np.max(logits))
             probs = exp / exp.sum()
             pd = float(1 - probs[0])
@@ -111,10 +128,14 @@ class TrainedProvider:
         if data.telemetry_features is not None:
             before = time.perf_counter()
             values = data.telemetry_features.model_dump()
-            matrix = self.xgb.DMatrix(np.array([[values[k] for k in self.features]], dtype=np.float32), feature_names=self.features)
-            probs = self.telemetry.predict(matrix, iteration_range=(0, self.iteration_end))[0]
+            try:
+                matrix = self.xgb.DMatrix(np.array([[values[k] for k in self.features]], dtype=np.float32), feature_names=self.features)
+                probs = np.asarray(self.telemetry.predict(matrix, iteration_range=(0, self.iteration_end))[0], dtype=np.float32)
+            except Exception as exc:
+                raise ModelRuntimeError("Telemetry model failed during inference", origin=ORIGIN_TELEMETRY_MODEL) from exc
             if probs.shape != (3,) or not np.isfinite(probs).all():
-                raise ModelUnavailable("Telemetry model produced invalid output")
+                raise ModelRuntimeError("Telemetry model produced non-finite or wrongly shaped output",
+                                        origin=ORIGIN_TELEMETRY_MODEL)
             pt = float(1 - probs[0])
             behaviors = [{"label": label, "probability": float(prob)} for label, prob in zip(["Safe", "Aggressive", "Distracted"], probs)]
             timing["telemetry_ms"] = (time.perf_counter() - before) * 1000

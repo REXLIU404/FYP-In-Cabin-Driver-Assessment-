@@ -11,6 +11,7 @@ tsconfig.tsbuildinfo
 
 # backend runtime artifacts
 backend/*.db
+backend/logs/
 backend/**/__pycache__/
 *.db
 

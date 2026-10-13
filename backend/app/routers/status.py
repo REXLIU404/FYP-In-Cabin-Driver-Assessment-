@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from .. import cache, models
+from .. import cache, faults, models
 from ..config import settings
 from ..db import get_db
 from ..providers.mock_ai import mock_ai
@@ -48,6 +48,7 @@ def system_status(session_id: str, db: Session = Depends(get_db)):
         latest_risk_score=latest.risk_score if latest else None,
         latest_system_health=latest.system_health if latest else None,
         latest_alert_severity=latest.alert_severity if latest else None,
+        open_fault_events=faults.open_fault_count(db, session_id),
         # A hand-written legacy row may have no payload (or no provenance) at all.
         ai_provider=(((latest.payload or {}).get("provenance") or {}).get("provider", mock_ai.name) if latest else ("MobileNetV3ONNX+XGBoost" if sess and sess.operation_mode == "LIVE_MODEL_RUNTIME" else mock_ai.name)),
         models_loaded=bool(model_info),
