@@ -17,6 +17,11 @@
 本节的每一条都隐含在每个 task 的要求里。数值一律逐字取自 spec / 已验证的源码。
 
 - **RiskScore 量纲 0–100**，阈值 `low=30` / `high=60`（`score < 30` Low，`30 ≤ score < 60` Medium，`score ≥ 60` High）。**先 round 到 1 位小数，再映射等级** —— 顺序不可换。
+- **舍入规则：统一为 ROUND_HALF_UP（阶段 1 F4 写回）**。RiskScore 保留 **1 位**小数，EMA 平滑值保留 **3 位**小数。
+  - **实现位置（已存在）**：Python 在 `backend/app/fusion.py` 与 `ai/reference/risk_logic.py` 中的 `round_half_up(value, places)`，做法是 `Decimal(str(value)).quantize(..., rounding=ROUND_HALF_UP)`；TypeScript 在 `ai/src/riskLogic.ts` 导出的 `roundHalfUp(value, places)`。三种语言逐值一致。
+  - **禁止**：在 score、概率、EMA 值上使用 Python 内置 `round()`（banker's rounding），或 JS 的 `toFixed` / `Math.round(v*100)`。前端显示 score、概率、EMA 值一律用 `roundHalfUp`。后续任何 task（含 Task 7–10 的实现与测试）不得重新引入这些写法，否则跨语言分歧回归。
+  - **这是有意的数值改变（Codex 审阅 R30 确认），不是 bug**：相对旧 Python 实现改变了约 17.0% 的分数网格，相对旧 TS 实现约 13.0%，有 556 个网格点的 RiskLevel 改变（1,001×1,001 网格）。
+  - **来源**：Task 5 的控制者裁定（SDD ledger），Codex 审阅 R30 确认，阶段 1 F4 写回本计划与 SDD `global-constraints.md`。Task 5 小节及其 SDD brief 中「不要顺手整理 EMA 的舍入」一句是旧指示，已被本条取代，以本条为准。
 - **freshness 权重**：`fresh=1.0`、`stale=0.45`、`missing=0.0`；容差 3 秒，`age > 3` 才是 stale（3.000s 仍 fresh，严格 `>`）。
 - **有效分母** `denominator = w_v·fw(vision_status) + w_t·fw(telemetry_status)`。`RuntimeConfig` 允许权重和偏离 1 达 `1e-6`，因此判零必须用**声明过的 epsilon**（`FUSION_EPSILON = 1e-9`），不能写 `== 0`。
 - **EMA** `alpha=0.35`，仅在 vision 为 `fresh` 且存在 previous 值时应用。**seed 约定 = seed-on-first-sample**（首帧 raw 直接作为 previous）；`0.2 → 1.0` 的第二个平滑值是 `0.48`（seed-at-0 会得 `0.3955`）。**R1 已对三份实现逐一核实，发现两处真实分歧，Task 5 必须消除**：
@@ -52,7 +57,15 @@
   4. 在 System Freeze 前再决定是否实现 Maximum Evidence Age 或 Stale-Only Alert Guard；该决定不属于本 10 个 task。
 - **不删除任何现有功能**。prepared-probability replay 保留给回归测试与向后兼容，只降级、不移除。
 - 三份融合实现必须同步：`ai/src/riskLogic.ts` + `ai/src/evidence.ts`（权威）、`backend/app/fusion.py`、`ai/reference/risk_logic.py`（报告引用的语言无关规范，**零 importer，不会有任何测试因它漂移而失败**）。
-- 门禁命令：`npx vitest run`、`npx tsc --noEmit`、`npx eslint ai frontend`、`cd backend && PYTHONPATH=. ../.venv/bin/python -m pytest tests -q`（需先 `export TMPDIR=$(mktemp -d)`）。**`npm test` 不做类型检查**，`tsc` 必须单独跑。
+- **门禁命令（精确形式，阶段 1 F4 更新）**：在 `/Users/liu/Desktop/FYP2-Live-System` 下依次运行
+  ```
+  export PYTHONDONTWRITEBYTECODE=1
+  (cd backend && TMPDIR=$(mktemp -d) PYTHONPATH=. ../.venv/bin/python -m pytest tests -q -p no:cacheprovider)
+  ./node_modules/.bin/vitest run --no-cache
+  ./node_modules/.bin/tsc --noEmit
+  ./node_modules/.bin/eslint .
+  ```
+  原因：本机 `rtk` 包装器会改写 `npx`，所以一律直接调用 `./node_modules/.bin/*`；vitest 加 `--no-cache`，避免它经 `node_modules` 符号链接写入只读的主仓库。后端测试一律用一次性 `TMPDIR`，不得碰真实数据库。**`npm test` 不做类型检查**，`tsc` 必须单独跑。
 
 ### 已拍板的契约（不得再议）
 
