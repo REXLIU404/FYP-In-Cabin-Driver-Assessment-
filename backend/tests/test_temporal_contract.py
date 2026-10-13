@@ -601,7 +601,11 @@ def test_out_of_order_guard_survives_a_gap_for_telemetry(api, api_factory, monke
     one.
 
     Uses ``_RequestDrivenStubProvider`` and ``TELEMETRY_FEATURES`` (both defined further down,
-    in the IT-LIVE-AGE section): telemetry is 'fresh' and High, vision is 'missing'. The long
+    in the IT-LIVE-AGE section). The stub reports telemetry 'fresh' and High, vision
+    'missing'; because the 2025 stamps are far in the past, the pipeline re-derives
+    telemetry as 'stale' (R08), and a stale branch on its own still scores High (D13, a
+    known limitation). If an evidence-age policy ever stops that, step 1 here (and in the
+    captured_at version) fails loudly and the stamps must move onto a fake clock. The long
     pause is simulated by moving the persisted ``last_processed_ms`` 60 s into the past;
     nothing sleeps. All stamps are in the past, so ``normalize_timestamp`` accepts them."""
     from app import models

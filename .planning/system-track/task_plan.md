@@ -40,7 +40,7 @@
 ### 阶段 1：审阅修复批次（Task 7 之前）
 - [x] **F4**（`f289d66`、`9632812`，验收 PASS `9db6e2a`）：`ROUND_HALF_UP`（score 1 位、EMA 3 位）写回计划 Global Constraints 与 SDD `global-constraints.md`（Codex R30 确认）
 - [x] **R08 更正**（`c7391b5`，评审 clean）：「Live 不会出现 stale」的说法是**错的**。`run_inference` 按 `provenance.captured_at` 重判 freshness（`inference.py:107`），`test_live_inference.py:114-118` 本身就断言旧 `captured_at` 经 `/infer` 得到 `stale` / `DEGRADED`。要改：计划第 44 行与 R1 #8、风险表、`TASK_1_TO_6_SUMMARY.md` 加勘误、`test_temporal_contract.py` 中 UT-TIME-06 docstring 与 source-string guard 改为完整 pipeline 的可反证测试（UT/IT-LIVE-AGE：经 `/infer` 的 2.999 / 3 / 3.001 s 边界与 30 天旧帧）
-- [ ] **R13 补测**：`telemetry_timestamp` 的对称 HTTP gap 测试（F2 遗留 minor 4）
+- [x] **R13 补测**（`d83782d`，评审 clean）：`telemetry_timestamp` 的对称 HTTP gap 测试（F2 遗留 minor 4）。变异 M2 下它是 telemetry 水位线唯一的行为防线；两条 gap 测试都依赖 D13 现状（stale-only 仍得 High），阶段 5 落地证据年龄策略时第 1 步会响亮失败，届时改用 fake clock
 - [ ] **R05 补测**：IT-EPS —— 经 API 的 near-epsilon 权重（1e-10 / 1e-9 / 1.1e-9），杀死 producer 的 `>` → `>=` 变异
 - [ ] **P1-6 TS 舍入违规**（F4 评审新增，排在 F1 之前）：`riskLogic.ts` 的 `asPercent` 用 `Math.round(v*100)`（即 F5）、`preparedSessionInput.ts` 的 `round3` 用 `toFixed(3)`；改为 half-up，回放钉死值不得变化
 - [ ] **F1 / R30**：同步 `missing_cases.csv` W16/17/19 期望值与最新契约

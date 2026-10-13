@@ -34,7 +34,8 @@ TEMPORAL_STATE_KEYS = (
 # ``TEMPORAL_STATE_KEYS`` and must never be added to it: they have to survive a gap
 # and a worker restart. A gap that wiped them would let evidence older than the
 # newest one already accepted be taken again after any pause - the guard would
-# silently stop guarding. ``test_out_of_order_guard_survives_a_gap`` pins this.
+# silently stop guarding. ``test_out_of_order_guard_survives_a_gap`` (captured_at) and
+# ``test_out_of_order_guard_survives_a_gap_for_telemetry`` pin this, one per key.
 EVIDENCE_WATERMARK_KEYS = ("captured_at", "telemetry_timestamp")
 
 
