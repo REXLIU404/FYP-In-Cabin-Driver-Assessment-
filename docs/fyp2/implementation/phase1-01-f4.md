@@ -125,3 +125,131 @@ export PYTHONDONTWRITEBYTECODE=1
 - 之后由计划生成的 Task 7–10 brief 以及任何重新生成的 SDD 约束文件，都会带上舍入规则与精确门禁命令。
 - 建议把遗留问题 1（`asPercent` 的 `Math.round(v*100)`）作为独立后续项排期，否则新规则与现有代码存在一处已知不一致。
 - 本阶段后续各项（R08、T-gap、I-teps、F1）的 brief 已在同目录，不依赖本项产出。
+
+---
+
+# 修复轮 1
+
+起点：HEAD `f289d66`（开工前已确认，工作树干净）。审阅者提出 1 条 Important，要求修复；其余无。
+
+## R1.1 审阅发现（逐字）
+
+> （Important，`ai/src/riskLogic.ts:61`）F4 现在把「EMA 保留 3 位、ROUND_HALF_UP、禁止 JS toFixed、三种实现逐值一致」写进了计划 Global Constraints，但 TS 侧 EMA 舍入没有任何测试守着。复现：在隔离副本里把 `const round3 = (value: number) => roundHalfUp(value, 3);` 改成 `Number(value.toFixed(3))`，vitest 仍然 15 个文件 / 394 条全绿。原因是共享夹具的 EMA 平局用例 `half-up-tie-in-the-ema`（`ai/fixtures/ema_parity_vectors.json:328`，0.0625）在二进制里可以精确表示，toFixed 遇到它也会进位，所以这条用例只能区分 banker's 和 half-up，区分不了 toFixed 和 roundHalfUp。具体出错的输入：alpha=0.35，previous=0.0，current=0.11，EMA=0.0385。Python `round_half_up` 得 0.039，toFixed 得 0.038。只要有人按新规则明令禁止的写法回退，跨语言 P_distraction 就会分歧，而没有任何测试会变红。
+
+审阅者标注该问题是旧问题、不由 F4 引入、不在「只改文档」范围内，建议单独开一项。本轮按控制者指令修复它。注意范围：本轮**只改了测试夹具与一个测试文件，没有改任何生产代码**（`ai/src/riskLogic.ts`、`backend/app/*` 一字未动）。
+
+## R1.2 先复现（结论与审阅者一致）
+
+在隔离副本（`git archive HEAD` 解出，`.venv`、`node_modules` 为符号链接）里，只改 `ai/src/riskLogic.ts:61`，夹具与测试保持 HEAD 原样：
+
+```
+const round3 = (value: number) => Number(value.toFixed(3));
+./node_modules/.bin/vitest run --no-cache
+ Test Files  15 passed (15)
+      Tests  394 passed (394)
+```
+
+确认全绿，发现属实。同时在 node / Python 里验证了审阅者给的输入：
+
+```
+node:   raw 0.0385  toFixed3 0.038  Math.round(v*1000)/1000 0.039  String 0.0385
+python: raw 0.0385  py round 0.038  half_up 0.039  exact 0.038499999999999999500399638918679556809365749359130859375
+```
+
+根因：打印为 `0.0385` 的那个 double，精确值比 0.0385 略小。`toFixed` 与 Python 内置 `round` 看的是精确二进制值，所以得 0.038；`round_half_up` / `roundHalfUp` 看的是最短十进制表示 `0.0385`，所以得 0.039。已有的 0.0625 平局在二进制里精确，因此任何方法遇到它都进位，区分不了。
+
+## R1.3 修改了什么
+
+1. `ai/fixtures/ema_parity_vectors.json`（TS 与 Python 共用的 oracle）：在 `half-up-tie-in-the-ema` 之后新增 2 个用例，每个 2 个窗口（第 1 个窗口是种子，第 2 个是平滑窗口），`ema_alpha` 0.35，权重 0.6 / 0.4，`P_telemetry_anomaly` 0.1：
+
+   | id | 种子 | 第 2 窗口输入 | 十进制精确 EMA | 期望 `P_distraction` | 期望 `RiskScore` | `toFixed(3)` | `Math.round(v*1000)/1000` | Python `round` |
+   |---|---|---|---|---|---|---|---|---|
+   | `half-up-tie-in-the-ema-below-in-binary` | 0.0 | 0.11 | 0.0385 | 0.039 | 6.3 | 0.038（错） | 0.039（对） | 0.038（错） |
+   | `half-up-tie-in-the-ema-after-a-nonzero-seed` | 0.24 | 0.99 | 0.5025 | 0.503 | 34.2 | 0.502（错） | 0.502（错） | 0.502（错） |
+
+   第 1 个用例是审阅者给出的输入，抓 `toFixed`；它抓不到 `Math.round(v*1000)/1000`（0.0385 * 1000 恰好得 38.5）。所以又按同样的方法在 alpha=0.35 的 2 位小数网格上做穷举搜索（`previous` 取 0.00 至 0.99、`current` 取 0.01 至 0.99，每档 0.01，alpha 取 0.35 与 0.5），挑出对 `toFixed` 与 `Math.round` 两者都出错的输入，得到第 2 个用例。期望值是**字面量**，由只用 `decimal.Decimal` 的脚本独立推导（脚本不 import 任何实现代码）：
+
+   ```
+   A seed 0.0 cur 0.11 ema_exact 0.0385 ema 0.039 score1 exact 4.00 -> 4.0 score2 exact 6.3400 -> 6.3
+   B seed 0.24 cur 0.99 ema_exact 0.5025 ema 0.503 score1 exact 18.400 -> 18.4 score2 exact 34.1800 -> 34.2
+   ```
+
+   两个用例的 `RiskScore` 本身都不是平局（6.34、34.18），因此这两个用例只考 EMA 舍入，不混入分数舍入的歧义。夹具里的 `description` 写明了每种错误写法的结果；这些说法已用 node / Python 实测核对（见上表）。
+
+2. `ai/src/emaParity.test.ts`：在 "covers ..." 之后新增 1 个测试 "keeps the two ties that toFixed / Math.round get wrong"，断言这两个 id 仍在夹具里。理由：没有它，有人把这两个用例从夹具删掉，测试仍会全绿（`describe.each` 只对剩下的用例跑）。
+
+Python 一侧**无需改任何测试文件**：`test_ut_ema_parity_01_*` 是对同一夹具的参数化测试，新用例自动被 `run_inference` 与 `ai/reference/risk_logic.py` 两条路径各跑一遍。
+
+## R1.4 执行的命令与输出
+
+### 针对修改的测试
+
+```
+./node_modules/.bin/vitest run --no-cache ai/src/emaParity.test.ts
+ ✓ ai/src/emaParity.test.ts (13 tests) 4ms
+ Test Files  1 passed (1)
+      Tests  13 passed (13)
+
+(cd backend && TMPDIR=$(mktemp -d) PYTHONPATH=. ../.venv/bin/python -m pytest tests/test_temporal_contract.py -q -p no:cacheprovider -k "ema_parity")
+23 passed, 48 deselected in 0.22s
+```
+
+### 变异验证（均在隔离副本里做，真实工作树未触碰）
+
+| # | 变异 | 针对的测试夹具 | 观察到的结果 |
+|---|---|---|---|
+| M0 | `ai/src/riskLogic.ts:61` -> `Number(value.toFixed(3))` | HEAD 原夹具与测试（复现审阅发现） | vitest 15 个文件 / **394 passed**，**全绿**（发现属实） |
+| M1 | 同 M0 | 新夹具 + 新测试 | `Test Files 1 failed \| 14 passed (15)`，`Tests 2 failed \| 395 passed (397)`。两处失败：`half-up-tie-in-the-ema-below-in-binary window 2: expected { P_distraction: 0.038, ...} to deeply equal { P_distraction: 0.039, ...}`；`half-up-tie-in-the-ema-after-a-nonzero-seed window 2: expected { P_distraction: 0.502, ...} to deeply equal { P_distraction: 0.503, ...}`（后者 `RiskScore` 还从 34.2 变成 34.1） |
+| M2a | `ai/src/riskLogic.ts:61` -> `Math.round(value * 1000) / 1000` | HEAD 原夹具与测试 | **394 passed，全绿**（说明只有 0.0385 那个用例不够，需要第 2 个） |
+| M2b | 同 M2a | 新夹具 + 新测试 | `Tests 1 failed \| 396 passed (397)`，失败的是 `half-up-tie-in-the-ema-after-a-nonzero-seed window 2: expected { P_distraction: 0.502, ...} to deeply equal { P_distraction: 0.503, ...}`。`below-in-binary` 仍通过（预期，见上表） |
+| M3 | 从夹具里删掉这两个新用例（保留其余 9 个） | 新测试 | `Tests 1 failed \| 394 passed (395)`，失败的是 "keeps the two ties that toFixed / Math.round get wrong"：`expected [ ...(9) ] to include 'half-up-tie-in-the-ema-below-in-binary'` |
+| M4 | `backend/app/inference.py:120` 的 `fusion.round_half_up(..., 3)` -> 内置 `round(..., 3)` | 新夹具（Python 一侧） | `3 failed, 20 passed, 48 deselected`：`...matches_the_shared_oracle[half-up-tie-in-the-ema]`、`[half-up-tie-in-the-ema-below-in-binary]`、`[half-up-tie-in-the-ema-after-a-nonzero-seed]`。注：旧的 0.0625 用例本来就抓得住内置 `round`；新用例是额外多一层。 |
+| 还原 | 把实现行、夹具、测试都还原为真实工作树的版本 | | `diff -r /Users/liu/Desktop/FYP2-Live-System/ai/src ai/src` 无差异；`vitest` **15 个文件 / 397 passed**，全绿 |
+
+M0 / M2a 与 M1 / M2b 的对照说明新增内容正是让这两个变异变红的东西；M3 说明删除夹具用例本身也会变红。
+
+### 四项门禁（真实工作树，改动之后）
+
+```
+export PYTHONDONTWRITEBYTECODE=1
+(cd backend && TMPDIR=$(mktemp -d) PYTHONPATH=. ../.venv/bin/python -m pytest tests -q -p no:cacheprovider)
+  -> 510 passed, 1 warning in 5.89s            (退出码 0)
+./node_modules/.bin/vitest run --no-cache
+  -> Test Files 15 passed (15) / Tests 397 passed (397)   (退出码 0)
+./node_modules/.bin/tsc --noEmit
+  -> 无输出                                    (退出码 0)
+./node_modules/.bin/eslint .
+  -> 无输出                                    (退出码 0)
+```
+
+额外：`./node_modules/.bin/prettier --check ai/src/emaParity.test.ts ai/fixtures/ema_parity_vectors.json` -> `All matched files use Prettier code style!`
+
+## R1.5 测试数变化（逐项解释）
+
+| 门禁 | 修复前 | 修复后 | 变化 | 解释 |
+|---|---|---|---|---|
+| pytest | 506 | **510** | +4 | 夹具新增 2 个用例；Python 有 2 个按用例参数化的测试（`..._run_inference_matches_the_shared_oracle`、`..._the_reference_specification_agrees`），2 x 2 = +4。没有新增或改动任何 Python 测试代码。 |
+| vitest | 394 | **397** | +3 | 夹具新增 2 个用例，`describe.each` 每个用例 1 个测试，+2；新增 1 个 "keeps the two ties ..." 测试，+1。 |
+| tsc | 0 | 0 | 无 | |
+| eslint | 0 | 0 | 无 | |
+
+pytest 的那条 warning 与之前相同（`starlette.testclient` 对 `httpx` 的弃用提示）。
+
+## R1.6 修改的文件
+
+- 修改：`ai/fixtures/ema_parity_vectors.json`（+78 行，新增 2 个用例）
+- 修改：`ai/src/emaParity.test.ts`（+10 行，含注释）
+- 修改：`docs/fyp2/implementation/phase1-01-f4.md`（本节）
+
+## R1.7 遗留问题 / 说明
+
+1. 生产代码没有改。`riskLogic.ts` 的 `round3` 一直是对的，缺的只是守卫。
+2. "presence 守卫" 只加在 TS 测试里。Python 的 `test_ut_ema_parity_01_covers_the_three_required_situations` 没有加这两个 id。删除夹具用例会让 TS 测试变红（M3 已验证），所以保护已经成立；若希望 Python 一侧也对称，可另行加一行断言。
+3. 本轮没有处理报告第 7 节的原有遗留问题（尤其是 `ai/src/riskLogic.ts` 的 `asPercent` 仍使用 `Math.round(value * 100)`，与新规则不一致）。它不属于本次审阅发现。
+4. 夹具里 EMA 的输入是 2 位小数网格上的"十进制精确平局"。它抓得住 `toFixed` 与 `Math.round(v*1000)/1000` 这两类回退，但并不证明对所有输入逐位一致；这两个用例只是把已知的两类回退钉死，不替代全网格比较。
+
+## R1.8 证据路径
+
+- 门禁原始输出（scratchpad `/private/tmp/claude-501/-Users-liu-Desktop-FYP-In-Cabin-Driver-Assessment--1--claude-worktrees-exciting-keller-fdf913/a1949e26-b3d7-4f7f-bd9f-059bf8cb6f0e/scratchpad/`）：`fix1-pytest.log`、`fix1-vitest.log`、`fix1-tsc.log`、`fix1-eslint.log`
+- 穷举搜索与独立推导脚本：同目录 `search.mjs`、`search.py`、`oracle.py`
+- 变异用的隔离副本路径：同目录 `mutdir.txt`（内容为 `mktemp -d` 产生的目录）

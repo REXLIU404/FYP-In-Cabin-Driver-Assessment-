@@ -364,6 +364,84 @@
     ]
   },
   {
+    "id": "half-up-tie-in-the-ema-below-in-binary",
+    "description": "alpha 0.35 from a 0.0 seed to 0.11 is exactly 0.0385 in decimal, a tie at 3 dp: half up gives 0.039. The double printed as 0.0385 sits a hair below it, so toFixed(3) and Python's round give 0.038. (The 0.0625 tie above is exact in binary, so it cannot tell half up from toFixed.)",
+    "config": {
+      "ema_alpha": 0.35,
+      "weight_vision": 0.6,
+      "weight_telemetry": 0.4
+    },
+    "windows": [
+      {
+        "vision_status": "fresh",
+        "P_distraction": 0.0,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.1
+      },
+      {
+        "vision_status": "fresh",
+        "P_distraction": 0.11,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.1
+      }
+    ],
+    "expect": [
+      {
+        "P_distraction": 0.0,
+        "P_telemetry_anomaly": 0.1,
+        "assessment_available": true,
+        "RiskScore": 4.0,
+        "SystemHealth": "FULL"
+      },
+      {
+        "P_distraction": 0.039,
+        "P_telemetry_anomaly": 0.1,
+        "assessment_available": true,
+        "RiskScore": 6.3,
+        "SystemHealth": "FULL"
+      }
+    ]
+  },
+  {
+    "id": "half-up-tie-in-the-ema-after-a-nonzero-seed",
+    "description": "alpha 0.35 from a 0.24 seed to 0.99 is exactly 0.5025 in decimal, a tie at 3 dp: half up gives 0.503. toFixed(3) and Math.round(v * 1000) / 1000 both give 0.502 (the previous tie, 0.0385, is caught by toFixed but not by Math.round).",
+    "config": {
+      "ema_alpha": 0.35,
+      "weight_vision": 0.6,
+      "weight_telemetry": 0.4
+    },
+    "windows": [
+      {
+        "vision_status": "fresh",
+        "P_distraction": 0.24,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.1
+      },
+      {
+        "vision_status": "fresh",
+        "P_distraction": 0.99,
+        "telemetry_status": "fresh",
+        "P_telemetry_anomaly": 0.1
+      }
+    ],
+    "expect": [
+      {
+        "P_distraction": 0.24,
+        "P_telemetry_anomaly": 0.1,
+        "assessment_available": true,
+        "RiskScore": 18.4,
+        "SystemHealth": "FULL"
+      },
+      {
+        "P_distraction": 0.503,
+        "P_telemetry_anomaly": 0.1,
+        "assessment_available": true,
+        "RiskScore": 34.2,
+        "SystemHealth": "FULL"
+      }
+    ]
+  },
+  {
     "id": "telemetry-probability-is-not-rounded",
     "description": "pT 0.1237 is used as-is: the score is 34.9. Rounding it to 0.124 first (the TypeScript port used to) fused to 35.0.",
     "config": {

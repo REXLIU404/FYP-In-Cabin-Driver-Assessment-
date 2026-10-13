@@ -75,6 +75,16 @@ describe("UT-EMA-PARITY-01 (TypeScript half; shared oracle ema_parity_vectors.js
     expect(new Set(ids).size).toBe(ids.length);
   });
 
+  // The 0.0625 tie in "half-up-tie-in-the-ema" is exact in binary, so it only
+  // separates half up from banker's rounding. These two ties are NOT exact in
+  // binary and are what stop `toFixed(3)` / `Math.round(v * 1000) / 1000` from
+  // replacing roundHalfUp in the EMA. Deleting them from the fixture must fail here.
+  it("keeps the two ties that toFixed / Math.round get wrong", () => {
+    const ids = cases.map((c) => c.id);
+    expect(ids).toContain("half-up-tie-in-the-ema-below-in-binary");
+    expect(ids).toContain("half-up-tie-in-the-ema-after-a-nonzero-seed");
+  });
+
   describe.each(cases)("$id", (c) => {
     it("emits the oracle's value for every window", () => {
       const config = {
