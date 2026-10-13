@@ -592,6 +592,79 @@ def test_out_of_order_guard_survives_a_gap(api, api_factory, monkeypatch):
     assert persisted_state()["captured_at"] == second_stamp.isoformat()
 
 
+def test_out_of_order_guard_survives_a_gap_for_telemetry(api, api_factory, monkeypatch):
+    """Codex R13: the telemetry half of ``test_out_of_order_guard_survives_a_gap``, step for
+    step. That test only exercises the ``captured_at`` watermark; ``telemetry_timestamp`` was
+    guarded by the static disjointness test alone. Here only the TELEMETRY watermark is in
+    play: the requests carry no image and no ``captured_at``, so that key never enters the
+    persisted state (asserted below), and a 409 or a lost watermark can only be the telemetry
+    one.
+
+    Uses ``_RequestDrivenStubProvider`` and ``TELEMETRY_FEATURES`` (both defined further down,
+    in the IT-LIVE-AGE section): telemetry is 'fresh' and High, vision is 'missing'. The long
+    pause is simulated by moving the persisted ``last_processed_ms`` 60 s into the past;
+    nothing sleeps. All stamps are in the past, so ``normalize_timestamp`` accepts them."""
+    from app import models
+    from app.providers import trained
+    monkeypatch.setattr(trained, "get_provider", lambda: _RequestDrivenStubProvider())
+    client, _ = api
+    sid = "live-r13"
+    created = client.post("/api/sessions", json={"session_id": sid, "operation_mode": "LIVE_MODEL_RUNTIME"})
+    assert created.status_code == 201, created.text
+
+    def infer(request_id, stamp):
+        return client.post(f"/api/sessions/{sid}/infer",
+                           json={"request_id": request_id, "telemetry_features": TELEMETRY_FEATURES,
+                                 "telemetry_timestamp": stamp.isoformat(), "telemetry_source": "prepared_replay"})
+
+    def persisted_state():
+        with api_factory() as db:
+            return dict(db.get(models.SessionMeta, sid).runtime_state or {})
+
+    def record_count():
+        with api_factory() as db:
+            return db.query(models.InferenceRecord).filter_by(session_id=sid).count()
+
+    # 1. The first reading sets the telemetry watermark - and only that one.
+    first_stamp = at(10_000)
+    response = infer("r13-frame1", first_stamp)
+    assert response.status_code == 201, response.text
+    state = persisted_state()
+    assert state.get("telemetry_timestamp") == first_stamp.isoformat()
+    assert "captured_at" not in state  # no image was sent: the vision watermark is not involved
+    high_since_before_gap = state["high_since"]
+    assert high_since_before_gap is not None
+
+    # 2. A long pause: the last processed window was a minute ago.
+    with api_factory() as db:
+        sess = db.get(models.SessionMeta, sid)
+        paused = dict(sess.runtime_state)
+        paused["last_processed_ms"] -= 60_000
+        sess.runtime_state = paused
+        db.commit()
+    assert persisted_state()["last_processed_ms"] == paused["last_processed_ms"]
+
+    # 3. A newer reading is accepted, and run_inference sees the gap.
+    second_stamp = at(20_000)
+    response = infer("r13-frame2", second_stamp)
+    assert response.status_code == 201, response.text
+    state = persisted_state()
+    # Control: the gap really did clear the temporal memory (the High streak was
+    # re-anchored to this window). Without this the test could pass vacuously.
+    assert state["high_since"] > high_since_before_gap
+
+    # 4. ...and the telemetry watermark is still there, holding the newest accepted stamp.
+    assert state.get("telemetry_timestamp") == second_stamp.isoformat()
+    accepted = record_count()
+    assert accepted == 2
+
+    # 5. A reading older than that is refused and leaves nothing behind.
+    response = infer("r13-frame3", at(15_000))
+    assert response.status_code == 409, response.text
+    assert record_count() == accepted
+    assert persisted_state()["telemetry_timestamp"] == second_stamp.isoformat()
+
+
 # --------------------------------------------------------- UT-TIME-06 (limitation)
 @pytest.mark.parametrize("age", [timedelta(seconds=60), timedelta(hours=1), timedelta(days=30)],
                          ids=["1-minute", "1-hour", "30-days"])
@@ -774,9 +847,10 @@ def test_ut_ema_parity_01_run_inference_matches_the_shared_oracle(case):
 
 @pytest.mark.parametrize("case", PARITY_CASES, ids=PARITY_IDS)
 def test_ut_ema_parity_01_the_reference_specification_agrees(case):
-    """ai/reference/risk_logic.py has no importer; this keeps its ema() honest. The
-    caller convention is the one its docstring states: re-seed (previous=None) after
-    anything that was not a fresh, assessed window."""
+    """ai/reference/risk_logic.py is loaded by test_fusion_vectors.py through importlib and
+    imported from there as ``reference``; this keeps its ema() honest. The caller
+    convention is the one its docstring states: re-seed (previous=None) after anything
+    that was not a fresh, assessed window."""
     cfg = case["config"]
     previous = None
     for index, (window, want) in enumerate(zip(case["windows"], case["expect"])):
