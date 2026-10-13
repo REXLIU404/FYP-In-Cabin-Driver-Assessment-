@@ -28,6 +28,13 @@
 - `fyp2/ml-training`：Codex 使用中，尚无新 commit
 
 ### 待用户回答
-1. E2–E5 归属（建议系统轨道）
+1. ~~E2–E5 归属~~ —— 已定：系统轨道（2026-10-13）
 2. 文档删除 / 归档清单（见 findings.md）
 3. 阶段 5 的三项政策（之后逐个问）
+
+## 会话：2026-10-13（Claude，系统轨道，接手会话）
+
+- 接手交接；核实 HEAD `86f12ca`、远端停在 `564d0b1`
+- 独立核实 R08 属实（`inference.py:107-108` 按 `captured_at` / `telemetry_timestamp` 重判 freshness）
+- 用户确认 E2–E5 归系统轨道，并下令开工阶段 1
+- 发现计划第 510 行（Task 5 的 UT-TIME-06 规格）与第 755 行（Task 9 可达性表）仍写着 stale「不可达」，R4 未覆盖，并入 R08 更正项
