@@ -965,6 +965,11 @@ class Unprintable(Exception):
         raise RuntimeError("the original error cannot be printed")
 
 
+class NativeRuntimeError(Unprintable):
+    """The same, under a name that differs from the word in the placeholder
+    (``Unprintable <TypeName>``), so an assertion on the detail can tell the type name from it."""
+
+
 def test_a_classifier_failure_never_replaces_the_original_exception(live, monkeypatch):
     from app.providers import trained
     original = Unprintable("provider failed")
@@ -980,33 +985,42 @@ def test_a_classifier_failure_never_replaces_the_original_exception(live, monkey
     [row] = faults_of(live)
     assert (row["request_id"], row["error_category"], row["origin"], row["http_status"],
             row["retryable"], row["recovery_status"]) == ("hostile-1", "unknown", "unknown", 500, False, "open")
-    assert "Unprintable" in row["detail"]
+    # A plain exception IS "unknown" (nothing in it says more); what the unprintable cause
+    # costs is only the text, which becomes the placeholder (it names the type).
+    assert row["detail"] == "Unexpected error; cause: Unprintable Unprintable"
     assert len(sink_lines(live)) == 1  # the route's write only: the global handler added none
     assert record_count(live) == 0
 
 
-@pytest.mark.parametrize("arrange, status, body", [
-    ("runtime", 500, {"detail": "Vision model failed during inference"}),
-    ("conflict", 409, {"detail": "Create a live model session first"}),
+@pytest.mark.parametrize("arrange, status, body, expected", [
+    ("runtime", 500, {"detail": "Vision model failed during inference"},
+     ("model_runtime", "vision_model", 500, True,
+      "Vision model failed during inference; cause: Unprintable NativeRuntimeError")),
+    ("conflict", 409, {"detail": "Create a live model session first"},
+     ("mode_conflict", "session", 409, False,
+      "Create a live model session first; cause: Unprintable NativeRuntimeError")),
 ], ids=["model-runtime-500", "session-conflict-409"])
-def test_a_classifier_failure_keeps_the_original_http_response(live, monkeypatch, arrange, status, body):
-    """The error behind an HTTP error is unprintable: the client must still get that HTTP
-    error, and the fault row must carry its status."""
+def test_an_unprintable_cause_keeps_the_known_category_and_the_original_http_response(
+        live, monkeypatch, arrange, status, body, expected):
+    """The error BEHIND an HTTP error is unprintable. The client must still get that HTTP error,
+    and the fault row must keep what the HTTP error itself says (category, origin, status,
+    retryable); only the cause text becomes the placeholder."""
     from app.faults import FaultHTTPException
     from app.routers import windows
     if arrange == "runtime":
-        live.vision.fail = Unprintable("vision failed")  # trained.py wraps it: HTTP 500 caused by Unprintable
+        live.vision.fail = NativeRuntimeError("vision failed")  # trained.py wraps it: HTTP 500 caused by it
     else:
         def run_models(payload):
             raise FaultHTTPException(409, "Create a live model session first", error_category="mode_conflict",
-                                     origin="session") from Unprintable("cause")
+                                     origin="session") from NativeRuntimeError("cause")
         monkeypatch.setattr(windows, "_run_models", run_models)
 
     response = infer(live, make_payload("hostile-2"))
     assert (response.status_code, response.json()) == (status, body)  # the original response, unchanged
     [row] = faults_of(live)
-    assert (row["request_id"], row["error_category"], row["origin"], row["http_status"], row["retryable"]) == (
-        "hostile-2", "unknown", "unknown", status, False)  # the status the client got, not a fixed 500
+    assert (row["request_id"], row["error_category"], row["origin"], row["http_status"], row["retryable"],
+            row["detail"]) == ("hostile-2",) + expected  # the known class, not "unknown"
+    assert row["recovery_status"] == "open"
     assert record_count(live) == 0
 
 
@@ -1073,3 +1087,185 @@ def test_record_fault_writes_through_a_session_and_transaction_of_its_own(live):
         live.sid, "own-session-1", 4, "storage", "storage", 500, True, "the request session is broken", "open")
     [line] = sink_lines(live)
     assert (line["request_id"], line["db_written"]) == ("own-session-1", True)
+
+
+# =============================================================================================
+# Task 7 follow-up 2 (TASK-7-FOLLOWUP2): G1-G3
+# =============================================================================================
+
+# --- G1: the replay check made under the writer lock ------------------------------------------
+def blind_to_the_twin_on_the_first_check_only(monkeypatch):
+    """Only the FIRST duplicate pre-check (``_infer``, before the models run) misses the twin: it
+    commits after that check. The SECOND check (``_persist_window``, after the writer lock is taken)
+    sees it. Returns the call log, one ``(real answer was a hit, returned answer was a hit)`` per call;
+    asking the real function even on the blinded call proves the twin WAS there to be seen."""
+    from app.routers import windows
+    real, log = windows._existing_request, []
+
+    def existing(db, sid, request_id, digest):
+        found = real(db, sid, request_id, digest)
+        returned = found if log else None  # blind on the first call only
+        log.append((found is not None, returned is not None))
+        return returned
+    monkeypatch.setattr(windows, "_existing_request", existing)
+    return log
+
+
+def test_a_twin_found_by_the_check_under_the_writer_lock_is_a_replay_and_recovers_nothing(live, monkeypatch):
+    from app import inference
+    from app.routers import windows
+    body = make_payload("twin-4")
+    winner = infer(live, body)
+    assert winner.status_code == 201
+    assert infer(live, bad_frame("twin-4-open-fault")).status_code == 422  # opened AFTER the winner's commit
+    [opened] = faults_of(live)
+    assert opened["recovery_status"] == "open"
+    assert open_faults(live) == 1
+
+    fused, real_run_inference = [], inference.run_inference
+    held_lock, real_persist = [], windows._persist_window
+
+    def counting_run_inference(*args, **kwargs):
+        fused.append(1)
+        return real_run_inference(*args, **kwargs)
+
+    def persist_and_look(db, *args, **kwargs):
+        result = real_persist(db, *args, **kwargs)
+        held_lock.append(db.in_transaction())  # the allocating UPDATE took SQLite's only write lock
+        return result
+    with monkeypatch.context() as patched:  # NOT monkeypatch.undo(): `live` has patches of its own
+        log = blind_to_the_twin_on_the_first_check_only(patched)
+        patched.setattr(inference, "run_inference", counting_run_inference)
+        patched.setattr(windows, "_persist_window", persist_and_look)
+        loser = infer(live, body, attempt=2)
+
+    assert loser.status_code == 201, loser.text
+    assert loser.json() == winner.json()  # the stored record, not a new one
+    assert loser.json()["window_id"] == winner.json()["window_id"]
+    # The second check ran, and it is the one that answered: both checks could see the twin, only
+    # the first was blinded, and there was no third look (the IntegrityError re-read of the F4 test).
+    assert log == [(True, False), (True, True)]
+    assert fused == []  # answered before any fusion work, so before any commit could collide
+    assert held_lock == [False]  # and the replay gave the write lock back before it answered
+    assert record_count(live) == 1
+    assert scalar(live, "SELECT COUNT(*) FROM inference_records WHERE request_id = 'twin-4'") == 1
+
+    assert faults_of(live) == [opened]  # field for field the same row: still open, nothing recovered it
+    assert open_faults(live) == 1
+
+    # Control: a genuinely new record does recover that very fault, so the setup could show it.
+    assert infer(live, make_payload("twin-4-next")).status_code == 201
+    assert open_faults(live) == 0
+    assert [r["recovery_status"] for r in faults_of(live)] == ["recovered"]
+
+
+# --- G2: the global handler's classification is protected too --------------------------------------
+def break_get_db_once(error):
+    """Make the NEXT resolution of the ``get_db`` dependency raise ``error``. FastAPI resolves
+    dependencies before it calls the route function, so ``infer_frame`` (and its try/except) is never
+    entered: the error leaves the application from outside the route and only the global handler can
+    record it. The handler resolves ``get_db`` once more to write the fault; that call gets the
+    working database. Returns the list of errors still pending (append to arm it again)."""
+    from app.db import get_db
+    from app.main import app
+    working = app.dependency_overrides[get_db]
+    pending = [error]
+
+    def get_db_that_fails_once():
+        if pending:
+            raise pending.pop()
+        yield from working()
+    app.dependency_overrides[get_db] = get_db_that_fails_once
+    return pending
+
+
+@pytest.mark.parametrize("how", ["unprintable-error", "classifier-bug"])
+def test_the_global_handler_records_an_error_that_never_reached_the_route(live, monkeypatch, how):
+    """Two ways classification can go wrong inside ``on_unhandled_exception``:
+
+    * ``unprintable-error``: the error's own ``__str__`` raises. Since G3 the classifier absorbs this
+      by itself (placeholder text, nothing else lost), so the whole handler path must still end in one
+      row, a 500 and the original exception;
+    * ``classifier-bug``: classification fails for a reason of its own (injected). Only the guarded
+      ``classify_exception`` survives that; the bare ``_classify`` would leave the attempt unrecorded."""
+    from app import faults
+    if how == "unprintable-error":
+        def make_error(n):
+            return NativeRuntimeError(f"native failure {n}")
+        expected = ("unknown", "unknown", 500, False, "Unexpected error; cause: Unprintable NativeRuntimeError")
+    else:
+        def broken(exc):
+            raise RuntimeError("a bug in the classifier")
+        monkeypatch.setattr(faults, "_classify", broken)
+
+        def make_error(n):
+            return ValueError(f"native failure {n}")
+        expected = ("unknown", "unknown", 500, False, "Unclassifiable ValueError")
+
+    def recorded(attempt):
+        return [(r["session_id"], r["error_category"], r["origin"], r["http_status"], r["retryable"],
+                 r["detail"], r["recovery_status"])
+                for r in faults_of(live) if r["attempt_index"] == attempt]
+    want = [(live.sid,) + expected + ("open",)]
+
+    original = make_error(1)
+    pending = break_get_db_once(original)
+    with pytest.raises(type(original)) as caught:  # strict client: what the application raised
+        infer(live, make_payload("global-1"), attempt=1, client=live.strict)
+    assert caught.value is original  # propagated unchanged
+    assert pending == []  # the dependency really was what raised
+    assert recorded(1) == want and len(faults_of(live)) == 1  # exactly one row
+
+    pending.append(make_error(2))
+    response = infer(live, make_payload("global-2"), attempt=2)  # what a client sees
+    assert (response.status_code, response.text) == (500, "Internal Server Error")
+    assert recorded(2) == want and len(faults_of(live)) == 2  # one more row, not two
+    assert [r["attempt_index"] for r in faults_of(live)] == [1, 2]
+    assert len(sink_lines(live)) == 2  # one write per attempt
+    assert record_count(live) == 0
+
+
+# --- G3: only an exception that cannot be classified at all becomes "unknown" -----------------------
+def test_an_http_error_the_classifier_does_not_know_is_unknown_with_the_status_the_client_got(live, monkeypatch):
+    """The category is not one the classifier has a retry rule for: classification fails. The attempt is
+    still recorded, as the status the client received (409), not as a fixed 500."""
+    from app.faults import FaultHTTPException
+    from app.routers import windows
+
+    def run_models(payload):
+        raise FaultHTTPException(409, "Create a live model session first", error_category="not-a-category",
+                                 origin="session")
+    monkeypatch.setattr(windows, "_run_models", run_models)
+
+    response = infer(live, make_payload("unclassifiable-1"))
+    assert (response.status_code, response.json()) == (409, {"detail": "Create a live model session first"})
+    [row] = faults_of(live)
+    assert (row["request_id"], row["error_category"], row["origin"], row["http_status"], row["retryable"],
+            row["detail"], row["recovery_status"]) == (
+        "unclassifiable-1", "unknown", "unknown", 409, False, "Unclassifiable FaultHTTPException", "open")
+    assert record_count(live) == 0
+
+
+def test_a_classifier_bug_never_replaces_the_original_exception(live, monkeypatch):
+    from app import faults
+    from app.providers import trained
+    original = ValueError("provider broke")
+
+    def provider_raises(payload):
+        raise original
+    monkeypatch.setattr(trained._provider, "infer", provider_raises)
+
+    def broken(exc):
+        raise RuntimeError("a bug in the classifier")
+    monkeypatch.setattr(faults, "_classify", broken)
+
+    with pytest.raises(ValueError) as caught:  # strict client: not the classifier's RuntimeError
+        infer(live, make_payload("unclassifiable-2"), client=live.strict)
+    assert caught.value is original
+
+    [row] = faults_of(live)
+    assert (row["request_id"], row["error_category"], row["origin"], row["http_status"], row["retryable"],
+            row["detail"], row["recovery_status"]) == (
+        "unclassifiable-2", "unknown", "unknown", 500, False, "Unclassifiable ValueError", "open")
+    assert len(sink_lines(live)) == 1
+    assert record_count(live) == 0

@@ -171,8 +171,17 @@ def _root_cause(exc: BaseException) -> BaseException:
 def _cause_text(root: BaseException) -> str:
     # A SQLAlchemy error's str() carries the SQL and its parameters (a whole payload
     # blob); the driver's own message is the part that says what went wrong.
-    root = getattr(root, "orig", None) or root
-    return f"{type(root).__name__}: {root}"
+    #
+    # This is the ONE step of classification that runs somebody else's code (their
+    # __str__, their ``orig``), and it is guarded on its own: a cause that cannot be
+    # printed costs the detail text, never the category the exception already carries.
+    try:
+        root = getattr(root, "orig", None) or root
+        return f"{type(root).__name__}: {root}"
+    except Exception:
+        logger.exception("could not print the cause (%s) of a fault; recording a placeholder",
+                         type(root).__name__)
+        return f"Unprintable {type(root).__name__}"
 
 
 def _response_status(exc: BaseException) -> int:
@@ -188,9 +197,18 @@ def classify_exception(exc: BaseException) -> FaultClass:
 
     Never raises. Classification prints the root cause (``str(...)``), and an
     exception whose own ``__str__`` fails would otherwise make the classifier's error
-    take the original's place and leave the attempt without a fault row. If
-    classification fails the attempt is recorded as ``unknown`` / not retryable, with
-    the status of the response the client actually receives."""
+    take the original's place and leave the attempt without a fault row.
+
+    Two layers, so that a failure costs as little as it can:
+
+    * Printing the root cause is guarded by itself (``_cause_text``). A cause that
+      cannot be printed becomes the placeholder ``Unprintable <TypeName>``, and
+      everything else the classifier knows is kept: a ``FaultHTTPException`` carries its
+      category, origin, status and (via the category) retryable as attributes, none of
+      which needs ``str()``.
+    * Only an exception that cannot be classified at all - for any other reason - is
+      recorded as ``unknown`` / not retryable, with the status of the response the
+      client actually receives."""
     try:
         return _classify(exc)
     except Exception:
