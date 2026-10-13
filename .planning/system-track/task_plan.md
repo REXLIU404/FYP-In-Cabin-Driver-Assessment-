@@ -42,7 +42,7 @@
 - [x] **R08 更正**（`c7391b5`，评审 clean）：「Live 不会出现 stale」的说法是**错的**。`run_inference` 按 `provenance.captured_at` 重判 freshness（`inference.py:107`），`test_live_inference.py:114-118` 本身就断言旧 `captured_at` 经 `/infer` 得到 `stale` / `DEGRADED`。要改：计划第 44 行与 R1 #8、风险表、`TASK_1_TO_6_SUMMARY.md` 加勘误、`test_temporal_contract.py` 中 UT-TIME-06 docstring 与 source-string guard 改为完整 pipeline 的可反证测试（UT/IT-LIVE-AGE：经 `/infer` 的 2.999 / 3 / 3.001 s 边界与 30 天旧帧）
 - [x] **R13 补测**（`d83782d`，评审 clean）：`telemetry_timestamp` 的对称 HTTP gap 测试（F2 遗留 minor 4）。变异 M2 下它是 telemetry 水位线唯一的行为防线；两条 gap 测试都依赖 D13 现状（stale-only 仍得 High），阶段 5 落地证据年龄策略时第 1 步会响亮失败，届时改用 fake clock
 - [x] **R05 补测**（`2c07d79`，评审 clean）：IT-EPS —— 经 API 的 near-epsilon 权重（1e-10 / 1e-9 / 1.1e-9），杀死 producer 的 `>` → `>=` 与 `> 0` 变异（改动前旧测试集在两种变异下都全绿）
-- [ ] **P1-6 TS 舍入违规**（F4 评审新增，排在 F1 之前）：`riskLogic.ts` 的 `asPercent` 用 `Math.round(v*100)`（即 F5）、`preparedSessionInput.ts` 的 `round3` 用 `toFixed(3)`；改为 half-up，回放钉死值不得变化
+- [x] **P1-6 TS 舍入违规**（`b53f007`，评审 clean）：`asPercent` 与 `formatPercent` 改为先在小数上 half-up 再放大；`round3` 改为 half-up。回放 25 个窗口 + 25 条记录（含解释文本）改动前后逐字节相同（SHA-256 一致），停止条件未触发
 - [ ] **F1 / R30**：同步 `missing_cases.csv` W16/17/19 期望值与最新契约
 - **状态：** pending
 
@@ -57,6 +57,7 @@
 ### 阶段 3：Task 9（Live-only 范围落地）
 - [ ] 按计划执行
 - [ ] **R5**：游标改动保持 Task 8 的循环行为；开工前定游标语义（2 s 节奏 vs 按窗口推进），它决定 ST-BRANCH-T-CONTINUITY 的预期
+- [ ] **P1-6 遗留**：趋势图 tooltip（`trendSeries.ts:32` → `formatTrendTooltip`）先 ×100 再 `formatFixed(…, 1)`，二进制噪声会越过平局（0.2855 → 28.5%）。改为先在小数上 half-up 再放大，与 `asPercent` 同一做法，并加平局用例
 - **状态：** pending
 
 ### 阶段 4：Task 10（Live E2E，按计划 + R02/R17/R31 补充）
