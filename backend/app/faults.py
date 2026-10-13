@@ -87,6 +87,13 @@ RECOVERY_EXHAUSTED = "exhausted"  # reserved: the retry budget belongs to the cl
 
 DEFAULT_SINK_PATH = Path(__file__).resolve().parents[1] / "logs" / "fault_events.log"
 
+# X-Attempt-Index is 1..MAX_ATTEMPT_INDEX. This is a sanity bound, not a retry budget
+# (the budget belongs to the client, Task 8): an unbounded value reaches ``record_fault``
+# as a Python int that an INTEGER column cannot hold, the INSERT overflows, and the
+# attempt is left without its fault row. routers/windows.py declares the same number in
+# ``Header(le=1000)``; the tests pin both.
+MAX_ATTEMPT_INDEX = 1000
+
 _DETAIL_LIMIT = 1000
 
 FAULT_EVENTS_DDL = """
@@ -168,9 +175,31 @@ def _cause_text(root: BaseException) -> str:
     return f"{type(root).__name__}: {root}"
 
 
+def _response_status(exc: BaseException) -> int:
+    """The status the client gets for ``exc``: an ``HTTPException`` carries its own,
+    anything else escapes as the server's bare 500."""
+    status = exc.status_code if isinstance(exc, HTTPException) else None
+    return status if isinstance(status, int) else 500
+
+
 def classify_exception(exc: BaseException) -> FaultClass:
     """Map whatever the ``/infer`` path raised onto a fault description. Does not
-    alter or wrap the exception - the caller re-raises the original."""
+    alter or wrap the exception - the caller re-raises the original.
+
+    Never raises. Classification prints the root cause (``str(...)``), and an
+    exception whose own ``__str__`` fails would otherwise make the classifier's error
+    take the original's place and leave the attempt without a fault row. If
+    classification fails the attempt is recorded as ``unknown`` / not retryable, with
+    the status of the response the client actually receives."""
+    try:
+        return _classify(exc)
+    except Exception:
+        logger.exception("could not classify a %s; recording the attempt as unknown", type(exc).__name__)
+        return FaultClass(ORIGIN_UNKNOWN, CATEGORY_UNKNOWN, _response_status(exc), False,
+                          _clip(f"Unclassifiable {type(exc).__name__}"))
+
+
+def _classify(exc: BaseException) -> FaultClass:
     if isinstance(exc, FaultHTTPException):
         category, origin, status, message = exc.error_category, exc.origin, exc.status_code, str(exc.detail)
     elif isinstance(exc, HTTPException):  # raised by code that predates FaultHTTPException
@@ -301,14 +330,15 @@ def list_fault_events(db, *, session_id: Optional[str] = None, limit: int = 500)
 
 # --- request parsing helpers shared by the route and the global handlers -------------
 def parse_attempt_header(raw: Optional[str]) -> Optional[int]:
-    """``X-Attempt-Index``: absent = 1; a positive integer = itself; anything else = None."""
+    """``X-Attempt-Index``: absent = 1; an integer in 1..MAX_ATTEMPT_INDEX = itself;
+    anything else (not a number, below 1, above the bound) = None."""
     if raw is None:
         return 1
     try:
         value = int(raw.strip())
     except ValueError:
         return None
-    return value if value >= 1 else None
+    return value if 1 <= value <= MAX_ATTEMPT_INDEX else None
 
 
 def request_id_from_body(body: Any) -> Optional[str]:

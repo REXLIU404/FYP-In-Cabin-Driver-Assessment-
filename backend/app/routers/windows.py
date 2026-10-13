@@ -155,7 +155,9 @@ def _infer(db, session_id: str, payload: LiveInput):
 @router.post("/{session_id}/infer", response_model=RiskUpdate, status_code=201)
 def infer_frame(session_id: str, payload: LiveInput, request: Request,
                 db: Session = Depends(get_db), sink: FaultSink = Depends(get_fault_sink),
-                attempt_index: int = Header(1, ge=1, alias="X-Attempt-Index")):
+                attempt_index: int = Header(1, ge=1, le=1000, alias="X-Attempt-Index")):
+    # le=1000 equals faults.MAX_ATTEMPT_INDEX. Above it FastAPI answers 422 before this
+    # body runs, and the global handler records the fault with attempt_index NULL.
     # Seen by the global handlers, which must not record what this route already has.
     request.state.fault_context = {"session_id": session_id, "request_id": payload.request_id,
                                    "attempt_index": attempt_index}
@@ -166,7 +168,7 @@ def infer_frame(session_id: str, payload: LiveInput, request: Request,
         # lock; the fault is written on a second connection, which would otherwise
         # wait out busy_timeout and then fail. Roll back first, then record.
         _rollback_quietly(db)
-        info = faults.classify_exception(exc)
+        info = faults.classify_exception(exc)  # never raises: it falls back to "unknown"
         faults.record_fault(db, session_id=session_id, request_id=payload.request_id,
                             attempt_index=attempt_index, origin=info.origin,
                             error_category=info.error_category, http_status=info.http_status,

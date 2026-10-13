@@ -12,6 +12,9 @@ to build an expectation.
 import base64
 import io
 import json
+import os
+import shutil
+import subprocess
 from datetime import datetime, timezone
 from fractions import Fraction
 from pathlib import Path
@@ -668,7 +671,7 @@ def test_attempt_index_is_told_by_the_client_and_is_not_part_of_the_request_hash
     body = make_payload("attempt-1")
     infer(live, body)                # no header: attempt 1
     infer(live, body, attempt=2)
-    infer(live, body, attempt=99)    # the server imposes no upper bound
+    infer(live, body, attempt=99)    # no retry budget on the server (only the 1000 sanity bound, tested below)
     assert [r["attempt_index"] for r in faults_of(live)] == [1, 2, 99]
 
     live.vision.fail = None
@@ -868,3 +871,205 @@ def test_initialize_database_adds_the_fault_table_without_touching_anything_else
     assert legacy_snapshot(migrated) == after_first
     migrated.dispose()
     control.dispose()
+
+
+# =============================================================================================
+# Task 7 follow-up (TASK-7-FOLLOWUP): F1-F5
+# =============================================================================================
+
+# --- F1: X-Attempt-Index has an upper bound ------------------------------------------------
+@pytest.mark.parametrize("payload", ["valid", "bad-frame"])
+@pytest.mark.parametrize("value", ["1001", "100000000000000000000"], ids=["1001", "10-to-the-20"])
+def test_an_attempt_header_above_1000_is_a_recorded_422_with_a_null_attempt_index(live, value, payload):
+    """1001 is the first rejected value; 10**20 is one an INTEGER column cannot hold (the
+    INSERT would overflow and the attempt would be left without its fault row). The bad-frame
+    variant makes the route fail by itself, so a missing bound shows up as a row carrying the
+    huge index (or no row at all) instead of as a 201."""
+    body = make_payload("too-many-1") if payload == "valid" else bad_frame("too-many-1")
+    response = live.client.post(f"/api/sessions/{live.sid}/infer", json=body,
+                                headers={"X-Attempt-Index": value})
+    assert response.status_code == 422
+
+    [row] = faults_of(live)  # exactly one
+    assert (row["request_id"], row["attempt_index"], row["error_category"], row["origin"],
+            row["http_status"], row["retryable"], row["recovery_status"]) == (
+        "too-many-1", None, "input_validation", "request_validation", 422, False, "open")
+    assert "X-Attempt-Index" in row["detail"]  # the header was what got rejected
+    assert record_count(live) == 0 and total_windows(live) == 0
+    [line] = sink_lines(live)
+    assert (line["request_id"], line["attempt_index"], line["db_written"]) == ("too-many-1", None, True)
+
+
+def test_attempt_index_1000_is_the_last_accepted_value(live):
+    body = make_payload("limit-1")
+    live.vision.fail = RuntimeError("down")
+    assert infer(live, body, attempt=1000).status_code == 500  # the normal failure path
+    [row] = faults_of(live)
+    assert (row["request_id"], row["attempt_index"], row["error_category"], row["origin"],
+            row["http_status"], row["retryable"]) == ("limit-1", 1000, "model_runtime", "vision_model", 500, True)
+
+    # A schema 422 is recorded by the global handler, which parses the header on its own: it must
+    # agree with the route that 1000 is a real attempt index, not an unparseable one.
+    assert infer(live, {"request_id": "limit-schema", "unexpected": True}, attempt=1000).status_code == 422
+    schema_row = {r["request_id"]: r for r in faults_of(live)}["limit-schema"]
+    assert (schema_row["attempt_index"], schema_row["error_category"]) == (1000, "input_validation")
+
+    live.vision.fail = None
+    assert infer(live, body, attempt=1000).status_code == 201  # and the normal success path
+    assert record_count(live) == 1
+    assert open_faults(live) == 0
+
+
+# --- F2: the production default sink location -----------------------------------------------
+def git_check_ignore(repo, relative_path):
+    """Exit status of `git check-ignore` for a path, using only the repo's own .gitignore:
+    no global or system config and no user-level excludes file can ignore it for us."""
+    env = {**os.environ, "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_NOSYSTEM": "1"}
+    result = subprocess.run(["git", "-c", f"core.excludesFile={os.devnull}", "check-ignore", "-v", relative_path],
+                            cwd=repo, env=env, capture_output=True, text=True)
+    assert result.returncode in (0, 1), result.stderr  # 128 = git itself failed
+    return result.returncode, result.stdout
+
+
+def test_the_production_default_sink_path_is_backend_logs_and_git_ignored(tmp_path, monkeypatch):
+    """The autouse fixture redirects DEFAULT_SINK_PATH for every test, so nothing else ever
+    sees the real default. This test looks at it, and never writes to it."""
+    from app import faults
+    # Only the autouse redirect is active in this test (no `live`/`api_factory`, whose patches
+    # undo() would drop as well). Dropping it exposes the value the module really defines.
+    monkeypatch.undo()
+    default = faults.DEFAULT_SINK_PATH
+    backend_dir = Path(__file__).resolve().parents[1]  # this file is backend/tests/test_fault_events.py
+    repo_root = backend_dir.parent
+
+    assert default == backend_dir / "logs" / "fault_events.log"
+    assert default.parts[-3:] == ("backend", "logs", "fault_events.log")
+
+    # A throw-away repo holding only the project's .gitignore: works in a `git archive` copy too.
+    repo = tmp_path / "ignore-check"
+    repo.mkdir()
+    shutil.copy(repo_root / ".gitignore", repo / ".gitignore")
+    subprocess.run(["git", "init", "-q"], cwd=repo, check=True, capture_output=True)
+    status, matched = git_check_ignore(repo, default.relative_to(repo_root).as_posix())
+    assert status == 0, "the default fault log is not git-ignored"
+    assert "backend/logs/" in matched
+    # Control: the check can say no. A sibling of backend/logs/ is not ignored.
+    assert git_check_ignore(repo, "backend/fault_events.log")[0] == 1
+
+
+# --- F3: a failing classifier never replaces the original error ------------------------------
+class Unprintable(Exception):
+    """An error whose own __str__ raises, as a buggy native-library exception might."""
+
+    def __str__(self):
+        raise RuntimeError("the original error cannot be printed")
+
+
+def test_a_classifier_failure_never_replaces_the_original_exception(live, monkeypatch):
+    from app.providers import trained
+    original = Unprintable("provider failed")
+
+    def provider_raises(payload):
+        raise original
+    monkeypatch.setattr(trained._provider, "infer", provider_raises)
+
+    with pytest.raises(Unprintable) as caught:  # strict client: the app's exception reaches the test
+        infer(live, make_payload("hostile-1"), client=live.strict)
+    assert caught.value is original  # not the RuntimeError raised by its __str__
+
+    [row] = faults_of(live)
+    assert (row["request_id"], row["error_category"], row["origin"], row["http_status"],
+            row["retryable"], row["recovery_status"]) == ("hostile-1", "unknown", "unknown", 500, False, "open")
+    assert "Unprintable" in row["detail"]
+    assert len(sink_lines(live)) == 1  # the route's write only: the global handler added none
+    assert record_count(live) == 0
+
+
+@pytest.mark.parametrize("arrange, status, body", [
+    ("runtime", 500, {"detail": "Vision model failed during inference"}),
+    ("conflict", 409, {"detail": "Create a live model session first"}),
+], ids=["model-runtime-500", "session-conflict-409"])
+def test_a_classifier_failure_keeps_the_original_http_response(live, monkeypatch, arrange, status, body):
+    """The error behind an HTTP error is unprintable: the client must still get that HTTP
+    error, and the fault row must carry its status."""
+    from app.faults import FaultHTTPException
+    from app.routers import windows
+    if arrange == "runtime":
+        live.vision.fail = Unprintable("vision failed")  # trained.py wraps it: HTTP 500 caused by Unprintable
+    else:
+        def run_models(payload):
+            raise FaultHTTPException(409, "Create a live model session first", error_category="mode_conflict",
+                                     origin="session") from Unprintable("cause")
+        monkeypatch.setattr(windows, "_run_models", run_models)
+
+    response = infer(live, make_payload("hostile-2"))
+    assert (response.status_code, response.json()) == (status, body)  # the original response, unchanged
+    [row] = faults_of(live)
+    assert (row["request_id"], row["error_category"], row["origin"], row["http_status"], row["retryable"]) == (
+        "hostile-2", "unknown", "unknown", status, False)  # the status the client got, not a fixed 500
+    assert record_count(live) == 0
+
+
+# --- F4: a concurrent twin is a replay, so it recovers nothing --------------------------------
+def test_it_fault_integrity_the_concurrent_twin_path_does_not_recover_open_faults(live, monkeypatch):
+    body = make_payload("twin-3")
+    winner = infer(live, body)
+    assert winner.status_code == 201
+    assert infer(live, bad_frame("twin-open-fault")).status_code == 422  # opened AFTER the winner's commit
+    [opened] = faults_of(live)
+    assert opened["recovery_status"] == "open"
+    assert open_faults(live) == 1
+
+    with monkeypatch.context() as patched:  # NOT monkeypatch.undo(): `live` has patches of its own
+        calls = blind_to_the_twin(patched)
+        loser = infer(live, body, attempt=2)
+    assert (loser.status_code, loser.json()) == (201, winner.json())  # answered from the twin's record
+    assert len(calls) == 3  # it did go through the IntegrityError re-read
+    assert record_count(live) == 1
+
+    assert faults_of(live) == [opened]  # byte-for-byte the same row: still open, nothing recovered it
+    assert open_faults(live) == 1
+
+    # Control: a genuinely new record does recover that very fault, so the setup could show it.
+    assert infer(live, make_payload("twin-3-next")).status_code == 201
+    assert open_faults(live) == 0
+    assert [r["recovery_status"] for r in faults_of(live)] == ["recovered"]
+
+
+# --- F5: record_fault uses a session and a transaction of its own -----------------------------
+class UnusableRequestSession:
+    """The request's session, broken: it can still say which database it is bound to
+    (``get_bind``) but any other use - execute, commit, rollback, ... - raises."""
+
+    def __init__(self, bind):
+        self._bind = bind
+
+    def get_bind(self):
+        return self._bind
+
+    def execute(self, *args, **kwargs):
+        raise RuntimeError("the request session must not be used to write a fault")
+
+    def commit(self):
+        raise RuntimeError("the request session must not be used to commit a fault")
+
+    def __getattr__(self, name):
+        raise RuntimeError(f"the request session was touched: {name}")
+
+
+def test_record_fault_writes_through_a_session_and_transaction_of_its_own(live):
+    from app.faults import FaultSink, record_fault
+    with live.factory() as probe:
+        bind = probe.get_bind()
+
+    record_fault(UnusableRequestSession(bind), session_id=live.sid, request_id="own-session-1", attempt_index=4,
+                 origin="storage", error_category="storage", http_status=500, retryable=True,
+                 detail="the request session is broken", sink=FaultSink(live.sink_path))
+
+    # Read back through a brand-new session on the same database.
+    [row] = rows(live, "SELECT * FROM fault_events")
+    assert (row["session_id"], row["request_id"], row["attempt_index"], row["origin"], row["error_category"],
+            row["http_status"], bool(row["retryable"]), row["detail"], row["recovery_status"]) == (
+        live.sid, "own-session-1", 4, "storage", "storage", 500, True, "the request session is broken", "open")
+    [line] = sink_lines(live)
+    assert (line["request_id"], line["db_written"]) == ("own-session-1", True)
