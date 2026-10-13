@@ -1,10 +1,14 @@
 import { describe, expect, it } from "vitest";
 import {
+  DEFAULT_CONFIG,
+  asPercent,
+  buildRiskUpdate,
   computeRiskScore,
   mapRiskLevel,
   mapSystemHealth,
 } from "./riskLogic";
 import { determineEvidenceType } from "./evidence";
+import type { PreparedSessionWindow } from "./types";
 
 describe("mapRiskLevel boundaries (thresholds 30 / 60 on a 0-100 score)", () => {
   it("29.9 -> Low", () => expect(mapRiskLevel(29.9)).toBe("Low"));
@@ -126,5 +130,67 @@ describe("determineEvidenceType (dominant-evidence decision tree)", () => {
         pTelemetry: 0.1,
       }),
     ).toBe("Low observed risk");
+  });
+});
+
+describe("asPercent: integer percent, half-up on the decimal digits", () => {
+  it("breaks the exact decimal ties that Math.round(v * 100) gets wrong", () => {
+    // The trap: each product lands just under the tie in binary.
+    expect(Math.round(0.285 * 100)).toBe(28);
+    expect(Math.round(0.565 * 100)).toBe(56);
+    expect(Math.round(0.145 * 100)).toBe(14);
+    expect(asPercent(0.285)).toBe("29%");
+    expect(asPercent(0.565)).toBe("57%");
+    expect(asPercent(0.145)).toBe("15%");
+  });
+
+  it("leaves values that are not on a tie alone", () => {
+    expect(asPercent(0)).toBe("0%");
+    expect(asPercent(1)).toBe("100%");
+    expect(asPercent(0.07)).toBe("7%");
+    expect(asPercent(0.4)).toBe("40%");
+    expect(asPercent(0.284)).toBe("28%");
+    expect(asPercent(0.286)).toBe("29%");
+  });
+});
+
+describe("the stored explanation text rounds its percentages half-up", () => {
+  const freshWindow = (pD: number, pT: number): PreparedSessionWindow => ({
+    timestamp: "2026-01-01T12:00:00.000Z",
+    P_distraction: pD,
+    P_telemetry_anomaly: pT,
+    vision_status: "fresh",
+    telemetry_status: "fresh",
+    visual_top_classes: [],
+    telemetry_behavior_classes: [],
+    telemetry_feature_contributions: [],
+    telemetry_features: null,
+    latency_ms: 0,
+  });
+
+  it("Vision-dominant text: 0.565 -> 57% and 0.285 -> 29%", () => {
+    const record = buildRiskUpdate(
+      freshWindow(0.565, 0.285),
+      "s",
+      DEFAULT_CONFIG,
+      undefined,
+      1,
+    );
+    expect(record.DominantEvidence).toBe("Vision-dominant");
+    expect(record.explanation).toContain("P_distraction (57%)");
+    expect(record.explanation).toContain("P_telemetry_anomaly (29%)");
+  });
+
+  it("Telemetry-dominant text: 0.565 -> 57% and 0.145 -> 15%", () => {
+    const record = buildRiskUpdate(
+      freshWindow(0.145, 0.565),
+      "s",
+      DEFAULT_CONFIG,
+      undefined,
+      1,
+    );
+    expect(record.DominantEvidence).toBe("Telemetry-dominant");
+    expect(record.explanation).toContain("P_telemetry_anomaly (57%)");
+    expect(record.explanation).toContain("P_distraction (15%)");
   });
 });

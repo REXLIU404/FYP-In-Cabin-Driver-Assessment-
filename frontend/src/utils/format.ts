@@ -1,4 +1,4 @@
-import { roundHalfUp } from "../../../ai/src/riskLogic";
+import { asPercent, roundHalfUp } from "../../../ai/src/riskLogic";
 import type { FreshnessStatus } from "../types";
 
 /**
@@ -24,11 +24,10 @@ export const formatFixed = (value: number, places: number): string => {
   return places > 0 ? `${whole}.${fraction.padEnd(places, "0")}` : whole;
 };
 
-// A probability shown as an integer percent: round to 2 decimal places of the
-// fraction (half-up), then scale. Scaling first (value * 100) would put binary
-// noise in front of the tie.
-export const formatPercent = (value: number) =>
-  `${Math.round(roundHalfUp(value, 2) * 100)}%`;
+// A probability shown as an integer percent. This IS the function that renders
+// the percentages inside the stored explanation text (ai/src/riskLogic.ts), not
+// a second copy of it, so the UI and the record cannot show 29% against 28%.
+export const formatPercent = asPercent;
 
 export const formatProbability = (value: number) => formatFixed(value, 2);
 

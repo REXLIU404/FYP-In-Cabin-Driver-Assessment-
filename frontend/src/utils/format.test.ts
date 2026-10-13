@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 
+import { DEFAULT_CONFIG, buildRiskUpdate } from "../../../ai/src/riskLogic";
+import type { PreparedSessionWindow } from "../types";
 import {
   UNAVAILABLE_LABEL,
   formatBranchPercent,
@@ -57,6 +59,8 @@ describe("display rounding is half-up on the decimal digits, like the backend", 
 
   it("formatPercent rounds to an integer percent half-up", () => {
     expect(formatPercent(0.285)).toBe("29%");
+    expect(formatPercent(0.565)).toBe("57%");
+    expect(formatPercent(0.145)).toBe("15%");
     expect(formatPercent(0.07)).toBe("7%");
     expect(formatPercent(0)).toBe("0%");
     expect(formatPercent(1)).toBe("100%");
@@ -66,6 +70,51 @@ describe("display rounding is half-up on the decimal digits, like the backend", 
     expect(formatContribution(null)).toBe(UNAVAILABLE_LABEL);
     expect(formatContribution(31.25)).toBe("31 / 100");
     expect(formatContribution(0)).toBe("0 / 100");
+  });
+});
+
+describe("the UI percent and the percent in the stored explanation are one rounding", () => {
+  const freshWindow = (pD: number, pT: number): PreparedSessionWindow => ({
+    timestamp: "2026-01-01T12:00:00.000Z",
+    P_distraction: pD,
+    P_telemetry_anomaly: pT,
+    vision_status: "fresh",
+    telemetry_status: "fresh",
+    visual_top_classes: [],
+    telemetry_behavior_classes: [],
+    telemetry_feature_contributions: [],
+    telemetry_features: null,
+    latency_ms: 0,
+  });
+  const record = (pD: number, pT: number) =>
+    buildRiskUpdate(freshWindow(pD, pT), "s", DEFAULT_CONFIG, undefined, 1);
+
+  it("0.285 / 0.565 / 0.145 read 29% / 57% / 15% in both places", () => {
+    // Vision-dominant record: explanation names 57% (P_distraction) and 29%.
+    const vision = record(0.565, 0.285);
+    expect(vision.explanation).toContain(
+      `P_distraction (${formatPercent(vision.P_distraction)})`,
+    );
+    expect(vision.explanation).toContain(
+      `P_telemetry_anomaly (${formatPercent(vision.P_telemetry_anomaly)})`,
+    );
+    expect(formatPercent(vision.P_distraction)).toBe("57%");
+    expect(formatPercent(vision.P_telemetry_anomaly)).toBe("29%");
+    expect(vision.explanation).toContain("P_distraction (57%)");
+    expect(vision.explanation).toContain("P_telemetry_anomaly (29%)");
+
+    // Telemetry-dominant record: 0.565 on the telemetry side, 0.145 on vision.
+    const telemetry = record(0.145, 0.565);
+    expect(telemetry.explanation).toContain(
+      `P_telemetry_anomaly (${formatPercent(telemetry.P_telemetry_anomaly)})`,
+    );
+    expect(telemetry.explanation).toContain(
+      `P_distraction (${formatPercent(telemetry.P_distraction)})`,
+    );
+    expect(formatPercent(telemetry.P_telemetry_anomaly)).toBe("57%");
+    expect(formatPercent(telemetry.P_distraction)).toBe("15%");
+    expect(telemetry.explanation).toContain("P_telemetry_anomaly (57%)");
+    expect(telemetry.explanation).toContain("P_distraction (15%)");
   });
 });
 

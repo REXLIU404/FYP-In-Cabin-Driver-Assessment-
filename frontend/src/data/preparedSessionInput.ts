@@ -5,6 +5,7 @@ import type {
   TelemetryFeatures,
   VisualClassProbability,
 } from "../types";
+import { roundHalfUp } from "../../../ai/src/riskLogic";
 import metadataRaw from "../../../ai/prototype-data/prepared_sessions/session_001/session_metadata.json?raw";
 import telemetryCsv from "../../../ai/prototype-data/prepared_sessions/session_001/telemetry.csv?raw";
 
@@ -55,7 +56,10 @@ const parseCsv = (source: string) => {
 
 const toNumber = (value: string) => Number(value);
 const toBoolean = (value: string) => value === "1";
-const round3 = (value: number) => Number(value.toFixed(3));
+// Half UP on the decimal digits, the same rounding as the backend and the
+// fusion layer. `Number(value.toFixed(3))` rounds the exact binary value, so a
+// decimal tie such as 1 - 0.0635 = 0.9365 lands on 0.936 instead of 0.937.
+const round3 = (value: number) => roundHalfUp(value, 3);
 
 const visualClasses = (
   safe: number,
@@ -249,25 +253,36 @@ const freshnessStatus = (available: boolean, ageSeconds: number) => {
   return ageSeconds > 3 ? "stale" : "fresh";
 };
 
-const preparedRows = parseCsv(telemetryCsv).map(parsePreparedRecord);
+/**
+ * The replay's one parsing path: telemetry CSV text -> ordered windows. The
+ * shipped session is `buildPreparedWindows(telemetryCsv)`; it is exported so a
+ * test can feed it a CSV whose probabilities sit on a decimal rounding tie.
+ */
+export const buildPreparedWindows = (csv: string): PreparedSessionWindow[] =>
+  parseCsv(csv)
+    .map(parsePreparedRecord)
+    .sort((a, b) => a.window_id - b.window_id)
+    .map((record) => ({
+      timestamp: buildTimestamp(record.timestamp),
+      P_distraction: inferDistraction(
+        record.frame_file,
+        record.vision_available,
+      ),
+      P_telemetry_anomaly: inferTelemetryAnomaly(record),
+      vision_status: freshnessStatus(record.vision_available, 0),
+      telemetry_status: freshnessStatus(
+        record.telemetry_available,
+        record.telemetry_age_s,
+      ),
+      visual_top_classes:
+        record.vision_available && record.frame_file
+          ? (preparedVisualEvidence[record.frame_file] ?? [])
+          : [],
+      telemetry_behavior_classes: telemetryBehaviorClasses(record),
+      telemetry_feature_contributions: telemetryFeatureContributions(record),
+      telemetry_features: telemetryFeatures(record),
+      latency_ms: 38 + record.window_id * 4,
+    }));
 
-export const PREPARED_SESSION_WINDOWS: PreparedSessionWindow[] = preparedRows
-  .sort((a, b) => a.window_id - b.window_id)
-  .map((record) => ({
-    timestamp: buildTimestamp(record.timestamp),
-    P_distraction: inferDistraction(record.frame_file, record.vision_available),
-    P_telemetry_anomaly: inferTelemetryAnomaly(record),
-    vision_status: freshnessStatus(record.vision_available, 0),
-    telemetry_status: freshnessStatus(
-      record.telemetry_available,
-      record.telemetry_age_s,
-    ),
-    visual_top_classes:
-      record.vision_available && record.frame_file
-        ? (preparedVisualEvidence[record.frame_file] ?? [])
-        : [],
-    telemetry_behavior_classes: telemetryBehaviorClasses(record),
-    telemetry_feature_contributions: telemetryFeatureContributions(record),
-    telemetry_features: telemetryFeatures(record),
-    latency_ms: 38 + record.window_id * 4,
-  }));
+export const PREPARED_SESSION_WINDOWS: PreparedSessionWindow[] =
+  buildPreparedWindows(telemetryCsv);

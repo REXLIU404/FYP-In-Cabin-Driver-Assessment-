@@ -198,7 +198,18 @@ export const determineDominantEvidence = (
   });
 };
 
-const asPercent = (value: number) => `${Math.round(value * 100)}%`;
+/**
+ * A probability as an integer-percent label, rounded half UP on the decimal
+ * digits: round to 2 decimal places of the fraction first, then scale. The one
+ * implementation behind both the stored explanation text and the UI's
+ * `formatPercent`, so the two cannot disagree again.
+ *
+ * Scaling first would put binary noise in front of the tie:
+ * `Math.round(0.285 * 100)` is 28 (0.285 * 100 is 28.499999999999996) while the
+ * half-up answer, and what the UI shows, is 29.
+ */
+export const asPercent = (value: number): string =>
+  `${roundHalfUp(roundHalfUp(value, 2) * 100, 0)}%`;
 
 /**
  * Names which side(s) left the effective fusion denominator at zero. Only

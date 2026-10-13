@@ -2,7 +2,10 @@ import { describe, expect, it } from "vitest";
 
 import { buildRiskUpdate, DEFAULT_CONFIG } from "../../../ai/src/riskLogic";
 import type { RiskUpdate } from "../types";
-import { PREPARED_SESSION_WINDOWS } from "./preparedSessionInput";
+import {
+  PREPARED_SESSION_WINDOWS,
+  buildPreparedWindows,
+} from "./preparedSessionInput";
 
 // Drive the real fusion pipeline (incl. EMA smoothing) over the prepared replay,
 // exactly as the app does, then assert the session exercises every risk/evidence
@@ -97,5 +100,51 @@ describe("prepared session replay coverage", () => {
       maxRun = Math.max(maxRun, run);
     }
     expect(maxRun).toBeGreaterThanOrEqual(2);
+  });
+});
+
+// The replay turns 1 - p_safe into P_telemetry_anomaly through the one parsing
+// path, buildPreparedWindows. The shipped CSV has two-decimal p_safe values, where
+// toFixed(3) and half-up agree, so a regression to toFixed would not move a single
+// shipped number - it needs a CSV with p_safe on a four-decimal tie.
+describe("replay probabilities are rounded half-up, not by the binary value", () => {
+  const HEADER =
+    "window_id,timestamp,frame_file,vision_available,telemetry_available,telemetry_age_s,speed_kmph,accel_x,accel_y,brake_pressure,steering_angle,throttle,lane_deviation,headway_distance,p_safe,p_aggressive,p_distracted";
+  const row = (windowId: number, pSafe: string, telemetryAvailable = 1) =>
+    `${windowId},10:00:0${windowId},frame_safe_a.jpg,1,${telemetryAvailable},0,34,0.3,0.1,12,-2.0,30,0.3,26,${pSafe},0.04,0.02`;
+  const parse = (...rows: string[]) =>
+    buildPreparedWindows([HEADER, ...rows].join("\n"));
+
+  it("inputs are ones where toFixed(3) rounds the tie DOWN", () => {
+    // Guard on the test itself: if these stopped disagreeing the next test
+    // could no longer tell the two roundings apart.
+    expect(Number((1 - 0.0635).toFixed(3))).toBe(0.936);
+    expect(Number((1 - 0.3135).toFixed(3))).toBe(0.686);
+    expect(Number((1 - 0.9385).toFixed(3))).toBe(0.061);
+    // 0.4895 also defeats Math.round(v * 1000) / 1000 (1 - 0.4895 is 0.5105).
+    expect(Number((1 - 0.4895).toFixed(3))).toBe(0.51);
+    expect(Math.round((1 - 0.4895) * 1000) / 1000).toBe(0.51);
+  });
+
+  it("P_telemetry_anomaly = 1 - p_safe breaks decimal ties upward", () => {
+    // Exact decimal arithmetic: 1 - 0.0635 = 0.9365 -> 0.937, 1 - 0.3135 =
+    // 0.6865 -> 0.687, 1 - 0.9385 = 0.0615 -> 0.062, 1 - 0.4895 = 0.5105 ->
+    // 0.511; 0.94 is no tie (0.06).
+    const windows = parse(
+      row(1, "0.0635"),
+      row(2, "0.3135"),
+      row(3, "0.9385"),
+      row(4, "0.4895"),
+      row(5, "0.94"),
+    );
+    expect(windows.map((w) => w.P_telemetry_anomaly)).toEqual([
+      0.937, 0.687, 0.062, 0.511, 0.06,
+    ]);
+  });
+
+  it("P_distraction (vision branch) and a window without telemetry are unchanged", () => {
+    const windows = parse(row(1, "0.0635"), row(2, "0.0635", 0));
+    expect(windows.map((w) => w.P_distraction)).toEqual([0.07, 0.07]);
+    expect(windows[1].P_telemetry_anomaly).toBe(0);
   });
 });

@@ -22,8 +22,10 @@ import type {
  *   2. the first fresh window after a stale / missing / unavailable one - the
  *      backend re-seeds, this port kept smoothing from the stale window's value;
  *   3. a run of consecutive fresh windows - plain EMA, rounded half up to 3 dp.
- * plus two rounding ties and the (unrounded) telemetry probability. Python is the
- * canonical producer, so this port was changed to match it.
+ * plus four rounding ties and the (unrounded) telemetry probability: the cases
+ * `half-up-tie-in-the-ema`, `half-up-tie-in-the-ema-below-in-binary`,
+ * `half-up-tie-in-the-ema-after-a-nonzero-seed` and `half-up-tie-in-the-score`.
+ * Python is the canonical producer, so this port was changed to match it.
  */
 interface ParityCase {
   id: string;
