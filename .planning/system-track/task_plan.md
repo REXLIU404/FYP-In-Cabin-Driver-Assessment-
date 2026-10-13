@@ -50,11 +50,13 @@
 - [ ] Task 7 `fault_events`：在计划 DoD 之外补 —— 原生 ORT 运行期异常的分类、单分支失败、DB commit 失败；**每个 eligible 请求都有成功或失败的持久 outcome**（为 logging ≥ 99% 定义两个分母）
 - [ ] Task 8 有界重试：补 IT-RETRY-IDENTITY —— commit 之后 response 丢失再同 UUID 重发，DB 恰好一行、状态只推进一次；同 UUID 改 payload → 409
 - [ ] **重试与新鲜度的交互（2026-10-13 新增，开工 Task 8 前写进计划）**：为保幂等，重试逐字节重发同一 payload，`captured_at` / `telemetry_timestamp` 是首次采集值；退避 2 s + 4 s 后第 3 次投递距采集 ≥ 6 s，第 1 次若因 10 s 超时失败则第 2 次即已超过 3 s 容差。重试成功落库的窗口会被判为 stale / DEGRADED，并按 D13 现状继续累积 sustained-High。需在 Task 8 DoD 中声明并测试，且与阶段 5 的 D13 政策联动
+- [ ] **R5（用户批准 2026-10-13）**：摄像头停止后循环继续 —— 帧为 null 照发、不计失败、不停止；全空输入得到 UNAVAILABLE（`liveLoop.test.ts` + API 测试）。见计划 Task 8 与 DoD 8
 - [ ] `MAX_ATTEMPTS_PER_REQUEST = 3` 是**用户裁定的策略**（D02 Option 1），在文档中按「明确需求」陈述，回应 Codex「不能随意写 3」
 - **状态：** pending
 
 ### 阶段 3：Task 9（Live-only 范围落地）
-- [ ] 按计划执行，无审阅新增
+- [ ] 按计划执行
+- [ ] **R5**：游标改动保持 Task 8 的循环行为；开工前定游标语义（2 s 节奏 vs 按窗口推进），它决定 ST-BRANCH-T-CONTINUITY 的预期
 - **状态：** pending
 
 ### 阶段 4：Task 10（Live E2E，按计划 + R02/R17/R31 补充）
@@ -63,6 +65,7 @@
 - [ ] 分段计时 capture → 预处理 → 模型 → commit → 网络 → render（`windows.py:62` 计时早于 commit；前端 `requestMs` 不含 render）
 - [ ] `freeze_manifest.py` 在 `FYP_DATA_ROOT` 错误时不得静默回退
 - [ ] R31：导出遇 NULL / 畸形 payload 的测试与守卫（`export.py:51`）
+- [ ] **R5 单分支系统测试**：ST-BRANCH-T-SMOKE / T-CONTINUITY / V / ZERO（计划 Task 10 Step 2A）。测试工具内拦截请求，产品代码不改
 - **状态：** pending
 
 ### 阶段 5：需用户裁定的政策项（裁定后再实现）

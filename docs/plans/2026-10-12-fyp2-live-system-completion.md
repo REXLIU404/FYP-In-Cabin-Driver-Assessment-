@@ -176,6 +176,7 @@ spec 没有明说、但没有任何 task 的测试会自然覆盖、且最可能
 | `backend/tests/test_temporal_contract.py` | UT-TIME-01/02/03 + unavailable 期间 FSM 暂停 |
 | `backend/tests/test_fault_events.py` | ST-FAIL-01/02/03、ST-RECOVER-01 |
 | `backend/tests/test_live_e2e.py` | Playwright 驱动的完整 Live 端到端（零 npm 依赖） |
+| `backend/tests/test_live_single_branch.py` | ST-BRANCH-T-SMOKE / T-CONTINUITY / V / ZERO（R5） |
 | `ai/src/availability.test.ts` `ai/src/fusionVectors.test.ts` `frontend/src/api/retryPolicy.test.ts` `ai/src/liveLoop.test.ts` `frontend/src/utils/export.test.ts` | 对应单测 |
 | `docs/fyp2/release/RELEASE_MANIFEST.md` + `scripts/freeze_manifest.py` | 源码 / 模型 / split / 依赖的 SHA256 清单（B05） |
 | `prototype-tests/live_e2e.md` | 取代 replay checklist 的 Live 端到端人工验收单 |
@@ -733,6 +734,15 @@ export function backoffMs(attemptIndex: 1 | 2): number;   // 2000 / 4000
 
 `useCameraPreview.ts:82-104` 的 `captureFrame` 在 `readyState<2`、`videoWidth` 为 0、track 非 live 时返回 null，而 `useLiveSession` 只是发 `image_base64:null` —— 一个悄悄死掉的摄像头和一次故意的 vision-missing 完全一样。返回原因码。track 的 `ended` 监听（`:66-71`）只把 status 设成 "error"，从不通知 `useLiveSession`，于是监控会一直发 null 帧；把它暴露出来作为 fault 事件。
 
+**R5 追加：摄像头停止后循环继续（用户批准，2026-10-13）**
+
+现状（只读核实）：推理循环与摄像头解耦。Stop Camera 只调用 `camera.stop`（`App.tsx:324`）；`captureFrame()` 在画面不可用时返回 null，请求照发、不带图像（`useLiveSession.ts:144-158`）；后端 `LiveInput` 不要求「至少一项」（`schemas.py:122-131`），图像与遥测都为空时返回 201 + `UNAVAILABLE`，不是 422。改写成 `liveLoop.ts` 时**必须保持**这一行为：
+
+- `liveLoop.test.ts` 追加：`captureFrame` 返回 null 时照常调用 `infer`（`image_base64` 与 `captured_at` 为 null），**不计入**连续失败、不触发停止，下一 tick 按配置间隔排定；`captureFrame` 与遥测同时为 null 时照常发送（`telemetry_source: "missing"`），mock 返回 201 的 UNAVAILABLE 窗口，追加进历史，循环继续。
+- 与 Step 6 的关系：Step 6 让 `captureFrame` 返回原因码、把 track `ended` 暴露为 fault 事件。这些只用于**显示与记录**。主动 Stop Camera 与摄像头意外断开要能区分，但两者都**不计入 D02 的连续失败、不停止循环**。D02 只计 `infer` 请求本身的失败。
+- 后端：经 `/infer` 提交全空 `LiveInput` → 201 + `UNAVAILABLE`、四个风险字段为 null 的 API 测试（已有则引用，没有则补）。
+- Task 10 的单分支系统测试（Step 2A）以此为前提。
+
 - [ ] **Step 7：跑测试，Commit**
 
 ---
@@ -772,6 +782,10 @@ prepared telemetry 游标是 `Math.floor((Date.now() - startedAt.current) / 2000
 
 **R4 更正（Codex R08）**：划掉的两句是错的。「age to stale」在 Live 里**有**触发条件：`captured_at` / `telemetry_timestamp` 距服务端处理时刻超过 3 s，即可经 `POST /infer` 得到 `stale` 与 `DEGRADED`（`backend/app/inference.py:107-108`；`backend/tests/test_live_inference.py:114-117` 本身就断言这一点；阶段 1 的 `IT-LIVE-AGE` 在不依赖模型权重的情况下复现了 2.999 / 3.000 / 3.001 s 边界与 30 天旧帧）。因此 `ST-FAIL-01` 的 stale 步骤可以用旧 `captured_at` 经 `/infer` 构造，**D13 在 Live 主运行时可达**，是在役缺陷而不是仅限 replay 的限制。UNAVAILABLE 仍需显式关闭摄像头这一点不受影响。
 
+**R5 追加（用户批准，2026-10-13）**：本 Step 改游标时必须保持 Task 8 的「摄像头停止后循环继续」。游标落在第 14 / 17 行时照常发送 `telemetry_features: null` + `telemetry_source: "missing"`，不跳过、不停止；帧为 null 时照常发送。`liveLoop.test.ts` 的对应用例在本 task 之后仍须为绿。
+
+**开工前要定的一点**：本 Step 原文写「每提交一个窗口推进一次」，与现行代码「按原始 2 秒节奏回放、与推理帧率无关」（`useLiveSession.ts:145`）不一致。两种语义下 Task 10 `ST-BRANCH-T-CONTINUITY` 的预期不同：保持 2 s 节奏时，一整轮回放约 50 s，默认 10 fps 下每行遥测约提交 20 次；按窗口推进时，一整轮就是 25 个窗口。Task 9 开工前定下语义，Task 10 的 brief 按定下的语义写预期值。
+
 - [ ] **Step 3：不要让回访用户悄悄启动到 replay**
 
 `DEFAULT_CONFIG.operationMode` 已经是 `LIVE_MODEL_RUNTIME`（`ai/src/riskLogic.ts:14`），但 `persistence.loadConfig`（`utils/persistence.ts:90-94`）会原样恢复之前保存的 `PREPARED_SESSION_RUNTIME`。把 `App.tsx:191-210` 的 "Data mode" 选项改名为 legacy/test-only 并加门槛，`:240-244` 的说明文字同步改写。
@@ -795,6 +809,7 @@ prepared telemetry 游标是 `Math.floor((Date.now() - startedAt.current) / 2000
 **Files:**
 - Modify: `vitest.config.ts`、`package.json`（scripts）
 - Create: `backend/tests/test_live_e2e.py`、`prototype-tests/live_e2e.md`
+- Create（R5）: `backend/tests/test_live_single_branch.py`、冻结的逐行 P_t fixture（与 `xgb_telemetry.json` SHA256 绑定）
 - Create: `docs/evidence/<date>/live-e2e/`（运行产物）
 
 - [ ] **Step 1：补上类型检查门禁**
@@ -810,6 +825,34 @@ vitest **不做类型检查**，而仓库里没有任何 script 或 CI 步骤跑
 仍需补齐：把 playwright 写进 requirements（Task 1 已做）；setup 里跑 `npm run build` 或断言 `dist/` 存在（`dist` 是 git-ignored）；uvicorn 绑到空闲端口并用 tmp_path 作 `DRA_DATABASE_URL`；复用 `output/playwright/runtime.config.json` 里记录过的启动参数（`--use-fake-device-for-media-stream`、`--use-fake-ui-for-media-stream`、`permissions: ["camera"]`）。
 
 **不要断言数值分数**：`--use-fake-device-for-media-stream` 产生动态合成图案，每一 tick 的 JPEG 都不同，`P_distraction` 不可复现。确定性杠杆在遥测侧。断言**契约**：operation_mode、`provenance.vision_source` / `telemetry_source`、10 类 / 3 类的类别数、D01 不变式、以及 **UI 显示值 == `GET /risk/latest` == 导出行**（这就是 IT-UI-01 的 oracle）。
+
+- [ ] **Step 2A：单分支系统测试（R5 新增，用户批准 2026-10-13）**
+
+单分支运行是系统本来就要支持的降级路径，不是新功能。这一步**不改产品代码**，测完也不删任何东西；只为测试服务的控制（拦截请求）放在测试工具里。前提是 Task 8 的「摄像头停止后循环继续」。
+
+**共同断言**（四个测试都要）：
+- `DominantEvidence == ("Partial evidence" if assessment_available else null)`。依据：现行规则先判 `SystemHealth != FULL`，再判 Low（`fusion.py:145-151`、`evidence.ts:34-36`），所以单分支可用窗口即使低风险也是 Partial；唯一一路也缺失时为 null。若阶段 5 的 R14 落地时改了 Partial 的文案或判定顺序，按当时生效的规则断言。
+- 不可用窗口：四个风险字段为 null，`SystemHealth = UNAVAILABLE`，告警计时按 Task 5 规则挂起。
+- UI = `GET /risk/latest` = DB = 导出，逐 `window_id` 一致（与 Step 2 同一 oracle）。
+- 窗口与回放行的对应关系由记录里的 `telemetry_features` 反查，不按时间推算。
+
+1. **ST-BRANCH-T-SMOKE**（3–5 个有效窗口）：开始监测后点 Stop Camera，对停止之后的窗口断言：
+   - vision = `missing`，telemetry = `fresh`，`SystemHealth = DEGRADED`；
+   - `RiskScore == round_half_up(100 × P_telemetry_anomaly, 1)`，用记录里未取整的 P。默认权重 0.5 下 `(0.5·P)/0.5` 在浮点上精确等于 P，所以这个 oracle 精确成立（换权重时须按产品的计算顺序）；`RiskLevel` 按取整后的分数映射 30 / 60；
+   - `P_telemetry_anomaly` 与一份冻结 fixture 相等（每个回放行对应的 P_t）。fixture 记录 `xgb_telemetry.json` 的 SHA256（`9802cb06…`），测试先核对哈希，不符即失败；
+   - provenance：`vision_source = missing`，`telemetry_source = prepared_replay`。
+2. **ST-BRANCH-T-CONTINUITY**（至少一整轮回放；时长取决于 Task 9 定下的游标语义）：
+   - 记录不缺不重，`window_id` 连续，与 `total_windows` 一致；
+   - 回放第 14、17 行（`telemetry_features` 为 null）的窗口是 UNAVAILABLE，之后能恢复；
+   - 循环始终不停，没有 stopped 态，D02 计数为 0；
+   - **告警状态序列**取决于 R10（观察身份）是否已实施。现行规则下，同一行遥测每次提交都推进计时；R10 实施后只有遥测序号变化才推进。brief 必须写明按测试当时生效的规则断言。
+3. **ST-BRANCH-V**（只开视觉）：真实 UI，Playwright 假摄像头流（`--use-fake-device-for-media-stream`）。用 Playwright 拦截 `/infer` 请求，**同时**设 `telemetry_features = null`、`telemetry_timestamp = null`、`telemetry_source = "missing"`。只改 `telemetry_features` 会被 `schemas.py:129-130` 拒成 422，前端收到 422 就停止循环。断言：
+   - telemetry = `missing`，vision = `fresh`，`DEGRADED`；
+   - `RiskScore == round_half_up(100 × P_distraction, 1)`；
+   - EMA 链：链的第一帧 `P_distraction == provenance.P_distraction_raw`；之后每帧 `P_distraction == round_half_up(α × raw + (1 − α) × 上一帧 P_distraction, 3)`，α 取 `provenance.fusion_config.ema_alpha`（默认 0.35）。链在不可用窗口、vision 非 fresh 的窗口、处理间隔超过 `freshness_tolerance_s` 之后重新播种（`inference.py:112-120,136-140`），播种帧等于 raw；
+   - `captureFrame` 为 null 的窗口是 UNAVAILABLE、四个字段为 null；
+   - 假摄像头每帧画面不同，所以不断言具体数值，只断言上述关系。
+4. **ST-BRANCH-ZERO**（反向）：在配置页把 Vision Weight 设为 1.00（Telemetry 自动为 0.00，`ConfigurationView.tsx:35-38`），开始监测后点 Stop Camera。断言停止之后的每个窗口都是 UNAVAILABLE、四个字段为 null，`provenance.fusion_config` 记录 `weight_vision = 1`、`weight_telemetry = 0`；**不能**出现 `100 × P_t`（这正是 Tasks 2–4 修过的零有效权重边界）。
 
 - [ ] **Step 3：把 `requires_models` 的静默跳过变成显式**
 
@@ -984,6 +1027,24 @@ npm run build
 
 **审阅没有逐项回答提示词中的 D-A…D-F。** 从 R30、R31、R17 能间接读出：ROUND_HALF_UP、迁移改写历史行（需披露）、不引入 jsdom，这三项未被推翻。其余 Ruling 视为未被质疑。
 
+## R5 修订记录（2026-10-13）：单分支系统测试
+
+来源：用户批准，由并行的 ML 会话转达。只写计划，各项随对应 Task 实现。
+
+| # | 内容 | 落在 |
+|---|---|---|
+| 1 | 摄像头停止后推理循环继续：帧为 null 照发、不计失败、不停止；全空输入得到 UNAVAILABLE 而非 422 | Task 8（Step 6 之后）、DoD 8 |
+| 2 | 游标改动保持上一条；游标语义开工前定 | Task 9 Step 2、DoD 9 |
+| 3 | 四个单分支系统测试：ST-BRANCH-T-SMOKE / T-CONTINUITY / V / ZERO | Task 10 Step 2A、DoD 10 |
+
+**原则**：单分支运行是系统本来就要支持的降级路径，不新增产品功能，测完不删任何东西；只为测试服务的控制（拦截请求）放在测试工具里，产品代码不改。
+
+**核实时发现、已写进相应位置的两点**：
+- 告警序列依赖 R10（观察身份；研究稿称「裁定 2」）是否已实施，写进了 ST-BRANCH-T-CONTINUITY。
+- Task 9 Step 2 原文「每提交一个窗口推进一次」与现行 2 s 回放节奏不一致，影响 T-CONTINUITY 的时长与每行提交次数；开工 Task 9 前定。
+
+**同一转达中的两条用户决定（系统轨道暂无行动）**：模型工作先做 A（五模型、调参、E1，Codex 负责），再做 B（调整摄像头视角，使 Live 视觉可用）；「数据集帧回放」作为视觉来源，只在 B 失败时才做，届时作为系统轨道的独立小任务，由用户再批准。
+
 ## 执行顺序与依赖
 
 ```
@@ -1032,9 +1093,9 @@ Task 1  冻结基线 / 工作目录 / lint / manifest
 | **5** | `UT-TIME-01..06` 全绿（`06` 是 D13 行为快照，断言当前行为）；`UT-EMA-PARITY-01` 绿；unavailable 不写 `None` 进 `state['severity']`；新增 state 键全部进 gap-reset 元组；`test_audit_regressions.py:139` 与 `test_restart.py:44` **仍绿**（证明没误动 Python EMA） |
 | **6** | `./node_modules/.bin/tsc --noEmit` **清零**；五个视图与 `ExplanationView` 都有 unavailable 分支；`LiveMonitor.tsx:45` 伪造 `SystemHealth` 已删除；视图读 `record.DominantEvidence` 而非重算；grep 断言 `SystemHealth === "UNAVAILABLE"` 不再出现在 `LiveMonitor.tsx`/`AlertBanner.tsx`；`.pill--unavailable` 样式存在；`preparedSessionInput.test.ts:31` 更新为 4 元集并绿 |
 | **7** | `fault_events` 表无 FK、有唯一索引、用显式 `CREATE TABLE IF NOT EXISTS`；`record_fault` 绑 `db.get_bind()` 且在 `rollback()` 之后调用；DB 故障时文件 sink 有记录且原始异常原样抛出；`ST-FAIL-01/02/03/04` + `ST-RECOVER-01` 全绿；会话删除后 fault 仍可查。**R4 追加（审阅 R16）**：原生 ORT 运行期异常、单分支失败、DB commit 失败各有分类与测试；**每个 eligible 请求都有成功或失败的持久 outcome**，并为 logging ≥ 99% 写明两个分母（成功预测的持久化率、全部 outcome 的记录率），不得用 stored / stored 自证 |
-| **8** | `retryPolicy.ts` 与 `liveLoop.ts` 为纯模块、node 环境可测；3 次投递后停止且不再排定时器；重试 payload 深度相等（同 request_id + 同帧 + 同时间戳）；pause-abort 不计数；`retry()` 不新建会话；时钟偏移有专属 category 与文案；UI 有可见 stopped 面板 + 手动 Retry。**R4 追加（审阅 IT-RETRY-IDENTITY）**：commit 之后 response 丢失、再以同 UUID 同 payload 重发 → DB 恰好一行、时序状态只推进一次；同 UUID 改 payload → 409 |
-| **9** | `PREPARED_RAW_TELEMETRY` 导出存在且 Live 路径改用它；游标单调可注入、同一输入序列可复现；`loadConfig` 不会把用户静默带回 replay；replay 调用点在 `RiskLevel` 为 null 时不破坏不变式；`prototype-tests/README.md` 改为 Live 端到端清单 |
-| **10** | `npm run typecheck` 存在并接入 `npm test`；`test_live_e2e.py` 在单 uvicorn + 静态 `dist/` 上跑通，断言 UI 值 == `/risk/latest` == 导出行；显式 stop camera 以触达 UNAVAILABLE；`requires_models` 跳过数显式打印；四道门禁全绿；三个模型 SHA256 与 Task 1 基线**逐一相等**；证据归档到 `docs/evidence/<date>/live-e2e/`。**R4 追加（审阅 R02、R17、R31）**：对账从 6 个单元格扩为**逐 ID 全行**（API 保存 = DB = latest = 同窗口 UI = 导出行）；门禁原始日志带 version / env / argv / exit / skips；capture → 预处理 → 模型 → commit → 网络 → render 分段计时（`windows.py:62` 的计时早于 commit，前端 `requestMs` 不含 render，所以目前未证明 ≤ 1 s）；`freeze_manifest.py` 在 `FYP_DATA_ROOT` 错误时不得静默回退；导出遇 NULL / 畸形 payload 有测试与守卫 |
+| **8** | `retryPolicy.ts` 与 `liveLoop.ts` 为纯模块、node 环境可测；3 次投递后停止且不再排定时器；重试 payload 深度相等（同 request_id + 同帧 + 同时间戳）；pause-abort 不计数；`retry()` 不新建会话；时钟偏移有专属 category 与文案；UI 有可见 stopped 面板 + 手动 Retry。**R4 追加（审阅 IT-RETRY-IDENTITY）**：commit 之后 response 丢失、再以同 UUID 同 payload 重发 → DB 恰好一行、时序状态只推进一次；同 UUID 改 payload → 409。**R5 追加**：`captureFrame` 为 null 时循环照常发送、不计失败、不停止；图像与遥测都为 null 时照常发送并得到 UNAVAILABLE 窗口（`liveLoop.test.ts`）；摄像头原因码与 track `ended` 事件只显示、不计数；全空 `LiveInput` 经 `/infer` → 201 + UNAVAILABLE 有 API 测试 |
+| **9** | `PREPARED_RAW_TELEMETRY` 导出存在且 Live 路径改用它；游标单调可注入、同一输入序列可复现；`loadConfig` 不会把用户静默带回 replay；replay 调用点在 `RiskLevel` 为 null 时不破坏不变式；`prototype-tests/README.md` 改为 Live 端到端清单。**R5 追加**：游标改动后 Task 8 的「摄像头停止后循环继续」用例仍绿；第 14 / 17 行照常以 `telemetry_source: "missing"` 发送；游标语义（2 s 节奏或按窗口推进）已在开工前定下并写进 Task 10 brief |
+| **10** | `npm run typecheck` 存在并接入 `npm test`；`test_live_e2e.py` 在单 uvicorn + 静态 `dist/` 上跑通，断言 UI 值 == `/risk/latest` == 导出行；显式 stop camera 以触达 UNAVAILABLE；`requires_models` 跳过数显式打印；四道门禁全绿；三个模型 SHA256 与 Task 1 基线**逐一相等**；证据归档到 `docs/evidence/<date>/live-e2e/`。**R4 追加（审阅 R02、R17、R31）**：对账从 6 个单元格扩为**逐 ID 全行**（API 保存 = DB = latest = 同窗口 UI = 导出行）；门禁原始日志带 version / env / argv / exit / skips；capture → 预处理 → 模型 → commit → 网络 → render 分段计时（`windows.py:62` 的计时早于 commit，前端 `requestMs` 不含 render，所以目前未证明 ≤ 1 s）；`freeze_manifest.py` 在 `FYP_DATA_ROOT` 错误时不得静默回退；导出遇 NULL / 畸形 payload 有测试与守卫。**R5 追加**：`ST-BRANCH-T-SMOKE`、`ST-BRANCH-T-CONTINUITY`、`ST-BRANCH-V`、`ST-BRANCH-ZERO` 全绿，共同断言（Partial / null、不可用窗口四字段 null、逐 `window_id` 对账）全部满足；P_t fixture 与 `xgb_telemetry.json` SHA256 绑定；产品代码未因这些测试改动 |
 | **10A** | provider 只经 runtime manifest 加载，代码中不再写死模型名、架构名或文件名，且有测试证明 provider 不读评估文件；稳定基线有自己的 runtime manifest，与候选走同一加载路径；预处理不支持、输出语义不符、类别映射或契约冒烟检查失败、路径逃逸、哈希不符时**一律拒绝加载**，每种情况各有测试；离线评估器复用 `TrainedProvider` / 融合 / EMA / Alert FSM，不起服务器、不写开发数据库，输出四层分开的对比报告，包含 ECE、Brier、RiskScore 与 L/M/H 分布、权重与阈值敏感性、FSM 行为；报告不含「RiskScore 更准确」一类表述；版本化发布与回滚流程已文档化，并在临时目录演练过一次（不触碰稳定产物）；Task 10 的 Live E2E 仍全绿；三个基线 SHA256 不变。**不要求执行正式替换** |
 
 ## 剩余技术风险
