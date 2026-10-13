@@ -47,7 +47,7 @@
 - **状态：** complete（2026-10-14）
 
 ### 阶段 2：Task 7 + Task 8（失败恢复，按计划 + R16 补充）
-- [ ] Task 7 `fault_events`：在计划 DoD 之外补 —— 原生 ORT 运行期异常的分类、单分支失败、DB commit 失败；**每个 eligible 请求都有成功或失败的持久 outcome**（为 logging ≥ 99% 定义两个分母）
+- [ ] Task 7 `fault_events`（开工前的 R6 裁定见计划 Task 7 Interfaces 之后：503 不可重试、`models_unavailable`、`attempt_index` 经 `X-Attempt-Index`、运行期错误 500、单分支失败 = 整体失败、恢复语义、建表单一来源）：在计划 DoD 之外补 —— 原生 ORT 运行期异常的分类、单分支失败、DB commit 失败；**每个 eligible 请求都有成功或失败的持久 outcome**（为 logging ≥ 99% 定义两个分母）
 - [ ] Task 8 有界重试：补 IT-RETRY-IDENTITY —— commit 之后 response 丢失再同 UUID 重发，DB 恰好一行、状态只推进一次；同 UUID 改 payload → 409
 - [ ] **重试与新鲜度的交互（2026-10-13 新增，开工 Task 8 前写进计划）**：为保幂等，重试逐字节重发同一 payload，`captured_at` / `telemetry_timestamp` 是首次采集值；退避 2 s + 4 s 后第 3 次投递距采集 ≥ 6 s，第 1 次若因 10 s 超时失败则第 2 次即已超过 3 s 容差。重试成功落库的窗口会被判为 stale / DEGRADED，并按 D13 现状继续累积 sustained-High。需在 Task 8 DoD 中声明并测试，且与阶段 5 的 D13 政策联动
 - [ ] **R5（用户批准 2026-10-13）**：摄像头停止后循环继续 —— 帧为 null 照发、不计失败、不停止；全空输入得到 UNAVAILABLE（`liveLoop.test.ts` + API 测试）。见计划 Task 8 与 DoD 8

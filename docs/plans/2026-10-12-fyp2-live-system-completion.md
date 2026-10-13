@@ -633,16 +633,30 @@ Run: `./node_modules/.bin/vitest run --no-cache && ./node_modules/.bin/tsc --noE
 **Interfaces:**
 - Produces:
   ```python
-  record_fault(db, *, session_id, request_id, retry_index, origin,
+  record_fault(db, *, session_id, request_id, attempt_index, origin,
                error_category, http_status, retryable, detail) -> None
   mark_recovered(db, session_id, request_id) -> None
   open_fault_count(db, session_id) -> int
   ```
-  `error_category` ∈ `input_validation | mode_conflict | not_found | idempotency_conflict | model_unavailable | model_runtime | storage | transport_timeout | unknown`；`recovery_status` ∈ `open | recovered | exhausted`。
+  `error_category` ∈ `input_validation | mode_conflict | not_found | idempotency_conflict | models_unavailable | model_runtime | storage | transport_timeout | unknown`；`recovery_status` ∈ `open | recovered | exhausted`。
+
+**R6 裁定（2026-10-14，Task 7 开工前；控制者对照当前代码核实）**：
+1. **503 不可重试**：ST-FAIL-02 原文「`retryable is True`」与 D02 冲突，已更正为 `False`。
+2. **类别拼写**统一为 `models_unavailable`（与 R1 失败策略表、Task 8 一致）。本节 Interfaces 原写 `model_unavailable`，已改。
+3. **尝试序号**统一为 `attempt_index`（从 1 开始）。原 Interfaces 写 `retry_index`，ST-RECOVER-01 写 `attempt_index`。客户端经请求头 `X-Attempt-Index` 告知，缺省为 1；它**不进** `request_hash`，因为重试必须逐字节相同。唯一索引改名为 `uq_fault_session_request_attempt`。
+4. **模型错误拆分**：`vision.run` / `telemetry.predict` 抛出的异常，以及非有限或形状不对的输出（现在 `trained.py` 把这两种输出归为 503），一律 → 500 `model_runtime`。`ModelUnavailable` → 503 只留给文件缺失、依赖缺失或加载失败、元数据校验失败。
+5. **单分支运行期失败 = 整个请求失败**（500），不降级为单分支窗口。fault 行的 `origin` 指明是哪一路。降级属于产品行为改变，不在本 Task。
+6. **`origin`** 取值能区分 `vision_model` / `telemetry_model` / `model_load` / `storage` / `request_validation` / `session` / `unknown`。
+7. **恢复语义**：同一会话**新提交**一条记录后，把该会话所有 `open` 行标为 `recovered`；幂等重放不算恢复。`exhausted` 本 Task 不写入，因为 3 次上界属于客户端。
+8. **记录位置**：可以在路由内记录，全局处理器只管 `RequestValidationError` 与漏网异常。硬性要求是每次失败的尝试恰好一行，状态码、detail 与原始异常都不变；只记录 `/infer`。生产者自相矛盾（`RiskUpdate` validator 报错）现在冒成裸 500，在 `/infer` 上也要留一行 fault（P1-4 评审发现）。
+9. **建表只有一个来源**：同一个函数同时被 `initialize_database()` 与 `conftest.py` 的 `api_factory` 调用。`api_factory` 只跑 `create_all`，不跑 `initialize_database`。
+10. **文件 sink** 写到 `backend/logs/`，该目录加进 `.gitignore`；测试把它重定向到 `tmp_path`。
+11. **增量迁移**：在旧 schema 的 tmp 库上验证建表、原有行不变、幂等。
+12. **R16 补测**：IT-FAULT-ORT（原生运行期异常，用假会话对象，不依赖权重）、IT-FAULT-SINGLE-BRANCH、IT-FAULT-INTEGRITY（并发重复不冒 500）、IT-OUTCOME-01（每次尝试恰好一个持久 outcome；两个分母都由测试脚本自己的请求清单给出）。
 
 - [ ] **Step 1：写失败测试**
 
-- `ST-FAIL-02`：live 会话上 POST `/infer` 带 `image_base64="not-base64"` → 422；`total_windows` 仍为 0、`/risk/latest` 仍 404；`GET /api/faults?session_id=…` 恰好一行，`error_category == "input_validation"`、`http_status == 422`、`retryable is False`、`request_id` 等于提交值、`recovery_status == "open"`。重复同一请求不产生第二行。把 `model_root` 指向空目录后 POST → 503，恰好一行 `model_unavailable`、`retryable is True`。
+- `ST-FAIL-02`：live 会话上 POST `/infer` 带 `image_base64="not-base64"` → 422；`total_windows` 仍为 0、`/risk/latest` 仍 404；`GET /api/faults?session_id=…` 恰好一行，`error_category == "input_validation"`、`http_status == 422`、`retryable is False`、`request_id` 等于提交值、`recovery_status == "open"`。重复同一请求不产生第二行。把 `model_root` 指向空目录后 POST → 503，恰好一行 `models_unavailable`、`retryable is False`（**R6 更正**：原文 `True` 与 D02 冲突）。
 - `ST-FAIL-03`：monkeypatch 请求 Session 的 `commit` 在第一次 `/infer` 抛 `OperationalError`。响应是 5xx 且 detail 仍指向存储失败（不是 fault logger 的错）；`total_windows` 仍 0；没有对应的 `InferenceRecord`；独立文件 sink（测试里重定向到 `tmp_path`）里有一行 `storage` + 该 request_id。**第二个子用例**：把 fault session 的 `commit` 也 patch 成抛错，断言原始 `OperationalError` 原样向上传播 —— fault logger 绝不掩盖原因。
 - `ST-RECOVER-01`（**R1 修订：不再用 503**）：1 次成功 → 3 次可重试失败 → 恢复 → 第 4 次请求。**注入方式必须是 `model_runtime`（HTTP 500）或 `transport`，不能是 503** —— 503 在 R1 的分类里是不可重试的「模型文件缺失」，用它注入会和客户端策略自相矛盾（这正是 R1 要消除的 Task 7/8 冲突）。断言三行 fault 的 `attempt_index` 为 1/2/3，第 4 次提交后 `recovery_status` 转 `recovered` 且 `recovered_by_request_id` 指向成功请求；`/system-status` 的 `open_fault_events` 恢复前 3、恢复后 0；**总共只有 2 条 `InferenceRecord`**（失败不落记录、重试不产生重复）。**任何断言都不得把 3 次上界当成服务端策略** —— 上界属于客户端，由 Task 8 断言，后端只记录它被告知的 `attempt_index`。
 - `ST-FAIL-04`（**R1 新增**）：拆分 `trained.py` 的两类失败。模型文件缺失 → 503 + `models_unavailable`；provider 前向推理抛异常 → **500 + `model_runtime`**。断言两者 HTTP 码不同、category 不同，且各自只产生一行 fault。没有这个拆分，客户端无法区分「重试没用」和「值得重试」。
@@ -654,7 +668,7 @@ Run: `./node_modules/.bin/vitest run --no-cache && ./node_modules/.bin/tsc --noE
 
 1. **`session_id` 必须是普通的、带索引的可空 String，不能有 ForeignKey。** `models.py:34` 的 `cascade="all, delete-orphan"` + `:45` 的 `ondelete="CASCADE"` + `db.py:24` 的 `PRAGMA foreign_keys=ON` 合起来，会让 fault 行随会话一起消失 —— 正好与 D02 要求相反。可空是因为「session not found」这类 fault 带的 id 从来就不存在。
 2. **`fault_events` 必须用显式 `CREATE TABLE IF NOT EXISTS`**，不能靠 `Base.metadata.create_all`。`db.py:44` 的 `inspect(conn).get_columns(table)` 对不存在的表抛 `NoSuchTableError`；现在能跑通只是因为 `main.py:14` 先 import 了 `app.models`，而 `test_migration.py:8` 只 import `app.db`，建表与否取决于 pytest 收集顺序。
-3. 唯一索引 `uq_fault_session_request_retry ON fault_events(session_id, request_id, retry_index)` 用 `CREATE UNIQUE INDEX IF NOT EXISTS`（SQLite 的 `ALTER TABLE` 不能加 UNIQUE），照抄 `db.py:52-53` 的幂等写法。
+3. 唯一索引 `uq_fault_session_request_attempt ON fault_events(session_id, request_id, attempt_index)`（**R6**：原名 `…_retry` / `retry_index`） 用 `CREATE UNIQUE INDEX IF NOT EXISTS`（SQLite 的 `ALTER TABLE` 不能加 UNIQUE），照抄 `db.py:52-53` 的幂等写法。
 
 `occurred_at` 用 ISO 字符串，与 `InferenceRecord.timestamp`（`models.py:50`）保持一致，不要用 `DateTime`。
 
