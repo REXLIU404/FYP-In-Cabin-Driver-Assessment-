@@ -269,3 +269,132 @@ brief 要求的 Q1–Q8：
 - **`freeze_manifest.py`**：现在在 `FYP_DATA_ROOT` 错误时退出 2、stdout 为空，归档脚本应检查退出码。
 - **R10**：本项没有碰游标与观测身份；告警序列的预期仍取决于 R10，仍由第 2 部分按届时生效的规则断言。
 - 若要让前端缓冲带上服务端分段（`server` 字段），需要先决定是否放开 `api/client.ts` 与 `main.py` 的 `expose_headers`（第 7 节第 2 条）。
+
+---
+
+## 修复轮 1
+
+基线：开工前核实 `git rev-parse --short HEAD` = `1a321b0`（与任务要求一致），`git status --short` 为空。本轮只处理评审者留下的一条 Important（`blocks_this_item: true`），**实现代码 0 行改动**，只新增一个测试文件并追加本节。
+
+### R1.1　发现
+
+> `frontend/src/hooks/useLiveSession.ts:60`：没有任何测试检查「生产环境的 Live 循环确实接了一个有上限的记录器」。记录器靠依赖注入启用，不注入就什么也不记；只有 hook 注入（`timings: createTimingBuffer()`），而没有测试读 hook。评审者在隔离副本里做了两个变异，全部门禁仍然全绿：Q7c `createTimingBuffer(10_000_000)`（生产里等于无上限），vitest 750/750；Q7d `createTimingBuffer() && undefined`（生产里什么也不记），vitest 750/750、tsc、eslint 都过。`window.__draLiveTimings` 访问器和 `markRendered` 的 effect（77–89 行）同样无守卫。该 effect 还只标记最新一个窗口，所以在同一次 React 提交里被超过的窗口，`renderMs` 永远是 null。建议的修法在允许范围内（新测试文件）：对 `useLiveSession.ts` 做 node 环境的 `?raw` 源码守卫，像 `ai/src/availability.test.ts` 对 `export.ts` 做的那样，钉住默认容量的 `timings: createTimingBuffer()` 与 `__draLiveTimings` 的 getter；第 2 部分的验收还应断言每个窗口的 `renderMs` 非 null。
+
+**处理**：
+
+| 发现中的内容 | 本轮处理 |
+|---|---|
+| 没有测试保证生产循环接了有上限的记录器（Q7c、Q7d 全绿） | **已修**：新测试 `frontend/src/hooks/useLiveSession.test.ts` 的源码守卫。Q7c、Q7d 现在变红，且**只有**这个新文件红（见 R1.4） |
+| `__draLiveTimings` 访问器、`markRendered` effect 无守卫 | **已修**：同一个守卫钉住访问器（getter、挂在 `window`、卸载时删除）与 effect（最新窗口、依赖 `newestWindowId`） |
+| effect 只标记最新窗口，被超过的窗口 `renderMs` 永远是 null | **未改代码，已记录**：这是 effect 的既有设计限制，修它要改 `useLiveSession.ts` 的行为，而且 node 环境无法验证；评审者给出的修法也只要求「第 2 部分验收断言每个窗口 `renderMs` 非 null」。该要求写入 R1.6，并且守卫**原样钉住了**现在的 effect 形状，所以将来谁改它必须同时更新守卫 |
+
+### R1.2　改动
+
+- **新增** `frontend/src/hooks/useLiveSession.test.ts`（351 行，21 个测试，vitest include 的 `frontend/src/**/*.test.ts` 自动收录，不需要 DOM 环境）。**没有修改任何已有文件的代码**（`ai/src/liveTiming.ts`、`ai/src/liveLoop.ts`、`useLiveSession.ts` 都是 0 行改动）。
+- **本节**追加到本报告。提交内含 2 个文件：新测试、本报告。
+
+**守卫的做法**（与 `availability.test.ts` 同一手法：`import hookSource from "./useLiveSession.ts?raw"`，由 Vite 在测试时解析，不需要 `@types/node`）：
+
+1. 先**去掉所有注释**再匹配（字符串字面量原样保留，所以字符串里的 `//` 不会被误当注释）。这样 `// timings: createTimingBuffer(),` 这种「注释掉」的变异不能蒙混过关。
+2. `argumentsOf` 用括号配平取出 `createLiveLoop<…>(…)` 的实参文本，`depthAt` 算出某个位置的括号深度（忽略字符串里的括号），用来要求 `timings` 是**选项对象的顶层属性**，而不是塞进某个循环不会读的嵌套对象里。
+3. 八条要求（`violations()` 返回未满足的那几条，整体断言 `toEqual([])`，失败时直接显示哪几条）：
+
+| 要求 | 钉住的内容 |
+|---|---|
+| `IMPORT` | `createTimingBuffer` 来自共享的、有测试的 `../../../ai/src/liveTiming`，不是本地替身 |
+| `ONE_BUFFER` | 全文只有「import + 一次调用」，没有第二个、模块级的共享缓冲 |
+| `PER_INSTANCE` | `createLiveLoop` 在 `useState(() => …)` 初始化器里调用：每个 hook 实例一个循环、一个缓冲 |
+| `OPTION` | 选项里是 `timings: createTimingBuffer()`，**括号内无参数**（即默认的 500 窗口环），后面紧跟 `,` 或 `}`（所以 `… && undefined`、任何参数、包装、回退都不通过），且位于顶层 |
+| `SINGLE_OPTION` | 选项里 `timings:` 只出现一次（后面不能再有一个覆盖它的重复项） |
+| `ACCESSOR` | `const host = window …`；`Object.defineProperty(host, "__draLiveTimings", {…})` 的描述符里是 `get: () => loop.getTimings()`（每次读取都是新拷贝），且没有 `value:` |
+| `CLEANUP` | 卸载时 `delete host.__draLiveTimings` |
+| `RENDERED` | `newestWindowId` 取自 `live.history[live.history.length - 1].window_id`；`useEffect(() => { if (newestWindowId !== null) loop.markRendered(newestWindowId); }, [loop, newestWindowId])` |
+
+4. 「无参的 `createTimingBuffer()` 就是 500 窗口环」用**字面量**在同一个文件里闭合：`expect(createTimingBuffer().capacity).toBe(500)`，再推入 501 个窗口，断言 `size` 为 500、最旧的是窗口 2。（`liveTiming.test.ts` 里本来就有同样的断言；放一份在守卫旁边，是为了让「hook 用默认值 → 默认值是 500」这条证据链在一个文件里读得完。）
+5. **守卫自带 16 个内存变异**（`MUTANTS`）：对**真实的** hook 源码做字符串替换，被替换的文本必须恰好出现一次（源码漂移时是大声失败，而不是什么也没测），并断言对应的要求变红：无上限 `createTimingBuffer(10_000_000)`、`&& undefined`、整行删除、注释掉、塞进嵌套对象、模块级共享缓冲、后面追加覆盖的重复项、本地替身取代 import、`value:` 代替 getter、返回空数组的 getter、只返回一部分的 getter、挂到 `{}` 而不是 `window`、卸载时不删除、effect 依赖改成 `[loop]`、effect 不调用 `markRendered`、effect 跟随最旧窗口。
+6. 3 个测试验证守卫自己的工具函数（`withoutComments`、`depthAt`、`argumentsOf`）。
+7. 期望值都是测试里的字面量（500、501、2、各要求名），没有从实现 import 常量构造期望。
+
+测试数：2（真实源码满足全部要求；默认环为 500）+ 16（变异）+ 3（工具函数）= **21**。
+
+### R1.3　执行的命令与输出
+
+```
+cd /Users/liu/Desktop/FYP2-Live-System
+./node_modules/.bin/prettier --check frontend/src/hooks/useLiveSession.test.ts
+    All matched files use Prettier code style!                      (exit 0；首次写完后有格式差异，已对这一个新文件 --write)
+./node_modules/.bin/vitest run --no-cache frontend/src/hooks/useLiveSession.test.ts
+    ✓ frontend/src/hooks/useLiveSession.test.ts (21 tests) 9ms
+    Test Files  1 passed (1) | Tests  21 passed (21)
+```
+
+四项门禁（真实工作树，`export PYTHONDONTWRITEBYTECODE=1`，精确命令同 `phase2-context.md`）：
+
+```
+(cd backend && TMPDIR=$(mktemp -d) PYTHONPATH=. ../.venv/bin/python -m pytest tests -q -p no:cacheprovider)
+    774 passed, 1 warning in 15.42s            (exit 0；警告是 starlette 对 httpx 的弃用提示，既有)
+./node_modules/.bin/vitest run --no-cache
+    Test Files  28 passed (28)
+    Tests  771 passed (771)                    (exit 0)
+./node_modules/.bin/tsc --noEmit
+    (无输出)                                   (exit 0)
+./node_modules/.bin/eslint .
+    (无输出)                                   (exit 0)
+```
+
+提交时 `git status --short` 只有 `?? frontend/src/hooks/useLiveSession.test.ts` 与本报告。
+
+### R1.4　变异（隔离副本）
+
+**副本的做法**：`git archive HEAD | tar -x` 到一个新的临时目录，再把工作树里的新测试文件拷进去；副本的 `node_modules` 是一个**真实目录**，里面逐个包符号链接到主仓库的 `node_modules/*`，**唯独不链接** `.vite`、`.vite-temp`、`.vitest`，所以 Vite / vitest 的缓存与配置临时文件都写进副本，不写主仓库（上一轮 E9b 的教训）。副本里 `git init` 并提交一次基线，仅用于核对「还原后干净」。副本路径 `/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/tmp.u38CcQXLwo`。每个变异：改**一个**文件 → 跑**整个** vitest（`vitest run --no-cache`）→ 把文件还原 → 与真实工作树里的同名文件逐字节比较（脚本里有断言）；全部做完后副本 `git status --short` 为 0 行。
+
+先复现评审者的结果（**不含**新文件）：
+
+| 变异 | 命令 | 观察到 |
+|---|---|---|
+| Q7c（`createTimingBuffer(10_000_000)`），排除新测试 | `vitest run --no-cache --exclude frontend/src/hooks/useLiveSession.test.ts` | 27 个文件、**750 passed (750)**，全绿——与评审者一致 |
+| Q7d（`createTimingBuffer() && undefined`），排除新测试 | 同上 | 27 个文件、**750 passed (750)**，全绿 |
+
+加上新文件（`python3 mut_fe.py <副本> …`，每项都是整个 vitest）：
+
+| # | 变异 | 观察到 |
+|---|---|---|
+| Q7c | `timings: createTimingBuffer(10_000_000),` | vitest 退出 1；`1 failed \| 27 passed (28)` 个文件，`8 failed \| 763 passed (771)`；红的文件**只有** `useLiveSession.test.ts`；同一变异下 `tsc` 退出 0、`eslint` 退出 0（与评审者一致：只有新守卫能抓到） |
+| Q7d | `timings: createTimingBuffer() && undefined,` | 同上：`8 failed`，只有新文件红；`tsc` 0、`eslint` 0 |
+| M3 | 整行 `timings: …` 删除（生产里什么也不记） | `8 failed`，只有新文件红 |
+| M4 | 注释掉：`// timings: createTimingBuffer(),` | `1 failed`，只有新文件红（去注释起作用） |
+| M5 | 塞进嵌套对象：`unused: { timings: createTimingBuffer() },` | `8 failed`，只有新文件红（深度检查起作用） |
+| M6 | `get: () => loop.getTimings()` 改成 `value: loop.getTimings()` | `4 failed`，只有新文件红 |
+| M6b | getter 改成 `get: () => []` | `4 failed`，只有新文件红 |
+| M7 | 删掉卸载时的 `delete host.__draLiveTimings;` | `2 failed`，只有新文件红 |
+| M8 | effect 依赖 `[loop, newestWindowId]` 改成 `[loop]` | `2 failed`，只有新文件红 |
+| M9 | effect 里不再调用 `loop.markRendered(…)` | `2 failed`，只有新文件红 |
+| M10 | `ai/src/liveTiming.ts` 的 `TIMING_CAPACITY` 500 → 50000 | `3 files failed`：`liveTiming.test.ts`、`liveLoopTiming.test.ts`、新文件，`4 failed \| 767 passed (771)` |
+
+关于失败数 8：真实源码那条要求测试 1 个，加上 7 个「内存变异」——它们要替换的文本 `timings: createTimingBuffer(),` 已经被磁盘变异改掉，`once()` 的「必须恰好出现一次」前提不成立而大声失败。这是设计如此：源码一漂移，守卫的失败就指向「该更新守卫」。
+
+每个变异后文件都还原并与真实工作树逐字节相同；副本 `git status --short` 为 0 行。主仓库 `node_modules/.vite`、`.vite-temp`、`.vite/deps`、`.vite/vitest` 的 mtime 在本轮开始前后**完全一致**（`diff` 无输出；`.vite-temp` 的 mtime 在本轮开工前就是 `2026-10-16 04:21:18`，不是本轮造成的）。
+
+### R1.5　测试数的变化
+
+| | 修复轮前（`1a321b0`） | 修复轮后 |
+|---|---|---|
+| pytest | 774 passed / 0 failed / 0 skipped | **774 passed**（本轮没有改 Python） |
+| vitest | 750 passed（27 个文件） | **771 passed（28 个文件）**：+21 = 2 + 16 + 3，新文件 `useLiveSession.test.ts` |
+| tsc | 0 | 0 |
+| eslint | 0 | 0 |
+
+没有任何已有测试被删除、修改或弱化。
+
+### R1.6　遗留，及对第 2 部分验收的要求
+
+1. **守卫钉的是源码文字，不是运行行为。** 它能证明「生产 hook 注入了默认的 500 窗口环、访问器是 getter、effect 调用 `markRendered`」，但不能证明这些 effect 在真实 React 里确实运行。第 2 部分的真实浏览器验收仍要读 `window.__draLiveTimings`：非空；条数 ≤ 500；卸载后访问器消失。
+2. **`renderMs` 只会被标记给最新窗口**（评审者指出的限制，**未改代码**）。`useEffect` 每次提交只对 `live.history` 的最后一个 `window_id` 调一次 `markRendered`；如果两个窗口在同一次 React 提交里到达（批处理），较早的那个 `renderMs` 将永远是 `null`，没有任何地方会回头补。正常节奏下窗口之间相隔一个推理周期，很少发生，但不能假设它不发生。**第 2 部分 PERF-01 的验收必须：** 对 `window.__draLiveTimings` 里的**每一个**窗口断言 `renderMs !== null`（或者把 `renderMs === null` 的窗口数与 `window_id` 列出来作为一项结论），**不能**在统计 `renderMs` 前悄悄把 null 过滤掉。如果实测出现 null，修法是让 effect 对 `live.history` 里所有尚未标记的窗口调用 `markRendered`；那样改时必须同步更新本守卫的 `RENDERED` 要求。
+3. **守卫刻意偏严**：要求 `createTimingBuffer()` 无参、effect 保持现在的形状、getter 用箭头函数。合法的重构（显式写容量、方法简写的 getter、给所有未标记窗口补 `markRendered`）会让它变红，这是要你**有意识地更新**守卫，而不是误报；失败信息会直接列出哪条要求不满足。
+4. 第 7 节第 3 条原文「React 绑定层未单测」现在应读作：**接线**有源码守卫（本轮），**运行行为**仍未单测（需要第 2 部分的真实浏览器）。
+5. 其余遗留（`WindowTiming.server` 恒为 null、`build` 门禁仅 dry-run、导出守卫的子字段边界等）本轮不涉及，保持第 7 节原样。
+
+### R1.7　证据路径
+
+- 新测试 `/Users/liu/Desktop/FYP2-Live-System/frontend/src/hooks/useLiveSession.test.ts`；本报告 `/Users/liu/Desktop/FYP2-Live-System/docs/fyp2/implementation/task-10-part1.md`
+- 会话草稿目录 `/private/tmp/claude-501/-Users-liu-Desktop-FYP-In-Cabin-Driver-Assessment--1--claude-worktrees-exciting-keller-fdf913/43d73f6d-ed36-4f8a-b584-13c974ccd767/scratchpad/`：`mkcopy_fe.sh`（隔离副本）、`mut_fe.py`（变异脚本，里面是每个变异的原文与新文）、`mut_fe_rest.out`（M3–M10 的原始输出）、`fix1_pytest.out`、`fix1_vitest.out`、`fix1_tsc.out`、`fix1_eslint.out`、`main_nm_mtimes_before.txt` / `main_nm_mtimes_after.txt`
