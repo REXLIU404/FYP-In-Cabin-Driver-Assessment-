@@ -1,6 +1,6 @@
 """Shared pytest configuration for the backend tests.
 
-Two jobs:
+Four jobs:
 
 1. Guarantee that *importing the app never touches a real database*. ``Settings``
    is instantiated once, the first time ``app.config`` is imported, and its
@@ -19,6 +19,12 @@ Two jobs:
    ``test_audit_regressions.py`` overrides only ``get_db``. The autouse fixture
    below therefore redirects the sink's default path for EVERY test.
 
+4. Make "needs the trained models" skips impossible to miss. ``ml/outputs/*`` is
+   git-ignored, so a clean checkout skips the heaviest live tests and pytest still
+   exits 0: a green that proved nothing about them. ``pytest_terminal_summary`` prints
+   the count and the names of those skips in a banner, and ``DRA_REQUIRE_MODELS=1``
+   (the pre-release gate) turns each of them into a failure instead.
+
 The pre-existing ``api`` fixture in ``test_audit_regressions.py`` has the same
 ``(client, session_id)`` contract and, being module-level, takes precedence in
 the modules that use it. New tests use only this one.
@@ -27,6 +33,7 @@ import atexit
 import os
 import shutil
 import tempfile
+from pathlib import Path
 
 import pytest
 
@@ -111,3 +118,73 @@ def api(api_factory, tmp_path):
     finally:
         client.close()
         cache._latest.clear()  # module-global: would leak between tests otherwise
+
+
+# --------------------------------------------------------------------------------------
+# "Needs the trained models" skips: counted, printed, and optionally fatal.
+# --------------------------------------------------------------------------------------
+# The reason string of every ``requires_models`` skipif in this directory
+# (test_live_inference.py, test_unavailable_contract.py). It is how a skip is
+# recognised, so a test that spells it differently would escape the accounting;
+# test_model_gate.py pins that every ``requires_models`` marker uses this exact text.
+MODELS_SKIP_REASON = "local trained artifacts not installed"
+REQUIRE_MODELS_ENV = "DRA_REQUIRE_MODELS"
+_MODEL_ROOT = Path(__file__).resolve().parents[2] / "ml" / "outputs"
+_STABLE_MODEL_FILES = (
+    "vision/mobilenetv3_large_vision.onnx",
+    "vision/mobilenetv3_large_vision.pt",
+    "telemetry/xgb_telemetry.json",
+)
+_model_skips: list[str] = []
+
+
+def _require_models() -> bool:
+    return os.environ.get(REQUIRE_MODELS_ENV) == "1"
+
+
+def _is_models_skip(report) -> bool:
+    """A skip raised by ``skipif(..., reason=MODELS_SKIP_REASON)``. For a mark-based
+    skip pytest stores ``(path, lineno, reason)`` in ``longrepr``; a ``pytest.skip()``
+    call stores ``"Skipped: reason"`` there. Both contain the reason text."""
+    return bool(report.skipped) and MODELS_SKIP_REASON in str(report.longrepr)
+
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    outcome = yield
+    report = outcome.get_result()
+    if report.when != "setup" or not _is_models_skip(report):
+        return
+    _model_skips.append(report.nodeid)
+    if _require_models():
+        # Not a skip any more: the session ends non-zero and the test is listed red.
+        report.outcome = "failed"
+        report.longrepr = (
+            f"{REQUIRE_MODELS_ENV}=1 but the trained model artifacts are missing, so this test "
+            f"cannot run ({MODELS_SKIP_REASON}).\nExpected under {_MODEL_ROOT}: "
+            + ", ".join(_STABLE_MODEL_FILES)
+        )
+
+
+def pytest_terminal_summary(terminalreporter, exitstatus, config):
+    if not _model_skips:
+        if _require_models():
+            terminalreporter.write_line(f"{REQUIRE_MODELS_ENV}=1: no model-dependent test was skipped.")
+        return
+    missing = [name for name in _STABLE_MODEL_FILES if not (_MODEL_ROOT / name).exists()]
+    terminalreporter.section(
+        f"{len(_model_skips)} MODEL-DEPENDENT TEST(S) NOT RUN (models missing)",
+        sep="!", red=True, bold=True,
+    )
+    terminalreporter.write_line(
+        "These tests were skipped, not passed: a green result says nothing about them.", red=True, bold=True)
+    terminalreporter.write_line(f"Model root: {_MODEL_ROOT}")
+    terminalreporter.write_line("Missing: " + (", ".join(missing) if missing else "(all stable files exist; check the skip condition)"))
+    for nodeid in _model_skips:
+        terminalreporter.write_line(f"  SKIPPED  {nodeid}")
+    if _require_models():
+        terminalreporter.write_line(
+            f"{REQUIRE_MODELS_ENV}=1: each of the above was reported as a FAILURE.", red=True, bold=True)
+    else:
+        terminalreporter.write_line(
+            f"Set {REQUIRE_MODELS_ENV}=1 (pre-release gate) to make a missing model fail the run.")

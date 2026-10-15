@@ -111,6 +111,67 @@ export interface LiveLoopApi<TModels> {
   ): Promise<RiskUpdate>;
 }
 
+/**
+ * Latency of one answered window (plan Task 10, R4). The three segments are wall-clock
+ * differences from the loop's injected `now()`: 1 ms resolution, not monotonic, clamped
+ * at 0. The measuring and the ring buffer live in `liveTiming.ts`; they are declared here
+ * because the loop must not import anything but `./types` (a scope guard in
+ * `preparedRawTelemetry.test.ts` pins that), so the recorder is injected.
+ */
+export interface WindowTiming {
+  sessionId: string;
+  windowId: number;
+  requestId: string;
+  /** X-Attempt-Index of the delivery whose response produced this window (1 = first send). */
+  attemptIndex: number;
+  /** The tick began, just before the camera was sampled. */
+  capturedAtMs: number;
+  /** The delivery that succeeded was issued. */
+  sentAtMs: number;
+  /** Its response arrived and was parsed. */
+  receivedAtMs: number;
+  /** `null` until `markRendered`: the window has been committed to the UI. */
+  renderedAtMs: number | null;
+  /** capture -> send; includes any backoff before a retried delivery. */
+  captureToSendMs: number;
+  /** send -> response parsed; contains the server's whole stay. */
+  networkMs: number;
+  /** response parsed -> committed to the UI (not first paint); `null` until rendered. */
+  renderMs: number | null;
+  /** The server's `Server-Timing` stages in ms, if the caller supplied the header; else `null`. */
+  server: Record<string, number> | null;
+}
+
+export interface TimingInput {
+  sessionId: string;
+  windowId: number;
+  requestId: string;
+  attemptIndex: number;
+  capturedAtMs: number;
+  sentAtMs: number;
+  receivedAtMs: number;
+  /** A raw `Server-Timing` header value, when the caller has one. */
+  serverTiming?: string | null;
+}
+
+/** What the loop needs from a latency recorder; `createTimingBuffer()` is the bounded implementation. */
+export interface TimingRecorder {
+  /** Record a window the server answered. A second entry for the same window replaces the first. */
+  push(input: TimingInput): void;
+  /**
+   * The window is on screen. Fills `renderedAtMs` / `renderMs` of the newest entry of that
+   * (session, window) not yet rendered; returns whether one was found. An unknown or
+   * already-closed window changes nothing.
+   */
+  markRendered(
+    sessionId: string,
+    windowId: number,
+    renderedAtMs: number,
+  ): boolean;
+  /** Oldest to newest, as a fresh array. */
+  snapshot(): readonly WindowTiming[];
+}
+
 export interface LiveLoopTimers {
   setTimeout(fn: () => void, ms: number): unknown;
   clearTimeout(handle: unknown): void;
@@ -133,6 +194,11 @@ export interface LiveLoopDeps<TModels> {
   /** Wall clock in epoch milliseconds. */
   now(): number;
   timers: LiveLoopTimers;
+  /**
+   * Where per-window latency goes. Optional: without it the loop records nothing and
+   * `getTimings()` is empty. Production passes a bounded `createTimingBuffer()`.
+   */
+  timings?: TimingRecorder;
 }
 
 export interface LiveFault {
@@ -201,6 +267,17 @@ export interface LiveLoop<TModels> {
   loadSession(sid: string): Promise<string | null>;
   /** Swap one history entry for a newer copy of the same window (a flag toggle). */
   replaceRecord(record: RiskUpdate): void;
+  /**
+   * Per-window latency of the windows the server answered, oldest first (empty when no
+   * recorder was injected). A read-only copy.
+   */
+  getTimings(): readonly WindowTiming[];
+  /**
+   * The UI has committed this window of the CURRENT session (called from a React effect
+   * after the commit). Closes the window's `renderMs`; unknown or already-closed windows
+   * are ignored.
+   */
+  markRendered(windowId: number): void;
 }
 
 /** Per-attempt abort deadline of one `infer` delivery. */
@@ -212,6 +289,8 @@ const HISTORY_LIMIT = 500;
 interface PendingRequest {
   sessionId: string;
   payload: LivePayload;
+  /** When the tick that built this request began, just before the camera was sampled. */
+  capturedAtMs: number;
   /** Deliveries started so far; the next one carries `deliveries + 1`. */
   deliveries: number;
   /** How many of those were started by `retry()` rather than by the loop itself. */
@@ -263,6 +342,7 @@ export function createLiveLoop<TModels = unknown>(
   let startedAt = 0;
   let pending: PendingRequest | null = null;
   let completions: number[] = [];
+  const timings = deps.timings;
 
   const clearTickTimer = () => {
     if (tickTimer !== null) timers.clearTimeout(tickTimer);
@@ -349,6 +429,7 @@ export function createLiveLoop<TModels = unknown>(
     // The one and only place a payload is built. Redeliveries reuse `pending`.
     pending = {
       sessionId: activeSid,
+      capturedAtMs: begun,
       deliveries: 0,
       manualDeliveries: 0,
       payload: {
@@ -398,6 +479,15 @@ export function createLiveLoop<TModels = unknown>(
     if (g !== generation) return;
     pending = null;
     const completed = deps.now();
+    timings?.push({
+      sessionId: request.sessionId,
+      windowId: record.window_id,
+      requestId: request.payload.request_id,
+      attemptIndex,
+      capturedAtMs: request.capturedAtMs,
+      sentAtMs: sentAt,
+      receivedAtMs: completed,
+    });
     completions.push(completed);
     if (completions.length > 20) completions.shift();
     patch({
@@ -649,5 +739,9 @@ export function createLiveLoop<TModels = unknown>(
     retry,
     loadSession,
     replaceRecord,
+    getTimings: () => timings?.snapshot() ?? [],
+    markRendered(windowId) {
+      timings?.markRendered(state.sessionId, windowId, deps.now());
+    },
   };
 }

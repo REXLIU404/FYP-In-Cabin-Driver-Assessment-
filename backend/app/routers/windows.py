@@ -4,12 +4,12 @@ import json
 import time
 from datetime import datetime
 
-from fastapi import APIRouter, Depends, Header, HTTPException, Query, Request
+from fastapi import APIRouter, Depends, Header, HTTPException, Query, Request, Response
 from sqlalchemy import update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from .. import cache, faults, inference, models
+from .. import cache, faults, inference, models, timing
 from ..db import get_db
 from ..faults import FaultHTTPException, FaultSink, get_fault_sink
 from ..schemas import LiveInput, RiskUpdate, RuntimeConfig, WindowInput
@@ -67,9 +67,12 @@ def _persist_window(db, sid, w, *, mode, provenance=None, request_id=None, diges
             if stamp:
                 state[key] = stamp
     config = RuntimeConfig(**sess.runtime_config) if sess.runtime_config else inference.default_config()
-    ru = inference.run_inference(sid, number, w, state=state, config=config,
-                                 provenance=provenance, operation_mode=mode)
+    with timing.measure("fusion"):
+        ru = inference.run_inference(sid, number, w, state=state, config=config,
+                                     provenance=provenance, operation_mode=mode)
     if started is not None:
+        # latency_ms stops HERE, before the record is added and committed: it excludes the
+        # commit and the cache write. Server-Timing's ``commit`` / ``total`` cover those.
         ru.latency_ms = round((time.perf_counter() - started) * 1000)
     rec = models.InferenceRecord(
         session_id=sid, window_id=number, request_id=request_id, request_hash=digest,
@@ -82,7 +85,8 @@ def _persist_window(db, sid, w, *, mode, provenance=None, request_id=None, diges
     db.add(rec)
     sess.runtime_state = state
     try:
-        db.commit()
+        with timing.measure("commit"):  # db.commit() and nothing else
+            db.commit()
     except IntegrityError:
         # A concurrent twin won uq_record_session_request between our check and our
         # commit. That is a duplicate delivery, not a server error: answer it the way
@@ -148,12 +152,13 @@ def _infer(db, session_id: str, payload: LiveInput):
     # Finish the read transaction before doing model work and taking a writer lock.
     db.rollback()
     window, provenance = _run_models(payload)
+    timing.record_provider_timings(provenance.get("timing_ms"))
     return _persist_window(db, session_id, window, mode="LIVE_MODEL_RUNTIME", provenance=provenance,
                            request_id=payload.request_id, digest=digest, started=started)
 
 
 @router.post("/{session_id}/infer", response_model=RiskUpdate, status_code=201)
-def infer_frame(session_id: str, payload: LiveInput, request: Request,
+def infer_frame(session_id: str, payload: LiveInput, request: Request, response: Response,
                 db: Session = Depends(get_db), sink: FaultSink = Depends(get_fault_sink),
                 attempt_index: int = Header(1, ge=1, le=1000, alias="X-Attempt-Index")):
     # le=1000 equals faults.MAX_ATTEMPT_INDEX. Above it FastAPI answers 422 before this
@@ -161,8 +166,15 @@ def infer_frame(session_id: str, payload: LiveInput, request: Request,
     # Seen by the global handlers, which must not record what this route already has.
     request.state.fault_context = {"session_id": session_id, "request_id": payload.request_id,
                                    "attempt_index": attempt_index}
+    handler_started = time.perf_counter()
+    timer = timing.SegmentTimer()
     try:
-        return _infer(db, session_id, payload)
+        with timing.activate(timer):
+            result = _infer(db, session_id, payload)
+        # Success only: a failed request has no Server-Timing (its outcome is a fault row).
+        timer.ms["total"] = (time.perf_counter() - handler_started) * 1000
+        response.headers["Server-Timing"] = timer.header()
+        return result
     except Exception as exc:
         # Order matters. The failed transaction may still hold SQLite's only write
         # lock; the fault is written on a second connection, which would otherwise

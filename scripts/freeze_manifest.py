@@ -17,12 +17,17 @@ Writes a Markdown report to stdout. It records
   6. whether any development SQLite database exists in the repo.
 
 Exit status: 0 when every baseline model checkpoint is present and matches its frozen hash,
-1 otherwise (so the script doubles as the "models unchanged" gate for later tasks).
+1 otherwise (so the script doubles as the "models unchanged" gate for later tasks), and 2
+when ``FYP_DATA_ROOT`` is set but does not contain ``eda_outputs/processed`` (nothing is
+written to stdout in that case).
 
 Environment:
   FYP_DATA_ROOT   directory that contains ``eda_outputs/``. When unset the script tries the
                   repo root, then the sibling repo ``~/Desktop/FYP-In-Cabin-Driver-Assessment-``
-                  (the same default ``ml/README.md`` documents).
+                  (the same default ``ml/README.md`` documents). When SET (an empty value
+                  counts as set) it is the only candidate: if it is wrong the script stops
+                  with an error instead of quietly hashing a different dataset, because a
+                  manifest that names the wrong split files is worse than no manifest.
 
 The script is read-only: it never writes to the repo, the data root or the model files.
 Standard library only.
@@ -186,12 +191,26 @@ def section_models() -> tuple[list[str], bool]:
     return lines, all_ok
 
 
+class DataRootError(Exception):
+    """``FYP_DATA_ROOT`` was given explicitly and does not hold ``eda_outputs/processed``."""
+
+
 def resolve_data_root() -> tuple[Path | None, list[str]]:
     tried: list[str] = []
     candidates: list[Path] = []
-    env = os.environ.get("FYP_DATA_ROOT")
-    if env:
-        candidates.append(Path(env).expanduser())
+    if "FYP_DATA_ROOT" in os.environ:
+        # An explicit choice is never second-guessed: no fallback to the other candidates.
+        env = os.environ["FYP_DATA_ROOT"]
+        if not env:
+            raise DataRootError("FYP_DATA_ROOT is set but empty; unset it to use the default candidates")
+        root = Path(env).expanduser()
+        if not (root / "eda_outputs" / "processed").is_dir():
+            raise DataRootError(
+                f"FYP_DATA_ROOT={env} does not contain eda_outputs/processed "
+                f"(looked for {root / 'eda_outputs' / 'processed'}); fix the path or unset it. "
+                "No other location was tried."
+            )
+        return root.resolve(), [str(root)]
     candidates += [REPO, DEFAULT_SIBLING_DATA_ROOT]
     for cand in candidates:
         tried.append(str(cand))
@@ -407,6 +426,11 @@ def section_dep_files() -> list[str]:
 
 
 def main() -> int:
+    try:
+        resolve_data_root()  # fail before any work, and before any byte reaches stdout
+    except DataRootError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
     stamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     out: list[str] = [
         "# FYP2 freeze manifest",

@@ -6,6 +6,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import { createLiveLoop } from "../../../ai/src/liveLoop";
+import { createTimingBuffer } from "../../../ai/src/liveTiming";
 import { api, type ModelStatus } from "../api/client";
 import { RETRY_POLICY } from "../api/retryPolicy";
 import { preparedTelemetryAt } from "../data/preparedSessionInput";
@@ -55,6 +56,8 @@ export function useLiveSession(
       telemetryAt: preparedTelemetryAt,
       newRequestId: () => crypto.randomUUID(),
       now: () => Date.now(),
+      // Bounded (500 windows) per-window latency: capture -> send -> response -> render.
+      timings: createTimingBuffer(),
       timers: {
         setTimeout: (fn, ms) => setTimeout(fn, ms),
         clearTimeout: (handle) =>
@@ -63,6 +66,29 @@ export function useLiveSession(
     }),
   );
   const live = useSyncExternalStore(loop.subscribe, loop.getState);
+
+  // Close the newest window's `renderMs` once React has committed it. A window the
+  // loop did not time (a saved session, a reconcile) is ignored by `markRendered`.
+  const newestWindowId =
+    live.history.length > 0
+      ? live.history[live.history.length - 1].window_id
+      : null;
+  useEffect(() => {
+    if (newestWindowId !== null) loop.markRendered(newestWindowId);
+  }, [loop, newestWindowId]);
+
+  // A read-only view of the per-window latency buffer for the end-to-end tests
+  // (`page.evaluate("window.__draLiveTimings")`). A getter, so each read is a fresh copy.
+  useEffect(() => {
+    const host = window as unknown as Record<string, unknown>;
+    Object.defineProperty(host, "__draLiveTimings", {
+      configurable: true,
+      get: () => loop.getTimings(),
+    });
+    return () => {
+      delete host.__draLiveTimings;
+    };
+  }, [loop]);
 
   const [sessions, setSessions] = useState<SessionMeta[]>([]);
   const [error, setError] = useState<string | null>(null);

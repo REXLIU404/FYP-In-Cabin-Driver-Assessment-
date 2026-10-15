@@ -9,7 +9,8 @@
     "preview": "vite preview --host 127.0.0.1",
     "prettier": "prettier --write .",
     "linc": "eslint .",
-    "test": "vitest run"
+    "typecheck": "tsc --noEmit",
+    "test": "npm run typecheck && vitest run"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
