@@ -63,7 +63,9 @@
 
 ### 阶段 3：Task 9（Live-only 范围落地）
 - [ ] 按计划执行
-- [ ] **R5**：游标改动保持 Task 8 的循环行为；开工前定游标语义（2 s 节奏 vs 按窗口推进），它决定 ST-BRANCH-T-CONTINUITY 的预期（控制者推荐 (a) 2 s 节奏，R10 的无界 seq 与模拟采集时间也由它产生）
+- [ ] **游标（K1）并入 R10**：用户 2026-10-15 批准 2 s 节拍；游标、`telemetry_seq` 与算术采集时间随 R10 实施（R10 规则正由 Codex 独立评审）。Task 9 先做与游标无关的部分，并保持 R5 行为（第 14 / 17 行照常以 missing 发送）
+- [ ] **P0-D13 遗留（K9）**：前端导出补过期四列；replay 3 s 常量跟随配置或注明
+- [ ] **Task 8 React 绑定层断言提前（K10）**：用 `react-dom/server` 静态渲染测停止面板文案与两种摄像头原因码
 - [ ] **Task 8 遗留文案**（只影响显示）：手动重试失败后说明仍写「已自动重发」；setup 阶段面板未写明 Retry 会新建会话；`retryCount` 注释写「失败次数」实为「已发出的投递次数」
 - [ ] **P1-6 遗留**：趋势图 tooltip（`trendSeries.ts:32` → `formatTrendTooltip`）先 ×100 再 `formatFixed(…, 1)`，二进制噪声会越过平局（0.2855 → 28.5%）。改为先在小数上 half-up 再放大，与 `asPercent` 同一做法，并加平局用例
 - **状态：** pending
