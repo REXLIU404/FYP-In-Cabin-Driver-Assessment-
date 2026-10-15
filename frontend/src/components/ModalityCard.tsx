@@ -7,17 +7,19 @@ interface ModalityCardProps {
   title: string;
   probability: number;
   freshness: FreshnessStatus;
-  /** Ruling A (D13): the branch had evidence and it was too old. */
-  expiry?: BranchExpiry;
+  /**
+   * Ruling A (D13): whether the branch had evidence and it was too old. REQUIRED, with
+   * no default: an optional prop with a "not expired" default let a caller forget to
+   * pass it, and an expired branch then read as "missing" with nothing to catch it.
+   */
+  expiry: BranchExpiry;
 }
-
-const NOT_EXPIRED: BranchExpiry = { expired: false, ageS: null };
 
 export function ModalityCard({
   title,
   probability,
   freshness,
-  expiry = NOT_EXPIRED,
+  expiry,
 }: ModalityCardProps) {
   return (
     <div className="modality-card">

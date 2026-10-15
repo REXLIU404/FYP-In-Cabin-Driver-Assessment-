@@ -215,7 +215,7 @@ vitest：533 + 28 = 561，**无删除、无改名**；净新增 28：`availabili
 4. **prepared replay 的阈值是文件内常量 3 s**，不随 `AppConfig.freshnessTolerance`（会话可配）变化：replay 窗口在模块加载时一次性构建。改动前同样写死为 `> 3`，行为一致；若要让 replay 也随会话阈值变化，需要把窗口构建延后到有配置之后，不在本项。
 5. **导出未带过期原因。** `frontend/src/utils/export.ts` 的 `vision_freshness` / `telemetry_freshness` 两列只导出存储状态，过期分支导出为 `missing`，`expired` / `age_s` 不在导出列里（后端 `/export` 的 JSON 带完整 provenance）。简报 A6 只要求界面，且改列会改变导出形状，故未动；是否补两列留给控制者决定。
 6. **解释文字未改。** `backend/app/fusion.py::build_explanation` 与 `ai/src/riskLogic.ts::buildExplanation` 的 "one modality is stale or missing"、`ai/src/evidence.ts` 规则条件 "one modality is stale or missing" 仍写「stale」；它们是与夹具共享的文字，改动会连带夹具期望，超出范围。读者可从分支徽章看出过期。
-7. **界面接线没有组件渲染测试。** 仓库没有 React 组件测试设施。逻辑（`branchExpiry`、`describeBranchStatus`、`resolveBranchPill`、`formatBranch*`、`buildLiveMonitorModel`）全部有单元测试且各有变异守卫；组件内的接线（把这些结果放进 JSX）由 `tsc` 与 `eslint` 保证类型与引用正确，**没有做浏览器冒烟**（简报没有要求，且不得启动 vite dev server / 对开发库启动 uvicorn）。本次补齐的 `ExplanationView` 两个徽章属于这一类，未被任何测试直接覆盖。
+7. **界面接线没有组件渲染测试。**（**本条已在「修复轮 1」解决，见文末**：接线现在有静态渲染测试与变异守卫；下面是第一轮结束时的状态。）仓库没有 React 组件测试设施。逻辑（`branchExpiry`、`describeBranchStatus`、`resolveBranchPill`、`formatBranch*`、`buildLiveMonitorModel`）全部有单元测试且各有变异守卫；组件内的接线（把这些结果放进 JSX）由 `tsc` 与 `eslint` 保证类型与引用正确，**没有做浏览器冒烟**（简报没有要求，且不得启动 vite dev server / 对开发库启动 uvicorn）。本次补齐的 `ExplanationView` 两个徽章属于这一类，未被任何测试直接覆盖。
 8. **预先存在的 prettier 偏差**：`ai/src/evidence.ts`、`frontend/src/data/preparedSessionInput.ts` 在 `ce817ed` 上就不符合 prettier（后者在一个大数组上，前者在两处无关行）；本项未顺手格式化，以免产生无关改动。本项新写的代码行未被 prettier 指出问题；`ExplanationView.tsx` 在基线上是干净的，已用 prettier 格式化。
 9. **仍过时的文档**（按 A9 不由实现者修改，交控制者）：
    - `CLAUDE.md` 第 106–113 行写「implemented in phase 5 … the code still uses the 0.45 stale tier until then」，现已不成立；
@@ -242,3 +242,128 @@ vitest：533 + 28 = 561，**无删除、无改名**；净新增 28：`availabili
 - **Task 10（端到端与单分支测试 / PERF-01）**：可以直接断言最终行为（过期 → missing + expired、UNAVAILABLE 时告警计时挂起）；并负责用实测的采集 → 融合延迟复核 3 s 这个设计阈值，**不得**把 IT-EXPIRY-SENSITIVITY 当作阈值合理性的证据。
 - **R10（观察身份）**：关闭 UT-TIME-05 所钉的限制（同一证据在 3 s 内重复提交仍累积告警时间）。
 - **控制者**：更新计划 / 路线图 / `CLAUDE.md` 中的状态（第 7 节第 9 条）；决定是否给导出补 `expired` / `age_s` 两列（第 7 节第 5 条）。
+
+---
+
+## 修复轮 1
+
+- 开工 HEAD `5e72340`（与任务一致）。角色：实现者，修复轮 1 / 2。未派发子 agent。只修下面这一条发现，没有顺手改别的东西。
+- 日期 2026-10-15。
+
+### R1.1 评审发现（逐字）
+
+> **Important**（`blocks_this_item: true`）
+> where：`frontend/src/components/ModalityCard.tsx:11 (expiry?: optional), :20 (expiry = NOT_EXPIRED); wiring at frontend/src/views/LiveMonitor.tsx:131,137,182-190, ExplanationView.tsx:243,445, SignalInspector.tsx:151-180, AlertBanner.tsx:61-70`
+>
+> A6 的界面接线没有任何测试守护。我在隔离副本里做了四个接线回退：(E3) LiveMonitor 的遥测 ModalityCard 去掉 expiry={telemetryExpiry}；(E4) ExplanationView 的 vision Freshness 徽章改回 <Pill label={visionFreshness} tone={visionFreshness} />；(E5) SignalInspector 的遥测数值不再传 telemetryExpiry.expired；(E6) AlertBanner 的 vision 传 false。四项同时打上后 vitest 仍是 561 passed，tsc 0，eslint 0。实际后果：一个过期分支在这些位置会重新显示为 'missing' 或 'No input'，正是 A6 要禁止的情况，而且没有任何门禁会变红。ModalityCard 把 `expiry` 设成可选并给了 NOT_EXPIRED 默认值，所以漏传这个 prop 连类型检查都拦不住。实现者在报告 §7 第 7 条披露了这个缺口，但理由「仓库没有 React 组件测试设施」不完全成立：react-dom@18.3.1 已安装，在 node 环境里用 react-dom/server 的 renderToStaticMarkup 加 React.createElement，就能在 .test.ts 文件里做静态渲染断言，不需要新依赖。修法很便宜：把 ModalityCard 的 `expiry` 改成必填，再为 BranchStatusPill、ModalityCard 和至少一个视图加静态渲染测试，断言过期显示 'expired (4 s)'、缺失显示 'missing'。
+
+评审说得对，我先确认了前提：`node_modules/react-dom` 是 18.3.1，`renderToStaticMarkup` 在 vitest 的 node 环境里可以直接渲染 `LiveMonitor`、`SignalInspector`、`ExplanationView`、`AlertBanner`（先写了一个一次性的探针渲染四个视图，看过真实标记后删除，没有提交）。不需要新依赖，不需要改 `vitest.config.ts` 的 `include`（测试仍是 `.test.ts`，用 `createElement` 而不是 JSX），`package.json` / 锁文件没有变化。
+
+### R1.2 改了什么
+
+| 文件 | 变化 |
+|---|---|
+| `frontend/src/components/ModalityCard.tsx` | `expiry` 由可选改为**必填**，删除 `NOT_EXPIRED` 默认值（+7/−5）。漏传现在是类型错误（TS2741），不再静默显示成 `missing` |
+| `frontend/src/testing/markup.ts`（新） | 测试专用：`markup()`（`renderToStaticMarkup` 并去掉 `<!-- -->` 分隔符）、`pillsAfter()` / `valuesAfter()`（取紧跟在 `<span>行标签</span>` 之后的徽章 / 数值）、`modalityCard()`（取某张卡的「数字 \| 徽章 \| 小字」） |
+| `frontend/src/testing/expiryRecords.ts`（新） | 测试专用：用真实生产者（`makeRecord` → `buildRiskUpdate`）造 6 种记录：vision 过期（4 s）、telemetry 过期（7.5 s）、两路都过期、vision 没收到（未过期）、两路 fresh、历史 `stale`（无 provenance 字段）。**两路年龄故意不同**（4 / 7.5），接线写反或写丢时，被检查的文字会变，而不是碰巧通过 |
+| `frontend/src/components/branchStatusRender.test.ts`（新，18 个测试） | `BranchStatusPill` 7、`ModalityCard` 5、`AlertBanner` 6 |
+| `frontend/src/views/branchStatusRender.test.ts`（新，15 个测试） | `LiveMonitor` 5、`SignalInspector` 5、`ExplanationView` 5 |
+| 本报告 | §7 第 7 条加一句指向本节；追加本节 |
+
+没有改任何视图的实现：评审指出的是「缺守卫」，不是「实现错了」，四个视图的接线本身是对的（测试在未变异的代码上直接通过，且变异后变红，见 R1.4）。
+
+### R1.3 测试断言了什么
+
+**组件层（直接给 props）。** `BranchStatusPill`：过期带年龄读 `<span class="pill pill--expired">expired (4 s)</span>`；年龄按生产者记录的三位小数原样打印（`expired (3.001 s)`）；没有可测年龄读 `expired`；没收到读 `pill--missing` / `missing`；fresh；**历史 `stale` 仍读 `stale`**；过期与缺失的标记不相同。`ModalityCard`：过期读「`—` \| `expired:expired (4 s)` \| `Expired`」，没收到读「`—` \| `missing:missing` \| `No input`」，fresh 读「`50%` \| `fresh:fresh` \| `0.50`」，历史 stale 读「`42%` \| `stale:stale` \| `0.42`」。另有一条类型层测试：漏传 `expiry` 带 `// @ts-expect-error`（若 `expiry` 再次变成可选，该指令变成「未使用」，`tsc --noEmit` 变红），并断言漏传的渲染会抛 `TypeError`，而不是印出 `missing`。
+
+**接线层（每个视图，五个场景：vision 过期 / telemetry 过期 / 两路过期 / vision 没收到 / 历史 stale）。**
+
+- `LiveMonitor`：两张 `ModalityCard`（数字 + 徽章 + 小字）、「Vision freshness」「Telemetry freshness」两个徽章、两路都过期时的「Assessment unavailable」与 `SystemHealth` 徽章。
+- `SignalInspector`：「P_distraction」「Telemetry non-safe risk」两个数值、两个 freshness 徽章。
+- `ExplanationView`：「P_distraction」「Telemetry Non-Safe Risk」各出现两次（汇总格 + 证据卡），用数组断言两处都对；两个「Freshness」徽章（vision 卡在前、telemetry 卡在后）；「Active inputs」文字。
+- `AlertBanner`：「Visual distraction: … \| Telemetry non-safe: …」两个数字；两路都过期时显示「No assessment for the latest window」。
+
+期望值全部是测试里的字面量（如 `"— | expired:expired (4 s) | Expired"`），没有从实现 import 常量来构造期望值。每个数值 / 徽章都是按「行标签」取的，所以「某处有个 `expired` 徽章」不能代替「vision 那一行是 `expired (4 s)`」。
+
+### R1.4 执行的命令与输出
+
+**门禁（真实工作树，最终状态）：**
+
+```
+cd /Users/liu/Desktop/FYP2-Live-System
+export PYTHONDONTWRITEBYTECODE=1
+(cd backend && TMPDIR=$(mktemp -d) PYTHONPATH=. ../.venv/bin/python -m pytest tests -q -p no:cacheprovider)
+  -> 704 passed, 1 warning in 8.75s          # 1 条 starlette 弃用 warning，与本项无关
+./node_modules/.bin/vitest run --no-cache
+  -> Test Files  21 passed (21)
+     Tests  594 passed (594)
+./node_modules/.bin/tsc --noEmit            -> exit=0，无输出
+./node_modules/.bin/eslint .                -> exit=0，无输出
+```
+
+两个新测试文件单独跑：`vitest run --no-cache frontend/src/components/branchStatusRender.test.ts frontend/src/views/branchStatusRender.test.ts` → 2 个文件、33 个测试全部通过。新文件另用 `prettier --check` 检查（先 `--write` 格式化过一次），`All matched files use Prettier code style!`。
+
+**隔离副本与变异。** 副本：`git archive HEAD` 解包到 `/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/tmp.JloHK992Xv`，叠上本轮的 1 个修改文件与 4 个新文件，`node_modules` 以符号链接接入（与第一轮相同做法，`vitest --no-cache`）。变异脚本 `…/scratchpad/mutate_r1.py`：每个变异替换一处**精确出现一次**的字符串（出现次数不对即断言失败），在副本里跑两个新测试文件的 vitest 与 `tsc --noEmit`，然后从真实工作树拷回并 `diff` 确认还原。全部变异结束后，`diff -rq frontend ai backend docs` 对真实工作树与副本无差异；真实工作树的 `git status` 只有本轮的 1 个修改文件、4 个新文件。**没有在真实工作树里做任何变异。**
+
+### R1.5 变异结果
+
+先是评审发现里的四个回退（原样）：
+
+| # | 变异（副本里） | 结果 |
+|---|---|---|
+| E3 | `LiveMonitor` 遥测 `ModalityCard` 去掉 `expiry={telemetryExpiry}` | **vitest 5 failed**（LiveMonitor 的 vision 过期 / telemetry 过期 / 两路过期 / …）；**`tsc` exit 2**：`LiveMonitor.tsx(133,16): error TS2741: Property 'expiry' is missing in type '{ title: string; probability: number; freshness: FreshnessStatus; }' but required in type 'ModalityCardProps'` —— 评审说「连类型检查都拦不住」，现在拦得住 |
+| E3b | 同上，但改成传一个写死的 `{ expired: false, ageS: null }`（能过类型检查的版本） | vitest **2 failed**（telemetry 过期、两路过期），tsc 0 |
+| E4 | `ExplanationView` vision「Freshness」徽章改回 `<Pill label={visionFreshness} tone={visionFreshness} />` | vitest **2 failed**（vision 过期、两路过期） |
+| E5 | `SignalInspector` 遥测数值不再传 `telemetryExpiry.expired`（传 `false`） | vitest **2 failed**（telemetry 过期、两路过期） |
+| E6 | `AlertBanner` vision 传 `false` | vitest **1 failed**（`AlertBanner … vision expired, telemetry fresh`） |
+| E3-6 | E3b + E4 + E5 + E6 **同时**打上，然后跑**全量**门禁（评审的原实验） | 全量 vitest **7 failed / 587 passed（594）**；`tsc` 0；`eslint` 0。评审当时是「561 passed、tsc 0、eslint 0」，现在 vitest 变红 |
+
+然后是其余每一个接线位置（让「每个位置都有守卫」成立，而不只是评审点名的四个）：
+
+| # | 变异 | 结果 |
+|---|---|---|
+| L1 | LiveMonitor vision `ModalityCard` 的 expiry 写死未过期 | vitest 2 failed |
+| L2 | LiveMonitor「Vision freshness」徽章 expiry 写死未过期 | vitest 2 failed |
+| L3 | LiveMonitor「Telemetry freshness」徽章 expiry 写死未过期 | vitest 2 failed |
+| L4 / L5 | `liveMonitorModel` 的 `visionExpiry` / `telemetryExpiry` 读成另一路（互换） | 各 vitest 3 failed |
+| S1 | SignalInspector vision 数值传 `false` | vitest 2 failed |
+| S2 / S3 | SignalInspector vision / telemetry freshness 徽章 expiry 写死未过期 | 各 vitest 2 failed |
+| X1 | ExplanationView 汇总格 P_distraction 传 `false` | vitest 2 failed |
+| X2 | ExplanationView 汇总格 Telemetry Non-Safe Risk 传 `false` | vitest 2 failed |
+| X3 | ExplanationView vision 证据卡数值传 `false` | vitest 2 failed |
+| X4 | ExplanationView telemetry 证据卡数值传 `false` | vitest 2 failed |
+| X6 | ExplanationView telemetry「Freshness」徽章改回普通 `Pill` | vitest 2 failed |
+| X7 | ExplanationView `telemetryExpiry` 读成 vision 分支 | vitest 3 failed |
+| A1 | AlertBanner telemetry 传 `false` | vitest 1 failed |
+| C1 | `BranchStatusPill` 忽略 expiry | vitest 14 failed |
+| C2 | `ModalityCard` 小字传 `false` | vitest 4 failed |
+| C3 | `ModalityCard` 徽章 expiry 写死未过期 | vitest 4 failed |
+| C4 | `ModalityCard` 的 `expiry` 改回「可选 + 默认 NOT_EXPIRED」（原来的形状） | vitest 1 failed（那条「必填」测试）；**`tsc` exit 2**：`branchStatusRender.test.ts(111,11): error TS2578: Unused '@ts-expect-error' directive.` |
+| P1 | `describeBranchStatus` 永远不说 expired | vitest 13 failed |
+| P2 | `branchExpiry` 永远不报年龄 | vitest 9 failed |
+
+**一次作废的结果，如实写出。** 第一遍运行时，我的变异脚本里「写死未过期」的常量写成了双层花括号，导致 E3b、L1、L2、L3、S2、S3、C1、C3 与 E3-6 的变异后源码是**语法错误**；它们当时显示的「RED」只是 `tsc` 报了 TS1136 / TS1005 解析错误，**不是**测试抓到了回归，这些结果作废。我修正了常量，并给脚本加了保护（出现 TS1xxx 语法错误的变异一律标为无效、不计入），然后把这 9 个变异重跑一遍；上面表里这 9 项的数字都是重跑后的真实结果。E3、E4、E5、E6、L4、L5、S1、X1–X4、X6、X7、A1、C2、C4、P1、P2 在第一遍就是有效变异（它们的 `tsc` 报错是 TS2741 / TS2578 这类语义错误，不是语法错误），未受影响。
+
+### R1.6 测试数字的变化
+
+| 门禁 | 第一轮结束 | 本轮结束 | 变化 |
+|---|---|---|---|
+| pytest | 704 | **704** | 0（本轮未碰后端） |
+| vitest | 561 | **594** | **+33**：`branchStatusRender.test.ts`（components）18 + `branchStatusRender.test.ts`（views）15；没有删除、没有改名、没有改动任何既有测试 |
+| tsc | 0 | 0 | 0 |
+| eslint | 0 | 0 | 0 |
+
+### R1.7 仍然覆盖不到的东西
+
+1. **静态渲染没有 DOM、没有 CSS、不跑 effect / hook。** 它能证明「页面上这一行写的是 `expired (4 s)`，徽章 class 是 `pill--expired`」，不能证明颜色。`.pill--expired` 规则确实存在（`frontend/src/styles.css:536`），但没有测试检查它，也**没有做浏览器冒烟**（不得启动 vite dev server）。
+2. 两个图表（`TrendChart`、`DistributionChart`，recharts 的 `ResponsiveContainer`）在服务端渲染下是空容器，图表里的内容不在本轮测试范围；与本条发现无关。
+3. `App.tsx` 把 `stale`（显示年龄）传给 `LiveMonitor` / `AlertBanner` 的接线不在本轮范围；两个视图对 `stale` 的渲染本来就有别的测试。
+4. 第 7 节第 7 条原先说「由 `tsc` 与 `eslint` 保证」，这个说法对接线不成立（`eslint` 不管 prop 值，旧的可选 prop 还让 `tsc` 放过了漏传）；现在接线由本轮的静态渲染测试保证，剩下的只是上面第 1 点的视觉部分。
+5. 本轮没有碰第 7 节的其他遗留项（Live 遥测时间戳、UT-TIME-05、导出缺 `expired` / `age_s` 两列、解释文字里的「stale」措辞、过时文档），它们仍如第一轮所写。
+
+### R1.8 证据路径
+
+- 修改：`/Users/liu/Desktop/FYP2-Live-System/frontend/src/components/ModalityCard.tsx`
+- 新增：`/Users/liu/Desktop/FYP2-Live-System/frontend/src/components/branchStatusRender.test.ts`、`/Users/liu/Desktop/FYP2-Live-System/frontend/src/views/branchStatusRender.test.ts`、`/Users/liu/Desktop/FYP2-Live-System/frontend/src/testing/markup.ts`、`/Users/liu/Desktop/FYP2-Live-System/frontend/src/testing/expiryRecords.ts`
+- 变异脚本与输出（本会话临时目录）：`/private/tmp/claude-501/-Users-liu-Desktop-FYP-In-Cabin-Driver-Assessment--1--claude-worktrees-exciting-keller-fdf913/43d73f6d-ed36-4f8a-b584-13c974ccd767/scratchpad/` 下的 `mutate_r1.py`、`mut_r1.out`（第一遍，含作废项）、`mut_r1b.out`（9 项重跑）、`fullrun_r1.py` + `mut_r1_fullrun.out`（E3-6 全量）。
+- 隔离副本：`/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/tmp.JloHK992Xv`（其中的 `mut_r1_results.json` 只保存最后一次运行，即 9 项重跑；第一遍的完整输出在 `mut_r1.out`）。
