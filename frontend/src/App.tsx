@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Pause, Play, RotateCw } from "lucide-react";
 import { AlertBanner } from "./components/AlertBanner";
 import { CameraPreview } from "./components/CameraPreview";
+import { FAULT_TEXT, MAX_ATTEMPTS_PER_REQUEST } from "./api/retryPolicy";
 import { Sidebar, type ViewKey } from "./components/Sidebar";
 import {
   PREPARED_SESSION_METADATA,
@@ -21,6 +22,7 @@ import {
 } from "./utils/persistence";
 import { buildRiskUpdate } from "../../ai/src/riskLogic";
 import { initAlertState, type AlertFsmState } from "../../ai/src/alertFsm";
+import type { LiveFault } from "../../ai/src/liveLoop";
 import { applyAlertState } from "./utils/alertOverlay";
 import { ConfigurationView } from "./views/ConfigurationView";
 import { ExplanationView } from "./views/ExplanationView";
@@ -28,6 +30,94 @@ import { LiveMonitor } from "./views/LiveMonitor";
 import { RiskTrends } from "./views/RiskTrends";
 import { SignalInspector } from "./views/SignalInspector";
 import "./styles.css";
+
+const CAPTURE_MISS_TEXT: Record<string, string> = {
+  camera_not_started: "the camera has not been started",
+  stopped_by_user: "the camera was stopped",
+  device_disconnected: "the camera was disconnected",
+  start_failed: "the camera could not be started",
+  not_ready: "the camera has no picture yet",
+  track_muted: "the camera is muted",
+  capture_error: "the frame could not be captured",
+};
+
+const CAMERA_EVENT_TEXT = {
+  user: "stopped by you",
+  device: "disconnected",
+  start_failed: "failed to start",
+} as const;
+
+/**
+ * The visible stop (D02). While automatic retries are pending it is a plain status
+ * line; once the loop has stopped it is a panel that nothing clears by itself -
+ * only a successful delivery, Start Monitoring or loading a session does.
+ */
+function FaultPanel({
+  fault,
+  retrying,
+  onRetry,
+}: {
+  fault: LiveFault;
+  retrying: boolean;
+  onRetry: () => void;
+}) {
+  const text = FAULT_TEXT[fault.category];
+  if (!fault.stopped)
+    return (
+      <p className="runtime-warning" role="status">
+        Delivery {fault.retryCount} of {MAX_ATTEMPTS_PER_REQUEST} failed:{" "}
+        {text.title}. Retrying automatically…
+      </p>
+    );
+  const manual = Math.max(0, fault.retryCount - MAX_ATTEMPTS_PER_REQUEST);
+  return (
+    <section
+      className="runtime-error"
+      role="alert"
+      aria-label="Monitoring stopped"
+    >
+      <strong>Monitoring stopped: {text.title}</strong>
+      <p>{text.advice}</p>
+      <div className="runtime-details">
+        <span>
+          Category: <code>{fault.category}</code>
+          {fault.status ? ` (HTTP ${fault.status})` : ""}
+        </span>
+        {fault.phase === "setup" ? (
+          <span>Failed during setup, before any request was sent</span>
+        ) : (
+          <>
+            <span>
+              Request id: <code>{fault.requestId}</code>
+            </span>
+            <span>
+              Deliveries: {Math.min(fault.retryCount, MAX_ATTEMPTS_PER_REQUEST)}{" "}
+              of {MAX_ATTEMPTS_PER_REQUEST}
+              {manual ? ` + ${manual} manual` : ""}
+            </span>
+          </>
+        )}
+      </div>
+      <p>Server message: {fault.message}</p>
+      <p>
+        {fault.phase === "setup"
+          ? "Retry repeats the setup: the model check, then the session."
+          : fault.newSessionOnRetry
+            ? "Retry will create a NEW session."
+            : "Retry re-sends this same request to the same session."}
+      </p>
+      <button
+        type="button"
+        className="button"
+        onClick={onRetry}
+        disabled={retrying}
+      >
+        <RotateCw size={16} />
+        {retrying ? "Retrying…" : "Retry"}
+      </button>
+    </section>
+  );
+}
 
 export default function App() {
   const [activeView, setActiveView] = useState<ViewKey>("live");
@@ -154,7 +244,10 @@ export default function App() {
               className="button button--primary"
               onClick={() => void start()}
               disabled={
-                monitoring || live.busy || camera.status === "requesting"
+                monitoring ||
+                live.busy ||
+                live.retrying ||
+                camera.status === "requesting"
               }
             >
               <Play size={16} />
@@ -173,7 +266,9 @@ export default function App() {
               type="button"
               className="button"
               onClick={() => void start(true)}
-              disabled={live.busy || camera.status === "requesting"}
+              disabled={
+                live.busy || live.retrying || camera.status === "requesting"
+              }
             >
               <RotateCw size={16} />
               New Session
@@ -244,6 +339,9 @@ export default function App() {
                 {camera.actualFps
                   ? ` · ${camera.actualFps.toFixed(1)} FPS`
                   : ""}
+                {camera.event
+                  ? ` · ${CAMERA_EVENT_TEXT[camera.event.kind]} at ${new Date(camera.event.at).toLocaleTimeString()}`
+                  : ""}
               </span>
               <span>
                 Inference:{" "}
@@ -257,6 +355,9 @@ export default function App() {
                 Visible history: {history.length} / {live.total} persisted ·
                 export includes all windows
               </span>
+              {live.droppedFrames > 0 && (
+                <span>Late frames dropped: {live.droppedFrames}</span>
+              )}
             </div>
           )}
           {isLive && live.models && (
@@ -270,9 +371,24 @@ export default function App() {
               </p>
             </details>
           )}
+          {isLive && live.fault && (
+            <FaultPanel
+              fault={live.fault}
+              retrying={live.retrying}
+              onRetry={() => void live.retry()}
+            />
+          )}
           {isLive && live.error && (
             <p className="runtime-error" role="alert">
-              {live.error}. Check the backend and use Start Monitoring to retry.
+              {live.error}
+            </p>
+          )}
+          {isLive && monitoring && live.lastCaptureMiss && (
+            <p className="runtime-warning" role="status">
+              No camera image is being sent (
+              {CAPTURE_MISS_TEXT[live.lastCaptureMiss] ?? live.lastCaptureMiss}
+              ). Vision evidence is missing; monitoring continues with telemetry
+              only.
             </p>
           )}
           {isLive && live.stale && (
