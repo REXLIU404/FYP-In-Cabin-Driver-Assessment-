@@ -145,11 +145,20 @@ export interface LiveFault {
   requestId: string | null;
   /** Failed deliveries of that request so far, automatic and manual together. */
   retryCount: number;
+  /**
+   * How many of `retryCount` were manual (`retry()`); the rest were automatic. The
+   * split cannot be derived from `retryCount`: an error that a re-send cannot fix
+   * stops the loop after fewer than `maxAttempts` automatic deliveries.
+   */
+  manualRetries: number;
   /** X-Attempt-Index of the delivery that failed last (0 for a setup fault). */
   attemptIndex: number;
   /** `false` while an automatic retry is still pending; `true` once the loop stopped. */
   stopped: boolean;
-  /** `retry()` will create a NEW session (404 / setup) instead of resuming this one. */
+  /**
+   * `retry()` will create a NEW session instead of resuming this one: the session
+   * is gone (404), or the failed setup was a New Session (`start(true)`).
+   */
   newSessionOnRetry: boolean;
 }
 
@@ -198,6 +207,8 @@ interface PendingRequest {
   payload: LivePayload;
   /** Deliveries started so far; the next one carries `deliveries + 1`. */
   deliveries: number;
+  /** How many of those were started by `retry()` rather than by the loop itself. */
+  manualDeliveries: number;
 }
 
 interface Attempt {
@@ -332,6 +343,7 @@ export function createLiveLoop<TModels = unknown>(
     pending = {
       sessionId: activeSid,
       deliveries: 0,
+      manualDeliveries: 0,
       payload: {
         request_id: deps.newRequestId(),
         image_base64: frame?.image_base64 ?? null,
@@ -356,6 +368,7 @@ export function createLiveLoop<TModels = unknown>(
     const request = pending;
     if (!request || g !== generation) return;
     const attemptIndex = ++request.deliveries;
+    if (manual) request.manualDeliveries++;
     const sentAt = deps.now();
     const attempt = beginAttempt(ATTEMPT_TIMEOUT_MS);
     let record: RiskUpdate;
@@ -431,6 +444,7 @@ export function createLiveLoop<TModels = unknown>(
       phase: "delivery",
       requestId: request.payload.request_id,
       retryCount: request.deliveries,
+      manualRetries: request.manualDeliveries,
       attemptIndex,
       stopped: false,
       newSessionOnRetry,
@@ -462,10 +476,12 @@ export function createLiveLoop<TModels = unknown>(
     });
   }
 
-  const stopInSetup = (attempt: Attempt, err: unknown) => {
+  const stopInSetup = (attempt: Attempt, err: unknown, restart: boolean) => {
     const { error, failure } = failureOf(attempt, err);
-    const newSessionOnRetry = failure.category === "not_found";
-    if (newSessionOnRetry) activeSid = "";
+    // A New Session that failed in setup still means "a new session" on Retry; the
+    // running session stays where it is (`activeSid` is kept) until a create works.
+    const newSessionOnRetry = restart || failure.category === "not_found";
+    if (failure.category === "not_found") activeSid = "";
     patch({
       busy: false,
       running: false,
@@ -478,6 +494,7 @@ export function createLiveLoop<TModels = unknown>(
         phase: "setup",
         requestId: null,
         retryCount: 0,
+        manualRetries: 0,
         attemptIndex: 0,
         stopped: true,
         newSessionOnRetry,
@@ -519,7 +536,7 @@ export function createLiveLoop<TModels = unknown>(
         patch(snapshot);
       }
     } catch (err) {
-      if (g === generation) stopInSetup(attempt, err);
+      if (g === generation) stopInSetup(attempt, err, restart);
       return;
     } finally {
       attempt.end();
@@ -545,8 +562,10 @@ export function createLiveLoop<TModels = unknown>(
     const fault = state.fault;
     if (!fault?.stopped || state.busy || state.retrying) return;
     if (fault.phase === "setup" || fault.newSessionOnRetry || !pending) {
-      // Nothing to resume: redo the setup, which creates a session if there is none.
-      await start(false);
+      // Nothing to resume: redo the setup. A fault that asks for a new session
+      // (a 404, or a New Session that failed in setup) repeats it as a restart, so
+      // it creates a session even while another one is still the active one.
+      await start(fault.newSessionOnRetry);
       return;
     }
     cancel();

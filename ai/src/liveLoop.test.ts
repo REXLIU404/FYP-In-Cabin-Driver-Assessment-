@@ -533,6 +533,202 @@ describe("setup failures stop before a session exists", () => {
   });
 });
 
+describe("a New Session that fails in setup keeps its intent (H1)", () => {
+  it("api.create failing while another session runs: Retry creates the NEW session, it does not resume the running one", async () => {
+    const r = rig();
+    await r.begin();
+    expect(r.get().sessionId).toBe("sess-1");
+    expect(r.api.create).toHaveBeenCalledTimes(1);
+
+    // The user clicks New Session while sess-1 is running, and create fails.
+    r.api.create.mockRejectedValueOnce(transportError());
+    await r.loop.start(true);
+    expect(r.api.create).toHaveBeenCalledTimes(2);
+    expect(r.get()).toMatchObject({
+      running: false,
+      busy: false,
+      sessionId: "sess-1",
+      fault: {
+        phase: "setup",
+        category: "transport",
+        stopped: true,
+        newSessionOnRetry: true,
+      },
+    });
+
+    const inferBefore = r.api.infer.mock.calls.length;
+    await r.loop.retry();
+    await r.time.advance(0);
+    // A third create, no reconcile of sess-1, and the data goes to the new session.
+    expect(r.api.create).toHaveBeenCalledTimes(3);
+    expect(r.api.session).not.toHaveBeenCalled();
+    expect(r.get().sessionId).toBe("sess-2");
+    expect(r.get().fault).toBeNull();
+    expect(r.get().running).toBe(true);
+    expect(r.calls.slice(inferBefore).map((c) => c.sid)).toEqual(["sess-2"]);
+  });
+
+  it("the same when the failure came earlier, in the model check", async () => {
+    const r = rig();
+    await r.begin();
+    r.state.modelsError = new ApiError(
+      "Model artifacts are not installed",
+      503,
+    );
+    await r.loop.start(true);
+    expect(r.api.create).toHaveBeenCalledTimes(1);
+    expect(r.get().fault).toMatchObject({
+      phase: "setup",
+      category: "models_unavailable",
+      newSessionOnRetry: true,
+    });
+
+    r.state.modelsError = undefined; // the operator fixed the deployment
+    await r.loop.retry();
+    await r.time.advance(0);
+    expect(r.api.create).toHaveBeenCalledTimes(2);
+    expect(r.api.session).not.toHaveBeenCalled();
+    expect(r.get().sessionId).toBe("sess-2");
+    expect(r.get().running).toBe(true);
+  });
+
+  it("a plain Start that fails to resume keeps its session: Retry resumes it, it creates nothing", async () => {
+    const r = rig();
+    await r.begin();
+    r.loop.pause();
+    r.api.session.mockRejectedValueOnce(new ApiError("Bad Gateway", 502));
+    await r.loop.start();
+    expect(r.get().fault).toMatchObject({
+      phase: "setup",
+      category: "storage",
+      stopped: true,
+      newSessionOnRetry: false,
+    });
+
+    const inferBefore = r.api.infer.mock.calls.length;
+    await r.loop.retry();
+    await r.time.advance(0);
+    expect(r.api.create).toHaveBeenCalledTimes(1);
+    expect(r.api.session).toHaveBeenCalledTimes(2);
+    expect(r.get().sessionId).toBe("sess-1");
+    expect(r.get().running).toBe(true);
+    expect(r.calls.slice(inferBefore).map((c) => c.sid)).toEqual(["sess-1"]);
+  });
+});
+
+describe("a failed New Session leaves the running session in place (H1)", () => {
+  it("a plain Start after the failure resumes that session instead of creating one", async () => {
+    const r = rig();
+    await r.begin();
+    r.api.create.mockRejectedValueOnce(transportError());
+    await r.loop.start(true);
+    expect(r.get().fault?.stopped).toBe(true);
+
+    const inferBefore = r.api.infer.mock.calls.length;
+    await r.loop.start();
+    await r.time.advance(0);
+    expect(r.api.create).toHaveBeenCalledTimes(2); // the first start and the failed one
+    expect(r.api.session).toHaveBeenCalledTimes(1);
+    expect(r.get().sessionId).toBe("sess-1");
+    expect(r.calls.slice(inferBefore).map((c) => c.sid)).toEqual(["sess-1"]);
+  });
+});
+
+describe("the stop panel's delivery counts (H4)", () => {
+  it("an automatic stop has used 3 deliveries and no manual one", async () => {
+    const r = rig({ script: threeTransportErrors() });
+    await r.begin();
+    await r.time.advance(6000);
+    expect(r.get().fault).toMatchObject({
+      stopped: true,
+      retryCount: 3,
+      manualRetries: 0,
+    });
+  });
+
+  it("while automatic retries are pending no manual delivery has happened", async () => {
+    const r = rig({ script: threeTransportErrors() });
+    await r.begin();
+    expect(r.get().fault).toMatchObject({
+      stopped: false,
+      retryCount: 1,
+      manualRetries: 0,
+    });
+  });
+
+  it("each failed manual retry adds one manual delivery on top of the 3 automatic ones", async () => {
+    const r = rig({
+      script: [...threeTransportErrors(), transportError(), transportError()],
+    });
+    await r.begin();
+    await r.time.advance(6000);
+    await r.loop.retry();
+    await r.time.advance(0);
+    expect(r.get().fault).toMatchObject({ retryCount: 4, manualRetries: 1 });
+    await r.loop.retry();
+    await r.time.advance(0);
+    expect(r.get().fault).toMatchObject({ retryCount: 5, manualRetries: 2 });
+  });
+
+  it("a 400 stops after ONE automatic delivery; a failed manual retry is the second delivery and the first manual one", async () => {
+    const r = rig({
+      script: [
+        new ApiError("Bad Request", 400),
+        new ApiError("Bad Request", 400),
+        new ApiError("Bad Request", 400),
+      ],
+    });
+    await r.begin();
+    expect(r.get().fault).toMatchObject({
+      stopped: true,
+      retryCount: 1,
+      manualRetries: 0,
+    });
+    await r.loop.retry();
+    await r.time.advance(0);
+    expect(r.get().fault).toMatchObject({
+      stopped: true,
+      retryCount: 2,
+      manualRetries: 1,
+    });
+    await r.loop.retry();
+    await r.time.advance(0);
+    expect(r.get().fault).toMatchObject({
+      stopped: true,
+      retryCount: 3,
+      manualRetries: 2,
+    });
+  });
+
+  it("a reconcile that fails before the manual delivery adds no manual delivery", async () => {
+    const r = rig({
+      script: [
+        new ApiError("Bad Request", 400),
+        new ApiError("Bad Request", 400),
+      ],
+    });
+    await r.begin();
+    r.api.session.mockRejectedValueOnce(new ApiError("Bad Gateway", 502));
+    await r.loop.retry();
+    await r.time.advance(0);
+    expect(r.api.infer).toHaveBeenCalledTimes(1);
+    expect(r.get().fault).toMatchObject({
+      stopped: true,
+      retryCount: 1,
+      manualRetries: 0,
+    });
+    // The next retry does deliver, and fails: that is the first manual delivery.
+    await r.loop.retry();
+    await r.time.advance(0);
+    expect(r.api.infer).toHaveBeenCalledTimes(2);
+    expect(r.get().fault).toMatchObject({
+      stopped: true,
+      retryCount: 2,
+      manualRetries: 1,
+    });
+  });
+});
+
 describe("manual retry (T3)", () => {
   it("re-sends the SAME payload once, resumes the SAME session, and numbers the delivery 4", async () => {
     const committed = makeRecord("fresh", "fresh", 1);

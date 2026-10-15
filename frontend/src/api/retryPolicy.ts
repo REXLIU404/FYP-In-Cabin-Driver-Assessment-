@@ -1,6 +1,7 @@
 import type {
   FailureClass,
   FaultCategory,
+  LiveFault,
   RetryPolicy,
 } from "../../../ai/src/liveLoop";
 import { ApiError } from "./client";
@@ -86,6 +87,31 @@ export const RETRY_POLICY: RetryPolicy = {
   backoffMs,
   classify: classifyFailure,
 };
+
+/**
+ * The deliveries behind a stop, split into the loop's own and the user's. The split
+ * is carried by the fault (`manualRetries`); it cannot be derived from `retryCount`,
+ * because an error that a re-send cannot fix stops the loop after fewer than
+ * `MAX_ATTEMPTS_PER_REQUEST` automatic deliveries.
+ */
+export function deliveryCounts(
+  fault: Pick<LiveFault, "retryCount" | "manualRetries">,
+): { automatic: number; manual: number } {
+  return {
+    automatic: fault.retryCount - fault.manualRetries,
+    manual: fault.manualRetries,
+  };
+}
+
+/** The stop panel's delivery line, e.g. "1 of 3 + 1 manual" (automatic of budget). */
+export function deliveriesText(
+  fault: Pick<LiveFault, "retryCount" | "manualRetries">,
+): string {
+  const { automatic, manual } = deliveryCounts(fault);
+  return `${automatic} of ${MAX_ATTEMPTS_PER_REQUEST}${
+    manual > 0 ? ` + ${manual} manual` : ""
+  }`;
+}
 
 /** What the stop panel says. Every category has its own sentence. */
 export const FAULT_TEXT: Record<

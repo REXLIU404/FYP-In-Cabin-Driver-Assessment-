@@ -7,6 +7,8 @@ import {
   RETRY_POLICY,
   backoffMs,
   classifyFailure,
+  deliveriesText,
+  deliveryCounts,
 } from "./retryPolicy";
 
 // Every expectation below is a literal. Nothing is derived from the module under
@@ -127,7 +129,8 @@ describe("classifyFailure: server-side failures that are worth another delivery"
     const plainText = http(500, "API request failed (500)");
     const jsonDetail = http(500, "Vision model failed during inference");
     expect(plainText).toEqual(jsonDetail);
-    expect(plainText).toMatchObject({
+    expect(plainText).toEqual({
+      category: "model_runtime",
       status: 500,
       retryable: true,
       counted: true,
@@ -219,6 +222,37 @@ describe("FAULT_TEXT: what the stop panel says", () => {
   it("a hash conflict and a dropped late frame do not share a sentence", () => {
     expect(FAULT_TEXT.conflict_hash.title).not.toBe(
       FAULT_TEXT.conflict_stale_frame.title,
+    );
+  });
+});
+
+describe("deliveryCounts / deliveriesText: what the stop panel says about deliveries (H4)", () => {
+  // retryCount = every failed delivery of the request, automatic and manual
+  // together; manualRetries = how many of them were manual (the loop counts both).
+  // A stop on a non-retryable error happens after FEWER than 3 automatic deliveries,
+  // so the manual share cannot be read off retryCount alone.
+  it.each([
+    // retryCount, manualRetries, automatic, manual, text
+    [1, 0, 1, 0, "1 of 3"], // a 400: stopped after the first delivery
+    [2, 0, 2, 0, "2 of 3"], // a timeout, then a 400
+    [3, 0, 3, 0, "3 of 3"], // the budget is spent
+    [2, 1, 1, 1, "1 of 3 + 1 manual"], // a 400, then a failed manual retry
+    [3, 1, 2, 1, "2 of 3 + 1 manual"], // timeout, 400, then a failed manual retry
+    [3, 2, 1, 2, "1 of 3 + 2 manual"], // a 400, then two failed manual retries
+    [4, 1, 3, 1, "3 of 3 + 1 manual"], // budget spent, one manual retry failed
+    [6, 3, 3, 3, "3 of 3 + 3 manual"],
+  ] as const)(
+    "retryCount %i with %i manual -> %i automatic + %i manual: %s",
+    (retryCount, manualRetries, automatic, manual, text) => {
+      const fault = { retryCount, manualRetries };
+      expect(deliveryCounts(fault)).toEqual({ automatic, manual });
+      expect(deliveriesText(fault)).toBe(text);
+    },
+  );
+
+  it("a 400 followed by a failed manual retry is NOT '2 of 3': that would read as one automatic retry", () => {
+    expect(deliveriesText({ retryCount: 2, manualRetries: 1 })).not.toBe(
+      "2 of 3",
     );
   });
 });

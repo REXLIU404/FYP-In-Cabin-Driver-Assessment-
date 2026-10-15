@@ -157,12 +157,20 @@ describe("a pause and a timeout are different errors (Step 5)", () => {
       new AbortController().signal,
       1,
     );
+    let settled = false;
+    void pending.then(
+      () => (settled = true),
+      () => (settled = true),
+    );
     const outcome = expect(pending).rejects.toMatchObject({
       name: "TimeoutError",
     });
     await vi.advanceTimersByTimeAsync(14_999);
+    // The lower bound: one millisecond before the deadline the call still waits.
+    expect(settled).toBe(false);
     await vi.advanceTimersByTimeAsync(1);
     await outcome;
+    expect(settled).toBe(true);
   });
 
   it("the deadline is not reported if the caller aborted first", async () => {

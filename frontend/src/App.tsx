@@ -2,7 +2,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Pause, Play, RotateCw } from "lucide-react";
 import { AlertBanner } from "./components/AlertBanner";
 import { CameraPreview } from "./components/CameraPreview";
-import { FAULT_TEXT, MAX_ATTEMPTS_PER_REQUEST } from "./api/retryPolicy";
+import {
+  FAULT_TEXT,
+  MAX_ATTEMPTS_PER_REQUEST,
+  deliveriesText,
+} from "./api/retryPolicy";
 import { Sidebar, type ViewKey } from "./components/Sidebar";
 import {
   PREPARED_SESSION_METADATA,
@@ -69,7 +73,6 @@ function FaultPanel({
         {text.title}. Retrying automatically…
       </p>
     );
-  const manual = Math.max(0, fault.retryCount - MAX_ATTEMPTS_PER_REQUEST);
   return (
     <section
       className="runtime-error"
@@ -90,11 +93,7 @@ function FaultPanel({
             <span>
               Request id: <code>{fault.requestId}</code>
             </span>
-            <span>
-              Deliveries: {Math.min(fault.retryCount, MAX_ATTEMPTS_PER_REQUEST)}{" "}
-              of {MAX_ATTEMPTS_PER_REQUEST}
-              {manual ? ` + ${manual} manual` : ""}
-            </span>
+            <span>Deliveries: {deliveriesText(fault)}</span>
           </>
         )}
       </div>
