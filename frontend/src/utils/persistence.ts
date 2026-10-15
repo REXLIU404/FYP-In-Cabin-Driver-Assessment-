@@ -1,4 +1,9 @@
-import type { AppConfig, RiskUpdate, SessionMeta } from "../types";
+import type {
+  AppConfig,
+  OperationMode,
+  RiskUpdate,
+  SessionMeta,
+} from "../types";
 import {
   normalizeRiskUpdate,
   type StoredRiskUpdate,
@@ -106,11 +111,13 @@ export const loadConfig = (): AppConfig => {
     {},
   );
   const merged = { ...DEFAULT_CONFIG, ...saved };
-  const operationMode =
-    saved.operationMode === "LIVE_MODEL_RUNTIME" ||
-    saved.operationMode === "PREPARED_SESSION_RUNTIME"
-      ? saved.operationMode
-      : DEFAULT_CONFIG.operationMode;
+  // The operation mode is NEVER restored (D03). Live is the system; the
+  // prepared-probability replay is legacy and test-only, and a returning user must
+  // not be taken back into it by whatever the last visit happened to leave in
+  // storage. The page holds the mode in its own state: choosing the replay applies
+  // to that visit only, and every load starts on Live. The rest of the saved
+  // configuration (weights, thresholds, frame rate...) is restored as before.
+  const operationMode: OperationMode = "LIVE_MODEL_RUNTIME";
   const enableEvidenceInterpretation =
     typeof saved.enableEvidenceInterpretation === "boolean"
       ? saved.enableEvidenceInterpretation

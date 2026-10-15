@@ -75,6 +75,10 @@ const EVIDENCE_COLUMNS = [
   "assessment_available",
   "vision_freshness",
   "telemetry_freshness",
+  "vision_expired",
+  "vision_age_s",
+  "telemetry_expired",
+  "telemetry_age_s",
 ] as const;
 
 // The unavailable representation is a cross-stack contract shared with the
@@ -128,6 +132,14 @@ const evidenceExportRecord = (
   // that 0 is not a reading.
   vision_freshness: record.modality_freshness.vision,
   telemetry_freshness: record.modality_freshness.telemetry,
+  // Ruling A (D13): an EXPIRED branch is stored as `missing`, so the pair above
+  // cannot say "too old" from "never arrived". The reason and the age come from the
+  // record's provenance. A record written before ruling A has none of these fields:
+  // null (an empty CSV cell), never a fabricated false / 0.
+  vision_expired: record.provenance?.vision_expired ?? null,
+  vision_age_s: record.provenance?.vision_age_s ?? null,
+  telemetry_expired: record.provenance?.telemetry_expired ?? null,
+  telemetry_age_s: record.provenance?.telemetry_age_s ?? null,
 });
 
 const formatRecords = (

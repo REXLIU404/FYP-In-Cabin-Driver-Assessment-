@@ -6,7 +6,23 @@ replay through the trained XGBoost model**. Only the camera is a live sensor.
 
 The backend owns EMA, freshness-aware late fusion, sustained alerts, session
 state and persistence. The five dashboard views consume those saved results.
-Prepared-probability demo mode remains a separate, explicitly labelled option.
+
+## Scope: Live is the system
+
+- **Live is the only primary runtime.** Camera frames and the prepared raw
+  telemetry (8 features per row, no probabilities) go to
+  `POST /api/sessions/{id}/infer`; the trained MobileNetV3 and XGBoost produce the
+  probabilities, and the backend fuses, smooths, alerts and saves them. The Live
+  code reads only the prepared _raw telemetry_ (`PREPARED_RAW_TELEMETRY`).
+- **The prepared-probability replay is kept, as legacy / test-only.** It is listed
+  in the Data mode menu as "Prepared replay (legacy, test-only)", uses no trained
+  model and no backend, and exists for regression tests and backward compatibility.
+  Nothing was removed. It is entered only by choosing it in the page; every reload
+  starts on Live again.
+- **What is not claimed.** Frontal-camera accuracy, edge-hardware performance and
+  field validation are not established. The 3 s evidence-age limit is a design
+  threshold, not a validated safety threshold. `RiskLevel` is a derived operating
+  level, not an accident-severity label.
 
 ## Run the complete system
 
@@ -42,12 +58,12 @@ are paused at the user's request.
 ## Repository
 
 ```text
-frontend/       React views, camera capture, API client, live/replay controllers
+frontend/       React views, camera capture, API client, Live controller (+ retained legacy replay)
 backend/        FastAPI, trained ONNX/XGBoost provider, fusion/FSM, SQLite, exports
 ai/             Shared TypeScript contract and demo/reference risk logic
 ml/             Training notebooks, existing artifacts, reproducible experiments
 docs/           Runtime guide, progress, initial assessment and measured evidence
-prototype-tests/ Manual prototype checks
+prototype-tests/ Manual Live end-to-end acceptance checklist
 ```
 
 ## Checks

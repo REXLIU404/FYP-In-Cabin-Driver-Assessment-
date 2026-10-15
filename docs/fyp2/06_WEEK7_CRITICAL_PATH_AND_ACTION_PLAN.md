@@ -61,3 +61,24 @@ All boxes currently **unchecked for full end-to-end sign-off**, even when compon
 **48–72h:** A06 bounded search configuration and scripts; A07/A08 deterministic tiny generation samples; PERF/UAT runbooks. Exit: predeclared artifacts and smoke-ready evaluation pipelines, **not** a fabricated claim that all tuning/results/UAT were finished in72h.
 
 No implementation in this plan was started by the audit. Finishing audit documents does not check the W7 sign-off boxes.
+
+---
+
+## 增补：Live-only 范围落地（FYP2 阶段 3 · Task 9，2026-10-15）
+
+> **以上正文是 2026-10-10 审计时的快照，其结论原样保留、不因本节而改**：NO-GO 的就绪判断、各 Gate 的状态、依赖有序工作包、W7 签收清单（全部仍为未勾选）都以正文为准。本节只记录一项范围决定及它对正文里个别条目的影响。
+
+**决定（计划 D03 / D11 的落地）**：Live Monitoring 是唯一的主运行时。prepared-probability replay **保留**，降级为 legacy / test-only：它用于回归测试与向后兼容，不再是验收路径，也没有被删除。
+
+对正文条目的影响：
+
+1. **`ST-REPLAY01`（W2、W3、A05 引用的那一项；计划里写作 `ST-REPLAY-01`）在本阶段由 Live 端到端取代。** 被验收的链路是：摄像头帧 + prepared **raw** telemetry → `POST /api/sessions/{id}/infer` → MobileNetV3 + XGBoost → 后端 freshness / EMA / late fusion / Alert FSM → SQLite → 五个视图（只渲染已保存的记录）。手工验收清单见 [`prototype-tests/README.md`](../../prototype-tests/README.md)；脚本化的 Live 端到端是计划中的 Task 10（`backend/tests/test_live_e2e.py`），**写本节时尚不存在**。
+2. **W2 的「选择 backend-backed replay，或明确批准独立的 demo 架构」一项**，现按后者的收窄形式落实：浏览器里的 replay 保持独立、显式标注为 legacy / test-only，不进入验收。
+3. **Live 路径只读 prepared 的 raw telemetry（8 个特征，`PREPARED_RAW_TELEMETRY`），不读任何 prepared probability。** 带 `P_distraction`、`P_telemetry_anomaly`、`visual_top_classes` 的 `PREPARED_SESSION_WINDOWS` 只留给 replay；有静态测试守住这条边界。
+4. **回访用户不会被存储的设置悄悄带回 replay**：每次加载都从 Live 开始，replay 只有在页面里被明确选择时才进入。
+
+**本节没有改变的事实**（仍如正文与阶段 1–2 的报告所述）：
+- 没有任何 W7 签收框因本节变为已勾选；
+- Live 遥测的游标语义（2 s 节拍、暂停冻结、可注入时钟）与遥测采集时间戳并入 R10，不在本次落地内，Live 遥测的 `telemetry_timestamp` 仍是发送时刻；
+- 3 s 证据年龄上限是设计阈值，不是验证过的安全阈值；
+- 前向摄像头精度、目标硬件性能与现场验证均未建立。

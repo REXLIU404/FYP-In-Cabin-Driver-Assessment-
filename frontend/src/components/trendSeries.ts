@@ -1,4 +1,5 @@
 import { isAssessmentAvailable } from "../../../ai/src/availability";
+import { roundHalfUp } from "../../../ai/src/riskLogic";
 import type { RiskUpdate } from "../types";
 import {
   UNAVAILABLE_LABEL,
@@ -17,6 +18,16 @@ export interface TrendPoint {
 }
 
 /**
+ * A probability as a chart percent, to the 0.1 the tooltip prints. Half-up on the
+ * DECIMAL probability (3 places = 0.1 %) first, scaled after - the order `asPercent`
+ * uses. `P * 100` alone is a binary multiplication: 0.2855 becomes
+ * 28.549999999999997 and the tie is gone before anything rounds it (shown as 28.5%,
+ * should be 28.6%). The outer round only removes the binary dust of the scaling.
+ */
+const toPercentPoint = (probability: number): number =>
+  roundHalfUp(roundHalfUp(probability, 3) * 100, 1);
+
+/**
  * Chart series for a history. The risk point is keyed on the record's own
  * `assessment_available`, not on SystemHealth or on the score being falsy: a
  * genuine score of 0 is a reading and stays on the line, while an unassessed
@@ -29,11 +40,11 @@ export const buildTrendSeries = (history: RiskUpdate[]): TrendPoint[] =>
     vision:
       record.modality_freshness.vision === "missing"
         ? null
-        : record.P_distraction * 100,
+        : toPercentPoint(record.P_distraction),
     telemetry:
       record.modality_freshness.telemetry === "missing"
         ? null
-        : record.P_telemetry_anomaly * 100,
+        : toPercentPoint(record.P_telemetry_anomaly),
   }));
 
 /**

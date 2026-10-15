@@ -144,12 +144,18 @@ export interface LiveFault {
   phase: "setup" | "delivery";
   /** The logical request the fault belongs to; `null` before any was built. */
   requestId: string | null;
-  /** Failed deliveries of that request so far, automatic and manual together. */
+  /**
+   * Deliveries of that request SENT so far, automatic and manual together. A delivery
+   * is counted when it is sent, not when it fails: one that a Pause cancelled while
+   * in flight is included, so this is not strictly a count of failures.
+   */
   retryCount: number;
   /**
-   * How many of `retryCount` were manual (`retry()`); the rest were automatic. The
-   * split cannot be derived from `retryCount`: an error that a re-send cannot fix
-   * stops the loop after fewer than `maxAttempts` automatic deliveries.
+   * How many of those `retryCount` deliveries were started by `retry()`; the rest
+   * were the loop's own. Counted the same way - when sent - so a manual delivery
+   * that a Pause cancelled is included. The split cannot be derived from
+   * `retryCount`: an error that a re-send cannot fix stops the loop after fewer than
+   * `maxAttempts` automatic deliveries.
    */
   manualRetries: number;
   /** X-Attempt-Index of the delivery that failed last (0 for a setup fault). */

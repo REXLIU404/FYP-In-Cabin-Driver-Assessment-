@@ -7,7 +7,12 @@
 // followed by the value), so a test can tell "the vision row says expired" from
 // "some pill on the page says expired" - a swapped or dropped prop on one branch
 // changes exactly one of these results.
-import type { ReactElement } from "react";
+import {
+  Children,
+  isValidElement,
+  type ReactElement,
+  type ReactNode,
+} from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
 /** Markup of `element`, without React's `<!-- -->` text-node separators. */
@@ -53,4 +58,25 @@ export const modalityCard = (html: string, title: string): string | null => {
     `<div class="modality-card"><span>${escapeRegExp(title)}</span><strong>([^<]*)</strong><div><span class="pill pill--([^"]*)">([^<]*)</span><small>([^<]*)</small></div></div>`,
   ).exec(html);
   return match ? `${match[1]} | ${match[2]}:${match[3]} | ${match[4]}` : null;
+};
+
+/**
+ * Every element in the tree of `node`, depth first, that satisfies `match`. The tree
+ * is the one a function component RETURNS (call the component directly - it must use
+ * no hooks): host elements such as `button` are found with their props, which is how
+ * a test "clicks" without a DOM - `find(...)[0].props.onClick()`. Component elements
+ * inside it are visited but not expanded.
+ */
+export const findElements = (
+  node: ReactNode,
+  match: (element: ReactElement) => boolean,
+): ReactElement[] => {
+  const found: ReactElement[] = [];
+  const visit = (child: ReactNode) => {
+    if (!isValidElement(child)) return;
+    if (match(child)) found.push(child);
+    Children.forEach((child.props as { children?: ReactNode }).children, visit);
+  };
+  visit(node);
+  return found;
 };

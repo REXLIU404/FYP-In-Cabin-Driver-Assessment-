@@ -7,8 +7,10 @@ import {
   MAX_SESSION_RECORDS,
   appendRecord,
   flagWindow,
+  loadConfig,
   loadSessionLog,
   nextWindowId,
+  saveConfig,
 } from "./persistence";
 
 const rec = (id: number): RiskUpdate =>
@@ -179,5 +181,78 @@ describe("UT-PERS-MIGRATE-01: legacy localStorage records normalise in both dire
     expect(row.flagged).toBe(true);
     expect(row.assessment_available).toBe(false);
     expect(row.AlertSeverity).toBeNull();
+  });
+});
+
+// Task 9 / K4 (D03). Live is the system; the prepared-probability replay is legacy and
+// test-only. A returning user whose last visit ended in the replay must NOT be taken
+// back into it by a stored setting: the mode is chosen in the page, for that visit,
+// and never restored. Everything else the user configured is.
+describe("loadConfig: the stored operation mode is never restored (K4)", () => {
+  const APP_CONFIG_KEY = "app_config";
+  beforeEach(() => installStorage());
+  afterEach(() => vi.unstubAllGlobals());
+
+  it("nothing stored: Live", () => {
+    expect(loadConfig().operationMode).toBe("LIVE_MODEL_RUNTIME");
+  });
+
+  it("a stored replay mode comes back as Live", () => {
+    installStorage({
+      [APP_CONFIG_KEY]: { operationMode: "PREPARED_SESSION_RUNTIME" },
+    });
+    expect(loadConfig().operationMode).toBe("LIVE_MODEL_RUNTIME");
+  });
+
+  it("a stored Live mode stays Live", () => {
+    installStorage({
+      [APP_CONFIG_KEY]: { operationMode: "LIVE_MODEL_RUNTIME" },
+    });
+    expect(loadConfig().operationMode).toBe("LIVE_MODEL_RUNTIME");
+  });
+
+  it("an unrecognised stored mode is Live too", () => {
+    installStorage({ [APP_CONFIG_KEY]: { operationMode: "DEMO" } });
+    expect(loadConfig().operationMode).toBe("LIVE_MODEL_RUNTIME");
+  });
+
+  it("a stored replay mode does not cost the user their other settings", () => {
+    installStorage({
+      [APP_CONFIG_KEY]: {
+        operationMode: "PREPARED_SESSION_RUNTIME",
+        weightVision: 0.7,
+        weightTelemetry: 0.3,
+        inferenceFps: 5,
+        freshnessTolerance: 5,
+      },
+    });
+    expect(loadConfig()).toMatchObject({
+      operationMode: "LIVE_MODEL_RUNTIME",
+      weightVision: 0.7,
+      weightTelemetry: 0.3,
+      inferenceFps: 5,
+      freshnessTolerance: 5,
+    });
+  });
+
+  it("a user who picks the replay in this visit and saves it still lands on Live at the next load", () => {
+    // The page keeps the choice in its own state and saves the whole config; the
+    // reload goes back through loadConfig.
+    const chosen = {
+      ...loadConfig(),
+      operationMode: "PREPARED_SESSION_RUNTIME" as const,
+    };
+    saveConfig(chosen);
+    expect(
+      JSON.parse(window.localStorage.getItem(APP_CONFIG_KEY) ?? "{}"),
+    ).toMatchObject({
+      operationMode: "PREPARED_SESSION_RUNTIME",
+    });
+    expect(loadConfig().operationMode).toBe("LIVE_MODEL_RUNTIME");
+  });
+
+  it("with no usable storage (a private window, no `window` at all) it is Live", () => {
+    vi.unstubAllGlobals();
+    expect(loadConfig().operationMode).toBe("LIVE_MODEL_RUNTIME");
   });
 });

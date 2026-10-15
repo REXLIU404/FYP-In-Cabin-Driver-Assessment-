@@ -258,9 +258,16 @@ const telemetryFeatures = (
 };
 
 // The replay's evidence-age tolerance, in seconds: the same 3 s design threshold as
-// `freshness_tolerance_s` (default) on the backend - a design threshold, not a
-// validated safety threshold. Fixed here because the prepared windows are built once,
-// at load.
+// the default `freshness_tolerance_s` on the backend - a design threshold, not a
+// validated safety threshold.
+//
+// THE REPLAY IS FIXED AT 3 s; LIVE IS JUDGED BY THE BACKEND FROM THE SESSION'S OWN
+// CONFIGURATION. This constant does NOT follow `AppConfig.freshnessTolerance`: the
+// prepared windows are built once, at module load, before any configuration exists,
+// so making them follow the setting would mean rebuilding the replay per setting
+// change (and moving the pinned replay outputs, e.g. window 16 in
+// missing_cases.csv). The replay is the retained legacy path, so it keeps one fixed,
+// documented tolerance; the setting applies to Live sessions only.
 const PREPARED_FRESHNESS_TOLERANCE_S = 3;
 
 /**
@@ -332,3 +339,55 @@ export const buildPreparedWindows = (csv: string): PreparedSessionWindow[] =>
 
 export const PREPARED_SESSION_WINDOWS: PreparedSessionWindow[] =
   buildPreparedWindows(telemetryCsv);
+
+/**
+ * One row of the prepared session as the LIVE runtime sees it: the raw telemetry
+ * and nothing else. No probability of any kind - the trained XGBoost produces
+ * those, on the backend, from `telemetry_features`.
+ */
+export interface PreparedRawTelemetryRow {
+  timestamp: string;
+  /** The 8 features in their fixed order; `null` on a row with no telemetry (14, 17). */
+  telemetry_features: TelemetryFeatures | null;
+  /** The row's recorded age; `null` where there is no telemetry (the CSV's 999 sentinel). */
+  telemetry_age_s: number | null;
+}
+
+/**
+ * The prepared session reduced to its raw telemetry (plan Task 9, Step 1). Same
+ * parsing path as the replay windows, so the two cannot disagree about a row.
+ */
+export const buildPreparedRawTelemetry = (
+  csv: string,
+): PreparedRawTelemetryRow[] =>
+  parseCsv(csv)
+    .map(parsePreparedRecord)
+    .sort((a, b) => a.window_id - b.window_id)
+    .map((record) => ({
+      timestamp: buildTimestamp(record.timestamp),
+      telemetry_features: telemetryFeatures(record),
+      telemetry_age_s: telemetryAge(record),
+    }));
+
+/**
+ * What the LIVE path reads. `PREPARED_SESSION_WINDOWS` - which carries
+ * P_distraction, P_telemetry_anomaly, visual_top_classes and the other
+ * prepared-probability fields - is for the retained legacy replay only (guarded by
+ * preparedRawTelemetry.test.ts).
+ */
+export const PREPARED_RAW_TELEMETRY: PreparedRawTelemetryRow[] =
+  buildPreparedRawTelemetry(telemetryCsv);
+
+/**
+ * The Live telemetry cursor: the raw row for `elapsedMs` since the session began,
+ * one row per 2000 ms, wrapping after the last. The rule is exactly what
+ * `useLiveSession` applied inline before; it is a named function only so a test can
+ * drive the real rows through the loop (R5: rows 14 and 17 are still SENT, as
+ * `telemetry_features: null` / `telemetry_source: "missing"`). R10 replaces this rule.
+ */
+export const preparedTelemetryAt = (
+  elapsedMs: number,
+): TelemetryFeatures | null =>
+  PREPARED_RAW_TELEMETRY[
+    Math.floor(elapsedMs / 2000) % PREPARED_RAW_TELEMETRY.length
+  ].telemetry_features;

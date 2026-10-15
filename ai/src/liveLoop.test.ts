@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { api as realApi, ApiError } from "../../frontend/src/api/client";
 import { RETRY_POLICY } from "../../frontend/src/api/retryPolicy";
+import { preparedTelemetryAt } from "../../frontend/src/data/preparedSessionInput";
 import { makeRecord } from "../../frontend/src/testing/records";
 import {
   createLiveLoop,
@@ -81,6 +82,8 @@ interface RigOptions {
   script?: Step[];
   frame?: "camera" | "none" | "throws";
   telemetry?: boolean;
+  /** Replaces the constant telemetry with a source that depends on elapsed time. */
+  telemetrySource?: (elapsedMs: number) => TelemetryFeatures | null;
   missReason?: string;
   /** What the server already holds for a session (reconcile, loadSession). */
   saved?: RiskUpdate[];
@@ -175,8 +178,12 @@ function rig(options: RigOptions = {}) {
       captured_at: new Date(time.now).toISOString(),
     };
   });
-  const telemetryAt = vi.fn((): TelemetryFeatures | null =>
-    options.telemetry === false ? null : TELEMETRY,
+  const telemetryAt = vi.fn((elapsedMs: number): TelemetryFeatures | null =>
+    options.telemetrySource
+      ? options.telemetrySource(elapsedMs)
+      : options.telemetry === false
+        ? null
+        : TELEMETRY,
   );
   const newRequestId = vi.fn(() => `req-${++requestIds}`);
   const loop = createLiveLoop<Models>({
@@ -887,6 +894,35 @@ describe("after a stop", () => {
     expect(r.get().fault).toBeNull();
   });
 
+  it("a delivery counts when it is SENT: a manual one that a pause cancelled in flight is still in retryCount / manualRetries (K8)", async () => {
+    // Three automatic failures stop the loop; Retry sends delivery 4, which hangs;
+    // the user pauses (cancelling it); Retry again sends delivery 5, which fails.
+    // The panel's counts are deliveries sent (5, 2 of them manual), not failures (4).
+    const r = rig({
+      script: [...threeTransportErrors(), "hang", transportError()],
+    });
+    await r.begin();
+    await r.time.advance(6000);
+    expect(r.get().fault).toMatchObject({ retryCount: 3, manualRetries: 0 });
+
+    const firstRetry = r.loop.retry();
+    await r.time.advance(0);
+    expect(r.calls.map((c) => c.attemptIndex)).toEqual([1, 2, 3, 4]);
+    r.loop.pause(); // cancels delivery 4 in flight; the stop panel and request stay
+    await firstRetry;
+    expect(r.get().fault).toMatchObject({ stopped: true, retryCount: 3 });
+
+    await r.loop.retry();
+    await r.time.advance(0);
+    expect(r.calls.map((c) => c.attemptIndex)).toEqual([1, 2, 3, 4, 5]);
+    expect(r.get().fault).toMatchObject({
+      stopped: true,
+      retryCount: 5,
+      manualRetries: 2,
+      attemptIndex: 5,
+    });
+  });
+
   it("while a retry is reconciling it is busy, and a second click does nothing", async () => {
     const r = rig({ script: [...threeTransportErrors(), "ok"] });
     await r.begin();
@@ -1005,6 +1041,84 @@ describe("the camera never stops the loop (R5)", () => {
     await r.time.advance(500);
     expect(r.get().lastCaptureMiss).toBeNull();
     expect(r.calls[1].payload.image_base64).toBe("frame-back");
+  });
+});
+
+// Task 9 / K2. R5 says the loop never skips a tick: when the prepared cursor lands on
+// a row with no telemetry (rows 14 and 17 of the 25) the request is still sent, with
+// `telemetry_features: null` / `telemetry_source: "missing"`. These tests drive the
+// PRODUCTION cursor and the real prepared rows through the loop, so a loop (or a
+// cursor) that skipped or stopped on those rows is caught on the real data, not on a
+// stand-in. 2 inferences per second and an instant API: tick i happens at i x 500 ms,
+// so the cursor reads row floor(i / 4) + 1 (one row per 2000 ms).
+describe("the prepared telemetry cursor never skips or stops the loop (R5 on the real rows)", () => {
+  const TICKS_PER_CYCLE = 100; // 25 rows x 2000 ms / 500 ms
+  // Ticks on row 14 are 52..55 and on row 17 are 64..67 (0-based tick numbers).
+  const MISSING_TICKS = [52, 53, 54, 55, 64, 65, 66, 67];
+
+  const runOneCycle = async (frame: "camera" | "none") => {
+    const r = rig({ frame, telemetrySource: preparedTelemetryAt });
+    await r.begin();
+    await r.time.advance(49_500);
+    return r;
+  };
+
+  it("with the camera on, every tick of a full 50 s cycle is sent - including rows 14 and 17", async () => {
+    const r = await runOneCycle("camera");
+    expect(r.calls).toHaveLength(TICKS_PER_CYCLE);
+    r.calls.forEach((call, tick) => {
+      if (MISSING_TICKS.includes(tick)) {
+        expect(call.payload).toMatchObject({
+          telemetry_features: null,
+          telemetry_timestamp: null,
+          telemetry_source: "missing",
+          image_base64: `frame-${tick + 1}`,
+        });
+      } else {
+        expect(call.payload.telemetry_source).toBe("prepared_replay");
+        expect(call.payload.telemetry_features).not.toBeNull();
+        expect(call.payload.telemetry_timestamp).not.toBeNull();
+      }
+    });
+    // ...and the loop is still up at the end: nothing counted, nothing stopped.
+    expect(r.get().running).toBe(true);
+    expect(r.get().fault).toBeNull();
+    expect(r.get().history).toHaveLength(TICKS_PER_CYCLE);
+  });
+
+  it("the tick after row 14 is back on real telemetry (the loop recovers by itself)", async () => {
+    const r = await runOneCycle("camera");
+    expect(r.calls[51].payload.telemetry_features).not.toBeNull(); // row 13
+    expect(r.calls[55].payload.telemetry_features).toBeNull(); // row 14
+    expect(r.calls[56].payload.telemetry_features).not.toBeNull(); // row 15
+    expect(r.calls[63].payload.telemetry_features).not.toBeNull(); // row 16
+    expect(r.calls[64].payload.telemetry_features).toBeNull(); // row 17
+    expect(r.calls[68].payload.telemetry_features).not.toBeNull(); // row 18
+  });
+
+  it("with the camera OFF the cycle is just as complete: rows 14 and 17 send neither image nor telemetry", async () => {
+    const r = await runOneCycle("none");
+    expect(r.calls).toHaveLength(TICKS_PER_CYCLE);
+    r.calls.forEach((call, tick) => {
+      expect(call.payload.image_base64).toBeNull();
+      expect(call.payload.captured_at).toBeNull();
+      expect(call.payload.telemetry_features === null).toBe(
+        MISSING_TICKS.includes(tick),
+      );
+    });
+    expect(r.get().running).toBe(true);
+    expect(r.get().fault).toBeNull();
+    expect(r.get().imagelessRequests).toBe(TICKS_PER_CYCLE);
+  });
+
+  it("the cycle wraps: the first tick of the next cycle is on row 1 again", async () => {
+    const r = rig({ frame: "camera", telemetrySource: preparedTelemetryAt });
+    await r.begin();
+    await r.time.advance(50_000);
+    expect(r.calls).toHaveLength(TICKS_PER_CYCLE + 1);
+    expect(r.calls[TICKS_PER_CYCLE].payload.telemetry_features).toEqual(
+      r.calls[0].payload.telemetry_features,
+    );
   });
 });
 

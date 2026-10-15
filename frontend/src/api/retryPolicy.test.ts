@@ -9,6 +9,8 @@ import {
   classifyFailure,
   deliveriesText,
   deliveryCounts,
+  faultAdvice,
+  retryNote,
 } from "./retryPolicy";
 
 // Every expectation below is a literal. Nothing is derived from the module under
@@ -253,6 +255,106 @@ describe("deliveryCounts / deliveriesText: what the stop panel says about delive
   it("a 400 followed by a failed manual retry is NOT '2 of 3': that would read as one automatic retry", () => {
     expect(deliveriesText({ retryCount: 2, manualRetries: 1 })).not.toBe(
       "2 of 3",
+    );
+  });
+});
+
+// Task 9 / K8. The stop panel prints the delivery line ("Deliveries: ...") and an
+// advice sentence side by side. For model_runtime and timeout the advice used to say
+// "re-sent automatically and kept failing" whatever the reason for the stop - which
+// contradicts the line above it when the stop is a MANUAL retry that failed (e.g.
+// "1 of 3 + 1 manual": the loop sent it once). The sentence now follows the reason.
+describe("faultAdvice: the sentence follows why the loop stopped (K8)", () => {
+  it("automatic budget spent (no manual delivery): 're-sent automatically and kept failing'", () => {
+    expect(faultAdvice({ category: "model_runtime", manualRetries: 0 })).toBe(
+      "A model or storage error on the server (HTTP 500). The request was re-sent automatically and kept failing.",
+    );
+    expect(faultAdvice({ category: "timeout", manualRetries: 0 })).toBe(
+      "No answer within 10 seconds. The request was re-sent automatically and kept timing out. Check the backend, then use Retry.",
+    );
+  });
+
+  it("a manual retry that failed: it speaks of the retry the user triggered, and does not claim automatic re-sends", () => {
+    expect(faultAdvice({ category: "model_runtime", manualRetries: 1 })).toBe(
+      "A model or storage error on the server (HTTP 500). The retry you triggered failed as well.",
+    );
+    expect(faultAdvice({ category: "timeout", manualRetries: 2 })).toBe(
+      "No answer within 10 seconds. The retry you triggered timed out as well. Check the backend, then use Retry.",
+    );
+    for (const category of ["model_runtime", "timeout"] as const) {
+      expect(faultAdvice({ category, manualRetries: 1 })).not.toMatch(
+        /automatically/i,
+      );
+    }
+  });
+
+  it("the two reasons never share a sentence", () => {
+    for (const category of ["model_runtime", "timeout"] as const) {
+      expect(faultAdvice({ category, manualRetries: 0 })).not.toBe(
+        faultAdvice({ category, manualRetries: 1 }),
+      );
+    }
+  });
+
+  it("every other category reads the same whatever the reason", () => {
+    for (const category of [
+      "input",
+      "clock_skew",
+      "not_found",
+      "conflict_hash",
+      "conflict_mode",
+      "conflict_stale_frame",
+      "models_unavailable",
+      "storage",
+      "transport",
+      "aborted",
+    ] as const) {
+      expect(faultAdvice({ category, manualRetries: 0 })).toBe(
+        FAULT_TEXT[category].advice,
+      );
+      expect(faultAdvice({ category, manualRetries: 3 })).toBe(
+        FAULT_TEXT[category].advice,
+      );
+    }
+  });
+
+  it("the plain advice (automatic) is still the entry in FAULT_TEXT", () => {
+    expect(FAULT_TEXT.model_runtime.advice).toBe(
+      faultAdvice({ category: "model_runtime", manualRetries: 0 }),
+    );
+    expect(FAULT_TEXT.timeout.advice).toBe(
+      faultAdvice({ category: "timeout", manualRetries: 0 }),
+    );
+  });
+});
+
+describe("retryNote: what the stop panel says Retry will do (K8)", () => {
+  it("a delivery that stopped: Retry re-sends the same request to the same session", () => {
+    expect(retryNote({ phase: "delivery", newSessionOnRetry: false })).toBe(
+      "Retry re-sends this same request to the same session.",
+    );
+  });
+
+  it("a delivery whose session is gone (404): Retry creates a NEW session", () => {
+    expect(retryNote({ phase: "delivery", newSessionOnRetry: true })).toBe(
+      "Retry will create a NEW session.",
+    );
+  });
+
+  it("setup that stopped on a normal Start: Retry repeats the setup and resumes", () => {
+    expect(retryNote({ phase: "setup", newSessionOnRetry: false })).toBe(
+      "Retry repeats the setup: the model check, then the session.",
+    );
+  });
+
+  it("setup that stopped on a New Session: Retry creates a NEW session (it used to say only 'repeats the setup')", () => {
+    const note = retryNote({ phase: "setup", newSessionOnRetry: true });
+    expect(note).toBe(
+      "Retry repeats the setup: the model check, then a NEW session.",
+    );
+    expect(note).toMatch(/NEW session/);
+    expect(note).not.toBe(
+      retryNote({ phase: "setup", newSessionOnRetry: false }),
     );
   });
 });

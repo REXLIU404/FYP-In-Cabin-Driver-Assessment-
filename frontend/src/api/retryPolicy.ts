@@ -113,10 +113,17 @@ export function deliveriesText(
   }`;
 }
 
-/** What the stop panel says. Every category has its own sentence. */
+/**
+ * What the stop panel says. Every category has its own sentence.
+ *
+ * `advice` is the sentence for a stop the loop reached by itself (the automatic
+ * budget spent, or an error a re-send cannot fix). A category whose advice speaks of
+ * automatic re-sends also has `adviceAfterManualRetry`, used when the stop is a
+ * manual retry that failed - see `faultAdvice`.
+ */
 export const FAULT_TEXT: Record<
   FaultCategory,
-  { title: string; advice: string }
+  { title: string; advice: string; adviceAfterManualRetry?: string }
 > = {
   input: {
     title: "The server rejected the request as invalid",
@@ -157,6 +164,8 @@ export const FAULT_TEXT: Record<
     title: "The server failed while processing the frame",
     advice:
       "A model or storage error on the server (HTTP 500). The request was re-sent automatically and kept failing.",
+    adviceAfterManualRetry:
+      "A model or storage error on the server (HTTP 500). The retry you triggered failed as well.",
   },
   storage: {
     title: "The server could not store the result",
@@ -167,6 +176,8 @@ export const FAULT_TEXT: Record<
     title: "The server did not answer in time",
     advice:
       "No answer within 10 seconds. The request was re-sent automatically and kept timing out. Check the backend, then use Retry.",
+    adviceAfterManualRetry:
+      "No answer within 10 seconds. The retry you triggered timed out as well. Check the backend, then use Retry.",
   },
   transport: {
     title: "The backend cannot be reached",
@@ -178,3 +189,38 @@ export const FAULT_TEXT: Record<
     advice: "Monitoring was paused. Nothing failed.",
   },
 };
+
+/**
+ * The advice sentence for a stopped fault, chosen by WHY the loop stopped.
+ *
+ * `manualRetries > 0` means the last delivery was one the user started with Retry
+ * (a stop after a manual delivery is always that delivery failing; an automatic stop
+ * has none). Then "re-sent automatically and kept failing" would contradict the
+ * delivery line beside it - "1 of 3 + 1 manual" is one automatic send, not a spent
+ * automatic budget - so the sentence names the retry the user triggered instead.
+ */
+export function faultAdvice(
+  fault: Pick<LiveFault, "category" | "manualRetries">,
+): string {
+  const text = FAULT_TEXT[fault.category];
+  return fault.manualRetries > 0 && text.adviceAfterManualRetry
+    ? text.adviceAfterManualRetry
+    : text.advice;
+}
+
+/**
+ * What Retry will do, for the stop panel. It must follow `newSessionOnRetry` in the
+ * setup phase as well as the delivery phase: a New Session whose setup failed makes
+ * Retry create a session, not resume the old one.
+ */
+export function retryNote(
+  fault: Pick<LiveFault, "phase" | "newSessionOnRetry">,
+): string {
+  if (fault.phase === "setup")
+    return fault.newSessionOnRetry
+      ? "Retry repeats the setup: the model check, then a NEW session."
+      : "Retry repeats the setup: the model check, then the session.";
+  return fault.newSessionOnRetry
+    ? "Retry will create a NEW session."
+    : "Retry re-sends this same request to the same session.";
+}

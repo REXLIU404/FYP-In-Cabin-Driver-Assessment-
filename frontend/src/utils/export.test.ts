@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { expiryRecords } from "../testing/expiryRecords";
 import { makeRecord } from "../testing/records";
 import { buildSessionLogCSV, buildSessionLogJSON } from "./export";
 
@@ -163,5 +164,134 @@ describe("UT-EXPORT-01: unavailable windows export as empty cells / null, never 
       system_health: "UNAVAILABLE",
     });
     expect(parsed.record_count).toBe(2);
+  });
+});
+
+// Task 9 / K9 (the export leftover of P0-D13, ruling A). An expired branch is stored as
+// `missing`, so the two freshness columns alone cannot tell "never arrived" from "too
+// old". The reason and the age live in the record's provenance; four columns carry
+// them out, appended after telemetry_freshness. A record from before ruling A has no
+// such fields: its cells are EMPTY, not false and not 0.
+describe("K9: the export keeps why a branch scored as missing", () => {
+  const NEW_COLUMNS = [
+    "vision_expired",
+    "vision_age_s",
+    "telemetry_expired",
+    "telemetry_age_s",
+  ];
+  const csvRow = (
+    record: ReturnType<(typeof expiryRecords)[keyof typeof expiryRecords]>,
+  ) => {
+    const { rows } = parseCsv(buildSessionLogCSV([record], true));
+    return rows[0];
+  };
+
+  it("the evidence export appends the four columns after telemetry_freshness, nothing moves", () => {
+    const { header } = parseCsv(buildSessionLogCSV([available], true));
+    expect(header.slice(-6)).toEqual([
+      "vision_freshness",
+      "telemetry_freshness",
+      "vision_expired",
+      "vision_age_s",
+      "telemetry_expired",
+      "telemetry_age_s",
+    ]);
+    expect(header).toHaveLength(23);
+  });
+
+  it("an expired vision branch exports as missing, expired = true, with its age", () => {
+    const row = csvRow(expiryRecords.visionExpired());
+    expect(row.vision_freshness).toBe("missing");
+    expect(row.vision_expired).toBe("true");
+    expect(row.vision_age_s).toBe("4");
+    expect(row.telemetry_freshness).toBe("fresh");
+    expect(row.telemetry_expired).toBe("false");
+    expect(row.telemetry_age_s).toBe("1.5");
+  });
+
+  it("an expired telemetry branch is the mirror image", () => {
+    const row = csvRow(expiryRecords.telemetryExpired());
+    expect(row.telemetry_freshness).toBe("missing");
+    expect(row.telemetry_expired).toBe("true");
+    expect(row.telemetry_age_s).toBe("7.5");
+    expect(row.vision_freshness).toBe("fresh");
+    expect(row.vision_expired).toBe("false");
+    expect(row.vision_age_s).toBe("1.5");
+  });
+
+  it("a branch that never arrived is missing but NOT expired, with an empty age", () => {
+    const row = csvRow(expiryRecords.visionNeverArrived());
+    expect(row.vision_freshness).toBe("missing");
+    expect(row.vision_expired).toBe("false");
+    expect(row.vision_age_s).toBe("");
+  });
+
+  it("both branches expired: an unavailable window that still says why", () => {
+    const row = csvRow(expiryRecords.bothExpired());
+    expect(row.assessment_available).toBe("false");
+    expect(row.vision_expired).toBe("true");
+    expect(row.vision_age_s).toBe("4");
+    expect(row.telemetry_expired).toBe("true");
+    expect(row.telemetry_age_s).toBe("7.5");
+  });
+
+  it("a record from before ruling A has no such fields: four EMPTY cells", () => {
+    const record = expiryRecords.legacyStale();
+    expect(record.provenance).toBeUndefined();
+    const row = csvRow(record);
+    expect(row.vision_freshness).toBe("stale");
+    for (const column of NEW_COLUMNS) expect(row[column]).toBe("");
+  });
+
+  it("a provenance that has other keys but not these four is empty too, not false", () => {
+    const record = {
+      ...makeRecord("fresh", "fresh", 1),
+      provenance: { provider: "trained" },
+    };
+    const row = csvRow(record);
+    for (const column of NEW_COLUMNS) expect(row[column]).toBe("");
+  });
+
+  it("JSON: the same four keys, null where the record has none, and the same shape for every record", () => {
+    const parsed = JSON.parse(
+      buildSessionLogJSON(
+        "s",
+        [expiryRecords.visionExpired(), expiryRecords.legacyStale()],
+        true,
+      ),
+    );
+    const [expired, legacy] = parsed.records;
+    expect(expired).toMatchObject({
+      vision_freshness: "missing",
+      vision_expired: true,
+      vision_age_s: 4,
+      telemetry_expired: false,
+      telemetry_age_s: 1.5,
+    });
+    for (const column of NEW_COLUMNS) {
+      expect(Object.prototype.hasOwnProperty.call(legacy, column)).toBe(true);
+      expect(legacy[column]).toBeNull();
+    }
+    expect(Object.keys(legacy)).toEqual(Object.keys(expired));
+  });
+
+  it("without evidence interpretation the export is unchanged (these are evidence columns, like the freshness pair)", () => {
+    const { header } = parseCsv(buildSessionLogCSV([available], false));
+    for (const column of NEW_COLUMNS) expect(header).not.toContain(column);
+    expect(header).toEqual([
+      "window_id",
+      "risk_score",
+      "risk_level",
+      "alert_severity",
+      "system_health",
+      "assessment_available",
+    ]);
+  });
+
+  it("the CSV header and the JSON keys stay the same list", () => {
+    const records = [expiryRecords.visionExpired()];
+    const { header } = parseCsv(buildSessionLogCSV(records, true));
+    const [first] = JSON.parse(buildSessionLogJSON("s", records, true)).records;
+    expect(header).toEqual(Object.keys(first));
   });
 });

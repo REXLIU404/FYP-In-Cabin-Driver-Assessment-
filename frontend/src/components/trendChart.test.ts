@@ -80,3 +80,75 @@ describe("UT-TREND-01: the tooltip never turns a null point into 0.0 / 100", () 
     expect(formatTrendTooltip(0, "Telemetry non-safe (%)")).toBe("0.0%");
   });
 });
+
+// Task 9 / K5 (P1-6 leftover). The tooltip percent used to come from `P x 100` handed to
+// formatFixed(..., 1): the multiplication happens in binary, so a probability sitting
+// exactly on a decimal tie (0.2855) arrives as 28.549999999999997 and rounds DOWN. The
+// rule is half-up on the DECIMAL digits, scaled afterwards - the same order as
+// asPercent. These go through the whole path the chart uses: record -> series point ->
+// tooltip formatter.
+describe("the branch tooltips round half-up on the probability, not on P x 100 (K5)", () => {
+  const tooltipFor = (
+    over: { P_distraction?: number; P_telemetry_anomaly?: number },
+    branch: "vision" | "telemetry",
+  ) => {
+    const [point] = buildTrendSeries([makeRecord("fresh", "fresh", 1, over)]);
+    return formatTrendTooltip(
+      point[branch],
+      branch === "vision" ? "P_distraction (%)" : "Telemetry non-safe (%)",
+    );
+  };
+
+  it("guard on the test itself: these inputs really are ones where P x 100 lands below the tie", () => {
+    expect(0.2855 * 100).toBeLessThan(28.55);
+    expect(0.1455 * 100).toBeLessThan(14.55);
+  });
+
+  it("P_distraction 0.2855 reads 28.6%, not 28.5%", () => {
+    expect(tooltipFor({ P_distraction: 0.2855 }, "vision")).toBe("28.6%");
+  });
+
+  it("P_distraction 0.1455 reads 14.6%, not 14.5%", () => {
+    expect(tooltipFor({ P_distraction: 0.1455 }, "vision")).toBe("14.6%");
+  });
+
+  it("ties that other rounding recipes get wrong also read half-up (0.5005 -> 50.1%, 0.0015 -> 0.2%)", () => {
+    // Math.round(P * 1000) / 10 gives 50 for 0.5005; (P * 100).toFixed(1) gives 0.1 for
+    // 0.0015. The decimal-digit rounding gets both right.
+    expect(Math.round(0.5005 * 1000) / 10).toBe(50);
+    expect((0.0015 * 100).toFixed(1)).toBe("0.1");
+    expect(tooltipFor({ P_distraction: 0.5005 }, "vision")).toBe("50.1%");
+    expect(tooltipFor({ P_telemetry_anomaly: 0.0015 }, "telemetry")).toBe(
+      "0.2%",
+    );
+  });
+
+  it("the telemetry branch rounds the same way", () => {
+    expect(tooltipFor({ P_telemetry_anomaly: 0.2855 }, "telemetry")).toBe(
+      "28.6%",
+    );
+    expect(tooltipFor({ P_telemetry_anomaly: 0.1455 }, "telemetry")).toBe(
+      "14.6%",
+    );
+  });
+
+  it("values off a tie are unchanged, and the ends of the range are exact", () => {
+    expect(tooltipFor({ P_distraction: 0.2854 }, "vision")).toBe("28.5%");
+    expect(tooltipFor({ P_distraction: 0.2856 }, "vision")).toBe("28.6%");
+    expect(tooltipFor({ P_distraction: 0 }, "vision")).toBe("0.0%");
+    expect(tooltipFor({ P_distraction: 1 }, "vision")).toBe("100.0%");
+    expect(tooltipFor({ P_distraction: 0.5 }, "vision")).toBe("50.0%");
+  });
+
+  it("a stored 3-decimal probability maps to its exact percent, with no binary dust on the coordinate", () => {
+    // P x 100 gives 7.000000000000001, 28.999999999999996 and 56.99999999999999 here.
+    const coordinate = (p: number) =>
+      buildTrendSeries([
+        makeRecord("fresh", "fresh", 1, { P_distraction: p }),
+      ])[0].vision;
+    expect(coordinate(0.07)).toBe(7);
+    expect(coordinate(0.29)).toBe(29);
+    expect(coordinate(0.57)).toBe(57);
+    expect(coordinate(0.286)).toBe(28.6);
+  });
+});
