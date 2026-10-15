@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import liveLoopSource from "../../../ai/src/liveLoop.ts?raw";
 import telemetryCsv from "../../../ai/prototype-data/prepared_sessions/session_001/telemetry.csv?raw";
 import useLiveSessionSource from "../hooks/useLiveSession.ts?raw";
+import preparedSessionInputSource from "./preparedSessionInput.ts?raw";
 import {
   PREPARED_RAW_TELEMETRY,
   PREPARED_SESSION_WINDOWS,
@@ -173,6 +174,54 @@ describe("scope guard: the Live path does not use the prepared-probability repla
     expect(strip(useLiveSessionSource)).toMatch(
       /telemetryAt:\s*preparedTelemetryAt\b/,
     );
+  });
+
+  // The hook only NAMES the cursor (`telemetryAt: preparedTelemetryAt`); the function
+  // that actually reads the rows lives in preparedSessionInput.ts, the same module
+  // that defines PREPARED_SESSION_WINDOWS. Scanning the hook and the loop therefore
+  // cannot see a cursor that has quietly been pointed back at the replay table, and
+  // the two tables hold identical telemetry values, so no content test can either.
+  // So the guard reads the cursor's own source.
+  describe("the cursor the hook injects (preparedTelemetryAt)", () => {
+    // The text of the one top-level statement that begins at `marker`: up to the first
+    // `;` outside every (), [] and {}. If no such `;` exists the rest of the file is
+    // returned, which can only make the guard stricter, never blinder.
+    const statementStartingAt = (code: string, marker: string): string => {
+      const start = code.indexOf(marker);
+      expect(
+        start,
+        `${marker} was not found in preparedSessionInput.ts; update this guard`,
+      ).toBeGreaterThanOrEqual(0);
+      let depth = 0;
+      for (let index = start; index < code.length; index += 1) {
+        const char = code[index];
+        if ("([{".includes(char)) depth += 1;
+        else if (")]}".includes(char)) depth -= 1;
+        else if (char === ";" && depth === 0) {
+          return code.slice(start, index + 1);
+        }
+      }
+      return code.slice(start);
+    };
+
+    const cursor = statementStartingAt(
+      strip(preparedSessionInputSource),
+      "export const preparedTelemetryAt",
+    );
+
+    it("the extracted statement is the whole cursor (so the checks below cannot pass on a truncated slice)", () => {
+      expect(cursor).toMatch(/Math\.floor\(elapsedMs \/ 2000\)/);
+      expect(cursor).toMatch(/\.telemetry_features\s*;$/);
+    });
+
+    it("reads PREPARED_RAW_TELEMETRY", () => {
+      expect(cursor).toMatch(/\bPREPARED_RAW_TELEMETRY\b/);
+    });
+
+    it("never mentions PREPARED_SESSION_WINDOWS or the replay builder", () => {
+      expect(cursor).not.toMatch(/\bPREPARED_SESSION_WINDOWS\b/);
+      expect(cursor).not.toMatch(/\bbuildPreparedWindows\b/);
+    });
   });
 
   it("the pure loop imports nothing from the data layer at all", () => {

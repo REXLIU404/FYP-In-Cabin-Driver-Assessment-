@@ -303,3 +303,91 @@ vitest 的 +112（每个文件的前后数由 JSON 报告核对，基线副本�
 - **R10（观察身份 / 遥测采集时间戳 / 游标语义）**：替换点只有 `preparedTelemetryAt` 一个函数与 `liveLoop.ts` 里 `telemetry_timestamp` 的取值；要同步改写的测试：`liveLoop.test.ts` 的 K2 一组（tick 与行号的对应）、`preparedRawTelemetry.test.ts` 的游标两条、变异 N3d 所对应的钉死规则。R10 落地后才应补「遥测过期」的端到端断言（P0-D13 报告第 9 节已提）。
 - **阶段 5**：本项没有改任何与 0.45 stale 档或 D13 有关的东西。
 - **控制者**：决定是否同步第 7.2 第 7 条所列的三份中文文档里的旧选项名；决定第 7.2 第 2 条（Live 的 CSV 是否要独立的四个过期列，需要后端改动）要不要排进 Task 10 或之后。
+
+---
+
+# 修复轮 1
+
+输入：独立评审在 `c304aa0` 上提出的 1 条 Important 发现（`blocks_this_item: true`）。开工前核实：`git rev-parse --short HEAD` = `c304aa0`，分支 `fyp2/live-system`，`git status --short` 为空。只修这一条，不改实现代码。
+
+## R1.1 发现
+
+> K6 的范围守卫只扫描 `useLiveSession.ts` 与 `ai/src/liveLoop.ts` 两个文件。本 diff 把注入的遥测游标搬进了 `preparedSessionInput.ts` 的 `preparedTelemetryAt`，而这个模块同时定义了 `PREPARED_SESSION_WINDOWS`。Live 路径上真正读数据的那个函数没有任何守卫。变异 N6x：把 `preparedTelemetryAt` 的函数体改成读 `PREPARED_SESSION_WINDOWS`，706/706 全绿；README.md、frontend/README.md 和 docs/fyp2/06 的增补仍然声称 Live 只读 `PREPARED_RAW_TELEMETRY` 且有静态测试守护。
+
+**评审说得对，且是我（上一轮）的疏漏**：第 4 节 K6 写的守卫"覆盖 Live 路径及其注入点"，但注入点在 hook 里只剩 `telemetryAt: preparedTelemetryAt` 这个名字；读数据的函数在另一个模块里。两张表的 `telemetry_features` 数值逐项相同（K6 内容测试自己就断言了这一点），所以任何比较数值的测试都分不出游标读的是哪一张表。能区分的只有源码。
+
+### 复现（修复前，隔离副本，`c304aa0` 的 `git archive`，旧测试）
+
+```
+D=$(mktemp -d) && git archive HEAD | tar -x -C "$D" && ln -s <repo>/.venv "$D/.venv" && ln -s <repo>/node_modules "$D/node_modules"
+# 副本里把 preparedTelemetryAt 的函数体改为：
+#   PREPARED_SESSION_WINDOWS[Math.floor(elapsedMs / 2000) % PREPARED_SESSION_WINDOWS.length].telemetry_features;
+cd "$D" && ./node_modules/.bin/vitest run --no-cache
+```
+
+实测：`Test Files  24 passed (24)` / `Tests  706 passed (706)`。发现成立：变异存活。
+
+## R1.2 修复（选评审给的方案 (a)）
+
+只改一个文件：`frontend/src/data/preparedRawTelemetry.test.ts`（+49 / −0）。实现代码、hook、`liveLoop.ts`、文档正文均未动——三份文档的措辞（"有静态测试守住这条边界"）在本修复之后才真正为真，所以不需要改。
+
+- 新增 `import preparedSessionInputSource from "./preparedSessionInput.ts?raw"`。
+- 在既有的 `scope guard` 描述块里新增子块 `the cursor the hook injects (preparedTelemetryAt)`，3 个测试：
+  1. **切片完整性**：游标语句包含 `Math.floor(elapsedMs / 2000)` 且以 `.telemetry_features;` 结尾。作用：防止切片被截断而让下面两条空过。
+  2. **正向**：游标源码出现 `PREPARED_RAW_TELEMETRY`。作用：游标不能被改接到别处（或委托给读 replay 表的辅助函数）而守卫仍绿。
+  3. **负向**：游标源码不出现 `PREPARED_SESSION_WINDOWS`，也不出现 `buildPreparedWindows`。
+- 切片方法：先对 `preparedSessionInput.ts` 的源码去注释（沿用文件里已有的 `strip`），再从 `export const preparedTelemetryAt` 起，括号感知地扫到第一个位于 `()` `[]` `{}` 之外的 `;`。这样块体写法 `=> { …; … }` 里的内部分号不会把语句截断；若始终找不到顶层 `;`，就返回文件剩余部分——只会更严，不会更宽。找不到起始标记时，测试以明确信息失败（"update this guard"），不会静默通过。
+- 测试里的断言全是字面量正则，没有从实现 import 任何东西来构造期望值。
+
+## R1.3 变异验证（隔离副本，`mut.py` 每次从真实树复制被改文件的已修复版本、只改副本里一处、跑整套 vitest 的 JSON 报告，然后复原并 `filecmp` 逐字节确认一致）
+
+```
+python3 /private/tmp/claude-501/.../scratchpad/task9fix1/mut.py     # 输出另存于 mutations_fix1.txt
+```
+
+实测输出（节选自 `mutations_fix1.txt`，测试名前缀均为 `scope guard: the Live path does not use the prepared-probability replay data`）：
+
+| 变异（副本里，一次一处） | 结果 | 变红的测试 |
+|---|---|---|
+| control（无变异） | passed=709 failed=0 | — |
+| **N6x** `preparedTelemetryAt` 函数体改读 `PREPARED_SESSION_WINDOWS[...]`（评审复现的那个） | passed=707 failed=2 | `…the cursor… reads PREPARED_RAW_TELEMETRY`；`…the cursor… never mentions PREPARED_SESSION_WINDOWS or the replay builder` |
+| N6x-b 只把取模的长度改成 `PREPARED_SESSION_WINDOWS.length`，仍读 raw 表 | passed=708 failed=1 | `never mentions PREPARED_SESSION_WINDOWS…` |
+| N6x-c 内联 `buildPreparedWindows(telemetryCsv)[…]` | passed=708 failed=1 | `never mentions … the replay builder` |
+| N6x-d 块体写法 `=> { const raw = …; return PREPARED_SESSION_WINDOWS[…].telemetry_features; };` | passed=707 failed=2 | `the extracted statement is the whole cursor…`（形状变了）；`never mentions PREPARED_SESSION_WINDOWS…`（内部分号没有截断切片） |
+| N6x-e 游标委托给读 replay 表的辅助函数 `replayRowAt` | passed=708 failed=1 | `reads PREPARED_RAW_TELEMETRY` |
+| N6a（回归：hook 重新 import `PREPARED_SESSION_WINDOWS`，既有守卫） | passed=708 failed=1 | `frontend/src/hooks/useLiveSession.ts never mentions PREPARED_SESSION_WINDOWS…` |
+
+最后一行 `restored-identical: all [...]`：四个被改文件在每次变异后都复原为与真实树逐字节一致。没有在真实工作树里做过任何变异。
+
+**「红灯先行」说明**：本修复是先复现存活变异（R1.1，706/706 绿），再加测试，再证明同一变异变红；不是先写实现——没有实现要改。
+
+## R1.4 门禁（真实工作树，修复之后，精确命令同 `phase2-context.md`）
+
+```
+cd /Users/liu/Desktop/FYP2-Live-System
+export PYTHONDONTWRITEBYTECODE=1
+(cd backend && TMPDIR=$(mktemp -d) PYTHONPATH=. ../.venv/bin/python -m pytest tests -q -p no:cacheprovider)
+./node_modules/.bin/vitest run --no-cache
+./node_modules/.bin/tsc --noEmit
+./node_modules/.bin/eslint .
+```
+
+实测：
+
+- pytest：`704 passed, 1 warning in 9.36s`（0 failed，0 skipped）
+- vitest：`Test Files  24 passed (24)` / `Tests  709 passed (709)`
+- `tsc --noEmit`：`exit=0`
+- `eslint .`：`exit=0`
+- `prettier --check frontend/src/data/preparedRawTelemetry.test.ts`：`All matched files use Prettier code style!`
+- 只跑被改文件：`./node_modules/.bin/vitest run --no-cache frontend/src/data/preparedRawTelemetry.test.ts` → `38 passed (38)`（修复前 35）
+
+**数字变化**：vitest 706 → **709**，恰为本轮新增的 3 个测试（上面 R1.2 的 1/2/3），在 `preparedRawTelemetry.test.ts` 里 35 → 38；其余 23 个文件计数不变。pytest 704 不变（后端零改动）。无测试被删除或弱化。
+
+主仓库 `node_modules/.vite` 与 `node_modules/.vite-temp` 的修改时间在本轮前后都是 `Oct 15 13:13:46` / `Oct 15 13:13:40`，没有被触碰；未启动 vite dev server。
+
+## R1.5 遗留 / 已知边界
+
+1. **守卫的盲区**：若有人让游标委托给一个读 replay 表的辅助函数，**同时**游标本身仍出现 `PREPARED_RAW_TELEMETRY`（例如两张表混着用），切片里不会出现 `PREPARED_SESSION_WINDOWS`，三条检查都不红。N6x-e 能被抓到，是因为那个变异里游标不再提 `PREPARED_RAW_TELEMETRY`。要彻底关掉这条路，需要方案 (b)（把 raw 表与游标搬到一个不定义 replay 窗口的模块并整模块守卫），那是实现改动，评审给了二选一，我选了不碰实现的 (a)；盲区在此如实记录。
+2. **起始标记是硬编码的** `export const preparedTelemetryAt`。R10 若把它改写成 `function` 声明或改名，测试会以"update this guard"明确失败，而不是空过；届时随 R10 一起改写（第 9 节已列出 R10 要改的测试，这条加进去）。
+3. **与第 7.2 第 6 条的关系**：生产 bundle 里两张表仍然都在（同一模块）；守卫守的仍是"Live 代码不读它"，现在这句话对游标函数本身也成立。
+4. 第 4 节 K6 的"范围守卫"段与第 6 节的 vitest 计数（706 / 35）是上一轮的状态，以本节为准：K6 守卫现在覆盖 hook、`liveLoop.ts`、以及游标函数自身；总计 709，`preparedRawTelemetry.test.ts` 为 38。
