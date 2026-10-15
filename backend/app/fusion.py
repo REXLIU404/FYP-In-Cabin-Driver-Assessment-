@@ -26,6 +26,15 @@ FUSION_EPSILON = 1e-9
 
 
 def freshness_weight(status: str) -> float:
+    """fresh 1.0, missing 0.0 - and stale 0.45, which is HISTORICAL ONLY.
+
+    Ruling A (D13): the runtime no longer produces ``stale``. ``inference.freshness()``
+    returns only "fresh" or "missing"; evidence older than ``freshness_tolerance_s`` is
+    EXPIRED and arrives here as "missing" (weight 0), with the reason kept in the provenance
+    (``{modality}_expired`` / ``{modality}_age_s``). The 0.45 tier is retained, unchanged,
+    for one purpose: records written before the ruling carry ``stale`` and must keep
+    reading and rendering. It is a legacy compatibility weight, not a model input the
+    pipeline can reach - and not a validated number."""
     if status == "missing":
         return 0.0
     if status == "stale":

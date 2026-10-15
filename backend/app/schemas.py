@@ -14,6 +14,11 @@ from pydantic import BaseModel, Field, ConfigDict, field_validator, model_valida
 RiskLevel = Literal["Low", "Medium", "High"]
 AlertSeverity = Literal["NORMAL", "CAUTION", "HIGH_ALERT"]
 SystemHealth = Literal["FULL", "DEGRADED", "UNAVAILABLE"]
+# "stale" is HISTORICAL. Ruling A (D13): the runtime never produces it - evidence older than
+# freshness_tolerance_s is expired and recorded as "missing" (provenance: {modality}_expired,
+# {modality}_age_s). The literal stays because a stored record written before the ruling carries
+# it and must still validate on every read path, and because a sender may still DECLARE a branch
+# stale on WindowInput, which the pipeline then treats as expired.
 FreshnessStatus = Literal["fresh", "stale", "missing"]
 OperationMode = Literal["PREPARED_SESSION_RUNTIME", "LIVE_MODEL_RUNTIME"]
 DominantEvidence = Literal[

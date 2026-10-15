@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   assertAvailabilityInvariant,
+  branchExpiry,
   deriveAssessmentAvailable,
+  describeBranchStatus,
   effectiveFusionDenominator,
   getDisplayState,
   isAssessmentAvailable,
@@ -332,6 +334,27 @@ describe("null never reaches a relational operator (null < 30 is true in JS)", (
     );
   });
 
+  it("getActiveInputSummary says an EXPIRED branch expired, with its age, not 'missing'", () => {
+    // Ruling A (D13): expired evidence scores as missing but is not the same thing as no
+    // input, and the text for the reader must not pretend it is.
+    const record: RiskUpdate = {
+      ...makeRecord("missing", "fresh"),
+      provenance: {
+        vision_expired: true,
+        vision_age_s: 30,
+        telemetry_expired: false,
+        telemetry_age_s: 0,
+      },
+    };
+    expect(getActiveInputSummary(record)).toBe(
+      "Vision expired (30 s) / Telemetry fresh",
+    );
+    // The same statuses with nothing expired keep the plain wording.
+    expect(getActiveInputSummary(makeRecord("missing", "fresh"))).toBe(
+      "Vision missing / Telemetry fresh",
+    );
+  });
+
   it("getMatchedEvidenceRule names the zero-denominator rule for null", () => {
     const rule = getMatchedEvidenceRule(null, 30);
     expect(rule.label).toBe("Unavailable");
@@ -537,5 +560,91 @@ describe("IT-UI-01: the frontend renders the canonical record and recomputes not
     ]) {
       expect(strip(source)).not.toMatch(/\.toFixed\(/);
     }
+  });
+});
+
+describe("branchExpiry / describeBranchStatus: expired is not the same as missing (ruling A, D13)", () => {
+  const withProvenance = (
+    vision: FreshnessStatus,
+    telemetry: FreshnessStatus,
+    provenance: RiskUpdate["provenance"],
+  ): RiskUpdate => ({ ...makeRecord(vision, telemetry), provenance });
+
+  it("a branch is expired only if it scored as missing AND the provenance says so", () => {
+    const record = withProvenance("missing", "fresh", {
+      vision_expired: true,
+      vision_age_s: 4,
+      telemetry_expired: false,
+      telemetry_age_s: 1.5,
+    });
+    expect(branchExpiry(record, "vision")).toEqual({ expired: true, ageS: 4 });
+    // A fresh branch with an age on record is not expired, and reports no age.
+    expect(branchExpiry(record, "telemetry")).toEqual({
+      expired: false,
+      ageS: null,
+    });
+  });
+
+  it("a branch that never arrived is missing but NOT expired", () => {
+    const record = withProvenance("missing", "missing", {
+      vision_expired: false,
+      vision_age_s: null,
+      telemetry_expired: false,
+      telemetry_age_s: null,
+    });
+    expect(branchExpiry(record, "vision").expired).toBe(false);
+    expect(branchExpiry(record, "telemetry").expired).toBe(false);
+  });
+
+  it("a record from before the ruling (no provenance, or none of the fields) expires nothing", () => {
+    expect(
+      branchExpiry(withProvenance("missing", "stale", undefined), "vision"),
+    ).toEqual({ expired: false, ageS: null });
+    expect(
+      branchExpiry(
+        withProvenance("missing", "stale", { provider: "MockAIProvider" }),
+        "telemetry",
+      ),
+    ).toEqual({ expired: false, ageS: null });
+  });
+
+  it("an expired flag on a branch that is not missing is ignored (the status is the authority)", () => {
+    const record = withProvenance("fresh", "fresh", {
+      vision_expired: true,
+      vision_age_s: 9,
+    });
+    expect(branchExpiry(record, "vision").expired).toBe(false);
+  });
+
+  it("an expired branch with no measurable age is still expired", () => {
+    const record = withProvenance("missing", "fresh", {
+      vision_expired: true,
+      vision_age_s: null,
+    });
+    expect(branchExpiry(record, "vision")).toEqual({
+      expired: true,
+      ageS: null,
+    });
+  });
+
+  it("describeBranchStatus: expired reads 'expired (N s)', everything else is the stored status", () => {
+    const none = { expired: false, ageS: null };
+    expect(describeBranchStatus("missing", none)).toBe("missing");
+    expect(describeBranchStatus("fresh", none)).toBe("fresh");
+    // A historical record's stale tier still renders as stale.
+    expect(describeBranchStatus("stale", none)).toBe("stale");
+    expect(describeBranchStatus("missing", { expired: true, ageS: 4 })).toBe(
+      "expired (4 s)",
+    );
+    expect(
+      describeBranchStatus("missing", { expired: true, ageS: 3.001 }),
+    ).toBe("expired (3.001 s)");
+    expect(describeBranchStatus("missing", { expired: true, ageS: null })).toBe(
+      "expired",
+    );
+    // Not the same words as a branch that never arrived.
+    expect(
+      describeBranchStatus("missing", { expired: true, ageS: 4 }),
+    ).not.toBe(describeBranchStatus("missing", none));
   });
 });

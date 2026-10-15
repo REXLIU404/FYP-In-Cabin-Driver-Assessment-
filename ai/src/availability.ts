@@ -25,7 +25,16 @@ import type { FreshnessStatus, RiskUpdate } from "./types";
  */
 export const FUSION_EPSILON = 1e-9;
 
-/** Freshness weights: fresh 1.0, stale 0.45, missing 0.0. */
+/**
+ * Freshness weights: fresh 1.0, missing 0.0 - and stale 0.45, HISTORICAL ONLY.
+ *
+ * Ruling A (D13): the runtime no longer produces `stale`. Evidence older than
+ * `freshness_tolerance_s` is EXPIRED and arrives here as `missing` (weight 0), with
+ * the reason kept in the record's provenance (`{modality}_expired` / `_age_s`). The
+ * 0.45 tier is retained, unchanged, only so that records written before the ruling
+ * keep reading and rendering. It is a legacy compatibility weight, not a model input
+ * the pipeline can reach, and not a validated number.
+ */
 export const freshnessWeight = (status: FreshnessStatus): number => {
   if (status === "missing") return 0;
   if (status === "stale") return 0.45;
@@ -45,6 +54,53 @@ export const effectiveFusionDenominator = (
   const effVision = weightVision * freshnessWeight(visionStatus);
   const effTelemetry = weightTelemetry * freshnessWeight(telemetryStatus);
   return { effVision, effTelemetry, denominator: effVision + effTelemetry };
+};
+
+export type Branch = "vision" | "telemetry";
+
+export interface BranchExpiry {
+  /** The branch had evidence and it was rejected for its age (ruling A, D13). */
+  expired: boolean;
+  /** Seconds, as recorded; null when not expired or when no age was measurable. */
+  ageS: number | null;
+}
+
+/**
+ * Why one branch carried no weight, read from the record's provenance. A branch is
+ * "expired" only if it scored as `missing` AND the provenance says it expired: a
+ * branch that never arrived is `missing` but not expired, and a record written before
+ * ruling A has no such fields at all (nothing expired, as far as it can say).
+ */
+export const branchExpiry = (
+  record: Pick<RiskUpdate, "modality_freshness" | "provenance">,
+  branch: Branch,
+): BranchExpiry => {
+  const provenance = record.provenance;
+  const flag =
+    branch === "vision"
+      ? provenance?.vision_expired
+      : provenance?.telemetry_expired;
+  const age =
+    branch === "vision"
+      ? provenance?.vision_age_s
+      : provenance?.telemetry_age_s;
+  const expired =
+    flag === true && record.modality_freshness[branch] === "missing";
+  return { expired, ageS: expired && typeof age === "number" ? age : null };
+};
+
+/**
+ * The branch status as text: the stored status, except that an expired branch says so
+ * ("expired (4 s)") instead of reading the same as one that never arrived
+ * ("missing"). The age is printed as recorded - the producer already rounded it to
+ * 3 dp, half up.
+ */
+export const describeBranchStatus = (
+  status: FreshnessStatus,
+  expiry: BranchExpiry,
+): string => {
+  if (!expiry.expired) return status;
+  return expiry.ageS === null ? "expired" : `expired (${expiry.ageS} s)`;
 };
 
 /** The record's own availability flag (a property of the record, not its age). */

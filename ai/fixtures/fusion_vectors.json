@@ -81,6 +81,7 @@
   },
   {
     "id": "F-S1",
+    "legacy": "Historical stale tier (0.45 weight), kept so records written before ruling A (D13) stay readable. The runtime no longer produces 'stale': expired evidence scores as missing. The pure fusion functions still implement this row.",
     "pd": 0.1,
     "pt": 0.9,
     "wv": 0.5,
@@ -97,6 +98,7 @@
   },
   {
     "id": "F-S2",
+    "legacy": "Historical stale tier (0.45 weight), kept so records written before ruling A (D13) stay readable. The runtime no longer produces 'stale': expired evidence scores as missing. The pure fusion functions still implement this row.",
     "pd": 0.1,
     "pt": 0.9,
     "wv": 0.5,
@@ -113,6 +115,7 @@
   },
   {
     "id": "F-S3",
+    "legacy": "Historical stale tier (0.45 weight), kept so records written before ruling A (D13) stay readable. The runtime no longer produces 'stale': expired evidence scores as missing. The pure fusion functions still implement this row.",
     "pd": 0.1,
     "pt": 0.9,
     "wv": 0.5,
@@ -161,6 +164,7 @@
   },
   {
     "id": "F-M3",
+    "legacy": "Historical stale tier (0.45 weight), kept so records written before ruling A (D13) stay readable. The runtime no longer produces 'stale': expired evidence scores as missing. The pure fusion functions still implement this row.",
     "pd": 0.1,
     "pt": 0.9,
     "wv": 0.5,
@@ -177,6 +181,7 @@
   },
   {
     "id": "F-M4",
+    "legacy": "Historical stale tier (0.45 weight), kept so records written before ruling A (D13) stay readable. The runtime no longer produces 'stale': expired evidence scores as missing. The pure fusion functions still implement this row.",
     "pd": 0.1,
     "pt": 0.9,
     "wv": 0.5,

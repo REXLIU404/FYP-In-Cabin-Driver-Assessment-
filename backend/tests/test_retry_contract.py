@@ -9,8 +9,9 @@ needs model weights: the provider is stubbed with the request-driven stub of
 IT-RETRY-IDENTITY  the response was lost AFTER the commit: the re-send is answered from the
                    stored record, the database gains no row and the temporal state does not
                    move; the same id with different content is a 409.
-IT-RETRY-STALE     a re-send that is processed long after the capture. Asserts the CURRENT
-                   behaviour (stale / DEGRADED) - see the note on that test.
+IT-RETRY-STALE     a re-send that is processed long after the capture. Its evidence has
+                   EXPIRED (ruling A): it scores as missing, so a late re-send of a window whose
+                   both branches are old is UNAVAILABLE and never advances the alert timers.
 IT-RETRY-TEXTS     the 409 / 422 detail texts that the client classifies on.
 IT-RETRY-EMPTY     an all-empty LiveInput is a 201 UNAVAILABLE window, so a camera that has
                    stopped never makes the request fail (R5). The real-model counterpart is
@@ -152,26 +153,23 @@ def test_it_retry_identity_the_same_uuid_with_a_different_payload_is_409_and_cha
 
 
 # ------------------------------------------------------------- IT-RETRY-STALE
-@pytest.mark.parametrize("arrives_after_ms,attempt,freshness,health", [
-    (2000, 2, "fresh", "FULL"),      # one 2 s backoff: still inside the 3 s tolerance
-    (6000, 3, "stale", "DEGRADED"),  # 2 s + 4 s backoffs: the third delivery is 6 s old
-    (12_000, 2, "stale", "DEGRADED"),  # a 10 s timeout, then the 2 s backoff
+# (The id keeps its name: "stale" is what a late re-send used to be stored as. Under ruling A the
+# late window is EXPIRED - see the docstrings.)
+@pytest.mark.parametrize("arrives_after_ms,attempt,fresh,health,available,age_s", [
+    (2000, 2, True, "FULL", True, 2.0),            # one 2 s backoff: still inside the 3 s tolerance
+    (6000, 3, False, "UNAVAILABLE", False, 6.0),   # 2 s + 4 s backoffs: the third delivery is 6 s old
+    (12_000, 2, False, "UNAVAILABLE", False, 12.0),  # a 10 s timeout, then the 2 s backoff
 ])
-def test_it_retry_stale_a_resend_processed_late_is_stale_and_degraded_known_limitation(
-        api, fake_clock, monkeypatch, arrives_after_ms, attempt, freshness, health):
-    """BEHAVIOUR SNAPSHOT of the CURRENT backend - not the desired behaviour.
-
-    Earlier deliveries never committed (a timeout, a dropped connection). The retry re-sends
-    the first capture's ``captured_at`` / ``telemetry_timestamp`` byte for byte, so by the
-    time it is processed its evidence is ``arrives_after_ms`` old. The server re-derives
-    freshness from those stamps (3 s tolerance, strict ``>``): the window is stored as
-    stale / DEGRADED, still carries a score, and - like any stale-only stream (D13, see
-    IT-LIVE-AGE) - keeps its fusion weight.
-
-    PHASE 5, ruling A (expired evidence scores as missing) changes this expectation: the two
-    stale cases become ``missing`` with ``vision_expired`` / ``telemetry_expired`` set, and
-    since BOTH branches expire the window becomes assessment_available = False, UNAVAILABLE,
-    all four risk fields null. This test is meant to go red then, and to be rewritten."""
+def test_it_retry_stale_a_resend_processed_late_is_expired_and_unavailable(
+        api, fake_clock, monkeypatch, arrives_after_ms, attempt, fresh, health, available, age_s):
+    """Earlier deliveries never committed (a timeout, a dropped connection). The retry re-sends
+    the first capture's ``captured_at`` / ``telemetry_timestamp`` byte for byte, so by the time
+    it is processed its evidence is ``arrives_after_ms`` old. The server re-derives freshness
+    from those stamps (3 s tolerance, strict ``>``). Inside the tolerance the window is a normal
+    FULL one. Past it BOTH branches have expired - scored as missing, with
+    ``vision_expired`` / ``telemetry_expired`` and the age in the provenance - so nothing is
+    left to fuse: assessment_available is False, UNAVAILABLE, all four risk fields null.
+    (Under the old tier this was stale / DEGRADED with a High score.)"""
     client, _ = api
     sid = _live_age_session(client, monkeypatch, f"retry-stale-{arrives_after_ms}")
     body = _live_age_request("late-retry", at(0), at(0))  # captured at t = 0
@@ -181,22 +179,30 @@ def test_it_retry_stale_a_resend_processed_late_is_stale_and_degraded_known_limi
 
     assert response.status_code == 201, response.text
     record = response.json()
-    assert record["modality_freshness"] == {"vision": freshness, "telemetry": freshness}
+    status = "fresh" if fresh else "missing"
+    assert record["modality_freshness"] == {"vision": status, "telemetry": status}
     assert record["SystemHealth"] == health
-    assert record["assessment_available"] is True
-    assert record["RiskScore"] == 100.0 and record["RiskLevel"] == "High"
+    assert record["assessment_available"] is available
+    provenance = record["provenance"]
+    assert (provenance["vision_expired"], provenance["telemetry_expired"]) == (not fresh, not fresh)
+    assert (provenance["vision_age_s"], provenance["telemetry_age_s"]) == (age_s, age_s)
+    if available:
+        assert record["RiskScore"] == 100.0 and record["RiskLevel"] == "High"
+    else:
+        assert (record["RiskScore"], record["RiskLevel"], record["DominantEvidence"],
+                record["AlertSeverity"]) == (None, None, None, None)
     # The stamps are the first capture's, not the retry's.
-    assert record["provenance"]["captured_at"] == at(0).isoformat()
-    assert record["provenance"]["telemetry_timestamp"] == at(0).isoformat()
+    assert provenance["captured_at"] == at(0).isoformat()
+    assert provenance["telemetry_timestamp"] == at(0).isoformat()
 
 
-def test_it_retry_stale_late_resends_keep_accumulating_sustained_high_known_limitation(
-        api, fake_clock, monkeypatch):
-    """BEHAVIOUR SNAPSHOT (D13), not desired behaviour. Three logical requests captured 2 s
-    apart (t = 0, 2000, 4000), every one of them delivered 6 s after its capture (server time
-    6000, 8000, 10000). All three are stale / DEGRADED and High, and the server-side High
-    streak - which runs on the server's clock, not on the evidence's age - reaches HIGH_ALERT
-    on the second one. Under Phase 5 these windows expire and no longer count."""
+def test_it_retry_stale_late_resends_do_not_accumulate_sustained_high(
+        api, api_factory, fake_clock, monkeypatch):
+    """Three logical requests captured 2 s apart (t = 0, 2000, 4000), every one of them delivered
+    6 s after its capture (server time 6000, 8000, 10000). Each is expired on both branches, so
+    each is UNAVAILABLE with a null AlertSeverity and the server-side High streak - which runs on
+    the server's clock, not on the evidence's age - is never started: the sequence that used to
+    reach HIGH_ALERT on the second window stays silent however many late re-sends arrive."""
     client, _ = api
     sid = _live_age_session(client, monkeypatch, "retry-stale-accumulates")
     records = []
@@ -207,10 +213,14 @@ def test_it_retry_stale_late_resends_keep_accumulating_sustained_high_known_limi
         assert response.status_code == 201, response.text
         records.append(response.json())
     for record in records:
-        assert record["modality_freshness"] == {"vision": "stale", "telemetry": "stale"}
-        assert record["SystemHealth"] == "DEGRADED"
-        assert record["RiskLevel"] == "High"
-    assert [r["AlertSeverity"] for r in records] == ["CAUTION", "HIGH_ALERT", "HIGH_ALERT"]
+        assert record["modality_freshness"] == {"vision": "missing", "telemetry": "missing"}
+        assert (record["provenance"]["vision_expired"], record["provenance"]["telemetry_expired"]) == (True, True)
+        assert record["SystemHealth"] == "UNAVAILABLE"
+        assert record["RiskLevel"] is None
+    assert [r["AlertSeverity"] for r in records] == [None, None, None]
+    state = snapshot(api_factory, sid)["runtime_state"]
+    assert state["high_since"] is None and state["low_since"] is None  # the timers are suspended
+    assert "last_severity" not in state  # nothing was ever latched
 
 
 # ------------------------------------------------------------ IT-RETRY-TEXTS

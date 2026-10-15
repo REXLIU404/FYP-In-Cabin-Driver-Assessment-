@@ -2,6 +2,14 @@ export type RiskLevel = "Low" | "Medium" | "High";
 export type AlertSeverity = "NORMAL" | "CAUTION" | "HIGH_ALERT";
 export type SystemHealth = "FULL" | "DEGRADED" | "UNAVAILABLE";
 export type OperationMode = "PREPARED_SESSION_RUNTIME" | "LIVE_MODEL_RUNTIME";
+/**
+ * `stale` is HISTORICAL. Ruling A (D13): the runtime never produces it - evidence
+ * older than `freshness_tolerance_s` is EXPIRED and recorded as `missing`, with the
+ * reason in `provenance.{vision,telemetry}_expired` / `_age_s`. The literal stays so
+ * that a record written before the ruling (a stored session, an old export) still
+ * type-checks, reads and renders, and so that the pure fusion functions can still be
+ * given the 0.45 tier.
+ */
 export type FreshnessStatus = "fresh" | "stale" | "missing";
 
 export type DominantEvidence =
@@ -39,6 +47,20 @@ export interface TelemetryFeatures {
   headway_distance: number;
 }
 
+/**
+ * Why a branch carried no weight, recorded for BOTH branches of every new record
+ * (`RiskUpdate.provenance`). `*_expired` is true only when the branch had evidence
+ * and it was rejected for its age (or declared stale); a branch that never arrived is
+ * `false`. `*_age_s` is max(0, processing time - capture time) in seconds, 3 dp, or
+ * null when there is no input or no capture time to measure.
+ */
+export interface EvidenceExpiry {
+  vision_expired: boolean;
+  vision_age_s: number | null;
+  telemetry_expired: boolean;
+  telemetry_age_s: number | null;
+}
+
 export interface PreparedSessionWindow {
   timestamp: string;
   P_distraction: number;
@@ -50,6 +72,12 @@ export interface PreparedSessionWindow {
   telemetry_feature_contributions: TelemetryFeatureContribution[];
   telemetry_features: TelemetryFeatures | null;
   latency_ms: number;
+  /**
+   * The replay's own expiry verdict (see `EvidenceExpiry`), decided where the window
+   * is built. Optional so a hand-made window need not carry it; `buildRiskUpdate`
+   * then records "not expired, age unknown".
+   */
+  expiry?: EvidenceExpiry;
 }
 
 export interface RiskUpdate {
@@ -94,6 +122,11 @@ export interface RiskUpdate {
     telemetry_timestamp?: string | null;
     P_distraction_raw?: number;
     P_telemetry_raw?: number;
+    /** Ruling A (D13): why a branch scored as missing. Absent on a pre-ruling record. */
+    vision_expired?: boolean;
+    vision_age_s?: number | null;
+    telemetry_expired?: boolean;
+    telemetry_age_s?: number | null;
     timing_ms?: Record<string, number>;
     fusion_config?: {
       weight_vision: number;

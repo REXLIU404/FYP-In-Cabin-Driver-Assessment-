@@ -1,4 +1,6 @@
 import { BarChart3, FileText, Scale } from "lucide-react";
+import { branchExpiry } from "../../../ai/src/availability";
+import { BranchStatusPill } from "../components/BranchStatusPill";
 import { DistributionChart } from "../components/DistributionChart";
 import { Pill } from "../components/Pill";
 import type { AppConfig, RiskUpdate } from "../types";
@@ -98,6 +100,12 @@ export function ExplanationView({
     buildExplanationModel(selectedRecord, config);
   const visionFreshness = selectedRecord.modality_freshness.vision;
   const telemetryFreshness = selectedRecord.modality_freshness.telemetry;
+  // Ruling A (D13): a branch can be missing because it never arrived or because its
+  // evidence expired; the words differ, the number is withheld either way.
+  const visionExpiry = branchExpiry(selectedRecord, "vision");
+  const telemetryExpiry = branchExpiry(selectedRecord, "telemetry");
+  const visionExpired = visionExpiry.expired;
+  const telemetryExpired = telemetryExpiry.expired;
   const visualCue = getTopVisualCue(selectedRecord);
   const telemetryBehavior = getTopTelemetryBehavior(selectedRecord);
   const telemetryFeatureContributions =
@@ -151,6 +159,7 @@ export function ExplanationView({
                 {formatBranchProbability(
                   selectedRecord.P_distraction,
                   visionFreshness,
+                  visionExpired,
                 )}
               </strong>
             </div>
@@ -160,6 +169,7 @@ export function ExplanationView({
                 {formatBranchProbability(
                   selectedRecord.P_telemetry_anomaly,
                   telemetryFreshness,
+                  telemetryExpired,
                 )}
               </strong>
             </div>
@@ -210,6 +220,7 @@ export function ExplanationView({
                 {formatBranchProbability(
                   selectedRecord.P_distraction,
                   visionFreshness,
+                  visionExpired,
                 )}
                 {visionFreshness === "missing" ? null : (
                   <small>{formatPercent(selectedRecord.P_distraction)}</small>
@@ -229,7 +240,10 @@ export function ExplanationView({
             </div>
             <div>
               <span>Freshness</span>
-              <Pill label={visionFreshness} tone={visionFreshness} />
+              <BranchStatusPill
+                status={visionFreshness}
+                expiry={visionExpiry}
+              />
             </div>
             <div>
               <span>Contribution</span>
@@ -375,6 +389,7 @@ export function ExplanationView({
                 {formatBranchProbability(
                   selectedRecord.P_telemetry_anomaly,
                   telemetryFreshness,
+                  telemetryExpired,
                 )}
                 {telemetryFreshness === "missing" ? null : (
                   <small>
@@ -427,7 +442,10 @@ export function ExplanationView({
             </div>
             <div>
               <span>Freshness</span>
-              <Pill label={telemetryFreshness} tone={telemetryFreshness} />
+              <BranchStatusPill
+                status={telemetryFreshness}
+                expiry={telemetryExpiry}
+              />
             </div>
             <div>
               <span>Contribution</span>

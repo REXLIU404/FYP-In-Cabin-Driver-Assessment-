@@ -2,6 +2,7 @@ import type {
   AlertSeverity,
   AppConfig,
   DominantEvidence,
+  EvidenceExpiry,
   FreshnessStatus,
   PreparedSessionWindow,
   RiskLevel,
@@ -60,6 +61,17 @@ export const roundHalfUp = (value: number, places: number): number => {
 
 const round3 = (value: number) => roundHalfUp(value, 3);
 const round1 = (value: number) => roundHalfUp(value, 1);
+
+/**
+ * What `buildRiskUpdate` records for a window that carries no `expiry` verdict of its
+ * own: not expired, age unknown. (The prepared replay always carries one.)
+ */
+const NO_EXPIRY: EvidenceExpiry = {
+  vision_expired: false,
+  vision_age_s: null,
+  telemetry_expired: false,
+  telemetry_age_s: null,
+};
 const clamp = (value: number) => Math.min(1, Math.max(0, value));
 const alertSeverityMap: Record<RiskLevel, AlertSeverity> = {
   Low: "NORMAL",
@@ -276,6 +288,15 @@ const buildExplanation = (
   return "The selected monitoring window is below the low-risk threshold.";
 };
 
+/**
+ * Ruling A (D13), for this function: `stale` is HISTORICAL. The runtime no longer
+ * produces it - the prepared replay marks an over-age branch `missing` and records
+ * why in `window.expiry`, which is copied into `provenance` below - so this function
+ * is no longer asked to score a stale window in normal operation. The 0.45 handling
+ * (`freshnessWeight` in availability.ts, and the EMA/health code here that treats
+ * `stale` like any non-fresh status) is kept, unchanged, so that a window or record
+ * carrying `stale` still computes and renders; do not remove it.
+ */
 export const buildRiskUpdate = (
   window: PreparedSessionWindow,
   sessionId: string,
@@ -370,5 +391,8 @@ export const buildRiskUpdate = (
       config.weightVision,
       config.weightTelemetry,
     ),
+    // The four expiry fields are always present, for both branches, so a record can
+    // say WHY a branch carried no weight: expired (with an age) or never received.
+    provenance: { ...(window.expiry ?? NO_EXPIRY) },
   };
 };

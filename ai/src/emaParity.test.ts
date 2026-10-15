@@ -30,6 +30,8 @@ import type {
 interface ParityCase {
   id: string;
   description: string;
+  /** Present only on a case that exercises the historical stale (0.45) tier. */
+  legacy?: string;
   config: {
     ema_alpha: number;
     weight_vision: number;
@@ -75,6 +77,28 @@ describe("UT-EMA-PARITY-01 (TypeScript half; shared oracle ema_parity_vectors.js
     expect(ids).toContain("first-fresh-after-stale-reseeds");
     expect(ids).toContain("consecutive-fresh-run");
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  // Ruling A (D13): the backend runtime no longer produces `stale`, so its half of this
+  // oracle (test_temporal_contract.py) skips the legacy case. This half keeps running it:
+  // buildRiskUpdate still reads a `stale` window with the historical 0.45 weight, which
+  // is how a stored pre-ruling-A record keeps rendering.
+  it("exactly the cases that use the stale tier are marked legacy, and still run here", () => {
+    const usesStale = cases
+      .filter((c) =>
+        c.windows.some(
+          (w) => w.vision_status === "stale" || w.telemetry_status === "stale",
+        ),
+      )
+      .map((c) => c.id);
+    expect(usesStale).toEqual(["first-fresh-after-stale-reseeds"]);
+    expect(cases.filter((c) => "legacy" in c).map((c) => c.id)).toEqual(
+      usesStale,
+    );
+    for (const c of cases.filter((row) => "legacy" in row)) {
+      expect(typeof c.legacy).toBe("string");
+      expect(c.legacy).not.toBe("");
+    }
   });
 
   // The 0.0625 tie in "half-up-tie-in-the-ema" is exact in binary, so it only

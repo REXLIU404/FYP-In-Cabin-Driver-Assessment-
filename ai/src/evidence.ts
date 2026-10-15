@@ -1,4 +1,8 @@
-import { FUSION_EPSILON } from "./availability";
+import {
+  FUSION_EPSILON,
+  branchExpiry,
+  describeBranchStatus,
+} from "./availability";
 import type { DominantEvidence, RiskUpdate, SystemHealth } from "./types";
 
 export const EVIDENCE_GAP = 0.15;
@@ -78,7 +82,8 @@ export const getActiveInputSummary = (record: RiskUpdate) => {
     return "Vision + Telemetry available";
   }
 
-  return `Vision ${vision} / Telemetry ${telemetry}`;
+  // An expired branch says so (with its age) rather than reading as "missing".
+  return `Vision ${describeBranchStatus(vision, branchExpiry(record, "vision"))} / Telemetry ${describeBranchStatus(telemetry, branchExpiry(record, "telemetry"))}`;
 };
 
 export const getMatchedEvidenceRule = (

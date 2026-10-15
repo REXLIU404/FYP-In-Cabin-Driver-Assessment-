@@ -12,6 +12,12 @@ export const UNAVAILABLE_LABEL = "Unavailable";
 export const NO_INPUT_LABEL = "No input";
 
 /**
+ * Shown instead of NO_INPUT_LABEL when the branch DID send evidence but it was too old
+ * (ruling A, D13): it carries no weight, like a missing one, but the reader is told why.
+ */
+export const EXPIRED_LABEL = "Expired";
+
+/**
  * Fixed-point text with the SAME rounding as the backend (`round_half_up`):
  * half-up on the decimal digits, not on the binary value. The built-in binary
  * method disagrees at exact decimal ties (0.285 -> 0.28, 29.95 -> 29.9), which
@@ -38,20 +44,27 @@ export const formatRiskScore = (value: number | null) =>
 export const formatContribution = (value: number | null) =>
   value === null ? UNAVAILABLE_LABEL : `${formatFixed(value, 0)} / 100`;
 
+const noReading = (expired: boolean) =>
+  expired ? EXPIRED_LABEL : NO_INPUT_LABEL;
+
 /**
  * A branch whose input is missing carries P = 0.0 in the record (the contract
  * keeps the field non-null), but 0 is not a reading there. Consult
- * `modality_freshness` before printing the number.
+ * `modality_freshness` before printing the number. `expired` (from
+ * `branchExpiry`) says the branch was not absent but too old, and changes the
+ * words only: the number is withheld either way.
  */
 export const formatBranchPercent = (
   value: number,
   freshness: FreshnessStatus,
-) => (freshness === "missing" ? NO_INPUT_LABEL : formatPercent(value));
+  expired = false,
+) => (freshness === "missing" ? noReading(expired) : formatPercent(value));
 
 export const formatBranchProbability = (
   value: number,
   freshness: FreshnessStatus,
-) => (freshness === "missing" ? NO_INPUT_LABEL : formatProbability(value));
+  expired = false,
+) => (freshness === "missing" ? noReading(expired) : formatProbability(value));
 
 export const formatTimestamp = (timestamp: string) =>
   new Intl.DateTimeFormat(undefined, {

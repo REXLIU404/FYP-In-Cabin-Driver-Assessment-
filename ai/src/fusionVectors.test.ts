@@ -31,6 +31,8 @@ import type {
  */
 interface FusionVector {
   id: string;
+  /** Present only on a row that exercises the historical stale (0.45) tier. */
+  legacy?: string;
   pd: number;
   pt: number;
   wv: number;
@@ -60,12 +62,34 @@ describe("fusion_vectors.json shape (contract shared with the Python port)", () 
 
   it("every row carries the full field set", () => {
     for (const v of vectors) {
-      expect(Object.keys(v).sort()).toEqual(
+      // `legacy` is the one optional key (see the next test).
+      expect(
+        Object.keys(v)
+          .filter((key) => key !== "legacy")
+          .sort(),
+      ).toEqual(
         ["expect", "id", "pd", "pt", "telemetry", "vision", "wt", "wv"].sort(),
       );
       expect(Object.keys(v.expect).sort()).toEqual(
         ["available", "dominant", "health", "level", "score"].sort(),
       );
+    }
+  });
+
+  // Ruling A (D13): the runtime no longer produces `stale`. The 0.45 tier survives
+  // only for historical records, so each row that exercises it says so - and no
+  // other row does. The marker is a reason string; the expectations are untouched.
+  it("exactly the rows that use the stale tier are marked legacy", () => {
+    const usesStale = vectors
+      .filter((v) => v.vision === "stale" || v.telemetry === "stale")
+      .map((v) => v.id);
+    expect(usesStale).toEqual(["F-S1", "F-S2", "F-S3", "F-M3", "F-M4"]);
+    expect(vectors.filter((v) => "legacy" in v).map((v) => v.id)).toEqual(
+      usesStale,
+    );
+    for (const v of vectors.filter((row) => "legacy" in row)) {
+      expect(typeof v.legacy).toBe("string");
+      expect(v.legacy).not.toBe("");
     }
   });
 

@@ -16,11 +16,11 @@ import { PREPARED_SESSION_WINDOWS } from "./preparedSessionInput";
 // from pipeline output, so a changed replay number fails here until the CSV row
 // is corrected on purpose.
 //
-// W16 ("Telemetry stale") is pinned to TODAY's behaviour: telemetry_age_s 4 > 3
-// maps to the stale (0.45) tier, which scores High / 62.5. Phase 5 (ruling A)
-// retires that tier - expired evidence will score as missing - so W16 becomes
-// 60.0 and its health / dominant may move too. This test is then EXPECTED to go
-// red. Update the CSV row at that point; do not skip or loosen the assertion.
+// W16 ("Telemetry stale" - the label is the input scenario, kept as written) has
+// telemetry_age_s 4 > 3. Ruling A (D13) makes that telemetry EXPIRED: it scores as
+// missing, so the window is the vision branch alone (P_distraction 0.6 -> 60.0 /
+// High / DEGRADED / Partial evidence). It was 62.5 while the runtime still weighted
+// a stale branch at 0.45. The expectation lives in the CSV, not here.
 const records: RiskUpdate[] = [];
 let previous: RiskUpdate | undefined;
 PREPARED_SESSION_WINDOWS.forEach((window, index) => {

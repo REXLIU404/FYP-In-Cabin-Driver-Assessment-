@@ -532,7 +532,8 @@ button {
 .pill--Medium,
 .pill--CAUTION,
 .pill--DEGRADED,
-.pill--stale {
+.pill--stale,
+.pill--expired {
   color: #713f12;
   background: #fef3c7;
   border-color: #fde68a;

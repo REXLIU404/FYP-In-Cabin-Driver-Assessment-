@@ -113,8 +113,14 @@ def test_missing_expired_and_out_of_order_inputs(api):
     other = live_session(client, "expired")
     stale = {**payload("stale"), "captured_at": "2000-01-01T00:00:00+00:00"}
     result = client.post(f"/api/sessions/{other}/infer", json=stale).json()
-    assert result["modality_freshness"]["vision"] == "stale"
+    # Ruling A: an old frame is EXPIRED - scored as missing - not a 0.45-weight "stale" one.
+    # Telemetry is current, so the window is DEGRADED but still assessed, from telemetry alone.
+    assert result["modality_freshness"] == {"vision": "missing", "telemetry": "fresh"}
+    assert result["provenance"]["vision_expired"] is True
+    assert result["provenance"]["vision_age_s"] > 700_000_000  # 2000-01-01 is over 26 years ago
+    assert result["provenance"]["telemetry_expired"] is False
     assert result["SystemHealth"] == "DEGRADED"
+    assert result["assessment_available"] is True
 
 
 def test_wrong_mode_and_invalid_config(api):

@@ -56,8 +56,19 @@ class TestFixtureShape:
 
     def test_every_row_carries_the_full_field_set(self):
         for row in VECTORS:
-            assert sorted(row) == sorted(["expect", "id", "pd", "pt", "telemetry", "vision", "wt", "wv"])
+            # ``legacy`` is the one optional key (see the next test); every other key is required.
+            assert sorted(key for key in row if key != "legacy") == sorted(
+                ["expect", "id", "pd", "pt", "telemetry", "vision", "wt", "wv"])
             assert sorted(row["expect"]) == sorted(["available", "dominant", "health", "level", "score"])
+
+    def test_exactly_the_rows_that_use_the_stale_tier_are_marked_legacy(self):
+        """Ruling A (D13): the runtime no longer produces ``stale``. The 0.45 tier survives only
+        for historical records, so every row that exercises it says so - and no other row does.
+        The marker is a reason string; the rows' expectations are untouched."""
+        uses_stale = {row["id"] for row in VECTORS if "stale" in (row["vision"], row["telemetry"])}
+        assert uses_stale == {"F-S1", "F-S2", "F-S3", "F-M3", "F-M4"}
+        assert {row["id"] for row in VECTORS if "legacy" in row} == uses_stale
+        assert all(isinstance(row["legacy"], str) and row["legacy"] for row in VECTORS if "legacy" in row)
 
     def test_unavailable_rows_null_score_level_dominant_together_and_only_then(self):
         for row in VECTORS:

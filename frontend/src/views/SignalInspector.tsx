@@ -1,4 +1,6 @@
 import { Flag, Search } from "lucide-react";
+import { branchExpiry } from "../../../ai/src/availability";
+import { BranchStatusPill } from "../components/BranchStatusPill";
 import { Pill } from "../components/Pill";
 import { TelemetrySummary } from "../components/TelemetrySummary";
 import type { RiskUpdate } from "../types";
@@ -28,6 +30,8 @@ export function SignalInspector({
 }: SignalInspectorProps) {
   const evidenceType = resolveDominantEvidence(selectedRecord, thresholdLow);
   const relativeEvidence = getRelativeEvidence(selectedRecord);
+  const visionExpiry = branchExpiry(selectedRecord, "vision");
+  const telemetryExpiry = branchExpiry(selectedRecord, "telemetry");
 
   return (
     <div className="page-grid page-grid--inspector">
@@ -147,6 +151,7 @@ export function SignalInspector({
               {formatBranchPercent(
                 selectedRecord.P_distraction,
                 selectedRecord.modality_freshness.vision,
+                visionExpiry.expired,
               )}
             </strong>
           </div>
@@ -156,21 +161,22 @@ export function SignalInspector({
               {formatBranchPercent(
                 selectedRecord.P_telemetry_anomaly,
                 selectedRecord.modality_freshness.telemetry,
+                telemetryExpiry.expired,
               )}
             </strong>
           </div>
           <div>
             <span>Vision freshness</span>
-            <Pill
-              label={selectedRecord.modality_freshness.vision}
-              tone={selectedRecord.modality_freshness.vision}
+            <BranchStatusPill
+              status={selectedRecord.modality_freshness.vision}
+              expiry={visionExpiry}
             />
           </div>
           <div>
             <span>Telemetry freshness</span>
-            <Pill
-              label={selectedRecord.modality_freshness.telemetry}
-              tone={selectedRecord.modality_freshness.telemetry}
+            <BranchStatusPill
+              status={selectedRecord.modality_freshness.telemetry}
+              expiry={telemetryExpiry}
             />
           </div>
           <div>

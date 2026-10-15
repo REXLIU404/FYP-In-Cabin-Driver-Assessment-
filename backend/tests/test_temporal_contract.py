@@ -8,11 +8,16 @@ purpose - none of them is imported from the implementation, so a changed constan
 cannot drag its own expectation along with it.
 
 UT-TIME-01  FSM boundaries                       UT-TIME-04  unavailable is not credited
-UT-TIME-02  freshness / gap / UTC offsets        UT-TIME-05  identical captured_at   (known limitation)
-UT-TIME-03  EMA seed convention                  UT-TIME-06  stale-only stream, D13  (known limitation)
+UT-TIME-02  freshness / gap / UTC offsets        UT-TIME-05  identical captured_at   (known limitation, R10)
+UT-TIME-03  EMA seed convention                  UT-TIME-06  expired-only stream never alerts (ruling A)
 UT-EMA-PARITY-01  Python half; the TypeScript half is ai/src/emaParity.test.ts
-IT-LIVE-AGE  evidence age through POST /infer: the 3 s boundary, a 30-day-old frame, and the
-             D13 snapshot on the Live path (needs no model weights; the provider is stubbed)
+IT-LIVE-AGE  evidence age through POST /infer: the 3 s boundary, a 30-day-old frame, and an
+             expired-only stream on the Live path (needs no model weights; the provider is stubbed)
+
+Ruling A (D13): evidence older than ``freshness_tolerance_s`` is EXPIRED and scores as missing;
+``{modality}_expired`` / ``{modality}_age_s`` in the provenance keep the reason. The runtime no
+longer produces ``stale``. The tests of the evidence-age rule itself are in
+``test_evidence_expiry.py``; this file keeps the temporal tests that the rule changed.
 """
 import json
 from datetime import datetime, timedelta, timezone
@@ -105,29 +110,40 @@ def test_ut_time_01_whole_millisecond_boundaries_are_exact():
 
 
 # --------------------------------------------------------------------- UT-TIME-02
-@pytest.mark.parametrize("age_ms,expected", [(2999, "fresh"), (3000, "fresh"), (3001, "stale")])
-def test_ut_time_02_freshness_boundary(age_ms, expected):
+@pytest.mark.parametrize("age_ms,expected,expired", [
+    (2999, "fresh", False), (3000, "fresh", False), (3001, "missing", True)])
+def test_ut_time_02_freshness_boundary(age_ms, expected, expired):
+    """Ruling A: past the tolerance a branch is MISSING (and expired), never stale."""
     stamp = (at(0) - timedelta(milliseconds=age_ms)).isoformat()
-    assert freshness("fresh", stamp, at(0), 3) == expected
+    verdict = freshness("fresh", stamp, at(0), 3)
+    assert (verdict.status, verdict.expired) == (expected, expired)
 
 
 def test_ut_time_02_freshness_through_run_inference_and_health():
-    for age_ms, status, health in [(2999, "fresh", "FULL"), (3000, "fresh", "FULL"), (3001, "stale", "DEGRADED")]:
+    """Both branches carry the same stamp, so at 3001 ms BOTH expire: nothing is left to
+    fuse and the window is UNAVAILABLE (it used to be DEGRADED on two 0.45-weight branches)."""
+    for age_ms, status, health, available in [(2999, "fresh", "FULL", True), (3000, "fresh", "FULL", True),
+                                              (3001, "missing", "UNAVAILABLE", False)]:
         stamp = (at(0) - timedelta(milliseconds=age_ms)).isoformat()
         record = Stream().tick(0, MEDIUM, provenance={"captured_at": stamp, "telemetry_timestamp": stamp})
         assert record.modality_freshness.vision == status
         assert record.modality_freshness.telemetry == status
         assert record.SystemHealth == health
+        assert record.assessment_available is available
+        assert record.provenance["vision_expired"] is record.provenance["telemetry_expired"] is (not available)
 
 
 def test_ut_time_02_a_missing_branch_is_never_promoted_by_a_recent_timestamp():
-    assert freshness("missing", at(0).isoformat(), at(0), 3) == "missing"
+    verdict = freshness("missing", at(0).isoformat(), at(0), 3)
+    # Nothing was received, so there is no age to report and nothing expired.
+    assert (verdict.status, verdict.expired, verdict.age_s) == ("missing", False, None)
 
 
 def test_ut_time_02_the_tolerance_comes_from_the_config():
     stamp = (at(0) - timedelta(milliseconds=5000)).isoformat()
-    assert freshness("fresh", stamp, at(0), 5) == "fresh"
-    assert freshness("fresh", stamp, at(0), 4.999) == "stale"
+    assert freshness("fresh", stamp, at(0), 5).status == "fresh"
+    assert freshness("fresh", stamp, at(0), 4.999).status == "missing"
+    assert freshness("fresh", stamp, at(0), 4.999).expired is True
 
 
 def test_ut_time_02_a_gap_over_3_s_resets_the_streak_and_the_ema():
@@ -163,9 +179,12 @@ STAMPS_OF_T0 = [  # five spellings of the same instant
 ]
 
 
-@pytest.mark.parametrize("now_ms,expected", [(2999, "fresh"), (3000, "fresh"), (3001, "stale")])
-def test_ut_time_02_utc_offsets_are_equivalent(now_ms, expected):
-    assert {freshness("fresh", stamp, at(now_ms), 3) for stamp in STAMPS_OF_T0} == {expected}
+@pytest.mark.parametrize("now_ms,expected,age_s", [(2999, "fresh", 2.999), (3000, "fresh", 3.0),
+                                                   (3001, "missing", 3.001)])
+def test_ut_time_02_utc_offsets_are_equivalent(now_ms, expected, age_s):
+    assert {freshness("fresh", stamp, at(now_ms), 3).status for stamp in STAMPS_OF_T0} == {expected}
+    # ...and the reported age is the same instant-to-instant difference in every spelling.
+    assert {freshness("fresh", stamp, at(now_ms), 3).age_s for stamp in STAMPS_OF_T0} == {age_s}
 
 
 def test_ut_time_02_window_timestamps_normalise_to_the_same_utc_instant():
@@ -500,8 +519,12 @@ def test_ut_time_05_identical_captured_at_is_accepted_and_accumulates_alert_time
     The out-of-order guard in routers/windows.py is a strict ``<``, so a window whose
     captured_at EQUALS the previous one is accepted. Three requests that carry the very
     same frame timestamp therefore all pass, and the repeated old evidence accumulates
-    sustained-High time all the way to HIGH_ALERT. The complete evidence-age policy
-    (decision D13) is out of scope for this phase."""
+    sustained-High time all the way to HIGH_ALERT.
+
+    Ruling A (expired evidence scores as missing) is implemented and does NOT close this:
+    every frame here is only 0 - 2 s old, so none of them expires. Closing it needs an
+    observation identity / evidence clock (R10), which is not decided yet: this limitation
+    belongs to R10, not to ruling A."""
     from app.providers import trained
     monkeypatch.setattr(trained, "get_provider", lambda: _StubProvider())
     client, _ = api
@@ -525,14 +548,19 @@ def test_ut_time_05_identical_captured_at_is_accepted_and_accumulates_alert_time
     assert older.status_code == 409
 
 
-def test_out_of_order_guard_survives_a_gap(api, api_factory, monkeypatch):
+def test_out_of_order_guard_survives_a_gap(api, api_factory, fake_clock, monkeypatch):
     """Through POST /infer: a pause longer than the freshness tolerance clears the
     temporal memory, but must NOT clear the evidence watermark. If it did, the next
     OLDER frame would be accepted (201) instead of refused (409).
 
     The long pause is simulated by moving the persisted ``last_processed_ms`` 60 s
     into the past; nothing sleeps. All frame stamps are in the past, so
-    ``normalize_timestamp`` accepts them."""
+    ``normalize_timestamp`` accepts them.
+
+    The server clock is the fake clock, set to each frame's own capture time. Under ruling
+    A a frame that is 1.7 years old at the REAL processing time is expired, scores as
+    missing and starts no High streak - and this test needs a running streak to prove the
+    gap cleared it. So the evidence has to be genuinely fresh (age 0) when it is processed."""
     from app import models
     from app.providers import trained
     monkeypatch.setattr(trained, "get_provider", lambda: _StubProvider())
@@ -555,6 +583,7 @@ def test_out_of_order_guard_survives_a_gap(api, api_factory, monkeypatch):
 
     # 1. The first frame sets the watermark.
     first_stamp = at(10_000)
+    fake_clock.set(10_000)  # processed the instant it was captured: fresh
     response = infer("f2-frame1", first_stamp)
     assert response.status_code == 201, response.text
     state = persisted_state()
@@ -573,6 +602,7 @@ def test_out_of_order_guard_survives_a_gap(api, api_factory, monkeypatch):
 
     # 3. A newer frame is accepted, and run_inference sees the gap.
     second_stamp = at(20_000)
+    fake_clock.set(20_000)
     response = infer("f2-frame2", second_stamp)
     assert response.status_code == 201, response.text
     state = persisted_state()
@@ -592,7 +622,7 @@ def test_out_of_order_guard_survives_a_gap(api, api_factory, monkeypatch):
     assert persisted_state()["captured_at"] == second_stamp.isoformat()
 
 
-def test_out_of_order_guard_survives_a_gap_for_telemetry(api, api_factory, monkeypatch):
+def test_out_of_order_guard_survives_a_gap_for_telemetry(api, api_factory, fake_clock, monkeypatch):
     """Codex R13: the telemetry half of ``test_out_of_order_guard_survives_a_gap``, step for
     step. That test only exercises the ``captured_at`` watermark; ``telemetry_timestamp`` was
     guarded by the static disjointness test alone. Here only the TELEMETRY watermark is in
@@ -602,12 +632,14 @@ def test_out_of_order_guard_survives_a_gap_for_telemetry(api, api_factory, monke
 
     Uses ``_RequestDrivenStubProvider`` and ``TELEMETRY_FEATURES`` (both defined further down,
     in the IT-LIVE-AGE section). The stub reports telemetry 'fresh' and High, vision
-    'missing'; because the 2025 stamps are far in the past, the pipeline re-derives
-    telemetry as 'stale' (R08), and a stale branch on its own still scores High (D13, a
-    known limitation). If an evidence-age policy ever stops that, step 1 here (and in the
-    captured_at version) fails loudly and the stamps must move onto a fake clock. The long
-    pause is simulated by moving the persisted ``last_processed_ms`` 60 s into the past;
-    nothing sleeps. All stamps are in the past, so ``normalize_timestamp`` accepts them."""
+    'missing'. The pipeline re-derives freshness from the stamps (R08), and under ruling A
+    a reading that is old at processing time is expired and scores as missing - which would
+    leave nothing to fuse and no High streak for this test to watch the gap clear. (Before
+    ruling A the 2025 stamps came out 'stale' and still scored High, which is what let this
+    test run on the real clock.) So the server clock is the fake clock, set to each
+    reading's own capture time: the evidence is fresh when it is processed. The long pause
+    is simulated by moving the persisted ``last_processed_ms`` 60 s into the past; nothing
+    sleeps. All stamps are in the past, so ``normalize_timestamp`` accepts them."""
     from app import models
     from app.providers import trained
     monkeypatch.setattr(trained, "get_provider", lambda: _RequestDrivenStubProvider())
@@ -631,6 +663,7 @@ def test_out_of_order_guard_survives_a_gap_for_telemetry(api, api_factory, monke
 
     # 1. The first reading sets the telemetry watermark - and only that one.
     first_stamp = at(10_000)
+    fake_clock.set(10_000)  # processed the instant it was captured: fresh
     response = infer("r13-frame1", first_stamp)
     assert response.status_code == 201, response.text
     state = persisted_state()
@@ -650,6 +683,7 @@ def test_out_of_order_guard_survives_a_gap_for_telemetry(api, api_factory, monke
 
     # 3. A newer reading is accepted, and run_inference sees the gap.
     second_stamp = at(20_000)
+    fake_clock.set(20_000)
     response = infer("r13-frame2", second_stamp)
     assert response.status_code == 201, response.text
     state = persisted_state()
@@ -669,45 +703,63 @@ def test_out_of_order_guard_survives_a_gap_for_telemetry(api, api_factory, monke
     assert persisted_state()["telemetry_timestamp"] == second_stamp.isoformat()
 
 
-# --------------------------------------------------------- UT-TIME-06 (limitation)
-@pytest.mark.parametrize("age", [timedelta(seconds=60), timedelta(hours=1), timedelta(days=30)],
+# --------------------------------------------------------- UT-TIME-06 (ruling A)
+# Was the D13 behaviour snapshot "a stale-only stream still reaches HIGH_ALERT". Ruling A made
+# that behaviour a defect and fixed it: this is now the REQUIREMENT, asserted as such.
+@pytest.mark.parametrize("age,age_s", [(timedelta(seconds=60), 60.0), (timedelta(hours=1), 3600.0),
+                                       (timedelta(days=30), 2592000.0)],
                          ids=["1-minute", "1-hour", "30-days"])
-def test_ut_time_06_stale_only_stream_still_reaches_high_alert_known_limitation_d13(age):
-    """BEHAVIOUR SNAPSHOT for decision D13 - NOT desired behaviour.
-
-    The system has NO maximum evidence age: ``freshness()`` can only ever return
-    'stale' for a branch that has a timestamp, never 'missing', and a stale branch
-    keeps its 0.45 fusion weight indefinitely. A stream whose every window carries
-    only stale evidence, and whose score stays High, therefore still accumulates
-    sustained-High time and escalates to HIGH_ALERT - on a 30-day-old frame as on a
-    one-minute-old one. This asserts what the code does today so the limitation is on
-    record; do NOT read it as 'stale evidence is handled'.
-
-    It IS reachable from the Live runtime. run_inference re-derives freshness from
-    provenance.captured_at / telemetry_timestamp (inference.py), so whatever the provider
-    labels a branch, an evidence timestamp more than 3 s older than the server's processing
-    time comes out 'stale'. The tests under IT-LIVE-AGE below drive the same behaviour through
-    POST /infer."""
+def test_ut_time_06_an_expired_only_stream_never_reaches_high_alert(age, age_s):
+    """Every window carries only expired evidence, and the evidence would score High if it
+    counted. The system must not alert on it: both branches expire, so each window has no
+    assessment (UNAVAILABLE, AlertSeverity null) and the alert timers are SUSPENDED - no
+    High streak starts, and nothing is latched. The stream runs for 9 s, well past the 2 s
+    sustain, so a leak would show as CAUTION / HIGH_ALERT."""
     s = Stream()
     old = (at(0) - age).isoformat()
-    records = [s.tick(ms, HIGH, provenance={"captured_at": old, "telemetry_timestamp": old})
-               for ms in (0, 1000, 2000, 3000)]
-    for record in records:
-        assert record.modality_freshness.vision == "stale"
-        assert record.modality_freshness.telemetry == "stale"
-        assert record.SystemHealth == "DEGRADED"
-        assert record.DominantEvidence == "Partial evidence"
-        assert record.RiskLevel == "High"
-    assert [r.AlertSeverity for r in records] == ["CAUTION", "CAUTION", "HIGH_ALERT", "HIGH_ALERT"]
+    records = []
+    for ms in range(0, 10_000, 1000):
+        # a retried / delayed delivery: the capture stamp is fixed, the server clock moves on
+        records.append(s.tick(ms, HIGH, provenance={"captured_at": old, "telemetry_timestamp": old}))
+    for ms, record in zip(range(0, 10_000, 1000), records):
+        assert record.modality_freshness.vision == "missing"
+        assert record.modality_freshness.telemetry == "missing"
+        assert record.assessment_available is False
+        assert (record.RiskScore, record.RiskLevel, record.DominantEvidence, record.AlertSeverity) == (
+            None, None, None, None)
+        assert record.SystemHealth == "UNAVAILABLE"
+        # The reason is kept: these are EXPIRED, not "no input".
+        assert record.provenance["vision_expired"] is True and record.provenance["telemetry_expired"] is True
+        assert record.provenance["vision_age_s"] == record.provenance["telemetry_age_s"] == age_s + ms / 1000
+    assert [r.AlertSeverity for r in records] == [None] * 10
+    # Timers suspended, nothing latched: the FSM never left its initial state.
+    assert s.state["high_since"] is None and s.state["low_since"] is None
+    assert s.state["unavailable_since"] == epoch_ms(0)
+    assert "last_severity" not in s.state
+
+
+def test_ut_time_06_fresh_evidence_next_to_an_expired_branch_still_alerts():
+    """The control for the test above: expiry removes the OLD branch, not the alerting. Vision
+    is a day old and expired; telemetry is current and High, so the stream is DEGRADED but
+    assessed, and sustained High still latches HIGH_ALERT after 2 s."""
+    s = Stream()
+    old = (at(0) - timedelta(days=1)).isoformat()
+    severities = []
+    for ms in (0, 1000, 1999, 2000, 3000):
+        record = s.tick(ms, HIGH, provenance={"captured_at": old, "telemetry_timestamp": at(ms).isoformat()})
+        assert record.modality_freshness.vision == "missing" and record.modality_freshness.telemetry == "fresh"
+        assert record.SystemHealth == "DEGRADED" and record.RiskLevel == "High"
+        severities.append(record.AlertSeverity)
+    assert severities == ["CAUTION", "CAUTION", "CAUTION", "HIGH_ALERT", "HIGH_ALERT"]
 
 
 # --------------------------------------------------------------- IT-LIVE-AGE
-# The deleted "source guard" asserted that trained.py contains no "stale" and called D13
-# unreachable from Live. That inference was wrong: freshness is not the provider's call.
-# run_inference re-derives it from the evidence timestamps, so a Live request whose
-# captured_at / telemetry_timestamp is older than 3 s at processing time is 'stale' even
-# though the provider reported the branch as present. These tests prove it end to end
-# through POST /infer, on a stubbed provider, so they need no model weights.
+# Freshness is not the provider's call. run_inference re-derives it from the evidence
+# timestamps, so a Live request whose captured_at / telemetry_timestamp is older than the
+# tolerance at processing time is EXPIRED - the branch scores as missing and the provenance
+# says why (ruling A) - even though the provider reported the branch as present. These tests
+# prove it end to end through POST /infer, on a stubbed provider, so they need no model
+# weights. (They used to assert the 'stale' / 0.45 tier; the runtime no longer produces it.)
 TELEMETRY_FEATURES = {"speed_kmph": 52, "accel_x": 0.7, "accel_y": 0.2, "brake_pressure": 20,
                       "steering_angle": 7.5, "throttle": 40, "lane_deviation": 0.21,
                       "headway_distance": 18}
@@ -716,8 +768,8 @@ TELEMETRY_FEATURES = {"speed_kmph": 52, "accel_x": 0.7, "accel_y": 0.2, "brake_p
 class _RequestDrivenStubProvider:
     """Stands in for the trained provider with its status logic: a branch is 'fresh' (and
     scores High) exactly when the request carried that branch's input, 'missing' otherwise.
-    Unlike _StubProvider it can report telemetry as fresh. It never reports 'stale': the
-    pipeline must work that out from the timestamps, which is what IT-LIVE-AGE checks."""
+    Unlike _StubProvider it can report telemetry as fresh. It never reports a branch as
+    expired: the pipeline must work that out from the timestamps, which is what IT-LIVE-AGE checks."""
 
     def infer(self, data):
         has_image = data.image_base64 is not None
@@ -749,14 +801,16 @@ def _live_age_request(request_id, vision_stamp, telemetry_stamp):
 
 
 @pytest.mark.parametrize("branch", ["vision", "telemetry"])
-@pytest.mark.parametrize("age_ms,expected,health", [
-    (2999, "fresh", "FULL"), (3000, "fresh", "FULL"), (3001, "stale", "DEGRADED")])
+@pytest.mark.parametrize("age_ms,expected,expired,age_s,health", [
+    (2999, "fresh", False, 2.999, "FULL"), (3000, "fresh", False, 3.0, "FULL"),
+    (3001, "missing", True, 3.001, "DEGRADED")])
 def test_it_live_age_freshness_boundary_is_rederived_from_the_evidence_timestamp_through_infer(
-        api, fake_clock, monkeypatch, branch, age_ms, expected, health):
-    """The 3 s tolerance is strict (> 3): 2.999 s and 3.000 s are fresh, 3.001 s is stale.
-    The provider says 'fresh' every time; only the timestamp can turn a branch stale. The
-    other branch is a fresh control (age 0), so a flipped status is attributable to its own
-    timestamp, and DEGRADED can only come from the aged branch."""
+        api, fake_clock, monkeypatch, branch, age_ms, expected, expired, age_s, health):
+    """The 3 s tolerance is strict (> 3): 2.999 s and 3.000 s are fresh, 3.001 s is EXPIRED -
+    scored as missing, with ``{branch}_expired`` and the measured age in the provenance. The
+    provider says 'fresh' every time; only the timestamp can expire a branch. The other branch
+    is a fresh control (age 0), so a flipped status is attributable to its own timestamp, and
+    DEGRADED can only come from the aged branch."""
     client, _ = api
     sid = _live_age_session(client, monkeypatch, f"live-age-{branch}-{age_ms}")
     fake_clock.set(0)  # the server processes the request at at(0)
@@ -771,14 +825,20 @@ def test_it_live_age_freshness_boundary_is_rederived_from_the_evidence_timestamp
     assert record["modality_freshness"][control] == "fresh"
     assert record["SystemHealth"] == health
     assert record["assessment_available"] is True
-    assert record["provenance"]["captured_at" if branch == "vision" else "telemetry_timestamp"] == aged.isoformat()
+    provenance = record["provenance"]
+    assert provenance[f"{branch}_expired"] is expired
+    assert provenance[f"{branch}_age_s"] == age_s
+    assert provenance[f"{control}_expired"] is False and provenance[f"{control}_age_s"] == 0.0
+    assert provenance["captured_at" if branch == "vision" else "telemetry_timestamp"] == aged.isoformat()
 
 
 @pytest.mark.parametrize("branch", ["vision", "telemetry"])
-def test_it_live_age_a_30_day_old_frame_is_stale_and_degraded_but_still_assessed(
+def test_it_live_age_a_30_day_old_frame_is_expired_and_scored_as_missing_but_the_window_is_still_assessed(
         api, fake_clock, monkeypatch, branch):
-    """One branch is 30 days old, the other is current. The old branch is 'stale', not
-    'missing': it keeps a fusion weight, so the window is DEGRADED yet still carries a score."""
+    """One branch is 30 days old, the other is current. The old branch is EXPIRED: it is
+    'missing' for scoring (no fusion weight), so the window is DEGRADED and its score is
+    the current branch's alone - and the provenance keeps the reason and the age
+    (30 * 86400 = 2592000 s)."""
     client, _ = api
     sid = _live_age_session(client, monkeypatch, f"live-age-30d-{branch}")
     fake_clock.set(0)
@@ -789,47 +849,66 @@ def test_it_live_age_a_30_day_old_frame_is_stale_and_degraded_but_still_assessed
     assert response.status_code == 201, response.text
     record = response.json()
     control = "telemetry" if branch == "vision" else "vision"
-    assert record["modality_freshness"][branch] == "stale"
+    assert record["modality_freshness"][branch] == "missing"
     assert record["modality_freshness"][control] == "fresh"
+    assert record["provenance"][f"{branch}_expired"] is True
+    assert record["provenance"][f"{branch}_age_s"] == 2592000.0
+    assert record["provenance"][f"{control}_expired"] is False
     assert record["SystemHealth"] == "DEGRADED"
     assert record["assessment_available"] is True
     assert record["RiskScore"] == 100.0 and record["RiskLevel"] == "High"
     stored = client.get(f"/api/sessions/{sid}/windows").json()
     assert [r["modality_freshness"] for r in stored] == [record["modality_freshness"]]
+    assert [r["provenance"] for r in stored] == [record["provenance"]]
 
 
-def test_it_live_age_stale_only_stream_still_reaches_high_alert_through_infer_known_limitation_d13(
-        api, fake_clock, monkeypatch):
-    """BEHAVIOUR SNAPSHOT for decision D13 on the LIVE path - NOT desired behaviour.
-
-    The Live counterpart of UT-TIME-06, driven through POST /infer. Every frame, and every
-    telemetry reading, is 30 days old at processing time, and each stamp is newer than the
-    last (so the out-of-order guard accepts them) and different from it (so this is not the
-    identical-timestamp case of UT-TIME-05). Both branches are 'stale', never 'missing', so
-    they keep their fusion weight, the score stays High, and the server clock advancing
-    1000 ms per request is enough to sustain High for 2 s and latch HIGH_ALERT. The system
-    has no maximum evidence age; do NOT read this as 'stale evidence is handled'."""
+def test_it_live_age_an_expired_only_stream_never_reaches_high_alert_through_infer(
+        api, api_factory, fake_clock, monkeypatch):
+    """Ruling A on the LIVE path, driven through POST /infer - the requirement that replaced the
+    D13 behaviour snapshot. Every frame, and every telemetry reading, is 30 days old at
+    processing time, and each stamp is newer than the last (so the out-of-order guard accepts
+    them) and different from it (so this is not the identical-timestamp case of UT-TIME-05).
+    Both branches expire, so every window is UNAVAILABLE with a null AlertSeverity and the alert
+    timers are suspended: the server clock advancing 1000 ms per request cannot sustain High,
+    however long the stream runs."""
+    from app import models
     client, _ = api
     sid = _live_age_session(client, monkeypatch, "live-age-d13")
     records = []
-    for index, ms in enumerate((0, 1000, 2000)):
+    for index, ms in enumerate((0, 1000, 2000, 3000, 4000)):
         fake_clock.set(ms)
         stamp = at(ms) - timedelta(days=30)
         response = client.post(f"/api/sessions/{sid}/infer", json=_live_age_request(f"old{index}", stamp, stamp))
         assert response.status_code == 201, response.text  # 409 would mean the guard caught it
         records.append(response.json())
-    assert len({r["provenance"]["captured_at"] for r in records}) == 3
+    assert len({r["provenance"]["captured_at"] for r in records}) == 5
     for record in records:
-        assert record["modality_freshness"] == {"vision": "stale", "telemetry": "stale"}
-        assert record["SystemHealth"] == "DEGRADED"
-        assert record["assessment_available"] is True
-        assert record["RiskScore"] == 100.0 and record["RiskLevel"] == "High"
-    assert [r["AlertSeverity"] for r in records] == ["CAUTION", "CAUTION", "HIGH_ALERT"]
+        assert record["modality_freshness"] == {"vision": "missing", "telemetry": "missing"}
+        assert record["provenance"]["vision_expired"] is True and record["provenance"]["telemetry_expired"] is True
+        assert record["provenance"]["vision_age_s"] == record["provenance"]["telemetry_age_s"] == 2592000.0
+        assert record["SystemHealth"] == "UNAVAILABLE"
+        assert record["assessment_available"] is False
+        assert (record["RiskScore"], record["RiskLevel"], record["DominantEvidence"], record["AlertSeverity"]) == (
+            None, None, None, None)
+    with api_factory() as db:
+        state = db.get(models.SessionMeta, sid).runtime_state
+    # Suspended, not running: no High streak was ever started, and nothing is latched.
+    assert state["high_since"] is None and state["low_since"] is None
+    assert state["unavailable_since"] == epoch_ms(0)
+    assert "last_severity" not in state
 
 
 # ------------------------------------------------------- UT-EMA-PARITY-01 (Python)
 PARITY_CASES = json.loads((REPO_ROOT / "ai/fixtures/ema_parity_vectors.json").read_text(encoding="utf-8"))
 PARITY_IDS = [case["id"] for case in PARITY_CASES]
+
+
+# A case marked "legacy" exercises the historical stale (0.45) tier. The pure functions still
+# implement it, so the reference-specification test below keeps running them; the runtime no
+# longer produces it, so run_inference is not asked to reproduce them (see the test after).
+RUNTIME_CASES = [case for case in PARITY_CASES if "legacy" not in case]
+RUNTIME_IDS = [case["id"] for case in RUNTIME_CASES]
+LEGACY_CASES = [case for case in PARITY_CASES if "legacy" in case]
 
 
 def test_ut_ema_parity_01_covers_the_three_required_situations():
@@ -838,7 +917,58 @@ def test_ut_ema_parity_01_covers_the_three_required_situations():
     assert len(set(PARITY_IDS)) == len(PARITY_IDS)
 
 
-@pytest.mark.parametrize("case", PARITY_CASES, ids=PARITY_IDS)
+def test_ut_ema_parity_01_exactly_the_cases_that_use_the_stale_tier_are_marked_legacy():
+    uses_stale = {case["id"] for case in PARITY_CASES
+                  if any("stale" in (w["vision_status"], w["telemetry_status"]) for w in case["windows"])}
+    assert uses_stale == {"first-fresh-after-stale-reseeds"}
+    assert {case["id"] for case in LEGACY_CASES} == uses_stale
+    assert all(case["legacy"] for case in LEGACY_CASES)  # a reason, not an empty marker
+    assert len(RUNTIME_CASES) == 10
+
+
+@pytest.mark.parametrize("case", LEGACY_CASES, ids=[case["id"] for case in LEGACY_CASES])
+def test_ut_ema_parity_01_the_runtime_never_produces_the_legacy_stale_tier(case):
+    """Fed a legacy case's own windows, run_inference treats a branch declared ``stale`` as
+    EXPIRED (scored as missing, reason kept) and never emits ``stale`` - which is why the
+    case's 0.45-based expectations cannot be asserted against the runtime."""
+    s = Stream(**case["config"])
+    for index, window in enumerate(case["windows"]):
+        record = s.tick(index * 1000, window["P_distraction"], vision=window["vision_status"],
+                        telemetry=window["telemetry_status"], pt=window["P_telemetry_anomaly"])
+        assert {record.modality_freshness.vision, record.modality_freshness.telemetry} <= {"fresh", "missing"}
+        for branch, declared in (("vision", window["vision_status"]), ("telemetry", window["telemetry_status"])):
+            if declared == "stale":
+                assert getattr(record.modality_freshness, branch) == "missing"
+                assert record.provenance[f"{branch}_expired"] is True
+                assert record.provenance[f"{branch}_age_s"] is None  # declared, with no timestamp to measure
+
+
+@pytest.mark.parametrize("source", ["old-capture-time", "declared-stale"])
+def test_ema_reseeds_on_the_first_fresh_window_after_an_expired_one(source):
+    """Expired vision is missing vision for the EMA too: it must leave no ``previous_vision``
+    behind, so the next fresh frame is a new seed (0.6 as it is) and not smoothed against the
+    frame from before the expiry (which would give 0.34 = 0.35 * 0.6 + 0.65 * 0.2). The
+    middle window stays assessable through telemetry, so only the vision chain is in question."""
+    s = Stream(ema_alpha=0.35, weight_vision=0.6, weight_telemetry=0.4)
+    old = (at(0) - timedelta(minutes=5)).isoformat()
+    first = s.tick(0, 0.2, pt=0.1)
+    assert first.P_distraction == 0.2 and first.RiskScore == 16.0
+    assert s.state["previous_vision"] == 0.2  # the chain is running
+    if source == "old-capture-time":
+        middle = s.tick(1000, 0.9, pt=0.1, provenance={"captured_at": old})
+    else:
+        middle = s.tick(1000, 0.9, pt=0.1, vision="stale")
+    # Expired vision contributes nothing: P_distraction is the missing-branch 0.0 and the
+    # score is telemetry alone. The chain is dropped, not carried over the expired window.
+    assert (middle.modality_freshness.vision, middle.provenance["vision_expired"]) == ("missing", True)
+    assert middle.P_distraction == 0.0 and middle.RiskScore == 10.0 and middle.SystemHealth == "DEGRADED"
+    assert s.state["previous_vision"] is None
+    third = s.tick(2000, 0.6, pt=0.1)
+    assert third.P_distraction == 0.6 and third.RiskScore == 40.0 and third.SystemHealth == "FULL"
+    assert s.tick(3000, 0.6, pt=0.1).P_distraction == 0.6  # and now the chain smooths again
+
+
+@pytest.mark.parametrize("case", RUNTIME_CASES, ids=RUNTIME_IDS)
 def test_ut_ema_parity_01_run_inference_matches_the_shared_oracle(case):
     s = Stream(**case["config"])
     for index, (window, want) in enumerate(zip(case["windows"], case["expect"])):

@@ -145,6 +145,7 @@
   {
     "id": "first-fresh-after-stale-reseeds",
     "description": "The window after a stale one re-seeds (0.6 as-is). The TypeScript port used to smooth from the stale window's stored 0.9 and emit 0.795.",
+    "legacy": "Historical stale tier (0.45 weight), kept so records written before ruling A (D13) stay readable. The runtime no longer produces 'stale': evidence older than freshness_tolerance_s is expired and scores as missing, so run_inference is not asked to reproduce this case; the pure functions and the TypeScript buildRiskUpdate still are.",
     "config": {
       "ema_alpha": 0.35,
       "weight_vision": 0.6,

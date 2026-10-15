@@ -32,9 +32,10 @@
  * capture's `captured_at` / `telemetry_timestamp` byte for byte. After the 2 s + 4 s
  * backoffs the third delivery is at least 6 s old, and a delivery that follows a
  * 10 s timeout is older than the 3 s tolerance already at the second attempt. Under
- * the current backend such a window is stored as stale / DEGRADED and keeps
- * accumulating sustained-High (D13). Phase 5 (ruling A) turns it into an expired
- * window scored as missing.
+ * ruling A (D13) the backend stores such a window as EXPIRED: both branches score as
+ * missing (`provenance.*_expired` / `*_age_s` say why), so it is a 201 with no
+ * assessment, UNAVAILABLE, and it advances no alert timer. It used to be stored as
+ * stale / DEGRADED and kept accumulating sustained-High.
  */
 import type {
   AppConfig,

@@ -3,6 +3,8 @@ import { describe, expect, it } from "vitest";
 import { DEFAULT_CONFIG, buildRiskUpdate } from "../../../ai/src/riskLogic";
 import type { PreparedSessionWindow } from "../types";
 import {
+  EXPIRED_LABEL,
+  NO_INPUT_LABEL,
   UNAVAILABLE_LABEL,
   formatBranchPercent,
   formatBranchProbability,
@@ -130,5 +132,23 @@ describe("branch values do not present a missing input as a 0 reading", () => {
     expect(formatBranchProbability(0.42, "fresh")).toBe("0.42");
     // A real zero from a live branch is still a reading.
     expect(formatBranchPercent(0, "fresh")).toBe("0%");
+  });
+});
+
+describe("an expired branch is worded differently from one that never arrived (ruling A, D13)", () => {
+  it("formatBranchPercent / formatBranchProbability: missing says 'No input', expired says 'Expired'", () => {
+    expect(formatBranchPercent(0, "missing")).toBe(NO_INPUT_LABEL);
+    expect(formatBranchPercent(0, "missing", false)).toBe(NO_INPUT_LABEL);
+    expect(formatBranchPercent(0, "missing", true)).toBe(EXPIRED_LABEL);
+    expect(formatBranchProbability(0, "missing")).toBe(NO_INPUT_LABEL);
+    expect(formatBranchProbability(0, "missing", true)).toBe(EXPIRED_LABEL);
+    expect(EXPIRED_LABEL).toBe("Expired");
+    expect(NO_INPUT_LABEL).toBe("No input");
+  });
+
+  it("the expired flag changes the words only: a branch that has a reading still shows it", () => {
+    expect(formatBranchPercent(0.42, "fresh", true)).toBe("42%");
+    expect(formatBranchProbability(0.42, "fresh", true)).toBe("0.42");
+    expect(formatBranchPercent(0.42, "stale", true)).toBe("42%");
   });
 });

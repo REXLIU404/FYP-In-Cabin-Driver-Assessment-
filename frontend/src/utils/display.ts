@@ -1,4 +1,9 @@
-import { FUSION_EPSILON, getDisplayState } from "../../../ai/src/availability";
+import {
+  FUSION_EPSILON,
+  describeBranchStatus,
+  getDisplayState,
+  type BranchExpiry,
+} from "../../../ai/src/availability";
 import { getEvidenceType, evidenceTypes } from "../../../ai/src/evidence";
 import type {
   AlertSeverity,
@@ -16,6 +21,7 @@ export type PillTone =
   | RiskLevel
   | SystemHealth
   | FreshnessStatus
+  | "expired"
   | "flagged"
   | "neutral"
   | "unavailable";
@@ -41,6 +47,19 @@ export const resolvePill = (
         ? "unavailable"
         : "neutral"
       : (tone ?? "unavailable"),
+});
+
+/**
+ * What a branch-freshness pill shows. An EXPIRED branch (ruling A, D13) reads
+ * "expired (N s)" in its own `expired` tone, so it no longer looks like a branch
+ * that never sent anything ("missing"); every other status is shown as stored.
+ */
+export const resolveBranchPill = (
+  status: FreshnessStatus,
+  expiry: BranchExpiry,
+): { label: string; tone: PillTone } => ({
+  label: describeBranchStatus(status, expiry),
+  tone: expiry.expired ? "expired" : status,
 });
 
 /**

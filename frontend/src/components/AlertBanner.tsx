@@ -1,5 +1,5 @@
 import { AlertTriangle, CheckCircle2, WifiOff } from "lucide-react";
-import { getDisplayState } from "../../../ai/src/availability";
+import { branchExpiry, getDisplayState } from "../../../ai/src/availability";
 import type { RiskUpdate } from "../types";
 import { alertBannerClass } from "../utils/display";
 import { formatBranchPercent, formatRiskScore } from "../utils/format";
@@ -61,11 +61,13 @@ export function AlertBanner({ latest, stale = false }: AlertBannerProps) {
           {formatBranchPercent(
             latest.P_distraction,
             latest.modality_freshness.vision,
+            branchExpiry(latest, "vision").expired,
           )}{" "}
           | Telemetry non-safe:{" "}
           {formatBranchPercent(
             latest.P_telemetry_anomaly,
             latest.modality_freshness.telemetry,
+            branchExpiry(latest, "telemetry").expired,
           )}
         </span>
       </div>

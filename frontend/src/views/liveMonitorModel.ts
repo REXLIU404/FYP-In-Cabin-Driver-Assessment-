@@ -1,4 +1,8 @@
-import { getDisplayState } from "../../../ai/src/availability";
+import {
+  branchExpiry,
+  getDisplayState,
+  type BranchExpiry,
+} from "../../../ai/src/availability";
 import type {
   DominantEvidence,
   FreshnessStatus,
@@ -14,6 +18,9 @@ export interface LiveMonitorModel {
   /** The record's own freshness - never rewritten to "stale" by record age. */
   vision: FreshnessStatus;
   telemetry: FreshnessStatus;
+  /** Whether each branch scored as missing because its evidence EXPIRED (ruling A). */
+  visionExpiry: BranchExpiry;
+  telemetryExpiry: BranchExpiry;
   evidenceType: DominantEvidence | null;
   resultAge: "stale" | "current";
 }
@@ -35,6 +42,8 @@ export const buildLiveMonitorModel = (
   systemHealth: latest.SystemHealth,
   vision: latest.modality_freshness.vision,
   telemetry: latest.modality_freshness.telemetry,
+  visionExpiry: branchExpiry(latest, "vision"),
+  telemetryExpiry: branchExpiry(latest, "telemetry"),
   evidenceType: resolveDominantEvidence(latest, thresholdLow),
   resultAge: stale ? "stale" : "current",
 });

@@ -56,7 +56,13 @@ def round_half_up(value: float, places: int) -> float:
 
 
 def freshness_weight(status: str) -> float:
-    """fresh -> full trust, stale -> down-weighted, missing -> dropped."""
+    """fresh -> full trust, missing -> dropped, stale -> down-weighted (HISTORICAL ONLY).
+
+    Ruling A (D13): the runtime no longer produces ``stale``. Evidence older than the
+    freshness tolerance is EXPIRED and scored as ``missing``, with the reason kept in the
+    record's provenance (``{modality}_expired`` / ``{modality}_age_s``). The 0.45 tier stays
+    in this specification, unchanged, only so that records written before the ruling - and
+    the fixture rows marked ``legacy`` - keep their meaning."""
     return {"fresh": 1.0, "stale": 0.45, "missing": 0.0}.get(status, 1.0)
 
 
@@ -161,7 +167,8 @@ def ema(current: float, previous: float | None, alpha: float = EMA_ALPHA) -> flo
     Re-initialisation convention: the chain is only valid across CONSECUTIVE
     windows whose vision evidence was fresh. A caller must pass ``previous=None``
     - re-seeding, no smoothing - for the first fresh window after any window whose
-    vision was stale or missing, after any window with no assessment (the
+    vision was missing or expired (scored as missing; a historical record's ``stale``
+    counts the same), after any window with no assessment (the
     effective denominator was zero), and after a gap longer than the freshness
     tolerance. backend/app/inference.py does all of this; ai/src/riskLogic.ts does
     the first two (it has no wall clock, so no gap rule). This function is

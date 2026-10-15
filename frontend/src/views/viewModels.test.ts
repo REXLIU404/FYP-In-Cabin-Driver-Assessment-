@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { DEFAULT_CONFIG } from "../../../ai/src/riskLogic";
-import { makeRecord } from "../testing/records";
+import { makeRecord, replayRecords } from "../testing/records";
 import { alertBannerClass } from "../utils/display";
 import { buildExplanationModel } from "./explanationModel";
 import { buildLiveMonitorModel } from "./liveMonitorModel";
@@ -171,5 +171,29 @@ describe("buildExplanationModel: an unassessed window has nothing to explain", (
     expect(buildExplanationModel(assessed, DEFAULT_CONFIG).evidenceType).toBe(
       "Telemetry-dominant",
     );
+  });
+});
+
+describe("buildLiveMonitorModel: expired evidence is reported apart from missing (ruling A, D13)", () => {
+  const records = replayRecords();
+
+  it("window 16 (telemetry 4 s old): telemetry is missing AND expired; vision is neither", () => {
+    const model = buildLiveMonitorModel(records[15], false, 30);
+    expect(model.telemetry).toBe("missing");
+    expect(model.telemetryExpiry).toEqual({ expired: true, ageS: 4 });
+    expect(model.vision).toBe("fresh");
+    expect(model.visionExpiry).toEqual({ expired: false, ageS: null });
+  });
+
+  it("window 14 (no telemetry at all): missing, but not expired", () => {
+    const model = buildLiveMonitorModel(records[13], false, 30);
+    expect(model.telemetry).toBe("missing");
+    expect(model.telemetryExpiry.expired).toBe(false);
+  });
+
+  it("the record's own status is still passed through untouched", () => {
+    const model = buildLiveMonitorModel(records[15], true, 30);
+    expect(model.systemHealth).toBe(records[15].SystemHealth);
+    expect(model.telemetry).toBe(records[15].modality_freshness.telemetry);
   });
 });

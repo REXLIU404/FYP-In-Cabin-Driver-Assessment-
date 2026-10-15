@@ -4,7 +4,7 @@ Visual distraction emerging,7,1,1,0,Medium,FULL,Vision-dominant,31.0,true
 Aggressive telemetry high risk,10,1,1,0,High,FULL,Telemetry-dominant,74.3,true
 Telemetry missing (vision only),14,1,0,999,Medium,DEGRADED,Partial evidence,48.9,true
 Vision missing (telemetry only),15,0,1,0,High,DEGRADED,Partial evidence,70.0,true
-Telemetry stale,16,1,1,4,High,DEGRADED,Partial evidence,62.5,true
+Telemetry stale,16,1,1,4,High,DEGRADED,Partial evidence,60.0,true
 Both modalities missing,17,0,0,999,,UNAVAILABLE,,,false
 Both branches active (vision leads),19,1,1,0,Medium,FULL,Vision-dominant,45.0,true
 Recovery sustained low,25,1,1,0,Low,FULL,Low observed risk,8.0,true

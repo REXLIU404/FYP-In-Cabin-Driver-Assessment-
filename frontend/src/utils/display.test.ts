@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { makeRecord } from "../testing/records";
+import { branchExpiry } from "../../../ai/src/availability";
+import { makeRecord, replayRecords } from "../testing/records";
 import type { RiskUpdate } from "../types";
 import {
   evidenceDistribution,
+  resolveBranchPill,
   resolveDominantEvidence,
   resolvePill,
   zeroWeightNotice,
@@ -123,5 +125,48 @@ describe("zeroWeightNotice: a slider at 0 is not silent", () => {
 
   it("treats a weight below the fusion epsilon as zero", () => {
     expect(zeroWeightNotice(1 - 1e-12, 1e-12)).not.toBeNull();
+  });
+});
+
+describe("resolveBranchPill: an expired branch no longer looks like a missing one (ruling A, D13)", () => {
+  const none = { expired: false, ageS: null };
+
+  it("missing keeps the 'missing' words and tone", () => {
+    expect(resolveBranchPill("missing", none)).toEqual({
+      label: "missing",
+      tone: "missing",
+    });
+  });
+
+  it("expired says 'expired (N s)' in its own tone", () => {
+    expect(resolveBranchPill("missing", { expired: true, ageS: 4 })).toEqual({
+      label: "expired (4 s)",
+      tone: "expired",
+    });
+    expect(resolveBranchPill("missing", { expired: true, ageS: null })).toEqual(
+      { label: "expired", tone: "expired" },
+    );
+  });
+
+  it("fresh, and a historical stale record, are shown as stored", () => {
+    expect(resolveBranchPill("fresh", none)).toEqual({
+      label: "fresh",
+      tone: "fresh",
+    });
+    expect(resolveBranchPill("stale", none)).toEqual({
+      label: "stale",
+      tone: "stale",
+    });
+  });
+
+  it("the shipped replay's window 16 (telemetry 4 s old) reads expired; window 14 (no telemetry) reads missing", () => {
+    const records = replayRecords();
+    const expiry = (id: number) => branchExpiry(records[id - 1], "telemetry");
+    expect(
+      resolveBranchPill(records[15].modality_freshness.telemetry, expiry(16)),
+    ).toEqual({ label: "expired (4 s)", tone: "expired" });
+    expect(
+      resolveBranchPill(records[13].modality_freshness.telemetry, expiry(14)),
+    ).toEqual({ label: "missing", tone: "missing" });
   });
 });

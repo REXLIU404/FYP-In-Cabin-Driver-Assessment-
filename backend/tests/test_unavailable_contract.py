@@ -215,9 +215,11 @@ def test_zero_weight_branch_missing_while_weighted_branch_is_fresh_stays_availab
 
 
 @pytest.mark.parametrize("weights, kwargs, score", [
-    ((0.5, 0.5), dict(pd=0.1, pt=0.9, v="stale", t="fresh"), 65.2),
+    # Ruling A: a vision branch DECLARED stale is expired, i.e. scored as missing (it was 65.2
+    # when the runtime still weighted a stale branch at 0.45). Telemetry alone carries the score.
+    ((0.5, 0.5), dict(pd=0.1, pt=0.9, v="stale", t="fresh"), 90.0),
     ((0.1, 0.9), dict(pd=0.0, pt=0.9, v="missing", t="fresh"), 90.0),
-], ids=["stale-vision", "light-vision-weight"])
+], ids=["declared-stale-vision-expires", "light-vision-weight"])
 def test_partial_evidence_with_positive_denominator_stays_available(api, weights, kwargs, score):
     client, _ = api
     sid = new_session(client, f"control-{_tag(weights)}", weights)
@@ -226,6 +228,9 @@ def test_partial_evidence_with_positive_denominator_stays_available(api, weights
     assert body["RiskScore"] == score
     assert body["SystemHealth"] == "DEGRADED"
     assert all(body[name] is not None for name in FOUR)
+    assert body["modality_freshness"]["vision"] == "missing"
+    # Only the DECLARED-stale branch is "expired"; a plain missing one never was received.
+    assert body["provenance"]["vision_expired"] is (kwargs["v"] == "stale")
     assert_identity(body)
 
 

@@ -2,6 +2,7 @@ export type {
   AlertSeverity,
   AppConfig,
   DominantEvidence,
+  EvidenceExpiry,
   FreshnessStatus,
   OperationMode,
   PreparedSessionWindow,

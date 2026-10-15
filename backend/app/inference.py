@@ -1,5 +1,6 @@
 """One authoritative temporal fusion path for replay and trained evidence."""
 from datetime import datetime, timezone
+from typing import NamedTuple
 
 from . import fusion
 from .config import settings
@@ -42,12 +43,48 @@ def default_config():
     return RuntimeConfig(**{name: getattr(settings, name) for name in RuntimeConfig.model_fields})
 
 
-def freshness(status, timestamp, now, tolerance):
+class Freshness(NamedTuple):
+    """The verdict on one evidence branch.
+
+    ``status`` is ``"fresh"`` or ``"missing"`` and nothing else: ruling A (D13) retired
+    the runtime ``stale`` tier, so evidence that is too old is scored exactly like
+    evidence that never arrived. What used to be the difference between the two now
+    lives in ``expired`` and ``age_s``, which ``run_inference`` records in the
+    provenance so that "unusable because it expired" and "no input was received" stay
+    distinguishable.
+
+    ``expired`` is True only when the branch DID carry evidence and that evidence was
+    rejected for its age (or was declared ``stale`` by the sender); a branch that sent
+    nothing is ``expired = False``. ``age_s`` is ``max(0, processing time - capture
+    time)`` rounded half up to 3 dp, and None when the branch has no input or no
+    capture time to measure."""
+
+    status: str
+    expired: bool
+    age_s: float | None
+
+
+def freshness(status, timestamp, now, tolerance) -> Freshness:
+    """Judge one branch. ``status`` is what the sender declared (fresh / stale /
+    missing); ``timestamp`` is the evidence's capture time, ``now`` the processing time
+    and ``tolerance`` the session's ``freshness_tolerance_s`` - a design threshold, not
+    a validated safety threshold.
+
+    The comparison is strict: an age of exactly ``tolerance`` is still fresh. It is made
+    on the exact age, not on the rounded ``age_s`` that is reported, so an age of 3.0004 s
+    is expired yet reports ``age_s = 3.0`` (the difference is below a millisecond). A
+    sender that declares ``stale`` is treated as expired whatever its timestamp says: the
+    pipeline no longer has a stale tier to put it in."""
     if status == "missing":
-        return status
-    if timestamp and (now - datetime.fromisoformat(timestamp.replace("Z", "+00:00"))).total_seconds() > tolerance:
-        return "stale"
-    return status
+        return Freshness("missing", False, None)
+    age_s, too_old = None, False
+    if timestamp:
+        seconds = (now - datetime.fromisoformat(timestamp.replace("Z", "+00:00"))).total_seconds()
+        age_s = fusion.round_half_up(max(0.0, seconds), 3)
+        too_old = seconds > tolerance
+    if status == "stale" or too_old:
+        return Freshness("missing", True, age_s)
+    return Freshness(status, False, age_s)
 
 
 def _step_alert_fsm(state: dict, level: str | None, now_ms: float) -> str | None:
@@ -104,8 +141,11 @@ def run_inference(session_id: str, window_id: int, w: WindowInput, *, state=None
     now = now or datetime.now(timezone.utc)
     now_ms = now.timestamp() * 1000
     provenance = dict(provenance or {"provider": "MockAIProvider", "vision_source": "prepared_replay", "telemetry_source": "prepared_replay"})
-    vstatus = freshness(w.vision_status, provenance.get("captured_at") or w.timestamp, now, config.freshness_tolerance_s)
-    tstatus = freshness(w.telemetry_status, provenance.get("telemetry_timestamp") or w.timestamp, now, config.freshness_tolerance_s)
+    vision = freshness(w.vision_status, provenance.get("captured_at") or w.timestamp, now, config.freshness_tolerance_s)
+    telemetry = freshness(w.telemetry_status, provenance.get("telemetry_timestamp") or w.timestamp, now, config.freshness_tolerance_s)
+    # Only "fresh" and "missing" come out of here. An expired branch is a missing one as
+    # far as the score, the health, the EMA chain and the FSM are concerned.
+    vstatus, tstatus = vision.status, telemetry.status
     # All temporal bookkeeping happens on a scratch copy and is committed only after
     # the record validated, so a producer bug that raises leaves the memory intact.
     scratch = dict(state)
@@ -113,8 +153,10 @@ def run_inference(session_id: str, window_id: int, w: WindowInput, *, state=None
     if now_ms - scratch.get("last_processed_ms", now_ms) > config.freshness_tolerance_s * 1000:
         for key in TEMPORAL_STATE_KEYS:
             scratch.pop(key, None)
-    # EMA: seed-on-first-sample. The seed (and any stale / re-seeded sample) keeps
-    # full provider precision; only a smoothed value is rounded, half up to 3 dp.
+    # EMA: seed-on-first-sample. The seed (and any re-seeded sample) keeps full
+    # provider precision; only a smoothed value is rounded, half up to 3 dp. Expired
+    # vision is missing vision: it contributes 0.0 here and, below, leaves no
+    # ``previous_vision`` behind, so the next fresh frame re-seeds the chain.
     pd = w.P_distraction if vstatus != "missing" else 0.0
     if vstatus == "fresh" and scratch.get("previous_vision") is not None:
         pd = fusion.round_half_up(config.ema_alpha * pd + (1 - config.ema_alpha) * scratch["previous_vision"], 3)
@@ -139,6 +181,12 @@ def run_inference(session_id: str, window_id: int, w: WindowInput, *, state=None
     scratch.update(previous_vision=pd if vstatus == "fresh" and level is not None else None,
                    last_processed_ms=now_ms)
     provenance["fusion_config"] = config.model_dump()
+    # Always written, for both branches, so a record can say WHY a branch carried no
+    # weight: ``expired`` with an age, or simply never received (``expired`` false).
+    # Assigned, not ``setdefault``: these four are this function's verdict, never the
+    # provider's.
+    provenance.update(vision_expired=vision.expired, vision_age_s=vision.age_s,
+                      telemetry_expired=telemetry.expired, telemetry_age_s=telemetry.age_s)
     provenance.setdefault("P_distraction_raw", w.P_distraction)
     provenance.setdefault("P_telemetry_raw", w.P_telemetry_anomaly)
     record = RiskUpdate(

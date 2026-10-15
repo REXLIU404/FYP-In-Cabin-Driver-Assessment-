@@ -1,4 +1,5 @@
 import type {
+  FreshnessStatus,
   PreparedSessionWindow,
   TelemetryBehaviorProbability,
   TelemetryFeatureContribution,
@@ -202,7 +203,15 @@ const telemetryFeatureContributions = (
 };
 
 const inferTelemetryAnomaly = (record: PreparedTelemetryRecord): number => {
-  if (!record.telemetry_available) return 0;
+  // A branch that scores as missing carries P = 0.0 in the record - whether it never
+  // arrived or EXPIRED (ruling A) - exactly as the backend's run_inference does. The
+  // model output itself is not lost: the CSV row still holds it.
+  if (
+    !record.telemetry_available ||
+    isExpired(record.telemetry_available, record.telemetry_age_s)
+  ) {
+    return 0;
+  }
   return round3(1 - record.p_safe);
 };
 
@@ -248,10 +257,36 @@ const telemetryFeatures = (
   };
 };
 
-const freshnessStatus = (available: boolean, ageSeconds: number) => {
-  if (!available) return "missing";
-  return ageSeconds > 3 ? "stale" : "fresh";
-};
+// The replay's evidence-age tolerance, in seconds: the same 3 s design threshold as
+// `freshness_tolerance_s` (default) on the backend - a design threshold, not a
+// validated safety threshold. Fixed here because the prepared windows are built once,
+// at load.
+const PREPARED_FRESHNESS_TOLERANCE_S = 3;
+
+/**
+ * Ruling A (D13): evidence whose age exceeds the tolerance (strictly: exactly 3 s is
+ * still fresh) is EXPIRED. A `null` age means there is no capture time to measure, so
+ * nothing expires. A branch that was never received (`available` false) is not
+ * "expired" - it is absent.
+ */
+const isExpired = (available: boolean, ageSeconds: number | null) =>
+  available &&
+  ageSeconds !== null &&
+  ageSeconds > PREPARED_FRESHNESS_TOLERANCE_S;
+
+/**
+ * An expired branch is `missing`, exactly like one that never arrived (weight 0); the
+ * runtime no longer produces `stale`. The reason travels separately, in `expiry`.
+ */
+const freshnessStatus = (
+  available: boolean,
+  ageSeconds: number | null,
+): FreshnessStatus =>
+  !available || isExpired(available, ageSeconds) ? "missing" : "fresh";
+
+// `telemetry_age_s` is 999 on a row with no telemetry: a sentinel, not an age.
+const telemetryAge = (record: PreparedTelemetryRecord): number | null =>
+  record.telemetry_available ? record.telemetry_age_s : null;
 
 /**
  * The replay's one parsing path: telemetry CSV text -> ordered windows. The
@@ -269,11 +304,22 @@ export const buildPreparedWindows = (csv: string): PreparedSessionWindow[] =>
         record.vision_available,
       ),
       P_telemetry_anomaly: inferTelemetryAnomaly(record),
-      vision_status: freshnessStatus(record.vision_available, 0),
+      // The prepared CSV carries no capture time for the frame, so vision has no age:
+      // it can neither expire nor report an age (null), only be present or absent.
+      vision_status: freshnessStatus(record.vision_available, null),
       telemetry_status: freshnessStatus(
         record.telemetry_available,
-        record.telemetry_age_s,
+        telemetryAge(record),
       ),
+      expiry: {
+        vision_expired: isExpired(record.vision_available, null),
+        vision_age_s: null,
+        telemetry_expired: isExpired(
+          record.telemetry_available,
+          telemetryAge(record),
+        ),
+        telemetry_age_s: telemetryAge(record),
+      },
       visual_top_classes:
         record.vision_available && record.frame_file
           ? (preparedVisualEvidence[record.frame_file] ?? [])

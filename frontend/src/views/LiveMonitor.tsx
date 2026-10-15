@@ -1,4 +1,5 @@
 import { Database, Timer, Video } from "lucide-react";
+import { BranchStatusPill } from "../components/BranchStatusPill";
 import { CameraPreview } from "../components/CameraPreview";
 import { ModalityCard } from "../components/ModalityCard";
 import { Pill } from "../components/Pill";
@@ -40,6 +41,8 @@ export function LiveMonitor({
     systemHealth,
     vision: visionFreshness,
     telemetry: telemetryFreshness,
+    visionExpiry,
+    telemetryExpiry,
     evidenceType,
   } = buildLiveMonitorModel(latest, stale, thresholdLow);
 
@@ -125,11 +128,13 @@ export function LiveMonitor({
                 title="Visual Distraction"
                 probability={latest.P_distraction}
                 freshness={visionFreshness}
+                expiry={visionExpiry}
               />
               <ModalityCard
                 title="Telemetry Non-Safe"
                 probability={latest.P_telemetry_anomaly}
                 freshness={telemetryFreshness}
+                expiry={telemetryExpiry}
               />
             </div>
           </div>
@@ -174,11 +179,14 @@ export function LiveMonitor({
           </div>
           <div>
             <span>Vision freshness</span>
-            <Pill label={visionFreshness} tone={visionFreshness} />
+            <BranchStatusPill status={visionFreshness} expiry={visionExpiry} />
           </div>
           <div>
             <span>Telemetry freshness</span>
-            <Pill label={telemetryFreshness} tone={telemetryFreshness} />
+            <BranchStatusPill
+              status={telemetryFreshness}
+              expiry={telemetryExpiry}
+            />
           </div>
           <div>
             <span>Server processing (before DB commit)</span>
