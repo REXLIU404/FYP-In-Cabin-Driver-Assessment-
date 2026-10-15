@@ -51,3 +51,11 @@
 - `docs/figma-wireframe-fit-analysis.md`
 
 审计证据 `docs/fyp2/evidence/source_inventory.json` 与 `repository_discovery.json` 中仍有这些路径。那是审计当时的文件清单与 git status 快照，不被任何程序读取，作为历史记录保持原样。
+
+## 已删除（2026-10-15，用户决定：所有分支都不保留）
+
+`FYP2_Codex_ClaudeCode_Audit_Package_v2/` 整个文件夹（7 个文件）：原始审计规格包，包括 `FYP2_EVALUATION_AND_TESTCASE_SPEC.md`、`FYP2_DEVELOPMENT_AND_REPORT_MAP.md`、`FYP2_MASTER_REPOSITORY_AUDIT_PROMPT.md`、`FYP2_CROSS_REVIEW_PROMPT.md`、两份对应的 `.docx` 与 `README_使用说明.md`。
+
+审计文档仍按路径引用其中的规格文件（`docs/fyp2/03_EVALUATION_COVERAGE_MATRIX.md`、`07_EVIDENCE_MANIFEST.md`、`findings.md`，以及 `docs/fyp2/evidence/` 下的 `audit_commands.md`、`repository_discovery.json`、`source_inventory.json`）。审计文档是冻结证据，这些引用作为历史记录原样保留。没有任何代码读取这个文件夹。
+
+需要时可从 git 历史取回：在 `fyp2/live-system` 上，删除前最后一个包含它的提交是 `90a2f2f`，例如 `git show 90a2f2f:FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_EVALUATION_AND_TESTCASE_SPEC.md`；整个文件夹可用 `git checkout 90a2f2f -- FYP2_Codex_ClaudeCode_Audit_Package_v2/` 恢复。
