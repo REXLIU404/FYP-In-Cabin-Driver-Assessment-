@@ -48,15 +48,21 @@
 
 ### 阶段 2：Task 7 + Task 8（失败恢复，按计划 + R16 补充）
 - [x] Task 7 `fault_events`（`6e8039c` + 跟进 `c4926b3`、`9b21296`，验收 PASS；pytest 525 → 584）（开工前的 R6 裁定见计划 Task 7 Interfaces 之后：503 不可重试、`models_unavailable`、`attempt_index` 经 `X-Attempt-Index`、运行期错误 500、单分支失败 = 整体失败、恢复语义、建表单一来源）：在计划 DoD 之外补 —— 原生 ORT 运行期异常的分类、单分支失败、DB commit 失败；**每个 eligible 请求都有成功或失败的持久 outcome**（为 logging ≥ 99% 定义两个分母）
-- [ ] Task 8 有界重试：补 IT-RETRY-IDENTITY —— commit 之后 response 丢失再同 UUID 重发，DB 恰好一行、状态只推进一次；同 UUID 改 payload → 409
-- [ ] **重试与新鲜度的交互（2026-10-13 新增，开工 Task 8 前写进计划）**：为保幂等，重试逐字节重发同一 payload，`captured_at` / `telemetry_timestamp` 是首次采集值；退避 2 s + 4 s 后第 3 次投递距采集 ≥ 6 s，第 1 次若因 10 s 超时失败则第 2 次即已超过 3 s 容差。重试成功落库的窗口会被判为 stale / DEGRADED，并按 D13 现状继续累积 sustained-High。需在 Task 8 DoD 中声明并测试，且与阶段 5 的 D13 政策联动
-- [ ] **R5（用户批准 2026-10-13）**：摄像头停止后循环继续 —— 帧为 null 照发、不计失败、不停止；全空输入得到 UNAVAILABLE（`liveLoop.test.ts` + API 测试）。见计划 Task 8 与 DoD 8
-- [ ] `MAX_ATTEMPTS_PER_REQUEST = 3` 是**用户裁定的策略**（D02 Option 1），在文档中按「明确需求」陈述，回应 Codex「不能随意写 3」
+- [x] Task 8（`e37a312` + 跟进 `90a2f2f`，验收 PASS；pytest 584 → 598，vitest 427 → 533）有界重试：补 IT-RETRY-IDENTITY —— commit 之后 response 丢失再同 UUID 重发，DB 恰好一行、状态只推进一次；同 UUID 改 payload → 409
+- [x] **重试与新鲜度的交互（IT-RETRY-STALE 钉住现行行为，P0-D13 翻转）（2026-10-13 新增，开工 Task 8 前写进计划）**：为保幂等，重试逐字节重发同一 payload，`captured_at` / `telemetry_timestamp` 是首次采集值；退避 2 s + 4 s 后第 3 次投递距采集 ≥ 6 s，第 1 次若因 10 s 超时失败则第 2 次即已超过 3 s 容差。重试成功落库的窗口会被判为 stale / DEGRADED，并按 D13 现状继续累积 sustained-High。需在 Task 8 DoD 中声明并测试，且与阶段 5 的 D13 政策联动
+- [x] **R5（用户批准 2026-10-13）**：摄像头停止后循环继续 —— 帧为 null 照发、不计失败、不停止；全空输入得到 UNAVAILABLE（`liveLoop.test.ts` + API 测试）。见计划 Task 8 与 DoD 8
+- [x] `MAX_ATTEMPTS_PER_REQUEST = 3` 是**用户裁定的策略**（D02 Option 1），在文档中按「明确需求」陈述，回应 Codex「不能随意写 3」
+- **状态：** complete（2026-10-15）
+
+### 阶段 2.5：P0-D13 —— 实施裁定 A（用户 2026-10-15 批准提前到 Task 8 之后、Task 9 之前）
+- [ ] 过期证据按 missing 计分并保留原因（`{modality}_expired` / `_age_s`）；运行时不再产出 stale；把钉住旧行为的测试改为需求断言（IT-LIVE-AGE、UT-TIME-06、两条 gap 测试、F1 W16、IT-RETRY-STALE）；新增 IT-EXPIRY-REASON / SENSITIVITY / NO-STALE 与历史记录读取测试
+- [ ] 已知的剩余缺口：UT-TIME-05（3 s 内重复同一证据仍累积告警）由 R10 负责；Live 遥测时间戳是发送时刻而非采集时刻，裁定 A 对遥测要等 R10 / Task 9 改为采集时间才真正生效
 - **状态：** pending
 
 ### 阶段 3：Task 9（Live-only 范围落地）
 - [ ] 按计划执行
-- [ ] **R5**：游标改动保持 Task 8 的循环行为；开工前定游标语义（2 s 节奏 vs 按窗口推进），它决定 ST-BRANCH-T-CONTINUITY 的预期
+- [ ] **R5**：游标改动保持 Task 8 的循环行为；开工前定游标语义（2 s 节奏 vs 按窗口推进），它决定 ST-BRANCH-T-CONTINUITY 的预期（控制者推荐 (a) 2 s 节奏，R10 的无界 seq 与模拟采集时间也由它产生）
+- [ ] **Task 8 遗留文案**（只影响显示）：手动重试失败后说明仍写「已自动重发」；setup 阶段面板未写明 Retry 会新建会话；`retryCount` 注释写「失败次数」实为「已发出的投递次数」
 - [ ] **P1-6 遗留**：趋势图 tooltip（`trendSeries.ts:32` → `formatTrendTooltip`）先 ×100 再 `formatFixed(…, 1)`，二进制噪声会越过平局（0.2855 → 28.5%）。改为先在小数上 half-up 再放大，与 `asPercent` 同一做法，并加平局用例
 - **状态：** pending
 
@@ -67,10 +73,11 @@
 - [ ] `freeze_manifest.py` 在 `FYP_DATA_ROOT` 错误时不得静默回退
 - [ ] R31：导出遇 NULL / 畸形 payload 的测试与守卫（`export.py:51`）
 - [ ] **R5 单分支系统测试**：ST-BRANCH-T-SMOKE / T-CONTINUITY / V / ZERO（计划 Task 10 Step 2A）。测试工具内拦截请求，产品代码不改
+- [ ] **Task 8 转入（React 绑定层无单测）**：E2E 断言停止面板 Retry 用同一会话且 `X-Attempt-Index` = 4；摄像头意外断开与主动 Stop Camera 显示不同；New Session 失败后 Retry 新建会话
 - **状态：** pending
 
 ### 阶段 5：需用户裁定的政策项（裁定后再实现）
-- [ ] **R09 / D13：已裁定 A**（2026-10-13，用户本人确认；待实施）：过期证据按 missing 计分，provenance 保留 `{modality}_expired` / `{modality}_age_s`；运行时不再产出 stale，0.45 只留给历史记录；阈值 = `freshness_tolerance_s`，默认 3 s、可配 (0, 30]，只称设计阈值，须用 PERF-01 与 2 / 3 / 5 s 敏感性复核。实施时同步改：IT-LIVE-AGE 3001 ms / 30 天 / D13 快照、两条 gap 测试第 1 步（改 fake clock）、F1 W16（62.5 → 60.0）、Task 8 重试窗口的预期
+- [ ] **R09 / D13：已裁定 A**（2026-10-13，用户本人确认；**2026-10-15 提前为阶段 2.5 的 P0-D13**）：过期证据按 missing 计分，provenance 保留 `{modality}_expired` / `{modality}_age_s`；运行时不再产出 stale，0.45 只留给历史记录；阈值 = `freshness_tolerance_s`，默认 3 s、可配 (0, 30]，只称设计阈值，须用 PERF-01 与 2 / 3 / 5 s 敏感性复核。实施时同步改：IT-LIVE-AGE 3001 ms / 30 天 / D13 快照、两条 gap 测试第 1 步（改 fake clock）、F1 W16（62.5 → 60.0）、Task 8 重试窗口的预期
 - [ ] **R10**：相等时间戳、新 UUID 的重复证据是否算「持续新观察」
 - [ ] **R14**：`DominantEvidence` 的语义 —— raw strength 还是 weighted contribution。现算法不接收权重，w=.3/.7 时可能标「Vision-dominant」而 telemetry 贡献更大。改语义要动三份实现 + 夹具
 - **状态：** pending（等待裁定）
