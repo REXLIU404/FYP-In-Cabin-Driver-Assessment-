@@ -62,13 +62,9 @@
 - **状态：** complete（2026-10-15）
 
 ### 阶段 3：Task 9（Live-only 范围落地）
-- [ ] 按计划执行
-- [ ] **游标（K1）并入 R10**：用户 2026-10-15 批准 2 s 节拍；游标、`telemetry_seq` 与算术采集时间随 R10 实施（R10 规则正由 Codex 独立评审）。Task 9 先做与游标无关的部分，并保持 R5 行为（第 14 / 17 行照常以 missing 发送）
-- [ ] **P0-D13 遗留（K9）**：前端导出补过期四列；replay 3 s 常量跟随配置或注明
-- [ ] **Task 8 React 绑定层断言提前（K10）**：用 `react-dom/server` 静态渲染测停止面板文案与两种摄像头原因码
-- [ ] **Task 8 遗留文案**（只影响显示）：手动重试失败后说明仍写「已自动重发」；setup 阶段面板未写明 Retry 会新建会话；`retryCount` 注释写「失败次数」实为「已发出的投递次数」
-- [ ] **P1-6 遗留**：趋势图 tooltip（`trendSeries.ts:32` → `formatTrendTooltip`）先 ×100 再 `formatFixed(…, 1)`，二进制噪声会越过平局（0.2855 → 28.5%）。改为先在小数上 half-up 再放大，与 `asPercent` 同一做法，并加平局用例
-- **状态：** pending
+- [x] Task 9（`c304aa0` + 修复轮 `6ec6799` + 控制者修正，验收 PASS；vitest 594 → 709，pytest 704 不变）：拆分 `PREPARED_RAW_TELEMETRY` 并加源码级范围守卫；replay 标为 legacy / test-only，重新打开页面总回到 Live；tooltip 舍入；Task 8 / P0-D13 遗留文案与导出四列；静态渲染测停止面板与两种摄像头原因码；`retryHandler` 只调用 `live.retry()`
+- [ ] **游标（K1）并入 R10**：用户 2026-10-15 批准 2 s 节拍；游标、`telemetry_seq` 与算术采集时间随 R10 实施。Task 9 已把游标表达式抽成 `preparedTelemetryAt`（规则未改），R10 只需替换这个函数，并改写 K2 与游标相关的测试
+- **状态：** complete（2026-10-16，游标除外）
 
 ### 阶段 4：Task 10（Live E2E，按计划 + R02/R17/R31 补充）
 - [ ] E2E 对账从「6 个单元格」扩为**逐 ID 全行**：API 保存 = DB = latest = 同窗口 UI = 导出行
@@ -82,7 +78,7 @@
 
 ### 阶段 5：需用户裁定的政策项（裁定后再实现）
 - [ ] **R09 / D13：已裁定 A**（2026-10-13，用户本人确认；**2026-10-15 提前为阶段 2.5 的 P0-D13**）：过期证据按 missing 计分，provenance 保留 `{modality}_expired` / `{modality}_age_s`；运行时不再产出 stale，0.45 只留给历史记录；阈值 = `freshness_tolerance_s`，默认 3 s、可配 (0, 30]，只称设计阈值，须用 PERF-01 与 2 / 3 / 5 s 敏感性复核。实施时同步改：IT-LIVE-AGE 3001 ms / 30 天 / D13 快照、两条 gap 测试第 1 步（改 fake clock）、F1 W16（62.5 → 60.0）、Task 8 重试窗口的预期
-- [ ] **R10**：相等时间戳、新 UUID 的重复证据是否算「持续新观察」
+- [ ] **R10**：相等时间戳、新 UUID 的重复证据是否算「持续新观察」。**状态（2026-10-16）**：用户有条件批准一部分（见 SDD 记录）；修订政策（双条件规则）已交 Codex 独立评审，待最终批准。实施时一并处理：Task 9 留下的游标函数 `preparedTelemetryAt`；手动 Retry 的 reconcile 失败时仍显示「自动重发」文案（需在 `LiveFault` 加标志，属 liveLoop 逻辑）
 - [ ] **R14**：`DominantEvidence` 的语义 —— raw strength 还是 weighted contribution。现算法不接收权重，w=.3/.7 时可能标「Vision-dominant」而 telemetry 贡献更大。改语义要动三份实现 + 夹具
 - **状态：** pending（等待裁定）
 

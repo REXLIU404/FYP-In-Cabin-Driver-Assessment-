@@ -89,7 +89,7 @@ API 文档：http://127.0.0.1:8000/docs。`GET /api/health` 检查进程；`GET 
 6. **Start Monitoring** 可恢复本次 session，并同步可能在暂停时已提交的最后记录。**New Session** 新建 session，不删除已有历史。修改配置也会在下次开始时创建新 session。
 7. **Refresh saved sessions** → 选择历史 session → Signal Inspector 标记/取消标记。加载的历史用于查看；再次 Start 会新建采集 session。
 8. Configuration 的 JSON/CSV 导出来自后端，包含全部记录。页面仅保留最近 500 条，session 下拉默认最近 100 个；更早记录可通过分页 API 或整段导出读取。
-9. **Prepared replay demo** 保留旧本地演示，使用预设概率/本地融合/localStorage。它与 Live 模式有明确标识，模型故障不会自动切到 demo。
+9. **Prepared replay (legacy, test-only)** 保留旧的本地回放，使用预设概率/本地融合/localStorage，只用于回归测试与向后兼容（D03：系统只保留 Live Monitoring 作为正式运行模式）。它与 Live 模式有明确标识；重新打开页面时总是回到 Live；模型故障不会自动切到回放。
 
 错误提示：模型文件/依赖缺失为 503；无效图像/特征为 422；乱序帧或请求 ID 内容冲突为 409。网络错误退避重试，新请求抓取最新帧。404/409/422/503 暂停采集并显示错误，需要修复原因后 Start。
 

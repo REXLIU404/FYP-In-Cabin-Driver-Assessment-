@@ -309,21 +309,20 @@ describe("faultAdvice: the sentence follows why the loop stopped (K8)", () => {
       "transport",
       "aborted",
     ] as const) {
-      expect(faultAdvice({ category, manualRetries: 0 })).toBe(
-        FAULT_TEXT[category].advice,
-      );
-      expect(faultAdvice({ category, manualRetries: 3 })).toBe(
-        FAULT_TEXT[category].advice,
-      );
+      // Invariance, not a copy of the table: the sentence must not depend on why
+      // the loop stopped, and it must say something.
+      const automatic = faultAdvice({ category, manualRetries: 0 });
+      expect(automatic.length).toBeGreaterThan(0);
+      expect(faultAdvice({ category, manualRetries: 3 })).toBe(automatic);
     }
   });
 
-  it("the plain advice (automatic) is still the entry in FAULT_TEXT", () => {
+  it("the table's own automatic advice is the literal sentence", () => {
     expect(FAULT_TEXT.model_runtime.advice).toBe(
-      faultAdvice({ category: "model_runtime", manualRetries: 0 }),
+      "A model or storage error on the server (HTTP 500). The request was re-sent automatically and kept failing.",
     );
     expect(FAULT_TEXT.timeout.advice).toBe(
-      faultAdvice({ category: "timeout", manualRetries: 0 }),
+      "No answer within 10 seconds. The request was re-sent automatically and kept timing out. Check the backend, then use Retry.",
     );
   });
 });

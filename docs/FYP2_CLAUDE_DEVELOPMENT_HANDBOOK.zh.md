@@ -45,7 +45,7 @@ Prepared telemetry.csv（每 2 秒切换一行并循环）
   → React 五视图 / session history / flag / JSON、CSV
 ```
 
-旧 Prepared replay demo 使用本地预设概率、TS 融合和 localStorage。它用于演示与对照，不证明真实模型推理。
+旧的 Prepared replay（界面标为 legacy, test-only）使用本地预设概率、TS 融合和 localStorage。它只用于回归测试与向后兼容，不是正式运行模式（D03），也不证明真实模型推理。
 
 ## 3. 代码定位和职责
 

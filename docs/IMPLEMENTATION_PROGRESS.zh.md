@@ -21,7 +21,7 @@
 | 状态与数据库 | 原子单调窗口编号、唯一约束、request ID 去重/冲突检测、乱序拒绝；DB authoritative latest；flag/delete 一致；状态跨进程重启恢复 |
 | 数据库性能/迁移 | WAL、busy timeout、短写事务、模型运算不占写锁、SQL count、分页、流式导出；additive migration 保留旧记录 |
 | 前端实时控制 | camera 采帧、一次一个请求、超时/退避、Start/Pause/New Session、模型检查、历史加载、标记与导出 |
-| 五视图 | Live Monitor、Signal Inspector、Risk Trends、Explanation、Configuration 接通后端结果；保留独立 Prepared replay demo |
+| 五视图 | Live Monitor、Signal Inspector、Risk Trends、Explanation、Configuration 接通后端结果；保留独立的 Prepared replay（legacy, test-only，仅用于回归测试与向后兼容） |
 | 诚实状态显示 | camera/telemetry 来源、模型 hash、处理/请求耗时、实际请求完成速率；camera missing、结果 stale、故障和空状态显示 |
 | 回归修复 | 修复新状态刷新打断旧 demo 定时器的问题；图表采用会话阈值；缺失分支不显示为正常的 0% 输入 |
 | 交付文档 | 根 README、backend README、当前启动指南与本进度表；旧文档增加历史快照提示，CLAUDE.md 更新运行事实 |
