@@ -68,6 +68,8 @@
 
 ### 阶段 4：Task 10（Live E2E，按计划 + R02/R17/R31 补充）
 > **2026-10-16 拆成两部分**：第 1 部分（不依赖 R10）= 类型检查门禁、模型跳过显式化（`DRA_REQUIRE_MODELS=1` 时失败）、导出遇 NULL / 畸形 payload 的守卫、`freeze_manifest` 不静默回退、分段计时（`Server-Timing` + 前端计时缓冲）、`scripts/run_gates.py` 门禁原始日志。第 2 部分（R10 落地后）= Playwright 端到端、单分支系统测试、逐 ID 全行对账、React 绑定层真实点击、PERF-01 实测与证据归档。
+- [x] **第 1 部分**（`1a321b0` + 修复轮 `89e8df0` + 控制者修正，验收 PASS；pytest 704 → 775，vitest 709 → 771）
+- [ ] **第 2 部分**：另需注意 `DRA_REQUIRE_MODELS=1` 只作用于被收集的测试，证据归档时必须跑全套
 - [ ] E2E 对账从「6 个单元格」扩为**逐 ID 全行**：API 保存 = DB = latest = 同窗口 UI = 导出行
 - [ ] 门禁原始日志带 version / env / argv / exit / skips，归档 `docs/evidence/<date>/live-e2e/`
 - [ ] 分段计时 capture → 预处理 → 模型 → commit → 网络 → render（`windows.py:62` 计时早于 commit；前端 `requestMs` 不含 render）

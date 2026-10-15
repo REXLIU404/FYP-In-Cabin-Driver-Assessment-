@@ -113,7 +113,13 @@ def export_session(session_id: str, format: str = "json", db: Session = Depends(
                     row = _unreadable_record(session_id, window_id, flagged, reason)
                 else:
                     provenance = payload.get("provenance") or {}
-                    row = {**payload, "flagged": flagged, **{k: provenance.get(k, "") for k in _COLUMNS if k in provenance},
+                    # A readable payload can still carry a provenance that is not an object
+                    # (a number, a list, a string). Reading keys out of it would raise inside
+                    # this generator - after the 200 - or, for a string, turn ``in`` into a
+                    # substring test. Such a value is exported verbatim in the provenance cell
+                    # and contributes no columns; nothing is invented.
+                    columns_from = provenance if isinstance(provenance, dict) else {}
+                    row = {**payload, "flagged": flagged, **{k: columns_from.get(k, "") for k in _COLUMNS if k in columns_from},
                            "provenance": json.dumps(provenance)}
                     for key in ("modality_freshness", "visual_top_classes", "telemetry_behavior_classes",
                                 "telemetry_feature_contributions", "telemetry_features"):

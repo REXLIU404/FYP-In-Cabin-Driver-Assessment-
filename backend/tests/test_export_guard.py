@@ -196,3 +196,40 @@ def test_a_session_of_only_unreadable_rows_still_exports_every_row(api, api_fact
         assert [r["window_id"] for r in response.json()["records"]] == [1, 2]
     else:
         assert [r["window_id"] for r in csv.DictReader(io.StringIO(response.text))] == ["1", "2"]
+
+
+# Controller follow-up (Task 10 part 1 review, Important): a READABLE payload whose
+# provenance is not an object. The CSV row builder used to read keys out of it inside the
+# generator: a number or a list raised after the 200 (truncated CSV), a string turned
+# ``k in provenance`` into a substring test. JSON already exported these verbatim.
+ODD_PROVENANCE = [
+    (2, 5, "5"),
+    (3, ["request_id"], '["request_id"]'),
+    (4, "has request_id inside", '"has request_id inside"'),
+]
+
+
+def test_csv_export_survives_a_provenance_that_is_not_an_object(api, api_factory):
+    client, _ = api
+    assert client.post("/api/sessions", json={"session_id": SID}).status_code == 201
+    _insert_good(api_factory, 1, GOOD_PAYLOAD, False)
+    for window_id, provenance, _ in ODD_PROVENANCE:
+        _insert_good(api_factory, window_id, {"window_id": window_id, "RiskScore": 40.0, "provenance": provenance}, False)
+    _insert_good(api_factory, 5, {"window_id": 5, "RiskScore": 41.0, "provenance": {"request_id": "r5"}}, False)
+
+    response = client.get(f"/api/sessions/{SID}/export?format=csv")
+    assert response.status_code == 200
+    rows = list(csv.DictReader(io.StringIO(response.text)))
+    assert [row["window_id"] for row in rows] == ["1", "2", "3", "4", "5"]
+    assert response.text.splitlines(keepends=True)[1] == GOOD_CSV_RECORD  # a normal row is untouched
+    for window_id, _, cell in ODD_PROVENANCE:
+        row = rows[window_id - 1]
+        assert row["provenance"] == cell        # verbatim
+        assert row["request_id"] == ""          # nothing read out of a non-object
+        assert row["RiskScore"] == "40.0"       # the readable payload still exports
+        assert row["payload_unreadable"] == ""  # the payload itself was readable
+    assert rows[4]["request_id"] == "r5"       # an object provenance still feeds its column
+
+    json_response = client.get(f"/api/sessions/{SID}/export?format=json")
+    assert json_response.status_code == 200
+    assert [r.get("provenance") for r in json_response.json()["records"][1:4]] == [5, ["request_id"], "has request_id inside"]
