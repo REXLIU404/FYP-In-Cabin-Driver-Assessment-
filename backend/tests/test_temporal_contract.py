@@ -601,8 +601,10 @@ def test_out_of_order_guard_survives_a_gap(api, api_factory, fake_clock, monkeyp
     assert persisted_state()["last_processed_ms"] == paused["last_processed_ms"]
 
     # 3. A newer frame is accepted, and run_inference sees the gap.
-    second_stamp = at(20_000)
-    fake_clock.set(20_000)
+    # Only 1 s after the first frame - inside the 3 s tolerance - so the gap can come
+    # from nothing but the simulated pause in step 2.
+    second_stamp = at(11_000)
+    fake_clock.set(11_000)
     response = infer("f2-frame2", second_stamp)
     assert response.status_code == 201, response.text
     state = persisted_state()
@@ -616,7 +618,7 @@ def test_out_of_order_guard_survives_a_gap(api, api_factory, fake_clock, monkeyp
     assert accepted == 2
 
     # 5. An older frame is refused and leaves nothing behind.
-    response = infer("f2-frame3", at(15_000))
+    response = infer("f2-frame3", at(10_500))  # older than the watermark (11 s)
     assert response.status_code == 409, response.text
     assert record_count() == accepted
     assert persisted_state()["captured_at"] == second_stamp.isoformat()
@@ -682,8 +684,10 @@ def test_out_of_order_guard_survives_a_gap_for_telemetry(api, api_factory, fake_
     assert persisted_state()["last_processed_ms"] == paused["last_processed_ms"]
 
     # 3. A newer reading is accepted, and run_inference sees the gap.
-    second_stamp = at(20_000)
-    fake_clock.set(20_000)
+    # Only 1 s after the first frame - inside the 3 s tolerance - so the gap can come
+    # from nothing but the simulated pause in step 2.
+    second_stamp = at(11_000)
+    fake_clock.set(11_000)
     response = infer("r13-frame2", second_stamp)
     assert response.status_code == 201, response.text
     state = persisted_state()
@@ -697,7 +701,7 @@ def test_out_of_order_guard_survives_a_gap_for_telemetry(api, api_factory, fake_
     assert accepted == 2
 
     # 5. A reading older than that is refused and leaves nothing behind.
-    response = infer("r13-frame3", at(15_000))
+    response = infer("r13-frame3", at(10_500))  # older than the watermark (11 s)
     assert response.status_code == 409, response.text
     assert record_count() == accepted
     assert persisted_state()["telemetry_timestamp"] == second_stamp.isoformat()

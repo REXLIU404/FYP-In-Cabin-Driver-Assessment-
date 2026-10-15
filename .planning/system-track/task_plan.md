@@ -55,9 +55,11 @@
 - **状态：** complete（2026-10-15）
 
 ### 阶段 2.5：P0-D13 —— 实施裁定 A（用户 2026-10-15 批准提前到 Task 8 之后、Task 9 之前）
-- [ ] 过期证据按 missing 计分并保留原因（`{modality}_expired` / `_age_s`）；运行时不再产出 stale；把钉住旧行为的测试改为需求断言（IT-LIVE-AGE、UT-TIME-06、两条 gap 测试、F1 W16、IT-RETRY-STALE）；新增 IT-EXPIRY-REASON / SENSITIVITY / NO-STALE 与历史记录读取测试
+- [x] （`5e72340` + 修复轮 `67af63e` + 控制者测试修正，验收 PASS；pytest 598 → 704，vitest 533 → 594）过期证据按 missing 计分并保留原因（`{modality}_expired` / `_age_s`）；运行时不再产出 stale；把钉住旧行为的测试改为需求断言（IT-LIVE-AGE、UT-TIME-06、两条 gap 测试、F1 W16、IT-RETRY-STALE）；新增 IT-EXPIRY-REASON / SENSITIVITY / NO-STALE 与历史记录读取测试
 - [ ] 已知的剩余缺口：UT-TIME-05（3 s 内重复同一证据仍累积告警）由 R10 负责；Live 遥测时间戳是发送时刻而非采集时刻，裁定 A 对遥测要等 R10 / Task 9 改为采集时间才真正生效
-- **状态：** pending
+- [ ] **P0-D13 遗留（只影响显示或文字）**：前端导出的 `vision_freshness` / `telemetry_freshness` 列不带过期原因与年龄（后端导出 JSON 带完整 provenance）→ Task 9；解释文字仍写「stale or missing」（与夹具共享）→ 与 R14 一起改；replay 的 3 s 阈值是文件常量、不跟随会话配置 → Task 9 说明或改；声明 stale 且时间戳为当前时刻的分支显示「expired (0 s)」→ 暂记
+- [x] 发现：`react-dom/server` 的 `renderToStaticMarkup` 可在 node 环境做静态渲染断言，无需 jsdom —— Task 8 留给 Task 10 的 React 绑定层断言可提前用这个办法补
+- **状态：** complete（2026-10-15）
 
 ### 阶段 3：Task 9（Live-only 范围落地）
 - [ ] 按计划执行
