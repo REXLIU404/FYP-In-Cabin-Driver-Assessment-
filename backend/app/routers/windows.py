@@ -1,8 +1,12 @@
 """Window logging, trained frame inference, and session-scoped temporal state."""
+import base64
+import binascii
 import hashlib
 import json
 import time
+from dataclasses import dataclass
 from datetime import datetime
+from typing import Optional
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Query, Request, Response
 from sqlalchemy import update
@@ -15,6 +19,58 @@ from ..faults import FaultHTTPException, FaultSink, get_fault_sink
 from ..schemas import LiveInput, RiskUpdate, RuntimeConfig, WindowInput
 
 router = APIRouter(prefix="/api/sessions", tags=["windows"])
+
+# The detail texts the client classifies a 409 on (retryPolicy.ts / test_retry_contract.py).
+OUT_OF_ORDER_DETAIL = "Out-of-order evidence timestamp"
+OBSERVATION_CONFLICT_DETAIL = "Observation identity already registered with different content or acquisition time"
+
+
+@dataclass(frozen=True)
+class Evidence:
+    """What one live request says about its own observations, taken from the REQUEST (never
+    from the provider's provenance): the identity metadata, the acquisition times and the
+    content hashes. A branch the request did not carry has its hash set to None."""
+
+    captured_at: Optional[str] = None
+    image_hash: Optional[str] = None
+    vision_frame: Optional[tuple] = None  # (epoch, index)
+    telemetry_timestamp: Optional[str] = None
+    telemetry_hash: Optional[str] = None
+    telemetry_seq: Optional[int] = None
+
+
+def image_digest(encoded: str) -> str:
+    """sha256 of the image BYTES. A ``data:`` URL prefix is not part of the image. Text that is
+    not valid base64 (a test double; the real provider rejects it with a 422 before this runs)
+    is hashed as text, so the digest is total."""
+    body = encoded.split(",", 1)[1] if encoded.startswith("data:") and "," in encoded else encoded
+    try:
+        raw = base64.b64decode(body, validate=True)
+    except (binascii.Error, ValueError):
+        raw = body.encode("utf-8")
+    return hashlib.sha256(raw).hexdigest()
+
+
+def telemetry_digest(features) -> str:
+    """sha256 of the eight feature values, in canonical (sorted-key) JSON."""
+    return hashlib.sha256(json.dumps(features.model_dump(), sort_keys=True).encode()).hexdigest()
+
+
+def evidence_of(payload: LiveInput) -> Evidence:
+    frame = payload.vision_frame
+    return Evidence(
+        captured_at=payload.captured_at if payload.image_base64 is not None else None,
+        image_hash=image_digest(payload.image_base64) if payload.image_base64 is not None else None,
+        vision_frame=(frame.epoch, frame.index) if frame is not None else None,
+        telemetry_timestamp=payload.telemetry_timestamp if payload.telemetry_features is not None else None,
+        telemetry_hash=telemetry_digest(payload.telemetry_features) if payload.telemetry_features is not None else None,
+        telemetry_seq=payload.telemetry_seq)
+
+
+def request_digest(payload: LiveInput) -> str:
+    """The request hash that makes a re-sent request an idempotent replay. R10 fields that are
+    None are left out of ``canonical_body``, so the same HTTP body hashes as it did before them."""
+    return hashlib.sha256(json.dumps(payload.canonical_body(), sort_keys=True).encode()).hexdigest()
 
 
 def _record_to_update(rec):
@@ -34,10 +90,116 @@ def _existing_request(db, sid, request_id, digest):
     return None
 
 
-def _persist_window(db, sid, w, *, mode, provenance=None, request_id=None, digest=None, started=None):
+def _instant(stamp: str) -> datetime:
+    return datetime.fromisoformat(stamp.replace("Z", "+00:00"))
+
+
+def _out_of_order() -> FaultHTTPException:
+    return FaultHTTPException(409, OUT_OF_ORDER_DETAIL, error_category=faults.CATEGORY_OUT_OF_ORDER_EVIDENCE,
+                              origin=faults.ORIGIN_SESSION)
+
+
+def _observation_conflict() -> FaultHTTPException:
+    return FaultHTTPException(409, OBSERVATION_CONFLICT_DETAIL,
+                              error_category=faults.CATEGORY_OBSERVATION_CONFLICT, origin=faults.ORIGIN_SESSION)
+
+
+def _advance_watermark(state: dict, key: str, stamp: str) -> None:
+    """The watermark only ever moves forward: a NEW observation with an explicit identity may
+    carry an older stamp (a client clock that stepped back) and must not lower it."""
+    previous = state.get(key)
+    if not previous or _instant(stamp) > _instant(previous):
+        state[key] = stamp
+
+
+def _classify_telemetry(state: dict, ev: Evidence) -> Optional[inference.Observation]:
+    """NEW / REPEAT / refusal for the telemetry branch, against what the session has accepted.
+    Runs under the writer lock and registers a NEW observation into ``state`` (the caller's copy,
+    committed with the window or not at all).
+
+    With a ``telemetry_seq``: bigger -> NEW; equal with the same features AND the same acquisition
+    time -> REPEAT; equal with anything different -> 409 observation_conflict; smaller -> 409
+    out-of-order. Without one (the weaker fallback): a later time -> NEW; the same time with the
+    same feature hash -> REPEAT, with another hash -> NEW; an earlier time -> 409 out-of-order.
+    A REPEAT answers with the REGISTERED acquisition time and refreshes nothing."""
+    if ev.telemetry_hash is None:
+        return None
+    stamp, seq = ev.telemetry_timestamp, ev.telemetry_seq
+    last_seq = state.get("obs_t_seq")
+    registered_ts, registered_hash = state.get("obs_t_ts"), state.get("obs_t_hash")
+    same_content = (registered_hash == ev.telemetry_hash and registered_ts is not None
+                    and _instant(registered_ts) == _instant(stamp))
+    watermark_key = inference.EVIDENCE_WATERMARK_KEYS[1]
+    if seq is not None:
+        if last_seq is not None and seq < last_seq:
+            raise _out_of_order()
+        if last_seq is not None and seq == last_seq:
+            if same_content:
+                return inference.Observation("repeat", registered_ts, "explicit", seq)
+            raise _observation_conflict()
+        identity = "explicit"
+    else:
+        watermark = state.get(watermark_key)
+        if watermark and _instant(stamp) < _instant(watermark):
+            raise _out_of_order()
+        if same_content:
+            return inference.Observation("repeat", registered_ts, "fallback")
+        identity = "fallback"
+    state.update(obs_t_seq=seq, obs_t_ts=stamp, obs_t_hash=ev.telemetry_hash)
+    _advance_watermark(state, watermark_key, stamp)
+    return inference.Observation("new", stamp, identity, seq)
+
+
+def _classify_vision(state: dict, ev: Evidence) -> Optional[inference.Observation]:
+    """NEW / REPEAT / refusal for the vision branch.
+
+    With a ``vision_frame`` (epoch, index): lexicographically bigger -> NEW; equal with the same
+    image bytes AND the same acquisition time -> REPEAT; equal with other bytes or another time ->
+    409 observation_conflict; smaller (an older epoch included) -> 409 out-of-order. The image
+    hash is an AUDIT here: a NEW frame whose bytes equal the previous accepted frame's is still
+    NEW, flagged ``hash_repeat_audit``. Without one (the weaker fallback): the same bytes as the
+    previous accepted frame -> REPEAT, with the REGISTERED acquisition time; otherwise NEW, and
+    subject to the ``captured_at`` watermark. A REPEAT never refreshes the acquisition time."""
+    if ev.image_hash is None:
+        return None
+    stamp, frame = ev.captured_at, ev.vision_frame
+    registered_ts, registered_hash = state.get("obs_v_ts"), state.get("obs_v_hash")
+    watermark_key = inference.EVIDENCE_WATERMARK_KEYS[0]
+    audit = False
+    if frame is not None:
+        last = (state.get("obs_v_epoch"), state.get("obs_v_index"))
+        if last[0] is not None:
+            if frame < last:
+                raise _out_of_order()
+            if frame == last:
+                if (registered_hash == ev.image_hash and registered_ts is not None
+                        and _instant(registered_ts) == _instant(stamp)):
+                    return inference.Observation("repeat", registered_ts, "explicit", f"{frame[0]}:{frame[1]}")
+                raise _observation_conflict()
+        audit = registered_hash is not None and registered_hash == ev.image_hash
+        identity, ref = "explicit", f"{frame[0]}:{frame[1]}"
+    else:
+        if registered_hash is not None and registered_hash == ev.image_hash and registered_ts is not None:
+            return inference.Observation("repeat", registered_ts, "fallback")
+        watermark = state.get(watermark_key)
+        if watermark and _instant(stamp) < _instant(watermark):
+            raise _out_of_order()
+        identity, ref = "fallback", None
+    state.update(obs_v_epoch=frame[0] if frame else None, obs_v_index=frame[1] if frame else None,
+                 obs_v_ts=stamp, obs_v_hash=ev.image_hash)
+    _advance_watermark(state, watermark_key, stamp)
+    return inference.Observation("new", stamp, identity, ref, audit)
+
+
+def _persist_window(db, sid, w, *, mode, provenance=None, request_id=None, digest=None, started=None,
+                    evidence=None):
     """Allocate, fuse and commit one window. Does NOT roll back when it raises: the
     caller owns the transaction boundary (``_save_window`` for replay, ``infer_frame``
-    for live, which must roll back BEFORE it records the fault)."""
+    for live, which must roll back BEFORE it records the fault).
+
+    For a live window ``evidence`` is classified here, under the writer lock the allocation
+    took and in the same transaction as the window record: the registry, the watermarks, the
+    FSM memory and the window counter all commit together or not at all."""
     # Atomic UPDATE obtains the SQLite writer lock before reading temporal state.
     # No count/max race, and deletion never causes identifier reuse.
     number = db.execute(update(models.SessionMeta).where(models.SessionMeta.id == sid)
@@ -57,19 +219,15 @@ def _persist_window(db, sid, w, *, mode, provenance=None, request_id=None, diges
         db.rollback()
         return existing
     state = dict(sess.runtime_state or {})
-    if provenance:
-        for key in inference.EVIDENCE_WATERMARK_KEYS:
-            stamp, previous = provenance.get(key), state.get(key)
-            if stamp and previous and datetime.fromisoformat(stamp) < datetime.fromisoformat(previous):
-                raise FaultHTTPException(409, "Out-of-order evidence timestamp",
-                                         error_category=faults.CATEGORY_OUT_OF_ORDER_EVIDENCE,
-                                         origin=faults.ORIGIN_SESSION)
-            if stamp:
-                state[key] = stamp
+    observations = None
+    if mode == inference.LIVE_MODE:
+        evidence = evidence or Evidence()
+        observations = inference.Observations(vision=_classify_vision(state, evidence),
+                                              telemetry=_classify_telemetry(state, evidence))
     config = RuntimeConfig(**sess.runtime_config) if sess.runtime_config else inference.default_config()
     with timing.measure("fusion"):
-        ru = inference.run_inference(sid, number, w, state=state, config=config,
-                                     provenance=provenance, operation_mode=mode)
+        ru = inference.run_inference(sid, number, w, state=state, config=config, provenance=provenance,
+                                     operation_mode=mode, observations=observations)
     if started is not None:
         # latency_ms stops HERE, before the record is added and committed: it excludes the
         # commit and the cache write. Server-Timing's ``commit`` / ``total`` cover those.
@@ -145,7 +303,7 @@ def _infer(db, session_id: str, payload: LiveInput):
                                  error_category=faults.CATEGORY_MODE_CONFLICT, origin=faults.ORIGIN_SESSION)
     # The attempt index is a header and is NOT part of the hash: a retry must be
     # byte-identical to the request it repeats, or it would collide with itself (409).
-    digest = hashlib.sha256(json.dumps(payload.model_dump(), sort_keys=True).encode()).hexdigest()
+    digest = request_digest(payload)
     existing = _existing_request(db, session_id, payload.request_id, digest)
     if existing:
         return existing
@@ -153,8 +311,10 @@ def _infer(db, session_id: str, payload: LiveInput):
     db.rollback()
     window, provenance = _run_models(payload)
     timing.record_provider_timings(provenance.get("timing_ms"))
-    return _persist_window(db, session_id, window, mode="LIVE_MODEL_RUNTIME", provenance=provenance,
-                           request_id=payload.request_id, digest=digest, started=started)
+    provenance = {**provenance, "captured_at_source": payload.captured_at_source}
+    return _persist_window(db, session_id, window, mode=inference.LIVE_MODE, provenance=provenance,
+                           request_id=payload.request_id, digest=digest, started=started,
+                           evidence=evidence_of(payload))
 
 
 @router.post("/{session_id}/infer", response_model=RiskUpdate, status_code=201)

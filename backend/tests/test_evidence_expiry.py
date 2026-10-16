@@ -80,11 +80,13 @@ def _live_session(client, monkeypatch, sid, tolerance=None):
     return sid
 
 
-def _request(request_id, *, vision_at=None, telemetry_at=None):
-    """A /infer body. A branch is present iff its capture time is given."""
+def _request(request_id, *, vision_at=None, telemetry_at=None, image="stub-frame"):
+    """A /infer body. A branch is present iff its capture time is given. Requests of one session
+    that must be DIFFERENT frames pass different ``image`` strings: the same bytes again are a
+    repeat of the accepted frame (R10), judged by the stamp it first arrived with."""
     body = {"request_id": request_id}
     if vision_at is not None:
-        body.update(image_base64="stub-frame", captured_at=vision_at.isoformat())
+        body.update(image_base64=image, captured_at=vision_at.isoformat())
     if telemetry_at is not None:
         body.update(telemetry_features=TELEMETRY_FEATURES, telemetry_timestamp=telemetry_at.isoformat(),
                     telemetry_source="prepared_replay")
@@ -243,7 +245,8 @@ def test_it_expiry_sensitivity_the_default_tolerance_is_3_seconds(api, fake_cloc
     fake_clock.set(0)
     fresh = _infer(client, sid, _request("a", vision_at=_ago(3.0), telemetry_at=at(0)))
     fake_clock.set(1000)
-    over = _infer(client, sid, _request("b", vision_at=at(1000) - timedelta(seconds=3.1), telemetry_at=at(1000)))
+    over = _infer(client, sid, _request("b", vision_at=at(1000) - timedelta(seconds=3.1), telemetry_at=at(1000),
+                                        image="stub-frame-2"))
     assert fresh["provenance"]["fusion_config"]["freshness_tolerance_s"] == 3
     assert fresh["modality_freshness"]["vision"] == "fresh"
     assert over["modality_freshness"]["vision"] == "missing" and over["provenance"]["vision_expired"] is True

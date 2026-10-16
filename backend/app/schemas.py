@@ -110,7 +110,28 @@ class RuntimeConfig(BaseModel):
         return self
 
 
+class VisionFrame(BaseModel):
+    """The identity of one camera frame: ``epoch`` is a session-wide, monotonic camera-start
+    counter (a restarted camera begins a new epoch) and ``index`` is the
+    ``requestVideoFrameCallback`` ``presentedFrames`` counter inside that epoch."""
+
+    model_config = ConfigDict(extra="forbid")
+    epoch: int = Field(ge=0)
+    index: int = Field(ge=0)
+
+
+# The R10 additions to ``LiveInput``. All are optional, so a request built before they existed is
+# still valid, and a value of None is LEFT OUT of the request hash (``canonical_body``): the same
+# HTTP body must keep the hash it had before the upgrade, or a retry that crosses a deploy would
+# turn from an idempotent replay into a 409.
+R10_OPTIONAL_FIELDS = ("telemetry_seq", "vision_frame", "captured_at_source")
+
+
 class LiveInput(BaseModel):
+    """One live request. ``captured_at`` is the VISION acquisition time and
+    ``telemetry_timestamp`` the TELEMETRY acquisition time (R10): the instant the evidence was
+    observed, not the instant the request was built. Their field names did not change."""
+
     model_config = ConfigDict(extra="forbid")
     request_id: str = Field(min_length=1, max_length=100, pattern=r"^[A-Za-z0-9_-]+$")
     image_base64: Optional[str] = Field(default=None, max_length=2_800_000)
@@ -118,6 +139,12 @@ class LiveInput(BaseModel):
     telemetry_features: Optional[TelemetryFeatures] = None
     telemetry_timestamp: Optional[str] = None
     telemetry_source: Literal["prepared_replay", "sensor", "missing"] = "missing"
+    # R10 observation identity. ``telemetry_seq`` is the session-wide, uncapped sequence number
+    # of the telemetry sample; ``vision_frame`` the (epoch, index) of the camera frame.
+    telemetry_seq: Optional[int] = Field(default=None, ge=0)
+    vision_frame: Optional[VisionFrame] = None
+    # Where ``captured_at`` came from. Recorded in the provenance only; it changes no verdict.
+    captured_at_source: Optional[Literal["capture_time", "callback", "client_clock"]] = None
 
     @field_validator("captured_at", "telemetry_timestamp")
     @classmethod
@@ -128,12 +155,25 @@ class LiveInput(BaseModel):
     def consistent_inputs(self):
         if self.image_base64 is not None and self.captured_at is None:
             raise ValueError("image requires captured_at")
+        if self.vision_frame is not None and self.image_base64 is None:
+            raise ValueError("vision_frame requires an image")
         if self.telemetry_features is not None:
             if self.telemetry_timestamp is None or self.telemetry_source == "missing":
                 raise ValueError("telemetry requires timestamp and source")
         elif self.telemetry_source != "missing":
             raise ValueError("telemetry source requires feature values")
+        if self.telemetry_seq is not None and self.telemetry_features is None:
+            raise ValueError("telemetry_seq requires telemetry feature values")
         return self
+
+    def canonical_body(self) -> dict:
+        """The dict the request hash is computed over: every field, except an R10 field that
+        is None. Dropping the Nones is what keeps a pre-upgrade body's hash unchanged."""
+        body = self.model_dump()
+        for name in R10_OPTIONAL_FIELDS:
+            if body.get(name) is None:
+                body.pop(name, None)
+        return body
 
 
 class RiskUpdate(BaseModel):

@@ -84,10 +84,10 @@ def test_it_retry_identity_a_resend_after_a_lost_response_changes_nothing(
     first = infer(client, sid, body, 1)
     assert first.status_code == 201, first.text
     committed = snapshot(api_factory, sid)
-    # There is something to protect: a High streak is running and both watermarks are set.
+    # There is something to protect: a High segment is open and both watermarks are set.
     assert committed["runtime_state"]["captured_at"] == at(0).isoformat()
     assert committed["runtime_state"]["telemetry_timestamp"] == at(0).isoformat()
-    assert committed["runtime_state"]["high_since"] is not None
+    assert committed["runtime_state"]["high_srv_us"] is not None
     assert committed["next_window_id"] == 1
     assert len(committed["records"]) == 1
 
@@ -106,7 +106,8 @@ def test_it_retry_identity_a_resend_after_a_lost_response_changes_nothing(
 
     # Numbering has no hole: the next NEW request is window 2.
     fake_clock.set(replay_after_ms + 500)
-    fresh = _live_age_request("next", at(replay_after_ms + 500), at(replay_after_ms + 500))
+    fresh = {**_live_age_request("next", at(replay_after_ms + 500), at(replay_after_ms + 500)),
+             "image_base64": "next-frame"}
     nxt = infer(client, sid, fresh, 1)
     assert nxt.status_code == 201, nxt.text
     assert nxt.json()["window_id"] == 2
@@ -208,7 +209,8 @@ def test_it_retry_stale_late_resends_do_not_accumulate_sustained_high(
     records = []
     for index, captured in enumerate((0, 2000, 4000)):
         fake_clock.set(captured + 6000)
-        body = _live_age_request(f"late-{index}", at(captured), at(captured))
+        body = {**_live_age_request(f"late-{index}", at(captured), at(captured)),
+                "image_base64": f"late-frame-{index}"}  # three DIFFERENT frames, each captured at its own time
         response = infer(client, sid, body, 3)
         assert response.status_code == 201, response.text
         records.append(response.json())
@@ -219,7 +221,7 @@ def test_it_retry_stale_late_resends_do_not_accumulate_sustained_high(
         assert record["RiskLevel"] is None
     assert [r["AlertSeverity"] for r in records] == [None, None, None]
     state = snapshot(api_factory, sid)["runtime_state"]
-    assert state["high_since"] is None and state["low_since"] is None  # the timers are suspended
+    assert state["high_srv_us"] is None and state["low_srv_us"] is None  # the timers are suspended
     assert "last_severity" not in state  # nothing was ever latched
 
 
@@ -239,8 +241,10 @@ def test_it_retry_texts_the_409_and_422_details_the_client_classifies_on(api, fa
     assert (hash_conflict.status_code, hash_conflict.json()["detail"]) == (
         409, "request_id already used for different input")
 
-    # An older captured_at than the one already accepted: a late frame.
-    late = infer(client, sid, _live_age_request("late", at(0), at(1000)), 1)
+    # An older captured_at than the one already accepted: a late frame. It is a different frame
+    # (another image) - a repeat of the accepted one would be judged by its first acquisition time,
+    # not by the stamp it re-sends - and its telemetry reading is older than the accepted one too.
+    late = infer(client, sid, {**_live_age_request("late", at(0), at(0)), "image_base64": "late-frame"}, 1)
     assert (late.status_code, late.json()["detail"]) == (409, "Out-of-order evidence timestamp")
 
     # A replay-mode session addressed as a live one, and the reverse.

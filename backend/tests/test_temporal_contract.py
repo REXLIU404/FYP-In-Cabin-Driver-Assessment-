@@ -8,7 +8,7 @@ purpose - none of them is imported from the implementation, so a changed constan
 cannot drag its own expectation along with it.
 
 UT-TIME-01  FSM boundaries                       UT-TIME-04  unavailable is not credited
-UT-TIME-02  freshness / gap / UTC offsets        UT-TIME-05  identical captured_at   (known limitation, R10)
+UT-TIME-02  freshness / gap / UTC offsets        UT-TIME-05  identical captured_at   (a requirement since R10)
 UT-TIME-03  EMA seed convention                  UT-TIME-06  expired-only stream never alerts (ruling A)
 UT-EMA-PARITY-01  Python half; the TypeScript half is ai/src/emaParity.test.ts
 IT-LIVE-AGE  evidence age through POST /infer: the 3 s boundary, a 30-day-old frame, and an
@@ -498,33 +498,35 @@ def test_a_latched_alert_survives_a_blackout_through_the_persisted_state(api, ap
     assert post_window(client, sid, p=HIGH)["AlertSeverity"] == "HIGH_ALERT"
 
 
-# --------------------------------------------------------- UT-TIME-05 (limitation)
+# --------------------------------------------------------- UT-TIME-05 (R10 requirement)
 class _StubProvider:
-    """Stands in for the trained provider: a fresh, High vision window that echoes
-    the request's captured_at into the provenance, exactly as trained.py does."""
+    """Stands in for the trained provider's MODEL: vision is 'fresh' and High exactly when the
+    request carries an image (as trained.py decides), missing otherwise; it echoes the request's
+    captured_at into the provenance as trained.py does. Only the probability is made up - the
+    image bytes, the acquisition time and the identity metadata all reach the real router."""
 
     def infer(self, data):
-        window = WindowInput(P_distraction=1.0, P_telemetry_anomaly=0.0,
-                             vision_status="fresh", telemetry_status="missing")
+        has_image = data.image_base64 is not None
+        window = WindowInput(P_distraction=1.0 if has_image else 0.0, P_telemetry_anomaly=0.0,
+                             vision_status="fresh" if has_image else "missing", telemetry_status="missing")
         provenance = {"provider": "StubProvider", "request_id": data.request_id,
-                      "vision_source": "camera_frame", "telemetry_source": "missing",
+                      "vision_source": "camera_frame" if has_image else "missing", "telemetry_source": "missing",
                       "captured_at": data.captured_at, "telemetry_timestamp": data.telemetry_timestamp}
         return window, provenance
 
 
-def test_ut_time_05_identical_captured_at_is_accepted_and_accumulates_alert_time_known_limitation(
-        api, fake_clock, monkeypatch):
-    """KNOWN LIMITATION, asserted as the CURRENT behaviour - not a desired one.
+# Two different image payloads (base64 of b"frame-A" / b"frame-B"): content is irrelevant to the
+# stub, but their bytes differ, so the router sees two different observations.
+IMAGE_A, IMAGE_B = "ZnJhbWUtQQ==", "ZnJhbWUtQg=="
 
-    The out-of-order guard in routers/windows.py is a strict ``<``, so a window whose
-    captured_at EQUALS the previous one is accepted. Three requests that carry the very
-    same frame timestamp therefore all pass, and the repeated old evidence accumulates
-    sustained-High time all the way to HIGH_ALERT.
 
-    Ruling A (expired evidence scores as missing) is implemented and does NOT close this:
-    every frame here is only 0 - 2 s old, so none of them expires. Closing it needs an
-    observation identity / evidence clock (R10), which is not decided yet: this limitation
-    belongs to R10, not to ruling A."""
+def test_ut_time_05_identical_captured_at_does_not_accumulate_alert_time(api, fake_clock, monkeypatch):
+    """REQUIREMENT (R10). It was the KNOWN LIMITATION of ruling A: three requests carrying the
+    very same frame at 0 / 1 / 2 s accumulated sustained-High time to HIGH_ALERT, because the
+    server clock was the only timer. Now the first request registers the frame; the other two
+    are REPEATs of it, which can finish the wall clock but can never move the source span, so
+    the alert never leaves CAUTION however long the same frame is re-sent (every frame here is
+    only 0 - 2 s old, so none expires: the expiry rule is not what holds it back)."""
     from app.providers import trained
     monkeypatch.setattr(trained, "get_provider", lambda: _StubProvider())
     client, _ = api
@@ -536,15 +538,18 @@ def test_ut_time_05_identical_captured_at_is_accepted_and_accumulates_alert_time
     for index, ms in enumerate((0, 1000, 2000)):
         fake_clock.set(ms)
         response = client.post("/api/sessions/live-ut05/infer",
-                               json={"request_id": f"frame{index}", "captured_at": captured_at})
+                               json={"request_id": f"frame{index}", "image_base64": IMAGE_A,
+                                     "captured_at": captured_at})
         assert response.status_code == 201, response.text  # 409 would mean the guard caught it
         results.append(response.json())
-    assert [r["AlertSeverity"] for r in results] == ["CAUTION", "CAUTION", "HIGH_ALERT"]
+    assert [r["AlertSeverity"] for r in results] == ["CAUTION", "CAUTION", "CAUTION"]
+    assert [r["provenance"]["vision_obs"] for r in results] == ["new", "repeat", "repeat"]
     assert {r["provenance"]["captured_at"] for r in results} == {captured_at}
-    # Control: the guard does exist - an OLDER stamp is refused.
+    # Control: the guard does exist - an OLDER stamp on another frame is refused.
     fake_clock.set(3000)
     older = client.post("/api/sessions/live-ut05/infer",
-                        json={"request_id": "older", "captured_at": (at(0) - timedelta(milliseconds=1)).isoformat()})
+                        json={"request_id": "older", "image_base64": IMAGE_B,
+                              "captured_at": (at(0) - timedelta(milliseconds=1)).isoformat()})
     assert older.status_code == 409
 
 
@@ -569,9 +574,9 @@ def test_out_of_order_guard_survives_a_gap(api, api_factory, fake_clock, monkeyp
     created = client.post("/api/sessions", json={"session_id": sid, "operation_mode": "LIVE_MODEL_RUNTIME"})
     assert created.status_code == 201, created.text
 
-    def infer(request_id, stamp):
+    def infer(request_id, stamp, image):
         return client.post(f"/api/sessions/{sid}/infer",
-                           json={"request_id": request_id, "captured_at": stamp.isoformat()})
+                           json={"request_id": request_id, "image_base64": image, "captured_at": stamp.isoformat()})
 
     def persisted_state():
         with api_factory() as db:
@@ -584,12 +589,12 @@ def test_out_of_order_guard_survives_a_gap(api, api_factory, fake_clock, monkeyp
     # 1. The first frame sets the watermark.
     first_stamp = at(10_000)
     fake_clock.set(10_000)  # processed the instant it was captured: fresh
-    response = infer("f2-frame1", first_stamp)
+    response = infer("f2-frame1", first_stamp, IMAGE_A)
     assert response.status_code == 201, response.text
     state = persisted_state()
     assert state.get("captured_at") == first_stamp.isoformat()
-    high_since_before_gap = state["high_since"]
-    assert high_since_before_gap is not None
+    high_srv_before_gap = state["high_srv_us"]
+    assert high_srv_before_gap is not None
 
     # 2. A long pause: the last processed window was a minute ago.
     with api_factory() as db:
@@ -605,20 +610,21 @@ def test_out_of_order_guard_survives_a_gap(api, api_factory, fake_clock, monkeyp
     # from nothing but the simulated pause in step 2.
     second_stamp = at(11_000)
     fake_clock.set(11_000)
-    response = infer("f2-frame2", second_stamp)
+    response = infer("f2-frame2", second_stamp, IMAGE_B)
     assert response.status_code == 201, response.text
     state = persisted_state()
-    # Control: the gap really did clear the temporal memory (the High streak was
+    # Control: the gap really did clear the temporal memory (the High segment was
     # re-anchored to this window). Without this the test could pass vacuously.
-    assert state["high_since"] > high_since_before_gap
+    assert state["high_srv_us"] > high_srv_before_gap
 
     # 4. ...and the watermark is still there, holding the newest accepted stamp.
     assert state.get("captured_at") == second_stamp.isoformat()
     accepted = record_count()
     assert accepted == 2
 
-    # 5. An older frame is refused and leaves nothing behind.
-    response = infer("f2-frame3", at(10_500))  # older than the watermark (11 s)
+    # 5. An older frame (a different image: a repeat of one would not be judged by its stamp) is
+    #    refused and leaves nothing behind.
+    response = infer("f2-frame3", at(10_500), "ZnJhbWUtQw==")  # older than the watermark (11 s)
     assert response.status_code == 409, response.text
     assert record_count() == accepted
     assert persisted_state()["captured_at"] == second_stamp.isoformat()
@@ -671,8 +677,8 @@ def test_out_of_order_guard_survives_a_gap_for_telemetry(api, api_factory, fake_
     state = persisted_state()
     assert state.get("telemetry_timestamp") == first_stamp.isoformat()
     assert "captured_at" not in state  # no image was sent: the vision watermark is not involved
-    high_since_before_gap = state["high_since"]
-    assert high_since_before_gap is not None
+    high_srv_before_gap = state["high_srv_us"]
+    assert high_srv_before_gap is not None
 
     # 2. A long pause: the last processed window was a minute ago.
     with api_factory() as db:
@@ -691,9 +697,9 @@ def test_out_of_order_guard_survives_a_gap_for_telemetry(api, api_factory, fake_
     response = infer("r13-frame2", second_stamp)
     assert response.status_code == 201, response.text
     state = persisted_state()
-    # Control: the gap really did clear the temporal memory (the High streak was
+    # Control: the gap really did clear the temporal memory (the High segment was
     # re-anchored to this window). Without this the test could pass vacuously.
-    assert state["high_since"] > high_since_before_gap
+    assert state["high_srv_us"] > high_srv_before_gap
 
     # 4. ...and the telemetry watermark is still there, holding the newest accepted stamp.
     assert state.get("telemetry_timestamp") == second_stamp.isoformat()
@@ -871,7 +877,8 @@ def test_it_live_age_an_expired_only_stream_never_reaches_high_alert_through_inf
     """Ruling A on the LIVE path, driven through POST /infer - the requirement that replaced the
     D13 behaviour snapshot. Every frame, and every telemetry reading, is 30 days old at
     processing time, and each stamp is newer than the last (so the out-of-order guard accepts
-    them) and different from it (so this is not the identical-timestamp case of UT-TIME-05).
+    them) and belongs to a different frame (so this is not the repeated-observation case of
+    UT-TIME-05).
     Both branches expire, so every window is UNAVAILABLE with a null AlertSeverity and the alert
     timers are suspended: the server clock advancing 1000 ms per request cannot sustain High,
     however long the stream runs."""
@@ -882,7 +889,8 @@ def test_it_live_age_an_expired_only_stream_never_reaches_high_alert_through_inf
     for index, ms in enumerate((0, 1000, 2000, 3000, 4000)):
         fake_clock.set(ms)
         stamp = at(ms) - timedelta(days=30)
-        response = client.post(f"/api/sessions/{sid}/infer", json=_live_age_request(f"old{index}", stamp, stamp))
+        body = {**_live_age_request(f"old{index}", stamp, stamp), "image_base64": f"old-frame-{index}"}
+        response = client.post(f"/api/sessions/{sid}/infer", json=body)
         assert response.status_code == 201, response.text  # 409 would mean the guard caught it
         records.append(response.json())
     assert len({r["provenance"]["captured_at"] for r in records}) == 5
@@ -896,8 +904,8 @@ def test_it_live_age_an_expired_only_stream_never_reaches_high_alert_through_inf
             None, None, None, None)
     with api_factory() as db:
         state = db.get(models.SessionMeta, sid).runtime_state
-    # Suspended, not running: no High streak was ever started, and nothing is latched.
-    assert state["high_since"] is None and state["low_since"] is None
+    # Suspended, not running: no High segment was ever opened, and nothing is latched.
+    assert state["high_srv_us"] is None and state["low_srv_us"] is None
     assert state["unavailable_since"] == epoch_ms(0)
     assert "last_severity" not in state
 

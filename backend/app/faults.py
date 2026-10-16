@@ -57,6 +57,11 @@ CATEGORY_IDEMPOTENCY_CONFLICT = "idempotency_conflict"      # same request_id, d
 # client must tell apart from a hash conflict (different UI text, D02), so it cannot
 # share a category with it.
 CATEGORY_OUT_OF_ORDER_EVIDENCE = "out_of_order_evidence"
+# R10: an observation identity (a telemetry seq, a vision (epoch, index)) was sent again with
+# DIFFERENT content or a different acquisition time. It is a 409 too, and it must not be read
+# as either neighbour: it is not the same request_id reused (idempotency_conflict) and not an
+# older stamp (out_of_order_evidence), so the client can word it exactly.
+CATEGORY_OBSERVATION_CONFLICT = "observation_conflict"
 CATEGORY_MODELS_UNAVAILABLE = "models_unavailable"          # 503, not retryable
 CATEGORY_MODEL_RUNTIME = "model_runtime"                    # 500, retryable
 CATEGORY_STORAGE = "storage"                                # 500, retryable
@@ -64,6 +69,7 @@ CATEGORY_TRANSPORT_TIMEOUT = "transport_timeout"            # client-side only; 
 CATEGORY_UNKNOWN = "unknown"
 ERROR_CATEGORIES = (CATEGORY_INPUT_VALIDATION, CATEGORY_MODE_CONFLICT, CATEGORY_NOT_FOUND,
                     CATEGORY_IDEMPOTENCY_CONFLICT, CATEGORY_OUT_OF_ORDER_EVIDENCE,
+                    CATEGORY_OBSERVATION_CONFLICT,
                     CATEGORY_MODELS_UNAVAILABLE, CATEGORY_MODEL_RUNTIME, CATEGORY_STORAGE,
                     CATEGORY_TRANSPORT_TIMEOUT, CATEGORY_UNKNOWN)
 
@@ -74,6 +80,7 @@ RETRYABLE = {
     CATEGORY_NOT_FOUND: False,
     CATEGORY_IDEMPOTENCY_CONFLICT: False,
     CATEGORY_OUT_OF_ORDER_EVIDENCE: False,
+    CATEGORY_OBSERVATION_CONFLICT: False,  # the same identity with other content stays a conflict
     CATEGORY_MODELS_UNAVAILABLE: False,   # a missing file does not appear by itself
     CATEGORY_MODEL_RUNTIME: True,
     CATEGORY_STORAGE: True,

@@ -108,7 +108,9 @@ def test_missing_expired_and_out_of_order_inputs(api):
     assert result["modality_freshness"] == {"vision": "missing", "telemetry": "missing"}
     data = payload("current")
     assert client.post(f"/api/sessions/{sid}/infer", json=data).status_code == 201
-    old = {**payload("old"), "captured_at": "2000-01-01T00:00:00+00:00"}
+    # A DIFFERENT frame (red, not the accepted blue one) with an old stamp: out of order. The same
+    # image again would be a repeat of the accepted observation, judged by its first stamp.
+    old = {**payload("old"), "image_base64": image_data((255, 0, 0)), "captured_at": "2000-01-01T00:00:00+00:00"}
     assert client.post(f"/api/sessions/{sid}/infer", json=old).status_code == 409
     other = live_session(client, "expired")
     stale = {**payload("stale"), "captured_at": "2000-01-01T00:00:00+00:00"}
