@@ -101,16 +101,20 @@ in `useCameraPreview`; API access in `frontend/src/api`; demo persistence in `ut
   Prepared probability inputs are restricted to prepared sessions. Preserve SQLite and
   existing records; do not recreate databases to fix migration errors.
 - **AlertSeverity is a real FSM**, not a direct mapping: HIGH_ALERT needs RiskLevel High sustained
-  ≥ 2s (wall-clock `Date.now()`, not window count); recovery to NORMAL needs Low sustained ≥ 10s.
-  When changing risk logic or the FSM, update the tests in `ai/src/*.test.ts`.
-- **Evidence expiry — ruling A (user-confirmed 2026-10-13; implemented in phase 5 of
-  `.planning/system-track/task_plan.md`, the code still uses the 0.45 stale tier until then)**:
+  ≥ 2s; recovery to NORMAL needs Low sustained ≥ 10s. The replay path (`ai/src/alertFsm.ts`, and the
+  backend's PREPARED mode) times this on the wall clock. **Live (R10, user-approved 2026-10-16)**
+  additionally requires source-time progress: the streak's span of NEW, same-direction observations
+  (first window span 0) must also reach 2 s / 10 s, repeats never advance it, and the modality that last
+  advanced it must still support the level when the transition fires. Ages use the canonical (first-seen)
+  acquisition time. When changing risk logic or the FSM, update the tests in `ai/src/*.test.ts` and
+  `backend/tests/`.
+- **Evidence expiry — ruling A (user-confirmed 2026-10-13; implemented in P0-D13, 2026-10-15)**:
   evidence older than `freshness_tolerance_s` scores as **missing** (factor 0) while provenance
   keeps `{modality}_expired` / `{modality}_age_s`; the runtime stops producing `stale`, and 0.45
   survives only for reading and rendering historical stale records. 3 s is a configurable
   **design threshold** (default 3 s, per session in (0, 30]) — never call it a validated safety
   threshold. Expiry alone does not stop repeated evidence advancing the alert timers; that is
-  Codex R10, still undecided.
+  R10 (approved 2026-10-16, see the FSM bullet).
 
 ## Scope guardrails (keep the project on-route)
 

@@ -39,6 +39,7 @@
 
   两处分歧都会让同一串输入在前后端算出不同的 `P_distraction`。**R1 裁定：以 Python 后端的语义为准**（后端是 canonical 产出方），即：首帧**不** round（保持 provider 原始精度），stale/missing 之后**重新 seed 不做 EMA**。TS 侧改为匹配。注意 `test_audit_regressions.py:139` 与 `test_restart.py:44`（钉死 `.312`）依赖现有 Python 行为，裁定方向正是「不动 Python」，这两个测试应保持绿。
 - **Alert FSM 三态** `NORMAL / CAUTION / HIGH_ALERT`：High 持续 `>= 2000ms` 升 HIGH_ALERT（1900ms 仍 CAUTION），Low 持续 `>= 10000ms` 回 NORMAL（9900ms 保持原 severity），Medium 立即 CAUTION 且清空 High streak。测试中 **2000 / 10000 必须硬编码**，不得从实现 import 常量。
+  - **R10（2026-10-16 用户批准 v3，第 5 条采用 estp5，并附 3 个细节；仅 `LIVE_MODEL_RUNTIME`，PREPARED 保留旧 FSM）**：阈值仍是 2000 / 10000 ms，Task 5 与 P0-D13 的契约不变。升级（恢复）需要**同时满足**两个条件：(a) 服务端时间自本段第一个有 NEW 支撑的窗口起 ≥ 阈值；(b) 来源跨度 `H_end − H_src` ≥ 阈值。来源跨度在首窗为 0（取该窗口 NEW 支撑观测中最新的采集时间作为基线），只能由 NEW 支撑观测推进；条件 (b) 满足之后，本段任何窗口（包括 REPEAT 窗口）都可以完成条件 (a)。**完成守卫**：最后一次推进 `H_end` 的那一路，在触发转移的窗口里必须仍然有效，且单分支分数仍在会话阈值的支撑一侧。支撑判定用会话的 `threshold_low` / `threshold_high`，单分支分数按 `round_half_up(100·P, 1)` 计算。观测身份以 telemetry seq 与 vision `(epoch, presentedFrames)` 为主，年龄按**首次登记的规范采集时间**、用未舍入的精确值计算，REPEAT 永不刷新这个时间。EMA 只在 NEW vision 上更新，断链后不复活。已知限制：来源时间戳抖动（例如 1975 ms）会让告警延迟一个样本。
 - `P_telemetry_anomaly` 是保留的历史字段名 = `1 − P(Safe)`，**不是**无监督异常检测。不得改名。
 - **遥测 8 特征固定顺序**：`speed_kmph, accel_x, accel_y, brake_pressure, steering_angle, throttle, lane_deviation, headway_distance`。
 - 只做 **decision-level late fusion**。权重是透明设计参数，不是学习出来的安全权重；`RiskLevel` 是派生的运行等级，不是事故严重度标签。
@@ -55,7 +56,7 @@
   **R4 更正（Codex 独立审阅 R08 判 INCORRECT，已核实）**：上一段是错的。`run_inference` 用 `provenance.captured_at` / `telemetry_timestamp` **重新判定** freshness（`backend/app/inference.py:107-108`），不依赖 provider 给的 `fresh`。`backend/tests/test_live_inference.py:114-117` 本身就断言：旧 `captured_at` 经 `POST /infer` 得到 `stale` 与 `DEGRADED`。正常浏览器操作下 age 接近 0，但网络或处理延迟超过 3 秒、客户端时钟偏差、或任何直接调用 `/infer` 的客户端都能让 Live 出现 stale。**因此 D13 在 Live 主运行时可达**，其优先级由「System Freeze 前再决定」提升为待用户裁定的政策项（见 R4 记录）。
 
   **裁定 A（2026-10-13，用户本人确认）**：D13 的政策已定，见上面「freshness 权重」一条；在阶段 5 实施，此前代码不变，`UT-TIME-06` 仍钉当前行为。两点限制须同时记住：
-  - 只靠过期关不掉 `UT-TIME-05`：持续阈值 2 s 小于 3 s，同一证据在 3 s 内重复提交仍会累积到 `HIGH_ALERT`。「旧证据不推进告警计时」需要 R10 的观察身份 / 证据时钟，**R10 与 R14 仍待裁定**。
+  - 只靠过期关不掉 `UT-TIME-05`：持续阈值 2 s 小于 3 s，同一证据在 3 s 内重复提交仍会累积到 `HIGH_ALERT`。「旧证据不推进告警计时」需要 R10 的观察身份 / 证据时钟。**R10 已于 2026-10-16 批准 v3**（见上面的 Alert FSM 一条），**R14 仍待裁定**。
   - 阶段 5 落地时，以下测试与数值会如实变化（它们现在钉的是当前行为，届时会响亮失败，不会空过）：`IT-LIVE-AGE` 的 3001 ms 用例、30 天用例与 D13 快照改为期望 `missing` + `{modality}_expired = true`；两条 gap 测试（`captured_at` 版与 telemetry 版）第 1 步依赖「只有 stale 证据仍得 High」，须改用 fake clock；F1 的 `missing_cases.csv` W16 随之重算（62.5 → 60.0）；Task 8 中距采集超过 3 s 才成功的重试窗口，将从 stale / DEGRADED 变为过期。
 
   **本阶段的义务（不是修复，是留证）**：
@@ -1079,6 +1080,17 @@ npm run build
 用户批准：裁定 A（D13 / Codex R09）不再等到阶段 5，**在 Task 8 之后、Task 9 之前**作为 P0-D13 实施。理由：D13 是门禁之外未关的 P0，而且已经裁定；Task 10 的端到端与单分支测试应断言最终行为，而不是已知错误的行为。实施后仍有两处缺口，都由 R10 负责：UT-TIME-05（3 s 内重复同一证据仍累积告警）；Live 遥测时间戳是发送时刻，裁定 A 对遥测要等改为采集时间后才真正生效。
 
 Task 8 转入 Task 10 的端到端断言（React 绑定层没有单测）：停止面板的 Retry 用同一会话且 `X-Attempt-Index` = 4；摄像头意外断开与主动 Stop Camera 显示不同；New Session 失败后 Retry 新建会话。
+
+## R9 修订记录（2026-10-16）：R10 证据支撑的时间持续性政策
+
+经过 v1（控制者起草）→ 对抗式核查 → v2（双条件）→ Codex 独立评审（REVISE）→ v3，用户于 2026-10-16 批准 v3，第 5 条采用控制者的 estp5 变体，并附 3 个细节：
+1. 年龄用未舍入的精确值计算并比较；REPEAT 严禁刷新规范采集时间。
+2. 墙钟完成守卫。按用户意图实施为：最后一次推进 `H_end` 的那一路，在触发转移的窗口里必须仍然有效且仍在支撑一侧。字面写法（任一路在支撑一侧）挡不住用户描述的情形：模拟器中 2.5 s 放行，意图版挡住，且在全部既有场景上与字面版一致。
+3. 测试用手算的字面量期望；去掉「来源时间戳抖动下第二个样本必定触发告警」的假设；给 Codex 的评审包补齐根目录 `.gitignore`。
+
+规格全文、Codex 评审与模拟器归档在 SDD 目录的 `r10/` 下（git 忽略）。实施拆为 **R10-A 后端**（观测身份、规范时间、EMA、FSM、hash 兼容、新故障类别）与 **R10-B 前端**（rVFC 帧元组、epoch、遥测 seq 与采集时间游标、payload、文案）。浏览器与导出验证归 Task 10 第 2 部分。
+
+Task 10 Step 2A 的 ST-BRANCH-T-CONTINUITY：告警在第 2 个连续 High 遥测样本处触发，**前提是**采集时间为算术值、跨度恰为 2000 ms；来源时间抖动使跨度 < 2000 ms 时，延迟到第 3 个样本（已知限制 K2），测试不得写死「第 2 个样本必定触发」。
 
 ## 执行顺序与依赖
 
