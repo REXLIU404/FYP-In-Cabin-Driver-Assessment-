@@ -332,6 +332,71 @@ def test_g6_completion_guard_the_branch_must_also_still_be_effective():
     assert out.AlertSeverity == "CAUTION"
 
 
+def test_g6_the_low_completion_guard_is_as_strict_as_the_high_one():
+    """The Low direction of user detail 2 (T5). A latched alert, weights 0.2 / 0.8, tolerance 30 s.
+    First window: vision's frame (acquired 1000 ms before it is processed) is the newest NEW Low
+    supporter, telemetry's older sample (1500 ms before) is registered and from then on only re-sent.
+    Vision's frame of 9000 ms puts the source span at 10000 ms while the wall clock is at 9000 ms.
+    At 10000 ms both conditions hold - but vision's NEW frame is HIGH (90.0): the fused score is
+    0.2 * 90 + 0.8 * 10 = 26.0, still Low, and telemetry's re-sent sample is an effective branch on
+    the Low side. The branch that supplied the span no longer supports, so the alert HOLDS. A guard
+    written only for High, or the literal 'any effective branch supports', would recover here."""
+    s = Live(weight_vision=0.2, weight_telemetry=0.8, freshness_tolerance_s=30).latched()
+    first = s.tick(0, vision=new(-1000), telemetry=new(-1500), pv=L, pt=L)
+    assert (first.RiskScore, first.RiskLevel, first.AlertSeverity) == (10.0, "Low", "HIGH_ALERT")
+    assert (s.state["low_src_us"], s.state["low_contrib"]) == (us(-1000), "vision")
+    filled = s.tick(9000, vision=new(9000), telemetry=repeat(-1500), pv=L, pt=L)
+    assert filled.AlertSeverity == "HIGH_ALERT"  # span 10000, wall only 9000
+    assert s.state["low_end_us"] - s.state["low_src_us"] == 10_000_000
+    flipped = s.tick(10_000, vision=new(10_000), telemetry=repeat(-1500), pv=H, pt=L)
+    assert (flipped.RiskScore, flipped.RiskLevel) == (26.0, "Low")
+    assert flipped.AlertSeverity == "HIGH_ALERT"  # guard: contrib=vision, now 90.0 -> not on the Low side
+    assert s.state["low_end_us"] == us(9000)  # the High frame moved nothing
+    # The guard is a condition of the moment, not a verdict: vision supports Low again.
+    again = s.tick(10_500, vision=new(10_500), telemetry=repeat(-1500), pv=L, pt=L)
+    assert again.AlertSeverity == "NORMAL"
+
+
+@pytest.mark.parametrize("last_ms,expected", [(9999, "HIGH_ALERT"), (10_000, "NORMAL")])
+def test_g6_low_the_wall_clock_holds_on_its_own_and_a_repeat_window_completes_it(last_ms, expected):
+    """The Low direction of the wall-clock condition, isolated. A latched alert, telemetry alone.
+    Its Low sample at 0 ms opens the segment; at 5000 ms a NEW Low sample dated 5 s ahead (inside the
+    future tolerance) covers the 10000 ms source span at once, while the server clock has run only
+    5000 ms: the alert holds. Re-sending that sample at 9999 ms is still HIGH_ALERT; at 10000 ms the
+    wall clock is complete and a REPEAT window - no new observation in it - recovers (estp5)."""
+    s = Live(freshness_tolerance_s=30).latched()
+    assert s.tick(0, telemetry=new(0), pt=L).AlertSeverity == "HIGH_ALERT"
+    jumped = s.tick(5000, telemetry=new(10_000), pt=L)
+    assert jumped.AlertSeverity == "HIGH_ALERT"
+    assert s.state["low_end_us"] - s.state["low_src_us"] == 10_000_000
+    assert s.tick(last_ms, telemetry=repeat(10_000), pt=L).AlertSeverity == expected
+
+
+def test_g6_completion_guard_the_branch_that_filled_the_span_must_not_be_expired_in_the_window():
+    """brief A5.1: an EFFECTIVE modality is not missing, not expired and has weight. A latched alert,
+    default weights and a 3 s tolerance. Vision's frames (acquired at their processing time) carry the
+    source clock, telemetry's samples are acquired 500 ms earlier and never move it. The first frame was
+    1 s old, so at 9000 ms the span is 10000 ms and the wall clock 9000 ms: the alert holds. At 10000 ms
+    both conditions hold, but the vision frame of that request was captured 3.5 s earlier (a stalled
+    pipeline): it is expired, scored as missing, and the Low fused score is telemetry's alone. The branch
+    that supplied the span is not effective any more, so the alert HOLDS although a fresh telemetry
+    sample supports Low. (An expired frame is scored 0.0, which merely LOOKS like Low support.)"""
+    s = Live().latched()
+    for ms, vision_acquired, telemetry_acquired in ((0, -1000, -1500), (3000, 3000, 2500),
+                                                    (6000, 6000, 5500), (9000, 9000, 8500)):
+        record = s.tick(ms, vision=new(vision_acquired), telemetry=new(telemetry_acquired), pv=L, pt=L)
+        assert (record.RiskScore, record.RiskLevel, record.AlertSeverity) == (10.0, "Low", "HIGH_ALERT")
+    assert (s.state["low_src_us"], s.state["low_end_us"], s.state["low_contrib"]) == (us(-1000), us(9000), "vision")
+    late = s.tick(10_000, vision=new(6500), telemetry=new(8900), pv=H, pt=L)
+    assert late.modality_freshness.vision == "missing" and late.provenance["vision_expired"] is True
+    assert (late.RiskScore, late.RiskLevel) == (10.0, "Low")
+    assert late.AlertSeverity == "HIGH_ALERT"
+    assert (s.state["low_end_us"], s.state["low_contrib"]) == (us(9000), "vision")
+    # Not a verdict: the next fresh vision frame supports again and finishes the recovery.
+    done = s.tick(10_500, vision=new(10_500), telemetry=new(10_000), pv=L, pt=L)
+    assert done.AlertSeverity == "NORMAL"
+
+
 def test_g6_a_medium_window_is_caution_at_once_and_restarts_the_count():
     s = Live()
     assert s.tick(0, telemetry=new(0), pt=H).AlertSeverity == "CAUTION"
@@ -375,6 +440,61 @@ def test_g7_a_branch_with_zero_weight_is_ignored_even_when_it_alarms():
                          for ms in range(0, 6001, 1000)])
     assert out == ["NORMAL"] * 7
     assert s.state["high_srv_us"] is None
+
+
+def test_g7_a_zero_weight_branch_cannot_move_the_span_of_the_effective_one():
+    """w_v = 0, w_t = 1. Telemetry's High sample is registered at 0 and only re-sent, so it never
+    advances the source clock. Vision sends a NEW, High frame every 500 ms. With no effective weight it
+    is not an effective modality: it does not support, does not open the segment and does not move the
+    end. The fused score is telemetry's 90.0 for the whole stream and the alert stays CAUTION. (If a
+    fresh branch counted whatever its weight, vision's frames would fill the 2000 ms span at 2000 ms.)"""
+    s = Live(weight_vision=0.0, weight_telemetry=1.0)
+    first = s.tick(0, vision=new(0), telemetry=new(0), pv=H, pt=H)
+    assert (first.RiskScore, first.RiskLevel, first.AlertSeverity) == (90.0, "High", "CAUTION")
+    assert s.state["high_contrib"] == "telemetry"
+    out = [s.tick(ms, vision=new(ms), telemetry=repeat(0), pv=H, pt=H) for ms in (500, 1000, 1500, 2000, 2500)]
+    assert [r.RiskScore for r in out] == [90.0] * 5
+    assert [r.AlertSeverity for r in out] == ["CAUTION"] * 5
+    assert s.state["high_end_us"] == s.state["high_src_us"] == us(0)
+
+
+@pytest.mark.parametrize("branch,weights", [
+    ("vision", {"weight_vision": 1.0, "weight_telemetry": 0.0}),
+    ("telemetry", {"weight_vision": 0.0, "weight_telemetry": 1.0}),
+])
+def test_g7_a_single_modality_escalates_and_recovers_while_the_other_branch_has_weight_zero(branch, weights):
+    """The branch with weight 1 sends a NEW sample every 2000 ms; the other branch (weight 0) sends a
+    NEW sample of the OPPOSITE kind each time. The latter changes nothing: High at 0 and 2000 ms
+    escalates at 2000 ms; Low from 4000 ms recovers at 14000 ms (10000 ms later), not before."""
+    def sample(ms, mine, theirs):
+        scores = {"pv": mine, "pt": theirs} if branch == "vision" else {"pt": mine, "pv": theirs}
+        return s.tick(ms, vision=new(ms), telemetry=new(ms), **scores)
+
+    s = Live(**weights)
+    high = [sample(ms, H, L) for ms in (0, 2000)]
+    assert [r.RiskScore for r in high] == [90.0, 90.0]
+    assert [r.AlertSeverity for r in high] == ["CAUTION", "HIGH_ALERT"]
+    low = [sample(ms, L, H) for ms in (4000, 6000, 8000, 10_000, 12_000, 14_000)]
+    assert [r.RiskScore for r in low] == [10.0] * 6
+    assert [r.AlertSeverity for r in low] == ["HIGH_ALERT"] * 5 + ["NORMAL"]
+
+
+def test_g7_an_expired_new_frame_is_not_an_effective_modality_and_opens_no_segment():
+    """brief A5.1, the 'not expired' part. Telemetry's Low sample (0.1) is registered at 0 ms in a Medium
+    window (vision 0.9 -> fused 50.0), which opens no Low segment. At 1000 ms a NEW vision frame arrives
+    that was captured 3.5 s earlier (a stalled pipeline): expired, scored as missing, so the fused score
+    is telemetry's 10.0 = Low. The expired frame's 0.0 merely looks like Low support: it is not an
+    effective modality and telemetry's REPEAT is no supporter, so NO segment may open."""
+    s = Live()
+    medium = s.tick(0, vision=new(0), telemetry=new(0), pv=H, pt=L)
+    assert (medium.RiskScore, medium.RiskLevel) == (50.0, "Medium")
+    late = s.tick(1000, vision=new(-2500), telemetry=repeat(0), pv=H, pt=L)
+    assert late.modality_freshness.vision == "missing" and late.provenance["vision_expired"] is True
+    assert (late.RiskScore, late.RiskLevel) == (10.0, "Low")
+    assert all(s.state[key] is None for key in SEGMENT_KEYS)
+    # Control: a fresh NEW telemetry sample is the first real supporter.
+    s.tick(2000, telemetry=new(2000), pt=L)
+    assert s.state["low_srv_us"] == us(2000) and s.state["low_contrib"] == "telemetry"
 
 
 def test_g7_a_zero_weight_branch_alone_is_not_an_assessment():
@@ -558,6 +678,31 @@ def test_g9_a_gap_breaks_the_chain():
     s.tick(0, vision=new(0), pv=0.1)
     assert s.tick(500, vision=new(500), pv=0.9).P_distraction == 0.38
     assert s.tick(3501, vision=new(3501), pv=0.9).P_distraction == 0.9  # 3001 ms since the last window
+
+
+def test_g9_vision_supports_with_its_smoothed_value_not_its_raw_one():
+    """brief A5.1: vision's P_m is the value AFTER the NEW-only EMA. alpha 0.35, default weights.
+    Telemetry's High sample (0.9) is registered at 0 and only re-sent. Vision's raw probability is 0.1
+    at 0 ms and 0.9 from then on, every 500 ms; the smoothed values are
+        0.1, 0.35*0.9 + 0.65*0.1 = 0.38, 0.315 + 0.65*0.38 = 0.562, 0.315 + 0.65*0.562 = 0.6803 -> 0.68,
+        0.315 + 0.65*0.68 = 0.757, 0.315 + 0.65*0.757 = 0.80705 -> 0.807.
+    From 500 ms the fused score is High (64.0, 73.1, 79.0 ...) but vision's own score first reaches 60 at
+    1500 ms (68.0; 56.2 at 1000 ms), so the High segment opens there and 2500 ms is only 1000 ms in:
+    CAUTION. Judged on the raw 0.9 it would open at 500 ms and escalate at 2500 ms. The segment is
+    2000 ms old, and telemetry's sample has expired, at 3500 ms: HIGH_ALERT."""
+    s = Live(ema_alpha=0.35)
+    first = s.tick(0, vision=new(0), telemetry=new(0), pv=0.1, pt=H)
+    assert (first.P_distraction, first.RiskScore, first.RiskLevel, first.AlertSeverity) == (0.1, 50.0, "Medium", "CAUTION")
+    for ms, smoothed, fused in ((500, 0.38, 64.0), (1000, 0.562, 73.1), (1500, 0.68, 79.0),
+                                (2000, 0.757, 82.9), (2500, 0.807, 85.4)):
+        record = s.tick(ms, vision=new(ms), telemetry=repeat(0), pv=0.9, pt=H)
+        assert (record.P_distraction, record.RiskLevel, record.AlertSeverity) == (smoothed, "High", "CAUTION"), ms
+        assert record.RiskScore == fused, ms
+        assert s.state["high_srv_us"] == (None if ms < 1500 else us(1500)), ms
+    s.tick(3000, vision=new(3000), telemetry=repeat(0), pv=0.9, pt=H)  # telemetry's sample is exactly 3 s old: fresh
+    done = s.tick(3500, vision=new(3500), telemetry=repeat(0), pv=0.9, pt=H)
+    assert done.modality_freshness.telemetry == "missing"
+    assert (done.RiskLevel, done.AlertSeverity) == ("High", "HIGH_ALERT")
 
 
 def test_g9_the_stored_value_is_the_smoothed_one_and_survives_a_gap():

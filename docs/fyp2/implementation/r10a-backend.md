@@ -236,3 +236,107 @@ pytest 数字的变化 **775 → 894 = +119**，逐项解释：
 - **R10-B（前端）**：rVFC 回调里一次生成并缓存 `(frame_id, 采集时间, JPEG 字节)` 元组；`vision_frame {epoch, index}` 与 `captured_at_source` 的发送，`epoch` 是会话内单调的摄像头启动序号；遥测的 `telemetry_seq` 与采集时间游标（分段基线 + seq，暂停 / 恢复 / 重试语义）；`LivePayload`、`retryPolicy.ts` 增加 `observation_conflict` 类别与文案（后端 detail 文本见 A7，不要说成「同一 request id」），并遵守 7.1 第 4 条的共存规则；顺带处理 Task 9 遗留的「对账失败时仍显示自动重发文案」。
 - **Task 10 第 2 部分**：浏览器端到端与导出（第 12 组）：rVFC 在未挂载 `<video>` 上是否触发、`captureTime` 是否提供、API = DB = latest = UI = export 逐 `window_id` 一致且保留身份 / 过期 provenance、capture → commit → render 延迟分布。
 - **阶段 5（裁定 A）**不依赖本项，也未被本项改动；本项保留了现行的过期规则。
+
+---
+
+## 修复轮 1
+
+独立评审在首个提交 `44b7c62` 上提出 4 条 Important 发现（均 `blocks_this_item`）。四条都是**测试缺口**：实现本身对 Low 方向、有效模态定义、NEW-only EMA 的行为是对的，评审用变异证明的是「这些行为没有测试守护」。所以本轮**没有改任何实现文件**（`backend/app/` 一字未动），只在 `backend/tests/test_r10_fsm.py` 里补了 7 个测试函数（9 个用例），并在隔离副本里把评审的 6 个变异逐个重跑，确认每一个现在都有明确变红的测试。
+
+开工核实：`git rev-parse --short HEAD` 输出 `44b7c62`，与任务一致；`git status --short` 只有预先存在的未跟踪项 `node_modules 2`。
+
+### F1 修复：Low 方向（T5 恢复）的完成守卫没有测试（X37、X38 存活）
+
+新增 `test_g6_the_low_completion_guard_is_as_strict_as_the_high_one`。手算（权重 0.2 / 0.8，容差 30 s，已锁存 HIGH_ALERT）：
+
+| 窗口 | 输入 | 手算 | 期望 |
+|---|---|---|---|
+| 0 ms | vision NEW 采集于 −1000（Low 0.1）、telemetry NEW 采集于 −1500（Low 0.1） | 融合 0.2·10 + 0.8·10 = 10.0 Low；两路都支撑，最新的是 vision（−1000 > −1500）：srv = 0，src = end = −1000，contrib = vision | 10.0 / Low / HIGH_ALERT |
+| 9000 ms | vision NEW 采集于 9000（Low）、telemetry REPEAT | end = 9000，跨度 9000 − (−1000) = 10000，墙钟只有 9000 | HIGH_ALERT |
+| 10000 ms | vision NEW 采集于 10000 且为 **High 0.9**、telemetry REPEAT（Low 0.1） | 融合 0.2·90 + 0.8·10 = 26.0 < 30 仍是 Low；墙钟 10000 ✓、跨度 10000 ✓；contrib = vision 现在 90.0，不在 Low 一侧 → 守卫失败；这个 High 帧不是 Low 支撑者，end 仍是 9000 | 26.0 / Low / **HIGH_ALERT** |
+| 10500 ms | vision NEW（Low） | end 前进到 10500，守卫成立 | NORMAL |
+
+这正是评审给的反例形状。X37（Low 的 guard 恒为真）与 X38（Low 的 guard 改成「任一路有效模态支撑即可」，此时 telemetry 的 REPEAT 10.0 在 Low 一侧）都会在 10000 ms 给出 NORMAL。
+
+### F2 修复：Low 段的墙钟条件没有被单独守护（X34 存活）
+
+新增 `test_g6_low_the_wall_clock_holds_on_its_own_and_a_repeat_window_completes_it`（参数 9999 / 10000 两个用例）。手算（默认权重，容差 30 s，已锁存，只有 telemetry）：
+
+- 0 ms：telemetry NEW 采集于 0（Low 0.1）→ 10.0，srv = src = end = 0，HIGH_ALERT。
+- 5000 ms：telemetry NEW 采集于 **10000**（超前 5 s，在 5 s 的未来容差之内，年龄取 max(0, −5000) = 0 仍新鲜）→ end = 10000，跨度 10000 ms 已满，墙钟只有 5000 ms → 必须 HIGH_ALERT。X34 在这里直接给出 NORMAL。
+- 9999 ms：同一样本的 REPEAT → 墙钟 9999 < 10000 → HIGH_ALERT。
+- 10000 ms：同一样本的 REPEAT → 墙钟 10000、跨度 10000、守卫成立 → NORMAL。这个窗口里没有任何新观测，是 Low 方向的 estp5「REPEAT 窗口可以完成墙钟条件」。
+
+### F3 修复：有效模态定义（未缺失、未过期、有效权重 > 0）没有测试（X21、X21b 存活）
+
+新增 4 个测试函数，分别守护定义的不同部分：
+
+1. `test_g7_a_zero_weight_branch_cannot_move_the_span_of_the_effective_one`（X21b 的反例 1）。w_v = 0、w_t = 1；telemetry High 在 0 ms 登记后只重发，vision 每 500 ms 发一张 NEW High 帧。手算：融合分恒为 telemetry 的 90.0（vision 有效权重 0），High；首窗两路采集时间相同（0），contrib 必须是 telemetry（零权重的 vision 不是支撑者）；500 … 2500 ms 全部 CAUTION，`high_end == high_src == 0`。X21b 让 vision 推进跨度，2000 ms 升级，并且首窗平局时 contrib 变成 vision。
+2. `test_g7_a_single_modality_escalates_and_recovers_while_the_other_branch_has_weight_zero`（brief 第 7 组的缺口，参数 vision / telemetry 两个用例）。有权重的一路每 2000 ms 发一个 NEW 样本，零权重的一路同时发**相反方向**的 NEW 样本：0 / 2000 ms 发 High（另一路 Low）→ 融合 90.0，`CAUTION → HIGH_ALERT`；4000 … 14000 ms 发 Low（另一路 High）→ 融合 10.0，14000 ms 恰好距 4000 ms 满 10000 ms，前五个窗口 HIGH_ALERT，第六个 NORMAL。这条本身不杀 X21b（相反方向的零权重样本本来就帮不上忙），它补的是 brief 要求但缺失的行为断言。
+3. `test_g7_an_expired_new_frame_is_not_an_effective_modality_and_opens_no_segment`（X21 的支撑者一半）。0 ms：vision 0.9 + telemetry 0.1，融合 50.0 Medium（登记 telemetry 样本但不开 Low 段）。1000 ms：vision NEW 帧**采集于 −2500**（3.5 s 前，超过 3 s 容差，过期，按缺失计），telemetry REPEAT（登记的 0.1，年龄 1.0 s 新鲜）→ 融合只剩 telemetry 的 10.0 Low。过期帧的 0.0「看上去」支撑 Low，但它不是有效模态，telemetry 的 REPEAT 也不是支撑者，所以 8 个段键必须全为 None。对照：2000 ms 的 telemetry NEW 才是第一个真正的支撑者（`low_srv == us(2000)`、`low_contrib == "telemetry"`）。
+4. `test_g6_completion_guard_the_branch_that_filled_the_span_must_not_be_expired_in_the_window`（X21 的守卫一半，对应评审反例 2）。默认权重、容差 3 s、已锁存；vision 帧采集于处理时间，telemetry 样本比 vision 早 500 ms（所以永远不会推进 end）：0 ms（−1000 / −1500）、3000（3000 / 2500）、6000（6000 / 5500）、9000（9000 / 8500），全部 10.0 / Low / HIGH_ALERT，之后 `src = −1000`、`end = 9000`、contrib = vision（跨度 10000，墙钟 9000）。10000 ms：墙钟与跨度同时满足，但这个请求里的 vision 帧是 NEW 且**采集于 6500**（3.5 s 前，过期），telemetry NEW 采集于 8900（1.1 s 前、不晚于 end，不推进）→ 融合只有 telemetry 的 10.0 Low；contrib（vision）在本窗口已不是有效模态 → HIGH_ALERT，end 与 contrib 不变。10500 ms 新的 vision 帧恢复支撑 → NORMAL。
+
+关于反例 2 的构造说明：评审给的是「vision 推满 Low 跨度，转移窗口里它的帧过期」。把它落成可执行的流时有一个约束：另一路（telemetry）在转移窗口必须仍然新鲜、仍在 Low 一侧，却不能是在 Low 段内登记的 NEW 样本（那会推进 `end` 并接过 contrib，守卫随之改看 telemetry，规格给出的就是 NORMAL）。我用的做法是让 vision 在转移窗口收到一帧**延迟到达的 NEW 帧**（采集于 3.5 s 前），telemetry 样本采集时间不晚于 `end`。这是规格内可达的流（流水线停顿），不依赖构造出来的、不可能出现的状态。
+
+### F4 修复：vision 的 P_m 用 NEW-only EMA 之后的值，没有测试（X22 存活）
+
+新增 `test_g9_vision_supports_with_its_smoothed_value_not_its_raw_one`。手算（α = 0.35，默认权重，telemetry High 0.9 在 0 ms 登记后只重发，vision 原始概率 0 ms 为 0.1、之后每 500 ms 为 0.9）：
+
+| 时间 | 平滑值 | 融合分 = 0.5·(100·平滑) + 45 | vision 自身分数 | 支撑 High |
+|---|---|---|---|---|
+| 0 | 0.1（seed） | 50.0 Medium | 10.0 | 否 |
+| 500 | 0.35·0.9 + 0.65·0.1 = 0.38 | 64.0 High | 38.0 | 否 |
+| 1000 | 0.315 + 0.65·0.38 = 0.562 | 73.1 | 56.2 | 否 |
+| 1500 | 0.315 + 0.65·0.562 = 0.6803 → 0.68 | 79.0 | 68.0 | **是，段在此打开（srv = 1500）** |
+| 2000 | 0.315 + 0.65·0.68 = 0.757 | 82.85 → 82.9 | 75.7 | 是 |
+| 2500 | 0.315 + 0.65·0.757 = 0.80705 → 0.807 | 85.35 → 85.4 | 80.7 | 是 |
+
+所以 2500 ms 距段起点只有 1000 ms，必须 CAUTION；断言还逐窗口检查 `high_srv`（1500 之前是 None，之后是 `us(1500)`）。3000 ms 的 telemetry 样本恰好 3.0 s（仍新鲜），3500 ms 它过期，融合只剩 vision，段龄 2000 ms、跨度 3500 − 1500 = 2000 → HIGH_ALERT。X22（支撑判定改用原始 0.9）在 500 ms 就开段，2500 ms 升级。
+
+### 本轮的命令与输出
+
+门禁（精确命令，与 `phase2-context.md` 一致）：
+
+```
+cd /Users/liu/Desktop/FYP2-Live-System
+export PYTHONDONTWRITEBYTECODE=1
+(cd backend && TMPDIR=$(mktemp -d) PYTHONPATH=. ../.venv/bin/python -m pytest tests -q -p no:cacheprovider)
+  -> 903 passed, 1 warning in 17.52s
+./node_modules/.bin/vitest run --no-cache
+  -> Test Files  28 passed (28) / Tests  771 passed (771)
+./node_modules/.bin/tsc --noEmit
+  -> exit 0
+./node_modules/.bin/eslint .
+  -> exit 0
+```
+
+pytest 数字的变化 **894 → 903 = +9**：`test_r10_fsm.py` 新增 7 个函数、9 个用例（F1 1 个、F2 2 个〔参数化〕、F3 的 4 个函数共 5 个〔其中单模态那条参数化为 2〕、F4 1 个）。既有 894 个用例一个都没有删、没有改、没有 skip。vitest 771 / tsc 0 / eslint 0 与上一轮一致（本轮没有碰前端与 `ai/src`）。`tests/test_r10_fsm.py` 单独 74 passed（原 65），与 `test_r10_observations.py` 合并 128 passed（原 119）。
+
+### 变异验证（隔离副本）
+
+方法与首轮相同：`git archive HEAD | tar -x` 到临时目录（`/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/r10fix1-mut-_o71efqn`），把真实工作树里改动过的后端文件（这一轮只有 `tests/test_r10_fsm.py`）叠上去，`.venv` 符号链接到本工作树的 `.venv`；每项变异改副本里的 `backend/app/inference.py` 一处 → 在副本的 `backend/` 里跑**全部** pytest → 从真实工作树把该文件拷回并 `filecmp` 逐字节确认一致 → 下一项。真实工作树不做任何变异（`git status` 在所有变异之后只有 `test_r10_fsm.py` 与预先存在的 `node_modules 2`）。副本里没有模型文件，依赖真实模型的 7 个测试 skip，这是预期。运行器：scratchpad 下的 `mut/mutate_fix1.py`，完整输出 `mut/fix1-mutation-run.log`（不入库）。
+
+- 未变异的副本：`896 passed, 7 skipped, 1 warning`（= 真实工作树的 903 − 7 个需要模型的测试）。
+- 还原后的副本：`896 passed, 7 skipped, 1 warning`。
+
+| # | 变异（`inference.py` 的改动） | 副本结果 | 变红的测试 |
+|---|---|---|---|
+| X37（F1） | 只对 High 做守卫：`guard = level == "Low" or (…)` | 2 failed, 894 passed | `test_g6_the_low_completion_guard_is_as_strict_as_the_high_one`、`test_g6_completion_guard_the_branch_that_filled_the_span_must_not_be_expired_in_the_window` |
+| X38（F1） | Low 的守卫改成字面版「任一路有效模态支撑即可」 | 2 failed, 894 passed | 同 X37 的两条 |
+| X34（F2） | Low 段去掉墙钟条件（High 保留） | 4 failed, 892 passed | `test_g6_low_the_wall_clock_holds_on_its_own_and_a_repeat_window_completes_it[9999-HIGH_ALERT]`、`[10000-NORMAL]`，另外 F1、F3-4 的两条 Low 守卫测试也变红 |
+| X21b（F3） | 有效模态 = 新鲜（忽略权重） | 1 failed, 895 passed | `test_g7_a_zero_weight_branch_cannot_move_the_span_of_the_effective_one` |
+| X21（F3） | 有效模态 = 请求带了观测（缺失、过期、权重都不看） | 3 failed, 893 passed | `test_g6_completion_guard_the_branch_that_filled_the_span_must_not_be_expired_in_the_window`、`test_g7_a_zero_weight_branch_cannot_move_the_span_of_the_effective_one`、`test_g7_an_expired_new_frame_is_not_an_effective_modality_and_opens_no_segment` |
+| X22（F4） | vision 的支撑判定用原始概率 | 1 failed, 895 passed | `test_g9_vision_supports_with_its_smoothed_value_not_its_raw_one` |
+| X21g（额外） | 只有完成守卫忽略「有效」 | 1 failed, 895 passed | `test_g6_completion_guard_the_branch_that_filled_the_span_must_not_be_expired_in_the_window` |
+| X21s（额外） | 只有支撑者判定忽略「有效」 | 2 failed, 894 passed | `test_g7_a_zero_weight_branch_cannot_move_the_span_of_the_effective_one`、`test_g7_an_expired_new_frame_is_not_an_effective_modality_and_opens_no_segment` |
+| X39（额外） | Low 段只在带 NEW 支撑者的窗口完成（estp4 用于 Low） | 1 failed, 895 passed | `…wall_clock_holds_on_its_own_and_a_repeat_window_completes_it[10000-NORMAL]` |
+| X40（额外） | 两个方向的守卫都删掉 | 4 failed, 892 passed | 既有的两条 High 守卫测试 + 本轮的两条 Low 守卫测试 |
+
+评审的 6 个变异（X37、X38、X34、X21b、X21、X22）现在每一个都有明确变红的测试；X21 / X21g / X21s 把「有效」的两处使用（支撑者、完成守卫）分开各有一条守护；首轮 V1–V13 未重跑（实现没有改动，首轮的结果仍然成立）。
+
+### 遗留与说明
+
+1. **没有改实现**：4 条发现都是测试缺口，行为本来就对。若控制者另有期望（例如 Low 方向的守卫要与 High 不同），那是规格问题，不是本轮范围。
+2. **F3 反例 2 的构造与评审给出的不完全相同**（见上文说明）；我没有看到评审的探针，只按其描述重建，并用 X21 / X21g 证明该测试确实守护守卫那一半。
+3. 变异 X21b 只在 High 方向被杀（零权重 vision 推进 High 跨度）。零权重一路在 Low 方向的同类情形（零权重的 Low 帧推进 Low 跨度）没有单独的测试；两个方向共用 `_Signal.effective` 与 `_supports`，同一行变异在 High 方向已红。
+4. 首轮报告第 3 节的文件行数、第 5 节的测试计数、第 6 节的 894 现在应读作：`test_r10_fsm.py` 813 行 / 57 个函数 / 74 个用例；pytest 总数 903。首轮其余内容不变。
