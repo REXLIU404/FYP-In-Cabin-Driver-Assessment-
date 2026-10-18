@@ -4,3 +4,28 @@
 *.pt
 *.onnx
 outputs/telemetry/xgb_telemetry.json
+
+# Offline ML runs: serialized models and feature caches never enter Git.
+outputs/runs/**/*.pth
+outputs/runs/**/*.ckpt
+outputs/runs/**/*.safetensors
+outputs/runs/**/*.bin
+outputs/runs/**/*.ubj
+outputs/runs/**/*.joblib
+outputs/runs/**/*.pkl
+outputs/runs/**/*.pickle
+outputs/runs/**/*.npy
+outputs/runs/**/*.npz
+
+# XGBoost can serialize weights as JSON. Keep only explicitly named evidence
+# JSON files; runners must use these names for metadata, never for weights.
+outputs/runs/**/*.json
+!outputs/runs/**/config.json
+!outputs/runs/**/runtime_manifest.json
+!outputs/runs/**/evaluation_metrics.json
+!outputs/runs/**/validation_metrics.json
+!outputs/runs/**/class_report.json
+!outputs/runs/**/selection_log.json
+!outputs/runs/**/preparation_evidence.json
+!outputs/runs/**/artifact_manifest.json
+!outputs/runs/**/train_statistics.json
