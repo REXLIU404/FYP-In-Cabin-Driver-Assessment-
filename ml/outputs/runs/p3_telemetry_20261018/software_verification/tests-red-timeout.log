@@ -1,0 +1,16 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____________ test_outer_supervisor_preserves_an_inner_trial_timeout ____________
+
+modules = (<module 'ml.experiments.run_telemetry_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/...module 'ml.telemetry.train_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py'>)
+
+    def test_outer_supervisor_preserves_an_inner_trial_timeout(modules):
+        runner, _ = modules
+>       assert runner.final_status('IMPLEMENTATION_FAILED', 'TIME_BUDGET_EXCEEDED') == 'TIME_BUDGET_EXCEEDED'
+               ^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'ml.experiments.run_telemetry_hpo' has no attribute 'final_status'
+
+ml/tests/test_telemetry_hpo.py:212: AttributeError
+=========================== short test summary info ============================
+FAILED ml/tests/test_telemetry_hpo.py::test_outer_supervisor_preserves_an_inner_trial_timeout
+1 failed, 21 deselected in 1.60s

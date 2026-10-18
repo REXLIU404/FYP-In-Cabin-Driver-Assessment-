@@ -1,0 +1,57 @@
+{
+  "week3": "VERIFIED_PASS_WITHIN_APPROVED_COMPARATOR_SMOKE_SCOPE",
+  "artifact_hash_records": 32,
+  "p1_source_files_unchanged": 4,
+  "models": [
+    {
+      "model": "resnet18",
+      "stratified_sample_counts": {
+        "train": 200,
+        "val": 100
+      },
+      "prediction_rows": 100,
+      "metrics": {
+        "accuracy": 0.1,
+        "macro_f1": 0.01818181818181818,
+        "log_loss": 2.9089953899383545
+      },
+      "saved_reload_evidence": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/resnet18/attempt_01/validation_metrics.json"
+    },
+    {
+      "model": "random_forest",
+      "stratified_sample_counts": {
+        "train": 300,
+        "val": 90
+      },
+      "prediction_rows": 90,
+      "metrics": {
+        "accuracy": 0.9666666666666667,
+        "macro_f1": 0.9666574048346762,
+        "log_loss": 0.13214261177082928
+      },
+      "saved_reload_evidence": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/random_forest/attempt_01/validation_metrics.json"
+    },
+    {
+      "model": "logistic_regression",
+      "stratified_sample_counts": {
+        "train": 300,
+        "val": 90
+      },
+      "prediction_rows": 90,
+      "metrics": {
+        "accuracy": 0.9888888888888889,
+        "macro_f1": 0.9888858016115588,
+        "log_loss": 0.04611736536629261
+      },
+      "saved_reload_evidence": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/logistic_regression/attempt_01/validation_metrics.json"
+    }
+  ],
+  "p1_original_combined_wall_seconds": 26.110907416965347,
+  "new_smoke_fits": 0,
+  "independent_model_forward_this_check": 0,
+  "test_access": false,
+  "limitations": [
+    "Original save/reload logs and binaries verified; no new P1 reload or numerical retraining",
+    "ResNet18 random-initialized smoke is not valid for formal model comparison"
+  ]
+}

@@ -1,5 +1,87 @@
 # FYP2 ML 轨道进度（唯一规范进度报告）
 
+## 2026-10-18 最新执行记录：S1 交付与 Week 3 验收
+
+本节覆盖下方2026-10-15的历史审批状态；旧日志与历史结论原样保留。用户明确要求执行 `.claude/worktrees/intelligent-chebyshev-836ed9/research/CODEX_ML_P2_P3_PROMPT.md`，并要求核验 Week 3。授权为遥测CPU P2/P3、视觉脚本/测试/说明以及C1–C6本地提交；代理不得执行视觉训练、下载、P4或P5。视觉search具体预算需probe后另批。
+
+第1节开工检查：cwd/root正确，branch=`fyp2/ml-training`，初始HEAD=`efb3ea6`。58项status逐路径比对全部吻合：7删除、1 ignore修改、09报告、5个P0文件、44个P1文件；`unexpected=[]`、`missing=[]`、暂存区为空，另一个只读agent独立核对通过。P0八项保护SHA-256 **8/8一致**。其中test CSV仅按开工要求做字节hash，未解析、选型或预测；训练阶段不重新打开test。两份原权威说明均从当前仓库git show完整读取，未访问Live-System工作区。
+
+已完成提交：C1=`a8e5da7`（仅ignore），C2=`bb3e6cd`（P0五文件原样），C3=`644a930`（P1四十四文件原样），C4=`48b7980`（用户决定的七删除），C5=`07d3390`（仅预注册config）。每次核精确暂存路径、无模型二进制/符号链接/单文件>5MB；09报告从未暂存。C3保留历史RED日志中的pytest尾空格，不清洗原始证据。C1首次自动审批误判非空工作树/授权后拒绝；补充任务明确授权及58项匹配证据，同一动作重试获准。未绕过审批，未push/merge/reset/stash或切分支。
+
+预注册已提交，状态`PREREGISTERED`：原五模型grid/search_trials/max_total_runs/epoch上限逐项比较未变。各模型首个网格seed42为P2并计入P3预算；选型仅val，macro-F1差`<1e-4`比log-loss、复杂度和trial号；冻结seed42，确认43/44不重选。遥测每trial300s/合计2700s/线程2；视觉probe每模型1200s/合计2400s，不计HPO/不选型。此前100/190分钟P2提案被本次明确授权替代。未创建`approved_vision_budget.json`。
+
+### 真实执行与结果
+
+本次 run_id=`p3_telemetry_20261018`，训练时 HEAD=`07d3390`，branch=`fyp2/ml-training`；训练源码当时尚未提交，完整dirty snapshot和源码SHA均写入run/worker config。当前交付提交为任务规定C6（提交号以最终git log为准）。没有额外正式模型重跑。
+
+关键实际命令：
+
+```bash
+./.venv/bin/python -B -m pytest -q ml/tests/test_comparator_pipeline.py -p no:cacheprovider
+./.venv/bin/python -B -m pytest -q ml/tests/test_hpo_protocol.py -p no:cacheprovider
+./.venv/bin/python -B -m pytest -q ml/tests/test_telemetry_hpo.py -p no:cacheprovider
+./.venv/bin/python -B ml/experiments/run_telemetry_hpo.py --run-id p3_telemetry_20261018 --data-root /Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-
+./.venv/bin/python -B ml/outputs/runs/p3_telemetry_20261018/verification/verify_artifacts.py
+./.venv/bin/python -B ml/outputs/runs/p3_telemetry_20261018/software_verification/verify_week3.py
+./.venv/bin/python -B -m pytest -q ml/tests -p no:cacheprovider
+./.venv/bin/python -B ml/experiments/run_vision_hpo.py status --run-id p3_vision_20261018
+```
+
+遥测完整train=21000、val=4500，固定8特征/3类，CPU两线程。外层真实墙钟 **68.61661075 s / 2700 s**，最慢trial **4.898389542 s / 300 s**。26个计划记录中，实际 **25 fits = XGB10 + RF8 + LR7**；24条`COMPLETED`、1条`DETERMINISTIC_DUPLICATE`、1条`SKIPPED_DETERMINISTIC_DUPLICATE`。没有失败、超时、中断、NOT_RUN_BUDGET或额外训练；LR seed43概率与选中seed42完全相同，因此按批准规则不运行44。重复运行消耗实际fit数，明确不算独立证据。
+
+| 模型 | 冻结seed42 trial / 配置 | Val accuracy | Val macro-F1 | Val log-loss | 确认macro-F1 mean / std(ddof=0) | 实际fit / 最大RSS |
+|---|---|---:|---:|---:|---|---|
+| XGBoost | `xgboost_02`：depth3、lr.03、subsample1、实际用400棵树 | 0.998888889 | 0.998888888395 | 0.004925716203 | 42/43/44：0.998888888395 / 0 | 10 / 216776704 bytes |
+| Random Forest | `random_forest_06`：400棵树、depth24、min_leaf2 | 0.998888889 | 0.998888888395 | 0.008043999630 | 42/43/44：0.998888888395 / 0 | 8 / 215252992 bytes |
+| Logistic Regression | `logistic_regression_06`：C1000、lbfgs、max_iter1000（实际16迭代） | 0.996888889 | 0.996888581119 | 0.008746305336 | 42/43：0.996888581119 / 0；43非独立重复，44未跑 | 7 / 193019904 bytes |
+
+以上仅val结果。std=0只描述本次所列seed的macro-F1，不能证明概率逐位相同或真实世界稳定性。RF/LR checkpoint仅用于benchmark，未创建候选包或部署。没有引用test指标作本轮对照。
+
+独立agent执行保存产物核验：**4987 checks / 0 failures / 2.648646 s**，包括250条artifact记录的exists/bytes/SHA、25个checkpoint的独立重载val预测、train-only median/LR mean/var/scale、val IDs/顺序/标签、CSV/npy、class order、全部metrics/class reports、选型重算及资源/次数上限。RF并行求和的独立重载最大差`1.1102230246251565e-16`，满足原`atol=rtol=1e-12`合同；没有把allclose说成bitwise equal。验证没有任何fit，没有打开test。核验原始输出和可重跑脚本位于`ml/outputs/runs/p3_telemetry_20261018/verification/`。
+
+### 软件验证、审查修复与源码身份
+
+完整ML软件套件 **103 passed / 16.46 s**（P1原36项 + protocol19项 + telemetry23项 + vision orchestration17项 + vision worker8项）。没有把它称为全仓库CI、Live E2E或真实MPS训练验证。视觉指定六项门禁通过fake设备/合成文件测试：无预算拒绝、无MPS拒绝、跳过已完成、保留INTERRUPTED、不覆盖完成目录、墙钟停止；另覆盖篡改产物和启动调度开销。
+
+两名实现agent中途遇到usage limit，主代理接手其测试；交付依据是后续实际测试/产物，不是agent完成声明。独立代码审查指出两项Important，均已单次修复并验证：
+
+1. 遥测双层独立process group在相同终止宽限下可能留下忽略TERM的worker。纯heartbeat假进程回归先失败，再改为coordinator/worker共享外层group、内层只终止worker、外层最终清理整个group；回归及103项suite通过。实际25次训练远低于截止，没有发生该故障。**修复在训练后，不重fit**。
+2. 视觉resume原先只信COMPLETED状态。删除/篡改合成checkpoint的两项回归先失败，修后跳过前逐文件核必需产物及SHA；损坏即停、不自动重训。回归及完整suite通过。
+
+另一个训练前修复保留内层TIME_BUDGET_EXCEEDED，防止外层非零exit把它误标IMPLEMENTATION_FAILED；视觉调度/写config开销也有RED→GREEN回归，不能追加在trial预算之外。原始RED/GREEN日志都在`software_verification/`，不清洗捕获输出。最初runner RED包含14 failed / 21 missing-module fixture errors；这些不是模型fit失败。后续边界回归均实际失败后修复。
+
+监督器修复导致`source_current_match=false`；**这不是训练产物哈希失败**。训练前实际执行的5份源码/config已在修复前逐字节保存到`source_snapshot/<原仓库相对路径>`，与原config SHA全部吻合，独立核验`source_snapshot_match=true`。原config/log/source_hashes均未改写；不能把修复后的监督器冒充实际生成这25个模型的代码。其余训练方法/参数未变。
+
+### Week 3 是否完成：VERIFIED_PASS（ML milestone 已提前完成）
+
+- **Implementation PASS**：三种comparator的P1 reusable trainer/loader、预处理/保存重载，以及预算监督器已存在；原P1四份执行源码SHA当前均未变。
+- **Testing PASS**：本次重新运行原P1 suite，**36 passed / 7.60 s**；已有三个真实首轮smoke均为PASS，没有追加smoke。ResNet18 train200/val100、每类20/10、1epoch；RF/LR train300/val90、每类100/30、各1fit。重新检查sample_manifest确认分层数量与ID唯一。
+- **Evidence PASS**：重新验证32条保存产物记录的存在/bytes/SHA和三模型保存预测的accuracy/macro-F1/log-loss；训练/validation/reload原始日志、模型二进制、class order与输出维度仍一致。证据为`software_verification/week3-verification.log`和原P1 run；历史85项核验未冒称本次重跑。
+- **Reproducibility PASS（原P1限定范围）**：seed42、源ID/配置/软件版本/统计/哈希和原save/reload证据可追溯；本次没有独立P1数值重训或新增forward。ResNet18仍是获批random-init smoke，**不用于正式性能比较**。
+
+本结论只验收Week3的ML comparator scripts + smoke，不能代替系统轨道Week3、完整视觉训练、五模型比较、E1、UAT或安全效果验收。
+
+### 最新阶段状态、限制与停止点
+
+| 阶段 | 当前四维验收 / 实际证据 | Verdict / 下一依赖 |
+|---|---|---|
+| P0 / W2准备 | 数据/模型/契约冻结已验证；网格/seed/tie协议已预注册，遥测预算获批；完整视觉预算故意留S2 | 技术准备PASS；总体仍PARTIAL，视觉数字预算APPROVAL_PENDING |
+| P1 / W3 | implementation、testing、evidence、限定reproducibility均PASS，36项当前测试+真实smoke+保存产物复核 | **VERIFIED_PASS**，已提前完成 |
+| P2 | 遥测首网格全量fit已完成；ResNet18用户终端正式fit尚未运行 | **PARTIAL**，等待用户fetch-weights/probe与S2预算 |
+| P3 | 遥测三模型HPO/确认/冻结/独立核验PASS；视觉CLI与103项软件验证PASS；真实视觉search未运行，E1 generator未实现 | **PARTIAL**，不能称五模型HPO完成 |
+| P4 | 最终test/E1均未运行 | **NOT_STARTED / 未授权** |
+| P5 | 候选包/部署均未执行 | **NOT_STARTED / 未授权** |
+
+视觉交付：`ml/experiments/run_vision_hpo.py`、`ml/vision/train_hpo.py`、fake-device tests及唯一新增的必需说明`docs/fyp2/ml/RUN_VISION_HPO.md`。实际只执行status，输出`NOT_STARTED p3_vision_20261018`；没有创建该run目录，没有下载权重，没有运行probe/search。真实MPS训练路径为**IMPLEMENTED_UNVERIFIED**，需要用户终端probe验证。`approved_vision_budget.json`不存在。
+
+本次说明明确允许中断后同一逻辑trial从头重跑，因此视觉可能有多个physical attempts；每个attempt保留且累加预算，不增加网格或正式逻辑trial上限。这是最新第5节对中断重跑的明确授权，不能外推为失败自动重跑或额外HPO。第1节test CSV hash完整性核验与第4节训练禁读test分开执行，未声称字节hash等于“完全没有接触文件”。
+
+R26披露继续有效：外部EDA曾在split前算median；本次每个trial仅train fit imputer/scaler，不修改源CSV；保留8特征没有NaN，不据此声称旧基线被污染。R27：test曾被多次评估，本轮未解析或推理test，也未用于选型。Telemetry为合成数据，近似线性可分，高val分数不证明真实泛化或事故风险改善。MobileNetV3 V2与ResNet18 V1配方差异、MPS固定seed不保证逐位复现必须保留披露。E2–E5/融合/前后端/Live runtime均未修改或执行；DMD仍blocked，不是新增W3 gate。
+
+**停止在S1**：C6提交本次代码/小证据后等待用户在终端执行`RUN_VISION_HPO.md`中的fetch-weights/probe命令并贴回`WEIGHTS_READY`、`PROBE_COMPLETE`、`VISION_STATUS probe`行。S2先核验probe再请求批准具体per_trial/per_model/total秒数；S3用户完成search后再核验。绝不自动开始视觉训练、P4或P5。W5/W7主里程碑不变。
+
+## 以下为 2026-10-15 的历史过程记录（审批状态以本页开头为准）
+
 更新日期：2026-10-15；时区：Asia/Kuala_Lumpur。当前 run_id：`p1_comparators_20261015`；P0 历史 run_id：`w2_preparation_20261015`。
 
 ## 最新验收复核：四维标准、Week 2 与 P2 待审批方案

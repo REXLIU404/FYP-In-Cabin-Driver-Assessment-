@@ -1,0 +1,272 @@
+{
+  "schema_version": 1,
+  "status": "PREREGISTERED",
+  "source": "docs/fyp2/04_ML_COMPARISON_AND_TUNING_AUDIT.md#bounded-hpo-proposal",
+  "authority_ref": "fyp2/live-system",
+  "authority_addendum": "docs/fyp2/review/CODEX_ML_TRACK_ADDENDUM_R4.md",
+  "launch_authorized": true,
+  "selection": {
+    "split": "val",
+    "metric": "macro_f1",
+    "test_access_during_tuning": false,
+    "final_clean_test_evaluations_per_frozen_model": 1,
+    "test_previously_exposed": true,
+    "confirmation_runs_may_not_reselect_using_test": true,
+    "p2_is_first_search_trial": true,
+    "grid_order": "insertion order, itertools.product; seed 42",
+    "tie_macro_f1_absolute_tolerance": 0.0001,
+    "tie_breakers": [
+      "lower validation log_loss",
+      "simpler configuration",
+      "lower trial number"
+    ],
+    "simpler_configuration": {
+      "xgboost": [
+        "lower max_depth",
+        "fewer actually used trees"
+      ],
+      "random_forest": [
+        "lower max_depth (None is infinity)",
+        "lower n_estimators"
+      ],
+      "logistic_regression": [
+        "lower C"
+      ],
+      "vision": [
+        "earlier best_epoch"
+      ]
+    },
+    "frozen_model": "selected configuration at seed 42",
+    "confirmation_must_not_reselect": true,
+    "confirmation_std_ddof": 0,
+    "confirmations_report": "all completed requested seeds; label deterministic duplicate non-independent"
+  },
+  "wall_time_limits_seconds": {
+    "scope": "telemetry_only",
+    "per_trial": 300,
+    "per_model": null,
+    "total": 2700,
+    "threads": 2,
+    "vision_search": "requires separately approved_vision_budget.json with explicit numeric per_trial/per_model/total"
+  },
+  "stop_policy": [
+    "达到模型 trial / epoch / iteration 上限即停止，未完成 trial 明确记录",
+    "遥测任一trial达到300s或累计达到2700s立即停止；未完成记NOT_RUN_BUDGET，不自动续跑或扩预算；视觉search须独立数字预算审批",
+    "只用 validation 选型；不通过 test 或 E1 结果重新选参",
+    "运行前校验 split、基线及配置哈希；仅写独立 run_id 目录",
+    "系统轨道进行性能测量时，不并发执行训练或 ML 性能测量"
+  ],
+  "models": {
+    "mobilenet_v3_large": {
+      "grid": {
+        "learning_rate": [
+          0.0001,
+          0.0003,
+          0.0008
+        ],
+        "weight_decay": [
+          0.0001,
+          0.001
+        ]
+      },
+      "search_trials": 6,
+      "search_seed": 42,
+      "confirmation_seeds": [
+        43,
+        44
+      ],
+      "max_total_runs": 8,
+      "max_epochs_per_run": 8,
+      "early_stopping_patience": 2,
+      "early_stopping_metric": "val_macro_f1",
+      "fixed": {
+        "pretrained_weights": "MobileNet_V3_Large_Weights.IMAGENET1K_V2",
+        "optimizer": "AdamW",
+        "scheduler": "CosineAnnealingLR",
+        "batch_size": 64,
+        "image_size": [
+          224,
+          224
+        ],
+        "random_rotation_degrees": 8,
+        "color_jitter_brightness": 0.2,
+        "color_jitter_contrast": 0.2,
+        "horizontal_flip": false,
+        "scheduler_T_max": 8,
+        "pretrained_filename": "mobilenet_v3_large-5c1a4163.pth"
+      }
+    },
+    "resnet18": {
+      "grid": {
+        "learning_rate": [
+          0.0001,
+          0.0003,
+          0.0008
+        ],
+        "weight_decay": [
+          0.0001,
+          0.001
+        ]
+      },
+      "search_trials": 6,
+      "search_seed": 42,
+      "confirmation_seeds": [
+        43,
+        44
+      ],
+      "max_total_runs": 8,
+      "max_epochs_per_run": 8,
+      "early_stopping_patience": 2,
+      "early_stopping_metric": "val_macro_f1",
+      "fixed": {
+        "pretrained_weights": "ResNet18_Weights.IMAGENET1K_V1",
+        "head": "fc -> Linear(512, 10)",
+        "augmentation_resolution_batch": "same_as_mobilenet_v3_large",
+        "evaluation_preprocessing": "RGB PIL bilinear direct Resize((224,224)); no crop",
+        "pretrained_filename": "resnet18-f37072fd.pth",
+        "pretrained_url": "https://download.pytorch.org/models/resnet18-f37072fd.pth",
+        "scheduler_T_max": 8
+      },
+      "pending_decisions": []
+    },
+    "xgboost": {
+      "grid": {
+        "max_depth": [
+          3,
+          6
+        ],
+        "learning_rate": [
+          0.03,
+          0.1
+        ],
+        "subsample": [
+          0.8,
+          1.0
+        ]
+      },
+      "search_trials": 8,
+      "search_seed": 42,
+      "confirmation_runs": 2,
+      "confirmation_seeds": [
+        43,
+        44
+      ],
+      "max_total_runs": 10,
+      "fixed": {
+        "n_estimators": 400,
+        "early_stopping_rounds": 30,
+        "early_stopping_metric": "val_mlogloss",
+        "colsample_bytree": 0.9,
+        "reg_lambda": 1.0,
+        "tree_method": "hist",
+        "objective": "multi:softprob",
+        "preprocessing": "train_only_median"
+      }
+    },
+    "random_forest": {
+      "grid": {
+        "n_estimators": [
+          200,
+          400
+        ],
+        "max_depth": [
+          null,
+          12,
+          24
+        ]
+      },
+      "search_trials": 6,
+      "search_seed": 42,
+      "confirmation_runs": 2,
+      "confirmation_seeds": [
+        43,
+        44
+      ],
+      "max_total_runs": 8,
+      "fixed": {
+        "min_samples_leaf": 2,
+        "n_jobs": 2,
+        "preprocessing": "train_only_median"
+      }
+    },
+    "logistic_regression": {
+      "grid": {
+        "C": [
+          0.01,
+          0.1,
+          1,
+          10,
+          100,
+          1000
+        ]
+      },
+      "search_trials": 6,
+      "search_seed": 42,
+      "conditional_reproducibility_checks": 2,
+      "max_total_runs": 8,
+      "fixed": {
+        "solver": "lbfgs",
+        "max_iter": 1000,
+        "preprocessing": "train_only_median_then_standard_scaler"
+      },
+      "duplicate_deterministic_runs_are_independent_evidence": false,
+      "confirmation_seeds": [
+        43,
+        44
+      ],
+      "confirmation_policy": "Run seed43; if validation probability arrays are exactly equal to selected seed42, label DETERMINISTIC_DUPLICATE, skip44; otherwise run44."
+    }
+  },
+  "required_run_artifacts": [
+    "config.json",
+    "artifact_manifest.json (split/model/content hashes, seeds, versions, commit + dirty state, contracts)",
+    "trials.csv",
+    "validation_metrics.json",
+    "class_report.json",
+    "selection_log.json",
+    "selected checkpoint (Git ignored)",
+    "predictions_test.csv (source IDs; logits/probabilities explicitly declared)",
+    "timing_samples.csv (warmup / measured; device, threads, provider, batch)"
+  ],
+  "pending_decisions": [
+    "用户终端 fetch-weights / probe 后批准视觉 per_trial、per_model、total 三项具体墙钟秒数；本轮不创建 approved_vision_budget.json",
+    "P4 final test/E1 与P5打包需新授权"
+  ],
+  "authorization": {
+    "source": ".claude/worktrees/intelligent-chebyshev-836ed9/research/CODEX_ML_P2_P3_PROMPT.md",
+    "sha256": "31ce5aafe8507b7fed76ab067418518eb9b3b00b9a22cc179c3fb1debff1407d",
+    "user_execution_approval_date": "2026-10-18",
+    "telemetry_p2_p3": true,
+    "vision_training_by_agent": false,
+    "downloads_by_agent": false,
+    "p4_p5": false,
+    "stop_point": "S1"
+  },
+  "vision_execution": {
+    "operator": "user terminal, MPS only",
+    "agent_training_authorized": false,
+    "probe_counts_toward_hpo": false,
+    "probe_used_for_selection": false,
+    "probe_seconds_per_model": 1200,
+    "probe_seconds_total": 2400,
+    "probe_config": {
+      "learning_rate": 0.0008,
+      "weight_decay": 0.0001,
+      "seed": 42,
+      "epochs": 1
+    },
+    "search_budget_approval_file": "ml/configs/approved_vision_budget.json",
+    "search_launch_authorized": false,
+    "weight_recipe_difference": "MobileNetV3 ImageNet V2 versus ResNet18 ImageNet V1",
+    "weights_full_sha256": "record actual cache files in run weights_manifest.json before training",
+    "mps_reproducibility": "fixed seeds do not guarantee bitwise determinism"
+  },
+  "artifact_phase_policy": {
+    "P2_P3": {
+      "predictions_test.csv": "NOT_YET_DUE; do not open or predict held-out test",
+      "predictions_validation.csv": "required, source IDs and declared probabilities/logits"
+    },
+    "P4": "one final clean held-out evaluation after selection freezes; new authorization required",
+    "P5": "candidate package; new authorization required"
+  }
+}

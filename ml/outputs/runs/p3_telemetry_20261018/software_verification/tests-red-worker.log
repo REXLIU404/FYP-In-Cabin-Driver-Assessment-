@@ -1,0 +1,358 @@
+FFFFFFFF                                                                 [100%]
+=================================== FAILURES ===================================
+_____ test_worker_rejects_unapproved_recipe_without_loading_data[change0] ______
+
+    def worker():
+>       try:return importlib.import_module('ml.vision.train_hpo')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_vision_worker.py:10: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.vision.train_hpo', import_ = <function _gcd_import at 0x104b384a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.vision.train_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+change = {'seed': 45}
+
+    @pytest.mark.parametrize('change',[{'seed':45},{'max_epochs':9},{'config':{'learning_rate':.1,'weight_decay':.0001}},
+                                      {'model':'efficientnet'},{'role':'SEARCH','seed':43}])
+    def test_worker_rejects_unapproved_recipe_without_loading_data(change):
+        p=plan();p.update(change)
+>       with pytest.raises(ValueError):worker().validate_plan(p,'search',configuration())
+                                       ^^^^^^^^
+
+ml/tests/test_vision_worker.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def worker():
+        try:return importlib.import_module('ml.vision.train_hpo')
+>       except ModuleNotFoundError:pytest.fail('Vision worker has not been implemented')
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: Vision worker has not been implemented
+
+ml/tests/test_vision_worker.py:11: Failed
+_____ test_worker_rejects_unapproved_recipe_without_loading_data[change1] ______
+
+    def worker():
+>       try:return importlib.import_module('ml.vision.train_hpo')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_vision_worker.py:10: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.vision.train_hpo', import_ = <function _gcd_import at 0x104b384a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.vision.train_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+change = {'max_epochs': 9}
+
+    @pytest.mark.parametrize('change',[{'seed':45},{'max_epochs':9},{'config':{'learning_rate':.1,'weight_decay':.0001}},
+                                      {'model':'efficientnet'},{'role':'SEARCH','seed':43}])
+    def test_worker_rejects_unapproved_recipe_without_loading_data(change):
+        p=plan();p.update(change)
+>       with pytest.raises(ValueError):worker().validate_plan(p,'search',configuration())
+                                       ^^^^^^^^
+
+ml/tests/test_vision_worker.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def worker():
+        try:return importlib.import_module('ml.vision.train_hpo')
+>       except ModuleNotFoundError:pytest.fail('Vision worker has not been implemented')
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: Vision worker has not been implemented
+
+ml/tests/test_vision_worker.py:11: Failed
+_____ test_worker_rejects_unapproved_recipe_without_loading_data[change2] ______
+
+    def worker():
+>       try:return importlib.import_module('ml.vision.train_hpo')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_vision_worker.py:10: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.vision.train_hpo', import_ = <function _gcd_import at 0x104b384a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.vision.train_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+change = {'config': {'learning_rate': 0.1, 'weight_decay': 0.0001}}
+
+    @pytest.mark.parametrize('change',[{'seed':45},{'max_epochs':9},{'config':{'learning_rate':.1,'weight_decay':.0001}},
+                                      {'model':'efficientnet'},{'role':'SEARCH','seed':43}])
+    def test_worker_rejects_unapproved_recipe_without_loading_data(change):
+        p=plan();p.update(change)
+>       with pytest.raises(ValueError):worker().validate_plan(p,'search',configuration())
+                                       ^^^^^^^^
+
+ml/tests/test_vision_worker.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def worker():
+        try:return importlib.import_module('ml.vision.train_hpo')
+>       except ModuleNotFoundError:pytest.fail('Vision worker has not been implemented')
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: Vision worker has not been implemented
+
+ml/tests/test_vision_worker.py:11: Failed
+_____ test_worker_rejects_unapproved_recipe_without_loading_data[change3] ______
+
+    def worker():
+>       try:return importlib.import_module('ml.vision.train_hpo')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_vision_worker.py:10: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.vision.train_hpo', import_ = <function _gcd_import at 0x104b384a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.vision.train_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+change = {'model': 'efficientnet'}
+
+    @pytest.mark.parametrize('change',[{'seed':45},{'max_epochs':9},{'config':{'learning_rate':.1,'weight_decay':.0001}},
+                                      {'model':'efficientnet'},{'role':'SEARCH','seed':43}])
+    def test_worker_rejects_unapproved_recipe_without_loading_data(change):
+        p=plan();p.update(change)
+>       with pytest.raises(ValueError):worker().validate_plan(p,'search',configuration())
+                                       ^^^^^^^^
+
+ml/tests/test_vision_worker.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def worker():
+        try:return importlib.import_module('ml.vision.train_hpo')
+>       except ModuleNotFoundError:pytest.fail('Vision worker has not been implemented')
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: Vision worker has not been implemented
+
+ml/tests/test_vision_worker.py:11: Failed
+_____ test_worker_rejects_unapproved_recipe_without_loading_data[change4] ______
+
+    def worker():
+>       try:return importlib.import_module('ml.vision.train_hpo')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_vision_worker.py:10: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.vision.train_hpo', import_ = <function _gcd_import at 0x104b384a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.vision.train_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+change = {'role': 'SEARCH', 'seed': 43}
+
+    @pytest.mark.parametrize('change',[{'seed':45},{'max_epochs':9},{'config':{'learning_rate':.1,'weight_decay':.0001}},
+                                      {'model':'efficientnet'},{'role':'SEARCH','seed':43}])
+    def test_worker_rejects_unapproved_recipe_without_loading_data(change):
+        p=plan();p.update(change)
+>       with pytest.raises(ValueError):worker().validate_plan(p,'search',configuration())
+                                       ^^^^^^^^
+
+ml/tests/test_vision_worker.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def worker():
+        try:return importlib.import_module('ml.vision.train_hpo')
+>       except ModuleNotFoundError:pytest.fail('Vision worker has not been implemented')
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: Vision worker has not been implemented
+
+ml/tests/test_vision_worker.py:11: Failed
+______________ test_probe_recipe_is_fixed_and_not_a_search_trial _______________
+
+    def worker():
+>       try:return importlib.import_module('ml.vision.train_hpo')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_vision_worker.py:10: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.vision.train_hpo', import_ = <function _gcd_import at 0x104b384a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.vision.train_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    def test_probe_recipe_is_fixed_and_not_a_search_trial():
+        p=plan();p.update(role='PROBE',max_epochs=1,config={'learning_rate':.0008,'weight_decay':.0001})
+>       worker().validate_plan(p,'probe',configuration())
+        ^^^^^^^^
+
+ml/tests/test_vision_worker.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def worker():
+        try:return importlib.import_module('ml.vision.train_hpo')
+>       except ModuleNotFoundError:pytest.fail('Vision worker has not been implemented')
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: Vision worker has not been implemented
+
+ml/tests/test_vision_worker.py:11: Failed
+__________________ test_best_epoch_ties_do_not_reset_patience __________________
+
+    def worker():
+>       try:return importlib.import_module('ml.vision.train_hpo')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_vision_worker.py:10: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.vision.train_hpo', import_ = <function _gcd_import at 0x104b384a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.vision.train_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    def test_best_epoch_ties_do_not_reset_patience():
+>       w=worker()
+          ^^^^^^^^
+
+ml/tests/test_vision_worker.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def worker():
+        try:return importlib.import_module('ml.vision.train_hpo')
+>       except ModuleNotFoundError:pytest.fail('Vision worker has not been implemented')
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: Vision worker has not been implemented
+
+ml/tests/test_vision_worker.py:11: Failed
+_______________________ test_nonfinite_score_is_rejected _______________________
+
+    def worker():
+>       try:return importlib.import_module('ml.vision.train_hpo')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_vision_worker.py:10: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.vision.train_hpo', import_ = <function _gcd_import at 0x104b384a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.vision.train_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    def test_nonfinite_score_is_rejected():
+>       with pytest.raises(ValueError):worker().advance_early_stop(.7,0,float('nan'))
+                                       ^^^^^^^^
+
+ml/tests/test_vision_worker.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def worker():
+        try:return importlib.import_module('ml.vision.train_hpo')
+>       except ModuleNotFoundError:pytest.fail('Vision worker has not been implemented')
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: Vision worker has not been implemented
+
+ml/tests/test_vision_worker.py:11: Failed
+=========================== short test summary info ============================
+FAILED ml/tests/test_vision_worker.py::test_worker_rejects_unapproved_recipe_without_loading_data[change0]
+FAILED ml/tests/test_vision_worker.py::test_worker_rejects_unapproved_recipe_without_loading_data[change1]
+FAILED ml/tests/test_vision_worker.py::test_worker_rejects_unapproved_recipe_without_loading_data[change2]
+FAILED ml/tests/test_vision_worker.py::test_worker_rejects_unapproved_recipe_without_loading_data[change3]
+FAILED ml/tests/test_vision_worker.py::test_worker_rejects_unapproved_recipe_without_loading_data[change4]
+FAILED ml/tests/test_vision_worker.py::test_probe_recipe_is_fixed_and_not_a_search_trial
+FAILED ml/tests/test_vision_worker.py::test_best_epoch_ties_do_not_reset_patience
+FAILED ml/tests/test_vision_worker.py::test_nonfinite_score_is_rejected - Fai...
+8 failed in 0.04s

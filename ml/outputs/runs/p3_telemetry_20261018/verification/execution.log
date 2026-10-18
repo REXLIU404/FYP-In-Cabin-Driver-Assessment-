@@ -1,0 +1,27 @@
+INDEPENDENT_ARTIFACT_VERIFICATION 2026-10-18T10:35:26.268434+00:00
+VERIFIED xgboost_01 val_macro_f1 0.9986666659999993 reload_max_abs_difference 0.0
+VERIFIED xgboost_02 val_macro_f1 0.9988888883953083 reload_max_abs_difference 0.0
+VERIFIED xgboost_03 val_macro_f1 0.9984444420229579 reload_max_abs_difference 0.0
+VERIFIED xgboost_04 val_macro_f1 0.9986666654806897 reload_max_abs_difference 0.0
+VERIFIED xgboost_05 val_macro_f1 0.9982219991108879 reload_max_abs_difference 0.0
+VERIFIED xgboost_06 val_macro_f1 0.9984444432338747 reload_max_abs_difference 0.0
+VERIFIED xgboost_07 val_macro_f1 0.9982219991108879 reload_max_abs_difference 0.0
+VERIFIED xgboost_08 val_macro_f1 0.9982219991108879 reload_max_abs_difference 0.0
+VERIFIED xgboost_09 val_macro_f1 0.9988888883953083 reload_max_abs_difference 0.0
+VERIFIED xgboost_10 val_macro_f1 0.9988888883953083 reload_max_abs_difference 0.0
+VERIFIED random_forest_01 val_macro_f1 0.9986666654806897 reload_max_abs_difference 0.0
+VERIFIED random_forest_02 val_macro_f1 0.9986666654806897 reload_max_abs_difference 0.0
+VERIFIED random_forest_03 val_macro_f1 0.9986666654806897 reload_max_abs_difference 0.0
+VERIFIED random_forest_04 val_macro_f1 0.9988888883948145 reload_max_abs_difference 1.1102230246251565e-16
+VERIFIED random_forest_05 val_macro_f1 0.9988888883948145 reload_max_abs_difference 0.0
+VERIFIED random_forest_06 val_macro_f1 0.9988888883948145 reload_max_abs_difference 0.0
+VERIFIED random_forest_07 val_macro_f1 0.9988888883948145 reload_max_abs_difference 0.0
+VERIFIED random_forest_08 val_macro_f1 0.9988888883948145 reload_max_abs_difference 0.0
+VERIFIED logistic_regression_01 val_macro_f1 0.9955547149556033 reload_max_abs_difference 0.0
+VERIFIED logistic_regression_02 val_macro_f1 0.99599939318087 reload_max_abs_difference 0.0
+VERIFIED logistic_regression_03 val_macro_f1 0.9964439162440378 reload_max_abs_difference 0.0
+VERIFIED logistic_regression_04 val_macro_f1 0.9966662851682916 reload_max_abs_difference 0.0
+VERIFIED logistic_regression_05 val_macro_f1 0.9968885811194106 reload_max_abs_difference 0.0
+VERIFIED logistic_regression_06 val_macro_f1 0.9968885811194106 reload_max_abs_difference 0.0
+VERIFIED logistic_regression_07 val_macro_f1 0.9968885811194106 reload_max_abs_difference 0.0
+{"status": "VERIFIED_PASS", "independent_check_count": 4987, "failures": [], "actual_fits": 25, "fits_by_model": {"xgboost": 10, "random_forest": 8, "logistic_regression": 7}, "training_combined_wall_seconds": 68.61661074997392, "verifier_wall_seconds": 2.6486464580520988}

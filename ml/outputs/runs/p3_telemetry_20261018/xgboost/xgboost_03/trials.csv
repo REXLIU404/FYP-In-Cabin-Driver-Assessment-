@@ -1,0 +1,2 @@
+trial_id,model,phase,role,seed,status,counts_toward_hpo,macro_f1,log_loss,fits
+xgboost_03,xgboost,P3,SEARCH,42,COMPLETED,True,0.9984444420229579,0.0042999256402254105,1

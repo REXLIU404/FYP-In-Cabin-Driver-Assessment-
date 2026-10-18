@@ -1,0 +1,2477 @@
+{
+  "status": "COMPLETED",
+  "trials": [
+    {
+      "trial_id": "xgboost_01",
+      "model": "xgboost",
+      "phase": "P2",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "max_depth": 3,
+        "learning_rate": 0.03,
+        "subsample": 0.8
+      },
+      "status": "COMPLETED",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_01",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.9986666666666667,
+        "macro_f1": 0.9986666659999993,
+        "log_loss": 0.004734213929623365,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1497,
+            3
+          ],
+          [
+            3,
+            0,
+            1497
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 42,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 0.0,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 210796544,
+          "user_cpu_seconds": 2.121844,
+          "system_cpu_seconds": 0.344481
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          },
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/opt/homebrew/Cellar/libomp/22.1.7/lib/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true,
+        "trees_used": 400,
+        "trees_built": 400,
+        "best_validation_mlogloss": 0.00473421389035664
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 2.28526004194282,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_01"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_01/checkpoint.joblib",
+      "trees_used": 400
+    },
+    {
+      "trial_id": "xgboost_02",
+      "model": "xgboost",
+      "phase": "P3",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "max_depth": 3,
+        "learning_rate": 0.03,
+        "subsample": 1.0
+      },
+      "status": "COMPLETED",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_02",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.9988888888888889,
+        "macro_f1": 0.9988888883953083,
+        "log_loss": 0.0049257162027060986,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1498,
+            2
+          ],
+          [
+            3,
+            0,
+            1497
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 42,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 0.0,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 210698240,
+          "user_cpu_seconds": 1.998897,
+          "system_cpu_seconds": 0.33488999999999997
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          },
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/opt/homebrew/Cellar/libomp/22.1.7/lib/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true,
+        "trees_used": 400,
+        "trees_built": 400,
+        "best_validation_mlogloss": 0.00492571662663856
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 2.1625632499344647,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_02"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_02/checkpoint.joblib",
+      "trees_used": 400
+    },
+    {
+      "trial_id": "xgboost_03",
+      "model": "xgboost",
+      "phase": "P3",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "max_depth": 3,
+        "learning_rate": 0.1,
+        "subsample": 0.8
+      },
+      "status": "COMPLETED",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_03",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.9984444444444445,
+        "macro_f1": 0.9984444420229579,
+        "log_loss": 0.0042999256402254105,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1495,
+            5
+          ],
+          [
+            2,
+            0,
+            1498
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 42,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 0.0,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 205570048,
+          "user_cpu_seconds": 1.666791,
+          "system_cpu_seconds": 0.272445
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          },
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/opt/homebrew/Cellar/libomp/22.1.7/lib/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true,
+        "trees_used": 195,
+        "trees_built": 225,
+        "best_validation_mlogloss": 0.00429992517612215
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 1.8962348330533132,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_03"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_03/checkpoint.joblib",
+      "trees_used": 195
+    },
+    {
+      "trial_id": "xgboost_04",
+      "model": "xgboost",
+      "phase": "P3",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "max_depth": 3,
+        "learning_rate": 0.1,
+        "subsample": 1.0
+      },
+      "status": "COMPLETED",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_04",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.9986666666666667,
+        "macro_f1": 0.9986666654806897,
+        "log_loss": 0.004254098515957594,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1496,
+            4
+          ],
+          [
+            2,
+            0,
+            1498
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 42,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 0.0,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 205979648,
+          "user_cpu_seconds": 1.63366,
+          "system_cpu_seconds": 0.273671
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          },
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/opt/homebrew/Cellar/libomp/22.1.7/lib/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true,
+        "trees_used": 215,
+        "trees_built": 245,
+        "best_validation_mlogloss": 0.00425409858939347
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 1.8673465000465512,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_04"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_04/checkpoint.joblib",
+      "trees_used": 215
+    },
+    {
+      "trial_id": "xgboost_05",
+      "model": "xgboost",
+      "phase": "P3",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "max_depth": 6,
+        "learning_rate": 0.03,
+        "subsample": 0.8
+      },
+      "status": "COMPLETED",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_05",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.9982222222222222,
+        "macro_f1": 0.9982219991108879,
+        "log_loss": 0.004852031357586384,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1496,
+            4
+          ],
+          [
+            3,
+            1,
+            1496
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 42,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 0.0,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 216252416,
+          "user_cpu_seconds": 2.197303,
+          "system_cpu_seconds": 0.378979
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          },
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/opt/homebrew/Cellar/libomp/22.1.7/lib/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true,
+        "trees_used": 307,
+        "trees_built": 337,
+        "best_validation_mlogloss": 0.00485203147713522
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 2.327762250090018,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_05"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_05/checkpoint.joblib",
+      "trees_used": 307
+    },
+    {
+      "trial_id": "xgboost_06",
+      "model": "xgboost",
+      "phase": "P3",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "max_depth": 6,
+        "learning_rate": 0.03,
+        "subsample": 1.0
+      },
+      "status": "COMPLETED",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_06",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.9984444444444445,
+        "macro_f1": 0.9984444432338747,
+        "log_loss": 0.004706045147031546,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1496,
+            4
+          ],
+          [
+            3,
+            0,
+            1497
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 42,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 0.0,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 216776704,
+          "user_cpu_seconds": 2.394676,
+          "system_cpu_seconds": 0.421413
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          },
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/opt/homebrew/Cellar/libomp/22.1.7/lib/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true,
+        "trees_used": 379,
+        "trees_built": 400,
+        "best_validation_mlogloss": 0.00470604474464199
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 2.771989458007738,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_06"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_06/checkpoint.joblib",
+      "trees_used": 379
+    },
+    {
+      "trial_id": "xgboost_07",
+      "model": "xgboost",
+      "phase": "P3",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "max_depth": 6,
+        "learning_rate": 0.1,
+        "subsample": 0.8
+      },
+      "status": "COMPLETED",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_07",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.9982222222222222,
+        "macro_f1": 0.9982219991108879,
+        "log_loss": 0.004685025196522474,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1496,
+            4
+          ],
+          [
+            3,
+            1,
+            1496
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 42,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 0.0,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 205324288,
+          "user_cpu_seconds": 1.613743,
+          "system_cpu_seconds": 0.269884
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          },
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/opt/homebrew/Cellar/libomp/22.1.7/lib/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true,
+        "trees_used": 113,
+        "trees_built": 143,
+        "best_validation_mlogloss": 0.00468502532091629
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 2.005450541037135,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_07"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_07/checkpoint.joblib",
+      "trees_used": 113
+    },
+    {
+      "trial_id": "xgboost_08",
+      "model": "xgboost",
+      "phase": "P3",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "max_depth": 6,
+        "learning_rate": 0.1,
+        "subsample": 1.0
+      },
+      "status": "COMPLETED",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_08",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.9982222222222222,
+        "macro_f1": 0.9982219991108879,
+        "log_loss": 0.0048162140883505344,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1496,
+            4
+          ],
+          [
+            3,
+            1,
+            1496
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 42,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 0.0,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 205422592,
+          "user_cpu_seconds": 1.581742,
+          "system_cpu_seconds": 0.27568699999999996
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          },
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/opt/homebrew/Cellar/libomp/22.1.7/lib/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true,
+        "trees_used": 109,
+        "trees_built": 139,
+        "best_validation_mlogloss": 0.00481621410889622
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 1.944182707928121,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_08"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_08/checkpoint.joblib",
+      "trees_used": 109
+    },
+    {
+      "trial_id": "xgboost_09",
+      "model": "xgboost",
+      "phase": "P3",
+      "role": "CONFIRMATION",
+      "seed": 43,
+      "config": {
+        "max_depth": 3,
+        "learning_rate": 0.03,
+        "subsample": 1.0
+      },
+      "status": "COMPLETED",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_09",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.9988888888888889,
+        "macro_f1": 0.9988888883953083,
+        "log_loss": 0.004848303738981485,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1498,
+            2
+          ],
+          [
+            3,
+            0,
+            1497
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 43,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 0.0,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 210616320,
+          "user_cpu_seconds": 2.013756,
+          "system_cpu_seconds": 0.30450099999999997
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          },
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/opt/homebrew/Cellar/libomp/22.1.7/lib/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true,
+        "trees_used": 400,
+        "trees_built": 400,
+        "best_validation_mlogloss": 0.00484830396006793
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 2.1412215000018477,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_09"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_09/checkpoint.joblib",
+      "trees_used": 400
+    },
+    {
+      "trial_id": "xgboost_10",
+      "model": "xgboost",
+      "phase": "P3",
+      "role": "CONFIRMATION",
+      "seed": 44,
+      "config": {
+        "max_depth": 3,
+        "learning_rate": 0.03,
+        "subsample": 1.0
+      },
+      "status": "COMPLETED",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_10",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.9988888888888889,
+        "macro_f1": 0.9988888883953083,
+        "log_loss": 0.004843355622142553,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1498,
+            2
+          ],
+          [
+            3,
+            0,
+            1497
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 44,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 0.0,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 210862080,
+          "user_cpu_seconds": 2.037554,
+          "system_cpu_seconds": 0.307189
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          },
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/opt/homebrew/Cellar/libomp/22.1.7/lib/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true,
+        "trees_used": 400,
+        "trees_built": 400,
+        "best_validation_mlogloss": 0.00484335511480337
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 2.1838261670200154,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_10"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_10/checkpoint.joblib",
+      "trees_used": 400
+    },
+    {
+      "trial_id": "random_forest_01",
+      "model": "random_forest",
+      "phase": "P2",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "n_estimators": 200,
+        "max_depth": null
+      },
+      "status": "COMPLETED",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_01",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.9986666666666667,
+        "macro_f1": 0.9986666654806897,
+        "log_loss": 0.008099584040937947,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1496,
+            4
+          ],
+          [
+            2,
+            0,
+            1498
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 42,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 0.0,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 204734464,
+          "user_cpu_seconds": 4.349731,
+          "system_cpu_seconds": 0.20574599999999998
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 3.151174084050581,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_01"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_01/checkpoint.joblib",
+      "trees_used": 400
+    },
+    {
+      "trial_id": "random_forest_02",
+      "model": "random_forest",
+      "phase": "P3",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "n_estimators": 200,
+        "max_depth": 12
+      },
+      "status": "COMPLETED",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_02",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.9986666666666667,
+        "macro_f1": 0.9986666654806897,
+        "log_loss": 0.008304071955436735,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1496,
+            4
+          ],
+          [
+            2,
+            0,
+            1498
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 42,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 0.0,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 204324864,
+          "user_cpu_seconds": 4.372409,
+          "system_cpu_seconds": 0.213119
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 3.161774666979909,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_02"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_02/checkpoint.joblib",
+      "trees_used": 400
+    },
+    {
+      "trial_id": "random_forest_03",
+      "model": "random_forest",
+      "phase": "P3",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "n_estimators": 200,
+        "max_depth": 24
+      },
+      "status": "COMPLETED",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_03",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.9986666666666667,
+        "macro_f1": 0.9986666654806897,
+        "log_loss": 0.008099584040937947,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1496,
+            4
+          ],
+          [
+            2,
+            0,
+            1498
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 42,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 0.0,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 205127680,
+          "user_cpu_seconds": 4.350604,
+          "system_cpu_seconds": 0.214502
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 3.1713986670365557,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_03"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_03/checkpoint.joblib",
+      "trees_used": 400
+    },
+    {
+      "trial_id": "random_forest_04",
+      "model": "random_forest",
+      "phase": "P3",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "n_estimators": 400,
+        "max_depth": null
+      },
+      "status": "COMPLETED",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_04",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.9988888888888889,
+        "macro_f1": 0.9988888883948145,
+        "log_loss": 0.008043999630180704,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1497,
+            3
+          ],
+          [
+            2,
+            0,
+            1498
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 42,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 1.1102230246251565e-16,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 209895424,
+          "user_cpu_seconds": 7.555646,
+          "system_cpu_seconds": 0.240646
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 4.829072208027355,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_04"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_04/checkpoint.joblib",
+      "trees_used": 400
+    },
+    {
+      "trial_id": "random_forest_05",
+      "model": "random_forest",
+      "phase": "P3",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "n_estimators": 400,
+        "max_depth": 12
+      },
+      "status": "COMPLETED",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_05",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.9988888888888889,
+        "macro_f1": 0.9988888883948145,
+        "log_loss": 0.00828331290471716,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1497,
+            3
+          ],
+          [
+            2,
+            0,
+            1498
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 42,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 0.0,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 208568320,
+          "user_cpu_seconds": 7.497504,
+          "system_cpu_seconds": 0.23833
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 4.835129667073488,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_05"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_05/checkpoint.joblib",
+      "trees_used": 400
+    },
+    {
+      "trial_id": "random_forest_06",
+      "model": "random_forest",
+      "phase": "P3",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "n_estimators": 400,
+        "max_depth": 24
+      },
+      "status": "COMPLETED",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_06",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.9988888888888889,
+        "macro_f1": 0.9988888883948145,
+        "log_loss": 0.008043999630180704,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1497,
+            3
+          ],
+          [
+            2,
+            0,
+            1498
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 42,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 0.0,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 215252992,
+          "user_cpu_seconds": 7.598223,
+          "system_cpu_seconds": 0.246577
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 4.8983895420096815,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_06"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_06/checkpoint.joblib",
+      "trees_used": 400
+    },
+    {
+      "trial_id": "random_forest_07",
+      "model": "random_forest",
+      "phase": "P3",
+      "role": "CONFIRMATION",
+      "seed": 43,
+      "config": {
+        "n_estimators": 400,
+        "max_depth": 24
+      },
+      "status": "COMPLETED",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_07",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.9988888888888889,
+        "macro_f1": 0.9988888883948145,
+        "log_loss": 0.008032126544207567,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1497,
+            3
+          ],
+          [
+            2,
+            0,
+            1498
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 43,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 0.0,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 211566592,
+          "user_cpu_seconds": 7.684417,
+          "system_cpu_seconds": 0.242699
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 4.878055249922909,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_07"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_07/checkpoint.joblib",
+      "trees_used": 400
+    },
+    {
+      "trial_id": "random_forest_08",
+      "model": "random_forest",
+      "phase": "P3",
+      "role": "CONFIRMATION",
+      "seed": 44,
+      "config": {
+        "n_estimators": 400,
+        "max_depth": 24
+      },
+      "status": "COMPLETED",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_08",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.9988888888888889,
+        "macro_f1": 0.9988888883948145,
+        "log_loss": 0.008203503517353347,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1497,
+            3
+          ],
+          [
+            2,
+            0,
+            1498
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 44,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 0.0,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 207175680,
+          "user_cpu_seconds": 7.641271,
+          "system_cpu_seconds": 0.23404599999999998
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 4.85287733306177,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_08"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_08/checkpoint.joblib",
+      "trees_used": 400
+    },
+    {
+      "trial_id": "logistic_regression_01",
+      "model": "logistic_regression",
+      "phase": "P2",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "C": 0.01
+      },
+      "status": "COMPLETED",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_01",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.9955555555555555,
+        "macro_f1": 0.9955547149556033,
+        "log_loss": 0.042229241376396304,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1492,
+            8
+          ],
+          [
+            11,
+            1,
+            1488
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 42,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 0.0,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 192970752,
+          "user_cpu_seconds": 1.177043,
+          "system_cpu_seconds": 0.20224399999999998
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true,
+        "n_iter": [
+          16
+        ]
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 1.688847874989733,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_01"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_01/checkpoint.joblib",
+      "trees_used": 400
+    },
+    {
+      "trial_id": "logistic_regression_02",
+      "model": "logistic_regression",
+      "phase": "P3",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "C": 0.1
+      },
+      "status": "COMPLETED",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_02",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.996,
+        "macro_f1": 0.99599939318087,
+        "log_loss": 0.01660951773502782,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1491,
+            9
+          ],
+          [
+            8,
+            1,
+            1491
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 42,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 0.0,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 193019904,
+          "user_cpu_seconds": 1.139594,
+          "system_cpu_seconds": 0.190961
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true,
+        "n_iter": [
+          18
+        ]
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 1.529685917077586,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_02"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_02/checkpoint.joblib",
+      "trees_used": 400
+    },
+    {
+      "trial_id": "logistic_regression_03",
+      "model": "logistic_regression",
+      "phase": "P3",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "C": 1
+      },
+      "status": "COMPLETED",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_03",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.9964444444444445,
+        "macro_f1": 0.9964439162440378,
+        "log_loss": 0.01000928359997071,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1492,
+            8
+          ],
+          [
+            7,
+            1,
+            1492
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 42,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 0.0,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 192675840,
+          "user_cpu_seconds": 1.10696,
+          "system_cpu_seconds": 0.173654
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true,
+        "n_iter": [
+          15
+        ]
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 1.4681224999949336,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_03"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_03/checkpoint.joblib",
+      "trees_used": 400
+    },
+    {
+      "trial_id": "logistic_regression_04",
+      "model": "logistic_regression",
+      "phase": "P3",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "C": 10
+      },
+      "status": "COMPLETED",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_04",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.9966666666666667,
+        "macro_f1": 0.9966662851682916,
+        "log_loss": 0.008843562009452651,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1491,
+            9
+          ],
+          [
+            5,
+            1,
+            1494
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 42,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 0.0,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 192790528,
+          "user_cpu_seconds": 1.119076,
+          "system_cpu_seconds": 0.180365
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true,
+        "n_iter": [
+          16
+        ]
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 1.5073925000615418,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_04"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_04/checkpoint.joblib",
+      "trees_used": 400
+    },
+    {
+      "trial_id": "logistic_regression_05",
+      "model": "logistic_regression",
+      "phase": "P3",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "C": 100
+      },
+      "status": "COMPLETED",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_05",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.9968888888888889,
+        "macro_f1": 0.9968885811194106,
+        "log_loss": 0.008753060270946625,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1491,
+            9
+          ],
+          [
+            4,
+            1,
+            1495
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 42,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 0.0,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 192692224,
+          "user_cpu_seconds": 1.102551,
+          "system_cpu_seconds": 0.17327499999999998
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true,
+        "n_iter": [
+          16
+        ]
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 1.4722190409665927,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_05"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_05/checkpoint.joblib",
+      "trees_used": 400
+    },
+    {
+      "trial_id": "logistic_regression_06",
+      "model": "logistic_regression",
+      "phase": "P3",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "C": 1000
+      },
+      "status": "COMPLETED",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_06",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.9968888888888889,
+        "macro_f1": 0.9968885811194106,
+        "log_loss": 0.008746305335608752,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1491,
+            9
+          ],
+          [
+            4,
+            1,
+            1495
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 42,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 0.0,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 192724992,
+          "user_cpu_seconds": 1.110383,
+          "system_cpu_seconds": 0.176681
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true,
+        "n_iter": [
+          16
+        ]
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 1.4828470419161022,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_06"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_06/checkpoint.joblib",
+      "trees_used": 400
+    },
+    {
+      "trial_id": "logistic_regression_07",
+      "model": "logistic_regression",
+      "phase": "P3",
+      "role": "CONFIRMATION",
+      "seed": 43,
+      "config": {
+        "C": 1000
+      },
+      "status": "DETERMINISTIC_DUPLICATE",
+      "directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_07",
+      "metrics": {
+        "interpretation": "FORMAL_VALIDATION_ONLY",
+        "formal_comparison_valid": true,
+        "samples": 4500,
+        "accuracy": 0.9968888888888889,
+        "macro_f1": 0.9968885811194106,
+        "log_loss": 0.008746305335608752,
+        "confusion_matrix": [
+          [
+            1500,
+            0,
+            0
+          ],
+          [
+            0,
+            1491,
+            9
+          ],
+          [
+            4,
+            1,
+            1495
+          ]
+        ],
+        "status": "COMPLETED",
+        "train_samples": 21000,
+        "validation_samples": 4500,
+        "fits_completed": 1,
+        "seed": 43,
+        "class_order": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "output_shape": [
+          4500,
+          3
+        ],
+        "reload_max_abs_difference": 0.0,
+        "all_probabilities_finite": true,
+        "resource_usage": {
+          "max_rss_bytes": 192626688,
+          "user_cpu_seconds": 1.11662,
+          "system_cpu_seconds": 0.18148399999999998
+        },
+        "thread_pools": [
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libomp",
+            "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+            "version": null
+          }
+        ],
+        "warnings": [],
+        "test_predictions": 0,
+        "test_csv_opened": false,
+        "synthetic_telemetry": true,
+        "benchmark_only": true,
+        "n_iter": [
+          16
+        ]
+      },
+      "execution": {
+        "status": "COMPLETED",
+        "command_started": true,
+        "wall_seconds": 1.5281838329974562,
+        "returncode": 0,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_07"
+        ]
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_07/checkpoint.joblib",
+      "trees_used": 400,
+      "independent_evidence": false
+    },
+    {
+      "trial_id": "logistic_regression_08",
+      "model": "logistic_regression",
+      "phase": "P3",
+      "role": "CONFIRMATION",
+      "seed": 44,
+      "config": {
+        "C": 1000
+      },
+      "status": "SKIPPED_DETERMINISTIC_DUPLICATE",
+      "independent_evidence": false
+    }
+  ],
+  "selection": {
+    "xgboost": {
+      "status": "FROZEN_VALIDATION_SELECTION",
+      "selected_trial_id": "xgboost_02",
+      "config": {
+        "max_depth": 3,
+        "learning_rate": 0.03,
+        "subsample": 1.0
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_02/checkpoint.joblib",
+      "frozen_seed": 42,
+      "validation_macro_f1": 0.9988888883953083,
+      "validation_log_loss": 0.0049257162027060986,
+      "confirmation_seeds_completed": [
+        43,
+        44
+      ],
+      "test_used": false,
+      "confirmation_macro_f1_mean": 0.9988888883953083,
+      "confirmation_macro_f1_std": 0.0,
+      "confirmation_std_ddof": 0,
+      "confirmation_seed_values": [
+        42,
+        43,
+        44
+      ]
+    },
+    "random_forest": {
+      "status": "FROZEN_VALIDATION_SELECTION",
+      "selected_trial_id": "random_forest_06",
+      "config": {
+        "n_estimators": 400,
+        "max_depth": 24
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_06/checkpoint.joblib",
+      "frozen_seed": 42,
+      "validation_macro_f1": 0.9988888883948145,
+      "validation_log_loss": 0.008043999630180704,
+      "confirmation_seeds_completed": [
+        43,
+        44
+      ],
+      "test_used": false,
+      "confirmation_macro_f1_mean": 0.9988888883948145,
+      "confirmation_macro_f1_std": 0.0,
+      "confirmation_std_ddof": 0,
+      "confirmation_seed_values": [
+        42,
+        43,
+        44
+      ]
+    },
+    "logistic_regression": {
+      "status": "FROZEN_VALIDATION_SELECTION",
+      "selected_trial_id": "logistic_regression_06",
+      "config": {
+        "C": 1000
+      },
+      "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_06/checkpoint.joblib",
+      "frozen_seed": 42,
+      "validation_macro_f1": 0.9968885811194106,
+      "validation_log_loss": 0.008746305335608752,
+      "confirmation_seeds_completed": [
+        43
+      ],
+      "test_used": false,
+      "deterministic_duplicate": true,
+      "confirmation_macro_f1_mean": 0.9968885811194106,
+      "confirmation_macro_f1_std": 0.0,
+      "confirmation_std_ddof": 0,
+      "confirmation_seed_values": [
+        42,
+        43
+      ]
+    }
+  },
+  "used_wall_seconds": 66.14878750010394,
+  "execution": {
+    "status": "COMPLETED",
+    "command_started": true,
+    "wall_seconds": 67.43851437501144,
+    "returncode": 0,
+    "command": [
+      "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+      "-B",
+      "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_telemetry_hpo.py",
+      "--run-id",
+      "p3_telemetry_20261018",
+      "--data-root",
+      "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-",
+      "--coordinate"
+    ]
+  },
+  "combined_wall_seconds": 68.61661074997392,
+  "protected_hashes_after": {
+    "ml/outputs/vision/mobilenetv3_large_vision.pt": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+    "ml/outputs/vision/mobilenetv3_large_vision.onnx": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "ml/outputs/telemetry/xgb_telemetry.json": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+    "docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md": "0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0"
+  }
+}

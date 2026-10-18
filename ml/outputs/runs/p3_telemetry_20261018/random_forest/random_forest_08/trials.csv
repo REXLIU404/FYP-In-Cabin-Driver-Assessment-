@@ -1,0 +1,2 @@
+trial_id,model,phase,role,seed,status,counts_toward_hpo,macro_f1,log_loss,fits
+random_forest_08,random_forest,P3,CONFIRMATION,44,COMPLETED,True,0.9988888883948145,0.008203503517353347,1

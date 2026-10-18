@@ -1,0 +1,5 @@
+phase,seconds,samples,warmup,device,threads,provider,batch
+train_preprocessing,0.019642916973680258,21000,False,cpu,2,xgboost,full_split
+fit,0.35661695804446936,21000,False,cpu,2,xgboost,full_split
+validation,0.006948333000764251,4500,False,cpu,2,xgboost,full_split
+reload_validation,0.011358875082805753,4500,False,cpu,2,xgboost,full_split

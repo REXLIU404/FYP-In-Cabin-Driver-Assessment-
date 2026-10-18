@@ -1,0 +1,72 @@
+{
+  "interpretation": "FORMAL_VALIDATION_ONLY",
+  "formal_comparison_valid": true,
+  "samples": 4500,
+  "accuracy": 0.9988888888888889,
+  "macro_f1": 0.9988888883953083,
+  "log_loss": 0.004843355622142553,
+  "confusion_matrix": [
+    [
+      1500,
+      0,
+      0
+    ],
+    [
+      0,
+      1498,
+      2
+    ],
+    [
+      3,
+      0,
+      1497
+    ]
+  ],
+  "status": "COMPLETED",
+  "train_samples": 21000,
+  "validation_samples": 4500,
+  "fits_completed": 1,
+  "seed": 44,
+  "class_order": [
+    "Safe",
+    "Aggressive",
+    "Distracted"
+  ],
+  "output_shape": [
+    4500,
+    3
+  ],
+  "reload_max_abs_difference": 0.0,
+  "all_probabilities_finite": true,
+  "resource_usage": {
+    "max_rss_bytes": 210862080,
+    "user_cpu_seconds": 2.037554,
+    "system_cpu_seconds": 0.307189
+  },
+  "thread_pools": [
+    {
+      "user_api": "openmp",
+      "internal_api": "openmp",
+      "num_threads": 2,
+      "prefix": "libomp",
+      "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+      "version": null
+    },
+    {
+      "user_api": "openmp",
+      "internal_api": "openmp",
+      "num_threads": 2,
+      "prefix": "libomp",
+      "filepath": "/opt/homebrew/Cellar/libomp/22.1.7/lib/libomp.dylib",
+      "version": null
+    }
+  ],
+  "warnings": [],
+  "test_predictions": 0,
+  "test_csv_opened": false,
+  "synthetic_telemetry": true,
+  "benchmark_only": true,
+  "trees_used": 400,
+  "trees_built": 400,
+  "best_validation_mlogloss": 0.00484335511480337
+}

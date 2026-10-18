@@ -1,0 +1,909 @@
+FFFFFFFFFFFFFFFFFFF                                                      [100%]
+=================================== FAILURES ===================================
+__________________ test_grid_order_and_p2_first_configuration __________________
+
+    def protocol_module():
+        try:
+>           return importlib.import_module('ml.experiments.hpo_protocol')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.hpo_protocol'
+import_ = <function _gcd_import at 0x102ef44a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.hpo_protocol'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    def test_grid_order_and_p2_first_configuration():
+>       h = protocol_module()
+            ^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def protocol_module():
+        try:
+            return importlib.import_module('ml.experiments.hpo_protocol')
+        except ModuleNotFoundError:
+>           pytest.fail('Shared HPO protocol is not implemented')
+E           Failed: Shared HPO protocol is not implemented
+
+ml/tests/test_hpo_protocol.py:14: Failed
+_______________ test_tied_f1_uses_logloss_then_simplicity_and_id _______________
+
+    def protocol_module():
+        try:
+>           return importlib.import_module('ml.experiments.hpo_protocol')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.hpo_protocol'
+import_ = <function _gcd_import at 0x102ef44a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.hpo_protocol'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    def test_tied_f1_uses_logloss_then_simplicity_and_id():
+>       h = protocol_module()
+            ^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def protocol_module():
+        try:
+            return importlib.import_module('ml.experiments.hpo_protocol')
+        except ModuleNotFoundError:
+>           pytest.fail('Shared HPO protocol is not implemented')
+E           Failed: Shared HPO protocol is not implemented
+
+ml/tests/test_hpo_protocol.py:14: Failed
+_______ test_none_depth_is_most_complex_and_no_confirmation_reselection ________
+
+    def protocol_module():
+        try:
+>           return importlib.import_module('ml.experiments.hpo_protocol')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.hpo_protocol'
+import_ = <function _gcd_import at 0x102ef44a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.hpo_protocol'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    def test_none_depth_is_most_complex_and_no_confirmation_reselection():
+>       h = protocol_module()
+            ^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def protocol_module():
+        try:
+            return importlib.import_module('ml.experiments.hpo_protocol')
+        except ModuleNotFoundError:
+>           pytest.fail('Shared HPO protocol is not implemented')
+E           Failed: Shared HPO protocol is not implemented
+
+ml/tests/test_hpo_protocol.py:14: Failed
+__________ test_unapproved_or_invalid_vision_budget_is_rejected[None] __________
+
+    def protocol_module():
+        try:
+>           return importlib.import_module('ml.experiments.hpo_protocol')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.hpo_protocol'
+import_ = <function _gcd_import at 0x102ef44a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.hpo_protocol'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+bad = None
+
+    @pytest.mark.parametrize('bad', [None, {}, {'launch_authorized': False},
+        {'launch_authorized': True, 'per_trial': 1, 'per_model': 2},
+        {'launch_authorized': True, 'per_trial': True, 'per_model': 2, 'total': 3},
+        {'launch_authorized': True, 'per_trial': 1, 'per_model': 2, 'total': float('inf')}])
+    def test_unapproved_or_invalid_vision_budget_is_rejected(bad):
+        with pytest.raises(ValueError):
+>           protocol_module().validate_vision_budget(bad)
+            ^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def protocol_module():
+        try:
+            return importlib.import_module('ml.experiments.hpo_protocol')
+        except ModuleNotFoundError:
+>           pytest.fail('Shared HPO protocol is not implemented')
+E           Failed: Shared HPO protocol is not implemented
+
+ml/tests/test_hpo_protocol.py:14: Failed
+__________ test_unapproved_or_invalid_vision_budget_is_rejected[bad1] __________
+
+    def protocol_module():
+        try:
+>           return importlib.import_module('ml.experiments.hpo_protocol')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.hpo_protocol'
+import_ = <function _gcd_import at 0x102ef44a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.hpo_protocol'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+bad = {}
+
+    @pytest.mark.parametrize('bad', [None, {}, {'launch_authorized': False},
+        {'launch_authorized': True, 'per_trial': 1, 'per_model': 2},
+        {'launch_authorized': True, 'per_trial': True, 'per_model': 2, 'total': 3},
+        {'launch_authorized': True, 'per_trial': 1, 'per_model': 2, 'total': float('inf')}])
+    def test_unapproved_or_invalid_vision_budget_is_rejected(bad):
+        with pytest.raises(ValueError):
+>           protocol_module().validate_vision_budget(bad)
+            ^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def protocol_module():
+        try:
+            return importlib.import_module('ml.experiments.hpo_protocol')
+        except ModuleNotFoundError:
+>           pytest.fail('Shared HPO protocol is not implemented')
+E           Failed: Shared HPO protocol is not implemented
+
+ml/tests/test_hpo_protocol.py:14: Failed
+__________ test_unapproved_or_invalid_vision_budget_is_rejected[bad2] __________
+
+    def protocol_module():
+        try:
+>           return importlib.import_module('ml.experiments.hpo_protocol')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.hpo_protocol'
+import_ = <function _gcd_import at 0x102ef44a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.hpo_protocol'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+bad = {'launch_authorized': False}
+
+    @pytest.mark.parametrize('bad', [None, {}, {'launch_authorized': False},
+        {'launch_authorized': True, 'per_trial': 1, 'per_model': 2},
+        {'launch_authorized': True, 'per_trial': True, 'per_model': 2, 'total': 3},
+        {'launch_authorized': True, 'per_trial': 1, 'per_model': 2, 'total': float('inf')}])
+    def test_unapproved_or_invalid_vision_budget_is_rejected(bad):
+        with pytest.raises(ValueError):
+>           protocol_module().validate_vision_budget(bad)
+            ^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def protocol_module():
+        try:
+            return importlib.import_module('ml.experiments.hpo_protocol')
+        except ModuleNotFoundError:
+>           pytest.fail('Shared HPO protocol is not implemented')
+E           Failed: Shared HPO protocol is not implemented
+
+ml/tests/test_hpo_protocol.py:14: Failed
+__________ test_unapproved_or_invalid_vision_budget_is_rejected[bad3] __________
+
+    def protocol_module():
+        try:
+>           return importlib.import_module('ml.experiments.hpo_protocol')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.hpo_protocol'
+import_ = <function _gcd_import at 0x102ef44a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.hpo_protocol'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+bad = {'launch_authorized': True, 'per_model': 2, 'per_trial': 1}
+
+    @pytest.mark.parametrize('bad', [None, {}, {'launch_authorized': False},
+        {'launch_authorized': True, 'per_trial': 1, 'per_model': 2},
+        {'launch_authorized': True, 'per_trial': True, 'per_model': 2, 'total': 3},
+        {'launch_authorized': True, 'per_trial': 1, 'per_model': 2, 'total': float('inf')}])
+    def test_unapproved_or_invalid_vision_budget_is_rejected(bad):
+        with pytest.raises(ValueError):
+>           protocol_module().validate_vision_budget(bad)
+            ^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def protocol_module():
+        try:
+            return importlib.import_module('ml.experiments.hpo_protocol')
+        except ModuleNotFoundError:
+>           pytest.fail('Shared HPO protocol is not implemented')
+E           Failed: Shared HPO protocol is not implemented
+
+ml/tests/test_hpo_protocol.py:14: Failed
+__________ test_unapproved_or_invalid_vision_budget_is_rejected[bad4] __________
+
+    def protocol_module():
+        try:
+>           return importlib.import_module('ml.experiments.hpo_protocol')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.hpo_protocol'
+import_ = <function _gcd_import at 0x102ef44a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.hpo_protocol'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+bad = {'launch_authorized': True, 'per_model': 2, 'per_trial': True, 'total': 3}
+
+    @pytest.mark.parametrize('bad', [None, {}, {'launch_authorized': False},
+        {'launch_authorized': True, 'per_trial': 1, 'per_model': 2},
+        {'launch_authorized': True, 'per_trial': True, 'per_model': 2, 'total': 3},
+        {'launch_authorized': True, 'per_trial': 1, 'per_model': 2, 'total': float('inf')}])
+    def test_unapproved_or_invalid_vision_budget_is_rejected(bad):
+        with pytest.raises(ValueError):
+>           protocol_module().validate_vision_budget(bad)
+            ^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def protocol_module():
+        try:
+            return importlib.import_module('ml.experiments.hpo_protocol')
+        except ModuleNotFoundError:
+>           pytest.fail('Shared HPO protocol is not implemented')
+E           Failed: Shared HPO protocol is not implemented
+
+ml/tests/test_hpo_protocol.py:14: Failed
+__________ test_unapproved_or_invalid_vision_budget_is_rejected[bad5] __________
+
+    def protocol_module():
+        try:
+>           return importlib.import_module('ml.experiments.hpo_protocol')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.hpo_protocol'
+import_ = <function _gcd_import at 0x102ef44a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.hpo_protocol'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+bad = {'launch_authorized': True, 'per_model': 2, 'per_trial': 1, 'total': inf}
+
+    @pytest.mark.parametrize('bad', [None, {}, {'launch_authorized': False},
+        {'launch_authorized': True, 'per_trial': 1, 'per_model': 2},
+        {'launch_authorized': True, 'per_trial': True, 'per_model': 2, 'total': 3},
+        {'launch_authorized': True, 'per_trial': 1, 'per_model': 2, 'total': float('inf')}])
+    def test_unapproved_or_invalid_vision_budget_is_rejected(bad):
+        with pytest.raises(ValueError):
+>           protocol_module().validate_vision_budget(bad)
+            ^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def protocol_module():
+        try:
+            return importlib.import_module('ml.experiments.hpo_protocol')
+        except ModuleNotFoundError:
+>           pytest.fail('Shared HPO protocol is not implemented')
+E           Failed: Shared HPO protocol is not implemented
+
+ml/tests/test_hpo_protocol.py:14: Failed
+_________________ test_numeric_budget_and_separate_model_caps __________________
+
+    def protocol_module():
+        try:
+>           return importlib.import_module('ml.experiments.hpo_protocol')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.hpo_protocol'
+import_ = <function _gcd_import at 0x102ef44a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.hpo_protocol'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    def test_numeric_budget_and_separate_model_caps():
+>       h = protocol_module()
+            ^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def protocol_module():
+        try:
+            return importlib.import_module('ml.experiments.hpo_protocol')
+        except ModuleNotFoundError:
+>           pytest.fail('Shared HPO protocol is not implemented')
+E           Failed: Shared HPO protocol is not implemented
+
+ml/tests/test_hpo_protocol.py:14: Failed
+___________________ test_run_path_rejects_escape[../escape] ____________________
+
+    def protocol_module():
+        try:
+>           return importlib.import_module('ml.experiments.hpo_protocol')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.hpo_protocol'
+import_ = <function _gcd_import at 0x102ef44a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.hpo_protocol'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+run_id = '../escape'
+
+    @pytest.mark.parametrize('run_id', ['../escape', '/tmp/escape', 'a/b', '', 'a..b'])
+    def test_run_path_rejects_escape(run_id):
+        with pytest.raises(ValueError):
+>           protocol_module().safe_run(run_id)
+            ^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def protocol_module():
+        try:
+            return importlib.import_module('ml.experiments.hpo_protocol')
+        except ModuleNotFoundError:
+>           pytest.fail('Shared HPO protocol is not implemented')
+E           Failed: Shared HPO protocol is not implemented
+
+ml/tests/test_hpo_protocol.py:14: Failed
+__________________ test_run_path_rejects_escape[/tmp/escape] ___________________
+
+    def protocol_module():
+        try:
+>           return importlib.import_module('ml.experiments.hpo_protocol')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.hpo_protocol'
+import_ = <function _gcd_import at 0x102ef44a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.hpo_protocol'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+run_id = '/tmp/escape'
+
+    @pytest.mark.parametrize('run_id', ['../escape', '/tmp/escape', 'a/b', '', 'a..b'])
+    def test_run_path_rejects_escape(run_id):
+        with pytest.raises(ValueError):
+>           protocol_module().safe_run(run_id)
+            ^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def protocol_module():
+        try:
+            return importlib.import_module('ml.experiments.hpo_protocol')
+        except ModuleNotFoundError:
+>           pytest.fail('Shared HPO protocol is not implemented')
+E           Failed: Shared HPO protocol is not implemented
+
+ml/tests/test_hpo_protocol.py:14: Failed
+______________________ test_run_path_rejects_escape[a/b] _______________________
+
+    def protocol_module():
+        try:
+>           return importlib.import_module('ml.experiments.hpo_protocol')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.hpo_protocol'
+import_ = <function _gcd_import at 0x102ef44a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.hpo_protocol'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+run_id = 'a/b'
+
+    @pytest.mark.parametrize('run_id', ['../escape', '/tmp/escape', 'a/b', '', 'a..b'])
+    def test_run_path_rejects_escape(run_id):
+        with pytest.raises(ValueError):
+>           protocol_module().safe_run(run_id)
+            ^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def protocol_module():
+        try:
+            return importlib.import_module('ml.experiments.hpo_protocol')
+        except ModuleNotFoundError:
+>           pytest.fail('Shared HPO protocol is not implemented')
+E           Failed: Shared HPO protocol is not implemented
+
+ml/tests/test_hpo_protocol.py:14: Failed
+________________________ test_run_path_rejects_escape[] ________________________
+
+    def protocol_module():
+        try:
+>           return importlib.import_module('ml.experiments.hpo_protocol')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.hpo_protocol'
+import_ = <function _gcd_import at 0x102ef44a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.hpo_protocol'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+run_id = ''
+
+    @pytest.mark.parametrize('run_id', ['../escape', '/tmp/escape', 'a/b', '', 'a..b'])
+    def test_run_path_rejects_escape(run_id):
+        with pytest.raises(ValueError):
+>           protocol_module().safe_run(run_id)
+            ^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def protocol_module():
+        try:
+            return importlib.import_module('ml.experiments.hpo_protocol')
+        except ModuleNotFoundError:
+>           pytest.fail('Shared HPO protocol is not implemented')
+E           Failed: Shared HPO protocol is not implemented
+
+ml/tests/test_hpo_protocol.py:14: Failed
+______________________ test_run_path_rejects_escape[a..b] ______________________
+
+    def protocol_module():
+        try:
+>           return importlib.import_module('ml.experiments.hpo_protocol')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.hpo_protocol'
+import_ = <function _gcd_import at 0x102ef44a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.hpo_protocol'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+run_id = 'a..b'
+
+    @pytest.mark.parametrize('run_id', ['../escape', '/tmp/escape', 'a/b', '', 'a..b'])
+    def test_run_path_rejects_escape(run_id):
+        with pytest.raises(ValueError):
+>           protocol_module().safe_run(run_id)
+            ^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def protocol_module():
+        try:
+            return importlib.import_module('ml.experiments.hpo_protocol')
+        except ModuleNotFoundError:
+>           pytest.fail('Shared HPO protocol is not implemented')
+E           Failed: Shared HPO protocol is not implemented
+
+ml/tests/test_hpo_protocol.py:14: Failed
+____________________ test_run_path_rejects_symlink_ancestor ____________________
+
+    def protocol_module():
+        try:
+>           return importlib.import_module('ml.experiments.hpo_protocol')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.hpo_protocol'
+import_ = <function _gcd_import at 0x102ef44a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.hpo_protocol'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-26/test_run_path_rejects_symlink_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1087fbbb0>
+
+    def test_run_path_rejects_symlink_ancestor(tmp_path, monkeypatch):
+>       h = protocol_module()
+            ^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:72: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def protocol_module():
+        try:
+            return importlib.import_module('ml.experiments.hpo_protocol')
+        except ModuleNotFoundError:
+>           pytest.fail('Shared HPO protocol is not implemented')
+E           Failed: Shared HPO protocol is not implemented
+
+ml/tests/test_hpo_protocol.py:14: Failed
+__________________________ test_mps_gate_refuses_cpu ___________________________
+
+    def protocol_module():
+        try:
+>           return importlib.import_module('ml.experiments.hpo_protocol')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.hpo_protocol'
+import_ = <function _gcd_import at 0x102ef44a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.hpo_protocol'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1087fb820>
+
+    def test_mps_gate_refuses_cpu(monkeypatch):
+>       h = protocol_module()
+            ^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def protocol_module():
+        try:
+            return importlib.import_module('ml.experiments.hpo_protocol')
+        except ModuleNotFoundError:
+>           pytest.fail('Shared HPO protocol is not implemented')
+E           Failed: Shared HPO protocol is not implemented
+
+ml/tests/test_hpo_protocol.py:14: Failed
+_________________ test_load_protocol_rejects_uncommitted_rules _________________
+
+    def protocol_module():
+        try:
+>           return importlib.import_module('ml.experiments.hpo_protocol')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.hpo_protocol'
+import_ = <function _gcd_import at 0x102ef44a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.hpo_protocol'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-26/test_load_protocol_rejects_unc0')
+
+    def test_load_protocol_rejects_uncommitted_rules(tmp_path):
+>       h = protocol_module()
+            ^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def protocol_module():
+        try:
+            return importlib.import_module('ml.experiments.hpo_protocol')
+        except ModuleNotFoundError:
+>           pytest.fail('Shared HPO protocol is not implemented')
+E           Failed: Shared HPO protocol is not implemented
+
+ml/tests/test_hpo_protocol.py:14: Failed
+______________ test_invalid_validation_scores_are_not_selectable _______________
+
+    def protocol_module():
+        try:
+>           return importlib.import_module('ml.experiments.hpo_protocol')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.hpo_protocol'
+import_ = <function _gcd_import at 0x102ef44a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.hpo_protocol'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    def test_invalid_validation_scores_are_not_selectable():
+>       h = protocol_module()
+            ^^^^^^^^^^^^^^^^^
+
+ml/tests/test_hpo_protocol.py:99: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def protocol_module():
+        try:
+            return importlib.import_module('ml.experiments.hpo_protocol')
+        except ModuleNotFoundError:
+>           pytest.fail('Shared HPO protocol is not implemented')
+E           Failed: Shared HPO protocol is not implemented
+
+ml/tests/test_hpo_protocol.py:14: Failed
+=========================== short test summary info ============================
+FAILED ml/tests/test_hpo_protocol.py::test_grid_order_and_p2_first_configuration
+FAILED ml/tests/test_hpo_protocol.py::test_tied_f1_uses_logloss_then_simplicity_and_id
+FAILED ml/tests/test_hpo_protocol.py::test_none_depth_is_most_complex_and_no_confirmation_reselection
+FAILED ml/tests/test_hpo_protocol.py::test_unapproved_or_invalid_vision_budget_is_rejected[None]
+FAILED ml/tests/test_hpo_protocol.py::test_unapproved_or_invalid_vision_budget_is_rejected[bad1]
+FAILED ml/tests/test_hpo_protocol.py::test_unapproved_or_invalid_vision_budget_is_rejected[bad2]
+FAILED ml/tests/test_hpo_protocol.py::test_unapproved_or_invalid_vision_budget_is_rejected[bad3]
+FAILED ml/tests/test_hpo_protocol.py::test_unapproved_or_invalid_vision_budget_is_rejected[bad4]
+FAILED ml/tests/test_hpo_protocol.py::test_unapproved_or_invalid_vision_budget_is_rejected[bad5]
+FAILED ml/tests/test_hpo_protocol.py::test_numeric_budget_and_separate_model_caps
+FAILED ml/tests/test_hpo_protocol.py::test_run_path_rejects_escape[../escape]
+FAILED ml/tests/test_hpo_protocol.py::test_run_path_rejects_escape[/tmp/escape]
+FAILED ml/tests/test_hpo_protocol.py::test_run_path_rejects_escape[a/b] - Fai...
+FAILED ml/tests/test_hpo_protocol.py::test_run_path_rejects_escape[] - Failed...
+FAILED ml/tests/test_hpo_protocol.py::test_run_path_rejects_escape[a..b] - Fa...
+FAILED ml/tests/test_hpo_protocol.py::test_run_path_rejects_symlink_ancestor
+FAILED ml/tests/test_hpo_protocol.py::test_mps_gate_refuses_cpu - Failed: Sha...
+FAILED ml/tests/test_hpo_protocol.py::test_load_protocol_rejects_uncommitted_rules
+FAILED ml/tests/test_hpo_protocol.py::test_invalid_validation_scores_are_not_selectable
+19 failed in 0.52s
