@@ -1,0 +1,1319 @@
+{
+  "run_id": "w2_preparation_20261015",
+  "phase": "P0_WEEK2_PREPARATION",
+  "checked_at": "2026-10-15T02:35:42.409466+08:00",
+  "command": "./.venv/bin/python -B ml/outputs/runs/w2_preparation_20261015/verify_preparation.py",
+  "git": {
+    "branch": "fyp2/ml-training",
+    "head": "efb3ea604d584d2c5d1b1684742996e95125a8ec",
+    "dirty_state": "M ml/.gitignore\n?? docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md\n?? docs/fyp2/ml/\n?? ml/configs/\n?? ml/outputs/runs/",
+    "staged_paths": ""
+  },
+  "versions": {
+    "python": "3.13.3",
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "torch": "2.12.0",
+    "torchvision": "0.27.0",
+    "scikit-learn": "1.9.0",
+    "xgboost": "3.2.0",
+    "onnx": "1.21.0",
+    "onnxruntime": "1.26.0",
+    "pandas": "3.0.3",
+    "numpy": "2.4.6",
+    "Pillow": "12.2.0"
+  },
+  "device": {
+    "mps_built": true,
+    "mps_available": false,
+    "cuda_available": false,
+    "training_device": "NOT_SELECTED"
+  },
+  "classifier_training_runs": 0,
+  "hpo_trials": 0,
+  "test_prediction_runs": 0,
+  "e1_runs": 0,
+  "protected_hashes_before": {
+    "ml/outputs/vision/mobilenetv3_large_vision.onnx": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "ml/outputs/vision/mobilenetv3_large_vision.pt": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+    "ml/outputs/telemetry/xgb_telemetry.json": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+    "docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md": "0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0",
+    "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/vision/vision_metadata_with_split.csv": "b4f8e90dec769bb419eaa490aea869668bed6484089cebe4d545c7667baa8ea4",
+    "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_train.csv": "97dd20ee9c0832ba33455e5c31088f9b4abb65c198bf988699a959d545d1e5b5",
+    "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_val.csv": "1b02792df846b5af138bae59e4f4ccfa8fa421fbb4fd6d42fad88d57722774f1",
+    "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_test.csv": "3bc3d47680a87359e1470fd8ffaf5ff330dc4419b37cc645e5736d51a91c96de"
+  },
+  "checks": [
+    {
+      "check": "cwd",
+      "passed": true,
+      "actual": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1"
+    },
+    {
+      "check": "branch",
+      "passed": true,
+      "actual": "fyp2/ml-training"
+    },
+    {
+      "check": "hash:ml/outputs/vision/mobilenetv3_large_vision.onnx",
+      "passed": true,
+      "actual": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf"
+    },
+    {
+      "check": "hash:ml/outputs/vision/mobilenetv3_large_vision.pt",
+      "passed": true,
+      "actual": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7"
+    },
+    {
+      "check": "hash:ml/outputs/telemetry/xgb_telemetry.json",
+      "passed": true,
+      "actual": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07"
+    },
+    {
+      "check": "hash:docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md",
+      "passed": true,
+      "actual": "0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0"
+    },
+    {
+      "check": "hash:/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/vision/vision_metadata_with_split.csv",
+      "passed": true,
+      "actual": "b4f8e90dec769bb419eaa490aea869668bed6484089cebe4d545c7667baa8ea4"
+    },
+    {
+      "check": "hash:/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_train.csv",
+      "passed": true,
+      "actual": "97dd20ee9c0832ba33455e5c31088f9b4abb65c198bf988699a959d545d1e5b5"
+    },
+    {
+      "check": "hash:/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_val.csv",
+      "passed": true,
+      "actual": "1b02792df846b5af138bae59e4f4ccfa8fa421fbb4fd6d42fad88d57722774f1"
+    },
+    {
+      "check": "hash:/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_test.csv",
+      "passed": true,
+      "actual": "3bc3d47680a87359e1470fd8ffaf5ff330dc4419b37cc645e5736d51a91c96de"
+    },
+    {
+      "check": "vision_sizes_reused",
+      "passed": true,
+      "actual": {
+        "train": 15899,
+        "val": 2868,
+        "test": 3657
+      }
+    },
+    {
+      "check": "vision_splits_only",
+      "passed": true,
+      "actual": [
+        "test",
+        "train",
+        "val"
+      ]
+    },
+    {
+      "check": "vision_driver_disjoint",
+      "passed": true,
+      "actual": {
+        "train_val": 0,
+        "train_test": 0,
+        "val_test": 0
+      }
+    },
+    {
+      "check": "vision_driver_counts_reused",
+      "passed": true,
+      "actual": {
+        "train": 18,
+        "val": 4,
+        "test": 4
+      }
+    },
+    {
+      "check": "vision_unique_paths",
+      "passed": true,
+      "actual": 0
+    },
+    {
+      "check": "vision_source_ids_unique",
+      "passed": true,
+      "actual": 0
+    },
+    {
+      "check": "vision_paths_exist",
+      "passed": true,
+      "actual": 0
+    },
+    {
+      "check": "vision_class_order",
+      "passed": true,
+      "actual": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5",
+        "c6",
+        "c7",
+        "c8",
+        "c9"
+      ]
+    },
+    {
+      "check": "vision_class_coverage:train",
+      "passed": true,
+      "actual": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5",
+        "c6",
+        "c7",
+        "c8",
+        "c9"
+      ]
+    },
+    {
+      "check": "vision_class_coverage:val",
+      "passed": true,
+      "actual": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5",
+        "c6",
+        "c7",
+        "c8",
+        "c9"
+      ]
+    },
+    {
+      "check": "vision_class_coverage:test",
+      "passed": true,
+      "actual": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5",
+        "c6",
+        "c7",
+        "c8",
+        "c9"
+      ]
+    },
+    {
+      "check": "telemetry_columns:train",
+      "passed": true,
+      "actual": [
+        "speed_kmph",
+        "accel_x",
+        "accel_y",
+        "brake_pressure",
+        "steering_angle",
+        "throttle",
+        "lane_deviation",
+        "headway_distance",
+        "behavior_label"
+      ]
+    },
+    {
+      "check": "telemetry_hash_reused:train",
+      "passed": true,
+      "actual": "97dd20ee9c0832ba33455e5c31088f9b4abb65c198bf988699a959d545d1e5b5"
+    },
+    {
+      "check": "telemetry_rows:train",
+      "passed": true,
+      "actual": 21000
+    },
+    {
+      "check": "telemetry_missing:train",
+      "passed": true,
+      "actual": 0
+    },
+    {
+      "check": "telemetry_finite:train",
+      "passed": true,
+      "actual": true
+    },
+    {
+      "check": "telemetry_labels:train",
+      "passed": true,
+      "actual": [
+        "Aggressive",
+        "Distracted",
+        "Safe"
+      ]
+    },
+    {
+      "check": "telemetry_unique_rows:train",
+      "passed": true,
+      "actual": 21000
+    },
+    {
+      "check": "telemetry_columns:val",
+      "passed": true,
+      "actual": [
+        "speed_kmph",
+        "accel_x",
+        "accel_y",
+        "brake_pressure",
+        "steering_angle",
+        "throttle",
+        "lane_deviation",
+        "headway_distance",
+        "behavior_label"
+      ]
+    },
+    {
+      "check": "telemetry_hash_reused:val",
+      "passed": true,
+      "actual": "1b02792df846b5af138bae59e4f4ccfa8fa421fbb4fd6d42fad88d57722774f1"
+    },
+    {
+      "check": "telemetry_rows:val",
+      "passed": true,
+      "actual": 4500
+    },
+    {
+      "check": "telemetry_missing:val",
+      "passed": true,
+      "actual": 0
+    },
+    {
+      "check": "telemetry_finite:val",
+      "passed": true,
+      "actual": true
+    },
+    {
+      "check": "telemetry_labels:val",
+      "passed": true,
+      "actual": [
+        "Aggressive",
+        "Distracted",
+        "Safe"
+      ]
+    },
+    {
+      "check": "telemetry_unique_rows:val",
+      "passed": true,
+      "actual": 4500
+    },
+    {
+      "check": "telemetry_columns:test",
+      "passed": true,
+      "actual": [
+        "speed_kmph",
+        "accel_x",
+        "accel_y",
+        "brake_pressure",
+        "steering_angle",
+        "throttle",
+        "lane_deviation",
+        "headway_distance",
+        "behavior_label"
+      ]
+    },
+    {
+      "check": "telemetry_hash_reused:test",
+      "passed": true,
+      "actual": "3bc3d47680a87359e1470fd8ffaf5ff330dc4419b37cc645e5736d51a91c96de"
+    },
+    {
+      "check": "telemetry_rows:test",
+      "passed": true,
+      "actual": 4500
+    },
+    {
+      "check": "telemetry_missing:test",
+      "passed": true,
+      "actual": 0
+    },
+    {
+      "check": "telemetry_finite:test",
+      "passed": true,
+      "actual": true
+    },
+    {
+      "check": "telemetry_labels:test",
+      "passed": true,
+      "actual": [
+        "Aggressive",
+        "Distracted",
+        "Safe"
+      ]
+    },
+    {
+      "check": "telemetry_unique_rows:test",
+      "passed": true,
+      "actual": 4500
+    },
+    {
+      "check": "telemetry_no_exact_overlap",
+      "passed": true,
+      "actual": {
+        "train_val": 0,
+        "train_test": 0,
+        "val_test": 0
+      }
+    },
+    {
+      "check": "feature_order_csv",
+      "passed": true,
+      "actual": [
+        "speed_kmph",
+        "accel_x",
+        "accel_y",
+        "brake_pressure",
+        "steering_angle",
+        "throttle",
+        "lane_deviation",
+        "headway_distance"
+      ]
+    },
+    {
+      "check": "raw_8_features_missing",
+      "passed": true,
+      "actual": 0
+    },
+    {
+      "check": "imputer_train_only_oracle",
+      "passed": true,
+      "actual": {
+        "train": [
+          0,
+          2
+        ],
+        "expected_missing_fill": 1.0
+      }
+    },
+    {
+      "check": "checkpoint_class_order",
+      "passed": true,
+      "actual": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5",
+        "c6",
+        "c7",
+        "c8",
+        "c9"
+      ]
+    },
+    {
+      "check": "checkpoint_label_names",
+      "passed": true,
+      "actual": {
+        "c0": "normal_driving",
+        "c1": "texting_right",
+        "c2": "talking_phone_right",
+        "c3": "texting_left",
+        "c4": "talking_phone_left",
+        "c5": "operating_radio",
+        "c6": "drinking",
+        "c7": "reaching_behind",
+        "c8": "hair_makeup",
+        "c9": "talking_to_passenger"
+      }
+    },
+    {
+      "check": "dataset_checkpoint_label_mapping",
+      "passed": true,
+      "actual": {
+        "c0": [
+          "normal_driving"
+        ],
+        "c1": [
+          "texting_right"
+        ],
+        "c2": [
+          "talking_phone_right"
+        ],
+        "c3": [
+          "texting_left"
+        ],
+        "c4": [
+          "talking_phone_left"
+        ],
+        "c5": [
+          "operating_radio"
+        ],
+        "c6": [
+          "drinking"
+        ],
+        "c7": [
+          "reaching_behind"
+        ],
+        "c8": [
+          "hair_makeup"
+        ],
+        "c9": [
+          "talking_to_passenger"
+        ]
+      }
+    },
+    {
+      "check": "baseline_feature_metadata",
+      "passed": true,
+      "actual": {
+        "features": [
+          "speed_kmph",
+          "accel_x",
+          "accel_y",
+          "brake_pressure",
+          "steering_angle",
+          "throttle",
+          "lane_deviation",
+          "headway_distance"
+        ],
+        "classes": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ]
+      }
+    },
+    {
+      "check": "onnx_input_contract",
+      "passed": true,
+      "actual": {
+        "name": "input",
+        "shape": [
+          "batch",
+          3,
+          224,
+          224
+        ],
+        "dtype": 1
+      }
+    },
+    {
+      "check": "onnx_output_contract",
+      "passed": true,
+      "actual": {
+        "name": "logits",
+        "shape": [
+          "batch",
+          10
+        ]
+      }
+    },
+    {
+      "check": "onnx_raw_logits_no_softmax",
+      "passed": true,
+      "actual": "No Softmax / LogSoftmax nodes; notebook exports raw model forward"
+    },
+    {
+      "check": "synthetic_preprocessing_byte_parity",
+      "passed": true,
+      "actual": {
+        "seed": 42,
+        "shape": [
+          1,
+          3,
+          224,
+          224
+        ],
+        "max_abs_difference": 0.0
+      }
+    },
+    {
+      "check": "hpo_grid_exact_budgets",
+      "passed": true,
+      "actual": {
+        "mobilenet_v3_large": 6,
+        "resnet18": 6,
+        "xgboost": 8,
+        "random_forest": 6,
+        "logistic_regression": 6
+      }
+    },
+    {
+      "check": "hpo_run_caps",
+      "passed": true,
+      "actual": {
+        "mobilenet_v3_large": 8,
+        "resnet18": 8,
+        "xgboost": 10,
+        "random_forest": 8,
+        "logistic_regression": 8
+      }
+    },
+    {
+      "check": "hpo_launch_disabled",
+      "passed": true,
+      "actual": {
+        "per_trial": null,
+        "per_model": null,
+        "total": null
+      }
+    },
+    {
+      "check": "ignore:model.pt",
+      "passed": true,
+      "actual": {
+        "ignored": true,
+        "expected": true
+      }
+    },
+    {
+      "check": "ignore:model.onnx",
+      "passed": true,
+      "actual": {
+        "ignored": true,
+        "expected": true
+      }
+    },
+    {
+      "check": "ignore:weights.pth",
+      "passed": true,
+      "actual": {
+        "ignored": true,
+        "expected": true
+      }
+    },
+    {
+      "check": "ignore:arbitrary_xgb.json",
+      "passed": true,
+      "actual": {
+        "ignored": true,
+        "expected": true
+      }
+    },
+    {
+      "check": "ignore:rf.joblib",
+      "passed": true,
+      "actual": {
+        "ignored": true,
+        "expected": true
+      }
+    },
+    {
+      "check": "ignore:lr.pkl",
+      "passed": true,
+      "actual": {
+        "ignored": true,
+        "expected": true
+      }
+    },
+    {
+      "check": "ignore:model.ubj",
+      "passed": true,
+      "actual": {
+        "ignored": true,
+        "expected": true
+      }
+    },
+    {
+      "check": "ignore:features.npz",
+      "passed": true,
+      "actual": {
+        "ignored": true,
+        "expected": true
+      }
+    },
+    {
+      "check": "ignore:config.json",
+      "passed": true,
+      "actual": {
+        "ignored": false,
+        "expected": false
+      }
+    },
+    {
+      "check": "ignore:runtime_manifest.json",
+      "passed": true,
+      "actual": {
+        "ignored": false,
+        "expected": false
+      }
+    },
+    {
+      "check": "ignore:evaluation_metrics.json",
+      "passed": true,
+      "actual": {
+        "ignored": false,
+        "expected": false
+      }
+    },
+    {
+      "check": "ignore:validation_metrics.json",
+      "passed": true,
+      "actual": {
+        "ignored": false,
+        "expected": false
+      }
+    },
+    {
+      "check": "ignore:selection_log.json",
+      "passed": true,
+      "actual": {
+        "ignored": false,
+        "expected": false
+      }
+    },
+    {
+      "check": "ignore:trials.csv",
+      "passed": true,
+      "actual": {
+        "ignored": false,
+        "expected": false
+      }
+    },
+    {
+      "check": "ignore:predictions_test.csv",
+      "passed": true,
+      "actual": {
+        "ignored": false,
+        "expected": false
+      }
+    },
+    {
+      "check": "ignore:timing_samples.csv",
+      "passed": true,
+      "actual": {
+        "ignored": false,
+        "expected": false
+      }
+    },
+    {
+      "check": "protected_hashes_unchanged",
+      "passed": true,
+      "actual": {
+        "ml/outputs/vision/mobilenetv3_large_vision.onnx": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+        "ml/outputs/vision/mobilenetv3_large_vision.pt": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+        "ml/outputs/telemetry/xgb_telemetry.json": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+        "docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md": "0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0",
+        "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/vision/vision_metadata_with_split.csv": "b4f8e90dec769bb419eaa490aea869668bed6484089cebe4d545c7667baa8ea4",
+        "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_train.csv": "97dd20ee9c0832ba33455e5c31088f9b4abb65c198bf988699a959d545d1e5b5",
+        "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_val.csv": "1b02792df846b5af138bae59e4f4ccfa8fa421fbb4fd6d42fad88d57722774f1",
+        "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_test.csv": "3bc3d47680a87359e1470fd8ffaf5ff330dc4419b37cc645e5736d51a91c96de"
+      }
+    },
+    {
+      "check": "nothing_staged",
+      "passed": true,
+      "actual": ""
+    }
+  ],
+  "gitignore_before_change": [
+    {
+      "path": "ml/outputs/runs/_ignore_probe/model.pt",
+      "ignored": true
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/model.onnx",
+      "ignored": true
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/xgb_telemetry.json",
+      "ignored": false
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/rf.joblib",
+      "ignored": false
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/lr.pkl",
+      "ignored": false
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/config.json",
+      "ignored": false
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/runtime_manifest.json",
+      "ignored": false
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/evaluation_metrics.json",
+      "ignored": false
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/trials.csv",
+      "ignored": false
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/predictions_test.csv",
+      "ignored": false
+    }
+  ],
+  "authorities": {
+    "CODEX_ML_TRACK_PROMPT.md": {
+      "git_object": "fyp2/live-system:docs/fyp2/review/CODEX_ML_TRACK_PROMPT.md",
+      "sha256": "53c53b82777d6376189a3e6e208d18977dc0047fa4359538c103f01d8c509b48"
+    },
+    "CODEX_ML_TRACK_ADDENDUM_R4.md": {
+      "git_object": "fyp2/live-system:docs/fyp2/review/CODEX_ML_TRACK_ADDENDUM_R4.md",
+      "sha256": "5a46fec48facec1fb8f92fea4446956089f6d3c2573fefe53296d59865dc55ff"
+    },
+    "ref_commit": "cbe573f25191999b22c027fcde06e2a524cb01c4"
+  },
+  "vision_split": {
+    "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/vision/vision_metadata_with_split.csv",
+    "sha256": "b4f8e90dec769bb419eaa490aea869668bed6484089cebe4d545c7667baa8ea4",
+    "bytes": 4281047,
+    "status": "REUSED_AND_VERIFIED",
+    "rows": {
+      "train": 15899,
+      "val": 2868,
+      "test": 3657
+    },
+    "driver_ids": {
+      "train": [
+        "p014",
+        "p015",
+        "p016",
+        "p021",
+        "p022",
+        "p024",
+        "p039",
+        "p042",
+        "p047",
+        "p049",
+        "p051",
+        "p052",
+        "p056",
+        "p061",
+        "p064",
+        "p066",
+        "p072",
+        "p081"
+      ],
+      "val": [
+        "p002",
+        "p041",
+        "p045",
+        "p075"
+      ],
+      "test": [
+        "p012",
+        "p026",
+        "p035",
+        "p050"
+      ]
+    },
+    "driver_overlap": {
+      "train_val": 0,
+      "train_test": 0,
+      "val_test": 0
+    },
+    "source_id_rule": "vision-v1:<class_id>/<filename>; existing CSV is canonical membership manifest",
+    "content_and_near_duplicate_pixel_audit": "NOT_RUN",
+    "class_counts": {
+      "train": {
+        "c0": 1766,
+        "c1": 1623,
+        "c2": 1649,
+        "c3": 1646,
+        "c4": 1623,
+        "c5": 1614,
+        "c6": 1649,
+        "c7": 1383,
+        "c8": 1383,
+        "c9": 1563
+      },
+      "val": {
+        "c0": 292,
+        "c1": 294,
+        "c2": 307,
+        "c3": 293,
+        "c4": 308,
+        "c5": 292,
+        "c6": 297,
+        "c7": 282,
+        "c8": 248,
+        "c9": 255
+      },
+      "test": {
+        "c0": 431,
+        "c1": 350,
+        "c2": 361,
+        "c3": 407,
+        "c4": 395,
+        "c5": 406,
+        "c6": 379,
+        "c7": 337,
+        "c8": 280,
+        "c9": 311
+      }
+    }
+  },
+  "telemetry_splits": {
+    "train": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_train.csv",
+      "sha256": "97dd20ee9c0832ba33455e5c31088f9b4abb65c198bf988699a959d545d1e5b5",
+      "bytes": 3300372,
+      "status": "REUSED_AND_VERIFIED",
+      "rows": 21000,
+      "class_counts": {
+        "Safe": 7000,
+        "Aggressive": 7000,
+        "Distracted": 7000
+      },
+      "source_id_rule": "telemetry-v1:97dd20ee9c0832ba33455e5c31088f9b4abb65c198bf988699a959d545d1e5b5:train:<zero-based CSV data row>",
+      "source_id_limitation": "Positional split IDs, not recovered original generator/person IDs"
+    },
+    "val": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_val.csv",
+      "sha256": "1b02792df846b5af138bae59e4f4ccfa8fa421fbb4fd6d42fad88d57722774f1",
+      "bytes": 707412,
+      "status": "REUSED_AND_VERIFIED",
+      "rows": 4500,
+      "class_counts": {
+        "Distracted": 1500,
+        "Safe": 1500,
+        "Aggressive": 1500
+      },
+      "source_id_rule": "telemetry-v1:1b02792df846b5af138bae59e4f4ccfa8fa421fbb4fd6d42fad88d57722774f1:val:<zero-based CSV data row>",
+      "source_id_limitation": "Positional split IDs, not recovered original generator/person IDs"
+    },
+    "test": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_test.csv",
+      "sha256": "3bc3d47680a87359e1470fd8ffaf5ff330dc4419b37cc645e5736d51a91c96de",
+      "bytes": 707415,
+      "status": "REUSED_AND_VERIFIED",
+      "rows": 4500,
+      "class_counts": {
+        "Safe": 1500,
+        "Aggressive": 1500,
+        "Distracted": 1500
+      },
+      "source_id_rule": "telemetry-v1:3bc3d47680a87359e1470fd8ffaf5ff330dc4419b37cc645e5736d51a91c96de:test:<zero-based CSV data row>",
+      "source_id_limitation": "Positional split IDs, not recovered original generator/person IDs"
+    }
+  },
+  "telemetry_exact_row_overlap": {
+    "train_val": 0,
+    "train_test": 0,
+    "val_test": 0
+  },
+  "raw_telemetry": {
+    "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/Driver_Behavior.csv",
+    "sha256": "f9ac7db872d7ecac8fe3bd2d4acf7911e77c129dc917865be95946c3733c72d3",
+    "bytes": 5414934,
+    "rows": 30000,
+    "missing_retained_features": 0,
+    "synthetic": true
+  },
+  "train_only_statistics": {
+    "fit_split": "train",
+    "fit_rows": 21000,
+    "train_split_sha256": "97dd20ee9c0832ba33455e5c31088f9b4abb65c198bf988699a959d545d1e5b5",
+    "feature_order": [
+      "speed_kmph",
+      "accel_x",
+      "accel_y",
+      "brake_pressure",
+      "steering_angle",
+      "throttle",
+      "lane_deviation",
+      "headway_distance"
+    ],
+    "median": [
+      57.93860519149476,
+      0.8300853419168045,
+      0.3137491543991106,
+      39.967699559836454,
+      -0.07318666029168115,
+      49.93226973097789,
+      0.45681715216094565,
+      20.131901680895577
+    ],
+    "lr_scaler_mean": [
+      59.99526767417343,
+      1.263703868453092,
+      0.36972883751314106,
+      40.743367101595545,
+      -0.09944516083069645,
+      54.992540345736444,
+      0.5703461105569637,
+      23.37604702041063
+    ],
+    "lr_scaler_scale": [
+      14.804879898796866,
+      1.023482106760274,
+      0.29647830146591114,
+      26.713414270387624,
+      11.351830586104386,
+      21.52101979283893,
+      0.4233015531661002,
+      11.984285482583775
+    ],
+    "sd_ddof0": [
+      14.804879898796866,
+      1.023482106760274,
+      0.29647830146591114,
+      26.713414270387624,
+      11.351830586104386,
+      21.52101979283893,
+      0.4233015531661002,
+      11.984285482583775
+    ],
+    "mean_global": [
+      59.99526767417343,
+      1.263703868453092,
+      0.36972883751314106,
+      40.743367101595545,
+      -0.09944516083069645,
+      54.992540345736444,
+      0.5703461105569637,
+      23.37604702041063
+    ],
+    "mean_by_class": {
+      "Safe": [
+        54.938254270418774,
+        0.5000222253756056,
+        0.10148328628921637,
+        12.413984533923273,
+        0.031161265923798986,
+        35.029360180821456,
+        0.20239042071664554,
+        37.497845431377606
+      ],
+      "Aggressive": [
+        75.06062970954677,
+        2.493276194567564,
+        0.607511661727444,
+        69.83111848970111,
+        -0.19802097976287852,
+        80.02163708784636,
+        0.5003863824021562,
+        12.540981159244746
+      ],
+      "Distracted": [
+        49.98691904255431,
+        0.7978131854161075,
+        0.40019156452276017,
+        39.984998281162184,
+        -0.1314757686530105,
+        49.926623768541404,
+        1.0082615285520888,
+        20.089314470609686
+      ]
+    },
+    "purpose": "Preparation evidence only; future trainers must fit their own train-only Pipeline, not load pickle",
+    "upstream_provenance": "EDA computes whole-dataset median before splitting; raw retained features have no NaN; contamination of existing .9993 is not demonstrated"
+  },
+  "contracts": {
+    "vision_class_to_idx": {
+      "c0": 0,
+      "c1": 1,
+      "c2": 2,
+      "c3": 3,
+      "c4": 4,
+      "c5": 5,
+      "c6": 6,
+      "c7": 7,
+      "c8": 8,
+      "c9": 9
+    },
+    "training_label_names": {
+      "c0": "normal_driving",
+      "c1": "texting_right",
+      "c2": "talking_phone_right",
+      "c3": "texting_left",
+      "c4": "talking_phone_left",
+      "c5": "operating_radio",
+      "c6": "drinking",
+      "c7": "reaching_behind",
+      "c8": "hair_makeup",
+      "c9": "talking_to_passenger"
+    },
+    "runtime_label_names": [
+      "safe_driving",
+      "texting_right",
+      "talking_phone_right",
+      "texting_left",
+      "talking_phone_left",
+      "operating_radio",
+      "drinking",
+      "reaching_behind",
+      "hair_makeup",
+      "talking_to_passenger"
+    ],
+    "telemetry_feature_order": [
+      "speed_kmph",
+      "accel_x",
+      "accel_y",
+      "brake_pressure",
+      "steering_angle",
+      "throttle",
+      "lane_deviation",
+      "headway_distance"
+    ],
+    "telemetry_class_to_idx": {
+      "Safe": 0,
+      "Aggressive": 1,
+      "Distracted": 2
+    },
+    "vision_preprocessing": "RGB -> direct PIL bilinear 224x224, no crop -> /255 -> ImageNet Normalize -> NCHW float32",
+    "mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "std": [
+      0.229,
+      0.224,
+      0.225
+    ]
+  },
+  "preprocessing_source": {
+    "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/backend/app/providers/trained.py",
+    "sha256": "9e0d6f37a35d0677d2d50b2a0522f82e051c4f1917dde696c56c4570cf300463",
+    "bytes": 8279
+  },
+  "baseline_metrics": {
+    "vision": {
+      "status": "STORED_NOT_RERUN",
+      "path": "ml/outputs/vision/metrics.json",
+      "sha256": "d32cc94aeae02f2b7068b0de1aab0e1cb698c3f7ce9c5c85cebd9cd05bf5636f",
+      "metrics": {
+        "val": {
+          "accuracy": 0.897489539748954,
+          "macro_f1": 0.8906507716026614,
+          "weighted_f1": 0.8946965156214346
+        },
+        "test": {
+          "accuracy": 0.8988241728192508,
+          "macro_f1": 0.8746408408872671,
+          "weighted_f1": 0.8855770474648978
+        }
+      }
+    },
+    "telemetry": {
+      "status": "STORED_NOT_RERUN",
+      "path": "ml/outputs/telemetry/metrics.json",
+      "sha256": "620cbafd652463766641e4e26839593112be4dd8066e6089a163ebb663b70f22",
+      "metrics": {
+        "val": {
+          "accuracy": 0.9984444444444445,
+          "macro_f1": 0.9984444432338747,
+          "weighted_f1": 0.9984444432338748
+        },
+        "test": {
+          "accuracy": 0.9993333333333333,
+          "macro_f1": 0.999333184740477,
+          "weighted_f1": 0.999333184740477
+        }
+      }
+    }
+  },
+  "reused_evidence": [
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/docs/fyp2/evidence/data_artifact_audit.json",
+      "sha256": "c5300c60caf252563c08e7103ec419b0ffc9bc503b700b3d1c35012d8023976c",
+      "bytes": 20937
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/docs/fyp2/03_EVALUATION_COVERAGE_MATRIX.md",
+      "sha256": "12dd866c8b79ce3446ea1c883dda6abb8bd8d34af7a1bb763a67cffeb45aba99",
+      "bytes": 17340
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/docs/fyp2/04_ML_COMPARISON_AND_TUNING_AUDIT.md",
+      "sha256": "e490ba03d7d183166b804b11080960b14f13e04f9da032c5bd576d4b8f552745",
+      "bytes": 11023
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/vision/train_vision.ipynb",
+      "sha256": "2a498a11292f8277f6a63e21f830964e41f8190f8658140e3aaa5e2bb4418015",
+      "bytes": 1205187
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_telemetry.ipynb",
+      "sha256": "59a3030d16b70e0bbeaf9d6c30a1170a13a4c67f996873f0353037dd14550d01",
+      "bytes": 81657
+    },
+    {
+      "path": "/Users/liu/Desktop/01_FYP2_Parallel_Sprint_Plan_W2_W7_SOURCE.md",
+      "sha256": "854a1172fa02d5879b7ce64c9c3eed236a76848b7c546f01339c304267b17afe",
+      "bytes": 11462
+    }
+  ],
+  "model_inventory": [
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/telemetry/classification_report_test.txt",
+      "sha256": "d45589fa31eb60c0d6ed9857ab12cacdbf62d98f3ae2d185e499ee8b0ed70844",
+      "bytes": 380
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/telemetry/confusion_matrix_test.png",
+      "sha256": "9d227c346f40ee532062118bcebe4c2ba2a8b4c76a339ef5c5593f5084143839",
+      "bytes": 40088
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/telemetry/feature_importance.png",
+      "sha256": "999546091707319d040ba1dc5de5836490ed1a64793921df9e5e720d813d5f1a",
+      "bytes": 33776
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/telemetry/metrics.json",
+      "sha256": "620cbafd652463766641e4e26839593112be4dd8066e6089a163ebb663b70f22",
+      "bytes": 3290
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/telemetry/xgb_telemetry.json",
+      "sha256": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+      "bytes": 629723
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/vision/classification_report_test.txt",
+      "sha256": "7f231d3c04956a228103612ece6ccc8678af9a96102316aedc6fbcbd8a5c8011",
+      "bytes": 912
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/vision/confusion_matrix_test.png",
+      "sha256": "5d0dca42860778c2b710bb87c66c2db32e3b6af1794d8e99ccd68233ea65e6b1",
+      "bytes": 77579
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/vision/metrics.json",
+      "sha256": "d32cc94aeae02f2b7068b0de1aab0e1cb698c3f7ce9c5c85cebd9cd05bf5636f",
+      "bytes": 9037
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/vision/mobilenetv3_large_vision.onnx",
+      "sha256": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+      "bytes": 16849378
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/vision/mobilenetv3_large_vision.pt",
+      "sha256": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+      "bytes": 17066477
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/vision/training_curve.png",
+      "sha256": "8c3d1f8b3e4eda71051fab5421d7486e343e0c305f0b36941f395cd465903fec",
+      "bytes": 56945
+    }
+  ],
+  "pretraining_cache": [
+    {
+      "path": "/Users/liu/.cache/torch/hub/checkpoints/mobilenet_v3_large-5c1a4163.pth",
+      "sha256": "5c1a416349c4cf298f2a6a5e2600ed0ee55e604713578f5e74e6bc8bcaef7997",
+      "bytes": 22132113
+    }
+  ],
+  "hpo_config": {
+    "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/configs/bounded_hpo.json",
+    "sha256": "b96f4a6380387abd6f19b99fdc6622a6d9b29610785977443c74a9950d41dc84",
+    "bytes": 4648
+  },
+  "gitignore_checks": [
+    {
+      "path": "ml/outputs/runs/_ignore_probe/nested/model.pt",
+      "expected_ignored": true,
+      "actual_ignored": true
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/nested/model.onnx",
+      "expected_ignored": true,
+      "actual_ignored": true
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/nested/weights.pth",
+      "expected_ignored": true,
+      "actual_ignored": true
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/nested/arbitrary_xgb.json",
+      "expected_ignored": true,
+      "actual_ignored": true
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/nested/rf.joblib",
+      "expected_ignored": true,
+      "actual_ignored": true
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/nested/lr.pkl",
+      "expected_ignored": true,
+      "actual_ignored": true
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/nested/model.ubj",
+      "expected_ignored": true,
+      "actual_ignored": true
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/nested/features.npz",
+      "expected_ignored": true,
+      "actual_ignored": true
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/nested/config.json",
+      "expected_ignored": false,
+      "actual_ignored": false
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/nested/runtime_manifest.json",
+      "expected_ignored": false,
+      "actual_ignored": false
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/nested/evaluation_metrics.json",
+      "expected_ignored": false,
+      "actual_ignored": false
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/nested/validation_metrics.json",
+      "expected_ignored": false,
+      "actual_ignored": false
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/nested/selection_log.json",
+      "expected_ignored": false,
+      "actual_ignored": false
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/nested/trials.csv",
+      "expected_ignored": false,
+      "actual_ignored": false
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/nested/predictions_test.csv",
+      "expected_ignored": false,
+      "actual_ignored": false
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/nested/timing_samples.csv",
+      "expected_ignored": false,
+      "actual_ignored": false
+    }
+  ],
+  "protected_hashes_after": {
+    "ml/outputs/vision/mobilenetv3_large_vision.onnx": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "ml/outputs/vision/mobilenetv3_large_vision.pt": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+    "ml/outputs/telemetry/xgb_telemetry.json": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+    "docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md": "0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0",
+    "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/vision/vision_metadata_with_split.csv": "b4f8e90dec769bb419eaa490aea869668bed6484089cebe4d545c7667baa8ea4",
+    "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_train.csv": "97dd20ee9c0832ba33455e5c31088f9b4abb65c198bf988699a959d545d1e5b5",
+    "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_val.csv": "1b02792df846b5af138bae59e4f4ccfa8fa421fbb4fd6d42fad88d57722774f1",
+    "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_test.csv": "3bc3d47680a87359e1470fd8ffaf5ff330dc4419b37cc645e5736d51a91c96de"
+  },
+  "reproduction_inputs": [
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/w2_preparation_20261015/verify_preparation.py",
+      "sha256": "ddf01ea8d2e2be3e992da5e06bb7719c5b56b90d6d3bb0d40f58c1951b7171ab",
+      "bytes": 17481
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/w2_preparation_20261015/config.json",
+      "sha256": "d727729f2fa4343c7f6d6c08eb74b5df7dff07f8e2037c04ecb8ce659fc02b75",
+      "bytes": 2873
+    }
+  ],
+  "exit_code": 0
+}

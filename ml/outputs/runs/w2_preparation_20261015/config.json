@@ -1,0 +1,67 @@
+{
+  "run_id": "w2_preparation_20261015",
+  "phase": "P0_WEEK2_PREPARATION",
+  "scope": "只读数据/基线验证、train-only 统计准备、配置和忽略规则核验；不训练分类器、不跑 test 预测、不执行 E1",
+  "data_root": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-",
+  "seed": 42,
+  "protected_hashes": {
+    "ml/outputs/vision/mobilenetv3_large_vision.onnx": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "ml/outputs/vision/mobilenetv3_large_vision.pt": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+    "ml/outputs/telemetry/xgb_telemetry.json": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+    "docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md": "0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0",
+    "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/vision/vision_metadata_with_split.csv": "b4f8e90dec769bb419eaa490aea869668bed6484089cebe4d545c7667baa8ea4",
+    "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_train.csv": "97dd20ee9c0832ba33455e5c31088f9b4abb65c198bf988699a959d545d1e5b5",
+    "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_val.csv": "1b02792df846b5af138bae59e4f4ccfa8fa421fbb4fd6d42fad88d57722774f1",
+    "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_test.csv": "3bc3d47680a87359e1470fd8ffaf5ff330dc4419b37cc645e5736d51a91c96de"
+  },
+  "reused_evidence": [
+    "docs/fyp2/evidence/data_artifact_audit.json",
+    "docs/fyp2/03_EVALUATION_COVERAGE_MATRIX.md",
+    "docs/fyp2/04_ML_COMPARISON_AND_TUNING_AUDIT.md",
+    "ml/vision/train_vision.ipynb",
+    "ml/telemetry/train_telemetry.ipynb",
+    "/Users/liu/Desktop/01_FYP2_Parallel_Sprint_Plan_W2_W7_SOURCE.md"
+  ],
+  "gitignore_before_change": [
+    {
+      "path": "ml/outputs/runs/_ignore_probe/model.pt",
+      "ignored": true
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/model.onnx",
+      "ignored": true
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/xgb_telemetry.json",
+      "ignored": false
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/rf.joblib",
+      "ignored": false
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/lr.pkl",
+      "ignored": false
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/config.json",
+      "ignored": false
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/runtime_manifest.json",
+      "ignored": false
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/evaluation_metrics.json",
+      "ignored": false
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/trials.csv",
+      "ignored": false
+    },
+    {
+      "path": "ml/outputs/runs/_ignore_probe/predictions_test.csv",
+      "ignored": false
+    }
+  ]
+}

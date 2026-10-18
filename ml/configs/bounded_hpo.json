@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "status": "DRAFT_APPROVAL_PENDING",
+  "source": "docs/fyp2/04_ML_COMPARISON_AND_TUNING_AUDIT.md#bounded-hpo-proposal",
+  "authority_ref": "fyp2/live-system",
+  "authority_addendum": "docs/fyp2/review/CODEX_ML_TRACK_ADDENDUM_R4.md",
+  "launch_authorized": false,
+  "selection": {
+    "split": "val",
+    "metric": "macro_f1",
+    "test_access_during_tuning": false,
+    "final_clean_test_evaluations_per_frozen_model": 1,
+    "test_previously_exposed": true,
+    "confirmation_runs_may_not_reselect_using_test": true
+  },
+  "wall_time_limits_seconds": {
+    "per_trial": null,
+    "per_model": null,
+    "total": null
+  },
+  "stop_policy": [
+    "达到模型 trial / epoch / iteration 上限即停止，未完成 trial 明确记录",
+    "墙钟上限须用户确认；任一适用墙钟上限达到即停止，不自动续跑",
+    "只用 validation 选型；不通过 test 或 E1 结果重新选参",
+    "运行前校验 split、基线及配置哈希；仅写独立 run_id 目录",
+    "系统轨道进行性能测量时，不并发执行训练或 ML 性能测量"
+  ],
+  "models": {
+    "mobilenet_v3_large": {
+      "grid": {"learning_rate": [0.0001, 0.0003, 0.0008], "weight_decay": [0.0001, 0.001]},
+      "search_trials": 6,
+      "search_seed": 42,
+      "confirmation_seeds": [43, 44],
+      "max_total_runs": 8,
+      "max_epochs_per_run": 8,
+      "early_stopping_patience": 2,
+      "early_stopping_metric": "val_macro_f1",
+      "fixed": {
+        "pretrained_weights": "MobileNet_V3_Large_Weights.IMAGENET1K_V2",
+        "optimizer": "AdamW",
+        "scheduler": "CosineAnnealingLR",
+        "batch_size": 64,
+        "image_size": [224, 224],
+        "random_rotation_degrees": 8,
+        "color_jitter_brightness": 0.2,
+        "color_jitter_contrast": 0.2,
+        "horizontal_flip": false
+      }
+    },
+    "resnet18": {
+      "grid": {"learning_rate": [0.0001, 0.0003, 0.0008], "weight_decay": [0.0001, 0.001]},
+      "search_trials": 6,
+      "search_seed": 42,
+      "confirmation_seeds": [43, 44],
+      "max_total_runs": 8,
+      "max_epochs_per_run": 8,
+      "early_stopping_patience": 2,
+      "early_stopping_metric": "val_macro_f1",
+      "fixed": {
+        "pretrained_weights": null,
+        "head": "fc -> Linear(in_features, 10)",
+        "augmentation_resolution_batch": "same_as_mobilenet_v3_large",
+        "evaluation_preprocessing": "RGB PIL bilinear direct Resize((224,224)); no crop"
+      },
+      "pending_decisions": ["声明并确认预训练 recipe；记录实际权重哈希，当前没有本地 ResNet18 权重"]
+    },
+    "xgboost": {
+      "grid": {"max_depth": [3, 6], "learning_rate": [0.03, 0.1], "subsample": [0.8, 1.0]},
+      "search_trials": 8,
+      "search_seed": 42,
+      "confirmation_runs": 2,
+      "confirmation_seeds": null,
+      "max_total_runs": 10,
+      "fixed": {"n_estimators": 400, "early_stopping_rounds": 30, "early_stopping_metric": "val_mlogloss", "colsample_bytree": 0.9, "reg_lambda": 1.0, "tree_method": "hist", "objective": "multi:softprob", "preprocessing": "train_only_median"}
+    },
+    "random_forest": {
+      "grid": {"n_estimators": [200, 400], "max_depth": [null, 12, 24]},
+      "search_trials": 6,
+      "search_seed": 42,
+      "confirmation_runs": 2,
+      "confirmation_seeds": null,
+      "max_total_runs": 8,
+      "fixed": {"min_samples_leaf": 2, "n_jobs": 2, "preprocessing": "train_only_median"}
+    },
+    "logistic_regression": {
+      "grid": {"C": [0.01, 0.1, 1, 10, 100, 1000]},
+      "search_trials": 6,
+      "search_seed": 42,
+      "conditional_reproducibility_checks": 2,
+      "max_total_runs": 8,
+      "fixed": {"solver": "lbfgs", "max_iter": 1000, "preprocessing": "train_only_median_then_standard_scaler"},
+      "duplicate_deterministic_runs_are_independent_evidence": false
+    }
+  },
+  "required_run_artifacts": [
+    "config.json",
+    "artifact_manifest.json (split/model/content hashes, seeds, versions, commit + dirty state, contracts)",
+    "trials.csv",
+    "validation_metrics.json",
+    "class_report.json",
+    "selection_log.json",
+    "selected checkpoint (Git ignored)",
+    "predictions_test.csv (source IDs; logits/probabilities explicitly declared)",
+    "timing_samples.csv (warmup / measured; device, threads, provider, batch)"
+  ],
+  "pending_decisions": [
+    "用户确认当前阶段结束并授权下一个阶段",
+    "用户确认适用的墙钟上限；未确认前不得启动 costly runs",
+    "ResNet18 上游预训练 recipe 与权重准备",
+    "XGBoost / RF confirmation seed 编号、validation 并列选型规则及资源安排在首次正式训练前固定"
+  ]
+}
