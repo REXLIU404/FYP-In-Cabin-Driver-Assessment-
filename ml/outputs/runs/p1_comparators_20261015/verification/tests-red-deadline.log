@@ -1,0 +1,12 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____________ test_process_startup_cannot_hide_exceeded_wall_budget _____________
+ml/tests/test_comparator_pipeline.py:225: in test_process_startup_cannot_hide_exceeded_wall_budget
+    assert result['status'] == 'TIME_BUDGET_EXCEEDED'
+E   AssertionError: assert 'VERIFIED_PASS' == 'TIME_BUDGET_EXCEEDED'
+E     
+E     - TIME_BUDGET_EXCEEDED
+E     + VERIFIED_PASS
+=========================== short test summary info ============================
+FAILED ml/tests/test_comparator_pipeline.py::test_process_startup_cannot_hide_exceeded_wall_budget
+1 failed in 1.53s

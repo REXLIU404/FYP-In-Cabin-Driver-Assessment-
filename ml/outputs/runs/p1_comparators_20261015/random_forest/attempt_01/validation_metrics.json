@@ -1,0 +1,70 @@
+{
+  "interpretation": "NON_COMPARATIVE_PIPELINE_SMOKE_ONLY",
+  "formal_comparison_valid": false,
+  "samples": 90,
+  "accuracy": 0.9666666666666667,
+  "macro_f1": 0.9666574048346762,
+  "log_loss": 0.13214261177082928,
+  "confusion_matrix": [
+    [
+      30,
+      0,
+      0
+    ],
+    [
+      0,
+      28,
+      2
+    ],
+    [
+      0,
+      1,
+      29
+    ]
+  ],
+  "status": "VERIFIED_PASS",
+  "model": "random_forest",
+  "train_samples": 300,
+  "validation_samples": 90,
+  "fits_completed": 1,
+  "output_shape": [
+    90,
+    3
+  ],
+  "class_order": [
+    "Safe",
+    "Aggressive",
+    "Distracted"
+  ],
+  "all_losses_and_probabilities_finite": true,
+  "train_only_preprocessing": true,
+  "reload_max_abs_probability_difference": 1.1102230246251565e-16,
+  "checkpoint": {
+    "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/random_forest/attempt_01/random_forest_smoke.joblib",
+    "sha256": "3e8ef64f91446ac5a4978653008da75f04753753dc6a91b62ba3f5900691175c",
+    "bytes": 51274
+  },
+  "artifact_scope": "BENCHMARK_ONLY_NOT_CANDIDATE_PACKAGE",
+  "warnings": [],
+  "n_iter": null,
+  "threadpools": [
+    {
+      "user_api": "openmp",
+      "internal_api": "openmp",
+      "num_threads": 2,
+      "prefix": "libomp",
+      "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+      "version": null
+    }
+  ],
+  "device": "cpu",
+  "worker_wall_seconds": 0.25115170900244266,
+  "resource_usage": {
+    "max_rss_bytes": 178372608,
+    "user_cpu_seconds": 0.08822399999999997,
+    "system_cpu_seconds": 0.04620999999999997
+  },
+  "test_predictions": 0,
+  "formal_hpo_trials": 0,
+  "candidate_package": false
+}

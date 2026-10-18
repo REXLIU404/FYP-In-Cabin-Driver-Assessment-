@@ -1,0 +1,72 @@
+{
+  "interpretation": "NON_COMPARATIVE_PIPELINE_SMOKE_ONLY",
+  "formal_comparison_valid": false,
+  "samples": 90,
+  "accuracy": 0.9888888888888889,
+  "macro_f1": 0.9888858016115588,
+  "log_loss": 0.04611736536629261,
+  "confusion_matrix": [
+    [
+      30,
+      0,
+      0
+    ],
+    [
+      0,
+      29,
+      1
+    ],
+    [
+      0,
+      0,
+      30
+    ]
+  ],
+  "status": "VERIFIED_PASS",
+  "model": "logistic_regression",
+  "train_samples": 300,
+  "validation_samples": 90,
+  "fits_completed": 1,
+  "output_shape": [
+    90,
+    3
+  ],
+  "class_order": [
+    "Safe",
+    "Aggressive",
+    "Distracted"
+  ],
+  "all_losses_and_probabilities_finite": true,
+  "train_only_preprocessing": true,
+  "reload_max_abs_probability_difference": 0.0,
+  "checkpoint": {
+    "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/logistic_regression/attempt_01/logistic_regression_smoke.joblib",
+    "sha256": "0b5b3af85033a678770d4c57526a32fc7e6c47690a91edd58df01db652c475d1",
+    "bytes": 2449
+  },
+  "artifact_scope": "BENCHMARK_ONLY_NOT_CANDIDATE_PACKAGE",
+  "warnings": [],
+  "n_iter": [
+    16
+  ],
+  "threadpools": [
+    {
+      "user_api": "openmp",
+      "internal_api": "openmp",
+      "num_threads": 2,
+      "prefix": "libomp",
+      "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+      "version": null
+    }
+  ],
+  "device": "cpu",
+  "worker_wall_seconds": 0.14417012495687231,
+  "resource_usage": {
+    "max_rss_bytes": 178012160,
+    "user_cpu_seconds": 0.06748699999999996,
+    "system_cpu_seconds": 0.03550600000000001
+  },
+  "test_predictions": 0,
+  "formal_hpo_trials": 0,
+  "candidate_package": false
+}

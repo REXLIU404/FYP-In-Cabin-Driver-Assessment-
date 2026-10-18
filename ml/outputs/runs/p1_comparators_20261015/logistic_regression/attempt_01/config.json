@@ -1,0 +1,79 @@
+{
+  "phase": "P1",
+  "model": "logistic_regression",
+  "smoke": true,
+  "formal_comparison_valid": false,
+  "counts_toward_hpo": false,
+  "budget": {
+    "train_samples": 300,
+    "validation_samples": 90,
+    "seed": 42,
+    "max_iter": 200,
+    "solver": "lbfgs",
+    "fits": 1,
+    "wall_seconds": 120
+  },
+  "data_root": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-",
+  "sources": {
+    "train": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_train.csv",
+      "sha256": "97dd20ee9c0832ba33455e5c31088f9b4abb65c198bf988699a959d545d1e5b5"
+    },
+    "val": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_val.csv",
+      "sha256": "1b02792df846b5af138bae59e4f4ccfa8fa421fbb4fd6d42fad88d57722774f1"
+    }
+  },
+  "feature_order": [
+    "speed_kmph",
+    "accel_x",
+    "accel_y",
+    "brake_pressure",
+    "steering_angle",
+    "throttle",
+    "lane_deviation",
+    "headway_distance"
+  ],
+  "class_to_idx": {
+    "Safe": 0,
+    "Aggressive": 1,
+    "Distracted": 2
+  },
+  "preprocessing_fit_split": "train_smoke_subset",
+  "preprocessing_fit_rows": 300,
+  "versions": {
+    "python": "3.13.3",
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "torch": "2.12.0",
+    "torchvision": "0.27.0",
+    "scikit-learn": "1.9.0",
+    "numpy": "2.4.6",
+    "pandas": "3.0.3",
+    "Pillow": "12.2.0",
+    "joblib": "1.5.3",
+    "threadpoolctl": "3.6.0"
+  },
+  "git": {
+    "branch": "fyp2/ml-training",
+    "head": "efb3ea604d584d2c5d1b1684742996e95125a8ec",
+    "dirty_state": "D FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_CROSS_REVIEW_PROMPT.md\n D FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_DEVELOPMENT_AND_REPORT_MAP.md\n D FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_Development_and_Report_Map.docx\n D FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_EVALUATION_AND_TESTCASE_SPEC.md\n D FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_Evaluation_and_Testcase_Spec.docx\n D FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_MASTER_REPOSITORY_AUDIT_PROMPT.md\n D \"FYP2_Codex_ClaudeCode_Audit_Package_v2/README_\\344\\275\\277\\347\\224\\250\\350\\257\\264\\346\\230\\216.md\"\n M ml/.gitignore\n?? docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md\n?? docs/fyp2/ml/\n?? ml/configs/\n?? ml/experiments/comparator_common.py\n?? ml/experiments/run_p1_smoke.py\n?? ml/outputs/runs/\n?? ml/telemetry/train_comparator.py\n?? ml/tests/\n?? ml/vision/train_resnet18.py",
+    "staged_paths": ""
+  },
+  "estimator_params": {
+    "C": 1.0,
+    "class_weight": null,
+    "dual": false,
+    "fit_intercept": true,
+    "intercept_scaling": 1,
+    "l1_ratio": 0.0,
+    "max_iter": 200,
+    "n_jobs": null,
+    "penalty": "deprecated",
+    "random_state": 42,
+    "solver": "lbfgs",
+    "tol": 0.0001,
+    "verbose": 0,
+    "warm_start": false
+  },
+  "test_csv_opened": false
+}

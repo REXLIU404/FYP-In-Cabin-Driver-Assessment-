@@ -1,0 +1,180 @@
+{
+  "interpretation": "NON_COMPARATIVE_PIPELINE_SMOKE_ONLY",
+  "formal_comparison_valid": false,
+  "samples": 100,
+  "accuracy": 0.1,
+  "macro_f1": 0.01818181818181818,
+  "log_loss": 2.9089953899383545,
+  "confusion_matrix": [
+    [
+      0,
+      0,
+      10,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      10,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      10,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      10,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      10,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      10,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      10,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      10,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      10,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      10,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  "status": "VERIFIED_PASS",
+  "model": "resnet18",
+  "initialization": {
+    "weights": null,
+    "status": "RANDOM_INITIALIZATION_SMOKE_ONLY",
+    "comparison_validity": "NOT_VALID_FOR_FORMAL_MODEL_COMPARISON"
+  },
+  "train_samples": 200,
+  "validation_samples": 100,
+  "epochs_completed": 1,
+  "training_steps": 13,
+  "validation_steps": 7,
+  "reload_validation_steps": 1,
+  "total_validation_steps": 8,
+  "train_loss": 2.54887300491333,
+  "validation_loss": 2.9089953899383545,
+  "output_shape": [
+    100,
+    10
+  ],
+  "class_order": [
+    "c0",
+    "c1",
+    "c2",
+    "c3",
+    "c4",
+    "c5",
+    "c6",
+    "c7",
+    "c8",
+    "c9"
+  ],
+  "reload_max_abs_logit_difference": 0.0,
+  "all_losses_and_probabilities_finite": true,
+  "checkpoint": {
+    "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/resnet18/attempt_01/resnet18_smoke.pt",
+    "sha256": "a0e82bdb55266554a821b4cf8142d2e049be7d21c71ec2afa81f32265bae9640",
+    "bytes": 44803723
+  },
+  "device": "cpu",
+  "threads": 2,
+  "worker_wall_seconds": 18.61266558303032,
+  "resource_usage": {
+    "max_rss_bytes": 1026162688,
+    "user_cpu_seconds": 27.347638,
+    "system_cpu_seconds": 2.821854
+  },
+  "test_predictions": 0,
+  "formal_hpo_trials": 0,
+  "candidate_package": false
+}
