@@ -1,0 +1,77 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+_________ test_total_stop_preserves_earlier_per_trial_exclusion_reason _________
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-51/test_total_stop_preserves_earl0')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x111501e00>
+
+    def test_total_stop_preserves_earlier_per_trial_exclusion_reason(vision,tmp_path,context,monkeypatch):
+        clock=[0.];monkeypatch.setattr(vision.time,'monotonic',lambda:clock[0])
+        plans=model_plans('mobilenet_v3_large')+model_plans('resnet18')
+        def worker(command,log_path,timeout):
+            clock[0]+=timeout
+            return {'status':'TIME_BUDGET_EXCEEDED','returncode':-15,'wall_seconds':timeout}
+        state=vision.run_plan(tmp_path,'search',plans,{'per_trial':.5,'per_model':10.,'total':.8},context,runner=worker)
+        assert state['status']=='NOT_RUN_BUDGET'
+>       assert state['trials']['mobilenet_v3_large/search_001']['budget_scope']=='per_trial'
+E       AssertionError: assert 'total' == 'per_trial'
+E         
+E         - per_trial
+E         + total
+
+ml/tests/test_vision_hpo.py:573: AssertionError
+_______ test_total_preflight_has_priority_over_negative_model_remaining ________
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-51/test_total_preflight_has_prior0')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10912a8b0>
+
+    def test_total_preflight_has_priority_over_negative_model_remaining(vision,tmp_path,context,monkeypatch):
+        clock=[0.];monkeypatch.setattr(vision.time,'monotonic',lambda:clock[0])
+        plans=model_plans('mobilenet_v3_large')+model_plans('resnet18')
+        budget={'per_trial':1.,'per_model':.5,'total':.7}
+        state={'signature':vision.plan_signature(plans,budget,context),'phase':'search','status':'INTERRUPTED',
+               'attempts':[{'key':'mobilenet_v3_large/search_001','plan':plans[0],
+                            'directory':'unused','status':'INTERRUPTED','wall_seconds':.8}],
+               'trials':{},'selection':{},'used_wall_seconds':.8}
+        (tmp_path/'search_state.json').write_text(json.dumps(state))
+        state=vision.run_plan(tmp_path,'search',plans,budget,context,runner=lambda *a:pytest.fail('Total cap exhausted'))
+>       assert state['budget_stop_scope']=='total' and not state['model_budget_stops']
+E       AssertionError: assert ('total' == 'total'
+E         
+E           total and not {'mobilenet_v3_large': {'scope': 'per_model', 'trigger_trial': 'search_001'}})
+
+ml/tests/test_vision_hpo.py:587: AssertionError
+_ test_total_terminal_verifies_completed_checkpoint_before_republishing_selection _
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-51/test_total_terminal_verifies_c0')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x111850b90>
+
+    def test_total_terminal_verifies_completed_checkpoint_before_republishing_selection(vision,tmp_path,context,monkeypatch):
+        clock=[0.];monkeypatch.setattr(vision.time,'monotonic',lambda:clock[0])
+        plans=model_plans('mobilenet_v3_large')+model_plans('resnet18')
+        budget={'per_trial':10.,'per_model':10.,'total':.5}
+        def worker(command,log_path,timeout):
+            if clock[0]==0:
+                result=synthetic_worker(command,log_path,timeout);clock[0]=.1;result['wall_seconds']=.1;return result
+            clock[0]+=timeout
+            return {'status':'TIME_BUDGET_EXCEEDED','returncode':-15,'wall_seconds':timeout}
+        state=vision.run_plan(tmp_path,'search',plans,budget,context,runner=worker)
+        assert state['status']=='NOT_RUN_BUDGET'
+        (tmp_path/state['attempts'][0]['directory']/'checkpoint.pt').write_bytes(b'corrupt')
+        before=(tmp_path/'search_state.json').read_bytes()
+>       with pytest.raises(ValueError,match='artifact|integrity'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+ml/tests/test_vision_hpo.py:604: Failed
+=========================== short test summary info ============================
+FAILED ml/tests/test_vision_hpo.py::test_total_stop_preserves_earlier_per_trial_exclusion_reason
+FAILED ml/tests/test_vision_hpo.py::test_total_preflight_has_priority_over_negative_model_remaining
+FAILED ml/tests/test_vision_hpo.py::test_total_terminal_verifies_completed_checkpoint_before_republishing_selection
+3 failed, 43 deselected in 1.22s

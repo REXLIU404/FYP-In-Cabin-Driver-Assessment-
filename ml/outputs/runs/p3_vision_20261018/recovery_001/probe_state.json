@@ -1,0 +1,61 @@
+{
+  "signature": "f472de690c86990cbbad4d36ce7c9d51e6d777cedb10801c6a699dbb05bb6da2",
+  "phase": "probe",
+  "status": "IMPLEMENTATION_FAILED",
+  "attempts": [
+    {
+      "key": "mobilenet_v3_large/probe_001",
+      "plan": {
+        "trial_id": "probe_001",
+        "model": "mobilenet_v3_large",
+        "role": "PROBE",
+        "seed": 42,
+        "config": {
+          "learning_rate": 0.0008,
+          "weight_decay": 0.0001
+        },
+        "max_epochs": 1,
+        "is_p2": false
+      },
+      "directory": "probe/mobilenet_v3_large/probe_001/attempt_01",
+      "status": "INTERRUPTED",
+      "wall_seconds": 30.797756583080627,
+      "timeout_seconds": 1200,
+      "started_wall_time": 1792320228.4701738
+    },
+    {
+      "key": "mobilenet_v3_large/probe_001",
+      "plan": {
+        "trial_id": "probe_001",
+        "model": "mobilenet_v3_large",
+        "role": "PROBE",
+        "seed": 42,
+        "config": {
+          "learning_rate": 0.0008,
+          "weight_decay": 0.0001
+        },
+        "max_epochs": 1,
+        "is_p2": false
+      },
+      "directory": "probe/mobilenet_v3_large/probe_001/attempt_02",
+      "status": "IMPLEMENTATION_FAILED",
+      "wall_seconds": 27.519550209050067,
+      "timeout_seconds": 1169.2022434169194,
+      "started_wall_time": 1792320349.090271,
+      "execution": {
+        "status": "IMPLEMENTATION_FAILED",
+        "returncode": -15,
+        "wall_seconds": 27.51805025001522,
+        "timeout_seconds": 1169.2013827079209
+      }
+    }
+  ],
+  "trials": {
+    "mobilenet_v3_large/probe_001": {
+      "status": "IMPLEMENTATION_FAILED",
+      "attempt": "probe/mobilenet_v3_large/probe_001/attempt_02"
+    }
+  },
+  "selection": {},
+  "used_wall_seconds": 78.09884787490591
+}

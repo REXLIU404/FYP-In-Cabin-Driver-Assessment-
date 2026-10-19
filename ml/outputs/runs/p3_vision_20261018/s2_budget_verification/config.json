@@ -1,0 +1,223 @@
+{
+  "scope": "software budget isolation and committed-search preflight; zero new model fits or predictions",
+  "approved_budget": {
+    "launch_authorized": true,
+    "approval_date": "2026-10-19",
+    "approval_source": "Explicit user S2 approval in this conversation",
+    "phase": "search",
+    "per_trial": 2400,
+    "per_model": {
+      "mobilenet_v3_large": 17100,
+      "resnet18": 15300
+    },
+    "total": 32400,
+    "resource_constraints": {
+      "device": "mps",
+      "batch_size": 64,
+      "cpu_threads": 2,
+      "workers": 0
+    },
+    "automatic_budget_extension": false,
+    "grid_changes_authorized": false,
+    "training_operator": "user terminal",
+    "p4_p5_authorized": false
+  },
+  "unchanged_search_plans": [
+    {
+      "trial_id": "search_001",
+      "model": "mobilenet_v3_large",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "learning_rate": 0.0001,
+        "weight_decay": 0.0001
+      },
+      "max_epochs": 8,
+      "is_p2": true
+    },
+    {
+      "trial_id": "search_002",
+      "model": "mobilenet_v3_large",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "learning_rate": 0.0001,
+        "weight_decay": 0.001
+      },
+      "max_epochs": 8,
+      "is_p2": false
+    },
+    {
+      "trial_id": "search_003",
+      "model": "mobilenet_v3_large",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "learning_rate": 0.0003,
+        "weight_decay": 0.0001
+      },
+      "max_epochs": 8,
+      "is_p2": false
+    },
+    {
+      "trial_id": "search_004",
+      "model": "mobilenet_v3_large",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "learning_rate": 0.0003,
+        "weight_decay": 0.001
+      },
+      "max_epochs": 8,
+      "is_p2": false
+    },
+    {
+      "trial_id": "search_005",
+      "model": "mobilenet_v3_large",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "learning_rate": 0.0008,
+        "weight_decay": 0.0001
+      },
+      "max_epochs": 8,
+      "is_p2": false
+    },
+    {
+      "trial_id": "search_006",
+      "model": "mobilenet_v3_large",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "learning_rate": 0.0008,
+        "weight_decay": 0.001
+      },
+      "max_epochs": 8,
+      "is_p2": false
+    },
+    {
+      "trial_id": "confirm_43",
+      "model": "mobilenet_v3_large",
+      "role": "CONFIRMATION",
+      "seed": 43,
+      "config": null,
+      "max_epochs": 8,
+      "is_p2": false
+    },
+    {
+      "trial_id": "confirm_44",
+      "model": "mobilenet_v3_large",
+      "role": "CONFIRMATION",
+      "seed": 44,
+      "config": null,
+      "max_epochs": 8,
+      "is_p2": false
+    },
+    {
+      "trial_id": "search_001",
+      "model": "resnet18",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "learning_rate": 0.0001,
+        "weight_decay": 0.0001
+      },
+      "max_epochs": 8,
+      "is_p2": true
+    },
+    {
+      "trial_id": "search_002",
+      "model": "resnet18",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "learning_rate": 0.0001,
+        "weight_decay": 0.001
+      },
+      "max_epochs": 8,
+      "is_p2": false
+    },
+    {
+      "trial_id": "search_003",
+      "model": "resnet18",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "learning_rate": 0.0003,
+        "weight_decay": 0.0001
+      },
+      "max_epochs": 8,
+      "is_p2": false
+    },
+    {
+      "trial_id": "search_004",
+      "model": "resnet18",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "learning_rate": 0.0003,
+        "weight_decay": 0.001
+      },
+      "max_epochs": 8,
+      "is_p2": false
+    },
+    {
+      "trial_id": "search_005",
+      "model": "resnet18",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "learning_rate": 0.0008,
+        "weight_decay": 0.0001
+      },
+      "max_epochs": 8,
+      "is_p2": false
+    },
+    {
+      "trial_id": "search_006",
+      "model": "resnet18",
+      "role": "SEARCH",
+      "seed": 42,
+      "config": {
+        "learning_rate": 0.0008,
+        "weight_decay": 0.001
+      },
+      "max_epochs": 8,
+      "is_p2": false
+    },
+    {
+      "trial_id": "confirm_43",
+      "model": "resnet18",
+      "role": "CONFIRMATION",
+      "seed": 43,
+      "config": null,
+      "max_epochs": 8,
+      "is_p2": false
+    },
+    {
+      "trial_id": "confirm_44",
+      "model": "resnet18",
+      "role": "CONFIRMATION",
+      "seed": 44,
+      "config": null,
+      "max_epochs": 8,
+      "is_p2": false
+    }
+  ],
+  "protected_hashes": {
+    "ml/outputs/vision/mobilenetv3_large_vision.pt": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+    "ml/outputs/vision/mobilenetv3_large_vision.onnx": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "ml/outputs/telemetry/xgb_telemetry.json": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+    "docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md": "0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0"
+  },
+  "test_commands": [
+    "./.venv/bin/python -B -m pytest -q ml/tests/test_vision_hpo.py -k 'mobilenet_budget_stop or total_budget_stops or other_model_resumes or model_cap_preflight' -p no:cacheprovider",
+    "./.venv/bin/python -B -m pytest -q ml/tests/test_vision_hpo.py -k 'partial_selection or partial_cli or search_refuses_uncommitted or search_clean_commit' -p no:cacheprovider",
+    "./.venv/bin/python -B -m pytest -q ml/tests/test_vision_hpo.py -k 'total_stop_preserves or total_preflight_has_priority or total_terminal_verifies' -p no:cacheprovider",
+    "./.venv/bin/python -B -m pytest -q ml/tests -p no:cacheprovider"
+  ],
+  "training_executed": false,
+  "test_data_opened": false,
+  "probe_as_executed_source_snapshot": "source_snapshot/ml/experiments/run_vision_hpo.py",
+  "probe_source_sha256": "cc711202c31a5e23dc57108bccfcf0ff3c555af1b0ab8bdb583bcb7e8587590f"
+}

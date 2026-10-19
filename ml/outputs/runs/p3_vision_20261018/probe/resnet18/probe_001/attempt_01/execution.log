@@ -1,0 +1,2 @@
+{"epoch": 1, "train_seconds": 174.8701369590126, "validation_seconds": 12.18938362505287, "train_images_per_second": 90.9188971683972, "validation_images_per_second": 235.28671245569734, "train_loss": 0.16070547624668, "validation_loss": 0.35093146562576294, "macro_f1": 0.9085165501797136, "log_loss": 0.3509314954280853, "learning_rate": 0.0008}
+TRIAL_COMPLETE resnet18 probe_001 1 0.9085165501797136

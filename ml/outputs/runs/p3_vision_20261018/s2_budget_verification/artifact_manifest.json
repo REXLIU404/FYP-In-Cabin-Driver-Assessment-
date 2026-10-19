@@ -1,0 +1,44 @@
+{
+  "artifacts": {
+    "model-budget-green.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/s2_budget_verification/model-budget-green.log",
+      "sha256": "d7382a5a2e9ad1925993ae202d018b75db5012608ea0afbf76fac7e8e84d3b63",
+      "bytes": 113
+    },
+    "selection-clean-red.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/s2_budget_verification/selection-clean-red.log",
+      "sha256": "8534754fa3c740f65e891d0dbec81c547fed1b98be2cf2619abdfa09c6e1624d",
+      "bytes": 10347
+    },
+    "model-budget-red.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/s2_budget_verification/model-budget-red.log",
+      "sha256": "aebd701a5e8b681251c51268f63acd0e091b020296d2b4f2f615030bdda751aa",
+      "bytes": 9820
+    },
+    "config.json": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/s2_budget_verification/config.json",
+      "sha256": "abdb0a81f8d601c78e6986723404e282ebe3ef64f412baf18b9b489f3ebe1473",
+      "bytes": 5927
+    },
+    "suite-green.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/s2_budget_verification/suite-green.log",
+      "sha256": "56ebcc26f2f9b23b54d25fd9b402da0cf761b9f19e9c3ad6ca8451d458e6a7b6",
+      "bytes": 181
+    },
+    "review-boundaries-red.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/s2_budget_verification/review-boundaries-red.log",
+      "sha256": "44ff9d168ce8c5aa0c1dcb69b1e253f3574ee54d9e1cb1aeb7002b4728221a2e",
+      "bytes": 5585
+    }
+  },
+  "source_hashes": {
+    "ml/experiments/run_vision_hpo.py": "c669bb30fc79c7493f86c738fd66d430e465efcbf367c17e4753f19b2713279d",
+    "ml/tests/test_vision_hpo.py": "db05aaed9e351f6794be37601c2c8438d33df9fd94115585b83a81a01d4126e1",
+    "ml/configs/approved_vision_budget.json": "91abbac8ec85c6f0ced50acdfbd59822576a6b26969c4a7fe2170a808bf50334"
+  },
+  "full_ml_suite": {
+    "passed": 132,
+    "seconds": 16.52
+  },
+  "new_model_fits": 0
+}

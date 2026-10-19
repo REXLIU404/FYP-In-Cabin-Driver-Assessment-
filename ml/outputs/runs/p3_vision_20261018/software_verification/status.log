@@ -1,0 +1,65 @@
+probe_state.json {
+  "signature": "1de825963ec3550922ff5d6c2301d306b2ad9e853c6f0f37c396bd5093e8e695",
+  "phase": "probe",
+  "status": "INTERRUPTED",
+  "attempts": [
+    {
+      "key": "mobilenet_v3_large/probe_001",
+      "plan": {
+        "trial_id": "probe_001",
+        "model": "mobilenet_v3_large",
+        "role": "PROBE",
+        "seed": 42,
+        "config": {
+          "learning_rate": 0.0008,
+          "weight_decay": 0.0001
+        },
+        "max_epochs": 1,
+        "is_p2": false
+      },
+      "directory": "probe/mobilenet_v3_large/probe_001/attempt_01",
+      "status": "INTERRUPTED",
+      "wall_seconds": 30.797756583080627,
+      "timeout_seconds": 1200,
+      "started_wall_time": 1792320228.4701738
+    },
+    {
+      "key": "mobilenet_v3_large/probe_001",
+      "plan": {
+        "trial_id": "probe_001",
+        "model": "mobilenet_v3_large",
+        "role": "PROBE",
+        "seed": 42,
+        "config": {
+          "learning_rate": 0.0008,
+          "weight_decay": 0.0001
+        },
+        "max_epochs": 1,
+        "is_p2": false
+      },
+      "directory": "probe/mobilenet_v3_large/probe_001/attempt_02",
+      "status": "INTERRUPTED",
+      "wall_seconds": 27.519550209050067,
+      "timeout_seconds": 1169.2022434169194,
+      "started_wall_time": 1792320349.090271,
+      "execution": {
+        "status": "IMPLEMENTATION_FAILED",
+        "returncode": -15,
+        "wall_seconds": 27.51805025001522,
+        "timeout_seconds": 1169.2013827079209
+      },
+      "original_status": "IMPLEMENTATION_FAILED",
+      "recovery": "recovery_001"
+    }
+  ],
+  "trials": {
+    "mobilenet_v3_large/probe_001": {
+      "status": "INTERRUPTED",
+      "attempt": "probe/mobilenet_v3_large/probe_001/attempt_02"
+    }
+  },
+  "selection": {},
+  "used_wall_seconds": 78.09884787490591,
+  "context_file": "recovery_001/config.json"
+}
+

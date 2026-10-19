@@ -1,5 +1,175 @@
 # FYP2 ML 轨道进度（唯一规范进度报告）
 
+## 2026-10-19 最新交付：S2预算已批准，模型预算隔离修复已提交
+
+用户明确批准 `per_trial=2400 s`、MobileNet `17100 s`、ResNet `15300 s`、`total=32400 s`，要求先修复模型预算互相阻断、TDD及完整ML tests，再分别提交监督器、测试、预算，不push。该批准覆盖正式视觉search的具体数字，**视觉训练仍由用户自己的终端运行**；本轮没有启动probe/search、fit/forward、下载、held-out test、E1或package。
+
+开工Git六项检查：cwd/root正确，branch=`fyp2/ml-training`、初始HEAD=`c6d1f65`；全部dirty项均为此前已记录的监督器/测试/ignore/两份ML文档及该probe run，09审阅报告保持受保护untracked，没有未知改动。fast-context优先调用仍因Windsurf key不可用失败，改用精确文件/函数读取，没有提取凭据。
+
+### 问题、实现与真实验证
+
+旧调度器把任一trial/model超限写成整个search的`NOT_RUN_BUDGET`并break，且terminal early return阻断后续模型。现有修复为：
+
+- `per_trial`或`per_model`触顶只写该模型的`model_budget_stops`和剩余trial的`NOT_RUN_BUDGET`，保留已完成trial并继续下一模型；只有`total`触顶全停。模型封停后另一模型若中断，同run续跑只续允许的模型，账本/旧attempt/原始截断scope不重置。
+- 预算检查先于confirmation选型，避免首模型无完成search时阻断另一模型。截断attempt保留`TIME_BUDGET_EXCEEDED`，即使残留checkpoint或高分metrics也不进入选型。无完成search的模型记`NOT_SELECTED / NO_COMPLETED_SEARCH`；确认不足明确列missing seeds。
+- 模型级不完整整体为`PARTIAL`，total耗尽为`NOT_RUN_BUDGET`；两者都输出`SEARCH_PARTIAL`、选择日志和`BUDGET_EXCLUDED_TRIALS`。`search_state.json.excluded_trials`逐项保留model/trial/role/seed、scope/reason、attempt和实际截断或未启动状态。所有可生成selection的terminal路径都复核已完成产物，损坏时拒绝发布/自动重训。
+- search写文件/启动worker前拒绝staged及tracked修改，且四份执行源码、预注册protocol和预算文件必须逐字节等于`HEAD`。唯一允许的未跟踪例外为受保护09报告及当前run自己的输出；原始Git状态如实记录，另写`tracked_worktree_clean=true`和`execution_commit`，不伪称完全空的git status。新search记录最终已提交HEAD，旧probe context原样保留。
+
+由主代理实现，一名独立只读审查agent复审预算/选型/clean门禁，没有让agent运行训练。审查发现并补回归的三项边界是：后续total停止不能覆盖先前per-trial截断原因；多个余额为负时total判断优先；total终态重新输出selection前也必须验证完成checkpoint。
+
+TDD原始证据位于 `ml/outputs/runs/p3_vision_20261018/s2_budget_verification/`：
+
+| 实际命令 / 日志 | 真实结果 |
+|---|---|
+| `./.venv/bin/python -B -m pytest -q ml/tests/test_vision_hpo.py -k 'mobilenet_budget_stop or total_budget_stops or other_model_resumes or model_cap_preflight' -p no:cacheprovider` / `model-budget-red.log` | **5 failed / 30 deselected / 1.76 s**；实际断言ResNet未被执行，先复现再修复 |
+| 相同命令 / `model-budget-green.log` | **5 passed / 30 deselected / 1.94 s** |
+| selection/clean六项RED / `selection-clean-red.log` | **6 failed / 35 deselected / 1.38 s**；新增partial selection、CLI报告和clean-source guard不存在 |
+| 独立审查三项边界RED / `review-boundaries-red.log` | **3 failed / 43 deselected / 1.22 s**；先复现再修复 |
+| `./.venv/bin/python -B -m pytest -q ml/tests -p no:cacheprovider` / `suite-green.log` | **132 passed / 16.52 s**，其中视觉调度46项；完整ML suite，无新增真实模型训练 |
+
+精确命令、固定16条正式search/confirmation计划、4项保护hash、日志/源码SHA见该目录`config.json`与`artifact_manifest.json`。中间dirty tests的tmp fixture根目录不匹配曾导致3项测试失败，修正fixture后全部通过；不是训练失败。预算JSON在最终132项通过之后才写入，随后只做schema/精确数字/原grid/源hash校验，没有自动扩额或重跑模型。
+
+归档staged检查仅对原始pytest RED日志提示尾部空白、旧status日志提示末尾空行；这些捕获证据保持原字节和hash，不做格式清洗。排除`*.log`后的staged diff空白检查通过，源码/JSON/CSV/文档没有新增空白问题。
+
+### 提交与来源
+
+用户要求的三个独立本地commit已完成：
+
+| commit | 精确范围 |
+|---|---|
+| `64664e3` | `ml/experiments/run_vision_hpo.py` + `ml/.gitignore`：此前未提交的锁/中断恢复及本次模型预算、partial reporting、clean search修复 |
+| `27c8860` | 仅`ml/tests/test_vision_hpo.py`：原有未提交回归及本次新增预算/恢复/选型/clean tests |
+| `446c667` | 仅`ml/configs/approved_vision_budget.json`：用户批准的2400/17100/15300/32400秒，MPS/batch64/两线程/workers0不变 |
+
+另将此前未提交的probe/recovery/软件验证小体积证据及本报告/既有运行说明单独归档提交，以清除剩余tracked/非例外dirty。此文档提交本身不改变执行源码或预算；最终运行HEAD以交付时`git log -1`及新search的`execution_commit`为准，不预造尚未执行的search日志。每次提交前核对精确staged路径、无symlink、无模型二进制、无单文件>5MiB；09报告不删除、不修改、不暂存。没有push/reset/merge/rebase/stash或进入Live-System工作区。
+
+probe是在修复前源码`cc711202c31a5e23dc57108bccfcf0ff3c555af1b0ab8bdb583bcb7e8587590f`下执行。本轮已按此前确定的源码变更重建其逐字节快照，**SHA与probe记录完全匹配**，存入该run的`source_snapshot/ml/experiments/run_vision_hpo.py`。没有改写旧config/metrics/账本，不能把新的`64664e3`视为旧probe训练源码。
+
+### 四维验收与下一动作
+
+| 范围 | Implementation | Testing | Evidence | Reproducibility | Verdict |
+|---|---|---|---|---|---|
+| 本次监督器/测试/预算交付 | 预算按模型隔离、total全停、只用完成trial选型、clean commit门禁 | 关键RED→GREEN，完整132tests通过；真实dirty文档状态也被门禁拒绝且未创建search config/state | 独立3commits、预算JSON、原始日志/manifest/源码快照齐全 | committed源码/config可定位，旧probe来源保留；无新独立数值重训声明 | **VERIFIED_PASS（软件与审批交付）** |
+| Week2 ML准备 | 历史冻结/75checks及当前保护hash通过，预注册协议/资源/全部正式预算审批缺口现已闭合 | 真实MPS probe已验证所选资源路径 | 既有P0证据复用、最新protocol/预算已提交 | frozen split/recipe/seed和预算可追溯 | **VERIFIED_PASS（ML准备范围）** |
+| Week3 / P1 | 既有comparator pipeline/smoke继续复用 | 原真实smoke和保存复核；本次ML suite仍覆盖P1 tests | 不追加成功smoke | 不把旧random-init smoke算正式比较 | **VERIFIED_PASS（ML milestone）** |
+| P2/P3正式视觉search | 数字预算已批准，CLI待用户运行 | **NOT_RUN**；当前run无search config/state、无被截断的真实正式trial | 没有虚构实际截断列表；未来由CLI生成并于S3纳入报告 | 新search将记录最终提交与source hashes | **整体仍PARTIAL；视觉执行待用户终端** |
+
+search保持每模型6个seed42网格+2个selected配置确认seed43/44（总16逻辑运行），首网格计P2；epoch≤8、patience2、T_max8、224²预处理/augmentation不变。probe不计正式trial或正式预算。任何硬限达到均不扩额；真实截断trial在S3按保存账本列出，不能算选型候选、完整grid coverage或确认完成。原P4/P5和E2–E5/系统文件范围均未授权，W5/W7主里程碑不变。
+
+最终交付前只做非训练clean-source preflight：确认已提交文件与HEAD一致、允许例外明确、保护hash不变、无暂存、search尚未开始。接电、保持开盖、一个终端、避免与系统轨道计时并发，然后由用户执行：
+
+```bash
+cd /Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1
+caffeinate -dims ./.venv/bin/python -B ml/experiments/run_vision_hpo.py search --run-id p3_vision_20261018
+```
+
+结束后提供`SEARCH_COMPLETE`或`SEARCH_PARTIAL`、`BUDGET_EXCLUDED_TRIALS`与`VISION_STATUS search`；下一停止点S3只核验保存产物、正式选型/确认波动/截断列表，不自动开始P4或P5。
+
+## 2026-10-19 最新停止点 S2：视觉 probe 完成，正式 search 预算待批准
+
+用户已在自己的终端运行 `caffeinate -dims ./.venv/bin/python -B ml/experiments/run_vision_hpo.py probe --run-id p3_vision_20261018`，提供 `PROBE_COMPLETE` 和 `VISION_STATUS probe COMPLETED used_seconds 482.47383658390027`。本节覆盖下方“等待 probe / INTERRUPTED”的历史快照。当前 branch=`fyp2/ml-training`、HEAD=`c6d1f65`；Git 六项检查仅见本次已授权的修复/报告和该 run 产物，没有新的异常路径，staging 为空。09审阅报告仍未跟踪且哈希未变。本轮代理仅解读并核验保存产物、更新本报告，没有训练、模型加载/forward、权重下载、配置变更或提交。
+
+### 实际 probe 结果与解释
+
+| 模型 / 成功 attempt | 完整训练/验证 | train + val 秒数 | attempt 墙钟秒数 | Val accuracy / macro-F1（仅 probe diagnostics） | 保存/重载 |
+|---|---|---:|---:|---|---|
+| MobileNetV3-Large / attempt_03 | train15899、val2868；1 epoch；MPS、batch64、threads2、workers0 | 206.259663833 | 210.761519875 | .827405858 / .825530194 | checkpoint17052801 bytes；原重载16样本、logit最大差0 |
+| ResNet18 / attempt_01 | 相同样本与设置 | 187.059520584 | 191.677009750 | .909693166 / .908516550 | checkpoint44803787 bytes；原重载16样本、logit最大差0 |
+
+这证明获批全量输入上的单 epoch 训练、完整 validation、有限输出和保存/同批重载已经在用户真实 MPS 环境运行成功，超过了仅有 fake-device tests 的证据范围。它不证明多 epoch 长时稳定、独立重训逐位复现、真实 camera 泛化或 runtime 推理时延。ResNet本轮epoch较快、diagnostic F1较高，不能据此选模型、排除MobileNet、缩减grid或声称优于既有正式baseline；两模型预训练仍分别为ImageNet V2/V1。probe标记 `NON_COMPARATIVE_PROBE`、`formal_comparison_valid=false`、`counts_toward_hpo=false`、`is_p2=false`，selection仍为空。
+
+累计账本482.473836584 s包含原保留78.098847875 s；**本次成功续跑新增404.374988709 s**。MobileNet先前两次 interrupted attempt全部保留。没有超时；不能把482秒当作全部搜索时间，不能把旧中断历史抹除。MPS同步batch后采样的driver峰值约MobileNet4.365 GiB / ResNet2.440 GiB，OS峰值RSS分别706838528 / 959397888 bytes；二者统计口径不同，不相加，也不冒称长时运行的绝对内存上限。
+
+### 本轮只读核验与四维状态
+
+实际使用既有 `.venv/bin/python -B` 的内联Python核验（不另建重复报告）：对两条完成attempt调用 `run_vision_hpo.verify_completed`，**22条 artifact exists/bytes/SHA通过**，包括两份checkpoint；active source SHA/signature、4项受保护hash和context中的冻结metadata/train/val字节hash一致。`sample_manifest.csv`逐行相同，train15899/val2868、ID唯一、train/val司机无交集，validation predictions IDs和顺序一致、10类c0–c9映射正确。保存logits/probabilities均finite、softmax/argmax一致；CSV与`probabilities_validation.npy`一致，重新计算accuracy/macro-F1/log-loss与ledger一致。此核验没有重新加载checkpoint或追加forward；reload结论来自本次真实worker的保存记录。
+
+核验数值口径：第一次从CSV默认float64复算MobileNet log-loss=.737143634909，与原float32评分.736698567867有差异；确认scikit-learn按概率dtype选择裁剪精度后，使用原NPY float32重算，两模型全部指标一致。不是新的训练失败，没有修改原指标或scorer。后续复算应保留现有评分dtype；不能把float64复算值混入当前float32 log-loss并列规则。
+
+当前 `test_images_opened=0`、`test_predictions=0`，无`predictions_test.csv`；未打开test图像或telemetry_test CSV。无`approved_vision_budget.json`，没有正式search或新的HPO计数。软件修复的116项测试仍是下方历史执行证据，本轮未重复声称重跑。
+
+| 范围 | Implementation | Testing | Evidence | Reproducibility | Verdict |
+|---|---|---|---|---|---|
+| 视觉 probe / S2输入 | 真实MPS单epoch train/val、保存重载已执行 | 两模型各1次成功；输出/IDs/metrics/hash核验通过 | 日志、模型、config、manifest、timing及proposal齐全 | 配方/数据/源码/种子可追溯、原重载通过；MPS独立数值重训未做 | **VERIFIED_PASS（仅probe范围）** |
+| 视觉 P2/P3正式训练 | search CLI已实现；原批准grid/8epoch/patience2保持 | **NOT_RUN**；probe不抵扣第一组P2正式trial | 无正式视觉trial/selection freeze | 等待正式运行与确认seed证据 | **APPROVAL_PENDING** |
+| 整体进度 | Week3原P1仍VERIFIED_PASS；遥测P2/P3复用既有结果 | 不扩展为五模型HPO/E1全部完成 | 只引用本轮真实产物 | 各阶段门槛不变 | Week2总体仍PARTIAL（正式视觉预算未闭合）；P2/P3 PARTIAL；P4/P5未授权 |
+
+### 正式视觉预算：估计与待审批建议分开
+
+原批准公式 `(train + full val seconds) × 8 epochs × 8 logical trials × 1.15` 已复算一致：
+
+| 模型 | proposal估计（已含15%系数） | 建议模型硬限（尚未批准） |
+|---|---:|---:|
+| MobileNetV3-Large | 15180.711258114 s ≈ 4小时13分01秒 | **17100 s（4小时45分）** |
+| ResNet18 | 13767.580714987 s ≈ 3小时49分28秒 | **15300 s（4小时15分）** |
+| 合计 | 28948.291973101 s ≈ 8小时02分28秒 | **32400 s（9小时）** |
+
+另建议 `per_trial=2400 s（40分钟）`，与模型/总限额同时执行；这是本次提交用户考虑的数字，**不是R4规定或已获授权的扩额**。总9小时比已含15%的proposal再多约11.9%，用于长时MPS负载/初始化/保存重载和调度波动；不保证覆盖所有trial。保持MPS、batch64、CPU threads2、workers0，模型与trial顺序执行，接电、开盖，不与系统轨道性能测试并发。单trial不超过8epoch、patience2可能提前结束；达到任一硬限即停，保留已耗预算/attempt并记录NOT_RUN_BUDGET，不自动补跑。probe只计自己的2400s阶段，不计正式HPO trial或正式search账本。
+
+当前未解决事项为：用户是否批准以上每trial、每模型、总秒数及对应MPS资源窗口。批准后才按最新任务§5写入并提交 `approved_vision_budget.json`，给用户终端search命令；不得现在创建授权文件或启动search。正式每模型6组seed42+选中配置43/44共最多8次，首网格计P2；确认不重选。P4 final test/E1、P5 package仍须另批。只更新本规范报告，保留W5/W7里程碑与四维验收边界。
+
+## 2026-10-19 最新执行记录：probe 重复启动与中断恢复修复
+
+本节为最新状态，覆盖下方旧的“视觉 NOT_STARTED / 未下载 / 未执行”快照。Git 开工六项检查：cwd/root=`/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1`、branch=`fyp2/ml-training`、HEAD=`c6d1f65`；原有修改只有本次已记录的 regression tests 与 `p3_vision_20261018/`，09审阅报告仍为受保护 untracked。没有切换分支、访问 Live-System 工作区、暂存、提交或 push。用户已要求修复，但明确保留自己运行 probe；**本轮只修代码、做软件测试和非训练恢复，没有启动 probe/search、下载、fit/forward、P4/P5或读取 held-out test**。
+
+### 实际故障与修复范围
+
+旧 `_recover_running` 没有检查父控制器是否存活：同一 run 第二次启动时，把正在运行的 worker 当作孤儿发出 SIGTERM；`supervise` 又把 `returncode=-15` 标成 `IMPLEMENTATION_FAILED`，之后相同命令不启动新 attempt，却仍增加空转启动计时。这与用户终端的 “Interrupted worker was stopped” 和 attempt_02 的 `-15` 相符。两次 MobileNet attempt 都没有完成 epoch、validation 或 checkpoint，不能推断为模型性能差、权重损坏或已完成 probe。
+
+改动仅在 `ml/experiments/run_vision_hpo.py`、对应 tests、`ml/.gitignore`（忽略运行锁）和本报告/既有运行说明：
+
+- 同 run 的所有写操作持有 OS `flock`；重复启动报告 `ALREADY_RUNNING`，不改账本、不停止已有 worker。锁文件保留原 inode，进程退出后自动释放。
+- 兼容旧启动器：确认 worker 的父控制器仍存活时拒绝恢复；真实孤儿才按原规则处理。SIGINT/SIGTERM 记录 `INTERRUPTED`；普通实现错误不自动重跑，超时不扩预算。已停止的 failure/budget 状态再次执行不再增加空转耗时。
+- 新增受限 `recover-interrupted` 非训练命令：仅恢复旧 probe 的 `-15` 误分类；原提交源码可按 SHA 重建、除控制器外的 source/recipe/预训练/数据/环境/protocol 不变、无存活 worker 且有剩余预算才允许。原 state/config/控制器源码保存在 `recovery_001/`，原 attempt/config/log 不覆盖；新 source context 单独保存并签名。未改变模型训练 worker、网格、种子、预处理、正式 HPO ceiling 或审批机制。
+
+### 实际执行命令与结果
+
+证据根目录：`ml/outputs/runs/p3_vision_20261018/`，软件证据在其 `software_verification/`；恢复前快照、原源码和审计 manifest 在 `recovery_001/`。
+
+```bash
+./.venv/bin/python -B -m pytest -q ml/tests/test_vision_hpo.py -k 'second_launcher or external_sigterm or signal_interruption or live_controller or failed_run_retry or legacy' -p no:cacheprovider
+./.venv/bin/python -B -m pytest -q ml/tests/test_vision_hpo.py -p no:cacheprovider
+./.venv/bin/python -B -m pytest -q ml/tests -p no:cacheprovider
+./.venv/bin/python -B ml/experiments/run_vision_hpo.py recover-interrupted --run-id p3_vision_20261018
+./.venv/bin/python -B ml/outputs/runs/p3_vision_20261018/software_verification/verify_recovery.py
+./.venv/bin/python -B ml/experiments/run_vision_hpo.py status --run-id p3_vision_20261018
+git diff --check
+```
+
+先运行 regression，实际 **12 failed / 17 deselected / 1.95 s**（RED），修复后视觉 tests **29 passed / 1.80 s**。增加 CLI 恢复→同配方续跑的合成集成检查后，完整 ML suite **116 passed / 18.62 s**，其中视觉调度30项；日志分别为 `regression-red.log`、`vision-green.log`、`suite-green.log`。这些是 fake worker/临时合成文件/短生命周期软件进程验证，不是实际模型 fit 或 MPS 数值验收。
+
+实际恢复 exit 0，`recovery.log`：`PROBE_RECOVERED INTERRUPTED used_seconds 78.09884787490591 remaining_total_seconds 2321.901152125094 context_file recovery_001/config.json training_started False`。恢复后独立可重跑脚本 **33 checks / 0 failures**（`recovery-verification.log`）：原10个文件 bytes/SHA、4个保护哈希、原 state、审计文件、active source/signature、旧 signal result、零新 attempt/checkpoint、无 search 预算文件、空 staging 均通过。旧原始 execution.status 仍留为失败证据；修正后的 attempt.status 为 `INTERRUPTED` 并保留 `original_status`，没有抹掉历史。
+
+### 当前资源、预算与四维验收
+
+MPS availability 门禁在真实恢复命令中通过，但本轮没有实际 MPS forward 或资源性能测量。MobileNet V2 / ResNet18 V1 缓存已由用户获取，恢复时完整 SHA 与原 manifest 一致（分别 `5c1a416349c4cf298f2a6a5e2600ed0ee55e604713578f5e74e6bc8bcaef7997` / `f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec`）；无需重复 fetch，未变更 `.venv`。
+
+| 项目 | 实际状态 / 预算 |
+|---|---|
+| MobileNet probe | 2 interrupted attempts；实际 attempt 墙钟合计58.317306792 s；累计1200 s限额剩余约1141.682693208 s |
+| ResNet probe | 0 attempts；模型上限1200 s，另受总剩余约束 |
+| 阶段总预算 | 原账本已记78.098847875 s，**不退款、不清零**；2400 s总限额剩2321.901152125 s；后续启动开销仍计入 |
+| 验证/恢复开销 | RED 1.95 s、视觉GREEN 1.80 s、完整suite 18.62 s，属于软件验证；恢复未新增训练耗时或 attempt，未将原账本改写为“仅fit耗时” |
+
+| 范围 | Implementation | Testing | Evidence | Reproducibility | Verdict |
+|---|---|---|---|---|---|
+| 本次监督器修复及旧状态恢复 | 锁/中断分类/受限迁移已实现 | 完整116软件tests + 真实恢复33项核验 | RED/GREEN、原快照、源码hash、新context及旧attempt齐全 | 恢复脚本可重跑、配方与预算未变、旧证据保留 | **VERIFIED_PASS（仅软件与状态恢复）** |
+| 真实视觉 probe | CLI可续跑；原2 attempts保留 | 没有完整epoch/val/reload结果 | 无 checkpoint、validation metrics 或 proposal | 后续新attempt记录新控制器context；MPS数值复现未验证 | **PARTIAL / INTERRUPTED，等待用户终端续跑** |
+| 五模型正式HPO / E1 / package | 遥测既有结果不重跑；视觉search预算文件不存在 | 本轮未执行 | 不新增正式比较或E1证据 | 仍服从各阶段审批 | **P2/P3 PARTIAL；P4/P5 NOT_STARTED / 未授权** |
+
+Week3 的 comparator pipeline + 原批准smoke继续为 `VERIFIED_PASS`（下方实际证据）；这次修复不是追加smoke或验收整条ML轨道。Week2 数据/模型冻结与技术准备通过，总体仍 `PARTIAL / APPROVAL_PENDING`：视觉正式 search 数字预算留待 probe 完成后的 S2 审批。W5/W7 主里程碑未变。
+
+### 下一步与停止状态
+
+本次修复/恢复完成后停止，不代用户启动训练。用户接电、保持开盖，仅在一个终端执行：
+
+```bash
+cd /Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1
+caffeinate -dims ./.venv/bin/python -B ml/experiments/run_vision_hpo.py probe --run-id p3_vision_20261018
+```
+
+不必再 fetch 或 recover；不删除 state/attempt/lock，不更换 run_id。完成后提供 `PROBE_COMPLETE` 和 `VISION_STATUS probe`；若超时或出错，停下并保留状态。接着只核验 probe、提出具体视觉 per-trial/per-model/total预算，在 S2 等用户批准；不自动 search、final test、E1或打包。运行方法已同步到既有 `RUN_VISION_HPO.md`，没有新建重复进度文档。
+
 ## 2026-10-18 最新执行记录：S1 交付与 Week 3 验收
 
 本节覆盖下方2026-10-15的历史审批状态；旧日志与历史结论原样保留。用户明确要求执行 `.claude/worktrees/intelligent-chebyshev-836ed9/research/CODEX_ML_P2_P3_PROMPT.md`，并要求核验 Week 3。授权为遥测CPU P2/P3、视觉脚本/测试/说明以及C1–C6本地提交；代理不得执行视觉训练、下载、P4或P5。视觉search具体预算需probe后另批。

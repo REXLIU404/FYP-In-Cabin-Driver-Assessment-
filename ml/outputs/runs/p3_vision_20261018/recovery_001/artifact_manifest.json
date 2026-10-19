@@ -1,0 +1,29 @@
+{
+  "reason": "Legacy SIGTERM -15 misclassified as IMPLEMENTATION_FAILED; controller-only recovery",
+  "training_started": false,
+  "budget_unchanged": true,
+  "used_wall_seconds": 78.09884787490591,
+  "previous_signature": "f472de690c86990cbbad4d36ce7c9d51e6d777cedb10801c6a699dbb05bb6da2",
+  "artifacts": {
+    "config.json": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/recovery_001/config.json",
+      "sha256": "9e846b805560d1c54a14c24bd5fb5c997e6a35f20b36327684ae888482ab66ae",
+      "bytes": 2594
+    },
+    "probe_state.json": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/recovery_001/probe_state.json",
+      "sha256": "6374f11126fe51807fb65107b8297768bc2eef414bd6b263de39cf450146bde0",
+      "bytes": 1735
+    },
+    "original/config.json": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/recovery_001/original/config.json",
+      "sha256": "11160fefb25fa9a94cbaa228630e7304d46ce0224b313513a599d3b56a0e29ba",
+      "bytes": 2594
+    },
+    "source_snapshot/ml/experiments/run_vision_hpo.py": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/recovery_001/source_snapshot/ml/experiments/run_vision_hpo.py",
+      "sha256": "8e2770f02c44bb501f4fd35ff42c05367e6b134513c844c3a5d9d7703c6abb2f",
+      "bytes": 16972
+    }
+  }
+}
