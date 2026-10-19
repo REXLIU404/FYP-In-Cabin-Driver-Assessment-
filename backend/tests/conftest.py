@@ -1,6 +1,6 @@
 """Shared pytest configuration for the backend tests.
 
-Four jobs:
+Five jobs:
 
 1. Guarantee that *importing the app never touches a real database*. ``Settings``
    is instantiated once, the first time ``app.config`` is imported, and its
@@ -24,6 +24,11 @@ Four jobs:
    exits 0: a green that proved nothing about them. ``pytest_terminal_summary`` prints
    the count and the names of those skips in a banner, and ``DRA_REQUIRE_MODELS=1``
    (the pre-release gate) turns each of them into a failure instead.
+
+5. Provide the end-to-end environment of ``test_live_e2e.py``: the ``e2e`` marker, a session-scoped
+   ``npm run build`` and the ONE uvicorn that serves the API and the freshly built ``dist/`` on a
+   throw-away database (``e2e_dist`` / ``e2e_server``). Both import their helpers lazily, so a run
+   that selects no end-to-end test never builds or starts anything.
 
 The pre-existing ``api`` fixture in ``test_audit_regressions.py`` has the same
 ``(client, session_id)`` contract and, being module-level, takes precedence in
@@ -118,6 +123,39 @@ def api(api_factory, tmp_path):
     finally:
         client.close()
         cache._latest.clear()  # module-global: would leak between tests otherwise
+
+
+# --------------------------------------------------------------------------------------
+# End-to-end environment (Task 10 part 2a): ONE uvicorn serving the API and the built dist/.
+# --------------------------------------------------------------------------------------
+def pytest_configure(config):
+    config.addinivalue_line(
+        "markers",
+        "e2e: drives Chromium against one real uvicorn that serves the API and the freshly built dist/ "
+        "(slow; part of the full run, select with -m e2e)",
+    )
+
+
+@pytest.fixture(scope="session")
+def e2e_dist():
+    """``npm run build`` once per pytest session. ``dist/`` is git-ignored and can be stale; the
+    end-to-end tests must exercise the CURRENT frontend, so they never trust an existing one."""
+    from e2e_support import build_dist
+
+    build_dist()
+
+
+@pytest.fixture(scope="session")
+def e2e_server(e2e_dist, tmp_path_factory):
+    """The single uvicorn of the end-to-end tests: a throw-away SQLite file, the fault sink in the
+    same directory, a free port, the API and ``dist/`` on one origin. Never the development database."""
+    from e2e_support import start_server
+
+    server = start_server(tmp_path_factory.mktemp("e2e-server"))
+    try:
+        yield server
+    finally:
+        server.stop()
 
 
 # --------------------------------------------------------------------------------------
