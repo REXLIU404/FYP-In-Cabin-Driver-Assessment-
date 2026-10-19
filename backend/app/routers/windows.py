@@ -121,7 +121,9 @@ def _classify_telemetry(state: dict, ev: Evidence) -> Optional[inference.Observa
     time -> REPEAT; equal with anything different -> 409 observation_conflict; smaller -> 409
     out-of-order. Without one (the weaker fallback): a later time -> NEW; the same time with the
     same feature hash -> REPEAT, with another hash -> NEW; an earlier time -> 409 out-of-order.
-    A REPEAT answers with the REGISTERED acquisition time and refreshes nothing."""
+    A REPEAT answers with the REGISTERED acquisition time and refreshes nothing. The explicit
+    high-water mark (``obs_t_seq``) only moves forward: a fallback NEW leaves it alone, so mixing
+    the two identity modes in one session cannot make an older seq acceptable again."""
     if ev.telemetry_hash is None:
         return None
     stamp, seq = ev.telemetry_timestamp, ev.telemetry_seq
@@ -145,7 +147,12 @@ def _classify_telemetry(state: dict, ev: Evidence) -> Optional[inference.Observa
         if same_content:
             return inference.Observation("repeat", registered_ts, "fallback")
         identity = "fallback"
-    state.update(obs_t_seq=seq, obs_t_ts=stamp, obs_t_hash=ev.telemetry_hash)
+    state.update(obs_t_ts=stamp, obs_t_hash=ev.telemetry_hash)
+    if seq is not None:
+        # The explicit high-water mark only ever moves forward (the checks above guarantee this seq
+        # is bigger than the last one). A fallback NEW has no seq and must leave it where it is:
+        # writing None here would let an older seq be accepted again after any seq-less sample.
+        state["obs_t_seq"] = seq
     _advance_watermark(state, watermark_key, stamp)
     return inference.Observation("new", stamp, identity, seq)
 
@@ -159,7 +166,9 @@ def _classify_vision(state: dict, ev: Evidence) -> Optional[inference.Observatio
     hash is an AUDIT here: a NEW frame whose bytes equal the previous accepted frame's is still
     NEW, flagged ``hash_repeat_audit``. Without one (the weaker fallback): the same bytes as the
     previous accepted frame -> REPEAT, with the REGISTERED acquisition time; otherwise NEW, and
-    subject to the ``captured_at`` watermark. A REPEAT never refreshes the acquisition time."""
+    subject to the ``captured_at`` watermark. A REPEAT never refreshes the acquisition time. The
+    explicit high-water mark (``obs_v_epoch`` / ``obs_v_index``) only moves forward: a frame without
+    metadata leaves it alone, so an older (epoch, index) cannot become acceptable again."""
     if ev.image_hash is None:
         return None
     stamp, frame = ev.captured_at, ev.vision_frame
@@ -185,8 +194,11 @@ def _classify_vision(state: dict, ev: Evidence) -> Optional[inference.Observatio
         if watermark and _instant(stamp) < _instant(watermark):
             raise _out_of_order()
         identity, ref = "fallback", None
-    state.update(obs_v_epoch=frame[0] if frame else None, obs_v_index=frame[1] if frame else None,
-                 obs_v_ts=stamp, obs_v_hash=ev.image_hash)
+    state.update(obs_v_ts=stamp, obs_v_hash=ev.image_hash)
+    if frame is not None:
+        # Same rule as the telemetry seq: the explicit (epoch, index) mark moves forward only, and a
+        # frame without metadata (the fallback) never clears it.
+        state.update(obs_v_epoch=frame[0], obs_v_index=frame[1])
     _advance_watermark(state, watermark_key, stamp)
     return inference.Observation("new", stamp, identity, ref, audit)
 

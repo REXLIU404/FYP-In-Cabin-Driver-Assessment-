@@ -577,13 +577,22 @@ def test_g8_every_key_the_live_fsm_writes_is_listed():
 
 def test_g8_a_row_written_by_the_pre_r10_worker_is_read_safely():
     """A LIVE session persisted before R10: no registry, no segment keys, a running ``high_since``.
-    The new FSM ignores the old streak (no instant escalation) and removes it."""
+    The new FSM ignores the old streak (no instant escalation) and removes it.
+
+    The streak is 5000 ms old - past the 2000 ms sustain - so INHERITING it would escalate this very
+    window, and the CAUTION below can tell ignoring from inheriting. (With a streak of 1000 ms it could
+    not: the pre-R10 rule answers CAUTION to that too.) The first assertion proves the premise: the
+    pre-R10 rule, fed this very row, does escalate."""
+    legacy = {"previous_vision": 0.9, "last_severity": "CAUTION", "high_since": 1_735_732_795_000.0,
+              "low_since": None, "last_processed_ms": 1_735_732_799_500.0,
+              "captured_at": at(-500).isoformat(), "telemetry_timestamp": at(-500).isoformat()}
     s = Live()
-    s.state = {"previous_vision": 0.9, "last_severity": "CAUTION", "high_since": 1_735_732_799_000.0,
-               "low_since": None, "last_processed_ms": 1_735_732_799_500.0,
-               "captured_at": at(-500).isoformat(), "telemetry_timestamp": at(-500).isoformat()}
+    premise = run_inference("s", 1, WindowInput(P_distraction=H, P_telemetry_anomaly=H), state=dict(legacy),
+                            config=s.config, now=at(0))  # PREPARED_SESSION_RUNTIME: the pre-R10 rule
+    assert premise.AlertSeverity == "HIGH_ALERT"
+    s.state = dict(legacy)
     out = s.tick(0, telemetry=new(0), pt=H)
-    assert out.AlertSeverity == "CAUTION"  # 'high_since' was 1000 ms old, but R10 starts its own segment
+    assert out.AlertSeverity == "CAUTION"  # 'high_since' was 5000 ms old, but R10 starts its own segment
     assert "high_since" not in s.state and "low_since" not in s.state
     assert s.state["high_srv_us"] == us(0)
     assert s.state["captured_at"] == at(-500).isoformat()  # the watermarks are untouched
@@ -772,6 +781,29 @@ def test_g10_the_low_side_is_decided_on_the_rounded_single_branch_score(p, level
         s.tick(ms, telemetry=repeat(0), pt=p)
     last = s.tick(10_000, telemetry=new(10_000), pt=p)
     assert last.AlertSeverity == ("NORMAL" if supports else "CAUTION")
+
+
+def test_g10_a_single_branch_score_of_exactly_30_does_not_support_low_while_the_fused_level_is_low():
+    """The Low SUPPORT test on its own boundary. The test above cannot reach it: with one branch at 29.95
+    the fused score is 30.0 = Medium, which clears the segments whatever the support test says. Here the
+    fused level stays Low, so only the single-branch test can decide. A latched alert, default weights,
+    tolerance 30 s. Telemetry's 10.0 sample is registered at 0 ms and only re-sent; vision sends a NEW
+    frame of exactly 30.0 every second. Fused 0.5 * 30.0 + 0.5 * 10.0 = 20.0 = Low in every window.
+    30.0 is not below 30, so vision does not support Low, telemetry's REPEAT is no supporter, and the
+    source end never leaves telemetry's 0 ms: the alert holds for as long as vision keeps sending.
+    ('score <= threshold_low' would let each frame move the end and recover the alert at 10 s.)
+    Control: a NEW frame of 29.9 does support, and finishes the recovery."""
+    s = Live(freshness_tolerance_s=30).latched()
+    first = s.tick(0, vision=new(0), telemetry=new(0), pv=0.30, pt=L)
+    assert (first.RiskScore, first.RiskLevel, first.AlertSeverity) == (20.0, "Low", "HIGH_ALERT")
+    out = [s.tick(ms, vision=new(ms), telemetry=repeat(0), pv=0.30, pt=L) for ms in range(1000, 12_001, 1000)]
+    assert [r.RiskScore for r in out] == [20.0] * 12
+    assert [r.RiskLevel for r in out] == ["Low"] * 12
+    assert [r.AlertSeverity for r in out] == ["HIGH_ALERT"] * 12  # 10000 ms and 12000 ms of wall clock included
+    # The bookkeeping says why: telemetry opened the segment and nobody moved its end.
+    assert (s.state["low_src_us"], s.state["low_end_us"], s.state["low_contrib"]) == (us(0), us(0), "telemetry")
+    done = s.tick(13_000, vision=new(13_000), telemetry=repeat(0), pv=0.299, pt=L)
+    assert done.RiskLevel == "Low" and done.AlertSeverity == "NORMAL"  # 29.9 < 30: span 13000, wall 13000
 
 
 @pytest.mark.parametrize("period_ms,expected", [

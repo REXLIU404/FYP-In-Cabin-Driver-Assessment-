@@ -393,6 +393,29 @@ def test_g3_without_a_seq_the_weaker_fallback_applies(drive):
     assert older.status_code == 409 and older.json()["detail"] == OUT_OF_ORDER
 
 
+def test_g3_a_sample_without_a_seq_in_between_does_not_clear_the_explicit_seq_high_water_mark(drive, api_factory):
+    """A3 / Codex C9: explicit identity is monotonic for the whole session, however it is mixed with the
+    fallback. seq 10 is accepted; a sample that carries no seq (the fallback, NEW by its later time) is
+    accepted in between; seq 3 must STILL be refused as out of order. The fallback registers its own time
+    and hash only - it must not write 'no seq' over the mark. (Before the fix it did, and seq 3 came
+    back 201 NEW.) Nothing of the refused request may reach the registry, the window count or the FSM."""
+    d = drive()
+    d.ok(0, "s10", features=tel(H, 1), seq=10, stamp=0)
+    between = d.ok(100, "no-seq", features=tel(H, 2), stamp=100)
+    assert between["provenance"]["telemetry_obs"] == "new"
+    assert between["provenance"]["telemetry_identity_source"] == "fallback"
+    committed = snapshot(api_factory, d.sid)
+    response = d.send(200, "s3", features=tel(H, 3), seq=3, stamp=200)
+    assert response.status_code == 409 and response.json()["detail"] == OUT_OF_ORDER
+    assert last_fault(api_factory, d.sid) == ("out_of_order_evidence", "session", 409, 0, OUT_OF_ORDER)
+    assert snapshot(api_factory, d.sid) == committed   # registry, watermarks, FSM memory, counter, records
+    assert window_count(api_factory, d.sid) == 2
+    assert state_of(api_factory, d.sid)["obs_t_seq"] == 10   # the mark survived the seq-less sample
+    # Forward is still open: the mark guards the past, it does not freeze the session.
+    forward = d.ok(300, "s11", features=tel(H, 4), seq=11, stamp=300)
+    assert (forward["provenance"]["telemetry_obs"], forward["provenance"]["telemetry_seq"]) == ("new", 11)
+
+
 # ===================================================================== 4. vision identity
 def test_g4_a_frame_re_sent_under_new_request_ids_is_a_repeat_and_never_alerts(drive):
     """S4: the same frame (0, 0) every 500 ms: REPEAT, canonical time kept, CAUTION until the frame
@@ -462,6 +485,31 @@ def test_g4_without_frame_metadata_the_image_hash_is_the_fallback_identity(drive
     assert older.status_code == 409 and older.json()["detail"] == OUT_OF_ORDER
     repeat_with_old_stamp = d.ok(400, "v4", image=img(H, "y"), captured=10)
     assert repeat_with_old_stamp["provenance"]["vision_obs"] == "repeat"
+
+
+def test_g4_a_frame_without_metadata_in_between_does_not_clear_the_explicit_frame_high_water_mark(drive, api_factory):
+    """A3 / Codex C9, the vision half. Frame (1, 5) is accepted; a frame with no vision_frame (the
+    fallback, NEW because its bytes differ) is accepted in between; an older epoch (0, 99) - and an
+    older index of the same epoch (1, 4) - must STILL be refused as out of order. The fallback registers
+    its own time and hash only, never 'no frame' over the mark. (Before the fix (0, 99) came back 201
+    NEW.) The refused requests change nothing: registry, window count, FSM memory."""
+    d = drive()
+    d.ok(0, "v15", image=img(H, "a"), captured=0, frame=(1, 5))
+    between = d.ok(100, "bare", image=img(H, "b"), captured=100)
+    assert between["provenance"]["vision_obs"] == "new"
+    assert between["provenance"]["vision_identity_source"] == "fallback"
+    committed = snapshot(api_factory, d.sid)
+    for rid, frame in (("old-epoch", (0, 99)), ("old-index", (1, 4))):
+        response = d.send(200, rid, image=img(H, rid), captured=200, frame=frame)
+        assert response.status_code == 409 and response.json()["detail"] == OUT_OF_ORDER, rid
+        assert last_fault(api_factory, d.sid) == ("out_of_order_evidence", "session", 409, 0, OUT_OF_ORDER)
+        assert snapshot(api_factory, d.sid) == committed, rid
+    assert window_count(api_factory, d.sid) == 2
+    held = state_of(api_factory, d.sid)
+    assert (held["obs_v_epoch"], held["obs_v_index"]) == (1, 5)   # the mark survived the bare frame
+    # Forward is still open.
+    forward = d.ok(300, "v16", image=img(H, "c"), captured=300, frame=(1, 6))
+    assert (forward["provenance"]["vision_obs"], forward["provenance"]["vision_frame_id"]) == ("new", "1:6")
 
 
 def test_g4_a_repeat_uses_the_stored_probabilities_not_the_models_new_answer(drive):
