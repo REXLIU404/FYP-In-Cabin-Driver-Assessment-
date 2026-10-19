@@ -9,7 +9,7 @@ import { createLiveLoop } from "../../../ai/src/liveLoop";
 import { createTimingBuffer } from "../../../ai/src/liveTiming";
 import { api, type ModelStatus } from "../api/client";
 import { RETRY_POLICY } from "../api/retryPolicy";
-import { preparedTelemetryAt } from "../data/preparedSessionInput";
+import { createPreparedTelemetryCursor } from "../data/preparedSessionInput";
 import type { AppConfig, SessionMeta } from "../types";
 import type { CaptureResult } from "./useCameraPreview";
 
@@ -52,8 +52,10 @@ export function useLiveSession(
       captureMissReason: () => lastMiss.current,
       // Replay the prepared RAW telemetry (PREPARED_RAW_TELEMETRY - never the
       // prepared-probability windows) at its original 2-second cadence,
-      // independently of the camera's inference rate.
-      telemetryAt: preparedTelemetryAt,
+      // independently of the camera's inference rate. The cursor numbers every
+      // sample and stamps it with its logical event time; the loop resets, pauses
+      // and resumes it with the session. One cursor per loop, hence per hook.
+      telemetry: createPreparedTelemetryCursor(),
       newRequestId: () => crypto.randomUUID(),
       now: () => Date.now(),
       // Bounded (500 windows) per-window latency: capture -> send -> response -> render.

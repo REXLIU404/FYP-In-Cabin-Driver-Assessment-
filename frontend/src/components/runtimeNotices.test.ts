@@ -27,6 +27,7 @@ const fault = (over: Partial<LiveFault> = {}): LiveFault => ({
   manualRetries: 0,
   attemptIndex: 3,
   stopped: true,
+  fromManualRetry: false,
   newSessionOnRetry: false,
   ...over,
 });
@@ -124,6 +125,59 @@ describe("FaultPanel: the advice and the delivery line agree on why it stopped (
     expect(html).toContain("Deliveries: 3 of 3 + 1 manual");
     expect(html).toContain("The retry you triggered timed out as well.");
     expect(html).not.toMatch(/kept timing out/);
+  });
+});
+
+describe("FaultPanel: a Retry that failed while reconciling (R10-B, B5)", () => {
+  it("nothing was re-sent (3 of 3, no manual delivery), yet the sentence names the retry the user triggered", () => {
+    const html = panel(
+      fault({
+        category: "model_runtime",
+        status: 500,
+        retryCount: 3,
+        manualRetries: 0,
+        fromManualRetry: true,
+      }),
+    );
+    expect(html).toContain("Deliveries: 3 of 3");
+    expect(html).toContain("The retry you triggered failed as well.");
+    expect(html).not.toMatch(/automatically/);
+  });
+
+  it("without the mark the same fault still reads as a spent automatic budget", () => {
+    const html = panel(
+      fault({
+        category: "model_runtime",
+        status: 500,
+        retryCount: 3,
+        manualRetries: 0,
+        fromManualRetry: false,
+      }),
+    );
+    expect(html).toContain(
+      "The request was re-sent automatically and kept failing.",
+    );
+  });
+});
+
+describe("FaultPanel: an observation conflict (R10-B)", () => {
+  it("names the observation identity, the category and the 409 - not a request id", () => {
+    const html = panel(
+      fault({
+        category: "observation_conflict",
+        status: 409,
+        retryCount: 1,
+        attemptIndex: 1,
+        message:
+          "Observation identity already registered with different content or acquisition time",
+      }),
+    );
+    expect(html).toContain(
+      "Monitoring stopped: The same observation identity was sent again with different content",
+    );
+    expect(html).toContain("<code>observation_conflict</code> (HTTP 409)");
+    expect(html).toContain("Start a new session and report it.");
+    expect(html).not.toMatch(/same request id/i);
   });
 });
 

@@ -6,6 +6,7 @@ import type {
   TelemetryFeatures,
   VisualClassProbability,
 } from "../types";
+import type { TelemetrySource } from "../../../ai/src/liveLoop";
 import { roundHalfUp } from "../../../ai/src/riskLogic";
 import metadataRaw from "../../../ai/prototype-data/prepared_sessions/session_001/session_metadata.json?raw";
 import telemetryCsv from "../../../ai/prototype-data/prepared_sessions/session_001/telemetry.csv?raw";
@@ -378,16 +379,72 @@ export const buildPreparedRawTelemetry = (
 export const PREPARED_RAW_TELEMETRY: PreparedRawTelemetryRow[] =
   buildPreparedRawTelemetry(telemetryCsv);
 
+/** One prepared row per 2000 ms of effective monitoring time (the CSV's own cadence). */
+export const PREPARED_TELEMETRY_PERIOD_MS = 2000;
+
 /**
- * The Live telemetry cursor: the raw row for `elapsedMs` since the session began,
- * one row per 2000 ms, wrapping after the last. The rule is exactly what
- * `useLiveSession` applied inline before; it is a named function only so a test can
- * drive the real rows through the loop (R5: rows 14 and 17 are still SENT, as
- * `telemetry_features: null` / `telemetry_source: "missing"`). R10 replaces this rule.
+ * The Live telemetry cursor (R10). It yields one prepared raw row per 2000 ms of
+ * EFFECTIVE monitoring time and gives every row a sequence number (`seq`, uncapped; the
+ * row is `seq % rows.length`, so the replay wraps) and an acquisition time.
+ *
+ * Segments. A segment is one stretch of uninterrupted monitoring. `reset` opens the
+ * first one of a session (seq 0, base time = now). `pause` freezes the cursor at the
+ * sequence it had reached. `resume` opens a NEW segment at once: its first sample is
+ * the sequence one past the frozen one and its time is the moment of resuming, so every
+ * resume has its own base time and start sequence; the pause itself consumes no
+ * sequence number.
+ *
+ * Acquisition time. `baseMs + (seq - startSeq) * 2000`: arithmetic, never the clock of
+ * a tick, so the same sequence number carries byte-identical time in every request.
+ * This is the replay's LOGICAL event time. It is not when a real sensor measured
+ * anything - the prepared telemetry has no such moment - and the server uses it only
+ * as the sample's canonical time for age and for the alert timer's source span.
+ *
+ * The rows come from `PREPARED_RAW_TELEMETRY` (never from the replay windows), and a
+ * clock that steps backwards never moves the sequence back.
  */
-export const preparedTelemetryAt = (
-  elapsedMs: number,
-): TelemetryFeatures | null =>
-  PREPARED_RAW_TELEMETRY[
-    Math.floor(elapsedMs / 2000) % PREPARED_RAW_TELEMETRY.length
-  ].telemetry_features;
+export const createPreparedTelemetryCursor = (
+  rows: readonly PreparedRawTelemetryRow[] = PREPARED_RAW_TELEMETRY,
+): TelemetrySource => {
+  let started = false;
+  let running = false;
+  let baseMs = 0;
+  let startSeq = 0;
+  let step = 0;
+
+  const advance = (nowMs: number) => {
+    step = Math.max(
+      step,
+      Math.floor((nowMs - baseMs) / PREPARED_TELEMETRY_PERIOD_MS),
+    );
+  };
+  const begin = (nowMs: number, firstSeq: number) => {
+    started = true;
+    running = true;
+    baseMs = nowMs;
+    startSeq = firstSeq;
+    step = 0;
+  };
+
+  return {
+    reset: (nowMs) => begin(nowMs, 0),
+    pause: (nowMs) => {
+      if (!running) return;
+      advance(nowMs);
+      running = false;
+    },
+    resume: (nowMs) => {
+      if (running) return;
+      begin(nowMs, started ? startSeq + step + 1 : 0);
+    },
+    read: (nowMs) => {
+      if (running) advance(nowMs);
+      const seq = startSeq + step;
+      return {
+        features: rows[seq % rows.length].telemetry_features,
+        seq,
+        acquiredAtMs: baseMs + step * PREPARED_TELEMETRY_PERIOD_MS,
+      };
+    },
+  };
+};

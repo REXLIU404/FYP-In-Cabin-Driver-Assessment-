@@ -1,14 +1,19 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { api as realApi, ApiError } from "../../frontend/src/api/client";
-import { RETRY_POLICY } from "../../frontend/src/api/retryPolicy";
-import { preparedTelemetryAt } from "../../frontend/src/data/preparedSessionInput";
+import { RETRY_POLICY, faultAdvice } from "../../frontend/src/api/retryPolicy";
+import {
+  PREPARED_RAW_TELEMETRY,
+  createPreparedTelemetryCursor,
+  type PreparedRawTelemetryRow,
+} from "../../frontend/src/data/preparedSessionInput";
 import { makeRecord } from "../../frontend/src/testing/records";
 import {
   createLiveLoop,
   type LiveFrame,
   type LiveLoopApi,
   type LivePayload,
+  type TelemetrySource,
 } from "./liveLoop";
 import { DEFAULT_CONFIG } from "./riskLogic";
 import type {
@@ -74,16 +79,28 @@ const TELEMETRY: TelemetryFeatures = {
   headway_distance: 18,
 };
 
+// The cursor behind tests that are not about the cursor: every sequence number reads
+// the same row, either a sample or a row with no telemetry.
+const constantRows = (
+  features: TelemetryFeatures | null,
+): PreparedRawTelemetryRow[] => [
+  { timestamp: "", telemetry_features: features, telemetry_age_s: 0 },
+];
+
 type Step = "ok" | "unavailable" | "hang" | "deferred" | Error;
 type Models = { ready: boolean };
 
 interface RigOptions {
   /** What successive `infer` calls do. Once exhausted, every call succeeds. */
   script?: Step[];
-  frame?: "camera" | "none" | "throws";
+  /**
+   * `camera`: frames with an explicit (epoch, index). `fallback`: frames with no
+   * identity, timed by the page clock. `none`: no frame. `throws`: the camera throws.
+   */
+  frame?: "camera" | "fallback" | "none" | "throws";
   telemetry?: boolean;
-  /** Replaces the constant telemetry with a source that depends on elapsed time. */
-  telemetrySource?: (elapsedMs: number) => TelemetryFeatures | null;
+  /** Replaces the constant rows the cursor reads. */
+  telemetryRows?: PreparedRawTelemetryRow[];
   missReason?: string;
   /** What the server already holds for a session (reconcile, loadSession). */
   saved?: RiskUpdate[];
@@ -173,18 +190,31 @@ function rig(options: RigOptions = {}) {
     if (options.frame === "none") return null;
     if (options.frame === "throws") throw new Error("canvas is tainted");
     frames += 1;
+    if (options.frame === "fallback")
+      return {
+        image_base64: `frame-${frames}`,
+        captured_at: new Date(time.now).toISOString(),
+        captured_at_source: "client_clock",
+      };
     return {
       image_base64: `frame-${frames}`,
       captured_at: new Date(time.now).toISOString(),
+      captured_at_source: "callback",
+      vision_frame: { epoch: 1000, index: frames },
     };
   });
-  const telemetryAt = vi.fn((elapsedMs: number): TelemetryFeatures | null =>
-    options.telemetrySource
-      ? options.telemetrySource(elapsedMs)
-      : options.telemetry === false
-        ? null
-        : TELEMETRY,
+  // The REAL cursor on a table the test chose, wrapped in spies so a test can count
+  // how often the loop resets, pauses, resumes and reads it.
+  const cursor = createPreparedTelemetryCursor(
+    options.telemetryRows ??
+      constantRows(options.telemetry === false ? null : TELEMETRY),
   );
+  const telemetry = {
+    reset: vi.fn((nowMs: number) => cursor.reset(nowMs)),
+    pause: vi.fn((nowMs: number) => cursor.pause(nowMs)),
+    resume: vi.fn((nowMs: number) => cursor.resume(nowMs)),
+    read: vi.fn((nowMs: number) => cursor.read(nowMs)),
+  } satisfies TelemetrySource;
   const newRequestId = vi.fn(() => `req-${++requestIds}`);
   const loop = createLiveLoop<Models>({
     api: api as LiveLoopApi<Models>,
@@ -192,7 +222,7 @@ function rig(options: RigOptions = {}) {
     getConfig: () => CONFIG,
     captureFrame,
     captureMissReason: () => options.missReason ?? "stopped_by_user",
-    telemetryAt,
+    telemetry,
     newRequestId,
     now: () => time.now,
     timers: time,
@@ -204,7 +234,7 @@ function rig(options: RigOptions = {}) {
     calls,
     deferred,
     captureFrame,
-    telemetryAt,
+    telemetry,
     newRequestId,
     state,
     get: () => loop.getState(),
@@ -314,6 +344,13 @@ describe("one failure is enough for errors that a re-send cannot fix", () => {
       new ApiError("request_id already used for different input", 409),
       "conflict_hash",
     ],
+    [
+      new ApiError(
+        "Observation identity already registered with different content or acquisition time",
+        409,
+      ),
+      "observation_conflict",
+    ],
     [new ApiError("Create a live model session first", 409), "conflict_mode"],
     [
       new ApiError(
@@ -401,12 +438,15 @@ describe("the request is frozen (Review Focus #4)", () => {
     expect(r.calls[0].payload).toMatchObject({
       request_id: "req-1",
       image_base64: "frame-1",
+      captured_at_source: "callback",
+      vision_frame: { epoch: 1000, index: 1 },
       telemetry_features: TELEMETRY,
+      telemetry_seq: 0,
       telemetry_source: "prepared_replay",
     });
     // The frame, the telemetry and the id were produced once, not once per delivery.
     expect(r.captureFrame).toHaveBeenCalledTimes(1);
-    expect(r.telemetryAt).toHaveBeenCalledTimes(1);
+    expect(r.telemetry.read).toHaveBeenCalledTimes(1);
     expect(r.newRequestId).toHaveBeenCalledTimes(1);
     expect(r.get().fault).toBeNull();
   });
@@ -736,6 +776,107 @@ describe("the stop panel's delivery counts (H4)", () => {
   });
 });
 
+// R10-B (B5, Task 9 leftover). A Retry that fails while it RECONCILES sends nothing, so
+// `manualRetries` stays where it was and the stop panel kept saying "re-sent
+// automatically" about a request nobody re-sent. The fault now records that the failure
+// came from the manual retry.
+describe("a failed manual retry is told apart from a spent automatic budget (B5)", () => {
+  const serverError = () => new ApiError("Internal Server Error", 500);
+  const threeServerErrors = (): Step[] => [
+    serverError(),
+    serverError(),
+    serverError(),
+  ];
+  const AUTOMATIC =
+    "A model or storage error on the server (HTTP 500). The request was re-sent automatically and kept failing.";
+  const MANUAL =
+    "A model or storage error on the server (HTTP 500). The retry you triggered failed as well.";
+
+  it("the loop's own stop is not from a manual retry, and says so in its advice", async () => {
+    const r = rig({ script: threeServerErrors() });
+    await r.begin();
+    await r.time.advance(6000);
+    const fault = r.get().fault;
+    expect(fault).toMatchObject({
+      category: "model_runtime",
+      stopped: true,
+      retryCount: 3,
+      manualRetries: 0,
+      fromManualRetry: false,
+    });
+    expect(faultAdvice(fault!)).toBe(AUTOMATIC);
+  });
+
+  it("a reconcile that fails during Retry marks the fault, and no delivery was added", async () => {
+    const r = rig({ script: threeServerErrors() });
+    await r.begin();
+    await r.time.advance(6000);
+    r.api.session.mockRejectedValueOnce(serverError());
+    await r.loop.retry();
+    await r.time.advance(0);
+    const fault = r.get().fault;
+    expect(r.api.infer).toHaveBeenCalledTimes(3); // nothing was re-sent
+    expect(fault).toMatchObject({
+      category: "model_runtime",
+      stopped: true,
+      retryCount: 3,
+      manualRetries: 0,
+      fromManualRetry: true,
+    });
+    // The category is the same as before; only the reason differs, and so does the advice.
+    expect(faultAdvice(fault!)).toBe(MANUAL);
+  });
+
+  it("a manual delivery that fails is from the manual retry too", async () => {
+    const r = rig({ script: [...threeServerErrors(), serverError()] });
+    await r.begin();
+    await r.time.advance(6000);
+    await r.loop.retry();
+    await r.time.advance(0);
+    expect(r.get().fault).toMatchObject({
+      stopped: true,
+      retryCount: 4,
+      manualRetries: 1,
+      fromManualRetry: true,
+    });
+    expect(faultAdvice(r.get().fault!)).toBe(MANUAL);
+  });
+
+  it("the mark does not outlive the stop: after Start Monitoring a new automatic stop is the loop's own again", async () => {
+    const r = rig({ script: threeServerErrors() });
+    await r.begin();
+    await r.time.advance(6000);
+    r.api.session.mockRejectedValueOnce(serverError());
+    await r.loop.retry();
+    await r.time.advance(0);
+    expect(r.get().fault?.fromManualRetry).toBe(true);
+
+    r.api.infer.mockRejectedValueOnce(serverError());
+    r.api.infer.mockRejectedValueOnce(serverError());
+    r.api.infer.mockRejectedValueOnce(serverError());
+    await r.loop.start();
+    await r.time.advance(6000);
+    expect(r.get().fault).toMatchObject({
+      stopped: true,
+      retryCount: 3,
+      manualRetries: 0,
+      fromManualRetry: false,
+    });
+    expect(faultAdvice(r.get().fault!)).toBe(AUTOMATIC);
+  });
+
+  it("a setup fault is not from a manual retry", async () => {
+    const r = rig({
+      modelsError: new ApiError("Model artifacts are not installed", 503),
+    });
+    await r.loop.start();
+    expect(r.get().fault).toMatchObject({
+      phase: "setup",
+      fromManualRetry: false,
+    });
+  });
+});
+
 describe("manual retry (T3)", () => {
   it("re-sends the SAME payload once, resumes the SAME session, and numbers the delivery 4", async () => {
     const committed = makeRecord("fresh", "fresh", 1);
@@ -1003,7 +1144,7 @@ describe("the camera never stops the loop (R5)", () => {
   it("with neither image nor telemetry the request is still sent, and its UNAVAILABLE window joins the history", async () => {
     const r = rig({ frame: "none", telemetry: false, script: ["unavailable"] });
     await r.begin();
-    expect(r.calls[0].payload).toEqual({
+    expect(r.calls[0].payload).toStrictEqual({
       request_id: "req-1",
       image_base64: null,
       captured_at: null,
@@ -1037,6 +1178,8 @@ describe("the camera never stops the loop (R5)", () => {
     r.captureFrame.mockReturnValue({
       image_base64: "frame-back",
       captured_at: new Date(r.time.now).toISOString(),
+      captured_at_source: "callback",
+      vision_frame: { epoch: 1000, index: 9 },
     });
     await r.time.advance(500);
     expect(r.get().lastCaptureMiss).toBeNull();
@@ -1044,20 +1187,24 @@ describe("the camera never stops the loop (R5)", () => {
   });
 });
 
-// Task 9 / K2. R5 says the loop never skips a tick: when the prepared cursor lands on
-// a row with no telemetry (rows 14 and 17 of the 25) the request is still sent, with
-// `telemetry_features: null` / `telemetry_source: "missing"`. These tests drive the
-// PRODUCTION cursor and the real prepared rows through the loop, so a loop (or a
-// cursor) that skipped or stopped on those rows is caught on the real data, not on a
-// stand-in. 2 inferences per second and an instant API: tick i happens at i x 500 ms,
-// so the cursor reads row floor(i / 4) + 1 (one row per 2000 ms).
+// Task 9 / K2, rewritten for R10. R5 says the loop never skips a tick: when the cursor
+// lands on a row with no telemetry (rows 14 and 17 of the 25) the request is still sent,
+// with `telemetry_features: null` / `telemetry_source: "missing"` - and, since R10, with
+// NO `telemetry_seq` (the server answers 422 to a sequence number without telemetry).
+// These tests drive the PRODUCTION cursor and the real prepared rows through the loop, so
+// a loop (or a cursor) that skipped or stopped on those rows is caught on the real data,
+// not on a stand-in. 2 inferences per second and an instant API: tick i happens at
+// i x 500 ms, so it reads sequence floor(i / 4) = row floor(i / 4) + 1 (one row per 2000
+// ms), and that sample's time is the session start + floor(i / 4) x 2000 ms, whatever
+// moment inside the slot the tick fell on.
 describe("the prepared telemetry cursor never skips or stops the loop (R5 on the real rows)", () => {
   const TICKS_PER_CYCLE = 100; // 25 rows x 2000 ms / 500 ms
   // Ticks on row 14 are 52..55 and on row 17 are 64..67 (0-based tick numbers).
   const MISSING_TICKS = [52, 53, 54, 55, 64, 65, 66, 67];
+  const SESSION_START = "2026-01-01T12:00:00.000Z";
 
   const runOneCycle = async (frame: "camera" | "none") => {
-    const r = rig({ frame, telemetrySource: preparedTelemetryAt });
+    const r = rig({ frame, telemetryRows: PREPARED_RAW_TELEMETRY });
     await r.begin();
     await r.time.advance(49_500);
     return r;
@@ -1074,16 +1221,36 @@ describe("the prepared telemetry cursor never skips or stops the loop (R5 on the
           telemetry_source: "missing",
           image_base64: `frame-${tick + 1}`,
         });
+        expect("telemetry_seq" in call.payload).toBe(false);
       } else {
         expect(call.payload.telemetry_source).toBe("prepared_replay");
         expect(call.payload.telemetry_features).not.toBeNull();
-        expect(call.payload.telemetry_timestamp).not.toBeNull();
+        expect(call.payload.telemetry_seq).toBe(Math.floor(tick / 4));
+        expect(call.payload.telemetry_timestamp).toBe(
+          new Date(
+            Date.parse(SESSION_START) + Math.floor(tick / 4) * 2000,
+          ).toISOString(),
+        );
       }
     });
     // ...and the loop is still up at the end: nothing counted, nothing stopped.
     expect(r.get().running).toBe(true);
     expect(r.get().fault).toBeNull();
     expect(r.get().history).toHaveLength(TICKS_PER_CYCLE);
+  });
+
+  it("pins sequence numbers and times at hand-computed ticks", async () => {
+    const r = await runOneCycle("camera");
+    const at = (tick: number) => [
+      r.calls[tick].payload.telemetry_seq,
+      r.calls[tick].payload.telemetry_timestamp,
+    ];
+    expect(at(0)).toEqual([0, "2026-01-01T12:00:00.000Z"]);
+    expect(at(3)).toEqual([0, "2026-01-01T12:00:00.000Z"]); // 1500 ms in: still the first sample
+    expect(at(4)).toEqual([1, "2026-01-01T12:00:02.000Z"]);
+    expect(at(51)).toEqual([12, "2026-01-01T12:00:24.000Z"]); // row 13, 25.5 s
+    expect(at(56)).toEqual([14, "2026-01-01T12:00:28.000Z"]); // row 15, 28 s
+    expect(at(99)).toEqual([24, "2026-01-01T12:00:48.000Z"]); // the last row, 49.5 s
   });
 
   it("the tick after row 14 is back on real telemetry (the loop recovers by itself)", async () => {
@@ -1102,6 +1269,8 @@ describe("the prepared telemetry cursor never skips or stops the loop (R5 on the
     r.calls.forEach((call, tick) => {
       expect(call.payload.image_base64).toBeNull();
       expect(call.payload.captured_at).toBeNull();
+      expect("vision_frame" in call.payload).toBe(false);
+      expect("captured_at_source" in call.payload).toBe(false);
       expect(call.payload.telemetry_features === null).toBe(
         MISSING_TICKS.includes(tick),
       );
@@ -1111,14 +1280,257 @@ describe("the prepared telemetry cursor never skips or stops the loop (R5 on the
     expect(r.get().imagelessRequests).toBe(TICKS_PER_CYCLE);
   });
 
-  it("the cycle wraps: the first tick of the next cycle is on row 1 again", async () => {
-    const r = rig({ frame: "camera", telemetrySource: preparedTelemetryAt });
+  it("the cycle wraps in ROWS but not in sequence numbers: the next cycle's first tick is row 1 again, as sequence 25", async () => {
+    const r = rig({ frame: "camera", telemetryRows: PREPARED_RAW_TELEMETRY });
     await r.begin();
     await r.time.advance(50_000);
     expect(r.calls).toHaveLength(TICKS_PER_CYCLE + 1);
     expect(r.calls[TICKS_PER_CYCLE].payload.telemetry_features).toEqual(
       r.calls[0].payload.telemetry_features,
     );
+    // Sent as 25, not as 25 % 25: the server's identity is the number itself.
+    expect(r.calls[0].payload.telemetry_seq).toBe(0);
+    expect(r.calls[TICKS_PER_CYCLE].payload.telemetry_seq).toBe(25);
+    expect(r.calls[TICKS_PER_CYCLE].payload.telemetry_timestamp).toBe(
+      "2026-01-01T12:00:50.000Z",
+    );
+  });
+});
+
+// R10-B (B1, B3). The identity and the time of what a request carries.
+describe("a request carries the observation identity and an arithmetic telemetry time (R10-B)", () => {
+  it("every tick inside one 2000 ms slot sends the SAME sequence number and the SAME time; the next slot moves both", async () => {
+    const r = rig();
+    await r.begin();
+    await r.time.advance(2000); // ticks at 0, 500, 1000, 1500, 2000
+    expect(r.calls).toHaveLength(5);
+    const samples = r.calls.map((call) => [
+      call.payload.telemetry_seq,
+      call.payload.telemetry_timestamp,
+    ]);
+    expect(samples).toEqual([
+      [0, "2026-01-01T12:00:00.000Z"],
+      [0, "2026-01-01T12:00:00.000Z"], // sent at +500 ms: the time is NOT the sending time
+      [0, "2026-01-01T12:00:00.000Z"],
+      [0, "2026-01-01T12:00:00.000Z"],
+      [1, "2026-01-01T12:00:02.000Z"],
+    ]);
+    // Same sequence number, same bytes for the two fields the server compares.
+    const field = (i: number) =>
+      JSON.stringify([
+        r.calls[i].payload.telemetry_seq,
+        r.calls[i].payload.telemetry_timestamp,
+        r.calls[i].payload.telemetry_features,
+      ]);
+    expect(field(1)).toBe(field(0));
+    expect(field(3)).toBe(field(0));
+  });
+
+  it("the vision half of the request is the frame's own tuple: its time, its source and its (epoch, index)", async () => {
+    const r = rig();
+    await r.begin();
+    await r.time.advance(500);
+    expect(r.calls[1].payload).toMatchObject({
+      image_base64: "frame-2",
+      captured_at: "2026-01-01T12:00:00.500Z",
+      captured_at_source: "callback",
+      vision_frame: { epoch: 1000, index: 2 },
+    });
+  });
+
+  it("a fallback frame (no identity) is sent with no vision_frame and its source client_clock", async () => {
+    const r = rig({ frame: "fallback" });
+    await r.begin();
+    expect(r.calls[0].payload).toMatchObject({
+      image_base64: "frame-1",
+      captured_at: "2026-01-01T12:00:00.000Z",
+      captured_at_source: "client_clock",
+      telemetry_seq: 0,
+    });
+    expect("vision_frame" in r.calls[0].payload).toBe(false);
+    // And on the wire: the key is absent, not null.
+    expect(Object.keys(JSON.parse(r.calls[0].body)).sort()).toEqual([
+      "captured_at",
+      "captured_at_source",
+      "image_base64",
+      "request_id",
+      "telemetry_features",
+      "telemetry_seq",
+      "telemetry_source",
+      "telemetry_timestamp",
+    ]);
+  });
+
+  it("no image: the request carries no vision_frame and no captured_at_source (the server answers 422 to a frame id without an image)", async () => {
+    const r = rig({ frame: "none" });
+    await r.begin();
+    expect(Object.keys(JSON.parse(r.calls[0].body)).sort()).toEqual([
+      "captured_at",
+      "image_base64",
+      "request_id",
+      "telemetry_features",
+      "telemetry_seq",
+      "telemetry_source",
+      "telemetry_timestamp",
+    ]);
+    expect(JSON.parse(r.calls[0].body)).toMatchObject({
+      image_base64: null,
+      captured_at: null,
+      telemetry_seq: 0,
+    });
+  });
+
+  it("null telemetry: the request carries no telemetry_seq (the server answers 422 to a sequence number without telemetry)", async () => {
+    const r = rig({ telemetry: false });
+    await r.begin();
+    expect(Object.keys(JSON.parse(r.calls[0].body)).sort()).toEqual([
+      "captured_at",
+      "captured_at_source",
+      "image_base64",
+      "request_id",
+      "telemetry_features",
+      "telemetry_source",
+      "telemetry_timestamp",
+      "vision_frame",
+    ]);
+    expect(JSON.parse(r.calls[0].body)).toMatchObject({
+      telemetry_features: null,
+      telemetry_timestamp: null,
+      telemetry_source: "missing",
+      vision_frame: { epoch: 1000, index: 1 },
+    });
+  });
+
+  it("a retry re-sends the first capture's tuple and sequence number byte for byte, and never reads the cursor again", async () => {
+    const r = rig({ script: threeTransportErrors() });
+    await r.begin();
+    await r.time.advance(6000);
+    expect(r.calls).toHaveLength(3);
+    expect(r.calls[1].body).toBe(r.calls[0].body);
+    expect(r.calls[2].body).toBe(r.calls[0].body);
+    expect(r.calls[2].payload).toMatchObject({
+      captured_at: "2026-01-01T12:00:00.000Z",
+      vision_frame: { epoch: 1000, index: 1 },
+      telemetry_seq: 0,
+      telemetry_timestamp: "2026-01-01T12:00:00.000Z",
+    });
+    // 6 s later the wall clock is on sequence 3, but the retries did not look.
+    expect(r.telemetry.read).toHaveBeenCalledTimes(1);
+
+    await r.loop.retry(); // the manual delivery re-sends the same frozen request too
+    await r.time.advance(0);
+    expect(r.calls).toHaveLength(4);
+    expect(r.calls[3].body).toBe(r.calls[0].body);
+    expect(r.telemetry.read).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("the telemetry cursor follows the session and the pauses (R10-B)", () => {
+  it("a new session numbers its telemetry from 0 again, at the moment it began", async () => {
+    const r = rig();
+    await r.begin();
+    await r.time.advance(5000); // sequence 2 by now
+    expect(r.calls[r.calls.length - 1].payload.telemetry_seq).toBe(2);
+    const before = r.calls.length;
+    await r.loop.start(true); // New Session, 5 s in
+    await r.time.advance(0);
+    expect(r.calls[before].sid).toBe("sess-2");
+    expect(r.calls[before].payload).toMatchObject({
+      telemetry_seq: 0,
+      telemetry_timestamp: "2026-01-01T12:00:05.000Z",
+    });
+  });
+
+  it("a pause freezes the cursor and a resume opens a NEW observation one past it, timed at the moment of resuming", async () => {
+    const r = rig();
+    await r.begin();
+    await r.time.advance(3000); // ticks up to +3000 ms: the cursor reached sequence 1
+    expect(r.calls[r.calls.length - 1].payload.telemetry_seq).toBe(1);
+    r.loop.pause();
+    const sent = r.calls.length;
+    await r.time.advance(600_000); // ten minutes of pause
+    expect(r.calls).toHaveLength(sent); // nothing went out, nothing moved
+
+    await r.loop.start(); // resume the same session at +603 s
+    await r.time.advance(0);
+    expect(r.calls[sent].sid).toBe("sess-1");
+    expect(r.calls[sent].payload).toMatchObject({
+      telemetry_seq: 2, // frozen at 1, plus one - not 301
+      telemetry_timestamp: "2026-01-01T12:10:03.000Z", // the resume instant
+    });
+    await r.time.advance(1999);
+    expect(r.calls[r.calls.length - 1].payload).toMatchObject({
+      telemetry_seq: 2,
+      telemetry_timestamp: "2026-01-01T12:10:03.000Z",
+    });
+    await r.time.advance(1); // +2000 ms after the resume
+    expect(r.calls[r.calls.length - 1].payload).toMatchObject({
+      telemetry_seq: 3,
+      telemetry_timestamp: "2026-01-01T12:10:05.000Z",
+    });
+  });
+
+  it("each resume starts its own segment: two pauses give two new base times and two new start sequences", async () => {
+    const r = rig();
+    await r.begin();
+    await r.time.advance(2500); // sequence 1
+    r.loop.pause();
+    await r.time.advance(10_000);
+    await r.loop.start(); // +12.5 s: sequence 2, base +12.5 s
+    await r.time.advance(4500); // +17 s: 4.5 s into the segment = sequence 4
+    expect(r.calls[r.calls.length - 1].payload).toMatchObject({
+      telemetry_seq: 4,
+      telemetry_timestamp: "2026-01-01T12:00:16.500Z",
+    });
+    r.loop.pause();
+    await r.time.advance(1000);
+    await r.loop.start(); // +18 s: one past 4
+    await r.time.advance(0);
+    expect(r.calls[r.calls.length - 1].payload).toMatchObject({
+      telemetry_seq: 5,
+      telemetry_timestamp: "2026-01-01T12:00:18.000Z",
+    });
+  });
+
+  it("after a fault stopped the loop, a successful manual Retry puts the cursor back in motion with a new observation", async () => {
+    const r = rig({ script: [...threeTransportErrors(), "ok"] });
+    await r.begin();
+    await r.time.advance(6000); // stopped at +6 s: the cursor froze on sequence 3
+    expect(r.get().fault?.stopped).toBe(true);
+    await r.time.advance(10_000); // +16 s
+    await r.loop.retry();
+    await r.time.advance(0);
+    // The delivery itself is the frozen request, byte for byte...
+    expect(r.calls).toHaveLength(4);
+    expect(r.calls[3].body).toBe(r.calls[0].body);
+    expect(r.calls[3].payload.telemetry_seq).toBe(0);
+    // ...and the next tick is a new observation: frozen sequence + 1, timed at the retry.
+    await r.time.advance(500);
+    expect(r.calls).toHaveLength(5);
+    expect(r.calls[4].payload).toMatchObject({
+      telemetry_seq: 4,
+      telemetry_timestamp: "2026-01-01T12:00:16.000Z",
+    });
+  });
+
+  it("a dropped late frame (not a failure) does not restart or freeze the cursor", async () => {
+    const r = rig({
+      script: [new ApiError("Out-of-order evidence timestamp", 409)],
+    });
+    await r.begin();
+    await r.time.advance(1500);
+    expect(r.get().droppedFrames).toBe(1);
+    expect(
+      r.calls.map((call) => [
+        call.payload.telemetry_seq,
+        call.payload.telemetry_timestamp,
+      ]),
+    ).toEqual([
+      [0, "2026-01-01T12:00:00.000Z"],
+      [0, "2026-01-01T12:00:00.000Z"],
+      [0, "2026-01-01T12:00:00.000Z"],
+      [0, "2026-01-01T12:00:00.000Z"],
+    ]);
   });
 });
 
@@ -1250,8 +1662,10 @@ describe("wired to the real api client", () => {
       captureFrame: () => ({
         image_base64: "data:image/jpeg;base64,AAAA",
         captured_at: new Date(time.now).toISOString(),
+        captured_at_source: "capture_time",
+        vision_frame: { epoch: 1000, index: 5 },
       }),
-      telemetryAt: () => TELEMETRY,
+      telemetry: createPreparedTelemetryCursor(constantRows(TELEMETRY)),
       newRequestId: () => `wire-${++ids}`,
       now: () => time.now,
       timers: time,
@@ -1281,7 +1695,15 @@ describe("wired to the real api client", () => {
       "4",
     ]);
     expect(new Set(infers.map((q) => q.body)).size).toBe(1);
-    expect(JSON.parse(infers[0].body ?? "{}").request_id).toBe("wire-1");
+    const sent = JSON.parse(infers[0].body ?? "{}");
+    expect(sent.request_id).toBe("wire-1");
+    // What the server reads to tell a new observation from a repeat really is on the wire.
+    expect(sent).toMatchObject({
+      captured_at_source: "capture_time",
+      vision_frame: { epoch: 1000, index: 5 },
+      telemetry_seq: 0,
+      telemetry_timestamp: "2026-01-01T12:00:00.000Z",
+    });
     expect(loop.getState().fault).toBeNull();
     // The manual retry reconciled the same session and never created another.
     expect(

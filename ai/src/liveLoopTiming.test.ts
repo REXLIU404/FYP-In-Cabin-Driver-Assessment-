@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { RETRY_POLICY } from "../../frontend/src/api/retryPolicy";
+import { createPreparedTelemetryCursor } from "../../frontend/src/data/preparedSessionInput";
 import { makeRecord } from "../../frontend/src/testing/records";
 import { createLiveLoop, type LiveLoopApi, type LivePayload } from "./liveLoop";
 import { createTimingBuffer } from "./liveTiming";
@@ -130,9 +131,14 @@ function rig(options: {
       return {
         image_base64: "frame",
         captured_at: new Date(time.now).toISOString(),
+        captured_at_source: "callback",
+        vision_frame: { epoch: 1000, index: 1 },
       };
     },
-    telemetryAt: () => TELEMETRY,
+    // These tests time the requests; the cursor only has to hand out a sample.
+    telemetry: createPreparedTelemetryCursor([
+      { timestamp: "", telemetry_features: TELEMETRY, telemetry_age_s: 0 },
+    ]),
     newRequestId: () => `req-${++requestIds}`,
     now: () => time.now,
     timers: time,

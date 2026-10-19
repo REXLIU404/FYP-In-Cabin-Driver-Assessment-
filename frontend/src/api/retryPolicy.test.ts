@@ -62,6 +62,21 @@ describe("classifyFailure: HTTP statuses that never succeed on a re-send", () =>
     },
   );
 
+  it.each([
+    "Value error, vision_frame requires an image",
+    "Value error, telemetry_seq requires telemetry feature values",
+  ])(
+    "the server's 422 for an identity without its evidence is input and is never retried (R10): %s",
+    (detail) => {
+      expect(http(422, detail)).toEqual({
+        category: "input",
+        status: 422,
+        retryable: false,
+        counted: true,
+      });
+    },
+  );
+
   it("a 422 whose message says the timestamp is in the future is clock skew, not bad input (T1)", () => {
     expect(
       http(422, "Value error, timestamp is in the future; check device clock"),
@@ -116,6 +131,44 @@ describe("classifyFailure: the three kinds of 409 (T1, T2)", () => {
       });
     },
   );
+
+  // R10. The server's text is OBSERVATION_CONFLICT_DETAIL (backend/app/routers/windows.py);
+  // it is restated here as a literal on purpose.
+  const OBSERVATION_CONFLICT =
+    "Observation identity already registered with different content or acquisition time";
+
+  it("an observation identity sent again with different content or time is a client error: stop, never retry (observation_conflict)", () => {
+    expect(http(409, OBSERVATION_CONFLICT)).toEqual({
+      category: "observation_conflict",
+      status: 409,
+      retryable: false,
+      counted: true,
+    });
+    expect(
+      RETRY_POLICY.classify(new ApiError(OBSERVATION_CONFLICT, 409)),
+    ).toEqual({
+      category: "observation_conflict",
+      status: 409,
+      retryable: false,
+      counted: true,
+    });
+  });
+
+  it("the three other 409 texts are not taken for an observation conflict, and it is not taken for them", () => {
+    expect(
+      http(409, "request_id already used for different input").category,
+    ).toBe("conflict_hash");
+    expect(http(409, "Out-of-order evidence timestamp").category).toBe(
+      "conflict_stale_frame",
+    );
+    expect(http(409, "Create a live model session first").category).toBe(
+      "conflict_mode",
+    );
+    expect(http(409, OBSERVATION_CONFLICT).category).not.toBe("conflict_hash");
+    expect(http(409, OBSERVATION_CONFLICT).category).not.toBe(
+      "conflict_stale_frame",
+    );
+  });
 
   it("an unrecognised 409 stops the loop: it is read as 'same id, different content'", () => {
     expect(http(409, "something the backend has never said")).toMatchObject({
@@ -198,6 +251,7 @@ describe("FAULT_TEXT: what the stop panel says", () => {
     "conflict_hash",
     "conflict_mode",
     "conflict_stale_frame",
+    "observation_conflict",
     "models_unavailable",
     "model_runtime",
     "storage",
@@ -219,6 +273,21 @@ describe("FAULT_TEXT: what the stop panel says", () => {
     expect(text.title).toMatch(/clock/i);
     expect(text.advice).toMatch(/clock/i);
     expect(text.title).not.toMatch(/inference request failed/i);
+  });
+
+  it("an observation conflict says it is the observation identity that was sent twice - never 'the same request id' (R10)", () => {
+    const text = FAULT_TEXT.observation_conflict;
+    expect(text.title).toBe(
+      "The same observation identity was sent again with different content",
+    );
+    expect(text.advice).toBe(
+      "The server already holds this camera frame or telemetry sample and received it again with other image bytes, values or acquisition time. This is a bug in the client, not a network problem; sending it again cannot fix it. Start a new session and report it.",
+    );
+    expect(`${text.title} ${text.advice}`).not.toMatch(/request id/i);
+    // ...and it does not borrow either of the other 409 sentences.
+    expect(text.title).not.toBe(FAULT_TEXT.conflict_hash.title);
+    expect(text.title).not.toBe(FAULT_TEXT.conflict_stale_frame.title);
+    expect(text.advice).not.toBe(FAULT_TEXT.conflict_hash.advice);
   });
 
   it("a hash conflict and a dropped late frame do not share a sentence", () => {
@@ -266,32 +335,102 @@ describe("deliveryCounts / deliveriesText: what the stop panel says about delive
 // "1 of 3 + 1 manual": the loop sent it once). The sentence now follows the reason.
 describe("faultAdvice: the sentence follows why the loop stopped (K8)", () => {
   it("automatic budget spent (no manual delivery): 're-sent automatically and kept failing'", () => {
-    expect(faultAdvice({ category: "model_runtime", manualRetries: 0 })).toBe(
+    expect(
+      faultAdvice({
+        category: "model_runtime",
+        manualRetries: 0,
+        fromManualRetry: false,
+      }),
+    ).toBe(
       "A model or storage error on the server (HTTP 500). The request was re-sent automatically and kept failing.",
     );
-    expect(faultAdvice({ category: "timeout", manualRetries: 0 })).toBe(
+    expect(
+      faultAdvice({
+        category: "timeout",
+        manualRetries: 0,
+        fromManualRetry: false,
+      }),
+    ).toBe(
       "No answer within 10 seconds. The request was re-sent automatically and kept timing out. Check the backend, then use Retry.",
     );
   });
 
   it("a manual retry that failed: it speaks of the retry the user triggered, and does not claim automatic re-sends", () => {
-    expect(faultAdvice({ category: "model_runtime", manualRetries: 1 })).toBe(
+    expect(
+      faultAdvice({
+        category: "model_runtime",
+        manualRetries: 1,
+        fromManualRetry: false,
+      }),
+    ).toBe(
       "A model or storage error on the server (HTTP 500). The retry you triggered failed as well.",
     );
-    expect(faultAdvice({ category: "timeout", manualRetries: 2 })).toBe(
+    expect(
+      faultAdvice({
+        category: "timeout",
+        manualRetries: 2,
+        fromManualRetry: false,
+      }),
+    ).toBe(
       "No answer within 10 seconds. The retry you triggered timed out as well. Check the backend, then use Retry.",
     );
     for (const category of ["model_runtime", "timeout"] as const) {
-      expect(faultAdvice({ category, manualRetries: 1 })).not.toMatch(
-        /automatically/i,
-      );
+      expect(
+        faultAdvice({ category, manualRetries: 1, fromManualRetry: false }),
+      ).not.toMatch(/automatically/i);
     }
   });
 
   it("the two reasons never share a sentence", () => {
     for (const category of ["model_runtime", "timeout"] as const) {
-      expect(faultAdvice({ category, manualRetries: 0 })).not.toBe(
-        faultAdvice({ category, manualRetries: 1 }),
+      expect(
+        faultAdvice({ category, manualRetries: 0, fromManualRetry: false }),
+      ).not.toBe(
+        faultAdvice({ category, manualRetries: 1, fromManualRetry: false }),
+      );
+    }
+  });
+
+  // R10-B (B5). A Retry whose RECONCILE fails sends nothing, so `manualRetries` stays 0;
+  // only the flag says the user's retry is what failed.
+  it("a failed reconcile during a manual Retry reads as the retry the user triggered - the flag alone decides", () => {
+    expect(
+      faultAdvice({
+        category: "model_runtime",
+        manualRetries: 0,
+        fromManualRetry: true,
+      }),
+    ).toBe(
+      "A model or storage error on the server (HTTP 500). The retry you triggered failed as well.",
+    );
+    expect(
+      faultAdvice({
+        category: "timeout",
+        manualRetries: 0,
+        fromManualRetry: true,
+      }),
+    ).toBe(
+      "No answer within 10 seconds. The retry you triggered timed out as well. Check the backend, then use Retry.",
+    );
+    for (const category of ["model_runtime", "timeout"] as const) {
+      expect(
+        faultAdvice({ category, manualRetries: 0, fromManualRetry: true }),
+      ).not.toMatch(/automatically/i);
+      // ...and the flag is what separates it from the automatic stop.
+      expect(
+        faultAdvice({ category, manualRetries: 0, fromManualRetry: true }),
+      ).not.toBe(
+        faultAdvice({ category, manualRetries: 0, fromManualRetry: false }),
+      );
+    }
+  });
+
+  it("a manual delivery that failed reads the same with or without the flag", () => {
+    for (const category of ["model_runtime", "timeout"] as const) {
+      expect(
+        faultAdvice({ category, manualRetries: 1, fromManualRetry: true }),
+      ).toBe(
+        faultAdvice({ category, manualRetries: 1, fromManualRetry: false }),
       );
     }
   });
@@ -304,6 +443,7 @@ describe("faultAdvice: the sentence follows why the loop stopped (K8)", () => {
       "conflict_hash",
       "conflict_mode",
       "conflict_stale_frame",
+      "observation_conflict",
       "models_unavailable",
       "storage",
       "transport",
@@ -311,9 +451,18 @@ describe("faultAdvice: the sentence follows why the loop stopped (K8)", () => {
     ] as const) {
       // Invariance, not a copy of the table: the sentence must not depend on why
       // the loop stopped, and it must say something.
-      const automatic = faultAdvice({ category, manualRetries: 0 });
+      const automatic = faultAdvice({
+        category,
+        manualRetries: 0,
+        fromManualRetry: false,
+      });
       expect(automatic.length).toBeGreaterThan(0);
-      expect(faultAdvice({ category, manualRetries: 3 })).toBe(automatic);
+      expect(
+        faultAdvice({ category, manualRetries: 3, fromManualRetry: false }),
+      ).toBe(automatic);
+      expect(
+        faultAdvice({ category, manualRetries: 0, fromManualRetry: true }),
+      ).toBe(automatic);
     }
   });
 

@@ -12,11 +12,24 @@
  *
  * Rules this module enforces (plan Task 8, rulings D02 / R5 / R7):
  *
- *  - The payload of a logical request (request_id, frame, captured_at, telemetry,
- *    telemetry_timestamp) is built ONCE, before the first delivery, and every
- *    redelivery - automatic or manual - re-sends it unchanged. The server's
- *    idempotency key is a hash of that payload and its out-of-order guard compares
- *    the evidence timestamps, so a re-stamped retry would be a 409.
+ *  - The payload of a logical request (request_id, frame and its identity,
+ *    captured_at, telemetry, telemetry_seq, telemetry_timestamp) is built ONCE,
+ *    before the first delivery, and every redelivery - automatic or manual - re-sends
+ *    it unchanged. The server's idempotency key is a hash of that payload and its
+ *    out-of-order guard compares the observation identities and the evidence
+ *    timestamps, so a re-stamped retry would be a 409.
+ *  - Observation identity (R10). A camera frame travels with the (epoch, index) it
+ *    was captured under and a telemetry sample with its sequence number, so the
+ *    server can tell a NEW observation from a REPEAT of one it already holds. The
+ *    telemetry cursor is injected (`TelemetrySource`) and is told when monitoring
+ *    pauses and resumes: it is frozen while the loop is not running, and every
+ *    resume opens a new segment. A retry never moves it - it re-sends the frozen
+ *    payload. `telemetry_timestamp` is the sample's LOGICAL event time (an
+ *    arithmetic value of the prepared replay), not a sensor's acquisition time and
+ *    not the moment of sending.
+ *  - Two omission rules, because the server answers 422 (never retried) otherwise:
+ *    a request without an image carries no `vision_frame`, and one whose telemetry
+ *    is null carries no `telemetry_seq`.
  *  - Every delivery carries its own attempt index (1, 2, 3 automatic; 4, 5 ...
  *    manual). The fault table is keyed on (session, request_id, attempt_index), so
  *    a restart from 1 would be folded into the first row and lost.
@@ -51,6 +64,7 @@ export type FaultCategory =
   | "conflict_hash"
   | "conflict_mode"
   | "conflict_stale_frame"
+  | "observation_conflict"
   | "models_unavailable"
   | "model_runtime"
   | "storage"
@@ -79,18 +93,114 @@ export interface RetryPolicy {
   classify(err: unknown): FailureClass;
 }
 
-export interface LiveFrame {
-  image_base64: string;
-  captured_at: string;
+/** Where a frame's acquisition time came from. */
+export type CapturedAtSource = "capture_time" | "callback" | "client_clock";
+
+/**
+ * The explicit identity of one camera frame: `epoch` is the number of the camera start
+ * (it only grows) and `index` the `requestVideoFrameCallback` `presentedFrames` counter
+ * inside it.
+ */
+export interface VisionFrameId {
+  epoch: number;
+  index: number;
 }
 
+/**
+ * One captured frame: its bytes and the metadata that belongs to THOSE bytes. The
+ * camera produces the tuple in one step; nothing downstream may pair the metadata of
+ * one capture with the bytes of another.
+ */
+export interface LiveFrame {
+  image_base64: string;
+  /** The VISION acquisition time (ISO). */
+  captured_at: string;
+  captured_at_source: CapturedAtSource;
+  /** Absent in the fallback mode, where the server identifies the frame by its bytes. */
+  vision_frame?: VisionFrameId;
+}
+
+/**
+ * The wire body of `POST /sessions/{id}/infer`. `vision_frame`, `captured_at_source`
+ * and `telemetry_seq` are OMITTED (not sent as null) when they do not apply; see
+ * `buildLivePayload`.
+ */
 export interface LivePayload {
   request_id: string;
   image_base64: string | null;
+  /** The VISION acquisition time; null without an image. */
   captured_at: string | null;
+  captured_at_source?: CapturedAtSource;
+  vision_frame?: VisionFrameId;
   telemetry_features: TelemetryFeatures | null;
+  /** The TELEMETRY acquisition time (logical event time for the prepared replay); null without telemetry. */
   telemetry_timestamp: string | null;
+  telemetry_seq?: number;
   telemetry_source: "prepared_replay" | "missing";
+}
+
+/** What the telemetry cursor yields for one tick. */
+export interface TelemetryReading {
+  /** `null` on a row that carries no telemetry. */
+  features: TelemetryFeatures | null;
+  /** The sample's sequence number: uncapped, only ever increasing within a session. */
+  seq: number;
+  /** Epoch ms of the sample's logical event time (arithmetic, see `TelemetrySource`). */
+  acquiredAtMs: number;
+}
+
+/**
+ * The telemetry cursor. It is told when a session begins and when monitoring pauses
+ * and resumes, because its sequence numbers follow EFFECTIVE monitoring time:
+ *
+ *  - `reset`: a new session. The sequence restarts at 0 and the first segment begins.
+ *  - `pause`: monitoring stopped. The cursor freezes where it is (idempotent).
+ *  - `resume`: monitoring runs again. A NEW observation begins at once: the sequence
+ *    is one past where the cursor froze and its time is `nowMs`. Idempotent while
+ *    the cursor is already running.
+ *  - `read`: the sample at `nowMs`.
+ *
+ * Within a segment the acquisition time is arithmetic - the segment's base time plus
+ * the sequence steps since its start times the sampling period - so the same sequence
+ * number carries the same time in every request.
+ */
+export interface TelemetrySource {
+  reset(nowMs: number): void;
+  pause(nowMs: number): void;
+  resume(nowMs: number): void;
+  read(nowMs: number): TelemetryReading;
+}
+
+/**
+ * Build the body of one logical request. The omission rules live here and nowhere
+ * else: the server rejects `vision_frame` without an image and `telemetry_seq`
+ * without telemetry with a 422, which is not retryable and stops the session.
+ */
+export function buildLivePayload(
+  requestId: string,
+  frame: LiveFrame | null,
+  telemetry: TelemetryReading,
+): LivePayload {
+  const payload: LivePayload = {
+    request_id: requestId,
+    image_base64: frame?.image_base64 ?? null,
+    captured_at: frame?.captured_at ?? null,
+    telemetry_features: telemetry.features,
+    telemetry_timestamp: telemetry.features
+      ? new Date(telemetry.acquiredAtMs).toISOString()
+      : null,
+    telemetry_source: telemetry.features ? "prepared_replay" : "missing",
+  };
+  if (frame) {
+    payload.captured_at_source = frame.captured_at_source;
+    if (frame.vision_frame)
+      payload.vision_frame = {
+        epoch: frame.vision_frame.epoch,
+        index: frame.vision_frame.index,
+      };
+  }
+  if (telemetry.features) payload.telemetry_seq = telemetry.seq;
+  return payload;
 }
 
 export interface LiveLoopApi<TModels> {
@@ -188,8 +298,8 @@ export interface LiveLoopDeps<TModels> {
    * for display and the log only: it never changes what the loop does.
    */
   captureMissReason?(): string | null;
-  /** The telemetry reading for `elapsedMs` since the session started, or `null`. */
-  telemetryAt(elapsedMs: number): TelemetryFeatures | null;
+  /** The telemetry cursor; the loop resets, pauses and resumes it with the session. */
+  telemetry: TelemetrySource;
   newRequestId(): string;
   /** Wall clock in epoch milliseconds. */
   now(): number;
@@ -228,6 +338,13 @@ export interface LiveFault {
   attemptIndex: number;
   /** `false` while an automatic retry is still pending; `true` once the loop stopped. */
   stopped: boolean;
+  /**
+   * This failure was a manual `retry()` failing - its delivery, or the reconcile that
+   * precedes it - rather than the loop's own automatic budget running out. The stop
+   * panel words its advice by it (a reconcile that fails adds no delivery, so
+   * `manualRetries` alone cannot tell).
+   */
+  fromManualRetry: boolean;
   /**
    * `retry()` will create a NEW session instead of resuming this one: the session
    * is gone (404), or the failed setup was a New Session (`start(true)`).
@@ -339,7 +456,6 @@ export function createLiveLoop<TModels = unknown>(
   let tickTimer: unknown = null;
   let activeSid = "";
   let configKey = "";
-  let startedAt = 0;
   let pending: PendingRequest | null = null;
   let completions: number[] = [];
   const timings = deps.timings;
@@ -355,6 +471,8 @@ export function createLiveLoop<TModels = unknown>(
     if (attemptTimer !== null) timers.clearTimeout(attemptTimer);
     attemptTimer = null;
     clearTickTimer();
+    // Monitoring is not running any more: the cursor stops with it (idempotent).
+    deps.telemetry.pause(deps.now());
   };
 
   /** One abortable call with its own deadline; `timedOut()` tells it from a pause. */
@@ -425,23 +543,15 @@ export function createLiveLoop<TModels = unknown>(
     if (g !== generation) return;
     const begun = deps.now();
     const { frame, miss } = sampleFrame();
-    const telemetry = deps.telemetryAt(begun - startedAt);
-    // The one and only place a payload is built. Redeliveries reuse `pending`.
+    const telemetry = deps.telemetry.read(begun);
+    // The one and only place a payload is built, and the only place the telemetry
+    // cursor is read. Redeliveries reuse `pending`, so they never move the cursor.
     pending = {
       sessionId: activeSid,
       capturedAtMs: begun,
       deliveries: 0,
       manualDeliveries: 0,
-      payload: {
-        request_id: deps.newRequestId(),
-        image_base64: frame?.image_base64 ?? null,
-        captured_at: frame?.captured_at ?? null,
-        telemetry_features: telemetry,
-        telemetry_timestamp: telemetry
-          ? new Date(deps.now()).toISOString()
-          : null,
-        telemetry_source: telemetry ? "prepared_replay" : "missing",
-      },
+      payload: buildLivePayload(deps.newRequestId(), frame, telemetry),
     };
     if (frame === null)
       patch({
@@ -479,6 +589,9 @@ export function createLiveLoop<TModels = unknown>(
     if (g !== generation) return;
     pending = null;
     const completed = deps.now();
+    // A delivery that succeeds while the loop was stopped (a manual Retry) puts it
+    // back in motion; while it was already running this does nothing.
+    deps.telemetry.resume(completed);
     timings?.push({
       sessionId: request.sessionId,
       windowId: record.window_id,
@@ -521,6 +634,7 @@ export function createLiveLoop<TModels = unknown>(
       // Not a failure of the request: a late frame the server refused, or an
       // abort nobody asked for. Discard the frame and carry on with the next tick.
       pending = null;
+      deps.telemetry.resume(deps.now());
       patch({
         droppedFrames:
           state.droppedFrames +
@@ -544,6 +658,7 @@ export function createLiveLoop<TModels = unknown>(
       manualRetries: request.manualDeliveries,
       attemptIndex,
       stopped: false,
+      fromManualRetry: manual,
       newSessionOnRetry,
     };
     if (
@@ -564,7 +679,9 @@ export function createLiveLoop<TModels = unknown>(
       return;
     }
     // Budget spent, a non-retryable error, or a manual retry that failed again.
-    // The request stays frozen in `pending` for the next manual retry.
+    // The request stays frozen in `pending` for the next manual retry. Monitoring has
+    // stopped, so the telemetry cursor stops with it.
+    deps.telemetry.pause(deps.now());
     patch({
       fault: { ...fault, stopped: true },
       running: false,
@@ -594,6 +711,7 @@ export function createLiveLoop<TModels = unknown>(
         manualRetries: 0,
         attemptIndex: 0,
         stopped: true,
+        fromManualRetry: false,
         newSessionOnRetry,
       },
     });
@@ -614,6 +732,7 @@ export function createLiveLoop<TModels = unknown>(
       lastCaptureMiss: null,
     });
     const attempt = beginAttempt(SETUP_TIMEOUT_MS);
+    let newSession = false;
     try {
       const models = await api.models(attempt.signal);
       if (g !== generation) return;
@@ -624,7 +743,7 @@ export function createLiveLoop<TModels = unknown>(
         if (g !== generation) return;
         activeSid = created.id;
         configKey = JSON.stringify(config);
-        startedAt = deps.now();
+        newSession = true;
         patch({ sessionId: created.id, history: [], total: 0 });
       } else {
         // Reconcile any last request committed after the browser paused/aborted.
@@ -638,6 +757,9 @@ export function createLiveLoop<TModels = unknown>(
     } finally {
       attempt.end();
     }
+    // A new session numbers its telemetry from 0; resuming one opens a new segment.
+    if (newSession) deps.telemetry.reset(deps.now());
+    else deps.telemetry.resume(deps.now());
     patch({ busy: false, running: true });
     void tick(g);
   }
@@ -685,6 +807,7 @@ export function createLiveLoop<TModels = unknown>(
             category: failure.category,
             status: failure.status,
             message: messageOf(error, "Backend unavailable"),
+            fromManualRetry: true,
             newSessionOnRetry: failure.category === "not_found",
           },
         });

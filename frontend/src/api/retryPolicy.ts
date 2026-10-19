@@ -37,13 +37,18 @@ const failure = (
 ): FailureClass => ({ category, status, retryable, counted });
 
 /**
- * 409 is overloaded (three server-side causes), so the detail decides. The
+ * 409 is overloaded (four server-side causes), so the detail decides. The
  * out-of-order case is the only one that is not a failure: a late frame is dropped.
- * An unrecognised 409 stops the loop - it is the safe reading of "same id, different
- * content". The texts are pinned by `test_retry_contract.py` on the backend side.
+ * An observation conflict - an identity the server already holds, sent again with
+ * different content or time - is a client error that no re-send can fix, so it stops.
+ * An unrecognised 409 stops the loop too - it is the safe reading of "same id,
+ * different content". The texts are pinned by `test_retry_contract.py` and
+ * `OBSERVATION_CONFLICT_DETAIL` on the backend side.
  */
 function classifyConflict(detail: string): FailureClass {
   const text = detail.toLowerCase();
+  if (text.includes("observation identity"))
+    return failure("observation_conflict", false, true, 409);
   if (text.includes("out-of-order"))
     return failure("conflict_stale_frame", false, false, 409);
   if (text.includes("operation mode") || text.includes("live model session"))
@@ -155,6 +160,12 @@ export const FAULT_TEXT: Record<
     advice:
       "The server already holds newer evidence than this frame. Nothing to do; monitoring continues.",
   },
+  observation_conflict: {
+    title:
+      "The same observation identity was sent again with different content",
+    advice:
+      "The server already holds this camera frame or telemetry sample and received it again with other image bytes, values or acquisition time. This is a bug in the client, not a network problem; sending it again cannot fix it. Start a new session and report it.",
+  },
   models_unavailable: {
     title: "The trained models are not available on the server",
     advice:
@@ -193,17 +204,19 @@ export const FAULT_TEXT: Record<
 /**
  * The advice sentence for a stopped fault, chosen by WHY the loop stopped.
  *
- * `manualRetries > 0` means the last delivery was one the user started with Retry
- * (a stop after a manual delivery is always that delivery failing; an automatic stop
- * has none). Then "re-sent automatically and kept failing" would contradict the
- * delivery line beside it - "1 of 3 + 1 manual" is one automatic send, not a spent
- * automatic budget - so the sentence names the retry the user triggered instead.
+ * A stop that a Retry the user triggered caused - `manualRetries > 0` (a manual
+ * delivery that failed) or `fromManualRetry` (also the reconcile before it, which
+ * adds no delivery) - is not a spent automatic budget. "Re-sent automatically and
+ * kept failing" would contradict the delivery line beside it ("1 of 3 + 1 manual" is
+ * one automatic send) or, for a failed reconcile, nothing was re-sent at all; so the
+ * sentence names the retry the user triggered instead.
  */
 export function faultAdvice(
-  fault: Pick<LiveFault, "category" | "manualRetries">,
+  fault: Pick<LiveFault, "category" | "manualRetries" | "fromManualRetry">,
 ): string {
   const text = FAULT_TEXT[fault.category];
-  return fault.manualRetries > 0 && text.adviceAfterManualRetry
+  return (fault.manualRetries > 0 || fault.fromManualRetry) &&
+    text.adviceAfterManualRetry
     ? text.adviceAfterManualRetry
     : text.advice;
 }
