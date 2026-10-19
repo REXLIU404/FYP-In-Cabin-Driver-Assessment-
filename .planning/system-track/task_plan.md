@@ -82,7 +82,7 @@
 ### 阶段 5：需用户裁定的政策项（裁定后再实现）
 - [ ] **R09 / D13：已裁定 A**（2026-10-13，用户本人确认；**2026-10-15 提前为阶段 2.5 的 P0-D13**）：过期证据按 missing 计分，provenance 保留 `{modality}_expired` / `{modality}_age_s`；运行时不再产出 stale，0.45 只留给历史记录；阈值 = `freshness_tolerance_s`，默认 3 s、可配 (0, 30]，只称设计阈值，须用 PERF-01 与 2 / 3 / 5 s 敏感性复核。实施时同步改：IT-LIVE-AGE 3001 ms / 30 天 / D13 快照、两条 gap 测试第 1 步（改 fake clock）、F1 W16（62.5 → 60.0）、Task 8 重试窗口的预期
 - [x] **R10 已批准**（2026-10-16，v3 + estp5 + 3 个细节，见计划 R9 修订记录）
-- [ ] **R10-A 后端**：观测身份与规范采集时间（年龄用未舍入值、REPEAT 不刷新）、事务内分类、409 `observation_conflict`、request hash 兼容、NEW-only EMA 与断链、双条件 FSM + 完成守卫（仅 LIVE）、UT-TIME-05 翻转为需求断言；Codex 测试组 1–11 + 定向变异
+- [x] **R10-A 后端**（`44b7c62` + 修复轮 `6c95db4` + 跟进 `ef341fa` + 控制者 `cc477d6`，验收 PASS；pytest 775 → 907）：观测身份与规范采集时间（年龄用未舍入值、REPEAT 不刷新）、事务内分类、409 `observation_conflict`、request hash 兼容、NEW-only EMA 与断链、双条件 FSM + 完成守卫（仅 LIVE）、UT-TIME-05 翻转为需求断言；Codex 测试组 1–11 + 定向变异
 - [ ] **R10-B 前端**：rVFC 帧元组缓存与 epoch、遥测 seq 与算术采集时间（接手 Task 9 的 `preparedTelemetryAt`，暂停 / 恢复分段基线）、payload、`observation_conflict` 文案、「对账失败仍显示自动重发」的标志
 - [ ] **R14**：`DominantEvidence` 的语义 —— raw strength 还是 weighted contribution。现算法不接收权重，w=.3/.7 时可能标「Vision-dominant」而 telemetry 贡献更大。改语义要动三份实现 + 夹具
 - **状态：** pending（等待裁定）
