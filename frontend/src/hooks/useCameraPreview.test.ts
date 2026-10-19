@@ -352,7 +352,9 @@ type Wiring =
   | "CALLBACK_CAPTURES"
   | "CALLBACK_REARMED_FIRST"
   | "TICK_DOES_NOT_DRAW"
-  | "TICK_TAKES_THE_CACHE";
+  | "TICK_TAKES_THE_CACHE"
+  | "SUPPORT_DETECTED"
+  | "CALLBACK_REGISTERED";
 
 /** The wiring requirements the hook's source fails; an empty list is a pass. */
 function wiringViolations(source: string): Wiring[] {
@@ -400,6 +402,26 @@ function wiringViolations(source: string): Wiring[] {
         ),
     ],
     ["TICK_TAKES_THE_CACHE", /framesRef\.current\?\.take\(\)/.test(body)],
+    // Explicit identity is used exactly when the browser has rVFC: the support flag
+    // handed to the frame source is the real feature test, not a constant...
+    [
+      "SUPPORT_DETECTED",
+      /callbacksSupported: typeof capture\.requestVideoFrameCallback === "function",/.test(
+        code,
+      ),
+    ],
+    // ...and the first callback is registered outside the callback itself; without it
+    // the chain never starts and every camera start silently falls back after 1 s.
+    [
+      "CALLBACK_REGISTERED",
+      code.split("capture.requestVideoFrameCallback(onFrame)").length - 1 >=
+        2 &&
+        code
+          .replace(callback, "")
+          .includes(
+            "frameCallbackRef.current = capture.requestVideoFrameCallback(onFrame);",
+          ),
+    ],
   ];
   return checks.filter(([, ok]) => !ok).map(([name]) => name);
 }
@@ -424,6 +446,28 @@ describe("useCameraPreview: the hook is wired to the frame source the way the pu
     edit: (source: string) => string;
     breaks: Wiring;
   }> = [
+    {
+      name: "the first frame callback is never registered (the chain never starts)",
+      edit: (s) =>
+        once(
+          s,
+          `        };
+        frameCallbackRef.current = capture.requestVideoFrameCallback(onFrame);`,
+          `        };`,
+        ),
+      breaks: "CALLBACK_REGISTERED",
+    },
+    {
+      name: "rVFC support forced off (every start falls back to the image hash)",
+      edit: (s) =>
+        once(
+          s,
+          `callbacksSupported:
+          typeof capture.requestVideoFrameCallback === "function",`,
+          `callbacksSupported: false,`,
+        ),
+      breaks: "SUPPORT_DETECTED",
+    },
     {
       name: "an epoch counter that starts at 0 on every page load",
       edit: (s) =>

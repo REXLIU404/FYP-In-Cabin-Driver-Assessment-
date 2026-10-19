@@ -114,7 +114,9 @@ describe("FaultPanel: the advice and the delivery line agree on why it stopped (
       }),
     );
     expect(html).toContain("Deliveries: 1 of 3 + 1 manual");
-    expect(html).toContain("The retry you triggered failed as well.");
+    expect(html).toContain(
+      "The retry you triggered failed with a model or storage error",
+    );
     expect(html).not.toMatch(/automatically/);
   });
 
@@ -123,7 +125,7 @@ describe("FaultPanel: the advice and the delivery line agree on why it stopped (
       fault({ category: "timeout", retryCount: 4, manualRetries: 1 }),
     );
     expect(html).toContain("Deliveries: 3 of 3 + 1 manual");
-    expect(html).toContain("The retry you triggered timed out as well.");
+    expect(html).toContain("The retry you triggered got no answer in time.");
     expect(html).not.toMatch(/kept timing out/);
   });
 });
@@ -140,7 +142,9 @@ describe("FaultPanel: a Retry that failed while reconciling (R10-B, B5)", () => 
       }),
     );
     expect(html).toContain("Deliveries: 3 of 3");
-    expect(html).toContain("The retry you triggered failed as well.");
+    expect(html).toContain(
+      "The retry you triggered failed with a model or storage error",
+    );
     expect(html).not.toMatch(/automatically/);
   });
 

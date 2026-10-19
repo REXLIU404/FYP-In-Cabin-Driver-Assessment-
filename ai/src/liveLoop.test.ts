@@ -790,7 +790,7 @@ describe("a failed manual retry is told apart from a spent automatic budget (B5)
   const AUTOMATIC =
     "A model or storage error on the server (HTTP 500). The request was re-sent automatically and kept failing.";
   const MANUAL =
-    "A model or storage error on the server (HTTP 500). The retry you triggered failed as well.";
+    "The retry you triggered failed with a model or storage error on the server (HTTP 500).";
 
   it("the loop's own stop is not from a manual retry, and says so in its advice", async () => {
     const r = rig({ script: threeServerErrors() });

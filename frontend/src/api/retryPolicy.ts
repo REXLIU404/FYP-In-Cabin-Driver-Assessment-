@@ -128,7 +128,14 @@ export function deliveriesText(
  */
 export const FAULT_TEXT: Record<
   FaultCategory,
-  { title: string; advice: string; adviceAfterManualRetry?: string }
+  {
+    title: string;
+    advice: string;
+    adviceAfterManualRetry?: string;
+    // Setup (model check, session, reconcile) has no automatic re-sends, so a category
+    // whose plain advice says "re-sent automatically" needs its own setup sentence.
+    adviceInSetup?: string;
+  }
 > = {
   input: {
     title: "The server rejected the request as invalid",
@@ -176,7 +183,9 @@ export const FAULT_TEXT: Record<
     advice:
       "A model or storage error on the server (HTTP 500). The request was re-sent automatically and kept failing.",
     adviceAfterManualRetry:
-      "A model or storage error on the server (HTTP 500). The retry you triggered failed as well.",
+      "The retry you triggered failed with a model or storage error on the server (HTTP 500).",
+    adviceInSetup:
+      "A model or storage error on the server (HTTP 500) while starting the session. Check the backend, then use Retry.",
   },
   storage: {
     title: "The server could not store the result",
@@ -188,7 +197,9 @@ export const FAULT_TEXT: Record<
     advice:
       "No answer within 10 seconds. The request was re-sent automatically and kept timing out. Check the backend, then use Retry.",
     adviceAfterManualRetry:
-      "No answer within 10 seconds. The retry you triggered timed out as well. Check the backend, then use Retry.",
+      "The retry you triggered got no answer in time. Check the backend, then use Retry.",
+    adviceInSetup:
+      "The server did not answer in time while starting the session. Check the backend, then use Retry.",
   },
   transport: {
     title: "The backend cannot be reached",
@@ -212,9 +223,13 @@ export const FAULT_TEXT: Record<
  * sentence names the retry the user triggered instead.
  */
 export function faultAdvice(
-  fault: Pick<LiveFault, "category" | "manualRetries" | "fromManualRetry">,
+  fault: Pick<LiveFault, "category" | "manualRetries" | "fromManualRetry"> & {
+    phase?: LiveFault["phase"];
+  },
 ): string {
   const text = FAULT_TEXT[fault.category];
+  if (fault.phase === "setup" && text.adviceInSetup && !fault.fromManualRetry)
+    return text.adviceInSetup;
   return (fault.manualRetries > 0 || fault.fromManualRetry) &&
     text.adviceAfterManualRetry
     ? text.adviceAfterManualRetry

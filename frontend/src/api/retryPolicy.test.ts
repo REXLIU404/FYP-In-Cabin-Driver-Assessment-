@@ -363,7 +363,7 @@ describe("faultAdvice: the sentence follows why the loop stopped (K8)", () => {
         fromManualRetry: false,
       }),
     ).toBe(
-      "A model or storage error on the server (HTTP 500). The retry you triggered failed as well.",
+      "The retry you triggered failed with a model or storage error on the server (HTTP 500).",
     );
     expect(
       faultAdvice({
@@ -372,7 +372,7 @@ describe("faultAdvice: the sentence follows why the loop stopped (K8)", () => {
         fromManualRetry: false,
       }),
     ).toBe(
-      "No answer within 10 seconds. The retry you triggered timed out as well. Check the backend, then use Retry.",
+      "The retry you triggered got no answer in time. Check the backend, then use Retry.",
     );
     for (const category of ["model_runtime", "timeout"] as const) {
       expect(
@@ -401,7 +401,7 @@ describe("faultAdvice: the sentence follows why the loop stopped (K8)", () => {
         fromManualRetry: true,
       }),
     ).toBe(
-      "A model or storage error on the server (HTTP 500). The retry you triggered failed as well.",
+      "The retry you triggered failed with a model or storage error on the server (HTTP 500).",
     );
     expect(
       faultAdvice({
@@ -410,7 +410,7 @@ describe("faultAdvice: the sentence follows why the loop stopped (K8)", () => {
         fromManualRetry: true,
       }),
     ).toBe(
-      "No answer within 10 seconds. The retry you triggered timed out as well. Check the backend, then use Retry.",
+      "The retry you triggered got no answer in time. Check the backend, then use Retry.",
     );
     for (const category of ["model_runtime", "timeout"] as const) {
       expect(
@@ -473,6 +473,61 @@ describe("faultAdvice: the sentence follows why the loop stopped (K8)", () => {
     expect(FAULT_TEXT.timeout.advice).toBe(
       "No answer within 10 seconds. The request was re-sent automatically and kept timing out. Check the backend, then use Retry.",
     );
+  });
+});
+
+describe("faultAdvice in the setup phase (R10-B review, controller fix)", () => {
+  // Setup (model check, session, reconcile) never re-sends automatically, so it must not
+  // say it did; and the manual-retry sentence no longer quotes a fixed 10 s deadline
+  // (the reconcile deadline is 15 s) nor says "as well" (the earlier stop may have been
+  // another category).
+  it("a setup stop does not claim automatic re-sends", () => {
+    expect(
+      faultAdvice({
+        category: "model_runtime",
+        manualRetries: 0,
+        fromManualRetry: false,
+        phase: "setup",
+      }),
+    ).toBe(
+      "A model or storage error on the server (HTTP 500) while starting the session. Check the backend, then use Retry.",
+    );
+    expect(
+      faultAdvice({
+        category: "timeout",
+        manualRetries: 0,
+        fromManualRetry: false,
+        phase: "setup",
+      }),
+    ).toBe(
+      "The server did not answer in time while starting the session. Check the backend, then use Retry.",
+    );
+  });
+
+  it("a delivery stop keeps the automatic sentence", () => {
+    expect(
+      faultAdvice({
+        category: "timeout",
+        manualRetries: 0,
+        fromManualRetry: false,
+        phase: "delivery",
+      }),
+    ).toBe(
+      "No answer within 10 seconds. The request was re-sent automatically and kept timing out. Check the backend, then use Retry.",
+    );
+  });
+
+  it("a manual retry that failed in setup speaks of the retry, with no fixed deadline", () => {
+    const text = faultAdvice({
+      category: "timeout",
+      manualRetries: 0,
+      fromManualRetry: true,
+      phase: "setup",
+    });
+    expect(text).toBe(
+      "The retry you triggered got no answer in time. Check the backend, then use Retry.",
+    );
+    expect(text).not.toMatch(/10 seconds|as well|automatically/);
   });
 });
 
