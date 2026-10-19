@@ -1513,6 +1513,50 @@ describe("the telemetry cursor follows the session and the pauses (R10-B)", () =
     });
   });
 
+  // The other way back from a fault stop: the manual Retry's delivery is not answered
+  // 201 but dropped as a late frame (409 out-of-order). That is not a failure, so the
+  // loop runs again - and with it the cursor, or the next tick would send the frozen
+  // position, long expired, and the telemetry branch would stay dark for a segment.
+  it("after a fault stopped the loop, a manual Retry whose delivery is dropped as a late frame also puts the cursor back in motion with a new observation", async () => {
+    const r = rig({
+      script: [
+        ...threeTransportErrors(),
+        new ApiError("Out-of-order evidence timestamp", 409),
+      ],
+    });
+    await r.begin();
+    await r.time.advance(6000); // stopped at +6 s: the cursor froze on sequence 3
+    expect(r.get().fault?.stopped).toBe(true);
+    expect(r.calls).toHaveLength(3);
+    await r.time.advance(10_000); // +16 s
+    await r.loop.retry();
+    await r.time.advance(0);
+    // The manual delivery is the frozen request, byte for byte, and it is dropped:
+    // no failure, no stop, the loop is running again.
+    expect(r.calls).toHaveLength(4);
+    expect(r.calls[3].body).toBe(r.calls[0].body);
+    expect(r.get()).toMatchObject({
+      droppedFrames: 1,
+      fault: null,
+      running: true,
+      retrying: false,
+    });
+    // The next tick is a NEW observation: frozen sequence + 1, timed at the retry -
+    // not sequence 3 at +6 s, which the server would call 10 s old.
+    await r.time.advance(500);
+    expect(r.calls).toHaveLength(5);
+    expect(r.calls[4].payload).toMatchObject({
+      telemetry_seq: 4,
+      telemetry_timestamp: "2026-01-01T12:00:16.000Z",
+    });
+    // And the segment is on its 2000 ms grid from the retry, not from a later tick.
+    await r.time.advance(1500); // +18 s
+    expect(r.calls[r.calls.length - 1].payload).toMatchObject({
+      telemetry_seq: 5,
+      telemetry_timestamp: "2026-01-01T12:00:18.000Z",
+    });
+  });
+
   it("a dropped late frame (not a failure) does not restart or freeze the cursor", async () => {
     const r = rig({
       script: [new ApiError("Out-of-order evidence timestamp", 409)],

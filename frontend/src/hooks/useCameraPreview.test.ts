@@ -389,9 +389,15 @@ function wiringViolations(source: string): Wiring[] {
           callback.indexOf("frames.onFrame(metadata)"),
     ],
     // A tick takes the cached tuple; it never draws and never stamps a time itself.
+    // `drawFrame` is this file's own helper that draws the video onto the canvas, and
+    // `canvasRef` is the only way to reach the canvas: a tick that calls either is
+    // drawing a fresh picture under the cached frame id.
     [
       "TICK_DOES_NOT_DRAW",
-      body !== "" && !/drawImage|toDataURL|new Date|Date\.now/.test(body),
+      body !== "" &&
+        !/drawFrame|canvasRef|drawImage|toDataURL|new Date|Date\.now/.test(
+          body,
+        ),
     ],
     ["TICK_TAKES_THE_CACHE", /framesRef\.current\?\.take\(\)/.test(body)],
   ];
@@ -463,12 +469,38 @@ describe("useCameraPreview: the hook is wired to the frame source the way the pu
       breaks: "CALLBACK_REARMED_FIRST",
     },
     {
+      // Nothing but a call to the file's own drawing helper, on a canvas that is not
+      // the hook's: only the `drawFrame` token can catch it.
       name: "a tick that draws a fresh picture of its own",
       edit: (s) =>
         once(
           s,
           "const frame = framesRef.current?.take() ?? null;",
-          "const frame = framesRef.current?.take() ?? null;\n    void drawFrame(video, canvasRef.current as HTMLCanvasElement); canvasRef.current?.toDataURL();",
+          'const frame = framesRef.current?.take() ?? null;\n    void drawFrame(video, document.createElement("canvas"));',
+        ),
+      breaks: "TICK_DOES_NOT_DRAW",
+    },
+    {
+      // Brief mutation U5 as it would be written in the hook: every tick redraws and
+      // sends the new bytes under the cached frame id.
+      name: "a tick that redraws and sends the new bytes under the cached frame id",
+      edit: (s) =>
+        once(
+          s,
+          "const frame = framesRef.current?.take() ?? null;",
+          "const frame = framesRef.current?.take() ?? null;\n    const fresh = frame && canvasRef.current ? drawFrame(video, canvasRef.current) : null;\n    if (frame && fresh) return { frame: { ...frame, image_base64: fresh }, reason: null };",
+        ),
+      breaks: "TICK_DOES_NOT_DRAW",
+    },
+    {
+      // Neither drawFrame, drawImage nor toDataURL: only reaching the canvas at all
+      // gives it away.
+      name: "a tick that reads the canvas by some other route",
+      edit: (s) =>
+        once(
+          s,
+          "const frame = framesRef.current?.take() ?? null;",
+          "const frame = framesRef.current?.take() ?? null;\n    canvasRef.current?.toBlob(() => undefined);",
         ),
       breaks: "TICK_DOES_NOT_DRAW",
     },

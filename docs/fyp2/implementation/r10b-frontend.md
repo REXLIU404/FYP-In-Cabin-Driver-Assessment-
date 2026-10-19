@@ -237,3 +237,102 @@ export PYTHONDONTWRITEBYTECODE=1
   - 导出里的新 provenance（`vision_frame_id`、`telemetry_seq`、`identity_source`、`captured_at_source`）的往返由后端 R10-A 的 API 测试覆盖，浏览器侧的逐窗口一致仍要在那里验证。
 - **控制者待定**：第 7.1 条第 1、4、5 点（故障停机是否冻结游标、`captureTime` 防护、两处既有措辞）。
 - **阶段 5（裁定 A）**不依赖本项，也未被本项改动；落地时遥测的「逻辑事件时间 = 时间片起点」会与 3 s 容差共同决定过期窗口，见第 7.1 条第 2 点。
+
+## 修复轮 1
+
+独立评审给出 2 条 Important（均为 blocks_this_item），本轮只修这两条，未改任何实现代码（`ai/src/liveLoop.ts`、`useCameraPreview.ts` 一字未动），只改了两个测试文件。开工前核实：HEAD 为 `8e9319a`，`git status` 干净。
+
+### 修复轮 1.1 发现与处理
+
+| # | 发现 | 根因 | 处理 |
+|---|---|---|---|
+| 1 | 钩子层的 U5（每个 tick 重新截帧、却沿用缓存的帧 id）让整个套件保持绿色 | `useCameraPreview.test.ts` 里的接线守卫 `TICK_DOES_NOT_DRAW` 只在 `captureFrame` 的函数体里找 `drawImage\|toDataURL\|new Date\|Date\.now`；调用本文件自己的 `drawFrame()` 助手不含这些词，逃过检查。守卫自带的自测变异体「a tick that draws a fresh picture of its own」只是因为同时多写了一句字面的 `canvasRef.current?.toDataURL()` 才变红 | 守卫的禁用词正则加上 `drawFrame` 与 `canvasRef`（tick 不得调用画图助手，也不得碰画布）；自测变异体去掉 `toDataURL` 拐杖；新增 2 个自测变异体，使每个新词都由一个只靠它才会变红的变异体守护 |
+| 2 | `ai/src/liveLoop.ts:637` 的 `deps.telemetry.resume(deps.now())`（`onFailure` 不计数分支）没有任何测试覆盖；删掉该行套件仍是 862 绿 | 唯一覆盖「丢帧」的既有测试「a dropped late frame (not a failure) does not restart or freeze the cursor」只走自动路径，那里游标本来就在运行，`resume` 是空操作；而报告第 4 节 B1 写明的「手动 Retry 的投递被当作乱序帧丢弃」这条恢复路径从未被执行过 | 在 `liveLoop.test.ts` 加 1 条循环测试，覆盖「故障停机后手动 Retry，其投递被 409 乱序丢弃」 |
+
+### 修复轮 1.2 改动
+
+文件（2 个，均为测试；`git diff --stat`：`ai/src/liveLoop.test.ts` +44，`frontend/src/hooks/useCameraPreview.test.ts` +34/−2）：
+
+1. `frontend/src/hooks/useCameraPreview.test.ts`
+   - 正则：`/drawImage|toDataURL|new Date|Date\.now/` → `/drawFrame|canvasRef|drawImage|toDataURL|new Date|Date\.now/`，并在旁边写明两个新词的理由（`drawFrame` 是本文件把视频画到画布上的助手，`canvasRef` 是 tick 能够碰到画布的唯一途径）。
+   - 变异体「a tick that draws a fresh picture of its own」：只保留 `void drawFrame(video, document.createElement("canvas"));`（画在一块不是钩子自己的画布上，没有 `canvasRef`、`drawImage`、`toDataURL`），因此只有 `drawFrame` 一个词能抓住它；`toDataURL` 拐杖已去掉。
+   - 新增变异体「a tick that redraws and sends the new bytes under the cached frame id」：逐字就是评审的 U5c（保留 `take()` 一行，其后 `const fresh = frame && canvasRef.current ? drawFrame(video, canvasRef.current) : null; if (frame && fresh) return { frame: { ...frame, image_base64: fresh }, reason: null };`）。
+   - 新增变异体「a tick that reads the canvas by some other route」：`canvasRef.current?.toBlob(() => undefined);`，不含 `drawFrame`、`drawImage`、`toDataURL`，只有 `canvasRef` 能抓住它。
+   - 已用 `prettier --write` 格式化（HEAD 版本本就 prettier 干净，修改后同样干净）。
+2. `ai/src/liveLoop.test.ts`：在 describe「the telemetry cursor follows the session and the pauses (R10-B)」里，紧接「after a fault stopped the loop, a successful manual Retry …」之后新增
+   「after a fault stopped the loop, a manual Retry whose delivery is dropped as a late frame also puts the cursor back in motion with a new observation」。场景与评审复现的一致：脚本为 3 次传输错误加 1 次 `409 Out-of-order evidence timestamp`；+6 s 停机（游标冻结在 seq 3）；+16 s 手动 Retry；断言
+   - 第 4 个请求（手动投递）与第 1 个请求逐字节相同，并被丢弃：`droppedFrames: 1`、`fault: null`、`running: true`、`retrying: false`；
+   - 下一个 tick（+16.5 s，共 5 个请求）是新观测：`telemetry_seq: 4`、`telemetry_timestamp: "2026-01-01T12:00:16.000Z"`（不是冻结位置 seq 3 / `12:00:06.000Z`）；
+   - 再过 1500 ms（+18 s）：`telemetry_seq: 5`、`telemetry_timestamp: "2026-01-01T12:00:18.000Z"`，即分段从重试时刻起按 2000 ms 网格前进，而不是晚一个 tick。
+
+   期望值全部是测试里手算的字面量。
+
+### 修复轮 1.3 执行的命令与输出
+
+隔离副本：`D=$(mktemp -d) && git archive HEAD | tar -x -C "$D"`，`node_modules` 与 `.venv` 符号链接到本工作树（不是主仓库）；变异只改副本里的一个文件，每项之后从真实工作树拷回并 `cmp` 确认逐字节还原；真实工作树不做任何变异。
+
+**先复现（修复前的测试，HEAD 版本）**
+
+| 变异（在副本里） | 命令 | 结果 |
+|---|---|---|
+| U5c：`useCameraPreview.ts` 在 `const frame = framesRef.current?.take() ?? null;` 之后加评审给出的两行 | `./node_modules/.bin/vitest run --no-cache` | `Test Files 29 passed (29)`、`Tests 862 passed (862)`：**保持绿色，复现了评审的发现** |
+| E1：`liveLoop.ts` 删去 `onFailure` 不计数分支里的 `deps.telemetry.resume(deps.now());`（配 HEAD 的 `liveLoop.test.ts`） | 同上 | `Test Files 29 passed (29)`、`Tests 864 passed (864)`：**保持绿色，复现了评审的发现**（864 而不是 862，因为副本里此时已是修复后的 `useCameraPreview.test.ts`，多 2 条） |
+
+**再验证（修复后的测试）**
+
+守卫（发现 1）——变异的是真实的钩子源码，命令均为 `./node_modules/.bin/vitest run --no-cache`（全量）：
+
+| 变异 | 结果 |
+|---|---|
+| U5c（评审原样：保留 `take()` 一行，其后重画并以新字节顶替缓存帧的图像） | `Tests 1 failed \| 863 passed (864)`；红的是 `…the hook's source meets every wiring requirement` |
+| U5d：只加 `void drawFrame(video, document.createElement("canvas"));`，别无其它 | `Tests 1 failed \| 863 passed (864)`；红的同上一条 |
+| U5b：替换 `take()` 那一行（保留 `framesRef.current?.take()`，其结果的图像被 `drawFrame` 的新字节顶替） | `Tests 6 failed \| 858 passed (864)`；红的包括 `…the hook's source meets every wiring requirement`（这次不再是只靠锚点漂移而红） |
+| 还原钩子源码 | `cmp` 逐字节一致；`Test Files 29 passed (29)`、`Tests 864 passed (864)` |
+
+守卫自己的正则（证明新词各有自测变异体守护），命令 `./node_modules/.bin/vitest run --no-cache frontend/src/hooks/useCameraPreview.test.ts`：
+
+| 变异（改副本里的测试文件） | 结果 |
+|---|---|
+| G1：正则去掉 `drawFrame` | `Tests 1 failed \| 38 passed (39)`；红的是「a tick that draws a fresh picture of …」 |
+| G2：正则去掉 `canvasRef` | `Tests 1 failed \| 38 passed (39)`；红的是「a tick that reads the canvas by some …」 |
+| G3：正则回到修复前（两个词都没有） | `Tests 3 failed \| 36 passed (39)`；红的是上面两条加「a tick that redraws and sends the new …」 |
+
+（第一次跑 G1–G3 时，我给正则写了两个反斜杠，`Date\\.now` 不再匹配 `Date.now`，使「a tick that stamps its own time …」多红了一条；那是我的转义错误，不是守卫的行为。改正后重跑得到上表，上表是唯一采信的结果。）
+
+循环（发现 2）——命令均为 `./node_modules/.bin/vitest run --no-cache`（全量）：
+
+| 变异（改副本里的 `liveLoop.ts` 第 637 行） | 结果 |
+|---|---|
+| E1：删去 `deps.telemetry.resume(deps.now());` | `Tests 1 failed \| 864 passed (865)`；红的是新测试，断言失败在 `liveLoop.test.ts:1548`（`calls[4].payload` 应为 `telemetry_seq: 4` @ `…16.000Z`，实际是冻结位置） |
+| E1b：改成 `deps.telemetry.resume(request.capturedAtMs);`（用被丢弃请求自己的采集时刻，而不是现在） | `Tests 1 failed \| 864 passed (865)`；红的是新测试 |
+| E1c：改成 `if (!manual) deps.telemetry.resume(deps.now());`（手动路径的丢帧不恢复） | `Tests 1 failed \| 864 passed (865)`；红的是新测试 |
+| 还原 `liveLoop.ts` | `cmp` 逐字节一致；`Test Files 29 passed (29)`、`Tests 865 passed (865)` |
+
+**四项门禁（真实工作树，与 `phase2-context.md` 逐字一致的命令）**
+
+```
+cd /Users/liu/Desktop/FYP2-Live-System
+export PYTHONDONTWRITEBYTECODE=1
+(cd backend && TMPDIR=$(mktemp -d) PYTHONPATH=. ../.venv/bin/python -m pytest tests -q -p no:cacheprovider)
+./node_modules/.bin/vitest run --no-cache
+./node_modules/.bin/tsc --noEmit
+./node_modules/.bin/eslint .
+```
+
+| 门禁 | 结果 |
+|---|---|
+| pytest | `922 passed, 1 warning in 18.76s`（与修复前相同；后端与夹具未动） |
+| vitest | `Test Files 29 passed (29)`、`Tests 865 passed (865)` |
+| `tsc --noEmit` | exit 0 |
+| `eslint .` | exit 0 |
+
+### 修复轮 1.4 数字的变化
+
+- vitest **862 → 865 = +3**：`useCameraPreview.test.ts` 37 → 39（+2，新增的两个守卫自测变异体）；`liveLoop.test.ts` 76 → 77（+1，新增的手动 Retry 丢帧测试）。没有删除、放宽或改写任何既有断言；「a tick that draws a fresh picture of its own」的变异体改了编辑内容（去掉 `toDataURL` 拐杖），它仍然断言 `TICK_DOES_NOT_DRAW` 被打破。
+- pytest 922 不变，tsc / eslint 仍为 0。
+- 上面第 5 节里「钩子接线守卫自带一张变异表（9 项）」现为 **11 项**；第 6 节里 vitest 862、`useCameraPreview.test.ts` 37、`liveLoop.test.ts` 76 的数字以本小节为准。
+
+### 修复轮 1.5 遗留
+
+- 守卫仍是对源码的正则检查，不是在 DOM 里运行钩子（本仓库的测试在 node 环境，无法渲染钩子）。新词只堵住了「tick 里调用画图助手 / 碰画布」这一类；一个自己新写、既不叫 `drawFrame` 也不碰 `canvasRef` 的助手仍然逃得过。该风险由 Task 10 第 2 部分的浏览器实测兜底（真实钩子下，同一 `(epoch, index)` 的请求字节应当逐字相同）。
+- 第 7 节其余各条（尤其是 7.1 的 1、4、5 点）不受本轮影响，仍待控制者裁定。
