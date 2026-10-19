@@ -6,6 +6,7 @@
 outputs/telemetry/xgb_telemetry.json
 
 # Offline ML runs: serialized models and feature caches never enter Git.
+outputs/runs/**/.run.lock
 outputs/runs/**/*.pth
 outputs/runs/**/*.ckpt
 outputs/runs/**/*.safetensors
