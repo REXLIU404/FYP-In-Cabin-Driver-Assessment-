@@ -162,7 +162,7 @@ def e2e_server(e2e_dist, tmp_path_factory):
 # "Needs the trained models" skips: counted, printed, and optionally fatal.
 # --------------------------------------------------------------------------------------
 # The reason string of every ``requires_models`` skipif in this directory
-# (test_live_inference.py, test_unavailable_contract.py). It is how a skip is
+# (test_live_inference.py, test_unavailable_contract.py, test_live_e2e.py). It is how a skip is
 # recognised, so a test that spells it differently would escape the accounting;
 # test_model_gate.py pins that every ``requires_models`` marker uses this exact text.
 MODELS_SKIP_REASON = "local trained artifacts not installed"

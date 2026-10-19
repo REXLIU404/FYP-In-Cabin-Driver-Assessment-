@@ -145,5 +145,5 @@ def test_every_model_skipif_uses_the_reason_the_gate_recognises():
     """The gate recognises a model skip by its reason text. A marker spelled differently
     would be skipped silently and survive DRA_REQUIRE_MODELS=1."""
     found = _requires_models_markers()
-    assert {name for name, _ in found} >= {"test_live_inference.py", "test_unavailable_contract.py"}
+    assert {name for name, _ in found} >= {"test_live_inference.py", "test_unavailable_contract.py", "test_live_e2e.py"}
     assert all(reason == REASON for _, reason in found), found

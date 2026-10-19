@@ -58,7 +58,14 @@ from e2e_support import (
 )
 
 MODEL_ROOT = Path(__file__).resolve().parents[2] / "ml/outputs"
-requires_models = pytest.mark.skipif(not (MODEL_ROOT / 'vision/mobilenetv3_large_vision.onnx').exists(), reason="local trained artifacts not installed")
+# All three frozen files: test_02 reads the bytes of each, so a missing one must be a counted
+# model skip (fatal under DRA_REQUIRE_MODELS=1), not a FileNotFoundError.
+requires_models = pytest.mark.skipif(
+    not all((MODEL_ROOT / name).exists() for name in ("vision/mobilenetv3_large_vision.onnx",
+                                                      "vision/mobilenetv3_large_vision.pt",
+                                                      "telemetry/xgb_telemetry.json")),
+    reason="local trained artifacts not installed",
+)
 pytestmark = [pytest.mark.e2e, requires_models]
 
 # The frozen baseline of the three model files (docs/evidence/2026-10-19/w3-gate/freeze_manifest.txt).
@@ -201,8 +208,9 @@ def run(pw, e2e_server):
 
 
 class TestStLiveE2E01:
-    """Tests run in definition order and share one paused run. ``test_07`` changes a flag, so
-    everything that must see the unflagged state comes before it."""
+    """The tests share one paused run. ``test_07`` flags a window and unflags it again before it
+    ends, so the others see the unflagged run in any order (a test_07 that fails half way can
+    leave the flag set; the failure is then already reported)."""
 
     def test_01_the_run_completed_and_every_request_was_a_distinct_stored_window(self, run):
         assert run.error is None, run.error
@@ -473,6 +481,17 @@ class TestStLiveE2E01:
         flagged_rows = page.evaluate(r"""() => [...document.querySelectorAll('table tbody tr')]
             .filter((tr) => tr.children[6].textContent.trim() === 'flagged').map((tr) => tr.children[0].textContent.trim())""")
         assert flagged_rows == [str(FLAGGED_WINDOW)]
+
+        # Unflag through the UI: every home follows, and the run is back to the unflagged state
+        # test_04..06 read, so the class does not depend on test_07 running after them.
+        page.get_by_role("button", name="Signal Inspector", exact=True).click()
+        page.get_by_role("button", name=f"Window {FLAGGED_WINDOW}", exact=True).click()
+        page.get_by_role("button", name="Unflag", exact=True).click()
+        chrome.wait_until(lambda: page.get_by_role("button", name="Flag", exact=True).count() == 1,
+                          "the Inspector to show window 3 as unflagged", 10, tolerate_stop_panel=True)
+        assert ("PATCH", f"/api/sessions/{run.sid}/windows/{FLAGGED_WINDOW}/flag?flagged=false") in chrome.api_requests
+        diffs = parties_diffs(Parties(run), before)
+        assert not diffs, f"after Unflag, {len(diffs)} differences, first {diffs[:12]}"
 
     def test_08_no_console_errors_and_nothing_failed_on_the_server(self, run):
         assert run.error is None, run.error

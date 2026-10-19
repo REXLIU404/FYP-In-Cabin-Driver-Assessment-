@@ -96,8 +96,11 @@ def start_server(workdir: Path) -> Server:
     sink_path = workdir / "fault_events.log"
     log_path = workdir / "uvicorn.log"
     db_url = f"sqlite:///{db_path}"
+    # Settings reads every DRA_* variable (env_prefix). A developer's shell must not change what
+    # the tests run against (freshness tolerance, weights, thresholds, model root), so none of
+    # theirs is passed on: the server runs on the defaults plus the four set here.
     env = {
-        **os.environ,
+        **{k: v for k, v in os.environ.items() if not k.startswith("DRA_")},
         "DRA_DATABASE_URL": db_url,
         "DRA_E2E_DATABASE_URL": db_url,
         "DRA_E2E_SINK": str(sink_path),
