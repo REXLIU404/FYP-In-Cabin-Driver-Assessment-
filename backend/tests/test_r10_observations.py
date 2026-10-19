@@ -416,6 +416,23 @@ def test_g3_a_sample_without_a_seq_in_between_does_not_clear_the_explicit_seq_hi
     assert (forward["provenance"]["telemetry_obs"], forward["provenance"]["telemetry_seq"]) == ("new", 11)
 
 
+def test_g3_after_mixing_identities_the_last_explicit_seq_resent_unchanged_is_refused(drive, api_factory):
+    """Documented limitation (R10-A follow-up review): explicit and fallback identities share one
+    content registry, so after a seq-less sample the registered content no longer belongs to seq 10.
+    Resending seq 10 unchanged is therefore REFUSED (409 observation_conflict) rather than taken as a
+    REPEAT. This is the conservative answer - the stored probabilities would be the wrong sample's -
+    and a client that always sends explicit identity (R10-B) never mixes. Pinned so a change is a
+    decision, not an accident."""
+    d = drive()
+    d.ok(0, "s10", features=tel(H, 1), seq=10, stamp=0)
+    d.ok(100, "no-seq", features=tel(H, 2), stamp=100)
+    committed = snapshot(api_factory, d.sid)
+    response = d.send(200, "s10-again", features=tel(H, 1), seq=10, stamp=0)
+    assert response.status_code == 409 and response.json()["detail"] == CONFLICT
+    assert snapshot(api_factory, d.sid) == committed
+    assert window_count(api_factory, d.sid) == 2
+
+
 # ===================================================================== 4. vision identity
 def test_g4_a_frame_re_sent_under_new_request_ids_is_a_repeat_and_never_alerts(drive):
     """S4: the same frame (0, 0) every 500 ms: REPEAT, canonical time kept, CAUTION until the frame
@@ -825,12 +842,19 @@ def test_g11_the_registry_crosses_a_gap(drive, api_factory):
 
 
 def test_g11_a_row_persisted_by_the_pre_r10_worker_is_read_safely(drive, api_factory):
+    """A pre-R10 row carries a Low streak that began 11 s ago. Inheriting it would recover the latch at
+    once; a LIVE window must re-anchor instead and keep HIGH_ALERT. The seed is chosen so the two
+    answers differ (the premise below runs the pre-R10 FSM on the same row)."""
+    from app import inference
     d = drive()
+    seed = {"previous_vision": 0.9, "last_severity": "HIGH_ALERT", "high_since": None,
+            "low_since": 1_735_732_789_000.0, "last_processed_ms": 1_735_732_799_500.0,
+            "captured_at": at(-500).isoformat(), "telemetry_timestamp": at(-500).isoformat()}
+    # Premise: on this row the pre-R10 FSM recovers immediately - so HIGH_ALERT below is a real verdict.
+    assert inference._step_alert_fsm(dict(seed), "Low", 1_735_732_800_000.0) == "NORMAL"
     with api_factory() as db:
         sess = db.get(models.SessionMeta, d.sid)
-        sess.runtime_state = {"previous_vision": 0.9, "last_severity": "HIGH_ALERT", "high_since": None,
-                              "low_since": 1_735_732_799_000.0, "last_processed_ms": 1_735_732_799_500.0,
-                              "captured_at": at(-500).isoformat(), "telemetry_timestamp": at(-500).isoformat()}
+        sess.runtime_state = seed
         db.commit()
     # No registry, no seq: the fallback applies and the OLD watermark is honoured (-600 < -500).
     older = d.send(0, "old-row-0", features=tel(L, 2), stamp=-600)

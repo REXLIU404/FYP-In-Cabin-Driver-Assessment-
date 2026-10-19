@@ -51,11 +51,14 @@ EVIDENCE_WATERMARK_KEYS = ("captured_at", "telemetry_timestamp")
 # worker restart, or an observation seen before a pause would be taken as new after it. It must
 # never be added to ``TEMPORAL_STATE_KEYS``. Flat keys on purpose (``dict(state)`` is a shallow
 # copy, so nothing nested may be edited in place); a list value is only ever replaced.
-#   telemetry: seq (None when the sample carried none), canonical acquisition time, sha256 of the
-#              feature values, the raw model probability, the per-class probabilities
-#   vision:    frame epoch / index (None when the frame carried none), canonical acquisition time,
-#              sha256 of the image bytes, the raw probability, the EMA-smoothed probability the
-#              observation was FUSED with, the per-class probabilities
+#   telemetry: seq = the highest EXPLICIT seq accepted (only moves forward; a seq-less fallback
+#              sample never clears it), canonical acquisition time, sha256 of the feature values,
+#              the raw model probability, the per-class probabilities
+#   vision:    frame epoch / index = the highest EXPLICIT identity accepted (same rule), canonical
+#              acquisition time, sha256 of the image bytes, the raw probability, the EMA-smoothed
+#              probability the observation was FUSED with, the per-class probabilities
+#   The content fields are shared by explicit and fallback observations: after a fallback sample,
+#   resending the last explicit identity unchanged is refused (409), not taken as a REPEAT.
 OBSERVATION_REGISTRY_KEYS = (
     "obs_t_seq", "obs_t_ts", "obs_t_hash", "obs_t_raw", "obs_t_classes",
     "obs_v_epoch", "obs_v_index", "obs_v_ts", "obs_v_hash", "obs_v_raw", "obs_v_p", "obs_v_classes",
