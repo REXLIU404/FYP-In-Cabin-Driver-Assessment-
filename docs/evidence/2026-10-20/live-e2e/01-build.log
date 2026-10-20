@@ -1,9 +1,9 @@
 GATE: build
 STATUS: PASS
 EXIT CODE: 0
-STARTED (UTC): 2026-10-20T04:49:13Z
-FINISHED (UTC): 2026-10-20T04:49:17Z
-DURATION (s): 3.67
+STARTED (UTC): 2026-10-20T05:20:43Z
+FINISHED (UTC): 2026-10-20T05:20:46Z
+DURATION (s): 3.49
 ARGV: ["npm", "run", "build"]
 CWD: /Users/liu/Desktop/FYP2-Live-System
 ENV (selected):
@@ -38,7 +38,7 @@ computing gzip size...
 ../dist/index.html                   0.82 kB │ gzip:   0.52 kB
 ../dist/assets/index-CuotzGSj.css   15.57 kB │ gzip:   3.93 kB
 ../dist/assets/index-BiE7oxGf.js   635.35 kB │ gzip: 183.05 kB
-✓ built in 1.72s
+✓ built in 1.58s
 ----- END STDOUT -----
 ----- STDERR -----
 

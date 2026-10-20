@@ -190,3 +190,16 @@ pytest args: tests/test_live_single_branch.py -k TestStBranchTSmoke
   FAILED tests/test_live_single_branch.py::TestStBranchTSmoke::test_03_common_assertions_and_five_way_reconciliation
   2 failed, 1 passed, 14 deselected in 13.82s
   restored: byte-identical to the working-tree fixture
+
+==========================================================================================
+Controller fixes (87bdc3f), isolated copies of c2191c0 + the fix diff; .venv / node_modules / models linked; worktree untouched
+==========================================================================================
+HM1  ai/src/liveLoop.ts  HISTORY_LIMIT 500 -> 400 (dist rebuilt by the e2e session)
+     RED TestStBranchTContinuity::test_06 (1 failed, 5 passed in 61.94 s): AssertionError: (400, [534, 533, 532], [137, 136, 135])
+HM2  backend/app/routers/export.py  .order_by(window_id).limit(500).yield_per(100)
+     RED TestStBranchTContinuity::test_05 and test_06 (2 failed, 4 passed in 62.00 s): window ids of the export != 1..N
+CM   backend/app/routers/export.py  _COLUMNS without "request_id"
+     RED test_e3_rvfc_behaviour_on_the_fake_camera_is_recorded (-k test_e3, 13.41 s):
+     "60 differences, first [\"window 1: csv: column 'request_id' is missing from the export\", ...]"  (was KeyError before the fix)
+ST-BRANCH-ZERO scope widening (test_02 / test_04 now cover every picture-less window, start-up not_ready included):
+     no mutation; the reviewer's probe found 0 such start-up windows in both ZERO and T-SMOKE runs, so the widening is literal coverage.

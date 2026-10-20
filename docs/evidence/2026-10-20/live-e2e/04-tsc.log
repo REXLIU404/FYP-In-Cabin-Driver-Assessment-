@@ -1,9 +1,9 @@
 GATE: tsc
 STATUS: PASS
 EXIT CODE: 0
-STARTED (UTC): 2026-10-20T04:51:34Z
-FINISHED (UTC): 2026-10-20T04:51:35Z
-DURATION (s): 1.43
+STARTED (UTC): 2026-10-20T05:23:03Z
+FINISHED (UTC): 2026-10-20T05:23:05Z
+DURATION (s): 1.5
 ARGV: ["./node_modules/.bin/tsc", "--noEmit"]
 CWD: /Users/liu/Desktop/FYP2-Live-System
 ENV (selected):

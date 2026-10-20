@@ -1,6 +1,6 @@
 # FYP2 freeze manifest
 
-Generated (UTC): `2026-10-20T04:51:51Z`  
+Generated (UTC): `2026-10-20T05:23:06Z`  
 Generator: `scripts/freeze_manifest.py` (python `3.13.9`)  
 Repository root: `/Users/liu/Desktop/FYP2-Live-System`
 
@@ -8,16 +8,22 @@ Repository root: `/Users/liu/Desktop/FYP2-Live-System`
 
 | Item | Value |
 |---|---|
-| HEAD | `ae1c1971ae14c028ccda0150fcc33d90c23a4ee7` |
+| HEAD | `87bdc3f15811cd532fdc3a7307520027d3ab3477` |
 | Branch | `fyp2/live-system` |
-| HEAD commit | 2026-10-20T12:49:07+08:00  test(e2e): Task 10 part 2b - ST-BRANCH-* single-branch system tests, default-camera reconciliation |
+| HEAD commit | 2026-10-20T13:20:38+08:00  test(e2e): Task 10 part 2b controller fixes - ZERO covers every picture-less window, T-CONTINUITY proves the export outlasts the page's 500 windows, readable missing-column diff |
 | Working tree | dirty |
-| Uncommitted entries | 1 |
+| Uncommitted entries | 7 |
 
 Uncommitted entries (`git status --porcelain`):
 
 ```
-?? docs/evidence/2026-10-20/
+M docs/evidence/2026-10-20/live-e2e/01-build.log
+ M docs/evidence/2026-10-20/live-e2e/02-pytest.log
+ M docs/evidence/2026-10-20/live-e2e/03-vitest.log
+ M docs/evidence/2026-10-20/live-e2e/04-tsc.log
+ M docs/evidence/2026-10-20/live-e2e/05-eslint.log
+ M docs/evidence/2026-10-20/live-e2e/SUMMARY.md
+ M docs/evidence/2026-10-20/live-e2e/freeze_manifest.txt
 ```
 
 ## 2. Model checkpoints (`ml/outputs/`, git-ignored, hash-only)
