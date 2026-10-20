@@ -1,6 +1,7 @@
-"""Support code for ``test_live_e2e.py`` (Task 10 part 2a): the one-uvicorn server, a Chromium
-wrapper with a request tap, readers for the five places a window lives, and the display-format
-oracle.
+"""Support code for ``test_live_e2e.py`` (Task 10 part 2a) and ``test_live_single_branch.py`` (part 2b):
+the one-uvicorn server, a Chromium wrapper with a request tap, readers for the five places a window
+lives, one monitoring run (``LiveRun``) with the five-way reconciliation (``Parties`` /
+``assert_reconciled``), and the display-format oracle.
 
 Nothing here touches product code. Everything the tests need that the product does not offer -
 recording the ``/infer`` bodies, failing a request, holding one, dispatching a synthetic
@@ -15,6 +16,7 @@ from __future__ import annotations
 
 import atexit
 import csv
+import hashlib
 import io
 import json
 import os
@@ -235,10 +237,17 @@ class InferCall:
     response: dict | None = None
     response_text: str | None = None
     route: object | None = field(default=None, repr=False)  # kept for a held call, so it can be released
+    sent_raw: str | None = None  # what the SERVER received; None = the browser's body, unchanged (no rewrite)
 
     @property
     def request_id(self) -> str:
         return self.body["request_id"]
+
+    @property
+    def sent_body(self) -> dict:
+        """The body that reached the server. ``raw`` / ``body`` stay what the browser sent; the two
+        differ only when the tap was told to rewrite (``ApiTap.rewrite_infer``)."""
+        return self.body if self.sent_raw is None else json.loads(self.sent_raw)
 
 
 @dataclass
@@ -258,7 +267,10 @@ class ApiTap:
     The knobs are plain attributes the test sets while it drives the page:
     ``abort_infer``  fail the next N infer requests at the network layer (they never reach the server);
     ``hold_infer``   do not answer infer requests at all (the server never sees them);
-    ``abort_session_posts``  the 1-based numbers of the ``POST /api/sessions`` calls to fail.
+    ``abort_session_posts``  the 1-based numbers of the ``POST /api/sessions`` calls to fail;
+    ``rewrite_infer``  a PURE function from the decoded request body to the body the server gets
+                       (Task 10 part 2b, ST-BRANCH-V). Pure, so a re-sent request is rewritten to the
+                       very same bytes. ``InferCall.raw`` / ``.body`` stay the browser's own.
     """
 
     def __init__(self):
@@ -267,6 +279,11 @@ class ApiTap:
         self.abort_infer = 0
         self.hold_infer = False
         self.abort_session_posts: set[int] = set()
+        self.rewrite_infer = None
+
+    def answered_with_image(self, sid: str | None = None) -> list[InferCall]:
+        """Answered infer calls whose request, as the SERVER received it, carried a camera image."""
+        return [c for c in self.answered(sid) if c.sent_body["image_base64"] is not None]
 
     def answered(self, sid: str | None = None) -> list[InferCall]:
         """The infer calls the server answered with a stored window (201), in the order sent."""
@@ -322,7 +339,11 @@ class ApiTap:
             call.outcome = "aborted"
             route.abort("failed")
             return
-        response = route.fetch()
+        if self.rewrite_infer is not None:
+            call.sent_raw = json.dumps(self.rewrite_infer(json.loads(raw)), separators=(",", ":"))
+            response = route.fetch(post_data=call.sent_raw)
+        else:
+            response = route.fetch()
         call.status = response.status
         try:
             call.response = response.json()
@@ -336,11 +357,11 @@ class Chrome:
     """One Chromium with a fake camera, one context (camera permission granted), one page, the tap
     and a record of every console error / uncaught page error / failed non-infer request."""
 
-    def __init__(self, pw, server: Server, args: list[str]):
+    def __init__(self, pw, server: Server, args: list[str], permissions: tuple[str, ...] = ("camera",)):
         self.server = server
         self.browser = pw.chromium.launch(args=args)
         self.version = self.browser.version
-        self.context = self.browser.new_context(permissions=["camera"], viewport={"width": 1280, "height": 1000})
+        self.context = self.browser.new_context(permissions=list(permissions), viewport={"width": 1280, "height": 1000})
         self.page = self.context.new_page()
         self.tap = ApiTap()
         self.console_errors: list[str] = []
@@ -574,27 +595,44 @@ def read_latest_panel(page) -> dict:
 
 
 def expected_latest_panel(record: dict, session_id: str, total_windows: int) -> dict:
-    """What the Live Monitor's latest panel must show for ``record`` (an assessed window), written
-    out from the display rules (1 decimal for the score, 2 for a probability, integer percent)."""
-    score = fixed(record["RiskScore"], 1)
+    """What the Live Monitor's latest panel must show for ``record``, written out from the display
+    rules (1 decimal for the score, 2 for a probability, integer percent). ``record`` may be a window
+    with no assessment (part 2b); the panel then says so instead of showing a score."""
     pd, pt = record["P_distraction"], record["P_telemetry_anomaly"]
     fresh = record["modality_freshness"]
+    strip = {"Session": session_id, "Window": str(record["window_id"]), "Stored records": str(total_windows)}
+    cards = [
+        {"title": "Visual Distraction", "percent": "—" if fresh["vision"] == "missing" else percent(pd),
+         "freshness": fresh["vision"], "probability": _branch(record, "vision", fixed(pd, 2))},
+        {"title": "Telemetry Non-Safe", "percent": "—" if fresh["telemetry"] == "missing" else percent(pt),
+         "freshness": fresh["telemetry"], "probability": _branch(record, "telemetry", fixed(pt, 2))},
+    ]
+    if not record["assessment_available"]:
+        # Part 2b: a window with no assessment (AlertBanner / LiveMonitor "unavailable" state): the
+        # banner says so in fixed words and shows only the SystemHealth pill, there is no gauge and no
+        # RiskLevel / evidence / alert badge, and the two branch cards still show their own state.
+        return {
+            "strip": strip,
+            "bannerTitle": "No assessment for the latest window",
+            "bannerText": "Neither input branch contributed usable evidence, so no RiskScore, RiskLevel or alert is reported for it.",
+            "bannerPills": [record["SystemHealth"]],
+            "gaugeLabel": None,
+            "gaugeValue": None,
+            "badges": [],
+            "cards": cards,
+        }
+    score = fixed(record["RiskScore"], 1)
     vision_percent = _branch(record, "vision", percent(pd))
     telemetry_percent = _branch(record, "telemetry", percent(pt))
     return {
-        "strip": {"Session": session_id, "Window": str(record["window_id"]), "Stored records": str(total_windows)},
+        "strip": strip,
         "bannerTitle": "Current Monitoring Status",
         "bannerText": f"RiskScore: {score} / 100 | Visual distraction: {vision_percent} | Telemetry non-safe: {telemetry_percent}",
         "bannerPills": [record["AlertSeverity"], record["SystemHealth"]],
         "gaugeLabel": f"RiskScore: {score} / 100",
         "gaugeValue": score,
         "badges": [record["RiskLevel"], record["DominantEvidence"], record["AlertSeverity"]],
-        "cards": [
-            {"title": "Visual Distraction", "percent": "—" if fresh["vision"] == "missing" else percent(pd),
-             "freshness": fresh["vision"], "probability": _branch(record, "vision", fixed(pd, 2))},
-            {"title": "Telemetry Non-Safe", "percent": "—" if fresh["telemetry"] == "missing" else percent(pt),
-             "freshness": fresh["telemetry"], "probability": _branch(record, "telemetry", fixed(pt, 2))},
-        ],
+        "cards": cards,
     }
 
 
@@ -614,3 +652,174 @@ def summarise(values: list[float]) -> dict:
     p95 = ordered[min(len(ordered) - 1, int(round(0.95 * (len(ordered) - 1))))]
     return {"n": len(ordered), "min": round(ordered[0], 3), "median": round(statistics.median(ordered), 3),
             "p95": round(p95, 3), "max": round(ordered[-1], 3)}
+
+
+# --------------------------------------------------------------------------------------
+# One monitoring run and the five homes of its windows
+# (LiveRun / Parties / parties_diffs / frame_key moved here from test_live_e2e.py in part 2b, so that
+# ``test_live_single_branch.py`` and the E3 test reuse them; their behaviour is unchanged)
+# --------------------------------------------------------------------------------------
+EVIDENCE_ENV = "DRA_E2E_EVIDENCE_DIR"
+
+
+def evidence_dir() -> Path | None:
+    """Where a test may leave its artifacts (screenshots, exports, measurements) for the evidence
+    archive: the directory named by ``DRA_E2E_EVIDENCE_DIR``. With the variable unset a test writes
+    nothing outside its own tmp directory, so a plain test run never touches the repository."""
+    value = os.environ.get(EVIDENCE_ENV)
+    if not value:
+        return None
+    path = Path(value)
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
+class LiveRun:
+    """The state one monitoring run leaves behind: the paused page, what the tap recorded, and
+    what the Live Monitor showed at the moment the server went quiet."""
+
+    def __init__(self, chrome: Chrome):
+        self.chrome = chrome
+        self.server = chrome.server
+        self.tap = chrome.tap
+        self.page = chrome.page
+        self.sid: str | None = None
+        self.error: str | None = None  # why the run did not complete; the first test reports it
+        self.ui_latest: dict | None = None
+        self.probe: dict | None = None
+        self.rvfc_supported: bool | None = None
+
+    @property
+    def calls(self):
+        """The answered ``/infer`` calls of the run, in the order sent; window ids 1..N."""
+        return self.tap.answered(self.sid)
+
+    def attempt(self, steps) -> None:
+        """Run the driving steps of a test; a failed wait is kept in ``error`` (the first test of
+        the run reports it), so a broken run is a FAILED test with its cause, not a fixture error."""
+        try:
+            steps()
+        except Exception as exc:  # AssertionError from a wait; anything else (a Playwright timeout) too
+            self.error = str(exc) if isinstance(exc, AssertionError) else f"{type(exc).__name__}: {exc}"
+
+    def collect(self) -> None:
+        chrome = self.chrome
+        chrome.open()
+        chrome.top_button("Start Monitoring").click()
+        self.attempt(lambda: (
+            chrome.wait_until(lambda: self._enough(), "10 windows spanning 4 telemetry samples (seq 0..3)", 90),
+            self.settle()))
+
+    def settle(self) -> None:
+        """Make the server quiet and read what the dashboard shows. From now on the loop's next
+        request is held at the network layer and never reaches the server. The request before it
+        has been answered (the loop sends one at a time), so the database holds exactly the windows
+        the browser received - and the dashboard shows the newest of them. The Live Monitor must be
+        the open view. Then Pause: the page cancels the held request itself."""
+        chrome = self.chrome
+        self.sid = self.sid or self.tap.session_posts[0].response["id"]
+        self.tap.hold_infer = True
+        chrome.wait_until(lambda: self.tap.held(), "the loop's next request to be held", 20)
+        last = str(self.calls[-1].response["window_id"])
+        chrome.wait_until(lambda: read_latest_panel(self.page)["strip"].get("Window") == last,
+                          f"the dashboard to show window {last}", 10)
+        self.ui_latest = read_latest_panel(self.page)
+        self.rvfc_supported = self.page.evaluate("() => typeof HTMLVideoElement.prototype.requestVideoFrameCallback === 'function'")
+        self.probe = chrome.probe()
+        chrome.top_button("Pause").click()
+        chrome.wait(500)
+        self.tap.hold_infer = False
+
+    def _enough(self) -> bool:
+        answered = self.tap.answered()
+        return len(answered) >= 10 and max(c.body.get("telemetry_seq", -1) for c in answered) >= 3
+
+
+class Parties:
+    """One window's five homes, fetched together: the browser's ``/infer`` bodies, the database,
+    ``GET /windows``, the JSON export and the CSV export, plus ``GET /risk/latest``."""
+
+    def __init__(self, run: LiveRun):
+        sid = run.sid
+        with api_client(run.server) as client:
+            windows = client.get(f"/api/sessions/{sid}/windows", params={"after": 0, "limit": 1000})
+            export_json = client.get(f"/api/sessions/{sid}/export", params={"format": "json"})
+            export_csv = client.get(f"/api/sessions/{sid}/export", params={"format": "csv"})
+            latest = client.get(f"/api/sessions/{sid}/risk/latest")
+            self.session = client.get(f"/api/sessions/{sid}").json()
+        assert windows.status_code == export_json.status_code == export_csv.status_code == latest.status_code == 200
+        self.infer = {c.response["window_id"]: c.response for c in run.calls}
+        self.db = {row["window_id"]: row for row in db_records(run.server, sid)}
+        self.windows = {w["window_id"]: w for w in windows.json()}
+        self.export_json = {r["window_id"]: r for r in export_json.json()["records"]}
+        self.export_json_top = {k: v for k, v in export_json.json().items() if k != "records"}
+        self.export_csv = {int(r["window_id"]): r for r in parse_csv(export_csv.text)}
+        self.latest = latest.json()
+        self.export_json_bytes, self.export_csv_bytes = export_json.content, export_csv.content
+
+
+def parties_diffs(parties: Parties, expected: dict[int, dict]) -> list[str]:
+    """Every difference between each home of every window and ``expected`` (the /infer bodies,
+    with any deliberate change applied), field by field."""
+    out: list[str] = []
+    for window_id, want in expected.items():
+        for name, home in (("database payload", {k: v["payload"] for k, v in parties.db.items()}),
+                           ("GET /windows", parties.windows), ("export JSON", parties.export_json)):
+            if window_id not in home:
+                out.append(f"window {window_id}: missing from {name}")
+                continue
+            out += [f"window {window_id} {name}: {d}" for d in deep_diff(want, home[window_id])]
+        if window_id in parties.db:
+            out += [f"window {window_id}: {d}" for d in record_diffs(parties.db[window_id], want)]
+        if window_id in parties.export_csv:
+            out += [f"window {window_id}: {d}" for d in csv_row_diffs(parties.export_csv[window_id], want)]
+        else:
+            out.append(f"window {window_id}: missing from export CSV")
+    return out
+
+
+def frame_key(body: dict):
+    """The identity a request gives its camera frame: (epoch, index), or the bytes when it sent none."""
+    frame = body.get("vision_frame")
+    return (frame["epoch"], frame["index"]) if frame else ("bytes", hashlib.sha256(body["image_base64"].encode()).hexdigest())
+
+
+def assert_reconciled(run: LiveRun) -> Parties:
+    """The part 2b reconciliation, for a run whose server is quiet (``LiveRun.settle``).
+
+    For EVERY window the run received - single-branch, unavailable and two-branch alike - the five
+    homes agree on all 21 contract fields, ``provenance`` key by key, floats exactly: (1) the
+    ``/infer`` answer the browser received, (2) the database row (payload and typed columns),
+    (3) ``GET /windows``, (4) the JSON export, (5) the CSV export (the rule is the one written in
+    ``TestStLiveE2E01.test_04``: every contract field is compared, a scalar by the exporter's own
+    encoding, the six structured fields as JSON documents, the seven provenance-derived columns
+    against provenance). The same window ids 1..N exist everywhere, ``total_windows`` is N, and
+    ``GET /risk/latest`` is the last window, whole."""
+    parties = Parties(run)
+    count = len(run.calls)
+    ids = list(range(1, count + 1))
+    assert sorted(parties.infer) == sorted(parties.db) == sorted(parties.windows) == ids
+    assert sorted(parties.export_json) == sorted(parties.export_csv) == ids
+    assert parties.session["total_windows"] == count
+    assert parties.export_json_top == {"session_id": run.sid}
+    diffs = parties_diffs(parties, parties.infer)
+    assert not diffs, f"{len(diffs)} differences, first {diffs[:12]}"
+    assert parties.latest["window_id"] == count
+    diffs = deep_diff(parties.latest, parties.infer[count])
+    assert not diffs, f"GET /risk/latest is not the last window: {diffs[:12]}"
+    return parties
+
+
+def assert_ui_shows_latest(run: LiveRun, parties: Parties) -> None:
+    """IT-UI-01: what the Live Monitor displayed when the run went quiet (read from the DOM by
+    ``LiveRun.settle``) against ``GET /risk/latest`` in the dashboard's display format."""
+    expected = expected_latest_panel(parties.latest, run.sid, parties.session["total_windows"])
+    shown = dict(run.ui_latest)
+    shown["strip"] = {k: v for k, v in shown["strip"].items() if k in expected["strip"]}
+    diffs = deep_diff(shown, expected)
+    assert not diffs, f"the Live Monitor does not show GET /risk/latest: {diffs}"
+
+
+def half_up_float(value: float, places: int) -> float:
+    """``half_up`` as the float a record stores (an independent implementation: Decimal on the repr)."""
+    return float(half_up(value, places))

@@ -25,10 +25,11 @@ Five jobs:
    the count and the names of those skips in a banner, and ``DRA_REQUIRE_MODELS=1``
    (the pre-release gate) turns each of them into a failure instead.
 
-5. Provide the end-to-end environment of ``test_live_e2e.py``: the ``e2e`` marker, a session-scoped
-   ``npm run build`` and the ONE uvicorn that serves the API and the freshly built ``dist/`` on a
-   throw-away database (``e2e_dist`` / ``e2e_server``). Both import their helpers lazily, so a run
-   that selects no end-to-end test never builds or starts anything.
+5. Provide the end-to-end environment of ``test_live_e2e.py`` and ``test_live_single_branch.py``: the
+   ``e2e`` marker, a session-scoped ``npm run build``, the ONE uvicorn that serves the API and the
+   freshly built ``dist/`` on a throw-away database (``e2e_dist`` / ``e2e_server``) and a
+   module-scoped Playwright (``pw``). All import their helpers lazily, so a run that selects no
+   end-to-end test never builds, starts or launches anything.
 
 The pre-existing ``api`` fixture in ``test_audit_regressions.py`` has the same
 ``(client, session_id)`` contract and, being module-level, takes precedence in
@@ -143,6 +144,17 @@ def e2e_dist():
     from e2e_support import build_dist
 
     build_dist()
+
+
+@pytest.fixture(scope="module")
+def pw():
+    """One Playwright per end-to-end test module (only one sync Playwright may run per thread). It is
+    stopped when the module ends - module scope on purpose, not session - so it never outlives the
+    end-to-end modules and an asyncio-using test elsewhere in the run never sees its event loop."""
+    from playwright.sync_api import sync_playwright
+
+    with sync_playwright() as playwright:
+        yield playwright
 
 
 @pytest.fixture(scope="session")

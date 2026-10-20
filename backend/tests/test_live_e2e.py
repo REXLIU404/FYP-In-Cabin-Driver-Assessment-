@@ -16,7 +16,8 @@ ST-LIVE-E2E-01 (class ``TestStLiveE2E01``, one monitoring run, many assertions)
 
 E2 (module-level tests): the stop panel by real clicks - a transport fault and Retry, a failed
     New Session and Retry, an unexpected camera loss against Stop Camera.
-E3: rVFC behaviour on the fake camera, recorded and not judged.
+E3: rVFC behaviour on the fake camera, recorded and not judged. Part 2b adds the five-way
+    reconciliation at its end, on this default (20 fps) camera.
 
 The E1 run uses a 5 fps fake camera: the default one is a 20 fps pattern and the loop (about
 10 Hz) never outruns it, so a frame is never sent twice and the vision REPEAT path would not be
@@ -24,6 +25,10 @@ exercised. E2 and E3 use the default camera.
 
 Expected values are literals in this file; the only thing computed is the dashboard's display
 rounding, by an independent implementation (``e2e_support.half_up``).
+
+Evidence (part 2b): with ``DRA_E2E_EVIDENCE_DIR`` set, ``test_06`` leaves a screenshot of each of the
+five views and the session's JSON / CSV export in that directory, and E3 its measurement JSON.
+Unset, nothing is written outside tmp.
 """
 from __future__ import annotations
 
@@ -41,18 +46,20 @@ from e2e_support import (
     RISK_UPDATE_FIELDS,
     SLOW_FAKE_CAMERA_ARGS,
     Chrome,
+    LiveRun,
+    Parties,
     api_client,
-    csv_row_diffs,
+    assert_reconciled,
+    assert_ui_shows_latest,
     db_count,
-    db_records,
     deep_diff,
+    evidence_dir,
     expected_latest_panel,
     fixed,
+    frame_key,
     instant,
-    parse_csv,
+    parties_diffs,
     percent,
-    read_latest_panel,
-    record_diffs,
     session_ids,
     summarise,
 )
@@ -81,121 +88,22 @@ PROVENANCE_EXPIRY_KEYS = ["vision_expired", "vision_age_s", "telemetry_expired",
 FLAGGED_WINDOW = 3  # the window the E1 flag test sets through the UI
 
 
-@pytest.fixture(scope="module")
-def pw():
-    """One Playwright for the whole module (only one sync Playwright may run per thread); it is
-    stopped when the module ends, so it never outlives these tests."""
-    from playwright.sync_api import sync_playwright
-
-    with sync_playwright() as playwright:
-        yield playwright
-
-
 def sha256_of(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def shoot(page, name: str) -> None:
+    """With ``DRA_E2E_EVIDENCE_DIR`` set, leave a screenshot of the open view for the evidence
+    archive (part 2b). With it unset this writes nothing."""
+    out = evidence_dir()
+    if out is not None:
+        (out / "screenshots").mkdir(exist_ok=True)
+        page.screenshot(path=str(out / "screenshots" / f"{name}.png"), full_page=True)
 
 
 # ======================================================================================
 # ST-LIVE-E2E-01
 # ======================================================================================
-class LiveRun:
-    """The state one monitoring run leaves behind: the paused page, what the tap recorded, and
-    what the Live Monitor showed at the moment the server went quiet."""
-
-    def __init__(self, chrome: Chrome):
-        self.chrome = chrome
-        self.server = chrome.server
-        self.tap = chrome.tap
-        self.page = chrome.page
-        self.sid: str | None = None
-        self.error: str | None = None  # why the run did not complete; the first test reports it
-        self.ui_latest: dict | None = None
-        self.probe: dict | None = None
-        self.rvfc_supported: bool | None = None
-
-    @property
-    def calls(self):
-        """The answered ``/infer`` calls of the run, in the order sent; window ids 1..N."""
-        return self.tap.answered(self.sid)
-
-    def collect(self) -> None:
-        chrome = self.chrome
-        chrome.open()
-        chrome.top_button("Start Monitoring").click()
-        try:
-            chrome.wait_until(lambda: self._enough(), "10 windows spanning 4 telemetry samples (seq 0..3)", 90)
-            self.sid = self.tap.session_posts[0].response["id"]
-            # Quiesce the server: from now on the loop's next request is held at the network layer
-            # and never reaches it. The request before it has been answered (the loop sends one at a
-            # time), so the database holds exactly the windows the browser received - and the
-            # dashboard shows the newest of them.
-            self.tap.hold_infer = True
-            chrome.wait_until(lambda: self.tap.held(), "the loop's next request to be held", 20)
-            last = str(self.calls[-1].response["window_id"])
-            chrome.wait_until(lambda: read_latest_panel(self.page)["strip"].get("Window") == last,
-                              f"the dashboard to show window {last}", 10)
-            self.ui_latest = read_latest_panel(self.page)
-            self.rvfc_supported = self.page.evaluate("() => typeof HTMLVideoElement.prototype.requestVideoFrameCallback === 'function'")
-            self.probe = chrome.probe()
-            chrome.top_button("Pause").click()
-            chrome.wait(500)
-            self.tap.hold_infer = False
-        except AssertionError as exc:
-            self.error = str(exc)
-
-    def _enough(self) -> bool:
-        answered = self.tap.answered()
-        return len(answered) >= 10 and max(c.body.get("telemetry_seq", -1) for c in answered) >= 3
-
-
-class Parties:
-    """One window's five homes, fetched together: the browser's ``/infer`` bodies, the database,
-    ``GET /windows``, the JSON export and the CSV export, plus ``GET /risk/latest``."""
-
-    def __init__(self, run: LiveRun):
-        sid = run.sid
-        with api_client(run.server) as client:
-            windows = client.get(f"/api/sessions/{sid}/windows", params={"after": 0, "limit": 1000})
-            export_json = client.get(f"/api/sessions/{sid}/export", params={"format": "json"})
-            export_csv = client.get(f"/api/sessions/{sid}/export", params={"format": "csv"})
-            latest = client.get(f"/api/sessions/{sid}/risk/latest")
-            self.session = client.get(f"/api/sessions/{sid}").json()
-        assert windows.status_code == export_json.status_code == export_csv.status_code == latest.status_code == 200
-        self.infer = {c.response["window_id"]: c.response for c in run.calls}
-        self.db = {row["window_id"]: row for row in db_records(run.server, sid)}
-        self.windows = {w["window_id"]: w for w in windows.json()}
-        self.export_json = {r["window_id"]: r for r in export_json.json()["records"]}
-        self.export_json_top = {k: v for k, v in export_json.json().items() if k != "records"}
-        self.export_csv = {int(r["window_id"]): r for r in parse_csv(export_csv.text)}
-        self.latest = latest.json()
-
-
-def parties_diffs(parties: Parties, expected: dict[int, dict]) -> list[str]:
-    """Every difference between each home of every window and ``expected`` (the /infer bodies,
-    with any deliberate change applied), field by field."""
-    out: list[str] = []
-    for window_id, want in expected.items():
-        for name, home in (("database payload", {k: v["payload"] for k, v in parties.db.items()}),
-                           ("GET /windows", parties.windows), ("export JSON", parties.export_json)):
-            if window_id not in home:
-                out.append(f"window {window_id}: missing from {name}")
-                continue
-            out += [f"window {window_id} {name}: {d}" for d in deep_diff(want, home[window_id])]
-        if window_id in parties.db:
-            out += [f"window {window_id}: {d}" for d in record_diffs(parties.db[window_id], want)]
-        if window_id in parties.export_csv:
-            out += [f"window {window_id}: {d}" for d in csv_row_diffs(parties.export_csv[window_id], want)]
-        else:
-            out.append(f"window {window_id}: missing from export CSV")
-    return out
-
-
-def frame_key(body: dict):
-    """The identity a request gives its camera frame: (epoch, index), or the bytes when it sent none."""
-    frame = body.get("vision_frame")
-    return (frame["epoch"], frame["index"]) if frame else ("bytes", hashlib.sha256(body["image_base64"].encode()).hexdigest())
-
-
 @pytest.fixture(scope="class")
 def run(pw, e2e_server):
     chrome = Chrome(pw, e2e_server, SLOW_FAKE_CAMERA_ARGS)
@@ -399,6 +307,8 @@ class TestStLiveE2E01:
             page.get_by_role("button", name=name, exact=True).click()
             chrome.wait(300)
 
+        shoot(page, "01-live-monitor")  # the view the run ended on
+
         # Signal Inspector
         open_view("Signal Inspector")
         buttons = page.locator(".window-list button")
@@ -418,6 +328,7 @@ class TestStLiveE2E01:
         assert stats["Flag"] == "None"
         bars = page.evaluate(r"""() => [...document.querySelectorAll('.bar-row')].map((r) => [r.querySelector('span').textContent.trim(), r.querySelector('strong').textContent.trim()])""")
         assert bars == [[c["label"], fixed(c["probability"], 2)] for c in wanted["visual_top_classes"]]
+        shoot(page, "02-signal-inspector")
 
         # Risk Trends: one row per window, newest first.
         open_view("Risk Trends")
@@ -430,6 +341,7 @@ class TestStLiveE2E01:
             assert row[3] == record["RiskLevel"] and row[4] == record["AlertSeverity"]
             assert row[5] == record["DominantEvidence"] and row[6] == "None"
         assert [int(r[0]) for r in rows] == list(range(count, 0, -1))
+        shoot(page, "03-risk-trends")
 
         # Explanation: the selected window's numbers.
         open_view("Explanation")
@@ -439,9 +351,11 @@ class TestStLiveE2E01:
         assert summary["P_distraction"] == fixed(wanted["P_distraction"], 2)
         assert summary["Telemetry Non-Safe Risk"] == fixed(wanted["P_telemetry_anomaly"], 2)
         assert summary["RiskLevel"] == wanted["RiskLevel"]
+        shoot(page, "04-explanation")
 
         # Configuration: both exports download, and are the server's exports of this session.
         open_view("Configuration")
+        shoot(page, "05-configuration")
         with api_client(run.server) as client:
             served_json = client.get(f"/api/sessions/{run.sid}/export", params={"format": "json"}).content
             served_csv = client.get(f"/api/sessions/{run.sid}/export", params={"format": "csv"}).content
@@ -449,6 +363,10 @@ class TestStLiveE2E01:
             with page.expect_download() as download:
                 page.get_by_role("button", name=label, exact=True).click()
             assert Path(download.value.path()).read_bytes() == served, label
+        out = evidence_dir()
+        if out is not None:  # the bytes the page downloaded (just proven equal to the server's export)
+            (out / "session-export.json").write_bytes(served_json)
+            (out / "session-export.csv").write_bytes(served_csv)
 
         # Live Monitor again.
         open_view("Live Monitor")
@@ -710,6 +628,9 @@ def test_e3_rvfc_behaviour_on_the_fake_camera_is_recorded(pw, e2e_server, tmp_pa
         if out:
             Path(out).mkdir(parents=True, exist_ok=True)
             (Path(out) / "rvfc-measurement.json").write_text(json.dumps(measurement, indent=2, sort_keys=True))
+        evidence = evidence_dir()
+        if evidence is not None:  # the G-W4-A archive (part 2b)
+            (evidence / "rvfc-measurement.json").write_text(json.dumps(measurement, indent=2, sort_keys=True))
 
         # Only structure is asserted, never a number: the run was healthy, the probe saw the
         # product ask for callbacks where the browser has them, and the wire shows the matching path.
@@ -720,5 +641,17 @@ def test_e3_rvfc_behaviour_on_the_fake_camera_is_recorded(pw, e2e_server, tmp_pa
             assert all("vision_frame" in b for b in bodies)
         else:
             assert all("vision_frame" not in b and b["captured_at_source"] == "client_clock" for b in bodies)
+
+        # Part 2b (carried over from 2a): the five-way reconciliation on the DEFAULT 20 fps camera,
+        # where every vision observation is NEW (E1 reconciles on the 5 fps camera, where REPEATs
+        # occur). Nothing above changed. First Pause with the server held quiet, so that the
+        # database holds exactly what the browser received; then every window the run received is
+        # reconciled across the five homes, GET /risk/latest is the last window, and the Live
+        # Monitor shows it. The measurement above was taken before this and is not affected by it.
+        live = LiveRun(chrome)
+        live.sid = sid
+        live.settle()
+        parties = assert_reconciled(live)
+        assert_ui_shows_latest(live, parties)
     finally:
         chrome.close()
