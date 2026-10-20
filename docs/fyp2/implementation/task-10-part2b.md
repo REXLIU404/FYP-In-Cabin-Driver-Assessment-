@@ -230,3 +230,14 @@ D=$(mktemp -d) && git -C /Users/liu/Desktop/FYP2-Live-System archive HEAD | tar 
 - **阶段 5 的 R14**（`DominantEvidence` 语义）若改变 Partial 的判定顺序或文案，`common_problems` 里的期望要按届时生效的规则改（B-M9 就是守这一处）。
 - **裁定 A / R10 的后续改动**若改变 `ALERT_SUSTAIN_MS` / `ALERT_RECOVER_MS`、算术采集时间或其他 FSM 规则，`ALERT_BY_SEQ` 要重新推导。
 - **控制者待定**：第 7 节第 6 条（`prototype-tests/README.md` 与 `docs/fyp2/implementation/README.md` 索引的过时描述）归谁改；第 7 节第 3 条是否需要一个单独触发「处理间隔 > 容差」重新播种的线上用例。
+
+## 附：G-W4-A 归档结果（提交二追加；归档必须在已提交的代码上运行，所以这一节不可能在提交一里）
+
+门禁提交 `ae1c197`（提交一）。全部在真实工作树、已提交代码上运行，证据目录 `docs/evidence/2026-10-20/live-e2e/`：
+
+- `DRA_REQUIRE_MODELS=1 python3 scripts/run_gates.py --out docs/evidence/2026-10-20/live-e2e`：**GREEN，五道门禁全绿**。build PASS（3.67 s）；pytest **951 passed / 0 skipped**（134.08 s；日志里 `PYTEST SKIPPED: 0` 与 `DRA_REQUIRE_MODELS=1: no model-dependent test was skipped`）；vitest 870 passed（2.49 s）；tsc 0（1.43 s）；eslint 0（1.16 s）。`SUMMARY.md` 里的 "working tree dirty (1 entries)" 是证据目录本身。
+- `freeze_manifest.txt`：三个模型文件的 SHA-256 与冻结基线全部 MATCH（onnx `b3a42e8d…`、pt `196ca7b1…`、xgb `9802cb06…`）。
+- 一次 E1 运行（`DRA_E2E_EVIDENCE_DIR` 指向证据目录，`pytest tests/test_live_e2e.py -v -s`，**12 passed in 36.77 s**，日志 `e2e-evidence-run.log`）留下：五个视图的截图（`screenshots/01…05`，我看过 `01-live-monitor.png`，是真实渲染）、该会话的导出 `session-export.json` / `session-export.csv`（各 60 个窗口，窗口号相同，`request_id` 不重复，CSV 的 `request_id` 列等于 provenance 里的值，无 flag）、E3 的 `rvfc-measurement.json`（Chromium 148.0.7778.96，60 个请求，全部走 `capture_time` 路径）。
+- `mutations.txt`：第 6.3 节 12 次变异的补丁、变红的测试、第一条断言、还原后的逐字节比对。
+- `README.md`：把 G-W4-A 的五项检查（五方逐行一致、单分支行为、失败与恢复、无重复写入、模型哈希不变）逐项对应到具体测试与验收报告；其中 `ST-FAIL-01..04`、`ST-RECOVER-01`、`IT-OUTCOME-01`（`test_fault_events.py`）、`IT-RETRY-IDENTITY`（`test_retry_contract.py`）和 2a 的三条 E2 都用 `grep` 核实过确实存在。
+- 会话结束前再次核对：主仓库的 `.venv` 与 `ml/outputs/` 在本次会话期间没有任何文件被修改。

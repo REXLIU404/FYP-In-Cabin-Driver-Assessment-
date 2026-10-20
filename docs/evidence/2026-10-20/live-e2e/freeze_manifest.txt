@@ -1,0 +1,135 @@
+# FYP2 freeze manifest
+
+Generated (UTC): `2026-10-20T04:51:51Z`  
+Generator: `scripts/freeze_manifest.py` (python `3.13.9`)  
+Repository root: `/Users/liu/Desktop/FYP2-Live-System`
+
+## 1. Source (git)
+
+| Item | Value |
+|---|---|
+| HEAD | `ae1c1971ae14c028ccda0150fcc33d90c23a4ee7` |
+| Branch | `fyp2/live-system` |
+| HEAD commit | 2026-10-20T12:49:07+08:00  test(e2e): Task 10 part 2b - ST-BRANCH-* single-branch system tests, default-camera reconciliation |
+| Working tree | dirty |
+| Uncommitted entries | 1 |
+
+Uncommitted entries (`git status --porcelain`):
+
+```
+?? docs/evidence/2026-10-20/
+```
+
+## 2. Model checkpoints (`ml/outputs/`, git-ignored, hash-only)
+
+| File | SHA-256 (recomputed) | Bytes | Frozen baseline (SHA-256 / bytes) | Status |
+|---|---|---|---|---|
+| `ml/outputs/vision/mobilenetv3_large_vision.onnx` | `b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf` | 16849378 | `b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf` / 16849378 | MATCH, git-ignored |
+| `ml/outputs/vision/mobilenetv3_large_vision.pt` | `196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7` | 17066477 | `196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7` / 17066477 | MATCH, git-ignored |
+| `ml/outputs/telemetry/xgb_telemetry.json` | `9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07` | 629723 | `9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07` / 629723 | MATCH, git-ignored |
+
+Symlink targets (read-only, owned by the main repository):
+
+- `ml/outputs/vision/mobilenetv3_large_vision.onnx` -> `/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/vision/mobilenetv3_large_vision.onnx`
+- `ml/outputs/vision/mobilenetv3_large_vision.pt` -> `/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/vision/mobilenetv3_large_vision.pt`
+- `ml/outputs/telemetry/xgb_telemetry.json` -> `/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/telemetry/xgb_telemetry.json`
+
+No additional checkpoint-like files (`.joblib`, `.onnx`, `.pkl`, `.pt`, `.pth`, `.safetensors`, `.ubj`) under `ml/outputs/`.
+
+**Models unchanged vs frozen baseline: YES**
+
+## 3. Data splits (`eda_outputs/processed/**/*.csv`)
+
+Data root: `/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-` (not part of this repository; read-only).
+
+| File (relative to `eda_outputs/processed/`) | SHA-256 | Bytes | Data rows |
+|---|---|---|---|
+| `telemetry/telemetry_clean.csv` | `5361962af47b7d06b36e8e43567aaa003cb33596c699a9ddafef93ba2ddc4820` | 5338910 | 30000 |
+| `telemetry/telemetry_feature_order.csv` | `abce565234a3892d4c121e0bd97335500ac9b46e2a1477692615d79ce5541ae0` | 106 | 8 |
+| `telemetry/telemetry_model_ready.csv` | `202308a8e5caa00ce0812d1c2eda1e39f27e519750f4adc8e1967d056f717050` | 4714973 | 30000 |
+| `telemetry/telemetry_raw_snapshot.csv` | `5361962af47b7d06b36e8e43567aaa003cb33596c699a9ddafef93ba2ddc4820` | 5338910 | 30000 |
+| `telemetry/telemetry_test.csv` | `3bc3d47680a87359e1470fd8ffaf5ff330dc4419b37cc645e5736d51a91c96de` | 707415 | 4500 |
+| `telemetry/telemetry_train.csv` | `97dd20ee9c0832ba33455e5c31088f9b4abb65c198bf988699a959d545d1e5b5` | 3300372 | 21000 |
+| `telemetry/telemetry_val.csv` | `1b02792df846b5af138bae59e4f4ccfa8fa421fbb4fd6d42fad88d57722774f1` | 707412 | 4500 |
+| `vision/vision_metadata_clean.csv` | `2982a621507e222bab80e136bb06427d03105f4da31f497430d5c4040316d056` | 4155890 | 22424 |
+| `vision/vision_metadata_raw.csv` | `bbc826cdb6090b201addba6d50766f8ae2fc615bd25f033183af37b86c425fd2` | 3550416 | 22424 |
+| `vision/vision_metadata_with_split.csv` | `b4f8e90dec769bb419eaa490aea869668bed6484089cebe4d545c7667baa8ea4` | 4281047 | 22424 |
+
+10 CSV files. Row counts exclude the header record.
+
+## 4. Python environment (`.venv`, actually installed)
+
+| Item | Value |
+|---|---|
+| Interpreter | `.venv/bin/python` -> `/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python` |
+| Python | `3.13.3` |
+| Host platform | `macOS-26.6.2-arm64-arm-64bit-Mach-O` |
+| Installed distributions | 144 |
+
+Declared requirements vs installed versions:
+
+| Declared | Declared in | Installed | Spec check |
+|---|---|---|---|
+| `fastapi>=0.110` | `requirements.txt` | `0.136.3` | ok |
+| `uvicorn[standard]>=0.29` | `requirements.txt` | `0.48.0` | ok |
+| `SQLAlchemy>=2.0` | `requirements.txt` | `2.0.50` | ok |
+| `pydantic>=2.6` | `requirements.txt` | `2.13.4` | ok |
+| `pydantic-settings>=2.2` | `requirements.txt` | `2.14.1` | ok |
+| `pytest>=8.0` | `requirements.txt` | `9.0.3` | ok |
+| `httpx>=0.27` | `requirements.txt` | `0.28.1` | ok |
+| `numpy>=1.26` | `requirements-inference.txt` | `2.4.6` | ok |
+| `Pillow>=10.0` | `requirements-inference.txt` | `12.2.0` | ok |
+| `onnxruntime>=1.17` | `requirements-inference.txt` | `1.26.0` | ok |
+| `xgboost>=2.0` | `requirements-inference.txt` | `3.2.0` | ok |
+| `playwright>=1.60` | `requirements-inference.txt` | `1.60.0` | ok |
+
+`backend/requirements.lock.txt`: 143 pins, sha256 `a0fa1c76ca7706736f51c03491ce9c3f4f9a3f69c261dbf91fa9e9218e164f2c`.
+Lock vs live `.venv`: IN SYNC.
+
+## 5. Node toolchain
+
+| Item | Value |
+|---|---|
+| node | `v24.1.0` |
+| npm | `11.4.2` |
+| package-lock.json sha256 | `f6fa92fd6f2e9f1cd22a97f827fdb364b9a1afb169afd1e3842b9284c9fec19b` |
+
+Declared (`package.json`) vs installed (`node_modules`):
+
+| Package | Group | Declared | Installed |
+|---|---|---|---|
+| `lucide-react` | dependencies | `^0.468.0` | `0.468.0` |
+| `react` | dependencies | `^18.3.1` | `18.3.1` |
+| `react-dom` | dependencies | `^18.3.1` | `18.3.1` |
+| `recharts` | dependencies | `^2.13.3` | `2.15.4` |
+| `@eslint/js` | devDependencies | `^9.17.0` | `9.39.4` |
+| `@types/react` | devDependencies | `^18.3.18` | `18.3.28` |
+| `@types/react-dom` | devDependencies | `^18.3.5` | `18.3.7` |
+| `@vitejs/plugin-react` | devDependencies | `^4.3.4` | `4.7.0` |
+| `eslint` | devDependencies | `^9.17.0` | `9.39.4` |
+| `eslint-plugin-react-hooks` | devDependencies | `^5.1.0` | `5.2.0` |
+| `eslint-plugin-react-refresh` | devDependencies | `^0.4.16` | `0.4.26` |
+| `globals` | devDependencies | `^15.14.0` | `15.15.0` |
+| `prettier` | devDependencies | `^3.4.2` | `3.8.3` |
+| `typescript` | devDependencies | `^5.7.2` | `5.9.3` |
+| `typescript-eslint` | devDependencies | `^8.18.2` | `8.59.1` |
+| `vite` | devDependencies | `^6.0.5` | `6.4.2` |
+| `vitest` | devDependencies | `^2.1.9` | `2.1.9` |
+
+## 6. Development database
+
+No `.db` / `.sqlite` / `.sqlite3` file exists anywhere in the working tree (`.git`, `node_modules`, `.venv`, `dist` excluded). There is no development database to back up; later schema migrations must be exercised on a throw-away copy.
+
+## 7. Dependency / config files
+
+| File | SHA-256 | Bytes |
+|---|---|---|
+| `backend/requirements.txt` | `5dd8966c3a136e3d4b5bf5141d3524dcd300a149b493cedf5994b066638eaa2e` | 490 |
+| `backend/requirements-inference.txt` | `0af6e32adf918e6fb427abcd36a13c868dce3678eb1b2d54d6688af67aaf0522` | 151 |
+| `backend/requirements.lock.txt` | `a0fa1c76ca7706736f51c03491ce9c3f4f9a3f69c261dbf91fa9e9218e164f2c` | 2977 |
+| `package.json` | `8ed9f579d7154f2205ad17cd2c69ae6544937442f87ed23512836e849f0f9326` | 1135 |
+| `package-lock.json` | `f6fa92fd6f2e9f1cd22a97f827fdb364b9a1afb169afd1e3842b9284c9fec19b` | 171363 |
+| `eslint.config.js` | `427dea849b2bd321fb55e96bf889a3f3c08fd365b1343280cf43d673046e8bec` | 788 |
+| `tsconfig.json` | `50d1f40b9207c81ce7a02cf2605b0b6eaacf36f0acac743342c140fe3d37d4c2` | 564 |
+| `vite.config.ts` | `1fa310cf929927e48702d2245c9fa1635b07e14b3fc3b4335028f9322f0bb770` | 321 |
+| `vitest.config.ts` | `c361d732b7c9b5de1b0dd68729ad6b922eb2990917b9bf47245b2065bd974fcd` | 340 |
