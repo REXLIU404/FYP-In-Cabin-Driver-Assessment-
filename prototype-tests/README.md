@@ -39,10 +39,12 @@ export PYTHONDONTWRITEBYTECODE=1
 ./node_modules/.bin/eslint .
 ```
 
-`npm test` does not type-check; `tsc` has to be run on its own. A scripted Live
-end-to-end (one uvicorn serving `dist/` and `/api`, driven by a fake camera) is
-planned as Task 10 (`backend/tests/test_live_e2e.py`); it does not exist yet, so the
-checklist below is manual.
+`npm test` does not type-check; `tsc` has to be run on its own. Since Task 10 the
+pytest run includes a scripted Live end-to-end (one uvicorn serving `dist/` and `/api`,
+Chromium with a fake camera): `backend/tests/test_live_e2e.py` and
+`backend/tests/test_live_single_branch.py`. `live_e2e.md` maps each step of the
+checklist below to the test that automates it and lists what is still manual (a
+physical camera, how the pages look, a real backend restart, target hardware).
 
 ## Manual Live end-to-end checklist
 

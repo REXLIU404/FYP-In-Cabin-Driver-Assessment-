@@ -496,6 +496,10 @@ def csv_row_diffs(row: dict, record: dict) -> list[str]:
     structured ones as JSON documents) plus the seven provenance-derived columns; the two
     ``payload_unreadable*`` columns must be empty on a readable row."""
     diffs: list[str] = []
+    expected = [*RISK_UPDATE_FIELDS, *CSV_FROM_PROVENANCE, "payload_unreadable", "payload_unreadable_reason"]
+    missing = [column for column in expected if column not in row]
+    if missing:  # a dropped column is a reconciliation difference, not a KeyError
+        return [f"csv: column {column!r} is missing from the export" for column in missing]
     for column in RISK_UPDATE_FIELDS:
         if column in CSV_JSON_COLUMNS:
             try:

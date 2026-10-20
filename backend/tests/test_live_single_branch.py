@@ -48,12 +48,14 @@ from e2e_support import (
     SLOW_FAKE_CAMERA_ARGS,
     Chrome,
     LiveRun,
+    api_client,
     assert_reconciled,
     assert_ui_shows_latest,
     db_count,
     frame_key,
     half_up_float,
     instant,
+    parse_csv,
 )
 
 MODEL_ROOT = Path(__file__).resolve().parents[2] / "ml/outputs"
@@ -360,6 +362,7 @@ ALERT_BY_SEQ = {
     27: "HIGH_ALERT",
 }
 LAST_SEQ = 27  # the run stops at the first window of this position: 26 is complete, i.e. a lap and a wrap
+PAGE_HISTORY = 500  # the page keeps the newest 500 windows (ai/src/liveLoop.ts HISTORY_LIMIT); the export keeps all
 
 
 @pytest.fixture(scope="class")
@@ -374,8 +377,9 @@ def continuity(pw, e2e_server):
         chrome.open()
         chrome.top_button("Start Monitoring").click()
         chrome.wait_until(
-            lambda: max((c.sent_body.get("telemetry_seq", -1) for c in live.tap.answered()), default=-1) >= LAST_SEQ,
-            f"telemetry_seq {LAST_SEQ} (about 56 s of monitoring)", 150)
+            lambda: max((c.sent_body.get("telemetry_seq", -1) for c in live.tap.answered()), default=-1) >= LAST_SEQ
+            and len(live.tap.answered()) > PAGE_HISTORY + 10,
+            f"telemetry_seq {LAST_SEQ} (about 56 s of monitoring) and more than {PAGE_HISTORY + 10} windows", 180)
         live.settle()
 
     try:
@@ -540,6 +544,27 @@ class TestStBranchTContinuity:
 
     def test_05_common_assertions_and_five_way_reconciliation(self, continuity):
         common_and_reconciliation(continuity, continuity.calls)
+
+    def test_06_the_export_covers_more_than_the_500_windows_the_page_keeps(self, continuity):
+        """README step 3 / 6: a session longer than the page's history. The page lists only the
+        newest 500 windows; the server's exports carry every one (the reconciliation of test_05
+        compared them all, field by field)."""
+        assert continuity.error is None, continuity.error
+        count = len(continuity.calls)
+        assert count > PAGE_HISTORY + 10, f"only {count} windows: the run must outlast the page's history"
+        page = continuity.page
+        page.get_by_role("button", name="Signal Inspector", exact=True).click()
+        continuity.chrome.wait(300)
+        listed = page.evaluate(r"""() => [...document.querySelectorAll('.window-list button')].map((b) => b.textContent.trim())""")
+        # An unavailable window's button also carries an "Unavailable" badge; the window number leads.
+        numbers = [int(re.match(r"Window (\d+)", text).group(1)) for text in listed]
+        assert numbers == list(range(count, count - PAGE_HISTORY, -1)), (len(numbers), numbers[:3], numbers[-3:])
+        with api_client(continuity.server) as client:
+            records = client.get(f"/api/sessions/{continuity.sid}/export", params={"format": "json"}).json()["records"]
+            csv_rows = parse_csv(client.get(f"/api/sessions/{continuity.sid}/export", params={"format": "csv"}).text)
+        assert [r["window_id"] for r in records] == list(range(1, count + 1))
+        assert [int(r["window_id"]) for r in csv_rows] == list(range(1, count + 1))
+        page.get_by_role("button", name="Live Monitor", exact=True).click()
 
 
 # ======================================================================================
@@ -792,13 +817,17 @@ class TestStBranchZero:
             assert (config["weight_vision"], config["weight_telemetry"]) == (1, 0), config
         assert_clean_run(zero)
 
-    def test_02_after_stop_camera_every_window_is_unavailable_and_nothing_leaks(self, zero, frozen):
+    def test_02_every_picture_less_window_is_unavailable_and_nothing_leaks(self, zero, frozen):
+        """Every window that carried no picture, in the whole session: the ones after Stop Camera
+        and any start-up ``not_ready`` window before it (telemetry only, telemetry weight 0, so
+        UNAVAILABLE as well). A window WITH a picture cannot show ``100 x P_t`` either: test_03
+        holds it to exactly ``round_half_up(100 x P_distraction, 1)``."""
         frozen.verify()
         assert zero.error is None, zero.error
-        after = [c for c in imageless(zero.calls) if c.number > zero.stop_number]
-        assert len(after) >= 5
+        assert len([c for c in imageless(zero.calls) if c.number > zero.stop_number]) >= 5
+        picture_less = imageless(zero.calls)
         leaked, magnitudes = [], []
-        for call in after:
+        for call in picture_less:
             record = call.response
             wid = record["window_id"]
             if record["assessment_available"] is not False or record["SystemHealth"] != "UNAVAILABLE":
@@ -843,4 +872,4 @@ class TestStBranchZero:
         problems = [p for call in zero.calls
                     for p in row_problems(frozen, call.response, call.response["provenance"]["telemetry_seq"])]
         assert not problems, problems[:8]
-        common_and_reconciliation(zero, [c for c in imageless(zero.calls) if c.number > zero.stop_number])
+        common_and_reconciliation(zero, imageless(zero.calls))  # every single-branch window, start-up ones included
