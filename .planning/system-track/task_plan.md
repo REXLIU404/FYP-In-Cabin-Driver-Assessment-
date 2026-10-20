@@ -9,11 +9,11 @@
 
 ## 下一步
 
-Task 10 第 2b 部分：单分支系统测试（ST-BRANCH-*）、默认摄像头补一次五方对账、G-W4-A 证据归档。之后是 W5 的会话生命周期、冷启动与导出。
+推送 `fyp2/live-system`（用户 2026-10-19 决定：Task 10 全部完成后推送，main 不动）。之后是 W5：会话生命周期 ST-SESSION-01、冷启动 ST-COLDSTART-01（含替换 `.venv` 符号链接）、导出完善、Task 10A manifest 交接。
 
 ## 当前阶段
 
-阶段 4（Task 10：第 1、2a 部分完成，2b 进行中）。全部完成证据的索引见 `docs/fyp2/implementation/README.md`。
+阶段 4 完成（Task 10 全部完成，G-W4-A 于 2026-10-20 提前关闭）；下一阶段 W5。全部完成证据的索引见 `docs/fyp2/implementation/README.md`。
 
 ## 工作环境（不得偏离）
 
@@ -70,15 +70,15 @@ Task 10 第 2b 部分：单分支系统测试（ST-BRANCH-*）、默认摄像头
 > **2026-10-16 拆成两部分**：第 1 部分（不依赖 R10）= 类型检查门禁、模型跳过显式化（`DRA_REQUIRE_MODELS=1` 时失败）、导出遇 NULL / 畸形 payload 的守卫、`freeze_manifest` 不静默回退、分段计时（`Server-Timing` + 前端计时缓冲）、`scripts/run_gates.py` 门禁原始日志。第 2 部分（R10 落地后）= Playwright 端到端、单分支系统测试、逐 ID 全行对账、React 绑定层真实点击、PERF-01 实测与证据归档。
 - [x] **第 1 部分**（`1a321b0` + 修复轮 `89e8df0` + 控制者修正，验收 PASS；pytest 704 → 775，vitest 709 → 771）
 - [x] **第 2a 部分**（`47484d3` + 控制者修正 `afcdd0b`，验收 PASS；pytest 922 → 934，e2e 12 条）：E2E 框架（单 uvicorn + 新构建 dist + tmp 库 + Chromium 假摄像头）、ST-LIVE-E2E-01（五方逐 ID 全行对账、IT-UI-01 oracle、契约、R10 线上行为、flag、五视图）、停止面板真实点击、rVFC 实测
-- [ ] **第 2b 部分**：单分支系统测试 + 默认摄像头补一次五方对账（2a 转入）+ G-W4-A 证据归档。另需注意 `DRA_REQUIRE_MODELS=1` 只作用于被收集的测试，证据归档时必须跑全套
+- [x] **第 2b 部分**（`ae1c197` + 证据 `c2191c0` + 控制者修正 `87bdc3f` + 证据重生成 `eb000bc`，验收 PASS；pytest 934 → 952）：ST-BRANCH-T-SMOKE / T-CONTINUITY / V / ZERO、默认摄像头五方对账（2a 转入）、页面 500 窗口 vs 全量导出、G-W4-A 证据 `docs/evidence/2026-10-20/live-e2e/`（全套、`DRA_REQUIRE_MODELS=1`、0 skipped）
 - [x] E2E 对账从「6 个单元格」扩为**逐 ID 全行**：API 保存 = DB = latest = 同窗口 UI = 导出行（2a）
-- [ ] 门禁原始日志带 version / env / argv / exit / skips（`run_gates.py` 已在第 1 部分完成），归档 `docs/evidence/<date>/live-e2e/`（2b）
+- [x] 门禁原始日志带 version / env / argv / exit / skips（`run_gates.py` 已在第 1 部分完成），归档 `docs/evidence/2026-10-20/live-e2e/`（2b）
 - [x] （第 1 部分）分段计时 capture → 预处理 → 模型 → commit → 网络 → render（`windows.py:62` 计时早于 commit；前端 `requestMs` 不含 render）
 - [x] （第 1 部分）`freeze_manifest.py` 在 `FYP_DATA_ROOT` 错误时不得静默回退
 - [x] （第 1 部分）R31：导出遇 NULL / 畸形 payload 的测试与守卫（`export.py:51`）
-- [ ] **R5 单分支系统测试**：ST-BRANCH-T-SMOKE / T-CONTINUITY / V / ZERO（计划 Task 10 Step 2A）。测试工具内拦截请求，产品代码不改（2b）
+- [x] **R5 单分支系统测试**：ST-BRANCH-T-SMOKE / T-CONTINUITY / V / ZERO（计划 Task 10 Step 2A）。测试工具内拦截请求，产品代码不改（2b）
 - [x] **Task 8 转入（React 绑定层无单测）**（2a，E2 三条）：E2E 断言停止面板 Retry 用同一会话且 `X-Attempt-Index` = 4；摄像头意外断开与主动 Stop Camera 显示不同；New Session 失败后 Retry 新建会话
-- **状态：** in progress（第 1、2a 部分完成，2b 待做）
+- **状态：** complete（2026-10-20）
 
 ### 阶段 5：需用户裁定的政策项（裁定后再实现）
 - [ ] **R09 / D13：已裁定 A**（2026-10-13，用户本人确认；**2026-10-15 提前为阶段 2.5 的 P0-D13**）：过期证据按 missing 计分，provenance 保留 `{modality}_expired` / `{modality}_age_s`；运行时不再产出 stale，0.45 只留给历史记录；阈值 = `freshness_tolerance_s`，默认 3 s、可配 (0, 30]，只称设计阈值，须用 PERF-01 与 2 / 3 / 5 s 敏感性复核。实施时同步改：IT-LIVE-AGE 3001 ms / 30 天 / D13 快照、两条 gap 测试第 1 步（改 fake clock）、F1 W16（62.5 → 60.0）、Task 8 重试窗口的预期

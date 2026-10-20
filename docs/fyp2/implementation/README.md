@@ -40,7 +40,7 @@
 | R10-A：后端观测身份与双条件 FSM | `r10a-backend-acceptance.zh.md` | `r10a-backend.md`、`r10a-followup.md` | `44b7c62`、`6c95db4`、`ef341fa`、`cc477d6` | 775 → 907 / 771 |
 | R10-B：前端 seq、帧元组、payload | `r10b-frontend-acceptance.zh.md` | `r10b-frontend.md` | `8e9319a`、`daa08ad`、`c359945` | 907 → 922 / 771 → 870 |
 | Task 10 第 2a 部分：Live 端到端 | `task-10-part2a-acceptance.zh.md` | `task-10-part2a.md` | `47484d3`、`afcdd0b` | 922 → 934 / 870 |
-| Task 10 第 2b 部分：单分支系统测试与 W4 归档 | 待做 | | | |
+| Task 10 第 2b 部分：单分支系统测试与 W4 归档 | `task-10-part2b-acceptance.zh.md` | `task-10-part2b.md` | `ae1c197`、`c2191c0`、`87bdc3f`、`eb000bc` | 934 → 952 / 870 |
 
 每份验收报告的第 3 节都列出了变异检验：每项变异在隔离副本里运行，并写明变红的测试。
 
@@ -52,7 +52,7 @@
 |---|---|---|---|
 | G-W2-A（补档） | `docs/evidence/2026-10-16/w2-gate/` | `cbe573f`，在隔离副本上运行 | 全绿：pytest 584，0 skipped；vitest 427 |
 | G-W3-A（提前关闭） | `docs/evidence/2026-10-19/w3-gate/` | `ce45f53` | 全绿：build；pytest 922；vitest 870；tsc 0；eslint 0 |
-| G-W4-A | `docs/evidence/<日期>/live-e2e/` | 由 Task 10 第 2b 部分产出 | 待做 |
+| G-W4-A（提前关闭） | `docs/evidence/2026-10-20/live-e2e/` | `87bdc3f` | 全绿：build；pytest 952，0 skipped；vitest 870；tsc 0；eslint 0。另有五视图截图、会话导出、rVFC 实测 |
 
 每个 gate 目录都包含以下文件：
 
@@ -61,7 +61,7 @@
 - `freeze_manifest.txt`，即三个模型文件的哈希；
 - `README.md`，把计划里的每项 gate 检查对应到具体测试和验收报告。
 
-单项的附加证据：`docs/evidence/2026-10-19/task-10-part2a/`，包括 e2e 日志、变异记录、rVFC 实测 JSON、控制者修正的验证记录。
+单项的附加证据：`docs/evidence/2026-10-19/task-10-part2a/`，包括 e2e 日志、变异记录、rVFC 实测 JSON、控制者修正的验证记录。人工验收清单与自动化测试的对应关系见 `prototype-tests/live_e2e.md`。
 
 更早的 `docs/evidence/2026-09-28/`、`2026-10-05/`、`2026-10-09/` 是 Live 系统开工前的基线运行证据，保留原样。
 
