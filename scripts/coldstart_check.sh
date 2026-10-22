@@ -70,13 +70,19 @@ link_models() {
     shasum -a 256 "$REPO/ml/outputs/$f"
   done
 }
+SERVE_PID=""
+stop_server() { if [ -n "$SERVE_PID" ]; then kill "$SERVE_PID" 2>/dev/null; wait "$SERVE_PID" 2>/dev/null; SERVE_PID=""; fi; }
+trap stop_server EXIT
+
 serve_check() {
-  local port db pid ok=1
+  local port db ok=1
   port="$("$REPO/.venv/bin/python" -c 'import socket; s=socket.socket(); s.bind(("127.0.0.1",0)); print(s.getsockname()[1])')"
   db="$WORK/serve.db"
-  ( cd "$WORK" && env -u DRA_MODEL_ROOT DRA_DATABASE_URL="sqlite:///$db" PYTHONDONTWRITEBYTECODE=1 \
+  # exec: the background job IS uvicorn, so $! is its PID and stop_server really stops it (without
+  # exec, $! is the subshell's PID and killing it leaves uvicorn running under macOS bash 3.2).
+  ( cd "$WORK" && exec env -u DRA_MODEL_ROOT DRA_DATABASE_URL="sqlite:///$db" PYTHONDONTWRITEBYTECODE=1 \
       "$REPO/.venv/bin/python" -m uvicorn app.main:app --app-dir "$REPO/backend" --host 127.0.0.1 --port "$port" ) >"$WORK/serve.log" 2>&1 &
-  pid=$!
+  SERVE_PID=$!
   for _ in $(seq 1 60); do curl -s -m 1 "http://127.0.0.1:$port/api/health" >/dev/null 2>&1 && break; sleep 0.5; done
   echo "health: $(curl -s -m 5 -o /dev/null -w '%{http_code}' "http://127.0.0.1:$port/api/health")"
   echo "models: $(curl -s -m 10 "http://127.0.0.1:$port/api/models")"
@@ -85,7 +91,10 @@ serve_check() {
   curl -s -m 10 "http://127.0.0.1:$port/api/models" | grep -q b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf || ok=0
   curl -s -m 10 "http://127.0.0.1:$port/api/models" | grep -q 9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07 || ok=0
   [ "$(curl -s -m 5 -o /dev/null -w '%{http_code}' "http://127.0.0.1:$port/")" = 200 ] || ok=0
-  kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null
+  stop_server
+  if ps -axo command= | grep -F -- "--app-dir $REPO/backend" | grep -v grep >/dev/null; then
+    echo "a server from this checkout is still running after stop"; ok=0
+  fi
   [ "$ok" = 1 ]
 }
 
