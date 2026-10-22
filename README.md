@@ -40,8 +40,10 @@ npm run build
 ```
 
 Open http://127.0.0.1:8000, select **Live trained models**, click **Start
-Monitoring**, and allow camera access. For development, run the same backend on
-8000 and `npm run dev` separately; Vite proxies `/api` to it.
+Monitoring**, and allow camera access. For development, `npm run dev:all` starts the
+backend on 8000 (or reuses one that is already running) and the Vite dev server, which
+proxies `/api` to it; one Ctrl-C stops both. `npm run dev` alone starts only Vite: without
+a backend the page reports "The backend cannot be reached".
 
 - [Runtime guide, inputs and limitations (中文)](docs/LIVE_RUNTIME_GUIDE.zh.md)
 - [Completed work, verified tests and next steps (中文)](docs/IMPLEMENTATION_PROGRESS.zh.md)

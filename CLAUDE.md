@@ -27,7 +27,8 @@ frontend-only prepared-probability demo remains a separate mode. See
 Run from the repo root (the Vite app lives in `frontend/` via `vite.config.ts` `root: "frontend"`):
 
 ```bash
-npm run dev        # Vite dev server (127.0.0.1)
+npm run dev        # Vite dev server only (127.0.0.1); /api needs a backend on 8000
+npm run dev:all    # backend on 8000 (reused if already up) + Vite; one Ctrl-C stops both
 npm run build      # tsc -b && vite build  → outputs to ../dist
 npm run preview    # serve the production build
 npm test           # vitest run (uses vitest.config.ts, NOT the frontend vite root)
