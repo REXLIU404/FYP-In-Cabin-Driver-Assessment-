@@ -1,0 +1,308 @@
+{
+  "minutes": 15.0,
+  "per_minute": [
+    {
+      "db_bytes": 6659960,
+      "js_heap_bytes": 23100000,
+      "minute": 1.01,
+      "network_including_server_ms": {
+        "max": 96,
+        "median": 32.0,
+        "min": 20,
+        "n": 500,
+        "p95": 38
+      },
+      "render_ms": {
+        "max": 7,
+        "median": 3.0,
+        "min": 2,
+        "n": 500,
+        "p95": 5
+      },
+      "windows": 602
+    },
+    {
+      "db_bytes": 9273208,
+      "js_heap_bytes": 23100000,
+      "minute": 2.02,
+      "network_including_server_ms": {
+        "max": 373,
+        "median": 35.0,
+        "min": 23,
+        "n": 500,
+        "p95": 72
+      },
+      "render_ms": {
+        "max": 10,
+        "median": 4.0,
+        "min": 2,
+        "n": 500,
+        "p95": 7
+      },
+      "windows": 1156
+    },
+    {
+      "db_bytes": 11554680,
+      "js_heap_bytes": 23100000,
+      "minute": 3.01,
+      "network_including_server_ms": {
+        "max": 204,
+        "median": 31.0,
+        "min": 20,
+        "n": 500,
+        "p95": 37
+      },
+      "render_ms": {
+        "max": 8,
+        "median": 3.0,
+        "min": 2,
+        "n": 500,
+        "p95": 5
+      },
+      "windows": 1722
+    },
+    {
+      "db_bytes": 14217080,
+      "js_heap_bytes": 23100000,
+      "minute": 4.02,
+      "network_including_server_ms": {
+        "max": 187,
+        "median": 32.0,
+        "min": 21,
+        "n": 500,
+        "p95": 47
+      },
+      "render_ms": {
+        "max": 9,
+        "median": 3.0,
+        "min": 2,
+        "n": 500,
+        "p95": 6
+      },
+      "windows": 2316
+    },
+    {
+      "db_bytes": 16867192,
+      "js_heap_bytes": 23100000,
+      "minute": 5.01,
+      "network_including_server_ms": {
+        "max": 116,
+        "median": 35.0,
+        "min": 21,
+        "n": 500,
+        "p95": 42
+      },
+      "render_ms": {
+        "max": 8,
+        "median": 4.0,
+        "min": 2,
+        "n": 500,
+        "p95": 5
+      },
+      "windows": 2904
+    },
+    {
+      "db_bytes": 19132280,
+      "js_heap_bytes": 23100000,
+      "minute": 6.03,
+      "network_including_server_ms": {
+        "max": 131,
+        "median": 35.0,
+        "min": 22,
+        "n": 500,
+        "p95": 52
+      },
+      "render_ms": {
+        "max": 8,
+        "median": 3.0,
+        "min": 2,
+        "n": 500,
+        "p95": 5
+      },
+      "windows": 3418
+    },
+    {
+      "db_bytes": 20643704,
+      "js_heap_bytes": 23100000,
+      "minute": 7.01,
+      "network_including_server_ms": {
+        "max": 125,
+        "median": 35.0,
+        "min": 22,
+        "n": 500,
+        "p95": 45
+      },
+      "render_ms": {
+        "max": 7,
+        "median": 3.0,
+        "min": 2,
+        "n": 500,
+        "p95": 5
+      },
+      "windows": 3699
+    },
+    {
+      "db_bytes": 22540152,
+      "js_heap_bytes": 23100000,
+      "minute": 8.03,
+      "network_including_server_ms": {
+        "max": 220,
+        "median": 35.0,
+        "min": 22,
+        "n": 500,
+        "p95": 41
+      },
+      "render_ms": {
+        "max": 8,
+        "median": 3.0,
+        "min": 2,
+        "n": 500,
+        "p95": 5
+      },
+      "windows": 4162
+    },
+    {
+      "db_bytes": 24813432,
+      "js_heap_bytes": 23100000,
+      "minute": 9.01,
+      "network_including_server_ms": {
+        "max": 69,
+        "median": 35.0,
+        "min": 22,
+        "n": 500,
+        "p95": 40
+      },
+      "render_ms": {
+        "max": 7,
+        "median": 4.0,
+        "min": 2,
+        "n": 500,
+        "p95": 6
+      },
+      "windows": 4672
+    },
+    {
+      "db_bytes": 27090808,
+      "js_heap_bytes": 23100000,
+      "minute": 10.01,
+      "network_including_server_ms": {
+        "max": 199,
+        "median": 35.0,
+        "min": 24,
+        "n": 500,
+        "p95": 40
+      },
+      "render_ms": {
+        "max": 8,
+        "median": 3.5,
+        "min": 2,
+        "n": 500,
+        "p95": 5
+      },
+      "windows": 5174
+    },
+    {
+      "db_bytes": 28950392,
+      "js_heap_bytes": 23100000,
+      "minute": 11.01,
+      "network_including_server_ms": {
+        "max": 86,
+        "median": 34.0,
+        "min": 24,
+        "n": 500,
+        "p95": 39
+      },
+      "render_ms": {
+        "max": 6,
+        "median": 3.0,
+        "min": 2,
+        "n": 500,
+        "p95": 5
+      },
+      "windows": 5620
+    },
+    {
+      "db_bytes": 31580024,
+      "js_heap_bytes": 23100000,
+      "minute": 12.0,
+      "network_including_server_ms": {
+        "max": 131,
+        "median": 35.0,
+        "min": 27,
+        "n": 500,
+        "p95": 41
+      },
+      "render_ms": {
+        "max": 8,
+        "median": 4.0,
+        "min": 2,
+        "n": 500,
+        "p95": 5
+      },
+      "windows": 6186
+    },
+    {
+      "db_bytes": 34258808,
+      "js_heap_bytes": 23100000,
+      "minute": 13.01,
+      "network_including_server_ms": {
+        "max": 121,
+        "median": 34.0,
+        "min": 22,
+        "n": 500,
+        "p95": 40
+      },
+      "render_ms": {
+        "max": 8,
+        "median": 4.0,
+        "min": 2,
+        "n": 500,
+        "p95": 5
+      },
+      "windows": 6778
+    },
+    {
+      "db_bytes": 36507512,
+      "js_heap_bytes": 23100000,
+      "minute": 14.0,
+      "network_including_server_ms": {
+        "max": 58,
+        "median": 34.0,
+        "min": 23,
+        "n": 500,
+        "p95": 40
+      },
+      "render_ms": {
+        "max": 7,
+        "median": 3.0,
+        "min": 2,
+        "n": 500,
+        "p95": 5
+      },
+      "windows": 7281
+    },
+    {
+      "db_bytes": 38801272,
+      "js_heap_bytes": 23100000,
+      "minute": 15.01,
+      "network_including_server_ms": {
+        "max": 55,
+        "median": 34.0,
+        "min": 22,
+        "n": 500,
+        "p95": 40
+      },
+      "render_ms": {
+        "max": 7,
+        "median": 3.0,
+        "min": 2,
+        "n": 500,
+        "p95": 5
+      },
+      "windows": 7793
+    }
+  ],
+  "rate_hz": 8.66,
+  "sampled_windows_reconciled": 101,
+  "windows": 7794
+}
