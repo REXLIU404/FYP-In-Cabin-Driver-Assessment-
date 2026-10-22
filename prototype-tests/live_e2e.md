@@ -15,7 +15,7 @@ export PYTHONDONTWRITEBYTECODE=1
 (cd backend && TMPDIR=$(mktemp -d) PYTHONPATH=. ../.venv/bin/python -m pytest tests -m e2e -p no:cacheprovider -v)
 ```
 
-- `-m e2e` selects the browser tests (`test_live_e2e.py`, `test_live_single_branch.py`); they are
+- `-m e2e` selects the browser tests (`test_live_e2e.py`, `test_live_single_branch.py`, `test_live_backend_reach.py`); they are
   also part of the plain full run. They need `npm`, the Playwright Chromium and the three model files.
 - Each pytest session first runs `npm run build` and then starts **one** uvicorn that serves the API
   and the built `dist/` on a throw-away SQLite database. The development database is never touched.
@@ -26,6 +26,7 @@ export PYTHONDONTWRITEBYTECODE=1
   outside the test's tmp directory.
 - Duration (measured on the development machine, 8 cores): the 12 tests of `test_live_e2e.py` take about 40 s, the 18 of
   `test_live_single_branch.py` about 90 s (the T-CONTINUITY run alone is a full 56 s replay lap and wrap).
+  The 4 of `test_live_backend_reach.py` take about 20 s (one of them starts and stops uvicorn processes of its own).
 
 ## Manual step -> automated test
 
@@ -43,7 +44,8 @@ IDs below are the steps of the manual checklist in `prototype-tests/README.md`.
 | 7b | New Session | `test_e2_a_failed_new_session_makes_retry_create_a_new_session` | A failed New Session shows the setup panel; Retry creates a new session with windows numbered from 1; the old one gets nothing more | — |
 | 7c | Stop Camera does not stop monitoring; unplugging reads differently | `test_e2_an_unexpected_camera_loss_…`, `TestStBranchTSmoke`, `TestStBranchV`, `TestStBranchZero` | Requests carry on without an image; vision `missing`, `DEGRADED`, "Partial evidence"; the two camera texts differ and neither shows a stop panel; the single-branch score is the branch's own probability | Physically unplugging a camera |
 | 7d | With the camera off, rows 14 and 17 are UNAVAILABLE and the loop recovers | `TestStBranchTContinuity` | Those windows have all four risk fields null, `SystemHealth = UNAVAILABLE`, no alert; the next row is `DEGRADED` again; the latched `HIGH_ALERT` is kept | — |
-| 8 | Transport fault: stop after three tries, recover by hand | `test_e2_transport_faults_stop_the_loop_and_retry_resumes_the_same_session` | The stop panel text (`Deliveries: 3 of 3`, request id); Retry re-sends the same request (`X-Attempt-Index` 4, byte-identical), keeps the session, stores the request once, and the loop resumes | Stopping and restarting the real backend process on the same database; `GET /api/faults` (server side: `test_fault_events.py`) |
+| 8 | Transport fault: stop after three tries, recover by hand | `test_e2_transport_faults_stop_the_loop_and_retry_resumes_the_same_session` (the network layer fails the requests); `test_e2_a_real_backend_restart_on_the_same_database_and_port_is_resumed_by_retry` (the real uvicorn process is terminated and started again) | The stop panel text (`Deliveries: 3 of 3`, request id); Retry re-sends the same request (`X-Attempt-Index` 4, byte-identical), keeps the session, stores the request once, and the loop resumes. In the restart test the backend is a separate uvicorn that is **terminated** after four windows: the panel reads "The backend cannot be reached" (`transport`, not a server error), the restarted process on the **same database file and port** still holds the session and the stored windows unchanged, Retry creates **no new session**, the frozen request goes out as delivery **4** and is stored **once**, `window_id` stays 1..N with no repeat, and the loop runs again | `GET /api/faults` (server side: `test_fault_events.py`); the restart of the process the person actually runs (`uvicorn app.main:app` in a terminal) on the development database |
+| 8b | Only `npm run dev` is running, no backend: Start Monitoring | `test_e2_a_dev_proxy_answer_without_the_backend_is_reported_as_backend_unreachable`; `test_the_backends_own_500_is_still_a_server_error_not_an_unreachable_backend` | The Vite proxy's own answer (HTTP 500, `text/plain`, empty body, no `X-DRA-Backend`; the route returns exactly that) is shown as "The backend cannot be reached" with the explanation in a `Details:` line, a setup stop ("Failed during setup"), no "Server message", no model / storage wording, no session created; with the backend back, Retry creates one session and the windows flow. The backend's own 500 (JSON detail, marker) still reads "The server failed ..." with its message | A real Vite dev server in front of a real stopped backend: the test reproduces the proxy's answer by a route; the shape was measured once with curl (task report) |
 
 ## Automated coverage the manual list never had
 
@@ -53,6 +55,8 @@ IDs below are the steps of the manual checklist in `prototype-tests/README.md`.
 | `TestStBranchTContinuity` (ST-BRANCH-T-CONTINUITY) | From a camera that never started: no gap, no stop, no retry, no fault; replay rows map to `telemetry_seq % 25` across the wrap; the alert sequence follows the R10 rule (NORMAL, CAUTION, HIGH_ALERT in the second High sample, latch kept through Low runs and unavailable windows) |
 | `TestStBranchV` (ST-BRANCH-V) | Vision only: score = `round_half_up(100 x P_distraction, 1)`; the EMA chain moves on NEW frames only, REPEATs show the value they were registered with, and Stop Camera -> Start Camera reseeds the chain |
 | `TestStBranchZero` (ST-BRANCH-ZERO) | With Vision Weight 1.00 / Telemetry 0.00, a Stop Camera window is UNAVAILABLE and never `100 x P_t` |
+| `test_backend_marker.py` (11 tests, no browser) | Every answer the backend sends carries `X-DRA-Backend: 1`: 200, 404, 409, both 422s, 503 `models_unavailable`, the JSON 500 `model_runtime`, the plain-text 500 of an unhandled exception (marked by the handler, outside every middleware), a CORS preflight (and the header is exposed to cross-origin pages) and a static page |
+| `test_the_deployed_backend_marks_its_page_and_every_kind_of_answer` | The same over real HTTP from the real uvicorn that serves the built `dist/` |
 | `test_e3_rvfc_behaviour_on_the_fake_camera_is_recorded` | `requestVideoFrameCallback` behaviour and capture timings (recorded, no threshold) and, since part 2b, the five-way reconciliation on the default 20 fps camera |
 
 ## Still manual (nothing in the automation can stand in for it)
@@ -60,8 +64,9 @@ IDs below are the steps of the manual checklist in `prototype-tests/README.md`.
 1. **A physical camera**: the permission prompt, whether the browser provides `captureTime`, the frame rate,
    the capture cost on real faces (the fake picture is a small synthetic pattern), lighting and viewpoint.
 2. **How the pages look**: layout, readability, colours, the wording of every notice.
-3. **Real stop and restart of the backend process** (README step 8) and a reload followed by *Load saved session*
-   (steps 5, 7a).
+3. A reload followed by *Load saved session* (steps 5, 7a). The **real stop and restart of the backend process** (README step 8) is
+   now automated for a separate uvicorn on a throw-away database (row 8); doing it once by hand against the development
+   backend and the Vite dev server is still the only check of that exact setup.
 4. **Performance on the target hardware**: the automation records timings on a development machine and
    asserts no threshold (PERF-01 is separate).
 5. **Frontal-camera accuracy of the models**: out of scope here and not claimed by any test.

@@ -4,7 +4,7 @@ import type {
   LiveFault,
   RetryPolicy,
 } from "../../../ai/src/liveLoop";
-import { ApiError } from "./client";
+import { ApiError, NotFromBackendError, isNoDetailMessage } from "./client";
 
 export type { FailureClass, FaultCategory, RetryPolicy };
 
@@ -57,11 +57,15 @@ function classifyConflict(detail: string): FailureClass {
 }
 
 /**
- * Classify by STATUS CODE. The response body is read only where the status alone is
- * ambiguous (409, and 422 for a clock that runs ahead of the server's). A 500 is
- * not told apart by its body: `model_runtime` answers JSON, a storage failure or an
- * unknown error answers plain text, and both are retryable, so a 500 is reported as
+ * Classify a BACKEND answer by STATUS CODE. The response body is read only where the
+ * status alone is ambiguous (409, and 422 for a clock that runs ahead of the server's).
+ * A 500 is not told apart by its body: `model_runtime` answers JSON, a storage failure or
+ * an unknown error answers plain text, and both are retryable, so a 500 is reported as
  * `model_runtime` whatever its cause.
+ *
+ * It is only ever called for an answer that carries the backend's `X-DRA-Backend` marker
+ * (see `classifyFailure`): an error answer without it is not the backend's 500, it is a
+ * proxy or gateway standing in for a backend that did not answer.
  */
 function classifyHttp(status: number, detail: string): FailureClass {
   if (status === 409) return classifyConflict(detail);
@@ -77,6 +81,12 @@ function classifyHttp(status: number, detail: string): FailureClass {
 }
 
 export function classifyFailure(err: unknown): FailureClass {
+  // An error answer the backend did not send (the dev proxy's own 500 when nothing listens
+  // on port 8000, a gateway's 502 / 503 / 504): no answer from the backend was obtained, which
+  // is what `transport` means. Checked before `ApiError`, which it extends, and never filed
+  // under the status it carries - a 500 here is not a model or storage error.
+  if (err instanceof NotFromBackendError)
+    return failure("transport", true, true);
   if (err instanceof ApiError) return classifyHttp(err.status, err.message);
   if (named(err, "TimeoutError")) return failure("timeout", true, true);
   // The user paused, or the page unmounted: not a failure, so not counted.
@@ -130,6 +140,9 @@ export const FAULT_TEXT: Record<
   FaultCategory,
   {
     title: string;
+    // Setup (model check, session, reconcile) processes no frame, so a title that speaks of
+    // one needs its own setup wording.
+    titleInSetup?: string;
     advice: string;
     adviceAfterManualRetry?: string;
     // Setup (model check, session, reconcile) has no automatic re-sends, so a category
@@ -180,6 +193,7 @@ export const FAULT_TEXT: Record<
   },
   model_runtime: {
     title: "The server failed while processing the frame",
+    titleInSetup: "The server failed while starting the session",
     advice:
       "A model or storage error on the server (HTTP 500). The request was re-sent automatically and kept failing.",
     adviceAfterManualRetry:
@@ -211,6 +225,38 @@ export const FAULT_TEXT: Record<
     advice: "Monitoring was paused. Nothing failed.",
   },
 };
+
+/** The stop panel's heading: the category's title, in the setup wording when the fault happened in setup. */
+export function faultTitle(
+  fault: Pick<LiveFault, "category"> & { phase?: LiveFault["phase"] },
+): string {
+  const text = FAULT_TEXT[fault.category];
+  return fault.phase === "setup" && text.titleInSetup
+    ? text.titleInSetup
+    : text.title;
+}
+
+/**
+ * The line under the details, and what to call it. The panel used to print every
+ * `fault.message` as "Server message", but most of what lands there is not the server's:
+ *
+ * - a fault with no HTTP status never heard from the backend (a refused connection, a
+ *   timeout, or - by the `X-DRA-Backend` rule - a proxy's answer): the text is the browser's or
+ *   the client's own, so it is labelled "Details";
+ * - an HTTP error whose body had no `detail` carries the client's fallback
+ *   ("API request failed (500)"), which says nothing the category line does not: no line.
+ *
+ * Only a `detail` the backend actually sent is a "Server message".
+ */
+export function faultDetail(
+  fault: Pick<LiveFault, "status" | "message">,
+): { label: "Server message" | "Details"; text: string } | null {
+  if (!fault.message) return null;
+  if (fault.status === undefined)
+    return { label: "Details", text: fault.message };
+  if (isNoDetailMessage(fault.message)) return null;
+  return { label: "Server message", text: fault.message };
+}
 
 /**
  * The advice sentence for a stopped fault, chosen by WHY the loop stopped.

@@ -185,6 +185,116 @@ describe("FaultPanel: an observation conflict (R10-B)", () => {
   });
 });
 
+// FIX-BACKEND-REACH. The panel the user saw with no backend running said "The server failed
+// while processing the frame / model_runtime (HTTP 500) / Failed during setup / Server message:
+// API request failed (500)": a frame that was never sent, a server that never spoke.
+describe("FaultPanel: the stop of a setup that never reached the backend (FIX-BACKEND-REACH)", () => {
+  const SETUP = {
+    phase: "setup",
+    requestId: null,
+    retryCount: 0,
+    attemptIndex: 0,
+  } as const;
+  const PROXY_TEXT =
+    "the API proxy or a gateway answered HTTP 500 and the backend did not; is the backend running?";
+
+  it("an unmarked answer in setup: 'The backend cannot be reached', the case in Details, nothing about a model, storage or a server message", () => {
+    const html = panel(
+      fault({ ...SETUP, category: "transport", message: PROXY_TEXT }),
+    );
+    expect(html).toContain(
+      "<strong>Monitoring stopped: The backend cannot be reached</strong>",
+    );
+    expect(html).toContain("Category: <code>transport</code>");
+    expect(html).toContain("Failed during setup, before any request was sent");
+    expect(html).toContain(`<p>Details: ${PROXY_TEXT}</p>`);
+    expect(html).not.toMatch(
+      /Server message|model or storage|model_runtime|storage|processing the frame/,
+    );
+    expect(html).not.toMatch(/HTTP 5\d\d\)/); // no "(HTTP 500)" next to the category
+  });
+
+  it("the user's own panel (model_runtime, 500, the client's fallback, setup): starting-the-session heading, no Server message", () => {
+    const html = panel(
+      fault({
+        ...SETUP,
+        category: "model_runtime",
+        status: 500,
+        message: "API request failed (500)",
+      }),
+    );
+    expect(html).toContain(
+      "<strong>Monitoring stopped: The server failed while starting the session</strong>",
+    );
+    expect(html).not.toContain("processing the frame");
+    expect(html).not.toContain("Server message");
+    expect(html).toContain("Category: <code>model_runtime</code> (HTTP 500)");
+    expect(html).toContain("Failed during setup, before any request was sent");
+  });
+
+  it("the same fault in the delivery phase still says it failed while processing the frame", () => {
+    const html = panel(
+      fault({
+        category: "model_runtime",
+        status: 500,
+        message: "API request failed (500)",
+      }),
+    );
+    expect(html).toContain(
+      "<strong>Monitoring stopped: The server failed while processing the frame</strong>",
+    );
+    expect(html).not.toContain("starting the session</strong>");
+  });
+
+  it("a detail the server did send is shown as the Server message", () => {
+    const html = panel(
+      fault({
+        ...SETUP,
+        category: "models_unavailable",
+        status: 503,
+        message: "Model artifacts are not installed",
+      }),
+    );
+    expect(html).toContain(
+      "<p>Server message: Model artifacts are not installed</p>",
+    );
+    expect(html).not.toContain("Details:");
+  });
+
+  it("a browser-side failure (no HTTP answer at all) is Details, not a Server message", () => {
+    const html = panel(fault({ message: "Failed to fetch" }));
+    expect(html).toContain("<p>Details: Failed to fetch</p>");
+    expect(html).not.toContain("Server message");
+  });
+
+  it("an error answer with no detail from the server shows no message line, only the category and status", () => {
+    const html = panel(
+      fault({
+        category: "storage",
+        status: 502,
+        message: "API request failed (502)",
+      }),
+    );
+    expect(html).toContain("Category: <code>storage</code> (HTTP 502)");
+    expect(html).not.toMatch(/Server message|Details:/);
+  });
+
+  it("while automatic retries are pending the status line uses the same heading rule", () => {
+    const html = panel(
+      fault({
+        ...SETUP,
+        category: "model_runtime",
+        status: 500,
+        stopped: false,
+        retryCount: 1,
+        attemptIndex: 1,
+      }),
+    );
+    expect(html).toContain("The server failed while starting the session");
+    expect(html).not.toContain("processing the frame");
+  });
+});
+
 describe("FaultPanel: structure", () => {
   it("while automatic retries are pending it is a status line with no button", () => {
     const html = panel(

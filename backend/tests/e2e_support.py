@@ -90,13 +90,19 @@ class Server:
                 self.process.wait(timeout=15)
 
 
-def start_server(workdir: Path) -> Server:
+def start_server(workdir: Path, *, port: int | None = None, log_name: str = "uvicorn.log") -> Server:
+    """Start one uvicorn on a throw-away database in ``workdir``.
+
+    Called with just a directory it is what the shared ``e2e_server`` fixture always did: a free
+    port, a new ``e2e.db``. A restart test (FIX-BACKEND-REACH) calls it a second time with the SAME
+    ``workdir`` and ``port`` - and a different ``log_name``, so the first process's log survives -
+    to bring the backend back on the very same database and address."""
     import httpx
 
-    port = _free_port()
+    port = _free_port() if port is None else port
     db_path = workdir / "e2e.db"
     sink_path = workdir / "fault_events.log"
-    log_path = workdir / "uvicorn.log"
+    log_path = workdir / log_name
     db_url = f"sqlite:///{db_path}"
     # Settings reads every DRA_* variable (env_prefix). A developer's shell must not change what
     # the tests run against (freshness tolerance, weights, thresholds, model root), so none of
@@ -232,7 +238,7 @@ class InferCall:
     raw: str  # the request body, byte for byte
     body: dict
     attempt: str | None  # the X-Attempt-Index header, as sent
-    outcome: str = "pending"  # ok | aborted | held
+    outcome: str = "pending"  # ok | aborted | held | unreachable
     status: int | None = None
     response: dict | None = None
     response_text: str | None = None
@@ -254,7 +260,7 @@ class InferCall:
 class SessionCall:
     number: int
     at: float
-    outcome: str = "pending"  # ok | aborted
+    outcome: str = "pending"  # ok | aborted | unreachable
     status: int | None = None
     response: dict | None = None
 
@@ -271,6 +277,10 @@ class ApiTap:
     ``rewrite_infer``  a PURE function from the decoded request body to the body the server gets
                        (Task 10 part 2b, ST-BRANCH-V). Pure, so a re-sent request is rewritten to the
                        very same bytes. ``InferCall.raw`` / ``.body`` stay the browser's own.
+
+    When the server is not there (a test that stops the backend) ``route.fetch`` raises; the tap then
+    answers the page with a refused connection, as the browser would have seen without a tap, and
+    records the call as ``unreachable``. Every other test has a live server, so this never runs for them.
     """
 
     def __init__(self):
@@ -318,7 +328,12 @@ class ApiTap:
             call.outcome = "aborted"
             route.abort("failed")
             return
-        response = route.fetch()
+        try:
+            response = route.fetch()
+        except Exception:  # the server is down: the page must see a refused connection
+            call.outcome = "unreachable"
+            route.abort("connectionrefused")
+            return
         call.status = response.status
         call.response = response.json() if response.ok else None
         call.outcome = "ok"
@@ -341,9 +356,12 @@ class ApiTap:
             return
         if self.rewrite_infer is not None:
             call.sent_raw = json.dumps(self.rewrite_infer(json.loads(raw)), separators=(",", ":"))
-            response = route.fetch(post_data=call.sent_raw)
-        else:
-            response = route.fetch()
+        try:
+            response = route.fetch() if call.sent_raw is None else route.fetch(post_data=call.sent_raw)
+        except Exception:  # the server is down: the page must see a refused connection
+            call.outcome = "unreachable"
+            route.abort("connectionrefused")
+            return
         call.status = response.status
         try:
             call.response = response.json()

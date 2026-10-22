@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { ApiError } from "./client";
+import { ApiError, NotFromBackendError } from "./client";
 import {
   FAULT_TEXT,
   MAX_ATTEMPTS_PER_REQUEST,
@@ -10,6 +10,8 @@ import {
   deliveriesText,
   deliveryCounts,
   faultAdvice,
+  faultDetail,
+  faultTitle,
   retryNote,
 } from "./retryPolicy";
 
@@ -559,5 +561,141 @@ describe("retryNote: what the stop panel says Retry will do (K8)", () => {
     expect(note).not.toBe(
       retryNote({ phase: "setup", newSessionOnRetry: false }),
     );
+  });
+});
+
+// FIX-BACKEND-REACH. The marker rule: an error answer the backend did not send is "the
+// backend could not be reached" whatever its status; the D02 table above is for answers
+// that did come from the backend, and none of its rows changed.
+describe("classifyFailure: an error answer without the backend's marker (FIX-BACKEND-REACH)", () => {
+  it.each([404, 500, 502, 503, 504])(
+    "an unmarked %i is transport: retryable, counted, and it carries no status of its own",
+    (status) => {
+      expect(classifyFailure(new NotFromBackendError(status))).toEqual({
+        category: "transport",
+        retryable: true,
+        counted: true,
+      });
+    },
+  );
+
+  it("the same 500 WITH the marker (a plain ApiError) is still model_runtime - the D02 row is unchanged", () => {
+    expect(http(500, "API request failed (500)")).toEqual({
+      category: "model_runtime",
+      status: 500,
+      retryable: true,
+      counted: true,
+    });
+  });
+
+  it("an unmarked 503 is retryable transport; a marked 503 still stops (models_unavailable)", () => {
+    expect(classifyFailure(new NotFromBackendError(503)).retryable).toBe(true);
+    expect(http(503, "Model artifacts are not installed")).toEqual({
+      category: "models_unavailable",
+      status: 503,
+      retryable: false,
+      counted: true,
+    });
+  });
+
+  it("an unmarked 404 is transport; a marked 404 is still 'the server no longer has this session'", () => {
+    expect(classifyFailure(new NotFromBackendError(404)).category).toBe(
+      "transport",
+    );
+    expect(http(404, "session not found").category).toBe("not_found");
+  });
+
+  it("says which case it is in the error message", () => {
+    expect(new NotFromBackendError(500).message).toBe(
+      "the API proxy or a gateway answered HTTP 500 and the backend did not; is the backend running?",
+    );
+  });
+});
+
+describe("faultTitle: the heading follows the phase (FIX-BACKEND-REACH)", () => {
+  it("a model_runtime fault in setup does not speak of a frame - setup processes none", () => {
+    expect(faultTitle({ category: "model_runtime", phase: "setup" })).toBe(
+      "The server failed while starting the session",
+    );
+  });
+
+  it("the same fault in the delivery phase keeps the frame wording", () => {
+    expect(faultTitle({ category: "model_runtime", phase: "delivery" })).toBe(
+      "The server failed while processing the frame",
+    );
+    expect(faultTitle({ category: "model_runtime" })).toBe(
+      "The server failed while processing the frame",
+    );
+  });
+
+  it("no category has a setup heading that mentions processing a frame", () => {
+    for (const category of Object.keys(FAULT_TEXT) as Array<
+      keyof typeof FAULT_TEXT
+    >)
+      expect(faultTitle({ category, phase: "setup" })).not.toMatch(
+        /processing the frame/,
+      );
+  });
+
+  it("a category without a setup heading uses its ordinary one", () => {
+    expect(faultTitle({ category: "transport", phase: "setup" })).toBe(
+      "The backend cannot be reached",
+    );
+    expect(faultTitle({ category: "timeout", phase: "setup" })).toBe(
+      "The server did not answer in time",
+    );
+  });
+});
+
+describe("faultDetail: only what the server actually said is a 'Server message' (FIX-BACKEND-REACH)", () => {
+  it("a detail the server sent is labelled Server message", () => {
+    expect(
+      faultDetail({
+        status: 500,
+        message: "Vision model failed during inference",
+      }),
+    ).toEqual({
+      label: "Server message",
+      text: "Vision model failed during inference",
+    });
+    expect(
+      faultDetail({
+        status: 503,
+        message: "Model artifacts are not installed",
+      }),
+    ).toEqual({
+      label: "Server message",
+      text: "Model artifacts are not installed",
+    });
+  });
+
+  it("the client's own fallback for an error answer without a detail is NOT the server's message", () => {
+    expect(
+      faultDetail({ status: 500, message: "API request failed (500)" }),
+    ).toBe(null);
+    expect(
+      faultDetail({ status: 404, message: "API request failed (404)" }),
+    ).toBe(null);
+  });
+
+  it("a fault with no HTTP status never heard from the server: its text is 'Details', not a server message", () => {
+    expect(
+      faultDetail({ status: undefined, message: "Failed to fetch" }),
+    ).toEqual({ label: "Details", text: "Failed to fetch" });
+    expect(
+      faultDetail({
+        status: undefined,
+        message:
+          "the API proxy or a gateway answered HTTP 500 and the backend did not; is the backend running?",
+      }),
+    ).toEqual({
+      label: "Details",
+      text: "the API proxy or a gateway answered HTTP 500 and the backend did not; is the backend running?",
+    });
+  });
+
+  it("an empty message gives no line at all", () => {
+    expect(faultDetail({ status: undefined, message: "" })).toBe(null);
+    expect(faultDetail({ status: 500, message: "" })).toBe(null);
   });
 });

@@ -1,10 +1,11 @@
 import { RotateCw } from "lucide-react";
 import type { LiveFault } from "../../../ai/src/liveLoop";
 import {
-  FAULT_TEXT,
   MAX_ATTEMPTS_PER_REQUEST,
   deliveriesText,
   faultAdvice,
+  faultDetail,
+  faultTitle,
   retryNote,
 } from "../api/retryPolicy";
 import type { CameraEvent } from "../hooks/useCameraPreview";
@@ -26,12 +27,13 @@ export function FaultPanel({
   retrying: boolean;
   onRetry: () => void;
 }) {
-  const text = FAULT_TEXT[fault.category];
+  const title = faultTitle(fault);
+  const detail = faultDetail(fault);
   if (!fault.stopped)
     return (
       <p className="runtime-warning" role="status">
         Delivery {fault.retryCount} of {MAX_ATTEMPTS_PER_REQUEST} failed:{" "}
-        {text.title}. Retrying automatically…
+        {title}. Retrying automatically…
       </p>
     );
   return (
@@ -40,7 +42,7 @@ export function FaultPanel({
       role="alert"
       aria-label="Monitoring stopped"
     >
-      <strong>Monitoring stopped: {text.title}</strong>
+      <strong>Monitoring stopped: {title}</strong>
       <p>{faultAdvice(fault)}</p>
       <div className="runtime-details">
         <span>
@@ -58,7 +60,11 @@ export function FaultPanel({
           </>
         )}
       </div>
-      <p>Server message: {fault.message}</p>
+      {detail && (
+        <p>
+          {detail.label}: {detail.text}
+        </p>
+      )}
       <p>{retryNote(fault)}</p>
       <button
         type="button"

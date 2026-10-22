@@ -3,7 +3,13 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { assertAvailabilityInvariant } from "../../../ai/src/availability";
 import { DEFAULT_CONFIG } from "../../../ai/src/riskLogic";
 import { makeRecord, toLegacyRow } from "../testing/records";
-import { api } from "./client";
+import {
+  ApiError,
+  NotFromBackendError,
+  api,
+  isNoDetailMessage,
+} from "./client";
+import { classifyFailure } from "./retryPolicy";
 
 const respondWith = (body: unknown) =>
   vi.stubGlobal(
@@ -208,4 +214,146 @@ describe("every call can be cancelled", () => {
       await expect(pending).rejects.toMatchObject({ name: "AbortError" });
     },
   );
+});
+
+// FIX-BACKEND-REACH. With only `npm run dev` running (nothing on port 8000) the Vite proxy
+// answers every /api call with an HTTP 500 of its own - text/plain, empty body - which used to
+// be reported as "a model or storage error on the server". The backend stamps X-DRA-Backend on
+// every response it sends; an error answer without it is not the backend's.
+describe("an error answer is the backend's only if it carries X-DRA-Backend", () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  const answer = (
+    status: number,
+    opts: { marked: boolean; body?: string; type?: string },
+  ) =>
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        async () =>
+          new Response(opts.body ?? "", {
+            status,
+            headers: {
+              "Content-Type": opts.type ?? "text/plain",
+              ...(opts.marked ? { "X-DRA-Backend": "1" } : {}),
+            },
+          }),
+      ),
+    );
+
+  const failureOf = async (call: () => Promise<unknown>) => {
+    const err = await call().then(
+      () => {
+        throw new Error("expected the call to reject");
+      },
+      (e: unknown) => e,
+    );
+    return { err, failure: classifyFailure(err) };
+  };
+
+  it("the dev proxy's own 500 (text/plain, empty body, no marker) is transport - not model_runtime", async () => {
+    answer(500, { marked: false });
+    const { err, failure } = await failureOf(() => api.models());
+    expect(failure).toEqual({
+      category: "transport",
+      retryable: true,
+      counted: true,
+    });
+    expect(err).toBeInstanceOf(NotFromBackendError);
+    expect((err as Error).message).toBe(
+      "the API proxy or a gateway answered HTTP 500 and the backend did not; is the backend running?",
+    );
+  });
+
+  it.each([404, 500, 502, 503, 504])(
+    "an unmarked %i is transport, retryable and counted, with no status of its own",
+    async (status) => {
+      answer(status, { marked: false });
+      const { failure } = await failureOf(() => api.sessions());
+      expect(failure).toEqual({
+        category: "transport",
+        retryable: true,
+        counted: true,
+      });
+    },
+  );
+
+  it("an unmarked answer is transport even when its body looks like the backend's JSON", async () => {
+    answer(500, {
+      marked: false,
+      type: "application/json",
+      body: JSON.stringify({ detail: "Vision model failed during inference" }),
+    });
+    const { failure } = await failureOf(() => api.models());
+    expect(failure.category).toBe("transport");
+  });
+
+  it("the backend's own JSON 500 is still model_runtime", async () => {
+    answer(500, {
+      marked: true,
+      type: "application/json",
+      body: JSON.stringify({ detail: "Vision model failed during inference" }),
+    });
+    const { err, failure } = await failureOf(() => api.models());
+    expect(failure).toEqual({
+      category: "model_runtime",
+      status: 500,
+      retryable: true,
+      counted: true,
+    });
+    expect(err).not.toBeInstanceOf(NotFromBackendError);
+    expect((err as Error).message).toBe("Vision model failed during inference");
+  });
+
+  it("the backend's own plain-text 500 (unhandled exception) is still model_runtime, and its message is the client's fallback", async () => {
+    answer(500, { marked: true, body: "Internal Server Error" });
+    const { err, failure } = await failureOf(() => api.models());
+    expect(failure.category).toBe("model_runtime");
+    expect((err as Error).message).toBe("API request failed (500)");
+    expect(isNoDetailMessage((err as Error).message)).toBe(true);
+  });
+
+  it.each([
+    [404, "session not found", "not_found"],
+    [409, "request_id already used for different input", "conflict_hash"],
+    [422, "Value error, image requires captured_at", "input"],
+    [503, "Model artifacts are not installed", "models_unavailable"],
+  ] as const)(
+    "a marked %i keeps its D02 category (%s -> %s)",
+    async (status, detail, category) => {
+      answer(status, {
+        marked: true,
+        type: "application/json",
+        body: JSON.stringify({ detail }),
+      });
+      const { err, failure } = await failureOf(() => api.models());
+      expect(failure.category).toBe(category);
+      expect(failure.status).toBe(status);
+      expect((err as Error).message).toBe(detail);
+    },
+  );
+
+  it("a 2xx answer is a success whether or not it carries the marker", async () => {
+    answer(200, { marked: false, type: "application/json", body: "[]" });
+    await expect(api.sessions()).resolves.toEqual([]);
+    answer(200, { marked: true, type: "application/json", body: "[]" });
+    await expect(api.sessions()).resolves.toEqual([]);
+  });
+
+  it("only the client's own fallback sentence counts as 'no detail from the server'", () => {
+    expect(isNoDetailMessage("API request failed (500)")).toBe(true);
+    expect(isNoDetailMessage("API request failed (404)")).toBe(true);
+    expect(isNoDetailMessage("Vision model failed during inference")).toBe(
+      false,
+    );
+    expect(isNoDetailMessage("API request failed (500) while saving")).toBe(
+      false,
+    );
+    expect(isNoDetailMessage("")).toBe(false);
+  });
+
+  it("the unmarked-answer error is an ApiError too, so nothing that catches ApiError loses it", () => {
+    expect(new NotFromBackendError(500)).toBeInstanceOf(ApiError);
+    expect(new NotFromBackendError(502).status).toBe(502);
+  });
 });

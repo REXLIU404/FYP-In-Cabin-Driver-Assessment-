@@ -10,6 +10,8 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from starlette.datastructures import MutableHeaders
+from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 from . import models  # noqa: F401  (register ORM models on Base)
 from .db import initialize_database
@@ -31,12 +33,50 @@ app = FastAPI(
 )
 
 # Local development uses a Vite proxy; explicit origins also allow direct API use.
+# ``expose_headers``: across origins a page can read only the CORS-safelisted response headers,
+# so without this the front end would never see ``X-DRA-Backend`` on a direct (non-proxied)
+# call and would take every error answer of this backend for a proxy's. Same-origin needs nothing.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=[faults.BACKEND_HEADER],
 )
+
+
+class BackendMarkerMiddleware:
+    """Stamp ``X-DRA-Backend: 1`` on every response this application sends.
+
+    When nothing listens on the backend's port, the Vite dev proxy answers ``/api`` calls with
+    an HTTP 500 of its own (empty plain-text body). Without a mark that answer is
+    indistinguishable from the backend's own 500 (``model_runtime``), so the dashboard reported
+    "a model or storage error on the server" for a backend that was simply not running. The
+    front end treats an error answer WITHOUT this header as "the backend did not answer".
+
+    Added after CORS, so it is the outermost user middleware: preflight answers and static
+    ``dist/`` files are marked too. One response is out of its reach - the unhandled-exception
+    500, which ServerErrorMiddleware sends from outside every user middleware - and is marked
+    in ``routers.faults.on_unhandled_exception``.
+    """
+
+    def __init__(self, app: ASGIApp) -> None:
+        self.app = app
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+
+        async def send_marked(message: Message) -> None:
+            if message["type"] == "http.response.start":
+                MutableHeaders(scope=message)[faults.BACKEND_HEADER] = faults.BACKEND_HEADER_VALUE
+            await send(message)
+
+        await self.app(scope, receive, send_marked)
+
+
+app.add_middleware(BackendMarkerMiddleware)
 
 for r in (
     sessions.router,

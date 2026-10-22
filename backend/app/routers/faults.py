@@ -32,6 +32,13 @@ from ..schemas import FaultEventOut
 
 router = APIRouter(prefix="/api", tags=["faults"])
 
+# Every response this backend produces carries this header (see ``main.BackendMarkerMiddleware``).
+# It lives here because the one response a middleware cannot reach - the plain-text 500 below -
+# must add it by hand, and ``main`` already imports this module. The front end reads it to tell
+# an answer of this backend from one a proxy or gateway invented when the backend is not running.
+BACKEND_HEADER = "X-DRA-Backend"
+BACKEND_HEADER_VALUE = "1"
+
 _INFER_PATH = re.compile(r"^/api/sessions/(?P<session_id>[^/]+)/infer$")
 
 
@@ -99,8 +106,11 @@ def on_unhandled_exception(request: Request, exc: Exception):
                 info=faults.classify_exception(exc))
         except Exception:
             faults.logger.exception("could not record an unhandled-exception fault")
-    # Starlette's own default body; it re-raises the exception after sending it.
-    return PlainTextResponse("Internal Server Error", status_code=500)
+    # Starlette's own default body; it re-raises the exception after sending it. The header is
+    # added HERE: ServerErrorMiddleware sits outside every user middleware, so the marker
+    # middleware never sees this response.
+    return PlainTextResponse("Internal Server Error", status_code=500,
+                             headers={BACKEND_HEADER: BACKEND_HEADER_VALUE})
 
 
 def install_exception_handlers(app: FastAPI) -> None:

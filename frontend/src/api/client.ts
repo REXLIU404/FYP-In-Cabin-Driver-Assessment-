@@ -15,6 +15,36 @@ export class ApiError extends Error {
   }
 }
 
+/**
+ * Every response of this backend carries this header (backend/app/main.py). An error answer
+ * WITHOUT it was not the backend's: with no backend on port 8000 the Vite dev proxy answers
+ * `/api` calls with an HTTP 500 of its own, and a gateway in front of a stopped backend answers
+ * 502 / 503 / 504. The backend's own 500 (`model_runtime`) must not be confused with that.
+ */
+const BACKEND_MARKER_HEADER = "X-DRA-Backend";
+
+/**
+ * A non-2xx answer that does not carry the backend's marker: something between the page and the
+ * backend answered, the backend did not. It is the same situation as a refused connection, so
+ * `retryPolicy.classifyFailure` files it under `transport` - never under the status code it
+ * happens to carry. The status stays here only for the message.
+ */
+export class NotFromBackendError extends ApiError {
+  constructor(status: number) {
+    super(
+      `the API proxy or a gateway answered HTTP ${status} and the backend did not; is the backend running?`,
+      status,
+    );
+  }
+}
+
+/** What `request` says when the server sent no `detail`: the client's own words, not the server's. */
+const noDetailMessage = (status: number) => `API request failed (${status})`;
+
+/** Is `message` the client's own fallback for an error answer with no `detail`? */
+export const isNoDetailMessage = (message: string) =>
+  /^API request failed \(\d{3}\)$/.test(message);
+
 /** The client's own deadline for one call. The loop's 10 s delivery deadline fires first. */
 const REQUEST_TIMEOUT_MS = 15000;
 
@@ -38,12 +68,14 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
       headers: { "Content-Type": "application/json", ...options.headers },
     });
     if (!response.ok) {
+      if (!response.headers.has(BACKEND_MARKER_HEADER))
+        throw new NotFromBackendError(response.status);
       const body = await response.json().catch(() => ({}));
       const detail = Array.isArray(body.detail)
         ? body.detail.map((item: { msg: string }) => item.msg).join("; ")
         : body.detail;
       throw new ApiError(
-        detail || `API request failed (${response.status})`,
+        detail || noDetailMessage(response.status),
         response.status,
       );
     }
