@@ -290,6 +290,9 @@ class ApiTap:
         self.hold_infer = False
         self.abort_session_posts: set[int] = set()
         self.rewrite_infer = None
+        # ST-LONG-01: keep the bookkeeping, not the pictures. A 15-minute run is ~9,000 requests, and
+        # keeping every base64 frame would hold hundreds of megabytes in the test process.
+        self.drop_images = False
 
     def answered_with_image(self, sid: str | None = None) -> list[InferCall]:
         """Answered infer calls whose request, as the SERVER received it, carried a camera image."""
@@ -369,6 +372,9 @@ class ApiTap:
             call.response_text = response.text()
         call.outcome = "ok"
         route.fulfill(response=response)
+        if self.drop_images:
+            call.body = {k: ("<dropped>" if k == "image_base64" and v is not None else v) for k, v in call.body.items()}
+            call.raw, call.sent_raw = "", None
 
 
 class Chrome:

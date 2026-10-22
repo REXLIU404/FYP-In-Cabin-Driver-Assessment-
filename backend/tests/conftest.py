@@ -135,6 +135,21 @@ def pytest_configure(config):
         "e2e: drives Chromium against one real uvicorn that serves the API and the freshly built dist/ "
         "(slow; part of the full run, select with -m e2e)",
     )
+    config.addinivalue_line(
+        "markers",
+        "long: a run of many minutes (ST-LONG-01); DESELECTED unless the run asks for it with -m long",
+    )
+
+
+def pytest_collection_modifyitems(config, items):
+    """``long`` tests run only when asked for (``-m long``): a gate run deselects them, so they are
+    neither started nor counted as skipped."""
+    if "long" in (config.option.markexpr or ""):
+        return
+    kept = [item for item in items if item.get_closest_marker("long") is None]
+    if len(kept) != len(items):
+        config.hook.pytest_deselected(items=[item for item in items if item.get_closest_marker("long") is not None])
+        items[:] = kept
 
 
 @pytest.fixture(scope="session")
