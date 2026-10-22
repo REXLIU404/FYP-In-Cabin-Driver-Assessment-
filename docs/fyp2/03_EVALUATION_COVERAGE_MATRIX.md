@@ -103,3 +103,39 @@ M1 five-model comparison/HPO: [04](04_ML_COMPARISON_AND_TUNING_AUDIT.md), incomp
 ### Stale-evidence temporal policy caveat
 
 Static finding (`backend/app/inference.py:43–55`): only `UNAVAILABLE` bypasses normal severity progression. A repeated high score with stale evidence can still accumulate the 2-second High guard; age alone never turns stale into missing (`:13–18`). This audit has not executed a stale-only alert stream. This is `IMPLEMENTED_UNTESTED` behavior with a `MISSING_REQUIREMENT/NEEDS_DECISION` policy, not evidence that such escalation is correct. Add an independently clocked stale-only sequence and decide expiry/repetition handling before claiming temporal robustness.
+
+---
+
+## 增补：外部建议（ChatGPT）复核与采纳裁定（2026-10-22）
+
+> **以上正文是 2026-10-10 审计快照，结论原样保留、不因本节而改**；其他文档对正文行号的引用保持有效。本节记录 2026-10-22 对一份外部建议（ChatGPT 针对 E1–E5 的五点修订提议）的复核结果，以及据此落入后续评估计划的增量决定。这些变更作用于 E1–E5 实验设计（仍为 `PLANNED`），不是对审计结论的否定。
+
+### 裁定总表
+
+| 建议 | 复核结论 | 处理 |
+|---|---|---|
+| E1 保留 + 概率可靠性作为独立诊断 | 合理，但只能作为**可选诊断**，不能作为通过门槛——06 已把概率校准定为 limitation、非强制里程碑 | 采纳（新增 E1 概率可靠性诊断约束，见下） |
+| E2 五权重、30/60 分级照旧，只验公式/稀释/Dominant，不作风险准确性声明 | 与正文 E2 完全一致：五权重、29.9/30/59.9/60 边界、`explicitly show attenuated high V`、`no data-selected “best” test weight`、`INVALID` 声明均已含 | 无新增，正文原样 |
+| E3 重写 ΔRisk≤0.15 通过标准 | 正文已先行修订：E3 段末已标 `NEEDS_REDRAFT`，`.1/.9` full→V missing 的 Δ=.4 反例与 D05「保留原目标、分别报告达成率」都在；ChatGPT 建议方向与之一致。但其 stale 建议未计入后来的 **D13 裁定 A** | 采纳，并按裁定 A 修正 stale 部分（见下） |
+| E4 保留并加强边界；latency 明确统计范围 | 与正文及 D07 一致：EMA 的 variance/flip **与** response lag、FSM 2s/10s 受控时钟、stale-only 待决 caveat 均已含；latency 范围目前只写在 D07，E4 无显式条目 | 采纳（E4 增加 latency 范围交叉引用，见下） |
+| E5 增加报告维度，不能只凭曲线更平稳 | 与正文 E5 一致：score/level retention、high-V attenuation 反例、`INVALID evidence of safer accident prediction` 均已含；其提议中的 **Missing-Input Behavior 属 E3 范围**，不并入 E5 | 无新增；范围澄清见下 |
+
+### 落地变更
+
+**E1 — 概率可靠性（新增可选诊断）**：在保留正文 E1-V / E1-T 全部指标的前提下，额外记录**仅诊断用途**的概率可靠性指标：NLL、Brier Score、Reliability Diagram / ECE。约束：
+
+- 不作为任何 acceptance criterion，报告为 limitation 证据；
+- 与正文标签有效性 QC 同一规则：D2/D3 等使标签失效的样本不得进入 NLL/Brier/ECE，只允许 flip rate / 分布变化；
+- 校准评估数据与训练数据隔离（同正文 train-only statistics 纪律）；不要求现在做 Temperature Scaling；
+- 与计划 Task 10A 的模型替换复检（ECE、Brier、RiskScore 分布，同一组固定成对输入）口径一致。
+
+**E3 — stale 行按 D13 裁定 A 更新**：裁定 A（2026-10-13 批准、10-15 落地，见 `docs/fyp2/implementation/p0-d13-ruling-a.md`）后，运行时不再产出 `stale`：超过 `freshness_tolerance_s` 的证据判 expired，**按 missing 计分（权重 0）**，原因保留在 provenance（`{modality}_expired` / `{modality}_age_s`）。因此：
+
+- E3-04/05/06 的 `.45` 公式**仅保留为历史记录读取/渲染的 legacy 兼容校验**，不再是运行时可达的模型输入；
+- 「9 种 freshness 组合」实验的维度改为 fresh / missing / expired，expired 的期望分数与 missing 相同（权重 0），同时断言 provenance 原因字段；
+- ChatGPT 建议中「Stale Data → 按约定 freshness 权重计算，并标记降级」的运行时含义已被裁定 A 取代：过期证据权重为 0 而非 0.45；
+- 其「Both Missing → UNAVAILABLE，不得把缺乏证据当作 Low」与「Weight Zero / Invalid Denominator → 不产生虚假的正常风险结果」两点是审计当时的真实缺陷（B01/B02，对应 E3-03/E3-08），已由 Codex 独立审阅 R04/R05 确认修复（当前 `fusion.py` 对无证据窗口返回 None/UNAVAILABLE，四个风险字段为 null）。评估矩阵中不再列为待办，仅保留全链路（API/UI/export/FSM）的回归断言。
+
+**E4 — latency 统计范围（交叉引用）**：latency 必须按 D07 定义为 **capture→render p95**，与模型 forward latency、Server-Timing 分段计时（capture→预处理→模型→commit→网络→render）分开报告，不得混同。EMA、FSM、故障恢复、日志完整性（eligible 请求分母）的要求不变。
+
+**E2 / E5 — 范围澄清，无指标变更**：E5 只做正文的 V-only / T-only / fusion 配对反事实与稀释反例；Missing-Input 行为继续归 E3。E2 维持正文原样，不得在任何测试数据上选择「最优」权重。
