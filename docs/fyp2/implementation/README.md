@@ -1,5 +1,7 @@
 # 系统轨道证据总索引
 
+> **给评估者和写报告的人**：先读 `docs/fyp2/SYSTEM_TRACK_HANDOFF_GUIDE.zh.md`。里面有一页地图、可以直接粘贴的评估 prompt 和写报告 prompt、章节与证据的对应，以及措辞规则。
+
 本文件把系统轨道（分支 `fyp2/live-system`）每一项工作的验收报告、技术报告、提交和门禁证据集中列在一处。
 
 - **验收报告** `*-acceptance.zh.md`：中文，固定 6 节，即任务概要、实现证据、测试结果、问题与风险、验收结论、下一任务就绪度。由控制者在亲自复跑门禁后写成。
@@ -43,6 +45,8 @@
 | Task 10 第 2b 部分：单分支系统测试与 W4 归档 | `task-10-part2b-acceptance.zh.md` | `task-10-part2b.md` | `ae1c197`、`c2191c0`、`87bdc3f`、`eb000bc` | 934 → 952 / 870 |
 | FIX-BACKEND-REACH：后端没启动被误报为模型错误；真实重启后端 e2e | `fix-backend-reach-acceptance.zh.md` | `fix-backend-reach.md` | `83219da` | 952 → 967 / 870 → 910 |
 | TELEMETRY-CONTRIBUTIONS：Live 遥测特征贡献（TreeSHAP，解释非安全风险） | `telemetry-contributions-acceptance.zh.md` | `telemetry-contributions.md` | `346f3a6` | 967 → 979 / 910 → 918 |
+| W5 系统测试（S1–S5、S10）：选中跟随最新、ST-SESSION-01、ST-COLDSTART-01、Task 10A manifest 交接、E3 网格 | `w5-system-tests-acceptance.zh.md` | 执行计划 `docs/plans/2026-10-22-w5-w6-system-tests.md` | `62f13fb`…`6491dd7`，评审后修复 `183d38f`、`258e380`、`0530b1a`、`7110615` | 979 → 1021 / 918 → 922 |
+| W6 系统测试（S6–S9）：ST-LONG-01、PERF-01、PERF-02、G-W6-A | `w6-system-tests-acceptance.zh.md` | 同上 | `bb947f0`、`4f38cfc`、`66327ee`，评审后修复 `349ee61`、`e03ed41`、证据重跑 `2897000` | 1021 → 1028 / 922 |
 
 每份验收报告的第 3 节都列出了变异检验：每项变异在隔离副本里运行，并写明变红的测试。
 
@@ -55,6 +59,8 @@
 | G-W2-A（补档） | `docs/evidence/2026-10-16/w2-gate/` | `cbe573f`，在隔离副本上运行 | 全绿：pytest 584，0 skipped；vitest 427 |
 | G-W3-A（提前关闭） | `docs/evidence/2026-10-19/w3-gate/` | `ce45f53` | 全绿：build；pytest 922；vitest 870；tsc 0；eslint 0 |
 | G-W4-A（提前关闭） | `docs/evidence/2026-10-20/live-e2e/` | `87bdc3f` | 全绿：build；pytest 952，0 skipped；vitest 870；tsc 0；eslint 0。另有五视图截图、会话导出、rVFC 实测 |
+| G-W5-A（硬性，提前关闭） | `docs/evidence/2026-10-22/w5-gate/`，冷启动 `docs/evidence/2026-10-22/coldstart/` | `5040e9d` | 全绿：pytest 1021 / 0 skipped（1 deselected = ST-LONG-01），vitest 922，tsc，eslint，build |
+| G-W6-A（提前完成，不含 E2–E5 runner） | `docs/evidence/2026-10-22/perf/`，回归 `docs/evidence/2026-10-22/coldstart-final/` | `2897000` | 全绿：全新克隆上 pytest 1028 / 0 skipped，vitest 922；长会话 8,867 窗口；capture→render p95 39 ms；日志完整性 100%；E2–E5 等 D06 |
 
 每个 gate 目录都包含以下文件：
 

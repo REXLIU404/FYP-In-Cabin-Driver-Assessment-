@@ -13,7 +13,7 @@
 
 ## 当前阶段
 
-阶段 4 完成（Task 10 全部完成，G-W4-A 于 2026-10-20 提前关闭）；下一阶段 W5。全部完成证据的索引见 `docs/fyp2/implementation/README.md`。
+阶段 4 完成；W5 / W6 系统测试完成（G-W5-A、G-W6-A 于 2026-10-22 提前关闭，E2–E5 runner 除外）。下一步：E2–E5（等 D06）、Task 10A、Constructed scenario 合并（在 `fyp2/constructed-scenario` 开发）、UAT。全部完成证据的索引见 `docs/fyp2/implementation/README.md`。
 
 ## 工作环境（不得偏离）
 
@@ -82,6 +82,9 @@
 - [x] **FIX-BACKEND-REACH**（用户 10-20 实测发现；`83219da`，只做评审 clean，验收 PASS；pytest 952 → 967，vitest 870 → 910）：后端响应标识 `X-DRA-Backend`、无标识错误归为「后端无法连接」、setup 标题与 Server message、开发代理形态与真实重启后端的 e2e
 - [x] **TELEMETRY-CONTRIBUTIONS**（用户 10-22 发现、选方案 A；`346f3a6`，验收 PASS；pytest 967 → 979，vitest 910 → 918）：Live 的遥测特征贡献 = TreeSHAP 作用于 Safe 类打分取负（正号推向不安全），REPEAT 沿用登记值，Explanation 卡片标注方法与单位
 - [x] **`npm run dev:all`**（`b98207b`）：一条命令启动后端与 vite；视觉 domain shift 证据 `611b453`、`84a1891`
+- [x] **W5 / W6 系统测试**（executing-plans，执行计划 `docs/plans/2026-10-22-w5-w6-system-tests.md` S1–S10；验收 PASS）：选中跟随最新、ST-SESSION-01、ST-COLDSTART-01（工作树 `.venv` 改为本地虚拟环境）、Task 10A manifest schema 交接、E3 新鲜度网格、ST-LONG-01、PERF-01、PERF-02；**G-W5-A（`5040e9d`）与 G-W6-A（`2897000`，不含 E2–E5 runner）提前关闭**；独立评审后修复 6 项。最终代码在全新克隆上：pytest 1028 / 0 skipped，vitest 922
+- [ ] E2–E5 runner：等导师对 D06 作出决定
+- [ ] Task 10A 的 provider 改造与离线评估器：W6 拓展项，需要候选包，以及稳定模型包目录布局与符号链接 containment 的决定
 
 ### 阶段 5：需用户裁定的政策项（裁定后再实现）
 - [ ] **R09 / D13：已裁定 A**（2026-10-13，用户本人确认；**2026-10-15 提前为阶段 2.5 的 P0-D13**）：过期证据按 missing 计分，provenance 保留 `{modality}_expired` / `{modality}_age_s`；运行时不再产出 stale，0.45 只留给历史记录；阈值 = `freshness_tolerance_s`，默认 3 s、可配 (0, 30]，只称设计阈值，须用 PERF-01 与 2 / 3 / 5 s 敏感性复核。实施时同步改：IT-LIVE-AGE 3001 ms / 30 天 / D13 快照、两条 gap 测试第 1 步（改 fake clock）、F1 W16（62.5 → 60.0）、Task 8 重试窗口的预期
