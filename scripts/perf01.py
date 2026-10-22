@@ -152,6 +152,9 @@ def analyse(raw: dict, windows: int, warmup: int) -> dict:
         "freshness_sensitivity": sensitivity,
         "freshness_at_default_3s": {k: sum(1 for p in measured if p["modality_freshness"][k] == "fresh") for k in ("vision", "telemetry")},
         "attempts_other_than_1": sum(1 for t in rows if t.get("attemptIndex") != 1),
+        "notes": ["telemetry age is 0-2 s BY CONSTRUCTION: the prepared replay's acquisition time is the start of its "
+                  "2 s sample, so it is not a sensor age",
+                  "one development machine, Chromium fake camera, frozen models: not target hardware or a real camera"],
     }
 
 
