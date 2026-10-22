@@ -77,6 +77,8 @@ class Lifecycle:
         self.view("Signal Inspector")
         ch.wait_until(lambda: (page.evaluate(LIST_AND_SELECTED_JS)["count"] or 0) >= 6, "the Inspector list", 10)
         obs["running_list"] = page.evaluate(LIST_AND_SELECTED_JS)
+        page.get_by_role("button", name="Window 2", exact=True).click()  # pin a window of A
+        obs["a_pinned"] = page.evaluate(LIST_AND_SELECTED_JS)
 
         # A: pause, wait, resume.
         self.quiet(self.a, a)
@@ -87,6 +89,8 @@ class Lifecycle:
         ch.top_button("Start Monitoring").click()
         ch.wait_until(lambda: len(tap.answered(a)) >= obs["a_before_resume"] + 5, "five more windows of A after resuming", 60)
         obs["posts_on_resume"] = len(tap.session_posts) - posts
+        self.view("Signal Inspector")
+        obs["a_pin_after_resume"] = page.evaluate(LIST_AND_SELECTED_JS)
 
         # B: New Session.
         self.quiet(self.a, a)
@@ -95,6 +99,10 @@ class Lifecycle:
         ch.top_button("New Session").click()
         b = self.new_post(posts, "session B")
         ch.wait_until(lambda: len(tap.answered(b)) >= 5, "five windows of session B", 60)
+        self.view("Signal Inspector")
+        obs["b_list"] = page.evaluate(LIST_AND_SELECTED_JS)
+        page.get_by_role("button", name="Window 2", exact=True).click()  # pin a window of B before loading A
+        obs["b_pinned"] = page.evaluate(LIST_AND_SELECTED_JS)
         self.quiet(self.b, b)
         obs["a_rows_after_b"] = rows(a)
 
@@ -208,3 +216,18 @@ class TestStSession01:
         assert life.error is None, life.error
         for run in (life.a, life.b, life.c):
             assert_reconciled(run)
+
+    def test_09_a_pin_survives_pause_and_resume_but_not_a_session_switch(self, life):
+        """Review Focus 3: a pinned window stays pinned within its session (Pause / Start resumes the
+        same session), and every session switch - New Session, loading a saved session - drops the pin
+        and opens on the newest window. Window 2 exists in A and in B, so a pin that survived a switch
+        would still show 'Window 2' selected."""
+        assert life.error is None, life.error
+        assert life.obs["a_pinned"]["selected"] == 2, life.obs["a_pinned"]
+        assert life.obs["a_pin_after_resume"]["selected"] == 2, life.obs["a_pin_after_resume"]
+        after_new = life.obs["b_list"]
+        assert after_new["selected"] == after_new["first"] and after_new["first"] >= 5, after_new
+        assert life.obs["b_pinned"]["selected"] == 2, life.obs["b_pinned"]
+        loaded = life.obs["loaded_list"]  # loading A happened while B was pinned to window 2
+        assert loaded["selected"] == loaded["first"] == life.obs["a_total"], loaded
+
