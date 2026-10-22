@@ -64,11 +64,12 @@
 - Produces（`backend/app/schemas.py`）：`LIVE_MODE = "LIVE_MODEL_RUNTIME"`、`CONSTRUCTED_MODE = "CONSTRUCTED_SCENARIO_RUNTIME"`、`def is_live_like(mode: str) -> bool`。`inference.py` 从 schemas 导入并继续导出 `LIVE_MODE`（现有调用方不变）。
 - Produces：`/infer` 用**会话自己的模式**调用 `_persist_window(..., mode=<session mode>)`，记录的 `operation_mode` 就是会话模式。
 
+- [ ] **Step 0：同步起点**（**用户同意后**才做）：Tasks1-10 已完成 W5/W6，`fyp2/live-system` 停在 `447cd2a`，此后它不再修改该分支，自 `bb947f0` 以来的改动不碰本计划要改的产品文件。在本工作副本运行 `git merge --no-edit fyp2/live-system`，应当没有冲突（覆盖矩阵的增补两边内容相同）。之后的基线以合并后的实测为准；Tasks1-10 报告其最终代码 `2897000` 在全新克隆上为 pytest 1028 / 0 skipped、vitest 922。
 - [ ] **Step 1：准备本工作副本的环境**（参照 `scripts/coldstart_check.sh`，就地进行）
   - `python3 -m venv .venv && .venv/bin/pip install -r backend/requirements.lock.txt`
   - `npm ci`
   - 模型只读链接：`mkdir -p ml/outputs/vision ml/outputs/telemetry`，把 `mobilenetv3_large_vision.onnx`、`mobilenetv3_large_vision.pt`、`xgb_telemetry.json` 链接到 `/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/` 下的同名文件（与 `FYP2-Live-System` 相同）
-  - 运行 `DRA_REQUIRE_MODELS=1 python3 scripts/run_gates.py --out <scratch>`。期望：全绿，作为基线计数（Tasks1-10 报告 fd2a8a5 上为 pytest 987 / vitest 922；bb947f0 只多测试代码，以实测为准）。
+  - 运行 `DRA_REQUIRE_MODELS=1 python3 scripts/run_gates.py --out <scratch>`。期望：全绿，作为基线计数（预计与 Tasks1-10 的 pytest 1028 / vitest 922 一致，以实测为准）。
 
 - [ ] **Step 2：写失败的测试** `backend/tests/test_constructed_mode.py`
   - `test_is_live_like`：`is_live_like("LIVE_MODEL_RUNTIME") is True`，`is_live_like("CONSTRUCTED_SCENARIO_RUNTIME") is True`，`is_live_like("PREPARED_SESSION_RUNTIME") is False`，`is_live_like("NO_SUCH_MODE") is False`。
@@ -342,6 +343,7 @@
 - Create: `frontend/src/views/scenarioPlayerModel.ts`（+ 测试）
 - Create: `frontend/src/components/scenarioPlayerRender.test.ts`
 - Modify: `frontend/src/App.tsx`、`frontend/src/views/LiveMonitor.tsx`、`frontend/src/views/SignalInspector.tsx`、`frontend/src/styles.css`
+- Modify: `README.md`（第 42 行附近）与 `prototype-tests/README.md`（第 68 行附近）：Live 选项改名后的文字；`prototype-tests/live_e2e.md` 中提到该选项的地方一并核对
 
 **Interfaces:**
 - `DATA_MODE_OPTIONS` 只剩两项（Global Constraints 中的文字）；`DATA_MODE_NOTE` 新模式的值为 `""`，App 只在非空时渲染 `<p>`。旧模式的选项不再列出（代码与测试保留）。
@@ -353,6 +355,7 @@
   - `const isLiveLikeMode = isLiveLike(config.operationMode)`，`const isScenario = config.operationMode === "CONSTRUCTED_SCENARIO_RUNTIME"`。原来的 `isLive` 分支改用 `isLiveLikeMode`，只有摄像头相关部分仍然只限 Live。
   - 本模式：显示剧本下拉框（`aria-label="Scenario"`）与加载进度；`status !== "ready"` 时 Start Monitoring 不可点，并显示 `invalid` 的原因或生成命令 `python3 scripts/build_dataset_replay.py viva_v1`；`start()` 不碰摄像头；把 `scenarioCapture(playback)` 与 `() => playback.telemetry` 传给 `useLiveSession`（Live 模式仍传 `camera.captureFrame`，不传第三个参数）。
   - 顶栏在本模式显示 `CONSTRUCTED SCENARIO`。
+  - **不能破坏的既有行为**（ST-SESSION-01 等浏览器测试依赖）：Live 模式下已保存会话下拉框的 `aria-label="Saved live sessions"` 不变；「选中窗口默认跟随最新，除非用户钉住某个窗口」（`frontend/src/utils/selection.ts`）不变；每次打开页面从 Live 开始。
   - `snapshot.finished` 时调用 `live.pause()`，并显示 `Scenario finished (136 s, 7 segments)`（数字取自 manifest）。
 - `LiveMonitor`：本模式渲染 `ScenarioPlayer` 代替 `CameraPreview`；Vehicle Signals 标题在本模式为 `Scenario telemetry`，并显示当前遥测的真实类别。
 - `SignalInspector`：所选窗口有 `provenance.replay` 时，显示 `Truth` 一组（vision_label、telemetry_label、frame_file、segment）。
