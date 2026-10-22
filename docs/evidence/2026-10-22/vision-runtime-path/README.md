@@ -42,3 +42,34 @@ dataset replay (user decision 2026-10-22), and a limitation to state in the repo
 
 Command: `cd backend && PYTHONDONTWRITEBYTECODE=1 ../.venv/bin/python -I ../docs/evidence/2026-10-22/vision-runtime-path/runtime_path_parity.py`
 (needs the data root `/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-` and the frozen model files).
+
+## 3. The decision test: do original `c0` test images come out as `safe_driving` through the live backend?
+
+`three_paths.py`: every State Farm test image (original file bytes) through (1) direct ONNX with this script's
+own preprocessing, (2) the backend's `TrainedProvider.preprocess` + ONNX session, (3) the real HTTP
+`POST /infer` of a throw-away backend (free port, tmp database, `LIVE_MODEL_RUNTIME`, vision only, explicit
+frame identity; every response 201 and `vision_obs = new`). Run 2026-10-22:
+
+```
+test images: 3657; HTTP statuses: {201: 3657}
+[1 Direct ONNX]              accuracy 0.8988; c0 (safe_driving) recall 0.9211 on 431 images
+  c0 predicted as: {'safe_driving': 397, 'talking_to_passenger': 31, 'operating_radio': 3}
+[2 Runtime provider]         accuracy 0.8988; c0 (safe_driving) recall 0.9211 on 431 images
+[3 Live backend HTTP /infer] accuracy 0.8988; c0 (safe_driving) recall 0.9211 on 431 images
+per-class recall (identical in all three): safe_driving 0.921, texting_right 0.900, talking_phone_right 1.000,
+  texting_left 0.980, talking_phone_left 0.975, operating_radio 0.990, drinking 0.989, reaching_behind 0.994,
+  hair_makeup 0.832, talking_to_passenger 0.273
+agreement direct vs provider: 3657 / 3657; provider vs HTTP: 3657 / 3657
+```
+
+**Reading.** The live backend recognises original `c0` images as `safe_driving` (0.921), and the three paths
+agree on every single image, so neither the runtime provider nor the HTTP path loses anything. By the decision
+tree, the cause is on the camera side: webcam domain shift (and the capture encoding, which section 2 shows costs
+0.0005). Two model-side facts worth reporting regardless: `talking_to_passenger` recall is only 0.273 on the test
+split, and it is one of the two classes the frontal camera collapses into.
+
+**Why a frontal camera lands on `hair_makeup` / `talking_to_passenger`.** In State Farm the camera sits on the
+passenger side, so a driver who looks INTO the camera is looking at the passenger (`c9`), and a hand near a face
+turned toward the camera reads as `c8`. In `c0` the driver looks ahead through the windscreen, i.e. shows the
+camera a profile, with the steering wheel and car interior in frame. A laptop camera in front of the user sees a
+frontal face and a room, which is the `c8` / `c9` look and never the `c0` look.
