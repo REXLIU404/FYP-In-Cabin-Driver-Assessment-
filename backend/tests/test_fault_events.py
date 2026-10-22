@@ -57,17 +57,25 @@ class FakeVision:
 
 
 class FakeBooster:
-    """Stands in for ``xgboost.Booster``: ``predict(matrix, iteration_range=...)``."""
+    """Stands in for ``xgboost.Booster``: ``predict(matrix, iteration_range=..., pred_contribs=...)``.
+    ``fail`` is raised by every call, ``contribs_fail`` only by the ``pred_contribs=True`` one (the
+    TreeSHAP call: (1, 3 classes, 8 features + bias)); ``output`` / ``contribs_output`` are what each returns."""
 
     def __init__(self):
         self.calls = 0
         self.fail = None
+        self.contribs_fail = None
         self.output = np.array([[0.6, 0.3, 0.1]], dtype=np.float32)
+        self.contribs_output = np.zeros((1, 3, 9), dtype=np.float32)
 
-    def predict(self, matrix, iteration_range=None):
+    def predict(self, matrix, iteration_range=None, pred_contribs=False):
         self.calls += 1
         if self.fail is not None:
             raise self.fail
+        if pred_contribs:
+            if self.contribs_fail is not None:
+                raise self.contribs_fail
+            return self.contribs_output
         return self.output
 
 
@@ -409,6 +417,9 @@ INF_LOGITS = np.array([[np.inf] + [0.0] * 9], dtype=np.float32)
 SHORT_LOGITS = np.zeros((1, 7), dtype=np.float32)
 NAN_PROBS = np.array([[np.nan, 0.5, 0.5]], dtype=np.float32)
 SHORT_PROBS = np.array([[0.5, 0.5]], dtype=np.float32)
+NAN_CONTRIBS = np.full((1, 3, 9), np.nan, dtype=np.float32)
+INF_CONTRIBS = np.full((1, 3, 9), np.inf, dtype=np.float32)
+SHORT_CONTRIBS = np.zeros((1, 3, 8), dtype=np.float32)  # the bias column is missing
 
 
 @pytest.mark.parametrize("break_it, origin, detail", [
@@ -426,8 +437,18 @@ SHORT_PROBS = np.array([[0.5, 0.5]], dtype=np.float32)
      "telemetry_model", "Telemetry model produced non-finite or wrongly shaped output"),
     (lambda e: setattr(e.booster, "output", SHORT_PROBS),
      "telemetry_model", "Telemetry model produced non-finite or wrongly shaped output"),
+    # TELEMETRY-CONTRIBUTIONS: the TreeSHAP call fails like the probability call does - the same
+    # category and origin, the whole request, no record.
+    (lambda e: setattr(e.booster, "contribs_fail", ValueError("xgboost: pred_contribs failed")),
+     "telemetry_model", "Telemetry model failed during inference"),
+    (lambda e: setattr(e.booster, "contribs_output", NAN_CONTRIBS),
+     "telemetry_model", "Telemetry model produced non-finite or wrongly shaped feature contributions"),
+    (lambda e: setattr(e.booster, "contribs_output", INF_CONTRIBS),
+     "telemetry_model", "Telemetry model produced non-finite or wrongly shaped feature contributions"),
+    (lambda e: setattr(e.booster, "contribs_output", SHORT_CONTRIBS),
+     "telemetry_model", "Telemetry model produced non-finite or wrongly shaped feature contributions"),
 ], ids=["ort-raises", "xgboost-raises", "vision-nan", "vision-inf", "vision-shape", "telemetry-nan",
-        "telemetry-shape"])
+        "telemetry-shape", "contribs-raises", "contribs-nan", "contribs-inf", "contribs-shape"])
 def test_it_fault_ort_runtime_failure_is_500_model_runtime(live, break_it, origin, detail):
     break_it(live)
     response = infer(live, make_payload("ort-1"))

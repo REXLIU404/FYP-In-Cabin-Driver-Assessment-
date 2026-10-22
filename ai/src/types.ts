@@ -128,6 +128,16 @@ export interface RiskUpdate {
     telemetry_expired?: boolean;
     telemetry_age_s?: number | null;
     timing_ms?: Record<string, number>;
+    /**
+     * Live only, and only on a window that carries `telemetry_feature_contributions`: what they
+     * MEAN. "xgboost_treeshap_neg_safe_margin" = TreeSHAP local attribution on the Safe-class
+     * score, sign flipped so that a positive value pushes toward unsafe; log-odds; not causal,
+     * not a dataset-level feature importance. `..._baseline` is -(the Safe-class bias), so that
+     * sum(contributions) + baseline = -margin_Safe. Absent on a replay record, whose
+     * contributions are the hand-written FYP1 table.
+     */
+    telemetry_contribution_method?: string;
+    telemetry_contribution_baseline?: number;
     fusion_config?: {
       weight_vision: number;
       weight_telemetry: number;

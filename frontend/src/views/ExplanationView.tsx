@@ -88,6 +88,14 @@ const getTopTelemetryFeatureContributions = (record: RiskUpdate) =>
 const formatSignedContribution = (value: number) =>
   `${value >= 0 ? "+" : ""}${formatFixed(value, 2)}`;
 
+// What a Live record's feature contributions MEAN, said only for the method the backend
+// names in the record's provenance (a replay record has none: its contributions are the
+// hand-written FYP1 table, and this sentence would be false for them). TreeSHAP local
+// attribution on the Safe-class score, sign flipped, so + pushes toward unsafe; log-odds.
+const TREESHAP_CONTRIBUTION_METHOD = "xgboost_treeshap_neg_safe_margin";
+const TREESHAP_CONTRIBUTION_NOTE =
+  "Explains Telemetry Non-Safe Risk; + pushes toward unsafe. TreeSHAP local attribution in model-score (log-odds) units; not causal.";
+
 export function ExplanationView({
   selectedRecord,
   history,
@@ -110,6 +118,9 @@ export function ExplanationView({
   const telemetryBehavior = getTopTelemetryBehavior(selectedRecord);
   const telemetryFeatureContributions =
     getTopTelemetryFeatureContributions(selectedRecord);
+  const treeShapContributions =
+    selectedRecord.provenance?.telemetry_contribution_method ===
+    TREESHAP_CONTRIBUTION_METHOD;
   const maxTelemetryContribution = Math.max(
     0.01,
     ...telemetryFeatureContributions.map((item) => Math.abs(item.contribution)),
@@ -439,6 +450,12 @@ export function ExplanationView({
               ) : (
                 <strong>unavailable</strong>
               )}
+              {treeShapContributions &&
+              telemetryFeatureContributions.length > 0 ? (
+                <small className="feature-contribution-note">
+                  {TREESHAP_CONTRIBUTION_NOTE}
+                </small>
+              ) : null}
             </div>
             <div>
               <span>Freshness</span>

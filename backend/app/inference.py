@@ -53,14 +53,17 @@ EVIDENCE_WATERMARK_KEYS = ("captured_at", "telemetry_timestamp")
 # copy, so nothing nested may be edited in place); a list value is only ever replaced.
 #   telemetry: seq = the highest EXPLICIT seq accepted (only moves forward; a seq-less fallback
 #              sample never clears it), canonical acquisition time, sha256 of the feature values,
-#              the raw model probability, the per-class probabilities
+#              the raw model probability, the per-class probabilities, the per-feature
+#              contributions (TreeSHAP local attribution on the Safe-class score, sign flipped so
+#              that a positive value pushes toward unsafe; log-odds; not causal, not a
+#              dataset-level feature importance)
 #   vision:    frame epoch / index = the highest EXPLICIT identity accepted (same rule), canonical
 #              acquisition time, sha256 of the image bytes, the raw probability, the EMA-smoothed
 #              probability the observation was FUSED with, the per-class probabilities
 #   The content fields are shared by explicit and fallback observations: after a fallback sample,
 #   resending the last explicit identity unchanged is refused (409), not taken as a REPEAT.
 OBSERVATION_REGISTRY_KEYS = (
-    "obs_t_seq", "obs_t_ts", "obs_t_hash", "obs_t_raw", "obs_t_classes",
+    "obs_t_seq", "obs_t_ts", "obs_t_hash", "obs_t_raw", "obs_t_classes", "obs_t_contribs",
     "obs_v_epoch", "obs_v_index", "obs_v_ts", "obs_v_hash", "obs_v_raw", "obs_v_p", "obs_v_classes",
 )
 
@@ -343,8 +346,13 @@ def run_inference(session_id: str, window_id: int, w: WindowInput, *, state=None
                                      "visual_top_classes": _stored_classes(scratch, "obs_v_classes")})
             provenance["P_distraction_raw"] = w.P_distraction
         if t_obs is not None and t_obs.kind == "repeat":
+            # The contributions too. A session registered before they existed has no entry (None, not
+            # a list): the repeat then keeps the model's own, identical answer for the same bytes.
+            stored = scratch.get("obs_t_contribs")
             w = w.model_copy(update={"P_telemetry_anomaly": scratch.get("obs_t_raw", w.P_telemetry_anomaly),
-                                     "telemetry_behavior_classes": _stored_classes(scratch, "obs_t_classes")})
+                                     "telemetry_behavior_classes": _stored_classes(scratch, "obs_t_classes"),
+                                     "telemetry_feature_contributions":
+                                         w.telemetry_feature_contributions if stored is None else list(stored)})
             provenance["P_telemetry_raw"] = w.P_telemetry_anomaly
         # Age is measured from the CANONICAL acquisition time. A branch the request did not
         # carry has no observation and is missing, whatever the provider declared.
@@ -419,7 +427,8 @@ def run_inference(session_id: str, window_id: int, w: WindowInput, *, state=None
                            obs_v_classes=[c.model_dump() for c in w.visual_top_classes])
         if t_obs is not None and t_obs.kind == "new":
             scratch.update(obs_t_raw=w.P_telemetry_anomaly,
-                           obs_t_classes=[c.model_dump() for c in w.telemetry_behavior_classes])
+                           obs_t_classes=[c.model_dump() for c in w.telemetry_behavior_classes],
+                           obs_t_contribs=[c.model_dump() for c in w.telemetry_feature_contributions])
         explicit = [o.identity == "explicit" for o in (v_obs, t_obs) if o is not None]
         provenance.update(
             vision_obs=v_obs.kind if v_obs is not None else None,

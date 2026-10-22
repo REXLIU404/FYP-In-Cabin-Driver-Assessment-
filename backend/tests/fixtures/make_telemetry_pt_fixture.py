@@ -23,6 +23,16 @@ Each row also carries the eight features. The test finds the row of a window by 
 ``telemetry_features`` up here (not by counting time), then checks that row against
 ``telemetry_seq % 25``.
 
+Feature contributions (TELEMETRY-CONTRIBUTIONS). Each telemetry row also carries
+``feature_contributions`` (feature -> value, in the model's feature order) and
+``contribution_baseline``. They are TreeSHAP local attributions on the Safe-class score (XGBoost
+``pred_contribs=True``, the same ``iteration_range``), sign flipped so that a positive value pushes
+toward unsafe; unit log-odds; not causal, and not a dataset-level feature importance. The script
+calls ``pred_contribs`` ITSELF and takes the Safe row (class 0) of its ``(1, 3, 8 + 1)`` result:
+``feature_contributions[f] = -shap[0, 0, f]`` and ``contribution_baseline = -shap[0, 0, bias]``. It
+also asserts the additivity ``sum(contributions) + baseline == -margin_Safe`` against an
+``output_margin=True`` call of its own, so a fixture that does not add up is never written.
+
 Usage (from the repository root; the interpreter must be the project's ``.venv``):
 
     .venv/bin/python backend/tests/fixtures/make_telemetry_pt_fixture.py            # write the fixture
@@ -86,6 +96,8 @@ def compute() -> dict:
         if features is None:
             row["P_telemetry_anomaly"] = None
             row["behavior_classes"] = None
+            row["feature_contributions"] = None
+            row["contribution_baseline"] = None
             continue
         key = tuple(features.values())
         assert key not in seen, f"row {row['row']} repeats the features of an earlier row: not identifiable"
@@ -96,11 +108,22 @@ def compute() -> dict:
         assert probs.shape == (3,) and np.isfinite(probs).all()
         row["P_telemetry_anomaly"] = float(1 - probs[0])
         row["behavior_classes"] = {label: float(p) for label, p in zip(CLASSES, probs)}
+        shap = np.asarray(booster.predict(matrix, iteration_range=(0, iteration_end), pred_contribs=True), dtype=np.float32)
+        margin = np.asarray(booster.predict(matrix, iteration_range=(0, iteration_end), output_margin=True), dtype=np.float32)
+        assert shap.shape == (1, 3, len(FEATURES) + 1) and np.isfinite(shap).all()
+        safe = shap[0, 0]  # class 0 = Safe; the last column is the bias
+        row["feature_contributions"] = {name: float(-value) for name, value in zip(FEATURES, safe[:-1])}
+        row["contribution_baseline"] = float(-safe[-1])
+        total = sum(row["feature_contributions"].values()) + row["contribution_baseline"]
+        assert abs(total + float(margin[0, 0])) < 1e-4, f"row {row['row']}: contributions + baseline = {total}, -margin_Safe = {-float(margin[0, 0])}"
     return {
-        "what": "Frozen P_telemetry_anomaly (= 1 - P(Safe)) and the three class probabilities of the "
-                "trained XGBoost for each of the 25 rows of the prepared replay, produced by "
-                "backend/tests/fixtures/make_telemetry_pt_fixture.py. Rows 13 and 16 (0-based) have no "
-                "telemetry and carry null. A window's row is telemetry_seq % 25.",
+        "what": "Frozen P_telemetry_anomaly (= 1 - P(Safe)), the three class probabilities and the TreeSHAP "
+                "feature contributions of the trained XGBoost for each of the 25 rows of the prepared replay, "
+                "produced by backend/tests/fixtures/make_telemetry_pt_fixture.py. The contributions are a local "
+                "attribution on the Safe-class score with the sign flipped (positive pushes toward unsafe), in "
+                "log-odds, not causal, not a dataset-level feature importance: feature_contributions + "
+                "contribution_baseline sum to -margin_Safe. Rows 13 and 16 (0-based) have no telemetry and carry "
+                "null. A window's row is telemetry_seq % 25.",
         "telemetry_model_file": "ml/outputs/telemetry/xgb_telemetry.json",
         "telemetry_model_sha256": sha256_of(MODEL),
         "replay_csv": "ai/prototype-data/prepared_sessions/session_001/telemetry.csv",
@@ -124,11 +147,17 @@ def cross_check_provider(fixture: dict) -> list[str]:
             continue
         data = LiveInput(request_id=f"fixture-row-{row['row']}", telemetry_features=TelemetryFeatures(**row["telemetry_features"]),
                          telemetry_timestamp="2026-01-01T00:00:00Z", telemetry_source="prepared_replay")
-        window, _ = provider.infer(data)
+        window, provenance = provider.infer(data)
         classes = {c.label: c.probability for c in window.telemetry_behavior_classes}
         if window.P_telemetry_anomaly != row["P_telemetry_anomaly"] or classes != row["behavior_classes"]:
             problems.append(f"row {row['row']}: provider {window.P_telemetry_anomaly!r} {classes!r} "
                             f"!= fixture {row['P_telemetry_anomaly']!r} {row['behavior_classes']!r}")
+        contributions = {c.feature: c.contribution for c in window.telemetry_feature_contributions}
+        if (contributions != row["feature_contributions"] or list(contributions) != FEATURES
+                or provenance.get("telemetry_contribution_baseline") != row["contribution_baseline"]):
+            problems.append(f"row {row['row']}: provider contributions {contributions!r} baseline "
+                            f"{provenance.get('telemetry_contribution_baseline')!r} != fixture "
+                            f"{row['feature_contributions']!r} {row['contribution_baseline']!r}")
     return problems
 
 

@@ -554,7 +554,7 @@ def test_g8_a_gap_clears_every_new_anchor_and_keeps_the_observation_registry():
 
 def test_g8_the_segment_keys_are_temporal_and_the_registry_keys_are_not():
     assert set(SEGMENT_KEYS) <= set(inference.TEMPORAL_STATE_KEYS)
-    registry_keys = ("obs_t_seq", "obs_t_ts", "obs_t_hash", "obs_t_raw", "obs_t_classes",
+    registry_keys = ("obs_t_seq", "obs_t_ts", "obs_t_hash", "obs_t_raw", "obs_t_classes", "obs_t_contribs",
                      "obs_v_epoch", "obs_v_index", "obs_v_ts", "obs_v_hash", "obs_v_raw", "obs_v_p", "obs_v_classes")
     assert set(inference.OBSERVATION_REGISTRY_KEYS) == set(registry_keys)
     assert not set(inference.OBSERVATION_REGISTRY_KEYS) & set(inference.TEMPORAL_STATE_KEYS)

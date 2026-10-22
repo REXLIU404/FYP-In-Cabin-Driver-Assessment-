@@ -33,6 +33,15 @@ class InvalidFrame(ValueError):
     pass
 
 
+# What ``telemetry_feature_contributions`` MEANS, recorded in the provenance of every window that
+# has them (``telemetry_contribution_method``) so a reader - the dashboard first of all - can tell
+# these numbers from the hand-written table of the legacy replay.
+# TreeSHAP local attribution (XGBoost ``pred_contribs``) on the Safe-class score, sign flipped so
+# that a positive value pushes toward unsafe; unit log-odds; not causal, and not a dataset-level
+# feature importance. They explain the non-safe risk 1 - P(Safe), the number that is fused.
+CONTRIBUTION_METHOD = "xgboost_treeshap_neg_safe_margin"
+
+
 class TrainedProvider:
     name = "MobileNetV3ONNX+XGBoost"
 
@@ -108,6 +117,7 @@ class TrainedProvider:
         import numpy as np
         started = time.perf_counter()
         pd, pt, visual, behaviors = 0.0, 0.0, [], []
+        contributions, baseline = [], None  # no telemetry -> no contributions, exactly like ``behaviors``
         timing = {}
         if data.image_base64 is not None:
             x = self.preprocess(data.image_base64)
@@ -131,18 +141,32 @@ class TrainedProvider:
             try:
                 matrix = self.xgb.DMatrix(np.array([[values[k] for k in self.features]], dtype=np.float32), feature_names=self.features)
                 probs = np.asarray(self.telemetry.predict(matrix, iteration_range=(0, self.iteration_end))[0], dtype=np.float32)
+                # TreeSHAP of the SAME trees the probabilities came from: (1, 3 classes, features + bias).
+                shap = np.asarray(self.telemetry.predict(matrix, iteration_range=(0, self.iteration_end), pred_contribs=True),
+                                  dtype=np.float32)
             except Exception as exc:
                 raise ModelRuntimeError("Telemetry model failed during inference", origin=ORIGIN_TELEMETRY_MODEL) from exc
             if probs.shape != (3,) or not np.isfinite(probs).all():
                 raise ModelRuntimeError("Telemetry model produced non-finite or wrongly shaped output",
                                         origin=ORIGIN_TELEMETRY_MODEL)
+            if shap.shape != (1, 3, len(self.features) + 1) or not np.isfinite(shap).all():
+                raise ModelRuntimeError("Telemetry model produced non-finite or wrongly shaped feature contributions",
+                                        origin=ORIGIN_TELEMETRY_MODEL)
             pt = float(1 - probs[0])
             behaviors = [{"label": label, "probability": float(prob)} for label, prob in zip(["Safe", "Aggressive", "Distracted"], probs)]
+            # Class 0 is Safe. The score that is fused is the NON-SAFE risk, 1 - P(Safe), so the
+            # Safe-class attribution is negated: a positive value pushes toward unsafe. The bias
+            # (last column) is not a feature; it is the baseline, sum(contributions) + baseline
+            # = -(the Safe-class margin).
+            safe = shap[0, 0]
+            contributions = [{"feature": name, "contribution": -float(value)} for name, value in zip(self.features, safe[:-1])]
+            baseline = -float(safe[-1])
             timing["telemetry_ms"] = (time.perf_counter() - before) * 1000
         window = WindowInput(P_distraction=pd, P_telemetry_anomaly=pt,
                              vision_status="fresh" if data.image_base64 is not None else "missing",
                              telemetry_status="fresh" if data.telemetry_features is not None else "missing",
                              visual_top_classes=visual, telemetry_behavior_classes=behaviors,
+                             telemetry_feature_contributions=contributions,
                              telemetry_features=data.telemetry_features,
                              latency_ms=round((time.perf_counter() - started) * 1000))
         provenance = {"provider": self.name, "request_id": data.request_id,
@@ -153,6 +177,9 @@ class TrainedProvider:
                       "captured_at": data.captured_at, "telemetry_timestamp": data.telemetry_timestamp,
                       "processed_at": datetime.now(timezone.utc).isoformat(), "timing_ms": timing,
                       "P_distraction_raw": pd, "P_telemetry_raw": pt}
+        if baseline is not None:
+            provenance["telemetry_contribution_method"] = CONTRIBUTION_METHOD
+            provenance["telemetry_contribution_baseline"] = baseline
         return window, provenance
 
 

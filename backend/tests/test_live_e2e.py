@@ -351,6 +351,25 @@ class TestStLiveE2E01:
         assert summary["P_distraction"] == fixed(wanted["P_distraction"], 2)
         assert summary["Telemetry Non-Safe Risk"] == fixed(wanted["P_telemetry_anomaly"], 2)
         assert summary["RiskLevel"] == wanted["RiskLevel"]
+        # Feature Contribution (TELEMETRY-CONTRIBUTIONS): the window's TreeSHAP contributions, sign flipped
+        # so that + pushes toward unsafe. The card shows the three largest |value|, signed, 2 places,
+        # largest first - the same three the record holds - and says what the numbers mean.
+        contributions = wanted["telemetry_feature_contributions"]
+        assert [c["feature"] for c in contributions] == [
+            "speed_kmph", "accel_x", "accel_y", "brake_pressure", "steering_angle", "throttle",
+            "lane_deviation", "headway_distance"]
+        assert wanted["provenance"]["telemetry_contribution_method"] == "xgboost_treeshap_neg_safe_margin"
+        labels = {"speed_kmph": "Speed", "accel_x": "Longitudinal Accel", "accel_y": "Lateral Accel",
+                  "brake_pressure": "Brake Pressure", "steering_angle": "Steering Angle", "throttle": "Throttle",
+                  "lane_deviation": "Lane Deviation", "headway_distance": "Headway Distance"}
+        top_three = sorted(contributions, key=lambda c: abs(c["contribution"]), reverse=True)[:3]
+        card = page.evaluate(r"""() => [...document.querySelectorAll('.feature-contribution-row')]
+            .map((row) => [row.querySelector('strong').textContent.trim(), row.querySelector('span').textContent.trim()])""")
+        assert card == [[labels[c["feature"]], ("+" if c["contribution"] >= 0 else "") + fixed(c["contribution"], 2)]
+                        for c in top_three]
+        assert page.locator(".feature-contribution-note").all_inner_texts() == [
+            "Explains Telemetry Non-Safe Risk; + pushes toward unsafe. TreeSHAP local attribution in "
+            "model-score (log-odds) units; not causal."]
         shoot(page, "04-explanation")
 
         # Configuration: both exports download, and are the server's exports of this session.

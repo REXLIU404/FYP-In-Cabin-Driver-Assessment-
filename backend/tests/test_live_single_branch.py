@@ -119,6 +119,10 @@ class Frozen:
     def classes(self, row: int) -> list[dict]:
         return [{"label": label, "probability": p} for label, p in self.rows[row]["behavior_classes"].items()]
 
+    def contributions(self, row: int) -> list[dict]:
+        """The TreeSHAP feature contributions (Safe-class attribution, sign flipped: positive pushes toward unsafe)."""
+        return [{"feature": name, "contribution": v} for name, v in self.rows[row]["feature_contributions"].items()]
+
 
 @pytest.fixture(scope="module")
 def frozen():
@@ -316,6 +320,10 @@ class TestStBranchTSmoke:
                 problems.append(f"window {wid}: P_telemetry_anomaly {record['P_telemetry_anomaly']!r} != frozen row {row} {frozen.pt(row)!r}")
             if record["telemetry_behavior_classes"] != frozen.classes(row):
                 problems.append(f"window {wid}: the three class probabilities differ from frozen row {row}")
+            if record["telemetry_feature_contributions"] != frozen.contributions(row):  # new AND repeat windows
+                problems.append(f"window {wid}: the feature contributions differ from frozen row {row}")
+            if prov.get("telemetry_contribution_method") != "xgboost_treeshap_neg_safe_margin":
+                problems.append(f"window {wid}: telemetry_contribution_method {prov.get('telemetry_contribution_method')!r}")
             if record["RiskScore"] != score_of(record["P_telemetry_anomaly"]):
                 problems.append(f"window {wid}: RiskScore {record['RiskScore']!r} != round_half_up(100 x P_t, 1) = {score_of(record['P_telemetry_anomaly'])!r}")
             if record["RiskLevel"] != level_of(score_of(record["P_telemetry_anomaly"])):
@@ -497,6 +505,8 @@ class TestStBranchTContinuity:
                 problems.append(f"window {wid} (seq {seq}): P_telemetry_anomaly {record['P_telemetry_anomaly']!r} != frozen row {row} {frozen.pt(row)!r}")
             if record["telemetry_behavior_classes"] != frozen.classes(row):
                 problems.append(f"window {wid} (seq {seq}): class probabilities differ from frozen row {row}")
+            if record["telemetry_feature_contributions"] != frozen.contributions(row):
+                problems.append(f"window {wid} (seq {seq}): feature contributions differ from frozen row {row}")
             if record["RiskScore"] != score_of(frozen.pt(row)) or record["RiskLevel"] != level_of(score_of(frozen.pt(row))):
                 problems.append(f"window {wid} (seq {seq}): {record['RiskScore']!r} {record['RiskLevel']} for frozen row {row}")
             if seq - 1 in unavailable_seqs or seq - 2 in unavailable_seqs:
@@ -714,7 +724,8 @@ class TestStBranchV:
                 problems.append(f"window {wid}: provenance sources {prov['vision_source']}/{prov['telemetry_source']}")
             if record["RiskScore"] != score_of(record["P_distraction"]) or record["RiskLevel"] != level_of(score_of(record["P_distraction"])):
                 problems.append(f"window {wid}: RiskScore {record['RiskScore']!r} / {record['RiskLevel']} for P_distraction {record['P_distraction']!r}")
-            if record["P_telemetry_anomaly"] != 0.0 or record["telemetry_features"] is not None or record["telemetry_behavior_classes"] != []:
+            if (record["P_telemetry_anomaly"] != 0.0 or record["telemetry_features"] is not None
+                    or record["telemetry_behavior_classes"] != [] or record["telemetry_feature_contributions"] != []):
                 problems.append(f"window {wid}: a missing telemetry branch carries data")
         assert not problems, f"{len(problems)} problems, first {problems[:8]}"
 

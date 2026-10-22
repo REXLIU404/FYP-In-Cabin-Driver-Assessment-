@@ -1,5 +1,5 @@
 {
-  "what": "Frozen P_telemetry_anomaly (= 1 - P(Safe)) and the three class probabilities of the trained XGBoost for each of the 25 rows of the prepared replay, produced by backend/tests/fixtures/make_telemetry_pt_fixture.py. Rows 13 and 16 (0-based) have no telemetry and carry null. A window's row is telemetry_seq % 25.",
+  "what": "Frozen P_telemetry_anomaly (= 1 - P(Safe)), the three class probabilities and the TreeSHAP feature contributions of the trained XGBoost for each of the 25 rows of the prepared replay, produced by backend/tests/fixtures/make_telemetry_pt_fixture.py. The contributions are a local attribution on the Safe-class score with the sign flipped (positive pushes toward unsafe), in log-odds, not causal, not a dataset-level feature importance: feature_contributions + contribution_baseline sum to -margin_Safe. Rows 13 and 16 (0-based) have no telemetry and carry null. A window's row is telemetry_seq % 25.",
   "telemetry_model_file": "ml/outputs/telemetry/xgb_telemetry.json",
   "telemetry_model_sha256": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
   "replay_csv": "ai/prototype-data/prepared_sessions/session_001/telemetry.csv",
@@ -28,7 +28,18 @@
         "Safe": 0.9997790455818176,
         "Aggressive": 6.998491153353825e-05,
         "Distracted": 0.00015100445307325572
-      }
+      },
+      "feature_contributions": {
+        "speed_kmph": -0.007805497385561466,
+        "accel_x": -0.10185913741588593,
+        "accel_y": -0.35926133394241333,
+        "brake_pressure": -3.6266157627105713,
+        "steering_angle": -0.05752299726009369,
+        "throttle": -0.00827666837722063,
+        "lane_deviation": -0.3046428859233856,
+        "headway_distance": -0.6351632475852966
+      },
+      "contribution_baseline": 0.11871296912431717
     },
     {
       "row": 1,
@@ -48,7 +59,18 @@
         "Safe": 0.32324329018592834,
         "Aggressive": 0.029405325651168823,
         "Distracted": 0.6473513841629028
-      }
+      },
+      "feature_contributions": {
+        "speed_kmph": -0.007805497385561466,
+        "accel_x": -0.06131267920136452,
+        "accel_y": -0.19677716493606567,
+        "brake_pressure": -2.2957253456115723,
+        "steering_angle": -0.03638264909386635,
+        "throttle": -0.0015636219177395105,
+        "lane_deviation": -0.09544149041175842,
+        "headway_distance": 4.763640880584717
+      },
+      "contribution_baseline": 0.11871296912431717
     },
     {
       "row": 2,
@@ -68,7 +90,18 @@
         "Safe": 0.20699238777160645,
         "Aggressive": 0.024418942630290985,
         "Distracted": 0.768588662147522
-      }
+      },
+      "feature_contributions": {
+        "speed_kmph": -0.03462729603052139,
+        "accel_x": 0.014604298397898674,
+        "accel_y": 0.07056760042905807,
+        "brake_pressure": -2.2292416095733643,
+        "steering_angle": -0.034589044749736786,
+        "throttle": -0.003350663697347045,
+        "lane_deviation": -0.0750923901796341,
+        "headway_distance": 4.62026834487915
+      },
+      "contribution_baseline": 0.11871296912431717
     },
     {
       "row": 3,
@@ -88,7 +121,18 @@
         "Safe": 0.9995394945144653,
         "Aggressive": 0.00011652790999505669,
         "Distracted": 0.0003439511638134718
-      }
+      },
+      "feature_contributions": {
+        "speed_kmph": -0.007805497385561466,
+        "accel_x": -0.09549200534820557,
+        "accel_y": -0.33169394731521606,
+        "brake_pressure": -3.5280203819274902,
+        "steering_angle": -0.054464537650346756,
+        "throttle": -0.002373890485614538,
+        "lane_deviation": -0.3458065092563629,
+        "headway_distance": -0.22539925575256348
+      },
+      "contribution_baseline": 0.11871296912431717
     },
     {
       "row": 4,
@@ -108,7 +152,18 @@
         "Safe": 0.0011129541089758277,
         "Aggressive": 0.00042052342905662954,
         "Distracted": 0.9984666109085083
-      }
+      },
+      "feature_contributions": {
+        "speed_kmph": -0.04195891693234444,
+        "accel_x": 0.10516292601823807,
+        "accel_y": 0.543867290019989,
+        "brake_pressure": -1.6916879415512085,
+        "steering_angle": -0.015777554363012314,
+        "throttle": 0.0011650000233203173,
+        "lane_deviation": 1.9575061798095703,
+        "headway_distance": 2.568671941757202
+      },
+      "contribution_baseline": 0.11871296912431717
     },
     {
       "row": 5,
@@ -128,7 +183,18 @@
         "Safe": 0.0011081602424383163,
         "Aggressive": 0.0005259750760160387,
         "Distracted": 0.9983658194541931
-      }
+      },
+      "feature_contributions": {
+        "speed_kmph": -0.04195891693234444,
+        "accel_x": 0.15568946301937103,
+        "accel_y": 0.11588429659605026,
+        "brake_pressure": -1.5767362117767334,
+        "steering_angle": -0.007400956936180592,
+        "throttle": 0.0011383802630007267,
+        "lane_deviation": 2.2345809936523438,
+        "headway_distance": 2.7738237380981445
+      },
+      "contribution_baseline": 0.11871296912431717
     },
     {
       "row": 6,
@@ -148,7 +214,18 @@
         "Safe": 0.00047398070455528796,
         "Aggressive": 0.000305606285110116,
         "Distracted": 0.9992203712463379
-      }
+      },
+      "feature_contributions": {
+        "speed_kmph": -0.04195891693234444,
+        "accel_x": 0.23871737718582153,
+        "accel_y": 0.7309616208076477,
+        "brake_pressure": -1.4283400774002075,
+        "steering_angle": 0.04411988705396652,
+        "throttle": 0.0014789137057960033,
+        "lane_deviation": 1.9787026643753052,
+        "headway_distance": 2.4376726150512695
+      },
+      "contribution_baseline": 0.11871296912431717
     },
     {
       "row": 7,
@@ -168,7 +245,18 @@
         "Safe": 6.895710248500109e-05,
         "Aggressive": 0.9998451471328735,
         "Distracted": 8.592185622546822e-05
-      }
+      },
+      "feature_contributions": {
+        "speed_kmph": 0.0049974350258708,
+        "accel_x": 0.3358193039894104,
+        "accel_y": 1.068092942237854,
+        "brake_pressure": 1.652031421661377,
+        "steering_angle": 0.021206581965088844,
+        "throttle": 0.18216484785079956,
+        "lane_deviation": -0.05309676751494408,
+        "headway_distance": 1.2878001928329468
+      },
+      "contribution_baseline": 0.11871296912431717
     },
     {
       "row": 8,
@@ -188,7 +276,18 @@
         "Safe": 6.895710248500109e-05,
         "Aggressive": 0.9998451471328735,
         "Distracted": 8.592185622546822e-05
-      }
+      },
+      "feature_contributions": {
+        "speed_kmph": 0.0049974350258708,
+        "accel_x": 0.33774635195732117,
+        "accel_y": 1.0664489269256592,
+        "brake_pressure": 1.6548831462860107,
+        "steering_angle": 0.021206581965088844,
+        "throttle": 0.18216484785079956,
+        "lane_deviation": -0.05844142287969589,
+        "headway_distance": 1.2900103330612183
+      },
+      "contribution_baseline": 0.11871296912431717
     },
     {
       "row": 9,
@@ -208,7 +307,18 @@
         "Safe": 6.895710248500109e-05,
         "Aggressive": 0.9998451471328735,
         "Distracted": 8.592185622546822e-05
-      }
+      },
+      "feature_contributions": {
+        "speed_kmph": 0.0049974350258708,
+        "accel_x": 0.3406884968280792,
+        "accel_y": 1.0522624254226685,
+        "brake_pressure": 1.6372027397155762,
+        "steering_angle": 0.05624682456254959,
+        "throttle": 0.18216484785079956,
+        "lane_deviation": -0.06352806836366653,
+        "headway_distance": 1.288981318473816
+      },
+      "contribution_baseline": 0.11871296912431717
     },
     {
       "row": 10,
@@ -228,7 +338,18 @@
         "Safe": 0.0002685190993361175,
         "Aggressive": 0.9983696341514587,
         "Distracted": 0.0013618096709251404
-      }
+      },
+      "feature_contributions": {
+        "speed_kmph": 0.0049974350258708,
+        "accel_x": 0.2778944969177246,
+        "accel_y": 0.8479804396629333,
+        "brake_pressure": 1.3502192497253418,
+        "steering_angle": 0.06282345205545425,
+        "throttle": 0.15032242238521576,
+        "lane_deviation": 0.7467529773712158,
+        "headway_distance": 1.05802583694458
+      },
+      "contribution_baseline": 0.11871296912431717
     },
     {
       "row": 11,
@@ -248,7 +369,18 @@
         "Safe": 0.00011741060734493658,
         "Aggressive": 0.9994813799858093,
         "Distracted": 0.00040124147199094296
-      }
+      },
+      "feature_contributions": {
+        "speed_kmph": 0.0049974350258708,
+        "accel_x": 0.2778944969177246,
+        "accel_y": 0.8479804396629333,
+        "brake_pressure": 1.3502192497253418,
+        "steering_angle": 0.06282345205545425,
+        "throttle": 0.15032242238521576,
+        "lane_deviation": 0.7467529773712158,
+        "headway_distance": 1.05802583694458
+      },
+      "contribution_baseline": 0.11871296912431717
     },
     {
       "row": 12,
@@ -268,14 +400,27 @@
         "Safe": 0.00010958389611914754,
         "Aggressive": 0.9996510744094849,
         "Distracted": 0.0002393301692791283
-      }
+      },
+      "feature_contributions": {
+        "speed_kmph": 0.0049974350258708,
+        "accel_x": 0.2801336646080017,
+        "accel_y": 0.8493214845657349,
+        "brake_pressure": 1.3524867296218872,
+        "steering_angle": 0.052855636924505234,
+        "throttle": 0.15124884247779846,
+        "lane_deviation": 0.7490203380584717,
+        "headway_distance": 1.0589523315429688
+      },
+      "contribution_baseline": 0.11871296912431717
     },
     {
       "row": 13,
       "window_id": 14,
       "telemetry_features": null,
       "P_telemetry_anomaly": null,
-      "behavior_classes": null
+      "behavior_classes": null,
+      "feature_contributions": null,
+      "contribution_baseline": null
     },
     {
       "row": 14,
@@ -295,7 +440,18 @@
         "Safe": 9.644405508879572e-05,
         "Aggressive": 0.9997294545173645,
         "Distracted": 0.0001740367733873427
-      }
+      },
+      "feature_contributions": {
+        "speed_kmph": 0.0049974350258708,
+        "accel_x": 0.2805808186531067,
+        "accel_y": 0.7885859608650208,
+        "brake_pressure": 1.3299615383148193,
+        "steering_angle": 0.15691961348056793,
+        "throttle": 0.15124884247779846,
+        "lane_deviation": 0.7324895858764648,
+        "headway_distance": 1.0542322397232056
+      },
+      "contribution_baseline": 0.11871296912431717
     },
     {
       "row": 15,
@@ -315,14 +471,27 @@
         "Safe": 8.510057523380965e-05,
         "Aggressive": 0.9997555613517761,
         "Distracted": 0.00015928794164210558
-      }
+      },
+      "feature_contributions": {
+        "speed_kmph": 0.0049974350258708,
+        "accel_x": 0.2801336646080017,
+        "accel_y": 0.8493214845657349,
+        "brake_pressure": 1.3524867296218872,
+        "steering_angle": 0.052855636924505234,
+        "throttle": 0.15124884247779846,
+        "lane_deviation": 0.7490203380584717,
+        "headway_distance": 1.0589523315429688
+      },
+      "contribution_baseline": 0.11871296912431717
     },
     {
       "row": 16,
       "window_id": 17,
       "telemetry_features": null,
       "P_telemetry_anomaly": null,
-      "behavior_classes": null
+      "behavior_classes": null,
+      "feature_contributions": null,
+      "contribution_baseline": null
     },
     {
       "row": 17,
@@ -342,7 +511,18 @@
         "Safe": 6.63208556943573e-05,
         "Aggressive": 0.9998539686203003,
         "Distracted": 7.966407429194078e-05
-      }
+      },
+      "feature_contributions": {
+        "speed_kmph": 0.0049974350258708,
+        "accel_x": 0.3308560252189636,
+        "accel_y": 1.0481997728347778,
+        "brake_pressure": 1.6285762786865234,
+        "steering_angle": 0.04356572777032852,
+        "throttle": 0.18216484785079956,
+        "lane_deviation": -0.002896541729569435,
+        "headway_distance": 1.2635526657104492
+      },
+      "contribution_baseline": 0.11871296912431717
     },
     {
       "row": 18,
@@ -362,7 +542,18 @@
         "Safe": 0.00028975438908673823,
         "Aggressive": 0.00039488644688390195,
         "Distracted": 0.9993153810501099
-      }
+      },
+      "feature_contributions": {
+        "speed_kmph": 0.0049974350258708,
+        "accel_x": 0.23645421862602234,
+        "accel_y": 0.8670595288276672,
+        "brake_pressure": 1.3736138343811035,
+        "steering_angle": 0.016192372888326645,
+        "throttle": 0.1628674864768982,
+        "lane_deviation": 0.763015866279602,
+        "headway_distance": 1.0748156309127808
+      },
+      "contribution_baseline": 0.11871296912431717
     },
     {
       "row": 19,
@@ -382,7 +573,18 @@
         "Safe": 0.20730414986610413,
         "Aggressive": 0.02627846971154213,
         "Distracted": 0.7664174437522888
-      }
+      },
+      "feature_contributions": {
+        "speed_kmph": -0.03462729603052139,
+        "accel_x": 0.02284526266157627,
+        "accel_y": 0.07099921256303787,
+        "brake_pressure": -2.22760272026062,
+        "steering_angle": -0.034589044749736786,
+        "throttle": -0.003350663697347045,
+        "lane_deviation": -0.07483220100402832,
+        "headway_distance": 4.615943431854248
+      },
+      "contribution_baseline": 0.11871296912431717
     },
     {
       "row": 20,
@@ -402,7 +604,18 @@
         "Safe": 0.32324329018592834,
         "Aggressive": 0.029405325651168823,
         "Distracted": 0.6473513841629028
-      }
+      },
+      "feature_contributions": {
+        "speed_kmph": -0.007805497385561466,
+        "accel_x": -0.06256074458360672,
+        "accel_y": -0.19732841849327087,
+        "brake_pressure": -2.295416831970215,
+        "steering_angle": -0.03638249263167381,
+        "throttle": -0.0015636219177395105,
+        "lane_deviation": -0.12336360663175583,
+        "headway_distance": 4.79305362701416
+      },
+      "contribution_baseline": 0.11871296912431717
     },
     {
       "row": 21,
@@ -422,7 +635,18 @@
         "Safe": 0.9995884299278259,
         "Aggressive": 0.00011653361434582621,
         "Distracted": 0.00029499808442778885
-      }
+      },
+      "feature_contributions": {
+        "speed_kmph": -0.007805497385561466,
+        "accel_x": -0.09533962607383728,
+        "accel_y": -0.33306780457496643,
+        "brake_pressure": -3.529548168182373,
+        "steering_angle": -0.054615288972854614,
+        "throttle": -0.002373890485614538,
+        "lane_deviation": -0.35011807084083557,
+        "headway_distance": -0.21818816661834717
+      },
+      "contribution_baseline": 0.11871296912431717
     },
     {
       "row": 22,
@@ -442,7 +666,18 @@
         "Safe": 0.9997790455818176,
         "Aggressive": 6.998491153353825e-05,
         "Distracted": 0.00015100445307325572
-      }
+      },
+      "feature_contributions": {
+        "speed_kmph": -0.007805497385561466,
+        "accel_x": -0.10956598818302155,
+        "accel_y": -0.35149523615837097,
+        "brake_pressure": -3.6312499046325684,
+        "steering_angle": -0.05752299726009369,
+        "throttle": -0.0071776192635297775,
+        "lane_deviation": -0.30631574988365173,
+        "headway_distance": -0.6300141215324402
+      },
+      "contribution_baseline": 0.11871296912431717
     },
     {
       "row": 23,
@@ -462,7 +697,18 @@
         "Safe": 0.999782383441925,
         "Aggressive": 6.890610529808328e-05,
         "Distracted": 0.0001486765977460891
-      }
+      },
+      "feature_contributions": {
+        "speed_kmph": -0.007805497385561466,
+        "accel_x": -0.09876912832260132,
+        "accel_y": -0.33583226799964905,
+        "brake_pressure": -3.6361050605773926,
+        "steering_angle": -0.05752299726009369,
+        "throttle": -0.0071776192635297775,
+        "lane_deviation": -0.31940600275993347,
+        "headway_distance": -0.6540673971176147
+      },
+      "contribution_baseline": 0.11871296912431717
     },
     {
       "row": 24,
@@ -482,7 +728,18 @@
         "Safe": 0.9997883439064026,
         "Aggressive": 6.890651275170967e-05,
         "Distracted": 0.00014275882858783007
-      }
+      },
+      "feature_contributions": {
+        "speed_kmph": -0.004151719156652689,
+        "accel_x": -0.08897154033184052,
+        "accel_y": -0.31231245398521423,
+        "brake_pressure": -3.6396470069885254,
+        "steering_angle": -0.05752299726009369,
+        "throttle": -0.006852596998214722,
+        "lane_deviation": -0.3197084963321686,
+        "headway_distance": -0.6875191926956177
+      },
+      "contribution_baseline": 0.11871296912431717
     }
   ]
 }
