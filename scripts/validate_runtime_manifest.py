@@ -23,7 +23,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("manifest", type=Path)
     parser.add_argument("--package-dir", type=Path, help="also check the model file inside this package")
     args = parser.parse_args(argv)
-    manifest = json.loads(args.manifest.read_text())
+    try:
+        manifest = json.loads(args.manifest.read_text())
+    except ValueError as exc:
+        print(f"{args.manifest}: not valid JSON ({exc})")
+        print("1 problem(s)")
+        return 1
     errors = validate_package(manifest, args.package_dir) if args.package_dir else validate_manifest(manifest)
     for error in errors:
         print(error)
