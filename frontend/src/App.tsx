@@ -18,6 +18,7 @@ import { useLiveSession } from "./hooks/useLiveSession";
 import { useSessionLog } from "./hooks/useSessionLog";
 import type { AppConfig } from "./types";
 import { DATA_MODE_NOTE, DATA_MODE_OPTIONS } from "./utils/dataMode";
+import { selectRecord } from "./utils/selection";
 import { exportSessionLogCSV, exportSessionLogJSON } from "./utils/export";
 import { retryHandler } from "./utils/runtimeNotices";
 import {
@@ -44,7 +45,8 @@ export default function App() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [config, setConfig] = useState<AppConfig>(() => loadConfig());
   const [cursor, setCursor] = useState(0);
-  const [selectedWindowId, setSelectedWindowId] = useState(1);
+  // null follows the newest window; a number is a window the person pinned (utils/selection.ts).
+  const [selectedWindowId, setSelectedWindowId] = useState<number | null>(null);
   const camera = useCameraPreview();
   const replayLog = useSessionLog(replayId);
   const live = useLiveSession(config, camera.captureFrame);
@@ -76,9 +78,15 @@ export default function App() {
   const monitoring = isLive ? live.running : replay.isMonitoring;
   const history = isLive ? live.history : replayLog.log;
   const latest = history[history.length - 1];
-  const selectedRecord =
-    history.find((record) => record.window_id === selectedWindowId) ?? latest;
+  const selectedRecord = selectRecord(history, selectedWindowId);
   const sessionId = isLive ? live.sessionId : replayId;
+  // Another session (new, or loaded from the saved list) opens on its newest window: drop the pin.
+  // Reset during render, not in an effect, so no frame shows the old pin against the new history.
+  const [selectionSession, setSelectionSession] = useState(sessionId);
+  if (selectionSession !== sessionId) {
+    setSelectionSession(sessionId);
+    setSelectedWindowId(null);
+  }
   const savedFusion = selectedRecord?.provenance?.fusion_config;
   const evidenceConfig = savedFusion
     ? {
@@ -111,7 +119,7 @@ export default function App() {
         replayLog.reset();
         alertFsmRef.current = initAlertState();
         setCursor(0);
-        setSelectedWindowId(1);
+        setSelectedWindowId(null);
       }
       replay.start();
     }
@@ -119,7 +127,7 @@ export default function App() {
   const updateConfig = (next: AppConfig) => {
     pause();
     setConfig(next);
-    setSelectedWindowId(1);
+    setSelectedWindowId(null);
   };
   const exportLog = (format: "json" | "csv") => {
     if (isLive) {
