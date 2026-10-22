@@ -8,7 +8,9 @@ for ``DRA_LONG_MINUTES`` minutes (default 15, about 9,000 windows at 10 Hz). Ass
   * a sample of windows (every 97th and the last 20) agrees field by field across the five homes;
   * the page keeps the newest 500 windows; no fault, no re-send, no stop panel, no console error.
 Recorded, not judged (no threshold): per-minute window count, round trip and render p50 / p95 from
-the page's timing buffer, the JS heap, and the database file size. With ``DRA_E2E_EVIDENCE_DIR``
+the page's timing buffer, the JS heap and DOM node count (read through the Chrome DevTools Protocol,
+``Performance.getMetrics``: ``performance.memory`` is bucketed and rarely refreshed without
+--enable-precise-memory-info, so it cannot show growth), and the database file size. With ``DRA_E2E_EVIDENCE_DIR``
 set the measurement is written there as ``long-session.json``.
 """
 from __future__ import annotations
@@ -56,6 +58,11 @@ def test_st_long_01_a_long_session_is_stored_and_exported_completely(pw, e2e_ser
     run = LiveRun(chrome)
     page, tap = chrome.page, chrome.tap
     samples: list[dict] = []
+    cdp = page.context.new_cdp_session(page)
+    cdp.send("Performance.enable")
+
+    def page_metrics() -> dict:
+        return {m["name"]: m["value"] for m in cdp.send("Performance.getMetrics")["metrics"]}
     try:
         chrome.open()
         chrome.top_button("Start Monitoring").click()
@@ -74,7 +81,8 @@ def test_st_long_01_a_long_session_is_stored_and_exported_completely(pw, e2e_ser
                     "windows": len(tap.answered(sid)),
                     "network_including_server_ms": summarise([t["networkMs"] for t in recent]),
                     "render_ms": summarise([t["renderMs"] for t in recent if t["renderMs"] is not None]),
-                    "js_heap_bytes": page.evaluate("() => performance.memory ? performance.memory.usedJSHeapSize : null"),
+                    "js_heap_used_bytes": page_metrics().get("JSHeapUsedSize"),
+                    "dom_nodes": page_metrics().get("Nodes"),
                     "db_bytes": db_bytes(e2e_server),
                 })
                 next_sample += 60
