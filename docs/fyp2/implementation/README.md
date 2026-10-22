@@ -42,6 +42,7 @@
 | Task 10 第 2a 部分：Live 端到端 | `task-10-part2a-acceptance.zh.md` | `task-10-part2a.md` | `47484d3`、`afcdd0b` | 922 → 934 / 870 |
 | Task 10 第 2b 部分：单分支系统测试与 W4 归档 | `task-10-part2b-acceptance.zh.md` | `task-10-part2b.md` | `ae1c197`、`c2191c0`、`87bdc3f`、`eb000bc` | 934 → 952 / 870 |
 | FIX-BACKEND-REACH：后端没启动被误报为模型错误；真实重启后端 e2e | `fix-backend-reach-acceptance.zh.md` | `fix-backend-reach.md` | `83219da` | 952 → 967 / 870 → 910 |
+| TELEMETRY-CONTRIBUTIONS：Live 遥测特征贡献（TreeSHAP，解释非安全风险） | `telemetry-contributions-acceptance.zh.md` | `telemetry-contributions.md` | `346f3a6` | 967 → 979 / 910 → 918 |
 
 每份验收报告的第 3 节都列出了变异检验：每项变异在隔离副本里运行，并写明变红的测试。
 
