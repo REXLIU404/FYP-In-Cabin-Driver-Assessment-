@@ -1,7 +1,10 @@
 # G-W5-A gate evidence (hard gate, sprint plan v3 W5) - closed early
 
 - **Gate commit:** `5040e9d` (`fyp2/live-system`). Planned date: Friday 2026-11-06; closed 2026-10-22.
-- **Logs:** `run_gates.py --out docs/evidence/2026-10-22/w5-gate` with `DRA_REQUIRE_MODELS=1`, on committed code, in the real worktree whose `.venv` is now its own virtualenv built from `backend/requirements.lock.txt`. "working tree dirty" in `SUMMARY.md` is this directory being written.
+- **Logs:** `run_gates.py --out docs/evidence/2026-10-22/w5-gate` with `DRA_REQUIRE_MODELS=1`, on committed code, in the real worktree whose `.venv` is now its own virtualenv built from `backend/requirements.lock.txt`. "working tree dirty" in `SUMMARY.md` and `freeze_manifest.txt` has two causes: this evidence directory
+  being written, and two then-untracked measurement scripts (`scripts/perf01.py`, `scripts/perf02.py`, committed
+  later in `4f38cfc` / `66327ee`). No gate imports or runs those scripts, so the gate result is that of `5040e9d`
+  itself. (Corrected after the final review; the first wording named only the evidence directory.)
 - **Result:** GREEN.
 
 | Gate | Result |
