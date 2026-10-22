@@ -57,6 +57,28 @@ Frontal-camera accuracy and target edge hardware remain to be measured. Existing
 source-dataset results are not field validation. Additional model experiments
 are paused at the user's request.
 
+## Clean start from a fresh checkout
+
+What a new machine needs, in order (Python 3.13 and Node 24 were used):
+
+```bash
+git clone <repo> && cd <repo>
+python3 -m venv .venv
+.venv/bin/python -m pip install -r backend/requirements.lock.txt   # exact tested versions
+.venv/bin/python -m playwright install chromium                     # once per machine (browser tests)
+npm ci
+# The trained models are NOT in git. Put these three files in place (or link them):
+#   ml/outputs/vision/mobilenetv3_large_vision.onnx   b3a42e8d...
+#   ml/outputs/vision/mobilenetv3_large_vision.pt     196ca7b1...
+#   ml/outputs/telemetry/xgb_telemetry.json           9802cb06...
+DRA_REQUIRE_MODELS=1 python3 scripts/run_gates.py   # build, pytest (incl. browser tests), vitest, tsc, eslint
+```
+
+`scripts/coldstart_check.sh` does all of this in a scratch clone and then serves the dashboard
+from it (ST-COLDSTART-01); its log and the gate logs go to `docs/evidence/<date>/coldstart/`.
+Without the model files the model-dependent tests are skipped with a banner, and
+`DRA_REQUIRE_MODELS=1` turns each skip into a failure.
+
 ## Repository
 
 ```text
