@@ -79,6 +79,7 @@
 - [x] **R5 单分支系统测试**：ST-BRANCH-T-SMOKE / T-CONTINUITY / V / ZERO（计划 Task 10 Step 2A）。测试工具内拦截请求，产品代码不改（2b）
 - [x] **Task 8 转入（React 绑定层无单测）**（2a，E2 三条）：E2E 断言停止面板 Retry 用同一会话且 `X-Attempt-Index` = 4；摄像头意外断开与主动 Stop Camera 显示不同；New Session 失败后 Retry 新建会话
 - **状态：** complete（2026-10-20）
+- [x] **FIX-BACKEND-REACH**（用户 10-20 实测发现；`83219da`，只做评审 clean，验收 PASS；pytest 952 → 967，vitest 870 → 910）：后端响应标识 `X-DRA-Backend`、无标识错误归为「后端无法连接」、setup 标题与 Server message、开发代理形态与真实重启后端的 e2e
 
 ### 阶段 5：需用户裁定的政策项（裁定后再实现）
 - [ ] **R09 / D13：已裁定 A**（2026-10-13，用户本人确认；**2026-10-15 提前为阶段 2.5 的 P0-D13**）：过期证据按 missing 计分，provenance 保留 `{modality}_expired` / `{modality}_age_s`；运行时不再产出 stale，0.45 只留给历史记录；阈值 = `freshness_tolerance_s`，默认 3 s、可配 (0, 30]，只称设计阈值，须用 PERF-01 与 2 / 3 / 5 s 敏感性复核。实施时同步改：IT-LIVE-AGE 3001 ms / 30 天 / D13 快照、两条 gap 测试第 1 步（改 fake clock）、F1 W16（62.5 → 60.0）、Task 8 重试窗口的预期

@@ -44,7 +44,9 @@ pytest run includes a scripted Live end-to-end (one uvicorn serving `dist/` and 
 Chromium with a fake camera): `backend/tests/test_live_e2e.py` and
 `backend/tests/test_live_single_branch.py`. `live_e2e.md` maps each step of the
 checklist below to the test that automates it and lists what is still manual (a
-physical camera, how the pages look, a real backend restart, target hardware).
+physical camera, how the pages look, target hardware). Step 8, including a real
+backend stopped mid-session and restarted on the same database, is automated by
+`backend/tests/test_live_backend_reach.py`.
 
 ## Manual Live end-to-end checklist
 
