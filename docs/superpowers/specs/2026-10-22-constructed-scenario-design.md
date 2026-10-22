@@ -1,8 +1,8 @@
 # Constructed scenario 设计文档（演示用的数据集图片回放）
 
 - 日期：2026-10-22
-- 分支 / 工作副本：`fyp2/dataset-replay`，`/Users/liu/Desktop/FYP2-Live-System-backups`（从 `fyp2/live-system` 的 `84a1891` 分出）
-- 状态：设计四节已逐节经用户确认，本文件待用户审阅
+- 分支 / 工作副本：短期分支 `fyp2/constructed-scenario`，工作副本在 `/Users/liu/Desktop/FYP2-Constructed-Scenario`，从 `fyp2/live-system` 的 `bb947f0` 分出，逐项合并回 `fyp2/live-system`（见第 9 节）
+- 状态：设计四节已逐节经用户确认（2026-10-22）；第 2、4.1、9 节按用户当天「改在 Live system 分支开发」的决定修订（见第 11 节修订记录），修订部分待用户确认
 
 ## 1. 背景与目的
 
@@ -38,7 +38,7 @@
 
 ## 2. 范围与非目标
 
-- **不改动 `fyp2/live-system`**：全部工作在 `fyp2/dataset-replay` 上完成。
+- **在 `fyp2/live-system` 上开发**：通过单独的工作副本和短期分支 `fyp2/constructed-scenario` 进行，逐项合并回 `fyp2/live-system`，规则见第 9 节。界面上用它**替换「Prepared replay (legacy, test-only)」那个选项**。
 - **不是评估结果**：本模式的测试和演示运行报告只是工程检查，用来保证演示能跑通。**FYP 报告与答辩引用的结果只来自 Live 系统。** 本模式在报告中只作为演示手段出现，并与「正面摄像头视角差异」这条限制一起说明。
 - 不训练、不调参模型，模型文件保持冻结。
 - 不修复正面摄像头的视角问题，Live 模式保持现状。
@@ -79,7 +79,7 @@
 
 1. 生成脚本按剧本生成情景包；
 2. 后端只读地提供情景包；
-3. 前端的帧来源和遥测来源接入**现有的、未修改的** `ai/src/liveLoop.ts`；
+3. 前端的帧来源和遥测来源接入现有的 `ai/src/liveLoop.ts`。**循环逻辑不改**，只扩展两处：请求的类型定义（`CapturedAtSource` 增加 `replay_clock`，`LivePayload` 增加可选的 `replay`），以及组装请求的 `buildLivePayload`；
 4. `POST /infer` → 真实的 MobileNetV3 与 XGBoost → R10 与告警状态机 → SQLite → 五个视图与导出。
 
 ### 4.1 运行模式与标注
@@ -87,10 +87,13 @@
 - **新增 `OperationMode = "CONSTRUCTED_SCENARIO_RUNTIME"`**，前后端同步：`ai/src/types.ts`、`backend/app/schemas.py`。
   - 每条记录的 `operation_mode` 都会写明是这个模式。
   - 内部按 Live 类处理：观测身份、规范采集时间、NEW-only EMA、双条件告警，调用真实模型。
-  - 现在判断 `== "LIVE_MODEL_RUNTIME"` 的地方，改成判断「是否属于 Live 类模式」（`LIVE_LIKE_MODES`）。
+  - 现在判断 `== "LIVE_MODEL_RUNTIME"` 的地方，**统一改成一个函数** `is_live_like(mode)`（后端）/ `isLiveLike(mode)`（前端），判断「是否属于 Live 类模式」。涉及 `inference.run_inference`、`windows._infer` 与 `_persist_window`、`status.py`，以及前端的同类判断。
+  - `/infer` 必须用**会话自己的模式**写入记录。否则新模式会通过第一道检查，却在写入时的第二道模式检查处返回 409。
+  - **现有的 R10 测试对两种模式都跑一遍**（参数化）：观测身份、双条件告警、NEW-only EMA 必须完全相同。
+  - Live 会话的 409 文本保持 `Create a live model session first` 不变，现有测试和前端分类都依赖它。
 - **来源标签由服务端按会话模式写入，不采用客户端的说法**：
-  - `provenance.vision_source = "dataset_replay"`，不再在 `trained.py` 里写死成 `camera_frame`；
-  - `provenance.telemetry_source = "dataset_replay"`；
+  - 在 `windows._infer` 里按会话模式覆盖：本模式下 `provenance.vision_source = "dataset_replay"`、`provenance.telemetry_source = "dataset_replay"`（对应分支缺失时为 `missing`）。`trained.py` 保持不变，Live 仍写 `camera_frame`（现有测试钉住）。
+  - 客户端照旧声明 `telemetry_source: "prepared_replay"`。请求的取值范围**不增加** `dataset_replay`，避免服务端去相信客户端的说法；
   - `captured_at_source` 新增取值 `"replay_clock"`，只在本模式下接受。
 - **真实标签块 `replay`**：请求可以附带
   ```json
@@ -98,8 +101,11 @@
   ```
   - 只在本模式下接受，其他模式发送会返回 422；
   - 存入 `provenance.replay`，**不参与任何计算**；
-  - 它是请求体的一部分，因此进入 request hash。
-- **模式不能混用**：会话模式与请求不符时返回 409，沿用 `conflict_mode`。
+  - 它是请求体的一部分，因此进入 request hash。**但值为空时不进入 hash**（与 R10 的可选字段同样处理），否则所有旧请求的 hash 都会变；
+  - 字段都可以为空：本帧没有图像时不带 `frame_file` / `vision_label`，没有遥测时不带 `telemetry_row` / `telemetry_label`。服务端不做交叉校验，免得一个 422 让演示停下；`segment_index` 从 0 开始，界面显示时加 1；
+  - 本模式**不要求**必须带 `replay` 或 `replay_clock`，标注由服务端按模式写入；
+  - 「只在本模式下接受」在 `windows._infer` 中检查（schema 看不到会话模式），返回 422，类别为 `input_validation`。
+- **模式不能混用**：会话模式与请求不符时返回 409。后端类别为 `mode_conflict`，前端停止类别为 `conflict_mode`，文本保持不变。
 
 ### 4.2 情景包
 
@@ -120,7 +126,8 @@
 - `GET /api/scenarios/{id}/frames/{file}`：只允许清单里列出的文件名，防止路径穿越。
 - 根目录取 `DRA_SCENARIO_ROOT`，默认 `<repo>/demo/bundles`。
   - 根目录不存在时，列表接口返回空列表；
-  - 未知 id，或清单中没有的文件名，返回 404。
+  - 未知 id，或清单中没有的文件名，返回 404；
+  - **完整性检查放在列表接口**：每个情景包带 `status`（`ok` / `invalid`）和 `error`（原因）。检查内容包括清单能否解析、每张图片是否存在、SHA256 是否与清单一致。剧本下拉框直接显示这个原因。
 
 ### 4.4 前端
 
@@ -193,7 +200,8 @@
    - 遥测行改按 seq 取，不按播放位置：暂停恢复后两路错段；
    - 生成脚本使用了 train 数据；
    - 播放器上的标签消失。
-7. **现有门禁保持全绿**。需要修改的既有测试只有下拉框选项那一条（`dataMode.test.ts`）。
+7. **现有门禁保持全绿**。需要修改的既有测试只有下拉框选项那一条（`dataMode.test.ts`）。2a / 2b 的端到端测试依赖「每次打开页面从 Live 开始」，这一点保持不变。
+8. `backend/tests/e2e_support.py` 是与 Tasks1-10 会话共享的测试辅助文件，修改前先通知对方。端到端测试需要让 `start_server` 能把 `DRA_SCENARIO_ROOT` 传给服务端（新增可选参数，默认行为不变）。
 
 ## 8. 标注与诚实性约束（落实 2026-10-13 的条件）
 
@@ -208,15 +216,35 @@
 
 ## 9. 工作副本、环境与 ML 同步
 
-- **工作副本**：`/Users/liu/Desktop/FYP2-Live-System-backups`，分支 `fyp2/dataset-replay`。`fyp2/live-system` 保持不变。
-- **本地环境**（实施计划的第一步）：
-  - `node_modules`：从 `FYP2-Live-System` 用 ditto 复制一份本地副本，不用符号链接，以免 vite 写到别的工作树；
-  - `.venv`：沿用与系统轨道相同的做法；
-  - 模型文件：以只读链接接入 `ml/outputs/`。
+- **工作副本与分支**：`/Users/liu/Desktop/FYP2-Constructed-Scenario`，短期分支 `fyp2/constructed-scenario`，从 `fyp2/live-system` 的 `bb947f0` 分出（Tasks1-10 会话确认的稳定起点）。
+- **与 Tasks1-10 会话分工**：它在 `/Users/liu/Desktop/FYP2-Live-System` 里继续工作，本项不碰那个工作树。它承诺不再改产品代码，只改性能脚本、证据、文档与路线图。共享的 `backend/tests/e2e_support.py` 由双方修改前互相通知。
+- **合并回 `fyp2/live-system` 的规则**：每完成一项，先与 Tasks1-10 确认；在合并后的树上运行 `DRA_REQUIRE_MODELS=1 python3 scripts/run_gates.py`（含全部浏览器测试），全绿才快进合并。拉取 `fyp2/live-system` 的更新也要先等 Tasks1-10 回复。
+- **本地环境**（实施计划的第一步，参照 `scripts/coldstart_check.sh` 的做法，就地进行）：
+  - `.venv`：用 `backend/requirements.lock.txt` 建本工作副本自己的虚拟环境，不借用其他工作树的；
+  - `node_modules`：`npm ci`，不用符号链接，以免 vite 写到别的工作树；
+  - 模型文件：以只读链接接入主仓库的 `ml/outputs/`，与 `FYP2-Live-System` 的做法相同。
 - **ML 同步**：ML 轨道（`fyp2/ml-training`）有新的冻结模型或 manifest 时，把相应提交合并进本分支，模型文件按同样方式链接。情景包与模型无关，换模型后不需要重新生成。
 
 ## 10. 未决与可选
 
 - 「摄像头被挡住」段：默认不加。
 - 循环播放：默认不循环，剧本结束后停止。
-- 本分支将来是否合回 `fyp2/live-system` / `main`：由用户之后决定，本设计不预设。
+- `main`：本设计不预设何时合并进 `main`，由用户决定。
+- `FYP2-Live-System-backups` 工作副本与 `fyp2/dataset-replay` 分支已不再使用，删除前先问用户。
+
+## 11. 修订记录
+
+- **2026-10-22 初稿**：第 1–4 节逐节经用户确认，提交于 `fyp2/dataset-replay`（`1f38c2d`）。
+- **2026-10-22 修订**（用户决定改在 Live system 分支开发；读代码时发现的事实）：
+  - 第 2、9 节：工作地点改为 `fyp2/live-system`，通过单独工作副本加短期分支进行；写明与 Tasks1-10 的分工和合并规则；用新模式替换「Prepared replay」选项。
+  - 第 4 节：Live 循环的逻辑不改，但 `liveLoop.ts` 的类型和 `buildLivePayload` 要小改。原文「未修改」不准确。
+  - 第 4.1 节：
+    - Live 类模式统一用一个判断函数，R10 测试两种模式都跑；
+    - `/infer` 按会话模式写入；
+    - 来源标签在 `windows._infer` 覆盖，`trained.py` 不变；
+    - 请求的取值范围不增加 `dataset_replay`；
+    - `replay` 为空时不进入 hash；
+    - 字段可以为空，不做交叉校验；
+    - 模式限制在路由里检查，返回 422。
+  - 第 4.3 节：完整性检查放在列表接口。
+  - 第 7 节：共享测试辅助文件的协作约定，`start_server` 需要能传入 `DRA_SCENARIO_ROOT`。
