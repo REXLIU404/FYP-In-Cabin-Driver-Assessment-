@@ -43,6 +43,15 @@ def test_a_long_test_is_deselected_not_skipped_in_a_normal_run(tmp_path):
     assert "skipped" not in done.stdout
 
 
+def test_a_marker_expression_that_merely_contains_the_letters_long_does_not_start_it(tmp_path):
+    """Deferred minor M7: the check is on the marker NAME, not a substring. ``-m "not longer"`` selects
+    every test without a ``longer`` marker - the long one included - so only the conftest stands
+    between it and a 15-minute run."""
+    done = run(tmp_path, "-m", "not longer")
+    assert done.returncode == 0, done.stdout
+    assert "1 passed, 1 deselected" in done.stdout, done.stdout
+
+
 def test_minus_m_long_runs_only_the_long_tests(tmp_path):
     done = run(tmp_path, "-m", "long")
     assert done.returncode == 0, done.stdout

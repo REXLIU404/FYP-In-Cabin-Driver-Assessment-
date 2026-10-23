@@ -7,11 +7,17 @@ for ``DRA_LONG_MINUTES`` minutes (default 15, about 9,000 windows at 10 Hz). Ass
     hold exactly 1..N;
   * a sample of windows (every 97th and the last 20) agrees field by field across the five homes;
   * the page keeps the newest 500 windows; no fault, no re-send, no stop panel, no console error.
-Recorded, not judged (no threshold): per-minute window count, round trip and render p50 / p95 from
-the page's timing buffer, the JS heap and DOM node count (read through the Chrome DevTools Protocol,
+Recorded, not judged (no threshold): per-minute window count, round trip and render p50 / p95, the
+first 1,000 against the last 1,000 windows (the plan's comparison), the JS heap and DOM node count (read
+through the Chrome DevTools Protocol,
 ``Performance.getMetrics``: ``performance.memory`` is bucketed and rarely refreshed without
 --enable-precise-memory-info, so it cannot show growth), and the database file size. With ``DRA_E2E_EVIDENCE_DIR``
 set the measurement is written there as ``long-session.json``.
+
+Timings: the page's buffer (window.__draLiveTimings) keeps only the newest 500 windows, about 50 s at
+10 Hz, so it is read every HARVEST_S seconds and accumulated here, keyed by window id. Each per-minute
+row and the first / last 1,000 are computed from that accumulated set; ``timing_coverage`` says what
+share of the stored windows it holds.
 """
 from __future__ import annotations
 
@@ -36,6 +42,8 @@ pytestmark = [pytest.mark.long, pytest.mark.e2e, requires_models]
 
 MINUTES = float(os.environ.get("DRA_LONG_MINUTES", "15"))
 PAGE_HISTORY = 500
+HARVEST_S = 20  # 200 windows at 10 Hz: well inside the 500-entry buffer
+EDGE = 1000  # the plan's "first 1,000 vs last 1,000 windows"
 
 
 def all_windows(client, sid: str) -> list[dict]:
@@ -63,29 +71,45 @@ def test_st_long_01_a_long_session_is_stored_and_exported_completely(pw, e2e_ser
 
     def page_metrics() -> dict:
         return {m["name"]: m["value"] for m in cdp.send("Performance.getMetrics")["metrics"]}
+
+    timings: dict[int, dict] = {}  # window id -> the rendered timing entry, accumulated over the run
+
+    def harvest() -> None:
+        for entry in page.evaluate("() => window.__draLiveTimings") or []:
+            if entry.get("sessionId") == run.sid and entry.get("renderMs") is not None:
+                timings[entry["windowId"]] = entry
+
+    def stats(entries: list[dict]) -> dict:
+        return {"network_including_server_ms": summarise([t["networkMs"] for t in entries]),
+                "render_ms": summarise([t["renderMs"] for t in entries])}
     try:
         chrome.open()
         chrome.top_button("Start Monitoring").click()
         chrome.wait_until(lambda: len(tap.answered()) >= 5, "the first windows", 60)
         run.sid = sid = tap.session_posts[0].response["id"]
         started = time.time()
-        next_sample = started + 60
+        next_sample, next_harvest = started + 60, started + HARVEST_S
         while time.time() - started < MINUTES * 60:
             chrome.wait(1000)  # keeps the page and the request tap running
             assert chrome.stop_panel().count() == 0, f"monitoring stopped: {chrome.stop_panel_text()}"
+            if time.time() >= next_harvest:
+                harvest()
+                next_harvest += HARVEST_S
             if time.time() >= next_sample:
-                timings = page.evaluate("() => window.__draLiveTimings") or []
-                recent = timings[-600:]
+                harvest()
+                minute_start_ms = (next_sample - 60) * 1000
+                this_minute = [t for t in timings.values() if t["capturedAtMs"] >= minute_start_ms]
                 samples.append({
                     "minute": round((time.time() - started) / 60, 2),
                     "windows": len(tap.answered(sid)),
-                    "network_including_server_ms": summarise([t["networkMs"] for t in recent]),
-                    "render_ms": summarise([t["renderMs"] for t in recent if t["renderMs"] is not None]),
+                    "timed_windows_this_minute": len(this_minute),
+                    **stats(this_minute),
                     "js_heap_used_bytes": page_metrics().get("JSHeapUsedSize"),
                     "dom_nodes": page_metrics().get("Nodes"),
                     "db_bytes": db_bytes(e2e_server),
                 })
                 next_sample += 60
+        harvest()
         run.settle()
 
         calls = tap.answered(sid)
@@ -122,8 +146,11 @@ def test_st_long_01_a_long_session_is_stored_and_exported_completely(pw, e2e_ser
         assert page.locator(".window-list button").count() == PAGE_HISTORY
         assert chrome.console_errors == [] and chrome.page_errors == []
 
+        timed = [timings[i] for i in sorted(timings)]
         measurement = {"minutes": MINUTES, "windows": count, "rate_hz": round(count / (MINUTES * 60), 2),
-                       "sampled_windows_reconciled": len(sample_ids), "per_minute": samples}
+                       "sampled_windows_reconciled": len(sample_ids), "per_minute": samples,
+                       "timing_coverage": round(len(timed) / count, 4),
+                       f"first_{EDGE}": stats(timed[:EDGE]), f"last_{EDGE}": stats(timed[-EDGE:])}
         print("ST-LONG-01 " + json.dumps({k: v for k, v in measurement.items() if k != "per_minute"}))
         out = evidence_dir()
         if out:

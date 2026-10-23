@@ -56,7 +56,8 @@ EVIDENCE_WATERMARK_KEYS = ("captured_at", "telemetry_timestamp")
 #              the raw model probability, the per-class probabilities, the per-feature
 #              contributions (TreeSHAP local attribution on the Safe-class score, sign flipped so
 #              that a positive value pushes toward unsafe; log-odds; not causal, not a
-#              dataset-level feature importance)
+#              dataset-level feature importance), and the method / baseline that explain them
+#              (``obs_t_contrib_meta``: None when the provider gave no contributions)
 #   vision:    frame epoch / index = the highest EXPLICIT identity accepted (same rule), canonical
 #              acquisition time, sha256 of the image bytes, the raw probability, the EMA-smoothed
 #              probability the observation was FUSED with, the per-class probabilities
@@ -64,7 +65,7 @@ EVIDENCE_WATERMARK_KEYS = ("captured_at", "telemetry_timestamp")
 #   resending the last explicit identity unchanged is refused (409), not taken as a REPEAT.
 OBSERVATION_REGISTRY_KEYS = (
     "obs_t_seq", "obs_t_ts", "obs_t_hash", "obs_t_raw", "obs_t_classes", "obs_t_contribs",
-    "obs_v_epoch", "obs_v_index", "obs_v_ts", "obs_v_hash", "obs_v_raw", "obs_v_p", "obs_v_classes",
+    "obs_t_contrib_meta", "obs_v_epoch", "obs_v_index", "obs_v_ts", "obs_v_hash", "obs_v_raw", "obs_v_p", "obs_v_classes",
 )
 
 LIVE_MODE = "LIVE_MODEL_RUNTIME"
@@ -354,6 +355,16 @@ def run_inference(session_id: str, window_id: int, w: WindowInput, *, state=None
                                      "telemetry_feature_contributions":
                                          w.telemetry_feature_contributions if stored is None else list(stored)})
             provenance["P_telemetry_raw"] = w.P_telemetry_anomaly
+            # The method and baseline that explain the registered contributions travel with them, so
+            # contributions + baseline still sum to the registered margin. Absent (a session registered
+            # before they were kept): the model's own answer for the same bytes stays, as above.
+            if stored is not None and "obs_t_contrib_meta" in scratch:
+                meta = scratch["obs_t_contrib_meta"]
+                provenance.pop("telemetry_contribution_method", None)
+                provenance.pop("telemetry_contribution_baseline", None)
+                if meta is not None:
+                    provenance.update(telemetry_contribution_method=meta["method"],
+                                      telemetry_contribution_baseline=meta["baseline"])
         # Age is measured from the CANONICAL acquisition time. A branch the request did not
         # carry has no observation and is missing, whatever the provider declared.
         vision = freshness(w.vision_status if v_obs is not None else "missing",
@@ -428,7 +439,10 @@ def run_inference(session_id: str, window_id: int, w: WindowInput, *, state=None
         if t_obs is not None and t_obs.kind == "new":
             scratch.update(obs_t_raw=w.P_telemetry_anomaly,
                            obs_t_classes=[c.model_dump() for c in w.telemetry_behavior_classes],
-                           obs_t_contribs=[c.model_dump() for c in w.telemetry_feature_contributions])
+                           obs_t_contribs=[c.model_dump() for c in w.telemetry_feature_contributions],
+                           obs_t_contrib_meta=None if "telemetry_contribution_method" not in provenance else {
+                               "method": provenance["telemetry_contribution_method"],
+                               "baseline": provenance.get("telemetry_contribution_baseline")})
         explicit = [o.identity == "explicit" for o in (v_obs, t_obs) if o is not None]
         provenance.update(
             vision_obs=v_obs.kind if v_obs is not None else None,

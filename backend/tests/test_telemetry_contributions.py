@@ -35,7 +35,13 @@ from test_r10_observations import ProbStub, drive, img, state_of, tel  # noqa: F
 from test_temporal_contract import fake_clock  # noqa: F401  (a fixture)
 
 MODEL_ROOT = Path(__file__).resolve().parents[2] / "ml/outputs"
-requires_models = pytest.mark.skipif(not (MODEL_ROOT / 'vision/mobilenetv3_large_vision.onnx').exists(), reason="local trained artifacts not installed")
+# All three stable files, like every other ``requires_models`` here (test_model_gate.py checks it).
+requires_models = pytest.mark.skipif(
+    not all((MODEL_ROOT / name).exists() for name in ("vision/mobilenetv3_large_vision.onnx",
+                                                      "vision/mobilenetv3_large_vision.pt",
+                                                      "telemetry/xgb_telemetry.json")),
+    reason="local trained artifacts not installed",
+)
 FIXTURE = Path(__file__).with_name("fixtures") / "telemetry_pt_by_row.json"
 TELEMETRY_XGB_SHA256 = "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07"
 FEATURES = ["speed_kmph", "accel_x", "accel_y", "brake_pressure", "steering_angle", "throttle",
@@ -181,6 +187,12 @@ def test_a_repeat_carries_the_contributions_registered_with_the_observation(driv
     assert again["provenance"]["telemetry_obs"] == "repeat"
     assert d.stub.calls == 2  # ... it did run again ...
     assert again["telemetry_feature_contributions"] == listing(4.0)  # ... and its answer (4.25 ...) was not used
+    # Deferred minor M4: the method and baseline that explain those contributions are the registered
+    # ones too (baseline -4.0), not this request's (-4.25) - otherwise contributions + baseline would no
+    # longer sum to the registered margin.
+    assert again["provenance"]["telemetry_contribution_method"] == METHOD
+    assert again["provenance"]["telemetry_contribution_baseline"] == -4.0
+    assert state_of(api_factory, d.sid)["obs_t_contrib_meta"] == {"method": METHOD, "baseline": -4.0}
     assert again["telemetry_behavior_classes"] == first["telemetry_behavior_classes"]
     # A NEW sample with the same throttle is judged by the new answer, and registered.
     new = d.ok(1000, "t2", features=tel(0.4, 2), stamp=1000, seq=1)
@@ -192,6 +204,7 @@ def test_a_repeat_carries_the_contributions_registered_with_the_observation(driv
     third = d.ok(1500, "t3", features=tel(0.4, 2), stamp=1000, seq=1)
     assert third["provenance"]["telemetry_obs"] == "repeat"
     assert third["telemetry_feature_contributions"] == listing(4.25)
+    assert third["provenance"]["telemetry_contribution_baseline"] == -4.25
 
 
 def test_a_repeat_in_a_session_registered_before_the_contributions_existed_keeps_the_models_answer(drive, api_factory):
@@ -204,6 +217,7 @@ def test_a_repeat_in_a_session_registered_before_the_contributions_existed_keeps
         sess = db.get(models.SessionMeta, d.sid)
         legacy = dict(sess.runtime_state)
         assert legacy.pop("obs_t_contribs") == listing(4.0)
+        assert legacy.pop("obs_t_contrib_meta") == {"method": METHOD, "baseline": -4.0}
         sess.runtime_state = legacy
         db.commit()
     assert "obs_t_contribs" not in state_of(api_factory, d.sid)

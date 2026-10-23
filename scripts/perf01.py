@@ -60,8 +60,8 @@ def collect(windows: int, warmup: int) -> dict:
     server_timing: dict[str, str] = {}  # request_id -> Server-Timing header, read off the network
 
     def on_response(response) -> None:
-        # The page's own buffer never receives the header (the loop does not pass TimingInput.serverTiming,
-        # a known gap), so the stages are taken from the response as it crosses the network.
+        # Read off the network, as for the committed 2026-10-22 evidence. (Since 2026-10-23 the page's own
+        # buffer records the header too - TimingEntry.server - but one source keeps runs comparable.)
         if response.request.method == "POST" and response.url.rstrip("/").endswith("/infer"):
             try:
                 request_id = json.loads(response.request.post_data or "{}").get("request_id")
@@ -100,14 +100,36 @@ def collect(windows: int, warmup: int) -> dict:
             "server_timing": server_timing}
 
 
-def parse_server_timing(header: str) -> dict[str, float]:
-    out = {}
-    for part in header.split(","):
-        name, _, rest = part.strip().partition(";")
-        for param in rest.split(";"):
-            key, _, value = param.strip().partition("=")
-            if key == "dur":
-                out[name.strip()] = float(value)
+def _split_outside_quotes(text: str, sep: str) -> list[str]:
+    parts, current, quoted = [], [], False
+    for ch in text:
+        if ch == '"':
+            quoted = not quoted
+        if ch == sep and not quoted:
+            parts.append("".join(current))
+            current = []
+        else:
+            current.append(ch)
+    parts.append("".join(current))
+    return parts
+
+
+def parse_server_timing(header: str | None) -> dict[str, float]:
+    """``{name: dur}`` in ms. A metric without a usable ``dur`` is left out; quoted values (``desc="a, b"``,
+    ``dur="1.5"``) are read as the header grammar allows. Mirrors ``parseServerTiming`` in ai/src/liveTiming.ts."""
+    out: dict[str, float] = {}
+    for metric in _split_outside_quotes(header or "", ","):
+        name, *params = [part.strip() for part in _split_outside_quotes(metric, ";")]
+        if not name:
+            continue
+        for param in params:
+            key, _, value = param.partition("=")
+            if key.strip().lower() == "dur":
+                try:
+                    out[name] = float(value.strip().strip('"'))
+                except ValueError:
+                    pass
+                break
     return out
 
 
@@ -140,12 +162,14 @@ def analyse(raw: dict, windows: int, warmup: int) -> dict:
         row["both_older_than"] = round(sum(p["provenance"]["vision_age_s"] > threshold and p["provenance"]["telemetry_age_s"] > threshold
                                            for p in both) / len(both), 4) if both else None
         sensitivity[f"{threshold:g}s"] = row
-    p95, worst = stages["capture_to_render_ms"]["p95"], stages["capture_to_render_ms"]["max"]
+    p95, worst = stages["capture_to_render_ms"].get("p95"), stages["capture_to_render_ms"].get("max")
     return {
-        "windows_measured": len(rows), "warmup_windows_skipped": warmup,
+        # A run that ran out of time before collecting `windows` says so; main() then exits 1.
+        "windows_measured": len(rows), "windows_requested": windows, "short_run": len(rows) < windows,
+        "warmup_windows_skipped": warmup,
         "achieved_rate_hz": round((len(rows) - 1) / ((rows[-1]["capturedAtMs"] - rows[0]["capturedAtMs"]) / 1000), 2) if len(rows) > 1 else None,
         "stages": stages,
-        "target_1s": {"statistic": "capture_to_render_p95", "p95_ms": p95, "met": p95 <= TARGET_MS,
+        "target_1s": {"statistic": "capture_to_render_p95", "p95_ms": p95, "met": p95 is not None and p95 <= TARGET_MS,
                       "max_ms_information_only": worst,
                       "source": "docs/fyp2/03_EVALUATION_COVERAGE_MATRIX.md addendum 2026-10-22 (E4, D07)"},
         "evidence_age_s": {b: summarise([v for v in a if v is not None]) for b, a in ages.items()},
@@ -172,8 +196,12 @@ def main(argv=None) -> int:
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "perf01.json").write_text(json.dumps(result, indent=2, sort_keys=True))
     c2r = result["stages"]["capture_to_render_ms"]
-    print(f"PERF-01: {result['windows_measured']} windows at {result['achieved_rate_hz']} Hz; capture->render p50 {c2r['median']} ms, "
-          f"p95 {c2r['p95']} ms, max {c2r['max']} ms -> {args.out / 'perf01.json'}")
+    print(f"PERF-01: {result['windows_measured']} windows at {result['achieved_rate_hz']} Hz; capture->render p50 {c2r.get('median')} ms, "
+          f"p95 {c2r.get('p95')} ms, max {c2r.get('max')} ms -> {args.out / 'perf01.json'}")
+    if result["short_run"]:
+        print(f"WARNING: SHORT RUN - {result['windows_measured']} of {result['windows_requested']} windows measured before "
+              "the deadline; the JSON is marked short_run and is not a PERF-01 result.", file=sys.stderr)
+        return 1
     return 0
 
 

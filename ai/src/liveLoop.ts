@@ -218,6 +218,8 @@ export interface LiveLoopApi<TModels> {
     payload: LivePayload,
     signal: AbortSignal,
     attemptIndex: number,
+    /** Receives the answer's raw `Server-Timing` header (null without one), for the timings. */
+    onServerTiming?: (header: string | null) => void,
   ): Promise<RiskUpdate>;
 }
 
@@ -570,12 +572,16 @@ export function createLiveLoop<TModels = unknown>(
     const sentAt = deps.now();
     const attempt = beginAttempt(ATTEMPT_TIMEOUT_MS);
     let record: RiskUpdate;
+    let serverTiming: string | null = null;
     try {
       record = await api.infer(
         request.sessionId,
         request.payload,
         attempt.signal,
         attemptIndex,
+        (header) => {
+          serverTiming = header;
+        },
       );
     } catch (err) {
       // Pause, a new start() or unmount: the user stopped it, nothing failed.
@@ -600,6 +606,7 @@ export function createLiveLoop<TModels = unknown>(
       capturedAtMs: request.capturedAtMs,
       sentAtMs: sentAt,
       receivedAtMs: completed,
+      serverTiming,
     });
     completions.push(completed);
     if (completions.length > 20) completions.shift();

@@ -373,8 +373,11 @@ class ApiTap:
         call.outcome = "ok"
         route.fulfill(response=response)
         if self.drop_images:
-            call.body = {k: ("<dropped>" if k == "image_base64" and v is not None else v) for k, v in call.body.items()}
-            call.raw, call.sent_raw = "", None
+            def without_image(body: dict) -> dict:
+                return {k: ("<dropped>" if k == "image_base64" and v is not None else v) for k, v in body.items()}
+            call.body, call.raw = without_image(call.body), ""
+            if call.sent_raw is not None:  # rewritten: keep what the SERVER got, minus the picture
+                call.sent_raw = json.dumps(without_image(json.loads(call.sent_raw)), separators=(",", ":"))
 
 
 class Chrome:

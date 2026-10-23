@@ -38,6 +38,15 @@ from e2e_support import FAKE_CAMERA_ARGS, Chrome, build_dist, db_connection, db_
 TARGET = 0.99
 
 
+def completeness(logged: int, denominator: int) -> dict:
+    """One denominator's share of durably logged requests. With nothing to divide by there is no
+    completeness to report (None) and the 99 % target is not met - never a ZeroDivisionError."""
+    ratio = logged / denominator if denominator else None
+    return {"denominator": denominator, "logged": logged,
+            "completeness": None if ratio is None else round(ratio, 6),
+            "meets_99_percent": ratio is not None and ratio >= TARGET}
+
+
 def run() -> dict:
     from playwright.sync_api import sync_playwright
 
@@ -103,8 +112,6 @@ def run() -> dict:
     stored = {r["request_id"] for r in records}
     faulted = {f["request_id"] for f in faults if f["request_id"]}
     logged = stored | faulted
-    d1 = len(seen & logged) / len(seen)
-    d2 = len(logical & logged) / len(logical)
     unavailable = sum(1 for r in records if not r["payload"]["assessment_available"])
     return {
         "generated_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -116,10 +123,9 @@ def run() -> dict:
                    "http_status_of_answered": dict(Counter(str(c.status) for c in calls if c.outcome == "ok"))},
         "server": {"stored_windows": len(records), "unavailable_windows_counted_as_accepted": unavailable,
                    "fault_rows": len(faults), "faults_by_category": dict(Counter(f["error_category"] for f in faults))},
-        "D1_server_seen": {"denominator": len(seen), "logged": len(seen & logged), "completeness": round(d1, 6),
-                           "meets_99_percent": d1 >= TARGET, "not_logged": sorted(seen - logged)},
-        "D2_all_logical": {"denominator": len(logical), "logged": len(logical & logged), "completeness": round(d2, 6),
-                           "meets_99_percent": d2 >= TARGET, "client_side_only": sorted(logical - logged)},
+        "D1_server_seen": {**completeness(len(seen & logged), len(seen)), "not_logged": sorted(seen - logged)},
+        "D2_all_logical": {**completeness(len(logical & logged), len(logical)),
+                           "client_side_only": sorted(logical - logged)},
         "stored_without_a_201_seen_by_the_page": sorted(stored - {c.request_id for c in calls if c.status == 201}),
         "duplicate_request_ids_in_database": len(records) - len(stored),
     }

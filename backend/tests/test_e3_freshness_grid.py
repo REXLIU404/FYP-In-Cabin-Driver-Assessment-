@@ -8,7 +8,9 @@ four risk fields null; one usable branch -> scored from it alone.
 
 Provider stubbed (vision 0.8, telemetry 0.2: 50.0 = both fused, 80.0 = vision alone, 20.0 =
 telemetry alone), fake clock at 0, default weights 0.5 / 0.5 and tolerance 3 s. fresh = 0.5 s old,
-expired = 10 s old, missing = not sent. Each combination is its own session. Expectations are literals.
+expired = 10 s old, missing = not sent. Each combination is its own session, so each record is the
+session's FIRST window: the alert FSM starts at NORMAL, Medium is CAUTION at once, High is CAUTION
+until it has lasted 2 s (it never has here), Low stays NORMAL. Expectations are literals.
 """
 import pytest
 
@@ -18,13 +20,15 @@ from test_temporal_contract import fake_clock  # noqa: F401
 AGE = {"fresh": 0.5, "expired": 10.0, "missing": None}
 STATES = ("fresh", "missing", "expired")
 
-# (vision, telemetry) -> (RiskScore, RiskLevel, SystemHealth) at default weights; None = unavailable.
+# (vision, telemetry) -> (RiskScore, RiskLevel, SystemHealth, DominantEvidence, AlertSeverity) at default
+# weights; None = unavailable. (fresh, fresh): FULL, 50 >= 30 and |0.8 - 0.2| = 0.6 >= the 0.15 gap, vision
+# higher -> Vision-dominant.
 EXPECTED = {
-    ("fresh", "fresh"): (50.0, "Medium", "FULL"),
-    ("fresh", "missing"): (80.0, "High", "DEGRADED"),
-    ("fresh", "expired"): (80.0, "High", "DEGRADED"),
-    ("missing", "fresh"): (20.0, "Low", "DEGRADED"),
-    ("expired", "fresh"): (20.0, "Low", "DEGRADED"),
+    ("fresh", "fresh"): (50.0, "Medium", "FULL", "Vision-dominant", "CAUTION"),
+    ("fresh", "missing"): (80.0, "High", "DEGRADED", "Partial evidence", "CAUTION"),
+    ("fresh", "expired"): (80.0, "High", "DEGRADED", "Partial evidence", "CAUTION"),
+    ("missing", "fresh"): (20.0, "Low", "DEGRADED", "Partial evidence", "NORMAL"),
+    ("expired", "fresh"): (20.0, "Low", "DEGRADED", "Partial evidence", "NORMAL"),
     ("missing", "missing"): None,
     ("missing", "expired"): None,
     ("expired", "missing"): None,
@@ -53,10 +57,9 @@ def test_e3_each_combination_scores_as_specified_and_keeps_its_reason(api, fake_
         assert record["assessment_available"] is False and record["SystemHealth"] == "UNAVAILABLE"
         assert _risk_fields(record) == NO_ASSESSMENT
     else:
-        score, level, health = expected
-        assert (record["RiskScore"], record["RiskLevel"], record["SystemHealth"]) == (score, level, health)
+        assert (record["RiskScore"], record["RiskLevel"], record["SystemHealth"], record["DominantEvidence"],
+                record["AlertSeverity"]) == expected
         assert record["assessment_available"] is True
-        assert record["DominantEvidence"] == ("Partial evidence" if health == "DEGRADED" else record["DominantEvidence"])
     provenance = record["provenance"]
     for branch, state in (("vision", vision), ("telemetry", telemetry)):
         assert (provenance[f"{branch}_expired"], provenance[f"{branch}_age_s"]) == (state == "expired", AGE[state]), branch
@@ -65,12 +68,13 @@ def test_e3_each_combination_scores_as_specified_and_keeps_its_reason(api, fake_
 
 @pytest.mark.parametrize("vision,telemetry", [c for c in GRID if "expired" in c], ids=lambda c: str(c))
 def test_e3_an_expired_branch_scores_exactly_like_a_missing_one(api, fake_clock, monkeypatch, vision, telemetry):
-    """Replace every 'expired' by 'missing': the assessment is byte-for-byte the same; only the
-    provenance reason differs."""
+    """Replace every 'expired' by 'missing': every assessment field compared below - the four risk
+    fields, the alert, SystemHealth, availability, freshness and both probabilities - is equal; only
+    the provenance reason differs."""
     client, _ = api
     fake_clock.set(0)
     with_expired = _record(client, monkeypatch, vision, telemetry)
     as_missing = _record(client, monkeypatch, *("missing" if s == "expired" else s for s in (vision, telemetry)))
-    for key in ("RiskScore", "RiskLevel", "DominantEvidence", "SystemHealth", "assessment_available",
-                "modality_freshness", "P_distraction", "P_telemetry_anomaly"):
+    for key in ("RiskScore", "RiskLevel", "DominantEvidence", "AlertSeverity", "SystemHealth",
+                "assessment_available", "modality_freshness", "P_distraction", "P_telemetry_anomaly"):
         assert with_expired[key] == as_missing[key], key

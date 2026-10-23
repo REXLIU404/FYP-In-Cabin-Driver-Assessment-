@@ -48,7 +48,12 @@ export const isNoDetailMessage = (message: string) =>
 /** The client's own deadline for one call. The loop's 10 s delivery deadline fires first. */
 const REQUEST_TIMEOUT_MS = 15000;
 
-async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+async function request<T>(
+  path: string,
+  options: RequestInit = {},
+  /** Sees a successful response before its body is read (e.g. for a response header). */
+  onOk?: (response: Response) => void,
+): Promise<T> {
   const controller = new AbortController();
   // The caller's signal (a pause, an unmount) and this deadline share ONE controller,
   // so the rejection alone cannot tell them apart. `timedOut` can: only the deadline
@@ -79,6 +84,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
         response.status,
       );
     }
+    onOk?.(response);
     // Untrusted boundary: the body is not validated here. Endpoints that return
     // risk records pass the result through `normalizeRiskUpdate` below; the
     // other response shapes (sessions, model status) are not safety-relevant.
@@ -137,13 +143,18 @@ export const api = {
     payload: LivePayload,
     signal: AbortSignal,
     attemptIndex: number,
+    onServerTiming?: (header: string | null) => void,
   ) =>
-    request<StoredRiskUpdate>(`/sessions/${encodeURIComponent(sid)}/infer`, {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: { "X-Attempt-Index": String(attemptIndex) },
-      signal,
-    }).then(normalizeRiskUpdate),
+    request<StoredRiskUpdate>(
+      `/sessions/${encodeURIComponent(sid)}/infer`,
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: { "X-Attempt-Index": String(attemptIndex) },
+        signal,
+      },
+      (response) => onServerTiming?.(response.headers.get("Server-Timing")),
+    ).then(normalizeRiskUpdate),
   sessions: (signal?: AbortSignal) =>
     request<SessionMeta[]>("/sessions?limit=100", { signal }),
   session: (sid: string, signal?: AbortSignal) =>

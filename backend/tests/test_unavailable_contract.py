@@ -23,8 +23,11 @@ from pydantic import ValidationError
 
 FOUR = ("RiskScore", "RiskLevel", "DominantEvidence", "AlertSeverity")
 MODEL_ROOT = Path(__file__).resolve().parents[2] / "ml/outputs"
+# All three stable files (test_model_gate.py checks every ``requires_models`` for it).
 requires_models = pytest.mark.skipif(
-    not (MODEL_ROOT / "vision/mobilenetv3_large_vision.onnx").exists(),
+    not all((MODEL_ROOT / name).exists() for name in ("vision/mobilenetv3_large_vision.onnx",
+                                                      "vision/mobilenetv3_large_vision.pt",
+                                                      "telemetry/xgb_telemetry.json")),
     reason="local trained artifacts not installed",
 )
 

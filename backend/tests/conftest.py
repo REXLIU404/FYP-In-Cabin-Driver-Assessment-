@@ -37,6 +37,7 @@ the modules that use it. New tests use only this one.
 """
 import atexit
 import os
+import re
 import shutil
 import tempfile
 from pathlib import Path
@@ -143,8 +144,9 @@ def pytest_configure(config):
 
 def pytest_collection_modifyitems(config, items):
     """``long`` tests run only when asked for (``-m long``): a gate run deselects them, so they are
-    neither started nor counted as skipped."""
-    if "long" in (config.option.markexpr or ""):
+    neither started nor counted as skipped. The expression is asked for the marker NAME ``long`` as a
+    word, not as a substring: ``-m "not longer"`` must not let them through."""
+    if "long" in re.findall(r"[A-Za-z_][A-Za-z0-9_]*", config.option.markexpr or ""):
         return
     kept = [item for item in items if item.get_closest_marker("long") is None]
     if len(kept) != len(items):
