@@ -72,6 +72,12 @@ Tasks1-10 还在改与本计划重叠的产品文件，所以：
 - Produces：`/infer` 用**会话自己的模式**调用 `_persist_window(..., mode=<session mode>)`，记录的 `operation_mode` 就是会话模式。
 
 - [ ] **Step 0：同步起点**（**用户同意后**才做）：2026-10-23 Tasks1-10 通知暂停同步——它按用户要求继续改 `fyp2/live-system`（合并 `dev_cc`；修 App.tsx / SignalInspector.tsx / inference.py / liveLoop.ts / client.ts / e2e_support.py / conftest.py；做一轮 UI 易用性审查，可能改 LiveMonitor.tsx、各视图与 styles.css）。**不合并 `447cd2a`**；等它发来新的稳定提交号（全量门禁已通过），再在本工作副本 `git merge --no-edit <该提交>`，有冲突就停下报告。基线以合并后的实测为准。
+  - **Tasks1-10 已告知的接口变化**（2026-10-23；后续任务以同步后的实际代码为准，不要照搬本计划写作时的旧形状）：
+    - `App.tsx` 新增 `SelectionBar`，删去传给 `ConfigurationView` 的 `onStart` / `onPause` / `onRestart`；
+    - `LiveMonitor.tsx` 新增 `stopped` prop；
+    - `ai/src/liveLoop.ts` 的 `LiveLoopApi.infer` 增加可选的第 5 个参数 `onServerTiming`；
+    - `frontend/src/api/client.ts` 的 `request` 增加 `onOk` 回调；
+    - `backend/tests/e2e_support.py`：`drop_images` 写法改变；`LATEST_PANEL_JS` 的概率改为读卡片 `strong` 的 `title`，格式 `P = 0.50`。
 - [ ] **Step 1：准备本工作副本的环境**（参照 `scripts/coldstart_check.sh`，就地进行）
   - `python3 -m venv .venv && .venv/bin/pip install -r backend/requirements.lock.txt`
   - `npm ci`
