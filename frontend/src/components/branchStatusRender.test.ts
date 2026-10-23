@@ -63,7 +63,7 @@ describe("BranchStatusPill: expired is not missing", () => {
   });
 });
 
-describe("ModalityCard: the number, the pill and the note agree on expired", () => {
+describe("ModalityCard: the number, the pill and the tooltip agree on expired", () => {
   const card = (
     freshness: "fresh" | "stale" | "missing",
     probability: number,
@@ -81,24 +81,28 @@ describe("ModalityCard: the number, the pill and the note agree on expired", () 
       "Visual Distraction",
     );
 
-  it("expired: no number, an `expired (N s)` pill, and the note says Expired", () => {
+  it("expired: no number, an `expired (N s)` pill, and the tooltip says Expired", () => {
     expect(card("missing", 0, { expired: true, ageS: 4 })).toBe(
       "— | expired:expired (4 s) | Expired",
     );
   });
 
-  it("never arrived: no number, a `missing` pill, and the note says No input", () => {
+  it("never arrived: no number, a `missing` pill, and the tooltip says No input", () => {
     expect(card("missing", 0, NOT_EXPIRED)).toBe(
       "— | missing:missing | No input",
     );
   });
 
   it("fresh: the number, a `fresh` pill and the probability", () => {
-    expect(card("fresh", 0.5, NOT_EXPIRED)).toBe("50% | fresh:fresh | 0.50");
+    expect(card("fresh", 0.5, NOT_EXPIRED)).toBe(
+      "50% | fresh:fresh | P = 0.50",
+    );
   });
 
   it("a historical `stale` record still shows its number", () => {
-    expect(card("stale", 0.42, NOT_EXPIRED)).toBe("42% | stale:stale | 0.42");
+    expect(card("stale", 0.42, NOT_EXPIRED)).toBe(
+      "42% | stale:stale | P = 0.42",
+    );
   });
 
   it("`expiry` is a REQUIRED prop: leaving it out is a type error, and a render that gets through fails loudly instead of printing `missing`", () => {

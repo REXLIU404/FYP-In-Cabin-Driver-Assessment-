@@ -28,7 +28,10 @@ export function AlertBanner({ latest, stale = false }: AlertBannerProps) {
           </span>
         </div>
         <div className="banner-pills">
-          <Pill label={latest.SystemHealth} tone={latest.SystemHealth} />
+          <span className="badge-field">
+            <span>System health</span>
+            <Pill label={latest.SystemHealth} tone={latest.SystemHealth} />
+          </span>
         </div>
       </section>
     );
@@ -72,8 +75,14 @@ export function AlertBanner({ latest, stale = false }: AlertBannerProps) {
         </span>
       </div>
       <div className="banner-pills">
-        <Pill label={severity} tone={severity} />
-        <Pill label={latest.SystemHealth} tone={latest.SystemHealth} />
+        <span className="badge-field">
+          <span>Alert</span>
+          <Pill label={severity} tone={severity} />
+        </span>
+        <span className="badge-field">
+          <span>System health</span>
+          <Pill label={latest.SystemHealth} tone={latest.SystemHealth} />
+        </span>
       </div>
     </section>
   );

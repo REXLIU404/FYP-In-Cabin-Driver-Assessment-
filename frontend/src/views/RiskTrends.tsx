@@ -54,7 +54,14 @@ export function RiskTrends({
       </section>
 
       <section className="panel panel--full">
-        <div className="table-wrap">
+        <div className="section-header">
+          <div>
+            <p className="eyebrow">Window log</p>
+            <h2>{history.length} windows, newest first</h2>
+            <p>Click a row to pin that window in every view.</p>
+          </div>
+        </div>
+        <div className="table-wrap table-wrap--scroll">
           <table>
             <thead>
               <tr>

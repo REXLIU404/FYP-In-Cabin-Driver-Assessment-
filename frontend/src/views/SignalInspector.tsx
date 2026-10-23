@@ -114,15 +114,18 @@ export function SignalInspector({
         </div>
 
         <div className="bar-list">
-          {selectedRecord.visual_top_classes.map((item) => (
-            <div className="bar-row" key={item.label}>
-              <span>{item.label}</span>
-              <div className="bar-track">
-                <div style={{ width: `${item.probability * 100}%` }} />
+          {/* Highest first: in class order (c0..c9) the one that matters could be anywhere. */}
+          {[...selectedRecord.visual_top_classes]
+            .sort((a, b) => b.probability - a.probability)
+            .map((item) => (
+              <div className="bar-row" key={item.label}>
+                <span title={item.label}>{item.label}</span>
+                <div className="bar-track">
+                  <div style={{ width: `${item.probability * 100}%` }} />
+                </div>
+                <strong>{formatProbability(item.probability)}</strong>
               </div>
-              <strong>{formatProbability(item.probability)}</strong>
-            </div>
-          ))}
+            ))}
         </div>
       </section>
 

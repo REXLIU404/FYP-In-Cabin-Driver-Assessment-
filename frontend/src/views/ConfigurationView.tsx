@@ -1,4 +1,4 @@
-import { Download, Pause, Play, RotateCw, Settings } from "lucide-react";
+import { Download, Settings } from "lucide-react";
 import type { AppConfig } from "../types";
 import { roundHalfUp } from "../../../ai/src/riskLogic";
 import { zeroWeightNotice } from "../utils/display";
@@ -8,9 +8,6 @@ interface ConfigurationViewProps {
   config: AppConfig;
   onConfigChange: (config: AppConfig) => void;
   isMonitoring: boolean;
-  onStartMonitoring: () => void;
-  onPauseMonitoring: () => void;
-  onRestartSession: () => void;
   onExportJson: () => void;
   onExportCsv: () => void;
 }
@@ -22,9 +19,6 @@ export function ConfigurationView({
   config,
   onConfigChange,
   isMonitoring,
-  onStartMonitoring,
-  onPauseMonitoring,
-  onRestartSession,
   onExportJson,
   onExportCsv,
 }: ConfigurationViewProps) {
@@ -58,8 +52,8 @@ export function ConfigurationView({
         <section className="config-section">
           <h3>Runtime Configuration</h3>
           <p>
-            Changing settings pauses monitoring. The next start creates a
-            session with the new configuration.
+            Changing settings pauses monitoring. The next Start Monitoring (top
+            of the page) creates a session with the new configuration.
           </p>
           <label className="field">
             <span>Target inference FPS (camera preview requests 30 FPS)</span>
@@ -76,30 +70,6 @@ export function ConfigurationView({
               }
             />
           </label>
-          <div className="action-strip">
-            <button
-              type="button"
-              className="button button--primary"
-              onClick={onStartMonitoring}
-              disabled={isMonitoring}
-            >
-              <Play size={16} />
-              Start Monitoring
-            </button>
-            <button
-              type="button"
-              className="button"
-              onClick={onPauseMonitoring}
-              disabled={!isMonitoring}
-            >
-              <Pause size={16} />
-              Pause
-            </button>
-            <button type="button" className="button" onClick={onRestartSession}>
-              <RotateCw size={16} />
-              Restart Session
-            </button>
-          </div>
         </section>
 
         <section className="config-section">

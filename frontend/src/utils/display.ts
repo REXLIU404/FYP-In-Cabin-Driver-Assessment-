@@ -4,6 +4,7 @@ import {
   getDisplayState,
   type BranchExpiry,
 } from "../../../ai/src/availability";
+import { ALERT_RECOVER_MS, ALERT_SUSTAIN_MS } from "../../../ai/src/alertFsm";
 import { getEvidenceType, evidenceTypes } from "../../../ai/src/evidence";
 import type {
   AlertSeverity,
@@ -146,4 +147,36 @@ export const alertBannerClass = (
   if (state === "unavailable") return "alert-banner alert-banner--unavailable";
   if (state === "stale") return "alert-banner runtime-warning";
   return `alert-banner alert-banner--${record.AlertSeverity ?? "unavailable"}`;
+};
+
+/**
+ * Why the alert on screen differs from the window's RiskLevel. The AlertSeverity FSM (ai/src/alertFsm.ts,
+ * backend `_step_alert_fsm`) holds an alert until Low has lasted ALERT_RECOVER_MS and raises HIGH_ALERT
+ * only after High has lasted ALERT_SUSTAIN_MS, so "Low + CAUTION" or "High + CAUTION" is correct but
+ * looks like a contradiction without a word of explanation. Display text only: it decides nothing.
+ */
+export const alertHoldNote = (
+  level: RiskLevel | null,
+  severity: AlertSeverity | null,
+): string | null => {
+  if (level === null || severity === null) return null;
+  const rank = { NORMAL: 0, CAUTION: 1, HIGH_ALERT: 2 } as const;
+  const instantaneous = {
+    Low: "NORMAL",
+    Medium: "CAUTION",
+    High: "HIGH_ALERT",
+  } as const;
+  if (level === "High" && severity !== "HIGH_ALERT") {
+    return (
+      `Escalation pending: HIGH_ALERT follows only if RiskLevel stays High for ` +
+      `${ALERT_SUSTAIN_MS / 1000} s.`
+    );
+  }
+  if (rank[severity] > rank[instantaneous[level]]) {
+    return (
+      `Alert held at ${severity}: it returns to NORMAL only after RiskLevel has stayed Low for ` +
+      `${ALERT_RECOVER_MS / 1000} s.`
+    );
+  }
+  return null;
 };

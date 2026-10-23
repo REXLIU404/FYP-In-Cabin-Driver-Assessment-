@@ -10,7 +10,8 @@ throw-away database), walks the whole lifecycle; the tests then read what it rec
      Refresh saved sessions, pick A -> A is shown read-only: no /infer is sent, and the
      Inspector and the Explanation open on A's newest window.
   C  Start Monitoring after loading A -> a NEW session C (a loaded session is never appended to);
-     A and B get nothing more. Pinning a window in the Inspector keeps it while C runs on.
+     A and B get nothing more. Pinning a window in the Inspector keeps it while C runs on, the
+     selection bar says it is pinned, and Follow latest returns the views to the newest window.
 
 Every switch is made on a quiet server (``LiveRun.settle``: the loop's next request is held at the
 network layer, then Pause), so each database holds exactly the windows the browser received and
@@ -23,7 +24,7 @@ from pathlib import Path
 
 import pytest
 
-from e2e_support import FAKE_CAMERA_ARGS, Chrome, LiveRun, assert_reconciled, db_count, fixed
+from e2e_support import FAKE_CAMERA_ARGS, Chrome, LiveRun, _branch, assert_reconciled, db_count, fixed
 
 MODEL_ROOT = Path(__file__).resolve().parents[2] / "ml/outputs"
 requires_models = pytest.mark.skipif(
@@ -38,8 +39,10 @@ ROWS_SQL = "SELECT COUNT(*) FROM inference_records WHERE session_id=?"
 LIST_AND_SELECTED_JS = r"""() => {
   const buttons = [...document.querySelectorAll('.window-list button')];
   const number = (b) => { const m = b && b.textContent.match(/Window (\d+)/); return m ? Number(m[1]) : null; };
+  const bar = document.querySelector('.selection-bar > span');
   return { first: number(buttons[0]), selected: number(document.querySelector('.window-list button.is-selected')),
-           count: buttons.length };
+           count: buttons.length, bar: bar ? bar.textContent.replace(/\s+/g, ' ').trim() : null,
+           follow: [...document.querySelectorAll('.selection-bar button')].map((b) => b.textContent.trim()) };
 }"""
 
 
@@ -121,6 +124,8 @@ class Lifecycle:
         self.view("Explanation")
         obs["loaded_explanation"] = page.evaluate(r"""() => Object.fromEntries([...document.querySelectorAll('.summary-metric-grid > div')]
             .map((d) => [d.querySelector('span')?.textContent.trim(), d.lastElementChild?.textContent.trim()]))""")
+        obs["loaded_evidence_type"] = page.locator(".evidence-type-block strong").inner_text().strip()
+        obs["loaded_selection_bar"] = page.evaluate(LIST_AND_SELECTED_JS)["bar"]
         self.view("Live Monitor")
 
         # C: Start after loading A -> a new session; then pin a window while C runs.
@@ -134,6 +139,10 @@ class Lifecycle:
         pinned_at = len(tap.answered(c))
         ch.wait_until(lambda: len(tap.answered(c)) >= pinned_at + 5, "five more windows of C after the pin", 60)
         obs["pinned_list"] = page.evaluate(LIST_AND_SELECTED_JS)
+        page.get_by_role("button", name="Follow latest", exact=True).click()
+        followed_at = len(tap.answered(c))
+        ch.wait_until(lambda: len(tap.answered(c)) >= followed_at + 3, "three more windows of C after Follow latest", 60)
+        obs["followed_list"] = page.evaluate(LIST_AND_SELECTED_JS)  # list, selection and bar read together
         self.quiet(self.c, c)
         obs["rows_after_c"] = (rows(a), rows(b))
         obs["sessions"] = (a, b, c)
@@ -197,9 +206,20 @@ class TestStSession01:
         shown = life.obs["loaded_list"]
         assert shown["selected"] == shown["first"] == newest, shown
         record = life.tap.answered(a)[newest - 1].response
-        explanation = life.obs["loaded_explanation"]
-        if record["assessment_available"]:
-            assert explanation["RiskScore"] == f"{fixed(record['RiskScore'], 1)} / 100"
+        # Deferred minor M2: every field of the summary, for an assessed window AND for one with no
+        # assessment (then the four risk fields read "Unavailable"; the branch values are as stored).
+        title = lambda token: " ".join(part.capitalize() for part in token.lower().split("_"))  # noqa: E731
+        available = record["assessment_available"]
+        assert life.obs["loaded_explanation"] == {
+            "P_distraction": _branch(record, "vision", fixed(record["P_distraction"], 2)),
+            "Telemetry Non-Safe Risk": _branch(record, "telemetry", fixed(record["P_telemetry_anomaly"], 2)),
+            "RiskScore": f"{fixed(record['RiskScore'], 1)} / 100" if available else "Unavailable",
+            "RiskLevel": record["RiskLevel"] if available else "Unavailable",
+            "AlertStatus": title(record["AlertSeverity"]) if available else "Unavailable",
+            "SystemHealth": title(record["SystemHealth"]),
+        }
+        assert life.obs["loaded_evidence_type"] == (record["DominantEvidence"].upper() if available else "Unavailable")
+        assert life.obs["loaded_selection_bar"] == f"Showing Window {newest} · following the newest window"
 
     def test_06_start_after_loading_creates_a_new_session(self, life):
         assert life.error is None, life.error
@@ -211,6 +231,18 @@ class TestStSession01:
         assert life.error is None, life.error
         shown = life.obs["pinned_list"]
         assert shown["selected"] == 2 and shown["first"] > 2, shown
+
+    def test_07b_follow_latest_releases_the_pin(self, life):
+        """Deferred minor M1: the selection bar says a window is pinned, and Follow latest returns the
+        views to the newest window, which they then keep following."""
+        assert life.error is None, life.error
+        pinned = life.obs["pinned_list"]
+        assert pinned["bar"] == "Showing Window 2 · pinned; newer windows keep arriving", pinned
+        assert pinned["follow"] == ["Follow latest"], pinned
+        followed = life.obs["followed_list"]
+        assert followed["selected"] == followed["first"] and followed["first"] > pinned["first"], followed
+        assert followed["bar"] == f"Showing Window {followed['first']} · following the newest window", followed
+        assert followed["follow"] == [], followed
 
     def test_08_each_session_reconciles_across_the_five_homes(self, life):
         assert life.error is None, life.error

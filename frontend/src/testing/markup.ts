@@ -49,15 +49,15 @@ export const valuesAfter = (html: string, label: string): string[] =>
   ].map((match) => match[1]);
 
 /**
- * One Live Monitor `ModalityCard`, as `"<big number> | <tone>:<pill text> | <small
- * text>"` - e.g. `"— | expired:expired (4 s) | Expired"`. `null` if the page has no
- * card with that title.
+ * One Live Monitor `ModalityCard`, as `"<big number> | <tone>:<pill text> | <tooltip of
+ * the number>"` - e.g. `"— | expired:expired (4 s) | Expired"`, `"30% | fresh:fresh | P =
+ * 0.30"`. `null` if the page has no card with that title.
  */
 export const modalityCard = (html: string, title: string): string | null => {
   const match = new RegExp(
-    `<div class="modality-card"><span>${escapeRegExp(title)}</span><strong>([^<]*)</strong><div><span class="pill pill--([^"]*)">([^<]*)</span><small>([^<]*)</small></div></div>`,
+    `<div class="modality-card"><span>${escapeRegExp(title)}</span><strong title="([^"]*)">([^<]*)</strong><div><span class="pill pill--([^"]*)">([^<]*)</span></div></div>`,
   ).exec(html);
-  return match ? `${match[1]} | ${match[2]}:${match[3]} | ${match[4]}` : null;
+  return match ? `${match[2]} | ${match[3]}:${match[4]} | ${match[1]}` : null;
 };
 
 /**
