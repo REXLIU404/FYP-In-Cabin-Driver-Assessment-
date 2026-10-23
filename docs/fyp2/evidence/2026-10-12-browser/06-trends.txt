@@ -1,0 +1,7620 @@
+Browser tab: 1473715718, Title: "In-Cabin Multi-Modal Driver Monitoring & Risk Assessment", URL: "http://127.0.0.1:8008/".
+0 AXWebArea In-Cabin Multi-Modal Driver Monitoring & Risk Assessment, URL: 127.0.0.1:8008/
+	1 container root
+		2 container
+			3 image
+			4 text Driver Risk MVP Dashboard
+			5 button (expanded) Description: Collapse sidebar, Secondary Actions: Collapse
+				6 image
+			7 container Dashboard views
+				8 button Live Monitor
+					9 image
+					10 text Live Monitor
+				11 button Signal Inspector
+					12 image
+					13 text Signal Inspector
+				14 button Risk Trends
+					15 image
+					16 text Risk Trends
+				17 button Explanation
+					18 image
+					19 text Explanation
+				20 button Configuration
+					21 image
+					22 text Configuration
+		23 container
+			24 heading In-Cabin Multi-Modal Driver Monitoring & Risk Assessment, Value: 1
+				25 text In-Cabin Multi-Modal Driver Monitoring & Risk Assessment
+			26 button Start Monitoring
+				27 image
+				28 text Start Monitoring
+			29 button (disabled) Pause
+				30 image
+				31 text Pause
+			32 button New Session
+				33 image
+				34 text New Session
+			35 container
+				36 text Data mode
+				37 pop up button (collapsed, settable) Description: Data mode, Value: Live trained models, Secondary Actions: Expand
+					38 menu
+						39 (selected) Live trained models
+						40 Prepared replay demo
+			41 button Refresh saved sessions
+			42 container
+				43 text Saved live sessions
+				44 pop up button (collapsed, settable) Description: Saved live sessions, Value: Select a session…, Secondary Actions: Expand
+					45 menu
+						46 (selected) Select a session…
+						62 S8d4e616a597b4dd5973d31a9ad417049 · 811 windows
+						63 S9540e6b97c804e23a71b6b6edf8d80f5 · 134 windows
+						64 S85c09da3b43d44ea820ab246cec175cb · 413 windows
+			47 text Vision: camera → trained MobileNetV3 · Telemetry: prepared raw features → trained XGBoost. Frontal-camera accuracy is experimental.
+			48 text Camera:  idle Inference: —  FPS · target  10 Request round trip:  —  ms Visible history:  500  /  811  persisted · export includes all windows
+			65 text Latest result is stale. Historical values are retained; there is no current risk assessment.
+			66 image
+			67 text No current assessment
+			68 text Last result is historical; waiting for fresh evidence.
+			69 text RISK TRENDS
+			70 heading RiskScore and modality traces, Value: 2
+				71 text RiskScore and modality traces
+			72 image
+			73 container Risk score timeline
+				74 container
+					75 image
+						76 text 331
+						77 text 351
+						78 text 372
+						79 text 394
+						80 text 415
+						81 text 436
+						82 text 458
+						83 text 480
+						84 text 501
+						85 text 521
+						86 text 542
+						87 text 564
+						88 text 586
+						89 text 608
+						90 text 630
+						91 text 651
+						92 text 671
+						93 text 691
+						94 text 711
+						95 text 731
+						96 text 751
+						97 text 771
+						98 text 791
+						99 text 811
+						100 text 0
+						101 text 25
+						102 text 50
+						103 text 75
+						104 text 100
+						105 text 30
+						106 text 60
+					107 content list
+						108 container
+							109 image
+							110 text RiskScore
+						111 container
+							112 image
+							113 text P_distraction (%)
+						114 container
+							115 image
+							116 text Telemetry non-safe (%)
+			117 text DISTRIBUTION
+			118 heading RiskLevel counts, Value: 2
+				119 text RiskLevel counts
+			120 image
+				121 text Low
+				122 text Medium
+				123 text High
+				124 text 0
+				125 text 100
+				126 text 200
+				127 text 300
+				128 text 400
+			129 table (showing 0-500 of 501 items)
+				130 row
+					131 cell
+						132 text Window
+					133 cell
+						134 text Time
+					135 cell
+						136 text RiskScore
+					137 cell
+						138 text RiskLevel
+					139 cell
+						140 text Alert
+					141 cell
+						142 text Evidence Type
+					143 cell
+						144 text Flag
+				145 row
+					146 cell
+						147 text 811
+					148 cell
+						149 text 11:20:32
+					150 cell
+						151 text 100.0 / 100
+					152 cell
+						153 text High
+					154 cell
+						155 text HIGH_ALERT
+					156 cell
+						157 text Combined evidence
+					158 cell
+						159 text None
+				160 row
+					161 cell
+						162 text 810
+					163 cell
+						164 text 11:20:32
+					165 cell
+						166 text 100.0 / 100
+					167 cell
+						168 text High
+					169 cell
+						170 text HIGH_ALERT
+					171 cell
+						172 text Combined evidence
+					173 cell
+						174 text None
+				175 row
+					176 cell
+						177 text 809
+					178 cell
+						179 text 11:20:32
+					180 cell
+						181 text 100.0 / 100
+					182 cell
+						183 text High
+					184 cell
+						185 text HIGH_ALERT
+					186 cell
+						187 text Combined evidence
+					188 cell
+						189 text None
+				190 row
+					191 cell
+						192 text 808
+					193 cell
+						194 text 11:20:32
+					195 cell
+						196 text 100.0 / 100
+					197 cell
+						198 text High
+					199 cell
+						200 text HIGH_ALERT
+					201 cell
+						202 text Combined evidence
+					203 cell
+						204 text None
+				205 row
+					206 cell
+						207 text 807
+					208 cell
+						209 text 11:20:32
+					210 cell
+						211 text 100.0 / 100
+					212 cell
+						213 text High
+					214 cell
+						215 text HIGH_ALERT
+					216 cell
+						217 text Combined evidence
+					218 cell
+						219 text None
+				220 row
+					221 cell
+						222 text 806
+					223 cell
+						224 text 11:20:32
+					225 cell
+						226 text 100.0 / 100
+					227 cell
+						228 text High
+					229 cell
+						230 text HIGH_ALERT
+					231 cell
+						232 text Combined evidence
+					233 cell
+						234 text None
+				235 row
+					236 cell
+						237 text 805
+					238 cell
+						239 text 11:20:31
+					240 cell
+						241 text 100.0 / 100
+					242 cell
+						243 text High
+					244 cell
+						245 text HIGH_ALERT
+					246 cell
+						247 text Combined evidence
+					248 cell
+						249 text None
+				250 row
+					251 cell
+						252 text 804
+					253 cell
+						254 text 11:20:31
+					255 cell
+						256 text 100.0 / 100
+					257 cell
+						258 text High
+					259 cell
+						260 text HIGH_ALERT
+					261 cell
+						262 text Combined evidence
+					263 cell
+						264 text None
+				265 row
+					266 cell
+						267 text 803
+					268 cell
+						269 text 11:20:31
+					270 cell
+						271 text 100.0 / 100
+					272 cell
+						273 text High
+					274 cell
+						275 text HIGH_ALERT
+					276 cell
+						277 text Combined evidence
+					278 cell
+						279 text None
+				280 row
+					281 cell
+						282 text 802
+					283 cell
+						284 text 11:20:31
+					285 cell
+						286 text 100.0 / 100
+					287 cell
+						288 text High
+					289 cell
+						290 text HIGH_ALERT
+					291 cell
+						292 text Combined evidence
+					293 cell
+						294 text None
+				295 row
+					296 cell
+						297 text 801
+					298 cell
+						299 text 11:20:31
+					300 cell
+						301 text 100.0 / 100
+					302 cell
+						303 text High
+					304 cell
+						305 text HIGH_ALERT
+					306 cell
+						307 text Combined evidence
+					308 cell
+						309 text None
+				310 row
+					311 cell
+						312 text 800
+					313 cell
+						314 text 11:20:31
+					315 cell
+						316 text 100.0 / 100
+					317 cell
+						318 text High
+					319 cell
+						320 text HIGH_ALERT
+					321 cell
+						322 text Combined evidence
+					323 cell
+						324 text None
+				325 row
+					326 cell
+						327 text 799
+					328 cell
+						329 text 11:20:31
+					330 cell
+						331 text 100.0 / 100
+					332 cell
+						333 text High
+					334 cell
+						335 text HIGH_ALERT
+					336 cell
+						337 text Combined evidence
+					338 cell
+						339 text None
+				340 row
+					341 cell
+						342 text 798
+					343 cell
+						344 text 11:20:31
+					345 cell
+						346 text 100.0 / 100
+					347 cell
+						348 text High
+					349 cell
+						350 text HIGH_ALERT
+					351 cell
+						352 text Combined evidence
+					353 cell
+						354 text None
+				355 row
+					356 cell
+						357 text 797
+					358 cell
+						359 text 11:20:31
+					360 cell
+						361 text 100.0 / 100
+					362 cell
+						363 text High
+					364 cell
+						365 text HIGH_ALERT
+					366 cell
+						367 text Combined evidence
+					368 cell
+						369 text None
+				370 row
+					371 cell
+						372 text 796
+					373 cell
+						374 text 11:20:31
+					375 cell
+						376 text 100.0 / 100
+					377 cell
+						378 text High
+					379 cell
+						380 text HIGH_ALERT
+					381 cell
+						382 text Combined evidence
+					383 cell
+						384 text None
+				385 row
+					386 cell
+						387 text 795
+					388 cell
+						389 text 11:20:30
+					390 cell
+						391 text 100.0 / 100
+					392 cell
+						393 text High
+					394 cell
+						395 text HIGH_ALERT
+					396 cell
+						397 text Combined evidence
+					398 cell
+						399 text None
+				400 row
+					401 cell
+						402 text 794
+					403 cell
+						404 text 11:20:30
+					405 cell
+						406 text 100.0 / 100
+					407 cell
+						408 text High
+					409 cell
+						410 text HIGH_ALERT
+					411 cell
+						412 text Combined evidence
+					413 cell
+						414 text None
+				415 row
+					416 cell
+						417 text 793
+					418 cell
+						419 text 11:20:30
+					420 cell
+						421 text 100.0 / 100
+					422 cell
+						423 text High
+					424 cell
+						425 text HIGH_ALERT
+					426 cell
+						427 text Combined evidence
+					428 cell
+						429 text None
+				430 row
+					431 cell
+						432 text 792
+					433 cell
+						434 text 11:20:30
+					435 cell
+						436 text 100.0 / 100
+					437 cell
+						438 text High
+					439 cell
+						440 text HIGH_ALERT
+					441 cell
+						442 text Combined evidence
+					443 cell
+						444 text None
+				445 row
+					446 cell
+						447 text 791
+					448 cell
+						449 text 11:20:30
+					450 cell
+						451 text 100.0 / 100
+					452 cell
+						453 text High
+					454 cell
+						455 text HIGH_ALERT
+					456 cell
+						457 text Combined evidence
+					458 cell
+						459 text None
+				460 row
+					461 cell
+						462 text 790
+					463 cell
+						464 text 11:20:30
+					465 cell
+						466 text 100.0 / 100
+					467 cell
+						468 text High
+					469 cell
+						470 text HIGH_ALERT
+					471 cell
+						472 text Combined evidence
+					473 cell
+						474 text None
+				475 row
+					476 cell
+						477 text 789
+					478 cell
+						479 text 11:20:30
+					480 cell
+						481 text 100.0 / 100
+					482 cell
+						483 text High
+					484 cell
+						485 text HIGH_ALERT
+					486 cell
+						487 text Combined evidence
+					488 cell
+						489 text None
+				490 row
+					491 cell
+						492 text 788
+					493 cell
+						494 text 11:20:30
+					495 cell
+						496 text 100.0 / 100
+					497 cell
+						498 text High
+					499 cell
+						500 text HIGH_ALERT
+					501 cell
+						502 text Combined evidence
+					503 cell
+						504 text None
+				505 row
+					506 cell
+						507 text 787
+					508 cell
+						509 text 11:20:30
+					510 cell
+						511 text 100.0 / 100
+					512 cell
+						513 text High
+					514 cell
+						515 text HIGH_ALERT
+					516 cell
+						517 text Combined evidence
+					518 cell
+						519 text None
+				520 row
+					521 cell
+						522 text 786
+					523 cell
+						524 text 11:20:29
+					525 cell
+						526 text 100.0 / 100
+					527 cell
+						528 text High
+					529 cell
+						530 text HIGH_ALERT
+					531 cell
+						532 text Combined evidence
+					533 cell
+						534 text None
+				535 row
+					536 cell
+						537 text 785
+					538 cell
+						539 text 11:20:29
+					540 cell
+						541 text 100.0 / 100
+					542 cell
+						543 text High
+					544 cell
+						545 text HIGH_ALERT
+					546 cell
+						547 text Combined evidence
+					548 cell
+						549 text None
+				550 row
+					551 cell
+						552 text 784
+					553 cell
+						554 text 11:20:29
+					555 cell
+						556 text 100.0 / 100
+					557 cell
+						558 text High
+					559 cell
+						560 text HIGH_ALERT
+					561 cell
+						562 text Combined evidence
+					563 cell
+						564 text None
+				565 row
+					566 cell
+						567 text 783
+					568 cell
+						569 text 11:20:29
+					570 cell
+						571 text 100.0 / 100
+					572 cell
+						573 text High
+					574 cell
+						575 text HIGH_ALERT
+					576 cell
+						577 text Combined evidence
+					578 cell
+						579 text None
+				580 row
+					581 cell
+						582 text 782
+					583 cell
+						584 text 11:20:29
+					585 cell
+						586 text 100.0 / 100
+					587 cell
+						588 text High
+					589 cell
+						590 text HIGH_ALERT
+					591 cell
+						592 text Combined evidence
+					593 cell
+						594 text None
+				595 row
+					596 cell
+						597 text 781
+					598 cell
+						599 text 11:20:29
+					600 cell
+						601 text 100.0 / 100
+					602 cell
+						603 text High
+					604 cell
+						605 text HIGH_ALERT
+					606 cell
+						607 text Combined evidence
+					608 cell
+						609 text None
+				610 row
+					611 cell
+						612 text 780
+					613 cell
+						614 text 11:20:29
+					615 cell
+						616 text 100.0 / 100
+					617 cell
+						618 text High
+					619 cell
+						620 text HIGH_ALERT
+					621 cell
+						622 text Combined evidence
+					623 cell
+						624 text None
+				625 row
+					626 cell
+						627 text 779
+					628 cell
+						629 text 11:20:29
+					630 cell
+						631 text 100.0 / 100
+					632 cell
+						633 text High
+					634 cell
+						635 text HIGH_ALERT
+					636 cell
+						637 text Combined evidence
+					638 cell
+						639 text None
+				640 row
+					641 cell
+						642 text 778
+					643 cell
+						644 text 11:20:29
+					645 cell
+						646 text 100.0 / 100
+					647 cell
+						648 text High
+					649 cell
+						650 text HIGH_ALERT
+					651 cell
+						652 text Combined evidence
+					653 cell
+						654 text None
+				655 row
+					656 cell
+						657 text 777
+					658 cell
+						659 text 11:20:28
+					660 cell
+						661 text 100.0 / 100
+					662 cell
+						663 text High
+					664 cell
+						665 text HIGH_ALERT
+					666 cell
+						667 text Combined evidence
+					668 cell
+						669 text None
+				670 row
+					671 cell
+						672 text 776
+					673 cell
+						674 text 11:20:28
+					675 cell
+						676 text 100.0 / 100
+					677 cell
+						678 text High
+					679 cell
+						680 text HIGH_ALERT
+					681 cell
+						682 text Combined evidence
+					683 cell
+						684 text None
+				685 row
+					686 cell
+						687 text 775
+					688 cell
+						689 text 11:20:28
+					690 cell
+						691 text 100.0 / 100
+					692 cell
+						693 text High
+					694 cell
+						695 text HIGH_ALERT
+					696 cell
+						697 text Combined evidence
+					698 cell
+						699 text None
+				700 row
+					701 cell
+						702 text 774
+					703 cell
+						704 text 11:20:28
+					705 cell
+						706 text 100.0 / 100
+					707 cell
+						708 text High
+					709 cell
+						710 text HIGH_ALERT
+					711 cell
+						712 text Partial evidence
+					713 cell
+						714 text None
+				715 row
+					716 cell
+						717 text 773
+					718 cell
+						719 text 11:20:28
+					720 cell
+						721 text 100.0 / 100
+					722 cell
+						723 text High
+					724 cell
+						725 text HIGH_ALERT
+					726 cell
+						727 text Partial evidence
+					728 cell
+						729 text None
+				730 row
+					731 cell
+						732 text 772
+					733 cell
+						734 text 11:20:28
+					735 cell
+						736 text 100.0 / 100
+					737 cell
+						738 text High
+					739 cell
+						740 text HIGH_ALERT
+					741 cell
+						742 text Partial evidence
+					743 cell
+						744 text None
+				745 row
+					746 cell
+						747 text 771
+					748 cell
+						749 text 11:20:28
+					750 cell
+						751 text 100.0 / 100
+					752 cell
+						753 text High
+					754 cell
+						755 text HIGH_ALERT
+					756 cell
+						757 text Partial evidence
+					758 cell
+						759 text None
+				760 row
+					761 cell
+						762 text 770
+					763 cell
+						764 text 11:20:28
+					765 cell
+						766 text 100.0 / 100
+					767 cell
+						768 text High
+					769 cell
+						770 text HIGH_ALERT
+					771 cell
+						772 text Partial evidence
+					773 cell
+						774 text None
+				775 row
+					776 cell
+						777 text 769
+					778 cell
+						779 text 11:20:28
+					780 cell
+						781 text 100.0 / 100
+					782 cell
+						783 text High
+					784 cell
+						785 text HIGH_ALERT
+					786 cell
+						787 text Partial evidence
+					788 cell
+						789 text None
+				790 row
+					791 cell
+						792 text 768
+					793 cell
+						794 text 11:20:28
+					795 cell
+						796 text 100.0 / 100
+					797 cell
+						798 text High
+					799 cell
+						800 text HIGH_ALERT
+					801 cell
+						802 text Partial evidence
+					803 cell
+						804 text None
+				805 row
+					806 cell
+						807 text 767
+					808 cell
+						809 text 11:20:27
+					810 cell
+						811 text 100.0 / 100
+					812 cell
+						813 text High
+					814 cell
+						815 text HIGH_ALERT
+					816 cell
+						817 text Partial evidence
+					818 cell
+						819 text None
+				820 row
+					821 cell
+						822 text 766
+					823 cell
+						824 text 11:20:27
+					825 cell
+						826 text 100.0 / 100
+					827 cell
+						828 text High
+					829 cell
+						830 text HIGH_ALERT
+					831 cell
+						832 text Partial evidence
+					833 cell
+						834 text None
+				835 row
+					836 cell
+						837 text 765
+					838 cell
+						839 text 11:20:27
+					840 cell
+						841 text 100.0 / 100
+					842 cell
+						843 text High
+					844 cell
+						845 text HIGH_ALERT
+					846 cell
+						847 text Partial evidence
+					848 cell
+						849 text None
+				850 row
+					851 cell
+						852 text 764
+					853 cell
+						854 text 11:20:27
+					855 cell
+						856 text 100.0 / 100
+					857 cell
+						858 text High
+					859 cell
+						860 text HIGH_ALERT
+					861 cell
+						862 text Partial evidence
+					863 cell
+						864 text None
+				865 row
+					866 cell
+						867 text 763
+					868 cell
+						869 text 11:20:27
+					870 cell
+						871 text 100.0 / 100
+					872 cell
+						873 text High
+					874 cell
+						875 text HIGH_ALERT
+					876 cell
+						877 text Partial evidence
+					878 cell
+						879 text None
+				880 row
+					881 cell
+						882 text 762
+					883 cell
+						884 text 11:20:27
+					885 cell
+						886 text 100.0 / 100
+					887 cell
+						888 text High
+					889 cell
+						890 text HIGH_ALERT
+					891 cell
+						892 text Partial evidence
+					893 cell
+						894 text None
+				895 row
+					896 cell
+						897 text 761
+					898 cell
+						899 text 11:20:27
+					900 cell
+						901 text 100.0 / 100
+					902 cell
+						903 text High
+					904 cell
+						905 text HIGH_ALERT
+					906 cell
+						907 text Partial evidence
+					908 cell
+						909 text None
+				910 row
+					911 cell
+						912 text 760
+					913 cell
+						914 text 11:20:27
+					915 cell
+						916 text 100.0 / 100
+					917 cell
+						918 text High
+					919 cell
+						920 text HIGH_ALERT
+					921 cell
+						922 text Partial evidence
+					923 cell
+						924 text None
+				925 row
+					926 cell
+						927 text 759
+					928 cell
+						929 text 11:20:27
+					930 cell
+						931 text 100.0 / 100
+					932 cell
+						933 text High
+					934 cell
+						935 text HIGH_ALERT
+					936 cell
+						937 text Partial evidence
+					938 cell
+						939 text None
+				940 row
+					941 cell
+						942 text 758
+					943 cell
+						944 text 11:20:27
+					945 cell
+						946 text 100.0 / 100
+					947 cell
+						948 text High
+					949 cell
+						950 text HIGH_ALERT
+					951 cell
+						952 text Partial evidence
+					953 cell
+						954 text None
+				955 row
+					956 cell
+						957 text 757
+					958 cell
+						959 text 11:20:26
+					960 cell
+						961 text 100.0 / 100
+					962 cell
+						963 text High
+					964 cell
+						965 text HIGH_ALERT
+					966 cell
+						967 text Partial evidence
+					968 cell
+						969 text None
+				970 row
+					971 cell
+						972 text 756
+					973 cell
+						974 text 11:20:26
+					975 cell
+						976 text 100.0 / 100
+					977 cell
+						978 text High
+					979 cell
+						980 text HIGH_ALERT
+					981 cell
+						982 text Partial evidence
+					983 cell
+						984 text None
+				985 row
+					986 cell
+						987 text 755
+					988 cell
+						989 text 11:20:26
+					990 cell
+						991 text 100.0 / 100
+					992 cell
+						993 text High
+					994 cell
+						995 text HIGH_ALERT
+					996 cell
+						997 text Partial evidence
+					998 cell
+						999 text None
+				1000 row
+					1001 cell
+						1002 text 754
+					1003 cell
+						1004 text 11:20:26
+					1005 cell
+						1006 text 100.0 / 100
+					1007 cell
+						1008 text High
+					1009 cell
+						1010 text HIGH_ALERT
+					1011 cell
+						1012 text Combined evidence
+					1013 cell
+						1014 text None
+				1015 row
+					1016 cell
+						1017 text 753
+					1018 cell
+						1019 text 11:20:26
+					1020 cell
+						1021 text 100.0 / 100
+					1022 cell
+						1023 text High
+					1024 cell
+						1025 text HIGH_ALERT
+					1026 cell
+						1027 text Combined evidence
+					1028 cell
+						1029 text None
+				1030 row
+					1031 cell
+						1032 text 752
+					1033 cell
+						1034 text 11:20:26
+					1035 cell
+						1036 text 100.0 / 100
+					1037 cell
+						1038 text High
+					1039 cell
+						1040 text HIGH_ALERT
+					1041 cell
+						1042 text Combined evidence
+					1043 cell
+						1044 text None
+				1045 row
+					1046 cell
+						1047 text 751
+					1048 cell
+						1049 text 11:20:26
+					1050 cell
+						1051 text 100.0 / 100
+					1052 cell
+						1053 text High
+					1054 cell
+						1055 text HIGH_ALERT
+					1056 cell
+						1057 text Combined evidence
+					1058 cell
+						1059 text None
+				1060 row
+					1061 cell
+						1062 text 750
+					1063 cell
+						1064 text 11:20:26
+					1065 cell
+						1066 text 100.0 / 100
+					1067 cell
+						1068 text High
+					1069 cell
+						1070 text HIGH_ALERT
+					1071 cell
+						1072 text Combined evidence
+					1073 cell
+						1074 text None
+				1075 row
+					1076 cell
+						1077 text 749
+					1078 cell
+						1079 text 11:20:26
+					1080 cell
+						1081 text 100.0 / 100
+					1082 cell
+						1083 text High
+					1084 cell
+						1085 text HIGH_ALERT
+					1086 cell
+						1087 text Combined evidence
+					1088 cell
+						1089 text None
+				1090 row
+					1091 cell
+						1092 text 748
+					1093 cell
+						1094 text 11:20:26
+					1095 cell
+						1096 text 100.0 / 100
+					1097 cell
+						1098 text High
+					1099 cell
+						1100 text HIGH_ALERT
+					1101 cell
+						1102 text Combined evidence
+					1103 cell
+						1104 text None
+				1105 row
+					1106 cell
+						1107 text 747
+					1108 cell
+						1109 text 11:20:25
+					1110 cell
+						1111 text 100.0 / 100
+					1112 cell
+						1113 text High
+					1114 cell
+						1115 text HIGH_ALERT
+					1116 cell
+						1117 text Combined evidence
+					1118 cell
+						1119 text None
+				1120 row
+					1121 cell
+						1122 text 746
+					1123 cell
+						1124 text 11:20:25
+					1125 cell
+						1126 text 100.0 / 100
+					1127 cell
+						1128 text High
+					1129 cell
+						1130 text HIGH_ALERT
+					1131 cell
+						1132 text Combined evidence
+					1133 cell
+						1134 text None
+				1135 row
+					1136 cell
+						1137 text 745
+					1138 cell
+						1139 text 11:20:25
+					1140 cell
+						1141 text 100.0 / 100
+					1142 cell
+						1143 text High
+					1144 cell
+						1145 text HIGH_ALERT
+					1146 cell
+						1147 text Combined evidence
+					1148 cell
+						1149 text None
+				1150 row
+					1151 cell
+						1152 text 744
+					1153 cell
+						1154 text 11:20:25
+					1155 cell
+						1156 text 100.0 / 100
+					1157 cell
+						1158 text High
+					1159 cell
+						1160 text HIGH_ALERT
+					1161 cell
+						1162 text Combined evidence
+					1163 cell
+						1164 text None
+				1165 row
+					1166 cell
+						1167 text 743
+					1168 cell
+						1169 text 11:20:25
+					1170 cell
+						1171 text 100.0 / 100
+					1172 cell
+						1173 text High
+					1174 cell
+						1175 text HIGH_ALERT
+					1176 cell
+						1177 text Combined evidence
+					1178 cell
+						1179 text None
+				1180 row
+					1181 cell
+						1182 text 742
+					1183 cell
+						1184 text 11:20:25
+					1185 cell
+						1186 text 100.0 / 100
+					1187 cell
+						1188 text High
+					1189 cell
+						1190 text HIGH_ALERT
+					1191 cell
+						1192 text Combined evidence
+					1193 cell
+						1194 text None
+				1195 row
+					1196 cell
+						1197 text 741
+					1198 cell
+						1199 text 11:20:25
+					1200 cell
+						1201 text 100.0 / 100
+					1202 cell
+						1203 text High
+					1204 cell
+						1205 text HIGH_ALERT
+					1206 cell
+						1207 text Combined evidence
+					1208 cell
+						1209 text None
+				1210 row
+					1211 cell
+						1212 text 740
+					1213 cell
+						1214 text 11:20:25
+					1215 cell
+						1216 text 100.0 / 100
+					1217 cell
+						1218 text High
+					1219 cell
+						1220 text HIGH_ALERT
+					1221 cell
+						1222 text Combined evidence
+					1223 cell
+						1224 text None
+				1225 row
+					1226 cell
+						1227 text 739
+					1228 cell
+						1229 text 11:20:25
+					1230 cell
+						1231 text 100.0 / 100
+					1232 cell
+						1233 text High
+					1234 cell
+						1235 text HIGH_ALERT
+					1236 cell
+						1237 text Combined evidence
+					1238 cell
+						1239 text None
+				1240 row
+					1241 cell
+						1242 text 738
+					1243 cell
+						1244 text 11:20:25
+					1245 cell
+						1246 text 100.0 / 100
+					1247 cell
+						1248 text High
+					1249 cell
+						1250 text HIGH_ALERT
+					1251 cell
+						1252 text Combined evidence
+					1253 cell
+						1254 text None
+				1255 row
+					1256 cell
+						1257 text 737
+					1258 cell
+						1259 text 11:20:24
+					1260 cell
+						1261 text 100.0 / 100
+					1262 cell
+						1263 text High
+					1264 cell
+						1265 text HIGH_ALERT
+					1266 cell
+						1267 text Combined evidence
+					1268 cell
+						1269 text None
+				1270 row
+					1271 cell
+						1272 text 736
+					1273 cell
+						1274 text 11:20:24
+					1275 cell
+						1276 text 100.0 / 100
+					1277 cell
+						1278 text High
+					1279 cell
+						1280 text HIGH_ALERT
+					1281 cell
+						1282 text Combined evidence
+					1283 cell
+						1284 text None
+				1285 row
+					1286 cell
+						1287 text 735
+					1288 cell
+						1289 text 11:20:24
+					1290 cell
+						1291 text 100.0 / 100
+					1292 cell
+						1293 text High
+					1294 cell
+						1295 text HIGH_ALERT
+					1296 cell
+						1297 text Combined evidence
+					1298 cell
+						1299 text None
+				1300 row
+					1301 cell
+						1302 text 734
+					1303 cell
+						1304 text 11:20:24
+					1305 cell
+						1306 text 100.0 / 100
+					1307 cell
+						1308 text High
+					1309 cell
+						1310 text HIGH_ALERT
+					1311 cell
+						1312 text Combined evidence
+					1313 cell
+						1314 text None
+				1315 row
+					1316 cell
+						1317 text 733
+					1318 cell
+						1319 text 11:20:24
+					1320 cell
+						1321 text 100.0 / 100
+					1322 cell
+						1323 text High
+					1324 cell
+						1325 text HIGH_ALERT
+					1326 cell
+						1327 text Combined evidence
+					1328 cell
+						1329 text None
+				1330 row
+					1331 cell
+						1332 text 732
+					1333 cell
+						1334 text 11:20:24
+					1335 cell
+						1336 text 100.0 / 100
+					1337 cell
+						1338 text High
+					1339 cell
+						1340 text HIGH_ALERT
+					1341 cell
+						1342 text Combined evidence
+					1343 cell
+						1344 text None
+				1345 row
+					1346 cell
+						1347 text 731
+					1348 cell
+						1349 text 11:20:24
+					1350 cell
+						1351 text 100.0 / 100
+					1352 cell
+						1353 text High
+					1354 cell
+						1355 text HIGH_ALERT
+					1356 cell
+						1357 text Combined evidence
+					1358 cell
+						1359 text None
+				1360 row
+					1361 cell
+						1362 text 730
+					1363 cell
+						1364 text 11:20:24
+					1365 cell
+						1366 text 100.0 / 100
+					1367 cell
+						1368 text High
+					1369 cell
+						1370 text HIGH_ALERT
+					1371 cell
+						1372 text Combined evidence
+					1373 cell
+						1374 text None
+				1375 row
+					1376 cell
+						1377 text 729
+					1378 cell
+						1379 text 11:20:24
+					1380 cell
+						1381 text 100.0 / 100
+					1382 cell
+						1383 text High
+					1384 cell
+						1385 text HIGH_ALERT
+					1386 cell
+						1387 text Combined evidence
+					1388 cell
+						1389 text None
+				1390 row
+					1391 cell
+						1392 text 728
+					1393 cell
+						1394 text 11:20:24
+					1395 cell
+						1396 text 100.0 / 100
+					1397 cell
+						1398 text High
+					1399 cell
+						1400 text HIGH_ALERT
+					1401 cell
+						1402 text Combined evidence
+					1403 cell
+						1404 text None
+				1405 row
+					1406 cell
+						1407 text 727
+					1408 cell
+						1409 text 11:20:23
+					1410 cell
+						1411 text 100.0 / 100
+					1412 cell
+						1413 text High
+					1414 cell
+						1415 text HIGH_ALERT
+					1416 cell
+						1417 text Combined evidence
+					1418 cell
+						1419 text None
+				1420 row
+					1421 cell
+						1422 text 726
+					1423 cell
+						1424 text 11:20:23
+					1425 cell
+						1426 text 100.0 / 100
+					1427 cell
+						1428 text High
+					1429 cell
+						1430 text HIGH_ALERT
+					1431 cell
+						1432 text Combined evidence
+					1433 cell
+						1434 text None
+				1435 row
+					1436 cell
+						1437 text 725
+					1438 cell
+						1439 text 11:20:23
+					1440 cell
+						1441 text 100.0 / 100
+					1442 cell
+						1443 text High
+					1444 cell
+						1445 text HIGH_ALERT
+					1446 cell
+						1447 text Combined evidence
+					1448 cell
+						1449 text None
+				1450 row
+					1451 cell
+						1452 text 724
+					1453 cell
+						1454 text 11:20:23
+					1455 cell
+						1456 text 100.0 / 100
+					1457 cell
+						1458 text High
+					1459 cell
+						1460 text HIGH_ALERT
+					1461 cell
+						1462 text Combined evidence
+					1463 cell
+						1464 text None
+				1465 row
+					1466 cell
+						1467 text 723
+					1468 cell
+						1469 text 11:20:23
+					1470 cell
+						1471 text 100.0 / 100
+					1472 cell
+						1473 text High
+					1474 cell
+						1475 text HIGH_ALERT
+					1476 cell
+						1477 text Combined evidence
+					1478 cell
+						1479 text None
+				1480 row
+					1481 cell
+						1482 text 722
+					1483 cell
+						1484 text 11:20:23
+					1485 cell
+						1486 text 100.0 / 100
+					1487 cell
+						1488 text High
+					1489 cell
+						1490 text HIGH_ALERT
+					1491 cell
+						1492 text Partial evidence
+					1493 cell
+						1494 text None
+				1495 row
+					1496 cell
+						1497 text 721
+					1498 cell
+						1499 text 11:20:23
+					1500 cell
+						1501 text 100.0 / 100
+					1502 cell
+						1503 text High
+					1504 cell
+						1505 text HIGH_ALERT
+					1506 cell
+						1507 text Partial evidence
+					1508 cell
+						1509 text None
+				1510 row
+					1511 cell
+						1512 text 720
+					1513 cell
+						1514 text 11:20:23
+					1515 cell
+						1516 text 100.0 / 100
+					1517 cell
+						1518 text High
+					1519 cell
+						1520 text HIGH_ALERT
+					1521 cell
+						1522 text Partial evidence
+					1523 cell
+						1524 text None
+				1525 row
+					1526 cell
+						1527 text 719
+					1528 cell
+						1529 text 11:20:23
+					1530 cell
+						1531 text 100.0 / 100
+					1532 cell
+						1533 text High
+					1534 cell
+						1535 text HIGH_ALERT
+					1536 cell
+						1537 text Partial evidence
+					1538 cell
+						1539 text None
+				1540 row
+					1541 cell
+						1542 text 718
+					1543 cell
+						1544 text 11:20:22
+					1545 cell
+						1546 text 100.0 / 100
+					1547 cell
+						1548 text High
+					1549 cell
+						1550 text HIGH_ALERT
+					1551 cell
+						1552 text Partial evidence
+					1553 cell
+						1554 text None
+				1555 row
+					1556 cell
+						1557 text 717
+					1558 cell
+						1559 text 11:20:22
+					1560 cell
+						1561 text 100.0 / 100
+					1562 cell
+						1563 text High
+					1564 cell
+						1565 text HIGH_ALERT
+					1566 cell
+						1567 text Partial evidence
+					1568 cell
+						1569 text None
+				1570 row
+					1571 cell
+						1572 text 716
+					1573 cell
+						1574 text 11:20:22
+					1575 cell
+						1576 text 100.0 / 100
+					1577 cell
+						1578 text High
+					1579 cell
+						1580 text HIGH_ALERT
+					1581 cell
+						1582 text Partial evidence
+					1583 cell
+						1584 text None
+				1585 row
+					1586 cell
+						1587 text 715
+					1588 cell
+						1589 text 11:20:22
+					1590 cell
+						1591 text 100.0 / 100
+					1592 cell
+						1593 text High
+					1594 cell
+						1595 text HIGH_ALERT
+					1596 cell
+						1597 text Partial evidence
+					1598 cell
+						1599 text None
+				1600 row
+					1601 cell
+						1602 text 714
+					1603 cell
+						1604 text 11:20:22
+					1605 cell
+						1606 text 100.0 / 100
+					1607 cell
+						1608 text High
+					1609 cell
+						1610 text HIGH_ALERT
+					1611 cell
+						1612 text Partial evidence
+					1613 cell
+						1614 text None
+				1615 row
+					1616 cell
+						1617 text 713
+					1618 cell
+						1619 text 11:20:22
+					1620 cell
+						1621 text 100.0 / 100
+					1622 cell
+						1623 text High
+					1624 cell
+						1625 text HIGH_ALERT
+					1626 cell
+						1627 text Partial evidence
+					1628 cell
+						1629 text None
+				1630 row
+					1631 cell
+						1632 text 712
+					1633 cell
+						1634 text 11:20:22
+					1635 cell
+						1636 text 100.0 / 100
+					1637 cell
+						1638 text High
+					1639 cell
+						1640 text HIGH_ALERT
+					1641 cell
+						1642 text Partial evidence
+					1643 cell
+						1644 text None
+				1645 row
+					1646 cell
+						1647 text 711
+					1648 cell
+						1649 text 11:20:22
+					1650 cell
+						1651 text 100.0 / 100
+					1652 cell
+						1653 text High
+					1654 cell
+						1655 text HIGH_ALERT
+					1656 cell
+						1657 text Partial evidence
+					1658 cell
+						1659 text None
+				1660 row
+					1661 cell
+						1662 text 710
+					1663 cell
+						1664 text 11:20:22
+					1665 cell
+						1666 text 100.0 / 100
+					1667 cell
+						1668 text High
+					1669 cell
+						1670 text HIGH_ALERT
+					1671 cell
+						1672 text Partial evidence
+					1673 cell
+						1674 text None
+				1675 row
+					1676 cell
+						1677 text 709
+					1678 cell
+						1679 text 11:20:22
+					1680 cell
+						1681 text 100.0 / 100
+					1682 cell
+						1683 text High
+					1684 cell
+						1685 text HIGH_ALERT
+					1686 cell
+						1687 text Partial evidence
+					1688 cell
+						1689 text None
+				1690 row
+					1691 cell
+						1692 text 708
+					1693 cell
+						1694 text 11:20:21
+					1695 cell
+						1696 text 100.0 / 100
+					1697 cell
+						1698 text High
+					1699 cell
+						1700 text HIGH_ALERT
+					1701 cell
+						1702 text Partial evidence
+					1703 cell
+						1704 text None
+				1705 row
+					1706 cell
+						1707 text 707
+					1708 cell
+						1709 text 11:20:21
+					1710 cell
+						1711 text 100.0 / 100
+					1712 cell
+						1713 text High
+					1714 cell
+						1715 text HIGH_ALERT
+					1716 cell
+						1717 text Partial evidence
+					1718 cell
+						1719 text None
+				1720 row
+					1721 cell
+						1722 text 706
+					1723 cell
+						1724 text 11:20:21
+					1725 cell
+						1726 text 100.0 / 100
+					1727 cell
+						1728 text High
+					1729 cell
+						1730 text HIGH_ALERT
+					1731 cell
+						1732 text Partial evidence
+					1733 cell
+						1734 text None
+				1735 row
+					1736 cell
+						1737 text 705
+					1738 cell
+						1739 text 11:20:21
+					1740 cell
+						1741 text 100.0 / 100
+					1742 cell
+						1743 text High
+					1744 cell
+						1745 text HIGH_ALERT
+					1746 cell
+						1747 text Partial evidence
+					1748 cell
+						1749 text None
+				1750 row
+					1751 cell
+						1752 text 704
+					1753 cell
+						1754 text 11:20:21
+					1755 cell
+						1756 text 100.0 / 100
+					1757 cell
+						1758 text High
+					1759 cell
+						1760 text HIGH_ALERT
+					1761 cell
+						1762 text Partial evidence
+					1763 cell
+						1764 text None
+				1765 row
+					1766 cell
+						1767 text 703
+					1768 cell
+						1769 text 11:20:21
+					1770 cell
+						1771 text 100.0 / 100
+					1772 cell
+						1773 text High
+					1774 cell
+						1775 text HIGH_ALERT
+					1776 cell
+						1777 text Partial evidence
+					1778 cell
+						1779 text None
+				1780 row
+					1781 cell
+						1782 text 702
+					1783 cell
+						1784 text 11:20:21
+					1785 cell
+						1786 text 100.0 / 100
+					1787 cell
+						1788 text High
+					1789 cell
+						1790 text HIGH_ALERT
+					1791 cell
+						1792 text Partial evidence
+					1793 cell
+						1794 text None
+				1795 row
+					1796 cell
+						1797 text 701
+					1798 cell
+						1799 text 11:20:21
+					1800 cell
+						1801 text 100.0 / 100
+					1802 cell
+						1803 text High
+					1804 cell
+						1805 text HIGH_ALERT
+					1806 cell
+						1807 text Partial evidence
+					1808 cell
+						1809 text None
+				1810 row
+					1811 cell
+						1812 text 700
+					1813 cell
+						1814 text 11:20:21
+					1815 cell
+						1816 text 100.0 / 100
+					1817 cell
+						1818 text High
+					1819 cell
+						1820 text HIGH_ALERT
+					1821 cell
+						1822 text Partial evidence
+					1823 cell
+						1824 text None
+				1825 row
+					1826 cell
+						1827 text 699
+					1828 cell
+						1829 text 11:20:21
+					1830 cell
+						1831 text 100.0 / 100
+					1832 cell
+						1833 text High
+					1834 cell
+						1835 text HIGH_ALERT
+					1836 cell
+						1837 text Partial evidence
+					1838 cell
+						1839 text None
+				1840 row
+					1841 cell
+						1842 text 698
+					1843 cell
+						1844 text 11:20:20
+					1845 cell
+						1846 text 100.0 / 100
+					1847 cell
+						1848 text High
+					1849 cell
+						1850 text HIGH_ALERT
+					1851 cell
+						1852 text Partial evidence
+					1853 cell
+						1854 text None
+				1855 row
+					1856 cell
+						1857 text 697
+					1858 cell
+						1859 text 11:20:20
+					1860 cell
+						1861 text 100.0 / 100
+					1862 cell
+						1863 text High
+					1864 cell
+						1865 text HIGH_ALERT
+					1866 cell
+						1867 text Partial evidence
+					1868 cell
+						1869 text None
+				1870 row
+					1871 cell
+						1872 text 696
+					1873 cell
+						1874 text 11:20:20
+					1875 cell
+						1876 text 100.0 / 100
+					1877 cell
+						1878 text High
+					1879 cell
+						1880 text HIGH_ALERT
+					1881 cell
+						1882 text Partial evidence
+					1883 cell
+						1884 text None
+				1885 row
+					1886 cell
+						1887 text 695
+					1888 cell
+						1889 text 11:20:20
+					1890 cell
+						1891 text 100.0 / 100
+					1892 cell
+						1893 text High
+					1894 cell
+						1895 text HIGH_ALERT
+					1896 cell
+						1897 text Partial evidence
+					1898 cell
+						1899 text None
+				1900 row
+					1901 cell
+						1902 text 694
+					1903 cell
+						1904 text 11:20:20
+					1905 cell
+						1906 text 100.0 / 100
+					1907 cell
+						1908 text High
+					1909 cell
+						1910 text HIGH_ALERT
+					1911 cell
+						1912 text Partial evidence
+					1913 cell
+						1914 text None
+				1915 row
+					1916 cell
+						1917 text 693
+					1918 cell
+						1919 text 11:20:20
+					1920 cell
+						1921 text 100.0 / 100
+					1922 cell
+						1923 text High
+					1924 cell
+						1925 text HIGH_ALERT
+					1926 cell
+						1927 text Partial evidence
+					1928 cell
+						1929 text None
+				1930 row
+					1931 cell
+						1932 text 692
+					1933 cell
+						1934 text 11:20:20
+					1935 cell
+						1936 text 100.0 / 100
+					1937 cell
+						1938 text High
+					1939 cell
+						1940 text HIGH_ALERT
+					1941 cell
+						1942 text Partial evidence
+					1943 cell
+						1944 text None
+				1945 row
+					1946 cell
+						1947 text 691
+					1948 cell
+						1949 text 11:20:20
+					1950 cell
+						1951 text 100.0 / 100
+					1952 cell
+						1953 text High
+					1954 cell
+						1955 text HIGH_ALERT
+					1956 cell
+						1957 text Partial evidence
+					1958 cell
+						1959 text None
+				1960 row
+					1961 cell
+						1962 text 690
+					1963 cell
+						1964 text 11:20:20
+					1965 cell
+						1966 text 100.0 / 100
+					1967 cell
+						1968 text High
+					1969 cell
+						1970 text HIGH_ALERT
+					1971 cell
+						1972 text Partial evidence
+					1973 cell
+						1974 text None
+				1975 row
+					1976 cell
+						1977 text 689
+					1978 cell
+						1979 text 11:20:20
+					1980 cell
+						1981 text 100.0 / 100
+					1982 cell
+						1983 text High
+					1984 cell
+						1985 text HIGH_ALERT
+					1986 cell
+						1987 text Partial evidence
+					1988 cell
+						1989 text None
+				1990 row
+					1991 cell
+						1992 text 688
+					1993 cell
+						1994 text 11:20:19
+					1995 cell
+						1996 text 100.0 / 100
+					1997 cell
+						1998 text High
+					1999 cell
+						2000 text HIGH_ALERT
+					2001 cell
+						2002 text Partial evidence
+					2003 cell
+						2004 text None
+				2005 row
+					2006 cell
+						2007 text 687
+					2008 cell
+						2009 text 11:20:19
+					2010 cell
+						2011 text 100.0 / 100
+					2012 cell
+						2013 text High
+					2014 cell
+						2015 text HIGH_ALERT
+					2016 cell
+						2017 text Partial evidence
+					2018 cell
+						2019 text None
+				2020 row
+					2021 cell
+						2022 text 686
+					2023 cell
+						2024 text 11:20:19
+					2025 cell
+						2026 text 100.0 / 100
+					2027 cell
+						2028 text High
+					2029 cell
+						2030 text HIGH_ALERT
+					2031 cell
+						2032 text Partial evidence
+					2033 cell
+						2034 text None
+				2035 row
+					2036 cell
+						2037 text 685
+					2038 cell
+						2039 text 11:20:19
+					2040 cell
+						2041 text 100.0 / 100
+					2042 cell
+						2043 text High
+					2044 cell
+						2045 text HIGH_ALERT
+					2046 cell
+						2047 text Partial evidence
+					2048 cell
+						2049 text None
+				2050 row
+					2051 cell
+						2052 text 684
+					2053 cell
+						2054 text 11:20:19
+					2055 cell
+						2056 text 100.0 / 100
+					2057 cell
+						2058 text High
+					2059 cell
+						2060 text HIGH_ALERT
+					2061 cell
+						2062 text Partial evidence
+					2063 cell
+						2064 text None
+				2065 row
+					2066 cell
+						2067 text 683
+					2068 cell
+						2069 text 11:20:19
+					2070 cell
+						2071 text 100.0 / 100
+					2072 cell
+						2073 text High
+					2074 cell
+						2075 text HIGH_ALERT
+					2076 cell
+						2077 text Partial evidence
+					2078 cell
+						2079 text None
+				2080 row
+					2081 cell
+						2082 text 682
+					2083 cell
+						2084 text 11:20:19
+					2085 cell
+						2086 text 100.0 / 100
+					2087 cell
+						2088 text High
+					2089 cell
+						2090 text HIGH_ALERT
+					2091 cell
+						2092 text Partial evidence
+					2093 cell
+						2094 text None
+				2095 row
+					2096 cell
+						2097 text 681
+					2098 cell
+						2099 text 11:20:19
+					2100 cell
+						2101 text 100.0 / 100
+					2102 cell
+						2103 text High
+					2104 cell
+						2105 text HIGH_ALERT
+					2106 cell
+						2107 text Partial evidence
+					2108 cell
+						2109 text None
+				2110 row
+					2111 cell
+						2112 text 680
+					2113 cell
+						2114 text 11:20:19
+					2115 cell
+						2116 text 100.0 / 100
+					2117 cell
+						2118 text High
+					2119 cell
+						2120 text HIGH_ALERT
+					2121 cell
+						2122 text Partial evidence
+					2123 cell
+						2124 text None
+				2125 row
+					2126 cell
+						2127 text 679
+					2128 cell
+						2129 text 11:20:19
+					2130 cell
+						2131 text 100.0 / 100
+					2132 cell
+						2133 text High
+					2134 cell
+						2135 text HIGH_ALERT
+					2136 cell
+						2137 text Partial evidence
+					2138 cell
+						2139 text None
+				2140 row
+					2141 cell
+						2142 text 678
+					2143 cell
+						2144 text 11:20:18
+					2145 cell
+						2146 text 100.0 / 100
+					2147 cell
+						2148 text High
+					2149 cell
+						2150 text HIGH_ALERT
+					2151 cell
+						2152 text Partial evidence
+					2153 cell
+						2154 text None
+				2155 row
+					2156 cell
+						2157 text 677
+					2158 cell
+						2159 text 11:20:18
+					2160 cell
+						2161 text 100.0 / 100
+					2162 cell
+						2163 text High
+					2164 cell
+						2165 text HIGH_ALERT
+					2166 cell
+						2167 text Partial evidence
+					2168 cell
+						2169 text None
+				2170 row
+					2171 cell
+						2172 text 676
+					2173 cell
+						2174 text 11:20:18
+					2175 cell
+						2176 text 100.0 / 100
+					2177 cell
+						2178 text High
+					2179 cell
+						2180 text HIGH_ALERT
+					2181 cell
+						2182 text Partial evidence
+					2183 cell
+						2184 text None
+				2185 row
+					2186 cell
+						2187 text 675
+					2188 cell
+						2189 text 11:20:18
+					2190 cell
+						2191 text 100.0 / 100
+					2192 cell
+						2193 text High
+					2194 cell
+						2195 text HIGH_ALERT
+					2196 cell
+						2197 text Partial evidence
+					2198 cell
+						2199 text None
+				2200 row
+					2201 cell
+						2202 text 674
+					2203 cell
+						2204 text 11:20:18
+					2205 cell
+						2206 text 100.0 / 100
+					2207 cell
+						2208 text High
+					2209 cell
+						2210 text HIGH_ALERT
+					2211 cell
+						2212 text Partial evidence
+					2213 cell
+						2214 text None
+				2215 row
+					2216 cell
+						2217 text 673
+					2218 cell
+						2219 text 11:20:18
+					2220 cell
+						2221 text 100.0 / 100
+					2222 cell
+						2223 text High
+					2224 cell
+						2225 text HIGH_ALERT
+					2226 cell
+						2227 text Partial evidence
+					2228 cell
+						2229 text None
+				2230 row
+					2231 cell
+						2232 text 672
+					2233 cell
+						2234 text 11:20:18
+					2235 cell
+						2236 text 100.0 / 100
+					2237 cell
+						2238 text High
+					2239 cell
+						2240 text HIGH_ALERT
+					2241 cell
+						2242 text Partial evidence
+					2243 cell
+						2244 text None
+				2245 row
+					2246 cell
+						2247 text 671
+					2248 cell
+						2249 text 11:20:18
+					2250 cell
+						2251 text 100.0 / 100
+					2252 cell
+						2253 text High
+					2254 cell
+						2255 text HIGH_ALERT
+					2256 cell
+						2257 text Partial evidence
+					2258 cell
+						2259 text None
+				2260 row
+					2261 cell
+						2262 text 670
+					2263 cell
+						2264 text 11:20:18
+					2265 cell
+						2266 text 100.0 / 100
+					2267 cell
+						2268 text High
+					2269 cell
+						2270 text HIGH_ALERT
+					2271 cell
+						2272 text Partial evidence
+					2273 cell
+						2274 text None
+				2275 row
+					2276 cell
+						2277 text 669
+					2278 cell
+						2279 text 11:20:18
+					2280 cell
+						2281 text 100.0 / 100
+					2282 cell
+						2283 text High
+					2284 cell
+						2285 text HIGH_ALERT
+					2286 cell
+						2287 text Partial evidence
+					2288 cell
+						2289 text None
+				2290 row
+					2291 cell
+						2292 text 668
+					2293 cell
+						2294 text 11:20:17
+					2295 cell
+						2296 text 100.0 / 100
+					2297 cell
+						2298 text High
+					2299 cell
+						2300 text HIGH_ALERT
+					2301 cell
+						2302 text Partial evidence
+					2303 cell
+						2304 text None
+				2305 row
+					2306 cell
+						2307 text 667
+					2308 cell
+						2309 text 11:20:17
+					2310 cell
+						2311 text 100.0 / 100
+					2312 cell
+						2313 text High
+					2314 cell
+						2315 text HIGH_ALERT
+					2316 cell
+						2317 text Partial evidence
+					2318 cell
+						2319 text None
+				2320 row
+					2321 cell
+						2322 text 666
+					2323 cell
+						2324 text 11:20:17
+					2325 cell
+						2326 text 100.0 / 100
+					2327 cell
+						2328 text High
+					2329 cell
+						2330 text HIGH_ALERT
+					2331 cell
+						2332 text Partial evidence
+					2333 cell
+						2334 text None
+				2335 row
+					2336 cell
+						2337 text 665
+					2338 cell
+						2339 text 11:20:17
+					2340 cell
+						2341 text 100.0 / 100
+					2342 cell
+						2343 text High
+					2344 cell
+						2345 text HIGH_ALERT
+					2346 cell
+						2347 text Partial evidence
+					2348 cell
+						2349 text None
+				2350 row
+					2351 cell
+						2352 text 664
+					2353 cell
+						2354 text 11:20:17
+					2355 cell
+						2356 text 100.0 / 100
+					2357 cell
+						2358 text High
+					2359 cell
+						2360 text HIGH_ALERT
+					2361 cell
+						2362 text Partial evidence
+					2363 cell
+						2364 text None
+				2365 row
+					2366 cell
+						2367 text 663
+					2368 cell
+						2369 text 11:20:17
+					2370 cell
+						2371 text 100.0 / 100
+					2372 cell
+						2373 text High
+					2374 cell
+						2375 text HIGH_ALERT
+					2376 cell
+						2377 text Partial evidence
+					2378 cell
+						2379 text None
+				2380 row
+					2381 cell
+						2382 text 662
+					2383 cell
+						2384 text 11:20:17
+					2385 cell
+						2386 text 100.0 / 100
+					2387 cell
+						2388 text High
+					2389 cell
+						2390 text HIGH_ALERT
+					2391 cell
+						2392 text Partial evidence
+					2393 cell
+						2394 text None
+				2395 row
+					2396 cell
+						2397 text 661
+					2398 cell
+						2399 text 11:20:17
+					2400 cell
+						2401 text 100.0 / 100
+					2402 cell
+						2403 text High
+					2404 cell
+						2405 text HIGH_ALERT
+					2406 cell
+						2407 text Partial evidence
+					2408 cell
+						2409 text None
+				2410 row
+					2411 cell
+						2412 text 660
+					2413 cell
+						2414 text 11:20:17
+					2415 cell
+						2416 text 100.0 / 100
+					2417 cell
+						2418 text High
+					2419 cell
+						2420 text HIGH_ALERT
+					2421 cell
+						2422 text Partial evidence
+					2423 cell
+						2424 text None
+				2425 row
+					2426 cell
+						2427 text 659
+					2428 cell
+						2429 text 11:20:17
+					2430 cell
+						2431 text 100.0 / 100
+					2432 cell
+						2433 text High
+					2434 cell
+						2435 text HIGH_ALERT
+					2436 cell
+						2437 text Partial evidence
+					2438 cell
+						2439 text None
+				2440 row
+					2441 cell
+						2442 text 658
+					2443 cell
+						2444 text 11:20:16
+					2445 cell
+						2446 text 100.0 / 100
+					2447 cell
+						2448 text High
+					2449 cell
+						2450 text HIGH_ALERT
+					2451 cell
+						2452 text Partial evidence
+					2453 cell
+						2454 text None
+				2455 row
+					2456 cell
+						2457 text 657
+					2458 cell
+						2459 text 11:20:16
+					2460 cell
+						2461 text 100.0 / 100
+					2462 cell
+						2463 text High
+					2464 cell
+						2465 text HIGH_ALERT
+					2466 cell
+						2467 text Partial evidence
+					2468 cell
+						2469 text None
+				2470 row
+					2471 cell
+						2472 text 656
+					2473 cell
+						2474 text 11:20:16
+					2475 cell
+						2476 text 100.0 / 100
+					2477 cell
+						2478 text High
+					2479 cell
+						2480 text HIGH_ALERT
+					2481 cell
+						2482 text Partial evidence
+					2483 cell
+						2484 text None
+				2485 row
+					2486 cell
+						2487 text 655
+					2488 cell
+						2489 text 11:20:16
+					2490 cell
+						2491 text 100.0 / 100
+					2492 cell
+						2493 text High
+					2494 cell
+						2495 text HIGH_ALERT
+					2496 cell
+						2497 text Partial evidence
+					2498 cell
+						2499 text None
+				2500 row
+					2501 cell
+						2502 text 654
+					2503 cell
+						2504 text 11:20:16
+					2505 cell
+						2506 text 100.0 / 100
+					2507 cell
+						2508 text High
+					2509 cell
+						2510 text HIGH_ALERT
+					2511 cell
+						2512 text Partial evidence
+					2513 cell
+						2514 text None
+				2515 row
+					2516 cell
+						2517 text 653
+					2518 cell
+						2519 text 11:20:16
+					2520 cell
+						2521 text 100.0 / 100
+					2522 cell
+						2523 text High
+					2524 cell
+						2525 text HIGH_ALERT
+					2526 cell
+						2527 text Partial evidence
+					2528 cell
+						2529 text None
+				2530 row
+					2531 cell
+						2532 text 652
+					2533 cell
+						2534 text 11:20:16
+					2535 cell
+						2536 text 100.0 / 100
+					2537 cell
+						2538 text High
+					2539 cell
+						2540 text HIGH_ALERT
+					2541 cell
+						2542 text Partial evidence
+					2543 cell
+						2544 text None
+				2545 row
+					2546 cell
+						2547 text 651
+					2548 cell
+						2549 text 11:20:16
+					2550 cell
+						2551 text 100.0 / 100
+					2552 cell
+						2553 text High
+					2554 cell
+						2555 text HIGH_ALERT
+					2556 cell
+						2557 text Partial evidence
+					2558 cell
+						2559 text None
+				2560 row
+					2561 cell
+						2562 text 650
+					2563 cell
+						2564 text 11:20:16
+					2565 cell
+						2566 text 100.0 / 100
+					2567 cell
+						2568 text High
+					2569 cell
+						2570 text HIGH_ALERT
+					2571 cell
+						2572 text Partial evidence
+					2573 cell
+						2574 text None
+				2575 row
+					2576 cell
+						2577 text 649
+					2578 cell
+						2579 text 11:20:16
+					2580 cell
+						2581 text 100.0 / 100
+					2582 cell
+						2583 text High
+					2584 cell
+						2585 text HIGH_ALERT
+					2586 cell
+						2587 text Partial evidence
+					2588 cell
+						2589 text None
+				2590 row
+					2591 cell
+						2592 text 648
+					2593 cell
+						2594 text 11:20:15
+					2595 cell
+						2596 text 100.0 / 100
+					2597 cell
+						2598 text High
+					2599 cell
+						2600 text HIGH_ALERT
+					2601 cell
+						2602 text Partial evidence
+					2603 cell
+						2604 text None
+				2605 row
+					2606 cell
+						2607 text 647
+					2608 cell
+						2609 text 11:20:15
+					2610 cell
+						2611 text 100.0 / 100
+					2612 cell
+						2613 text High
+					2614 cell
+						2615 text HIGH_ALERT
+					2616 cell
+						2617 text Partial evidence
+					2618 cell
+						2619 text None
+				2620 row
+					2621 cell
+						2622 text 646
+					2623 cell
+						2624 text 11:20:15
+					2625 cell
+						2626 text 100.0 / 100
+					2627 cell
+						2628 text High
+					2629 cell
+						2630 text HIGH_ALERT
+					2631 cell
+						2632 text Partial evidence
+					2633 cell
+						2634 text None
+				2635 row
+					2636 cell
+						2637 text 645
+					2638 cell
+						2639 text 11:20:15
+					2640 cell
+						2641 text 100.0 / 100
+					2642 cell
+						2643 text High
+					2644 cell
+						2645 text HIGH_ALERT
+					2646 cell
+						2647 text Partial evidence
+					2648 cell
+						2649 text None
+				2650 row
+					2651 cell
+						2652 text 644
+					2653 cell
+						2654 text 11:20:15
+					2655 cell
+						2656 text 100.0 / 100
+					2657 cell
+						2658 text High
+					2659 cell
+						2660 text HIGH_ALERT
+					2661 cell
+						2662 text Partial evidence
+					2663 cell
+						2664 text None
+				2665 row
+					2666 cell
+						2667 text 643
+					2668 cell
+						2669 text 11:20:15
+					2670 cell
+						2671 text 100.0 / 100
+					2672 cell
+						2673 text High
+					2674 cell
+						2675 text HIGH_ALERT
+					2676 cell
+						2677 text Partial evidence
+					2678 cell
+						2679 text None
+				2680 row
+					2681 cell
+						2682 text 642
+					2683 cell
+						2684 text 11:20:15
+					2685 cell
+						2686 text 100.0 / 100
+					2687 cell
+						2688 text High
+					2689 cell
+						2690 text HIGH_ALERT
+					2691 cell
+						2692 text Partial evidence
+					2693 cell
+						2694 text None
+				2695 row
+					2696 cell
+						2697 text 641
+					2698 cell
+						2699 text 11:20:15
+					2700 cell
+						2701 text 100.0 / 100
+					2702 cell
+						2703 text High
+					2704 cell
+						2705 text HIGH_ALERT
+					2706 cell
+						2707 text Partial evidence
+					2708 cell
+						2709 text None
+				2710 row
+					2711 cell
+						2712 text 640
+					2713 cell
+						2714 text 11:20:15
+					2715 cell
+						2716 text 100.0 / 100
+					2717 cell
+						2718 text High
+					2719 cell
+						2720 text HIGH_ALERT
+					2721 cell
+						2722 text Partial evidence
+					2723 cell
+						2724 text None
+				2725 row
+					2726 cell
+						2727 text 639
+					2728 cell
+						2729 text 11:20:15
+					2730 cell
+						2731 text 100.0 / 100
+					2732 cell
+						2733 text High
+					2734 cell
+						2735 text HIGH_ALERT
+					2736 cell
+						2737 text Partial evidence
+					2738 cell
+						2739 text None
+				2740 row
+					2741 cell
+						2742 text 638
+					2743 cell
+						2744 text 11:20:14
+					2745 cell
+						2746 text 100.0 / 100
+					2747 cell
+						2748 text High
+					2749 cell
+						2750 text HIGH_ALERT
+					2751 cell
+						2752 text Partial evidence
+					2753 cell
+						2754 text None
+				2755 row
+					2756 cell
+						2757 text 637
+					2758 cell
+						2759 text 11:20:14
+					2760 cell
+						2761 text 100.0 / 100
+					2762 cell
+						2763 text High
+					2764 cell
+						2765 text HIGH_ALERT
+					2766 cell
+						2767 text Partial evidence
+					2768 cell
+						2769 text None
+				2770 row
+					2771 cell
+						2772 text 636
+					2773 cell
+						2774 text 11:20:14
+					2775 cell
+						2776 text 100.0 / 100
+					2777 cell
+						2778 text High
+					2779 cell
+						2780 text HIGH_ALERT
+					2781 cell
+						2782 text Partial evidence
+					2783 cell
+						2784 text None
+				2785 row
+					2786 cell
+						2787 text 635
+					2788 cell
+						2789 text 11:20:14
+					2790 cell
+						2791 text 100.0 / 100
+					2792 cell
+						2793 text High
+					2794 cell
+						2795 text HIGH_ALERT
+					2796 cell
+						2797 text Partial evidence
+					2798 cell
+						2799 text None
+				2800 row
+					2801 cell
+						2802 text 634
+					2803 cell
+						2804 text 11:20:14
+					2805 cell
+						2806 text 100.0 / 100
+					2807 cell
+						2808 text High
+					2809 cell
+						2810 text HIGH_ALERT
+					2811 cell
+						2812 text Partial evidence
+					2813 cell
+						2814 text None
+				2815 row
+					2816 cell
+						2817 text 633
+					2818 cell
+						2819 text 11:20:14
+					2820 cell
+						2821 text 100.0 / 100
+					2822 cell
+						2823 text High
+					2824 cell
+						2825 text HIGH_ALERT
+					2826 cell
+						2827 text Partial evidence
+					2828 cell
+						2829 text None
+				2830 row
+					2831 cell
+						2832 text 632
+					2833 cell
+						2834 text 11:20:14
+					2835 cell
+						2836 text 100.0 / 100
+					2837 cell
+						2838 text High
+					2839 cell
+						2840 text HIGH_ALERT
+					2841 cell
+						2842 text Partial evidence
+					2843 cell
+						2844 text None
+				2845 row
+					2846 cell
+						2847 text 631
+					2848 cell
+						2849 text 11:20:14
+					2850 cell
+						2851 text 100.0 / 100
+					2852 cell
+						2853 text High
+					2854 cell
+						2855 text HIGH_ALERT
+					2856 cell
+						2857 text Partial evidence
+					2858 cell
+						2859 text None
+				2860 row
+					2861 cell
+						2862 text 630
+					2863 cell
+						2864 text 11:20:14
+					2865 cell
+						2866 text 100.0 / 100
+					2867 cell
+						2868 text High
+					2869 cell
+						2870 text HIGH_ALERT
+					2871 cell
+						2872 text Partial evidence
+					2873 cell
+						2874 text None
+				2875 row
+					2876 cell
+						2877 text 629
+					2878 cell
+						2879 text 11:20:14
+					2880 cell
+						2881 text 100.0 / 100
+					2882 cell
+						2883 text High
+					2884 cell
+						2885 text HIGH_ALERT
+					2886 cell
+						2887 text Partial evidence
+					2888 cell
+						2889 text None
+				2890 row
+					2891 cell
+						2892 text 628
+					2893 cell
+						2894 text 11:20:13
+					2895 cell
+						2896 text 100.0 / 100
+					2897 cell
+						2898 text High
+					2899 cell
+						2900 text HIGH_ALERT
+					2901 cell
+						2902 text Partial evidence
+					2903 cell
+						2904 text None
+				2905 row
+					2906 cell
+						2907 text 627
+					2908 cell
+						2909 text 11:20:13
+					2910 cell
+						2911 text 100.0 / 100
+					2912 cell
+						2913 text High
+					2914 cell
+						2915 text HIGH_ALERT
+					2916 cell
+						2917 text Partial evidence
+					2918 cell
+						2919 text None
+				2920 row
+					2921 cell
+						2922 text 626
+					2923 cell
+						2924 text 11:20:13
+					2925 cell
+						2926 text 100.0 / 100
+					2927 cell
+						2928 text High
+					2929 cell
+						2930 text HIGH_ALERT
+					2931 cell
+						2932 text Partial evidence
+					2933 cell
+						2934 text None
+				2935 row
+					2936 cell
+						2937 text 625
+					2938 cell
+						2939 text 11:20:13
+					2940 cell
+						2941 text 100.0 / 100
+					2942 cell
+						2943 text High
+					2944 cell
+						2945 text HIGH_ALERT
+					2946 cell
+						2947 text Partial evidence
+					2948 cell
+						2949 text None
+				2950 row
+					2951 cell
+						2952 text 624
+					2953 cell
+						2954 text 11:20:13
+					2955 cell
+						2956 text 100.0 / 100
+					2957 cell
+						2958 text High
+					2959 cell
+						2960 text HIGH_ALERT
+					2961 cell
+						2962 text Partial evidence
+					2963 cell
+						2964 text None
+				2965 row
+					2966 cell
+						2967 text 623
+					2968 cell
+						2969 text 11:20:13
+					2970 cell
+						2971 text 100.0 / 100
+					2972 cell
+						2973 text High
+					2974 cell
+						2975 text HIGH_ALERT
+					2976 cell
+						2977 text Partial evidence
+					2978 cell
+						2979 text None
+				2980 row
+					2981 cell
+						2982 text 622
+					2983 cell
+						2984 text 11:20:13
+					2985 cell
+						2986 text 100.0 / 100
+					2987 cell
+						2988 text High
+					2989 cell
+						2990 text HIGH_ALERT
+					2991 cell
+						2992 text Partial evidence
+					2993 cell
+						2994 text None
+				2995 row
+					2996 cell
+						2997 text 621
+					2998 cell
+						2999 text 11:20:13
+					3000 cell
+						3001 text 100.0 / 100
+					3002 cell
+						3003 text High
+					3004 cell
+						3005 text HIGH_ALERT
+					3006 cell
+						3007 text Partial evidence
+					3008 cell
+						3009 text None
+				3010 row
+					3011 cell
+						3012 text 620
+					3013 cell
+						3014 text 11:20:13
+					3015 cell
+						3016 text 100.0 / 100
+					3017 cell
+						3018 text High
+					3019 cell
+						3020 text HIGH_ALERT
+					3021 cell
+						3022 text Partial evidence
+					3023 cell
+						3024 text None
+				3025 row
+					3026 cell
+						3027 text 619
+					3028 cell
+						3029 text 11:20:13
+					3030 cell
+						3031 text 100.0 / 100
+					3032 cell
+						3033 text High
+					3034 cell
+						3035 text HIGH_ALERT
+					3036 cell
+						3037 text Partial evidence
+					3038 cell
+						3039 text None
+				3040 row
+					3041 cell
+						3042 text 618
+					3043 cell
+						3044 text 11:20:12
+					3045 cell
+						3046 text 100.0 / 100
+					3047 cell
+						3048 text High
+					3049 cell
+						3050 text HIGH_ALERT
+					3051 cell
+						3052 text Partial evidence
+					3053 cell
+						3054 text None
+				3055 row
+					3056 cell
+						3057 text 617
+					3058 cell
+						3059 text 11:20:12
+					3060 cell
+						3061 text 100.0 / 100
+					3062 cell
+						3063 text High
+					3064 cell
+						3065 text HIGH_ALERT
+					3066 cell
+						3067 text Partial evidence
+					3068 cell
+						3069 text None
+				3070 row
+					3071 cell
+						3072 text 616
+					3073 cell
+						3074 text 11:20:12
+					3075 cell
+						3076 text 100.0 / 100
+					3077 cell
+						3078 text High
+					3079 cell
+						3080 text HIGH_ALERT
+					3081 cell
+						3082 text Partial evidence
+					3083 cell
+						3084 text None
+				3085 row
+					3086 cell
+						3087 text 615
+					3088 cell
+						3089 text 11:20:12
+					3090 cell
+						3091 text 99.9 / 100
+					3092 cell
+						3093 text High
+					3094 cell
+						3095 text HIGH_ALERT
+					3096 cell
+						3097 text Partial evidence
+					3098 cell
+						3099 text None
+				3100 row
+					3101 cell
+						3102 text 614
+					3103 cell
+						3104 text 11:20:12
+					3105 cell
+						3106 text 99.9 / 100
+					3107 cell
+						3108 text High
+					3109 cell
+						3110 text HIGH_ALERT
+					3111 cell
+						3112 text Partial evidence
+					3113 cell
+						3114 text None
+				3115 row
+					3116 cell
+						3117 text 613
+					3118 cell
+						3119 text 11:20:12
+					3120 cell
+						3121 text 99.9 / 100
+					3122 cell
+						3123 text High
+					3124 cell
+						3125 text HIGH_ALERT
+					3126 cell
+						3127 text Partial evidence
+					3128 cell
+						3129 text None
+				3130 row
+					3131 cell
+						3132 text 612
+					3133 cell
+						3134 text 11:20:12
+					3135 cell
+						3136 text 99.9 / 100
+					3137 cell
+						3138 text High
+					3139 cell
+						3140 text HIGH_ALERT
+					3141 cell
+						3142 text Partial evidence
+					3143 cell
+						3144 text None
+				3145 row
+					3146 cell
+						3147 text 611
+					3148 cell
+						3149 text 11:20:12
+					3150 cell
+						3151 text 99.9 / 100
+					3152 cell
+						3153 text High
+					3154 cell
+						3155 text HIGH_ALERT
+					3156 cell
+						3157 text Partial evidence
+					3158 cell
+						3159 text None
+				3160 row
+					3161 cell
+						3162 text 610
+					3163 cell
+						3164 text 11:20:12
+					3165 cell
+						3166 text 99.9 / 100
+					3167 cell
+						3168 text High
+					3169 cell
+						3170 text HIGH_ALERT
+					3171 cell
+						3172 text Partial evidence
+					3173 cell
+						3174 text None
+				3175 row
+					3176 cell
+						3177 text 609
+					3178 cell
+						3179 text 11:20:12
+					3180 cell
+						3181 text 99.9 / 100
+					3182 cell
+						3183 text High
+					3184 cell
+						3185 text HIGH_ALERT
+					3186 cell
+						3187 text Partial evidence
+					3188 cell
+						3189 text None
+				3190 row
+					3191 cell
+						3192 text 608
+					3193 cell
+						3194 text 11:20:11
+					3195 cell
+						3196 text 99.9 / 100
+					3197 cell
+						3198 text High
+					3199 cell
+						3200 text HIGH_ALERT
+					3201 cell
+						3202 text Partial evidence
+					3203 cell
+						3204 text None
+				3205 row
+					3206 cell
+						3207 text 607
+					3208 cell
+						3209 text 11:20:11
+					3210 cell
+						3211 text 99.9 / 100
+					3212 cell
+						3213 text High
+					3214 cell
+						3215 text HIGH_ALERT
+					3216 cell
+						3217 text Partial evidence
+					3218 cell
+						3219 text None
+				3220 row
+					3221 cell
+						3222 text 606
+					3223 cell
+						3224 text 11:20:11
+					3225 cell
+						3226 text 99.9 / 100
+					3227 cell
+						3228 text High
+					3229 cell
+						3230 text HIGH_ALERT
+					3231 cell
+						3232 text Partial evidence
+					3233 cell
+						3234 text None
+				3235 row
+					3236 cell
+						3237 text 605
+					3238 cell
+						3239 text 11:20:11
+					3240 cell
+						3241 text 99.9 / 100
+					3242 cell
+						3243 text High
+					3244 cell
+						3245 text HIGH_ALERT
+					3246 cell
+						3247 text Partial evidence
+					3248 cell
+						3249 text None
+				3250 row
+					3251 cell
+						3252 text 604
+					3253 cell
+						3254 text 11:20:11
+					3255 cell
+						3256 text 99.9 / 100
+					3257 cell
+						3258 text High
+					3259 cell
+						3260 text HIGH_ALERT
+					3261 cell
+						3262 text Partial evidence
+					3263 cell
+						3264 text None
+				3265 row
+					3266 cell
+						3267 text 603
+					3268 cell
+						3269 text 11:20:11
+					3270 cell
+						3271 text 99.9 / 100
+					3272 cell
+						3273 text High
+					3274 cell
+						3275 text HIGH_ALERT
+					3276 cell
+						3277 text Partial evidence
+					3278 cell
+						3279 text None
+				3280 row
+					3281 cell
+						3282 text 602
+					3283 cell
+						3284 text 11:20:11
+					3285 cell
+						3286 text 99.9 / 100
+					3287 cell
+						3288 text High
+					3289 cell
+						3290 text HIGH_ALERT
+					3291 cell
+						3292 text Partial evidence
+					3293 cell
+						3294 text None
+				3295 row
+					3296 cell
+						3297 text 601
+					3298 cell
+						3299 text 11:20:11
+					3300 cell
+						3301 text 99.9 / 100
+					3302 cell
+						3303 text High
+					3304 cell
+						3305 text HIGH_ALERT
+					3306 cell
+						3307 text Partial evidence
+					3308 cell
+						3309 text None
+				3310 row
+					3311 cell
+						3312 text 600
+					3313 cell
+						3314 text 11:20:11
+					3315 cell
+						3316 text 99.9 / 100
+					3317 cell
+						3318 text High
+					3319 cell
+						3320 text HIGH_ALERT
+					3321 cell
+						3322 text Partial evidence
+					3323 cell
+						3324 text None
+				3325 row
+					3326 cell
+						3327 text 599
+					3328 cell
+						3329 text 11:20:11
+					3330 cell
+						3331 text 99.9 / 100
+					3332 cell
+						3333 text High
+					3334 cell
+						3335 text HIGH_ALERT
+					3336 cell
+						3337 text Partial evidence
+					3338 cell
+						3339 text None
+				3340 row
+					3341 cell
+						3342 text 598
+					3343 cell
+						3344 text 11:20:10
+					3345 cell
+						3346 text 99.9 / 100
+					3347 cell
+						3348 text High
+					3349 cell
+						3350 text HIGH_ALERT
+					3351 cell
+						3352 text Partial evidence
+					3353 cell
+						3354 text None
+				3355 row
+					3356 cell
+						3357 text 597
+					3358 cell
+						3359 text 11:20:10
+					3360 cell
+						3361 text 99.9 / 100
+					3362 cell
+						3363 text High
+					3364 cell
+						3365 text HIGH_ALERT
+					3366 cell
+						3367 text Partial evidence
+					3368 cell
+						3369 text None
+				3370 row
+					3371 cell
+						3372 text 596
+					3373 cell
+						3374 text 11:20:10
+					3375 cell
+						3376 text 99.9 / 100
+					3377 cell
+						3378 text High
+					3379 cell
+						3380 text HIGH_ALERT
+					3381 cell
+						3382 text Partial evidence
+					3383 cell
+						3384 text None
+				3385 row
+					3386 cell
+						3387 text 595
+					3388 cell
+						3389 text 11:20:10
+					3390 cell
+						3391 text 99.9 / 100
+					3392 cell
+						3393 text High
+					3394 cell
+						3395 text CAUTION
+					3396 cell
+						3397 text Partial evidence
+					3398 cell
+						3399 text None
+				3400 row
+					3401 cell
+						3402 text 594
+					3403 cell
+						3404 text 11:20:10
+					3405 cell
+						3406 text 99.9 / 100
+					3407 cell
+						3408 text High
+					3409 cell
+						3410 text CAUTION
+					3411 cell
+						3412 text Partial evidence
+					3413 cell
+						3414 text None
+				3415 row
+					3416 cell
+						3417 text 593
+					3418 cell
+						3419 text 11:20:10
+					3420 cell
+						3421 text 99.9 / 100
+					3422 cell
+						3423 text High
+					3424 cell
+						3425 text CAUTION
+					3426 cell
+						3427 text Partial evidence
+					3428 cell
+						3429 text None
+				3430 row
+					3431 cell
+						3432 text 592
+					3433 cell
+						3434 text 11:20:10
+					3435 cell
+						3436 text 99.9 / 100
+					3437 cell
+						3438 text High
+					3439 cell
+						3440 text CAUTION
+					3441 cell
+						3442 text Partial evidence
+					3443 cell
+						3444 text None
+				3445 row
+					3446 cell
+						3447 text 591
+					3448 cell
+						3449 text 11:20:10
+					3450 cell
+						3451 text 99.9 / 100
+					3452 cell
+						3453 text High
+					3454 cell
+						3455 text CAUTION
+					3456 cell
+						3457 text Partial evidence
+					3458 cell
+						3459 text None
+				3460 row
+					3461 cell
+						3462 text 590
+					3463 cell
+						3464 text 11:20:10
+					3465 cell
+						3466 text 99.9 / 100
+					3467 cell
+						3468 text High
+					3469 cell
+						3470 text CAUTION
+					3471 cell
+						3472 text Partial evidence
+					3473 cell
+						3474 text None
+				3475 row
+					3476 cell
+						3477 text 589
+					3478 cell
+						3479 text 11:20:10
+					3480 cell
+						3481 text 99.9 / 100
+					3482 cell
+						3483 text High
+					3484 cell
+						3485 text CAUTION
+					3486 cell
+						3487 text Partial evidence
+					3488 cell
+						3489 text None
+				3490 row
+					3491 cell
+						3492 text 588
+					3493 cell
+						3494 text 11:20:09
+					3495 cell
+						3496 text 99.9 / 100
+					3497 cell
+						3498 text High
+					3499 cell
+						3500 text CAUTION
+					3501 cell
+						3502 text Partial evidence
+					3503 cell
+						3504 text None
+				3505 row
+					3506 cell
+						3507 text 587
+					3508 cell
+						3509 text 11:20:09
+					3510 cell
+						3511 text 99.9 / 100
+					3512 cell
+						3513 text High
+					3514 cell
+						3515 text CAUTION
+					3516 cell
+						3517 text Partial evidence
+					3518 cell
+						3519 text None
+				3520 row
+					3521 cell
+						3522 text 586
+					3523 cell
+						3524 text 11:20:09
+					3525 cell
+						3526 text 99.9 / 100
+					3527 cell
+						3528 text High
+					3529 cell
+						3530 text CAUTION
+					3531 cell
+						3532 text Partial evidence
+					3533 cell
+						3534 text None
+				3535 row
+					3536 cell
+						3537 text 585
+					3538 cell
+						3539 text 11:20:09
+					3540 cell
+						3541 text 99.9 / 100
+					3542 cell
+						3543 text High
+					3544 cell
+						3545 text CAUTION
+					3546 cell
+						3547 text Partial evidence
+					3548 cell
+						3549 text None
+				3550 row
+					3551 cell
+						3552 text 584
+					3553 cell
+						3554 text 11:20:09
+					3555 cell
+						3556 text 99.9 / 100
+					3557 cell
+						3558 text High
+					3559 cell
+						3560 text CAUTION
+					3561 cell
+						3562 text Partial evidence
+					3563 cell
+						3564 text None
+				3565 row
+					3566 cell
+						3567 text 583
+					3568 cell
+						3569 text 11:20:09
+					3570 cell
+						3571 text 99.9 / 100
+					3572 cell
+						3573 text High
+					3574 cell
+						3575 text CAUTION
+					3576 cell
+						3577 text Partial evidence
+					3578 cell
+						3579 text None
+				3580 row
+					3581 cell
+						3582 text 582
+					3583 cell
+						3584 text 11:20:09
+					3585 cell
+						3586 text 99.9 / 100
+					3587 cell
+						3588 text High
+					3589 cell
+						3590 text CAUTION
+					3591 cell
+						3592 text Partial evidence
+					3593 cell
+						3594 text None
+				3595 row
+					3596 cell
+						3597 text 581
+					3598 cell
+						3599 text 11:20:09
+					3600 cell
+						3601 text 99.9 / 100
+					3602 cell
+						3603 text High
+					3604 cell
+						3605 text CAUTION
+					3606 cell
+						3607 text Partial evidence
+					3608 cell
+						3609 text None
+				3610 row
+					3611 cell
+						3612 text 580
+					3613 cell
+						3614 text 11:20:09
+					3615 cell
+						3616 text 99.9 / 100
+					3617 cell
+						3618 text High
+					3619 cell
+						3620 text CAUTION
+					3621 cell
+						3622 text Partial evidence
+					3623 cell
+						3624 text None
+				3625 row
+					3626 cell
+						3627 text 579
+					3628 cell
+						3629 text 11:20:08
+					3630 cell
+						3631 text 99.9 / 100
+					3632 cell
+						3633 text High
+					3634 cell
+						3635 text CAUTION
+					3636 cell
+						3637 text Partial evidence
+					3638 cell
+						3639 text None
+				3640 row
+					3641 cell
+						3642 text 578
+					3643 cell
+						3644 text 11:20:08
+					3645 cell
+						3646 text 99.9 / 100
+					3647 cell
+						3648 text High
+					3649 cell
+						3650 text CAUTION
+					3651 cell
+						3652 text Partial evidence
+					3653 cell
+						3654 text None
+				3655 row
+					3656 cell
+						3657 text 577
+					3658 cell
+						3659 text 11:20:08
+					3660 cell
+						3661 text 99.9 / 100
+					3662 cell
+						3663 text High
+					3664 cell
+						3665 text CAUTION
+					3666 cell
+						3667 text Partial evidence
+					3668 cell
+						3669 text None
+				3670 row
+					3671 cell
+						3672 text 576
+					3673 cell
+						3674 text 11:20:08
+					3675 cell
+						3676 text 99.9 / 100
+					3677 cell
+						3678 text High
+					3679 cell
+						3680 text CAUTION
+					3681 cell
+						3682 text Partial evidence
+					3683 cell
+						3684 text None
+				3685 row
+					3686 cell
+						3687 text 575
+					3688 cell
+						3689 text 11:20:08
+					3690 cell
+						3691 text 0.0 / 100
+					3692 cell
+						3693 text Low
+					3694 cell
+						3695 text CAUTION
+					3696 cell
+						3697 text Partial evidence
+					3698 cell
+						3699 text None
+				3700 row
+					3701 cell
+						3702 text 574
+					3703 cell
+						3704 text 11:20:08
+					3705 cell
+						3706 text 0.0 / 100
+					3707 cell
+						3708 text Low
+					3709 cell
+						3710 text CAUTION
+					3711 cell
+						3712 text Partial evidence
+					3713 cell
+						3714 text None
+				3715 row
+					3716 cell
+						3717 text 573
+					3718 cell
+						3719 text 11:20:08
+					3720 cell
+						3721 text 0.0 / 100
+					3722 cell
+						3723 text Low
+					3724 cell
+						3725 text CAUTION
+					3726 cell
+						3727 text Partial evidence
+					3728 cell
+						3729 text None
+				3730 row
+					3731 cell
+						3732 text 572
+					3733 cell
+						3734 text 11:20:08
+					3735 cell
+						3736 text 0.0 / 100
+					3737 cell
+						3738 text Low
+					3739 cell
+						3740 text CAUTION
+					3741 cell
+						3742 text Partial evidence
+					3743 cell
+						3744 text None
+				3745 row
+					3746 cell
+						3747 text 571
+					3748 cell
+						3749 text 11:20:08
+					3750 cell
+						3751 text 0.0 / 100
+					3752 cell
+						3753 text Low
+					3754 cell
+						3755 text CAUTION
+					3756 cell
+						3757 text Partial evidence
+					3758 cell
+						3759 text None
+				3760 row
+					3761 cell
+						3762 text 570
+					3763 cell
+						3764 text 11:20:08
+					3765 cell
+						3766 text 0.0 / 100
+					3767 cell
+						3768 text Low
+					3769 cell
+						3770 text CAUTION
+					3771 cell
+						3772 text Partial evidence
+					3773 cell
+						3774 text None
+				3775 row
+					3776 cell
+						3777 text 569
+					3778 cell
+						3779 text 11:20:07
+					3780 cell
+						3781 text 0.0 / 100
+					3782 cell
+						3783 text Low
+					3784 cell
+						3785 text CAUTION
+					3786 cell
+						3787 text Partial evidence
+					3788 cell
+						3789 text None
+				3790 row
+					3791 cell
+						3792 text 568
+					3793 cell
+						3794 text 11:20:07
+					3795 cell
+						3796 text 0.0 / 100
+					3797 cell
+						3798 text Low
+					3799 cell
+						3800 text CAUTION
+					3801 cell
+						3802 text Partial evidence
+					3803 cell
+						3804 text None
+				3805 row
+					3806 cell
+						3807 text 567
+					3808 cell
+						3809 text 11:20:07
+					3810 cell
+						3811 text 0.0 / 100
+					3812 cell
+						3813 text Low
+					3814 cell
+						3815 text CAUTION
+					3816 cell
+						3817 text Partial evidence
+					3818 cell
+						3819 text None
+				3820 row
+					3821 cell
+						3822 text 566
+					3823 cell
+						3824 text 11:20:07
+					3825 cell
+						3826 text 0.0 / 100
+					3827 cell
+						3828 text Low
+					3829 cell
+						3830 text CAUTION
+					3831 cell
+						3832 text Partial evidence
+					3833 cell
+						3834 text None
+				3835 row
+					3836 cell
+						3837 text 565
+					3838 cell
+						3839 text 11:20:07
+					3840 cell
+						3841 text 0.0 / 100
+					3842 cell
+						3843 text Low
+					3844 cell
+						3845 text CAUTION
+					3846 cell
+						3847 text Partial evidence
+					3848 cell
+						3849 text None
+				3850 row
+					3851 cell
+						3852 text 564
+					3853 cell
+						3854 text 11:20:07
+					3855 cell
+						3856 text 0.0 / 100
+					3857 cell
+						3858 text Low
+					3859 cell
+						3860 text CAUTION
+					3861 cell
+						3862 text Partial evidence
+					3863 cell
+						3864 text None
+				3865 row
+					3866 cell
+						3867 text 563
+					3868 cell
+						3869 text 11:20:07
+					3870 cell
+						3871 text 0.0 / 100
+					3872 cell
+						3873 text Low
+					3874 cell
+						3875 text CAUTION
+					3876 cell
+						3877 text Partial evidence
+					3878 cell
+						3879 text None
+				3880 row
+					3881 cell
+						3882 text 562
+					3883 cell
+						3884 text 11:20:07
+					3885 cell
+						3886 text 0.0 / 100
+					3887 cell
+						3888 text Low
+					3889 cell
+						3890 text CAUTION
+					3891 cell
+						3892 text Partial evidence
+					3893 cell
+						3894 text None
+				3895 row
+					3896 cell
+						3897 text 561
+					3898 cell
+						3899 text 11:20:07
+					3900 cell
+						3901 text 0.0 / 100
+					3902 cell
+						3903 text Low
+					3904 cell
+						3905 text CAUTION
+					3906 cell
+						3907 text Partial evidence
+					3908 cell
+						3909 text None
+				3910 row
+					3911 cell
+						3912 text 560
+					3913 cell
+						3914 text 11:20:07
+					3915 cell
+						3916 text 0.0 / 100
+					3917 cell
+						3918 text Low
+					3919 cell
+						3920 text CAUTION
+					3921 cell
+						3922 text Partial evidence
+					3923 cell
+						3924 text None
+				3925 row
+					3926 cell
+						3927 text 559
+					3928 cell
+						3929 text 11:20:06
+					3930 cell
+						3931 text 0.0 / 100
+					3932 cell
+						3933 text Low
+					3934 cell
+						3935 text CAUTION
+					3936 cell
+						3937 text Partial evidence
+					3938 cell
+						3939 text None
+				3940 row
+					3941 cell
+						3942 text 558
+					3943 cell
+						3944 text 11:20:06
+					3945 cell
+						3946 text 0.0 / 100
+					3947 cell
+						3948 text Low
+					3949 cell
+						3950 text CAUTION
+					3951 cell
+						3952 text Partial evidence
+					3953 cell
+						3954 text None
+				3955 row
+					3956 cell
+						3957 text 557
+					3958 cell
+						3959 text 11:20:06
+					3960 cell
+						3961 text 0.0 / 100
+					3962 cell
+						3963 text Low
+					3964 cell
+						3965 text CAUTION
+					3966 cell
+						3967 text Partial evidence
+					3968 cell
+						3969 text None
+				3970 row
+					3971 cell
+						3972 text 556
+					3973 cell
+						3974 text 11:20:06
+					3975 cell
+						3976 text 50.0 / 100
+					3977 cell
+						3978 text Medium
+					3979 cell
+						3980 text CAUTION
+					3981 cell
+						3982 text Vision-dominant
+					3983 cell
+						3984 text None
+				3985 row
+					3986 cell
+						3987 text 555
+					3988 cell
+						3989 text 11:20:06
+					3990 cell
+						3991 text 89.6 / 100
+					3992 cell
+						3993 text High
+					3994 cell
+						3995 text HIGH_ALERT
+					3996 cell
+						3997 text Vision-dominant
+					3998 cell
+						3999 text None
+				4000 row
+					4001 cell
+						4002 text 554
+					4003 cell
+						4004 text 11:20:06
+					4005 cell
+						4006 text 89.6 / 100
+					4007 cell
+						4008 text High
+					4009 cell
+						4010 text HIGH_ALERT
+					4011 cell
+						4012 text Vision-dominant
+					4013 cell
+						4014 text None
+				4015 row
+					4016 cell
+						4017 text 553
+					4018 cell
+						4019 text 11:20:06
+					4020 cell
+						4021 text 89.6 / 100
+					4022 cell
+						4023 text High
+					4024 cell
+						4025 text HIGH_ALERT
+					4026 cell
+						4027 text Vision-dominant
+					4028 cell
+						4029 text None
+				4030 row
+					4031 cell
+						4032 text 552
+					4033 cell
+						4034 text 11:20:06
+					4035 cell
+						4036 text 89.6 / 100
+					4037 cell
+						4038 text High
+					4039 cell
+						4040 text HIGH_ALERT
+					4041 cell
+						4042 text Vision-dominant
+					4043 cell
+						4044 text None
+				4045 row
+					4046 cell
+						4047 text 551
+					4048 cell
+						4049 text 11:20:06
+					4050 cell
+						4051 text 89.6 / 100
+					4052 cell
+						4053 text High
+					4054 cell
+						4055 text HIGH_ALERT
+					4056 cell
+						4057 text Vision-dominant
+					4058 cell
+						4059 text None
+				4060 row
+					4061 cell
+						4062 text 550
+					4063 cell
+						4064 text 11:20:06
+					4065 cell
+						4066 text 89.6 / 100
+					4067 cell
+						4068 text High
+					4069 cell
+						4070 text HIGH_ALERT
+					4071 cell
+						4072 text Vision-dominant
+					4073 cell
+						4074 text None
+				4075 row
+					4076 cell
+						4077 text 549
+					4078 cell
+						4079 text 11:20:05
+					4080 cell
+						4081 text 89.6 / 100
+					4082 cell
+						4083 text High
+					4084 cell
+						4085 text HIGH_ALERT
+					4086 cell
+						4087 text Vision-dominant
+					4088 cell
+						4089 text None
+				4090 row
+					4091 cell
+						4092 text 548
+					4093 cell
+						4094 text 11:20:05
+					4095 cell
+						4096 text 89.6 / 100
+					4097 cell
+						4098 text High
+					4099 cell
+						4100 text HIGH_ALERT
+					4101 cell
+						4102 text Vision-dominant
+					4103 cell
+						4104 text None
+				4105 row
+					4106 cell
+						4107 text 547
+					4108 cell
+						4109 text 11:20:05
+					4110 cell
+						4111 text 89.6 / 100
+					4112 cell
+						4113 text High
+					4114 cell
+						4115 text HIGH_ALERT
+					4116 cell
+						4117 text Vision-dominant
+					4118 cell
+						4119 text None
+				4120 row
+					4121 cell
+						4122 text 546
+					4123 cell
+						4124 text 11:20:05
+					4125 cell
+						4126 text 89.6 / 100
+					4127 cell
+						4128 text High
+					4129 cell
+						4130 text HIGH_ALERT
+					4131 cell
+						4132 text Vision-dominant
+					4133 cell
+						4134 text None
+				4135 row
+					4136 cell
+						4137 text 545
+					4138 cell
+						4139 text 11:20:05
+					4140 cell
+						4141 text 89.6 / 100
+					4142 cell
+						4143 text High
+					4144 cell
+						4145 text HIGH_ALERT
+					4146 cell
+						4147 text Vision-dominant
+					4148 cell
+						4149 text None
+				4150 row
+					4151 cell
+						4152 text 544
+					4153 cell
+						4154 text 11:20:05
+					4155 cell
+						4156 text 89.6 / 100
+					4157 cell
+						4158 text High
+					4159 cell
+						4160 text HIGH_ALERT
+					4161 cell
+						4162 text Vision-dominant
+					4163 cell
+						4164 text None
+				4165 row
+					4166 cell
+						4167 text 543
+					4168 cell
+						4169 text 11:20:05
+					4170 cell
+						4171 text 89.6 / 100
+					4172 cell
+						4173 text High
+					4174 cell
+						4175 text HIGH_ALERT
+					4176 cell
+						4177 text Vision-dominant
+					4178 cell
+						4179 text None
+				4180 row
+					4181 cell
+						4182 text 542
+					4183 cell
+						4184 text 11:20:05
+					4185 cell
+						4186 text 89.6 / 100
+					4187 cell
+						4188 text High
+					4189 cell
+						4190 text HIGH_ALERT
+					4191 cell
+						4192 text Vision-dominant
+					4193 cell
+						4194 text None
+				4195 row
+					4196 cell
+						4197 text 541
+					4198 cell
+						4199 text 11:20:05
+					4200 cell
+						4201 text 89.6 / 100
+					4202 cell
+						4203 text High
+					4204 cell
+						4205 text HIGH_ALERT
+					4206 cell
+						4207 text Vision-dominant
+					4208 cell
+						4209 text None
+				4210 row
+					4211 cell
+						4212 text 540
+					4213 cell
+						4214 text 11:20:05
+					4215 cell
+						4216 text 89.6 / 100
+					4217 cell
+						4218 text High
+					4219 cell
+						4220 text HIGH_ALERT
+					4221 cell
+						4222 text Vision-dominant
+					4223 cell
+						4224 text None
+				4225 row
+					4226 cell
+						4227 text 539
+					4228 cell
+						4229 text 11:20:04
+					4230 cell
+						4231 text 89.6 / 100
+					4232 cell
+						4233 text High
+					4234 cell
+						4235 text HIGH_ALERT
+					4236 cell
+						4237 text Vision-dominant
+					4238 cell
+						4239 text None
+				4240 row
+					4241 cell
+						4242 text 538
+					4243 cell
+						4244 text 11:20:04
+					4245 cell
+						4246 text 89.6 / 100
+					4247 cell
+						4248 text High
+					4249 cell
+						4250 text HIGH_ALERT
+					4251 cell
+						4252 text Vision-dominant
+					4253 cell
+						4254 text None
+				4255 row
+					4256 cell
+						4257 text 537
+					4258 cell
+						4259 text 11:20:04
+					4260 cell
+						4261 text 89.6 / 100
+					4262 cell
+						4263 text High
+					4264 cell
+						4265 text HIGH_ALERT
+					4266 cell
+						4267 text Vision-dominant
+					4268 cell
+						4269 text None
+				4270 row
+					4271 cell
+						4272 text 536
+					4273 cell
+						4274 text 11:20:04
+					4275 cell
+						4276 text 89.6 / 100
+					4277 cell
+						4278 text High
+					4279 cell
+						4280 text HIGH_ALERT
+					4281 cell
+						4282 text Vision-dominant
+					4283 cell
+						4284 text None
+				4285 row
+					4286 cell
+						4287 text 535
+					4288 cell
+						4289 text 11:20:04
+					4290 cell
+						4291 text 83.8 / 100
+					4292 cell
+						4293 text High
+					4294 cell
+						4295 text CAUTION
+					4296 cell
+						4297 text Vision-dominant
+					4298 cell
+						4299 text None
+				4300 row
+					4301 cell
+						4302 text 534
+					4303 cell
+						4304 text 11:20:04
+					4305 cell
+						4306 text 83.8 / 100
+					4307 cell
+						4308 text High
+					4309 cell
+						4310 text CAUTION
+					4311 cell
+						4312 text Vision-dominant
+					4313 cell
+						4314 text None
+				4315 row
+					4316 cell
+						4317 text 533
+					4318 cell
+						4319 text 11:20:04
+					4320 cell
+						4321 text 83.8 / 100
+					4322 cell
+						4323 text High
+					4324 cell
+						4325 text CAUTION
+					4326 cell
+						4327 text Vision-dominant
+					4328 cell
+						4329 text None
+				4330 row
+					4331 cell
+						4332 text 532
+					4333 cell
+						4334 text 11:20:04
+					4335 cell
+						4336 text 83.8 / 100
+					4337 cell
+						4338 text High
+					4339 cell
+						4340 text CAUTION
+					4341 cell
+						4342 text Vision-dominant
+					4343 cell
+						4344 text None
+				4345 row
+					4346 cell
+						4347 text 531
+					4348 cell
+						4349 text 11:20:04
+					4350 cell
+						4351 text 83.8 / 100
+					4352 cell
+						4353 text High
+					4354 cell
+						4355 text CAUTION
+					4356 cell
+						4357 text Vision-dominant
+					4358 cell
+						4359 text None
+				4360 row
+					4361 cell
+						4362 text 530
+					4363 cell
+						4364 text 11:20:04
+					4365 cell
+						4366 text 83.8 / 100
+					4367 cell
+						4368 text High
+					4369 cell
+						4370 text CAUTION
+					4371 cell
+						4372 text Vision-dominant
+					4373 cell
+						4374 text None
+				4375 row
+					4376 cell
+						4377 text 529
+					4378 cell
+						4379 text 11:20:03
+					4380 cell
+						4381 text 83.8 / 100
+					4382 cell
+						4383 text High
+					4384 cell
+						4385 text CAUTION
+					4386 cell
+						4387 text Vision-dominant
+					4388 cell
+						4389 text None
+				4390 row
+					4391 cell
+						4392 text 528
+					4393 cell
+						4394 text 11:20:03
+					4395 cell
+						4396 text 83.8 / 100
+					4397 cell
+						4398 text High
+					4399 cell
+						4400 text CAUTION
+					4401 cell
+						4402 text Vision-dominant
+					4403 cell
+						4404 text None
+				4405 row
+					4406 cell
+						4407 text 527
+					4408 cell
+						4409 text 11:20:03
+					4410 cell
+						4411 text 83.8 / 100
+					4412 cell
+						4413 text High
+					4414 cell
+						4415 text CAUTION
+					4416 cell
+						4417 text Vision-dominant
+					4418 cell
+						4419 text None
+				4420 row
+					4421 cell
+						4422 text 526
+					4423 cell
+						4424 text 11:20:03
+					4425 cell
+						4426 text 83.8 / 100
+					4427 cell
+						4428 text High
+					4429 cell
+						4430 text CAUTION
+					4431 cell
+						4432 text Vision-dominant
+					4433 cell
+						4434 text None
+				4435 row
+					4436 cell
+						4437 text 525
+					4438 cell
+						4439 text 11:20:03
+					4440 cell
+						4441 text 83.8 / 100
+					4442 cell
+						4443 text High
+					4444 cell
+						4445 text CAUTION
+					4446 cell
+						4447 text Vision-dominant
+					4448 cell
+						4449 text None
+				4450 row
+					4451 cell
+						4452 text 524
+					4453 cell
+						4454 text 11:20:03
+					4455 cell
+						4456 text 83.8 / 100
+					4457 cell
+						4458 text High
+					4459 cell
+						4460 text CAUTION
+					4461 cell
+						4462 text Vision-dominant
+					4463 cell
+						4464 text None
+				4465 row
+					4466 cell
+						4467 text 523
+					4468 cell
+						4469 text 11:20:03
+					4470 cell
+						4471 text 83.8 / 100
+					4472 cell
+						4473 text High
+					4474 cell
+						4475 text CAUTION
+					4476 cell
+						4477 text Vision-dominant
+					4478 cell
+						4479 text None
+				4480 row
+					4481 cell
+						4482 text 522
+					4483 cell
+						4484 text 11:20:03
+					4485 cell
+						4486 text 83.8 / 100
+					4487 cell
+						4488 text High
+					4489 cell
+						4490 text CAUTION
+					4491 cell
+						4492 text Vision-dominant
+					4493 cell
+						4494 text None
+				4495 row
+					4496 cell
+						4497 text 521
+					4498 cell
+						4499 text 11:20:03
+					4500 cell
+						4501 text 83.8 / 100
+					4502 cell
+						4503 text High
+					4504 cell
+						4505 text CAUTION
+					4506 cell
+						4507 text Vision-dominant
+					4508 cell
+						4509 text None
+				4510 row
+					4511 cell
+						4512 text 520
+					4513 cell
+						4514 text 11:20:03
+					4515 cell
+						4516 text 83.8 / 100
+					4517 cell
+						4518 text High
+					4519 cell
+						4520 text CAUTION
+					4521 cell
+						4522 text Vision-dominant
+					4523 cell
+						4524 text None
+				4525 row
+					4526 cell
+						4527 text 519
+					4528 cell
+						4529 text 11:20:02
+					4530 cell
+						4531 text 83.8 / 100
+					4532 cell
+						4533 text High
+					4534 cell
+						4535 text CAUTION
+					4536 cell
+						4537 text Vision-dominant
+					4538 cell
+						4539 text None
+				4540 row
+					4541 cell
+						4542 text 518
+					4543 cell
+						4544 text 11:20:02
+					4545 cell
+						4546 text 83.8 / 100
+					4547 cell
+						4548 text High
+					4549 cell
+						4550 text CAUTION
+					4551 cell
+						4552 text Vision-dominant
+					4553 cell
+						4554 text None
+				4555 row
+					4556 cell
+						4557 text 517
+					4558 cell
+						4559 text 11:20:02
+					4560 cell
+						4561 text 83.8 / 100
+					4562 cell
+						4563 text High
+					4564 cell
+						4565 text CAUTION
+					4566 cell
+						4567 text Vision-dominant
+					4568 cell
+						4569 text None
+				4570 row
+					4571 cell
+						4572 text 516
+					4573 cell
+						4574 text 11:20:02
+					4575 cell
+						4576 text 83.8 / 100
+					4577 cell
+						4578 text High
+					4579 cell
+						4580 text CAUTION
+					4581 cell
+						4582 text Vision-dominant
+					4583 cell
+						4584 text None
+				4585 row
+					4586 cell
+						4587 text 515
+					4588 cell
+						4589 text 11:20:02
+					4590 cell
+						4591 text 50.0 / 100
+					4592 cell
+						4593 text Medium
+					4594 cell
+						4595 text CAUTION
+					4596 cell
+						4597 text Vision-dominant
+					4598 cell
+						4599 text None
+				4600 row
+					4601 cell
+						4602 text 514
+					4603 cell
+						4604 text 11:20:02
+					4605 cell
+						4606 text 50.0 / 100
+					4607 cell
+						4608 text Medium
+					4609 cell
+						4610 text CAUTION
+					4611 cell
+						4612 text Vision-dominant
+					4613 cell
+						4614 text None
+				4615 row
+					4616 cell
+						4617 text 513
+					4618 cell
+						4619 text 11:20:02
+					4620 cell
+						4621 text 50.0 / 100
+					4622 cell
+						4623 text Medium
+					4624 cell
+						4625 text CAUTION
+					4626 cell
+						4627 text Vision-dominant
+					4628 cell
+						4629 text None
+				4630 row
+					4631 cell
+						4632 text 512
+					4633 cell
+						4634 text 11:20:02
+					4635 cell
+						4636 text 50.0 / 100
+					4637 cell
+						4638 text Medium
+					4639 cell
+						4640 text CAUTION
+					4641 cell
+						4642 text Vision-dominant
+					4643 cell
+						4644 text None
+				4645 row
+					4646 cell
+						4647 text 511
+					4648 cell
+						4649 text 11:20:02
+					4650 cell
+						4651 text 50.0 / 100
+					4652 cell
+						4653 text Medium
+					4654 cell
+						4655 text CAUTION
+					4656 cell
+						4657 text Vision-dominant
+					4658 cell
+						4659 text None
+				4660 row
+					4661 cell
+						4662 text 510
+					4663 cell
+						4664 text 11:20:02
+					4665 cell
+						4666 text 50.0 / 100
+					4667 cell
+						4668 text Medium
+					4669 cell
+						4670 text CAUTION
+					4671 cell
+						4672 text Vision-dominant
+					4673 cell
+						4674 text None
+				4675 row
+					4676 cell
+						4677 text 509
+					4678 cell
+						4679 text 11:20:01
+					4680 cell
+						4681 text 50.0 / 100
+					4682 cell
+						4683 text Medium
+					4684 cell
+						4685 text CAUTION
+					4686 cell
+						4687 text Vision-dominant
+					4688 cell
+						4689 text None
+				4690 row
+					4691 cell
+						4692 text 508
+					4693 cell
+						4694 text 11:20:01
+					4695 cell
+						4696 text 50.0 / 100
+					4697 cell
+						4698 text Medium
+					4699 cell
+						4700 text CAUTION
+					4701 cell
+						4702 text Vision-dominant
+					4703 cell
+						4704 text None
+				4705 row
+					4706 cell
+						4707 text 507
+					4708 cell
+						4709 text 11:20:01
+					4710 cell
+						4711 text 50.0 / 100
+					4712 cell
+						4713 text Medium
+					4714 cell
+						4715 text CAUTION
+					4716 cell
+						4717 text Vision-dominant
+					4718 cell
+						4719 text None
+				4720 row
+					4721 cell
+						4722 text 506
+					4723 cell
+						4724 text 11:20:01
+					4725 cell
+						4726 text 50.0 / 100
+					4727 cell
+						4728 text Medium
+					4729 cell
+						4730 text CAUTION
+					4731 cell
+						4732 text Vision-dominant
+					4733 cell
+						4734 text None
+				4735 row
+					4736 cell
+						4737 text 505
+					4738 cell
+						4739 text 11:20:01
+					4740 cell
+						4741 text 50.0 / 100
+					4742 cell
+						4743 text Medium
+					4744 cell
+						4745 text CAUTION
+					4746 cell
+						4747 text Vision-dominant
+					4748 cell
+						4749 text None
+				4750 row
+					4751 cell
+						4752 text 504
+					4753 cell
+						4754 text 11:20:01
+					4755 cell
+						4756 text 50.0 / 100
+					4757 cell
+						4758 text Medium
+					4759 cell
+						4760 text CAUTION
+					4761 cell
+						4762 text Vision-dominant
+					4763 cell
+						4764 text None
+				4765 row
+					4766 cell
+						4767 text 503
+					4768 cell
+						4769 text 11:20:01
+					4770 cell
+						4771 text 50.0 / 100
+					4772 cell
+						4773 text Medium
+					4774 cell
+						4775 text CAUTION
+					4776 cell
+						4777 text Vision-dominant
+					4778 cell
+						4779 text None
+				4780 row
+					4781 cell
+						4782 text 502
+					4783 cell
+						4784 text 11:20:01
+					4785 cell
+						4786 text 50.0 / 100
+					4787 cell
+						4788 text Medium
+					4789 cell
+						4790 text CAUTION
+					4791 cell
+						4792 text Vision-dominant
+					4793 cell
+						4794 text None
+				4795 row
+					4796 cell
+						4797 text 501
+					4798 cell
+						4799 text 11:20:01
+					4800 cell
+						4801 text 50.0 / 100
+					4802 cell
+						4803 text Medium
+					4804 cell
+						4805 text CAUTION
+					4806 cell
+						4807 text Vision-dominant
+					4808 cell
+						4809 text None
+				4810 row
+					4811 cell
+						4812 text 500
+					4813 cell
+						4814 text 11:20:01
+					4815 cell
+						4816 text 50.0 / 100
+					4817 cell
+						4818 text Medium
+					4819 cell
+						4820 text CAUTION
+					4821 cell
+						4822 text Vision-dominant
+					4823 cell
+						4824 text None
+				4825 row
+					4826 cell
+						4827 text 499
+					4828 cell
+						4829 text 11:20:00
+					4830 cell
+						4831 text 50.0 / 100
+					4832 cell
+						4833 text Medium
+					4834 cell
+						4835 text CAUTION
+					4836 cell
+						4837 text Vision-dominant
+					4838 cell
+						4839 text None
+				4840 row
+					4841 cell
+						4842 text 498
+					4843 cell
+						4844 text 11:20:00
+					4845 cell
+						4846 text 50.0 / 100
+					4847 cell
+						4848 text Medium
+					4849 cell
+						4850 text CAUTION
+					4851 cell
+						4852 text Vision-dominant
+					4853 cell
+						4854 text None
+				4855 row
+					4856 cell
+						4857 text 497
+					4858 cell
+						4859 text 11:20:00
+					4860 cell
+						4861 text 50.0 / 100
+					4862 cell
+						4863 text Medium
+					4864 cell
+						4865 text CAUTION
+					4866 cell
+						4867 text Vision-dominant
+					4868 cell
+						4869 text None
+				4870 row
+					4871 cell
+						4872 text 496
+					4873 cell
+						4874 text 11:20:00
+					4875 cell
+						4876 text 50.0 / 100
+					4877 cell
+						4878 text Medium
+					4879 cell
+						4880 text CAUTION
+					4881 cell
+						4882 text Vision-dominant
+					4883 cell
+						4884 text None
+				4885 row
+					4886 cell
+						4887 text 495
+					4888 cell
+						4889 text 11:20:00
+					4890 cell
+						4891 text 50.0 / 100
+					4892 cell
+						4893 text Medium
+					4894 cell
+						4895 text CAUTION
+					4896 cell
+						4897 text Vision-dominant
+					4898 cell
+						4899 text None
+				4900 row
+					4901 cell
+						4902 text 494
+					4903 cell
+						4904 text 11:20:00
+					4905 cell
+						4906 text 50.0 / 100
+					4907 cell
+						4908 text Medium
+					4909 cell
+						4910 text CAUTION
+					4911 cell
+						4912 text Vision-dominant
+					4913 cell
+						4914 text None
+				4915 row
+					4916 cell
+						4917 text 493
+					4918 cell
+						4919 text 11:20:00
+					4920 cell
+						4921 text 50.0 / 100
+					4922 cell
+						4923 text Medium
+					4924 cell
+						4925 text CAUTION
+					4926 cell
+						4927 text Vision-dominant
+					4928 cell
+						4929 text None
+				4930 row
+					4931 cell
+						4932 text 492
+					4933 cell
+						4934 text 11:20:00
+					4935 cell
+						4936 text 50.0 / 100
+					4937 cell
+						4938 text Medium
+					4939 cell
+						4940 text CAUTION
+					4941 cell
+						4942 text Vision-dominant
+					4943 cell
+						4944 text None
+				4945 row
+					4946 cell
+						4947 text 491
+					4948 cell
+						4949 text 11:20:00
+					4950 cell
+						4951 text 50.0 / 100
+					4952 cell
+						4953 text Medium
+					4954 cell
+						4955 text CAUTION
+					4956 cell
+						4957 text Vision-dominant
+					4958 cell
+						4959 text None
+				4960 row
+					4961 cell
+						4962 text 490
+					4963 cell
+						4964 text 11:20:00
+					4965 cell
+						4966 text 50.0 / 100
+					4967 cell
+						4968 text Medium
+					4969 cell
+						4970 text CAUTION
+					4971 cell
+						4972 text Vision-dominant
+					4973 cell
+						4974 text None
+				4975 row
+					4976 cell
+						4977 text 489
+					4978 cell
+						4979 text 11:19:59
+					4980 cell
+						4981 text 50.0 / 100
+					4982 cell
+						4983 text Medium
+					4984 cell
+						4985 text CAUTION
+					4986 cell
+						4987 text Vision-dominant
+					4988 cell
+						4989 text None
+				4990 row
+					4991 cell
+						4992 text 488
+					4993 cell
+						4994 text 11:19:59
+					4995 cell
+						4996 text 50.0 / 100
+					4997 cell
+						4998 text Medium
+					4999 cell
+						5000 text CAUTION
+					5001 cell
+						5002 text Vision-dominant
+					5003 cell
+						5004 text None
+				5005 row
+					5006 cell
+						5007 text 487
+					5008 cell
+						5009 text 11:19:59
+					5010 cell
+						5011 text 50.0 / 100
+					5012 cell
+						5013 text Medium
+					5014 cell
+						5015 text CAUTION
+					5016 cell
+						5017 text Vision-dominant
+					5018 cell
+						5019 text None
+				5020 row
+					5021 cell
+						5022 text 486
+					5023 cell
+						5024 text 11:19:59
+					5025 cell
+						5026 text 50.0 / 100
+					5027 cell
+						5028 text Medium
+					5029 cell
+						5030 text CAUTION
+					5031 cell
+						5032 text Vision-dominant
+					5033 cell
+						5034 text None
+				5035 row
+					5036 cell
+						5037 text 485
+					5038 cell
+						5039 text 11:19:59
+					5040 cell
+						5041 text 50.0 / 100
+					5042 cell
+						5043 text Medium
+					5044 cell
+						5045 text CAUTION
+					5046 cell
+						5047 text Vision-dominant
+					5048 cell
+						5049 text None
+				5050 row
+					5051 cell
+						5052 text 484
+					5053 cell
+						5054 text 11:19:59
+					5055 cell
+						5056 text 50.0 / 100
+					5057 cell
+						5058 text Medium
+					5059 cell
+						5060 text CAUTION
+					5061 cell
+						5062 text Vision-dominant
+					5063 cell
+						5064 text None
+				5065 row
+					5066 cell
+						5067 text 483
+					5068 cell
+						5069 text 11:19:59
+					5070 cell
+						5071 text 50.0 / 100
+					5072 cell
+						5073 text Medium
+					5074 cell
+						5075 text CAUTION
+					5076 cell
+						5077 text Vision-dominant
+					5078 cell
+						5079 text None
+				5080 row
+					5081 cell
+						5082 text 482
+					5083 cell
+						5084 text 11:19:59
+					5085 cell
+						5086 text 50.0 / 100
+					5087 cell
+						5088 text Medium
+					5089 cell
+						5090 text CAUTION
+					5091 cell
+						5092 text Vision-dominant
+					5093 cell
+						5094 text None
+				5095 row
+					5096 cell
+						5097 text 481
+					5098 cell
+						5099 text 11:19:59
+					5100 cell
+						5101 text 50.0 / 100
+					5102 cell
+						5103 text Medium
+					5104 cell
+						5105 text CAUTION
+					5106 cell
+						5107 text Vision-dominant
+					5108 cell
+						5109 text None
+				5110 row
+					5111 cell
+						5112 text 480
+					5113 cell
+						5114 text 11:19:59
+					5115 cell
+						5116 text 50.0 / 100
+					5117 cell
+						5118 text Medium
+					5119 cell
+						5120 text CAUTION
+					5121 cell
+						5122 text Vision-dominant
+					5123 cell
+						5124 text None
+				5125 row
+					5126 cell
+						5127 text 479
+					5128 cell
+						5129 text 11:19:58
+					5130 cell
+						5131 text 50.0 / 100
+					5132 cell
+						5133 text Medium
+					5134 cell
+						5135 text CAUTION
+					5136 cell
+						5137 text Vision-dominant
+					5138 cell
+						5139 text None
+				5140 row
+					5141 cell
+						5142 text 478
+					5143 cell
+						5144 text 11:19:58
+					5145 cell
+						5146 text 50.0 / 100
+					5147 cell
+						5148 text Medium
+					5149 cell
+						5150 text CAUTION
+					5151 cell
+						5152 text Vision-dominant
+					5153 cell
+						5154 text None
+				5155 row
+					5156 cell
+						5157 text 477
+					5158 cell
+						5159 text 11:19:58
+					5160 cell
+						5161 text 50.0 / 100
+					5162 cell
+						5163 text Medium
+					5164 cell
+						5165 text CAUTION
+					5166 cell
+						5167 text Vision-dominant
+					5168 cell
+						5169 text None
+				5170 row
+					5171 cell
+						5172 text 476
+					5173 cell
+						5174 text 11:19:58
+					5175 cell
+						5176 text 50.0 / 100
+					5177 cell
+						5178 text Medium
+					5179 cell
+						5180 text CAUTION
+					5181 cell
+						5182 text Vision-dominant
+					5183 cell
+						5184 text None
+				5185 row
+					5186 cell
+						5187 text 475
+					5188 cell
+						5189 text 11:19:58
+					5190 cell
+						5191 text 50.0 / 100
+					5192 cell
+						5193 text Medium
+					5194 cell
+						5195 text CAUTION
+					5196 cell
+						5197 text Vision-dominant
+					5198 cell
+						5199 text None
+				5200 row
+					5201 cell
+						5202 text 474
+					5203 cell
+						5204 text 11:19:58
+					5205 cell
+						5206 text 50.0 / 100
+					5207 cell
+						5208 text Medium
+					5209 cell
+						5210 text CAUTION
+					5211 cell
+						5212 text Vision-dominant
+					5213 cell
+						5214 text None
+				5215 row
+					5216 cell
+						5217 text 473
+					5218 cell
+						5219 text 11:19:58
+					5220 cell
+						5221 text 50.0 / 100
+					5222 cell
+						5223 text Medium
+					5224 cell
+						5225 text CAUTION
+					5226 cell
+						5227 text Vision-dominant
+					5228 cell
+						5229 text None
+				5230 row
+					5231 cell
+						5232 text 472
+					5233 cell
+						5234 text 11:19:58
+					5235 cell
+						5236 text 50.0 / 100
+					5237 cell
+						5238 text Medium
+					5239 cell
+						5240 text CAUTION
+					5241 cell
+						5242 text Vision-dominant
+					5243 cell
+						5244 text None
+				5245 row
+					5246 cell
+						5247 text 471
+					5248 cell
+						5249 text 11:19:58
+					5250 cell
+						5251 text 50.0 / 100
+					5252 cell
+						5253 text Medium
+					5254 cell
+						5255 text CAUTION
+					5256 cell
+						5257 text Vision-dominant
+					5258 cell
+						5259 text None
+				5260 row
+					5261 cell
+						5262 text 470
+					5263 cell
+						5264 text 11:19:58
+					5265 cell
+						5266 text 50.0 / 100
+					5267 cell
+						5268 text Medium
+					5269 cell
+						5270 text CAUTION
+					5271 cell
+						5272 text Vision-dominant
+					5273 cell
+						5274 text None
+				5275 row
+					5276 cell
+						5277 text 469
+					5278 cell
+						5279 text 11:19:57
+					5280 cell
+						5281 text 50.0 / 100
+					5282 cell
+						5283 text Medium
+					5284 cell
+						5285 text CAUTION
+					5286 cell
+						5287 text Vision-dominant
+					5288 cell
+						5289 text None
+				5290 row
+					5291 cell
+						5292 text 468
+					5293 cell
+						5294 text 11:19:57
+					5295 cell
+						5296 text 50.0 / 100
+					5297 cell
+						5298 text Medium
+					5299 cell
+						5300 text CAUTION
+					5301 cell
+						5302 text Vision-dominant
+					5303 cell
+						5304 text None
+				5305 row
+					5306 cell
+						5307 text 467
+					5308 cell
+						5309 text 11:19:57
+					5310 cell
+						5311 text 50.0 / 100
+					5312 cell
+						5313 text Medium
+					5314 cell
+						5315 text CAUTION
+					5316 cell
+						5317 text Vision-dominant
+					5318 cell
+						5319 text None
+				5320 row
+					5321 cell
+						5322 text 466
+					5323 cell
+						5324 text 11:19:57
+					5325 cell
+						5326 text 50.0 / 100
+					5327 cell
+						5328 text Medium
+					5329 cell
+						5330 text CAUTION
+					5331 cell
+						5332 text Vision-dominant
+					5333 cell
+						5334 text None
+				5335 row
+					5336 cell
+						5337 text 465
+					5338 cell
+						5339 text 11:19:57
+					5340 cell
+						5341 text 50.0 / 100
+					5342 cell
+						5343 text Medium
+					5344 cell
+						5345 text CAUTION
+					5346 cell
+						5347 text Vision-dominant
+					5348 cell
+						5349 text None
+				5350 row
+					5351 cell
+						5352 text 464
+					5353 cell
+						5354 text 11:19:57
+					5355 cell
+						5356 text 50.0 / 100
+					5357 cell
+						5358 text Medium
+					5359 cell
+						5360 text CAUTION
+					5361 cell
+						5362 text Vision-dominant
+					5363 cell
+						5364 text None
+				5365 row
+					5366 cell
+						5367 text 463
+					5368 cell
+						5369 text 11:19:57
+					5370 cell
+						5371 text 50.0 / 100
+					5372 cell
+						5373 text Medium
+					5374 cell
+						5375 text CAUTION
+					5376 cell
+						5377 text Vision-dominant
+					5378 cell
+						5379 text None
+				5380 row
+					5381 cell
+						5382 text 462
+					5383 cell
+						5384 text 11:19:57
+					5385 cell
+						5386 text 50.0 / 100
+					5387 cell
+						5388 text Medium
+					5389 cell
+						5390 text CAUTION
+					5391 cell
+						5392 text Vision-dominant
+					5393 cell
+						5394 text None
+				5395 row
+					5396 cell
+						5397 text 461
+					5398 cell
+						5399 text 11:19:57
+					5400 cell
+						5401 text 50.0 / 100
+					5402 cell
+						5403 text Medium
+					5404 cell
+						5405 text CAUTION
+					5406 cell
+						5407 text Vision-dominant
+					5408 cell
+						5409 text None
+				5410 row
+					5411 cell
+						5412 text 460
+					5413 cell
+						5414 text 11:19:57
+					5415 cell
+						5416 text 50.0 / 100
+					5417 cell
+						5418 text Medium
+					5419 cell
+						5420 text CAUTION
+					5421 cell
+						5422 text Vision-dominant
+					5423 cell
+						5424 text None
+				5425 row
+					5426 cell
+						5427 text 459
+					5428 cell
+						5429 text 11:19:56
+					5430 cell
+						5431 text 50.0 / 100
+					5432 cell
+						5433 text Medium
+					5434 cell
+						5435 text CAUTION
+					5436 cell
+						5437 text Vision-dominant
+					5438 cell
+						5439 text None
+				5440 row
+					5441 cell
+						5442 text 458
+					5443 cell
+						5444 text 11:19:56
+					5445 cell
+						5446 text 50.0 / 100
+					5447 cell
+						5448 text Medium
+					5449 cell
+						5450 text CAUTION
+					5451 cell
+						5452 text Vision-dominant
+					5453 cell
+						5454 text None
+				5455 row
+					5456 cell
+						5457 text 457
+					5458 cell
+						5459 text 11:19:56
+					5460 cell
+						5461 text 50.0 / 100
+					5462 cell
+						5463 text Medium
+					5464 cell
+						5465 text CAUTION
+					5466 cell
+						5467 text Vision-dominant
+					5468 cell
+						5469 text None
+				5470 row
+					5471 cell
+						5472 text 456
+					5473 cell
+						5474 text 11:19:56
+					5475 cell
+						5476 text 50.0 / 100
+					5477 cell
+						5478 text Medium
+					5479 cell
+						5480 text CAUTION
+					5481 cell
+						5482 text Vision-dominant
+					5483 cell
+						5484 text None
+				5485 row
+					5486 cell
+						5487 text 455
+					5488 cell
+						5489 text 11:19:56
+					5490 cell
+						5491 text 50.0 / 100
+					5492 cell
+						5493 text Medium
+					5494 cell
+						5495 text CAUTION
+					5496 cell
+						5497 text Vision-dominant
+					5498 cell
+						5499 text None
+				5500 row
+					5501 cell
+						5502 text 454
+					5503 cell
+						5504 text 11:19:56
+					5505 cell
+						5506 text 50.0 / 100
+					5507 cell
+						5508 text Medium
+					5509 cell
+						5510 text CAUTION
+					5511 cell
+						5512 text Vision-dominant
+					5513 cell
+						5514 text None
+				5515 row
+					5516 cell
+						5517 text 453
+					5518 cell
+						5519 text 11:19:56
+					5520 cell
+						5521 text 50.0 / 100
+					5522 cell
+						5523 text Medium
+					5524 cell
+						5525 text CAUTION
+					5526 cell
+						5527 text Vision-dominant
+					5528 cell
+						5529 text None
+				5530 row
+					5531 cell
+						5532 text 452
+					5533 cell
+						5534 text 11:19:56
+					5535 cell
+						5536 text 50.0 / 100
+					5537 cell
+						5538 text Medium
+					5539 cell
+						5540 text CAUTION
+					5541 cell
+						5542 text Vision-dominant
+					5543 cell
+						5544 text None
+				5545 row
+					5546 cell
+						5547 text 451
+					5548 cell
+						5549 text 11:19:56
+					5550 cell
+						5551 text 50.0 / 100
+					5552 cell
+						5553 text Medium
+					5554 cell
+						5555 text CAUTION
+					5556 cell
+						5557 text Vision-dominant
+					5558 cell
+						5559 text None
+				5560 row
+					5561 cell
+						5562 text 450
+					5563 cell
+						5564 text 11:19:56
+					5565 cell
+						5566 text 50.0 / 100
+					5567 cell
+						5568 text Medium
+					5569 cell
+						5570 text CAUTION
+					5571 cell
+						5572 text Vision-dominant
+					5573 cell
+						5574 text None
+				5575 row
+					5576 cell
+						5577 text 449
+					5578 cell
+						5579 text 11:19:55
+					5580 cell
+						5581 text 50.0 / 100
+					5582 cell
+						5583 text Medium
+					5584 cell
+						5585 text CAUTION
+					5586 cell
+						5587 text Vision-dominant
+					5588 cell
+						5589 text None
+				5590 row
+					5591 cell
+						5592 text 448
+					5593 cell
+						5594 text 11:19:55
+					5595 cell
+						5596 text 50.0 / 100
+					5597 cell
+						5598 text Medium
+					5599 cell
+						5600 text CAUTION
+					5601 cell
+						5602 text Vision-dominant
+					5603 cell
+						5604 text None
+				5605 row
+					5606 cell
+						5607 text 447
+					5608 cell
+						5609 text 11:19:55
+					5610 cell
+						5611 text 50.0 / 100
+					5612 cell
+						5613 text Medium
+					5614 cell
+						5615 text CAUTION
+					5616 cell
+						5617 text Vision-dominant
+					5618 cell
+						5619 text None
+				5620 row
+					5621 cell
+						5622 text 446
+					5623 cell
+						5624 text 11:19:55
+					5625 cell
+						5626 text 50.0 / 100
+					5627 cell
+						5628 text Medium
+					5629 cell
+						5630 text CAUTION
+					5631 cell
+						5632 text Vision-dominant
+					5633 cell
+						5634 text None
+				5635 row
+					5636 cell
+						5637 text 445
+					5638 cell
+						5639 text 11:19:55
+					5640 cell
+						5641 text 50.0 / 100
+					5642 cell
+						5643 text Medium
+					5644 cell
+						5645 text CAUTION
+					5646 cell
+						5647 text Vision-dominant
+					5648 cell
+						5649 text None
+				5650 row
+					5651 cell
+						5652 text 444
+					5653 cell
+						5654 text 11:19:55
+					5655 cell
+						5656 text 50.0 / 100
+					5657 cell
+						5658 text Medium
+					5659 cell
+						5660 text CAUTION
+					5661 cell
+						5662 text Vision-dominant
+					5663 cell
+						5664 text None
+				5665 row
+					5666 cell
+						5667 text 443
+					5668 cell
+						5669 text 11:19:55
+					5670 cell
+						5671 text 50.0 / 100
+					5672 cell
+						5673 text Medium
+					5674 cell
+						5675 text CAUTION
+					5676 cell
+						5677 text Vision-dominant
+					5678 cell
+						5679 text None
+				5680 row
+					5681 cell
+						5682 text 442
+					5683 cell
+						5684 text 11:19:55
+					5685 cell
+						5686 text 50.0 / 100
+					5687 cell
+						5688 text Medium
+					5689 cell
+						5690 text CAUTION
+					5691 cell
+						5692 text Vision-dominant
+					5693 cell
+						5694 text None
+				5695 row
+					5696 cell
+						5697 text 441
+					5698 cell
+						5699 text 11:19:55
+					5700 cell
+						5701 text 50.0 / 100
+					5702 cell
+						5703 text Medium
+					5704 cell
+						5705 text CAUTION
+					5706 cell
+						5707 text Vision-dominant
+					5708 cell
+						5709 text None
+				5710 row
+					5711 cell
+						5712 text 440
+					5713 cell
+						5714 text 11:19:54
+					5715 cell
+						5716 text 50.0 / 100
+					5717 cell
+						5718 text Medium
+					5719 cell
+						5720 text CAUTION
+					5721 cell
+						5722 text Vision-dominant
+					5723 cell
+						5724 text None
+				5725 row
+					5726 cell
+						5727 text 439
+					5728 cell
+						5729 text 11:19:54
+					5730 cell
+						5731 text 50.0 / 100
+					5732 cell
+						5733 text Medium
+					5734 cell
+						5735 text CAUTION
+					5736 cell
+						5737 text Vision-dominant
+					5738 cell
+						5739 text None
+				5740 row
+					5741 cell
+						5742 text 438
+					5743 cell
+						5744 text 11:19:54
+					5745 cell
+						5746 text 50.0 / 100
+					5747 cell
+						5748 text Medium
+					5749 cell
+						5750 text CAUTION
+					5751 cell
+						5752 text Vision-dominant
+					5753 cell
+						5754 text None
+				5755 row
+					5756 cell
+						5757 text 437
+					5758 cell
+						5759 text 11:19:54
+					5760 cell
+						5761 text 50.0 / 100
+					5762 cell
+						5763 text Medium
+					5764 cell
+						5765 text CAUTION
+					5766 cell
+						5767 text Vision-dominant
+					5768 cell
+						5769 text None
+				5770 row
+					5771 cell
+						5772 text 436
+					5773 cell
+						5774 text 11:19:54
+					5775 cell
+						5776 text 50.0 / 100
+					5777 cell
+						5778 text Medium
+					5779 cell
+						5780 text CAUTION
+					5781 cell
+						5782 text Vision-dominant
+					5783 cell
+						5784 text None
+				5785 row
+					5786 cell
+						5787 text 435
+					5788 cell
+						5789 text 11:19:54
+					5790 cell
+						5791 text 50.0 / 100
+					5792 cell
+						5793 text Medium
+					5794 cell
+						5795 text CAUTION
+					5796 cell
+						5797 text Vision-dominant
+					5798 cell
+						5799 text None
+				5800 row
+					5801 cell
+						5802 text 434
+					5803 cell
+						5804 text 11:19:54
+					5805 cell
+						5806 text 50.0 / 100
+					5807 cell
+						5808 text Medium
+					5809 cell
+						5810 text CAUTION
+					5811 cell
+						5812 text Vision-dominant
+					5813 cell
+						5814 text None
+				5815 row
+					5816 cell
+						5817 text 433
+					5818 cell
+						5819 text 11:19:54
+					5820 cell
+						5821 text 50.0 / 100
+					5822 cell
+						5823 text Medium
+					5824 cell
+						5825 text CAUTION
+					5826 cell
+						5827 text Vision-dominant
+					5828 cell
+						5829 text None
+				5830 row
+					5831 cell
+						5832 text 432
+					5833 cell
+						5834 text 11:19:54
+					5835 cell
+						5836 text 50.0 / 100
+					5837 cell
+						5838 text Medium
+					5839 cell
+						5840 text CAUTION
+					5841 cell
+						5842 text Vision-dominant
+					5843 cell
+						5844 text None
+				5845 row
+					5846 cell
+						5847 text 431
+					5848 cell
+						5849 text 11:19:54
+					5850 cell
+						5851 text 50.0 / 100
+					5852 cell
+						5853 text Medium
+					5854 cell
+						5855 text CAUTION
+					5856 cell
+						5857 text Vision-dominant
+					5858 cell
+						5859 text None
+				5860 row
+					5861 cell
+						5862 text 430
+					5863 cell
+						5864 text 11:19:53
+					5865 cell
+						5866 text 50.0 / 100
+					5867 cell
+						5868 text Medium
+					5869 cell
+						5870 text CAUTION
+					5871 cell
+						5872 text Vision-dominant
+					5873 cell
+						5874 text None
+				5875 row
+					5876 cell
+						5877 text 429
+					5878 cell
+						5879 text 11:19:53
+					5880 cell
+						5881 text 50.0 / 100
+					5882 cell
+						5883 text Medium
+					5884 cell
+						5885 text CAUTION
+					5886 cell
+						5887 text Vision-dominant
+					5888 cell
+						5889 text None
+				5890 row
+					5891 cell
+						5892 text 428
+					5893 cell
+						5894 text 11:19:53
+					5895 cell
+						5896 text 50.0 / 100
+					5897 cell
+						5898 text Medium
+					5899 cell
+						5900 text CAUTION
+					5901 cell
+						5902 text Vision-dominant
+					5903 cell
+						5904 text None
+				5905 row
+					5906 cell
+						5907 text 427
+					5908 cell
+						5909 text 11:19:53
+					5910 cell
+						5911 text 50.0 / 100
+					5912 cell
+						5913 text Medium
+					5914 cell
+						5915 text CAUTION
+					5916 cell
+						5917 text Vision-dominant
+					5918 cell
+						5919 text None
+				5920 row
+					5921 cell
+						5922 text 426
+					5923 cell
+						5924 text 11:19:53
+					5925 cell
+						5926 text 50.0 / 100
+					5927 cell
+						5928 text Medium
+					5929 cell
+						5930 text CAUTION
+					5931 cell
+						5932 text Vision-dominant
+					5933 cell
+						5934 text None
+				5935 row
+					5936 cell
+						5937 text 425
+					5938 cell
+						5939 text 11:19:53
+					5940 cell
+						5941 text 50.0 / 100
+					5942 cell
+						5943 text Medium
+					5944 cell
+						5945 text CAUTION
+					5946 cell
+						5947 text Vision-dominant
+					5948 cell
+						5949 text None
+				5950 row
+					5951 cell
+						5952 text 424
+					5953 cell
+						5954 text 11:19:53
+					5955 cell
+						5956 text 50.0 / 100
+					5957 cell
+						5958 text Medium
+					5959 cell
+						5960 text CAUTION
+					5961 cell
+						5962 text Vision-dominant
+					5963 cell
+						5964 text None
+				5965 row
+					5966 cell
+						5967 text 423
+					5968 cell
+						5969 text 11:19:53
+					5970 cell
+						5971 text 50.0 / 100
+					5972 cell
+						5973 text Medium
+					5974 cell
+						5975 text CAUTION
+					5976 cell
+						5977 text Vision-dominant
+					5978 cell
+						5979 text None
+				5980 row
+					5981 cell
+						5982 text 422
+					5983 cell
+						5984 text 11:19:53
+					5985 cell
+						5986 text 50.0 / 100
+					5987 cell
+						5988 text Medium
+					5989 cell
+						5990 text CAUTION
+					5991 cell
+						5992 text Vision-dominant
+					5993 cell
+						5994 text None
+				5995 row
+					5996 cell
+						5997 text 421
+					5998 cell
+						5999 text 11:19:53
+					6000 cell
+						6001 text 50.0 / 100
+					6002 cell
+						6003 text Medium
+					6004 cell
+						6005 text CAUTION
+					6006 cell
+						6007 text Vision-dominant
+					6008 cell
+						6009 text None
+				6010 row
+					6011 cell
+						6012 text 420
+					6013 cell
+						6014 text 11:19:52
+					6015 cell
+						6016 text 50.0 / 100
+					6017 cell
+						6018 text Medium
+					6019 cell
+						6020 text CAUTION
+					6021 cell
+						6022 text Vision-dominant
+					6023 cell
+						6024 text None
+				6025 row
+					6026 cell
+						6027 text 419
+					6028 cell
+						6029 text 11:19:52
+					6030 cell
+						6031 text 50.0 / 100
+					6032 cell
+						6033 text Medium
+					6034 cell
+						6035 text CAUTION
+					6036 cell
+						6037 text Vision-dominant
+					6038 cell
+						6039 text None
+				6040 row
+					6041 cell
+						6042 text 418
+					6043 cell
+						6044 text 11:19:52
+					6045 cell
+						6046 text 50.0 / 100
+					6047 cell
+						6048 text Medium
+					6049 cell
+						6050 text CAUTION
+					6051 cell
+						6052 text Vision-dominant
+					6053 cell
+						6054 text None
+				6055 row
+					6056 cell
+						6057 text 417
+					6058 cell
+						6059 text 11:19:52
+					6060 cell
+						6061 text 50.0 / 100
+					6062 cell
+						6063 text Medium
+					6064 cell
+						6065 text CAUTION
+					6066 cell
+						6067 text Vision-dominant
+					6068 cell
+						6069 text None
+				6070 row
+					6071 cell
+						6072 text 416
+					6073 cell
+						6074 text 11:19:52
+					6075 cell
+						6076 text 83.8 / 100
+					6077 cell
+						6078 text High
+					6079 cell
+						6080 text HIGH_ALERT
+					6081 cell
+						6082 text Vision-dominant
+					6083 cell
+						6084 text None
+				6085 row
+					6086 cell
+						6087 text 415
+					6088 cell
+						6089 text 11:19:52
+					6090 cell
+						6091 text 83.8 / 100
+					6092 cell
+						6093 text High
+					6094 cell
+						6095 text HIGH_ALERT
+					6096 cell
+						6097 text Vision-dominant
+					6098 cell
+						6099 text None
+				6100 row
+					6101 cell
+						6102 text 414
+					6103 cell
+						6104 text 11:19:52
+					6105 cell
+						6106 text 83.8 / 100
+					6107 cell
+						6108 text High
+					6109 cell
+						6110 text HIGH_ALERT
+					6111 cell
+						6112 text Vision-dominant
+					6113 cell
+						6114 text None
+				6115 row
+					6116 cell
+						6117 text 413
+					6118 cell
+						6119 text 11:19:52
+					6120 cell
+						6121 text 83.8 / 100
+					6122 cell
+						6123 text High
+					6124 cell
+						6125 text HIGH_ALERT
+					6126 cell
+						6127 text Vision-dominant
+					6128 cell
+						6129 text None
+				6130 row
+					6131 cell
+						6132 text 412
+					6133 cell
+						6134 text 11:19:52
+					6135 cell
+						6136 text 83.8 / 100
+					6137 cell
+						6138 text High
+					6139 cell
+						6140 text HIGH_ALERT
+					6141 cell
+						6142 text Vision-dominant
+					6143 cell
+						6144 text None
+				6145 row
+					6146 cell
+						6147 text 411
+					6148 cell
+						6149 text 11:19:52
+					6150 cell
+						6151 text 83.8 / 100
+					6152 cell
+						6153 text High
+					6154 cell
+						6155 text HIGH_ALERT
+					6156 cell
+						6157 text Vision-dominant
+					6158 cell
+						6159 text None
+				6160 row
+					6161 cell
+						6162 text 410
+					6163 cell
+						6164 text 11:19:51
+					6165 cell
+						6166 text 83.8 / 100
+					6167 cell
+						6168 text High
+					6169 cell
+						6170 text HIGH_ALERT
+					6171 cell
+						6172 text Vision-dominant
+					6173 cell
+						6174 text None
+				6175 row
+					6176 cell
+						6177 text 409
+					6178 cell
+						6179 text 11:19:51
+					6180 cell
+						6181 text 83.8 / 100
+					6182 cell
+						6183 text High
+					6184 cell
+						6185 text HIGH_ALERT
+					6186 cell
+						6187 text Vision-dominant
+					6188 cell
+						6189 text None
+				6190 row
+					6191 cell
+						6192 text 408
+					6193 cell
+						6194 text 11:19:51
+					6195 cell
+						6196 text 83.8 / 100
+					6197 cell
+						6198 text High
+					6199 cell
+						6200 text HIGH_ALERT
+					6201 cell
+						6202 text Vision-dominant
+					6203 cell
+						6204 text None
+				6205 row
+					6206 cell
+						6207 text 407
+					6208 cell
+						6209 text 11:19:51
+					6210 cell
+						6211 text 83.8 / 100
+					6212 cell
+						6213 text High
+					6214 cell
+						6215 text HIGH_ALERT
+					6216 cell
+						6217 text Vision-dominant
+					6218 cell
+						6219 text None
+				6220 row
+					6221 cell
+						6222 text 406
+					6223 cell
+						6224 text 11:19:51
+					6225 cell
+						6226 text 83.8 / 100
+					6227 cell
+						6228 text High
+					6229 cell
+						6230 text HIGH_ALERT
+					6231 cell
+						6232 text Vision-dominant
+					6233 cell
+						6234 text None
+				6235 row
+					6236 cell
+						6237 text 405
+					6238 cell
+						6239 text 11:19:51
+					6240 cell
+						6241 text 83.8 / 100
+					6242 cell
+						6243 text High
+					6244 cell
+						6245 text HIGH_ALERT
+					6246 cell
+						6247 text Vision-dominant
+					6248 cell
+						6249 text None
+				6250 row
+					6251 cell
+						6252 text 404
+					6253 cell
+						6254 text 11:19:51
+					6255 cell
+						6256 text 83.8 / 100
+					6257 cell
+						6258 text High
+					6259 cell
+						6260 text HIGH_ALERT
+					6261 cell
+						6262 text Vision-dominant
+					6263 cell
+						6264 text None
+				6265 row
+					6266 cell
+						6267 text 403
+					6268 cell
+						6269 text 11:19:51
+					6270 cell
+						6271 text 83.8 / 100
+					6272 cell
+						6273 text High
+					6274 cell
+						6275 text HIGH_ALERT
+					6276 cell
+						6277 text Vision-dominant
+					6278 cell
+						6279 text None
+				6280 row
+					6281 cell
+						6282 text 402
+					6283 cell
+						6284 text 11:19:51
+					6285 cell
+						6286 text 83.8 / 100
+					6287 cell
+						6288 text High
+					6289 cell
+						6290 text HIGH_ALERT
+					6291 cell
+						6292 text Vision-dominant
+					6293 cell
+						6294 text None
+				6295 row
+					6296 cell
+						6297 text 401
+					6298 cell
+						6299 text 11:19:51
+					6300 cell
+						6301 text 83.8 / 100
+					6302 cell
+						6303 text High
+					6304 cell
+						6305 text HIGH_ALERT
+					6306 cell
+						6307 text Vision-dominant
+					6308 cell
+						6309 text None
+				6310 row
+					6311 cell
+						6312 text 400
+					6313 cell
+						6314 text 11:19:50
+					6315 cell
+						6316 text 83.8 / 100
+					6317 cell
+						6318 text High
+					6319 cell
+						6320 text HIGH_ALERT
+					6321 cell
+						6322 text Vision-dominant
+					6323 cell
+						6324 text None
+				6325 row
+					6326 cell
+						6327 text 399
+					6328 cell
+						6329 text 11:19:50
+					6330 cell
+						6331 text 83.8 / 100
+					6332 cell
+						6333 text High
+					6334 cell
+						6335 text HIGH_ALERT
+					6336 cell
+						6337 text Vision-dominant
+					6338 cell
+						6339 text None
+				6340 row
+					6341 cell
+						6342 text 398
+					6343 cell
+						6344 text 11:19:50
+					6345 cell
+						6346 text 83.8 / 100
+					6347 cell
+						6348 text High
+					6349 cell
+						6350 text HIGH_ALERT
+					6351 cell
+						6352 text Vision-dominant
+					6353 cell
+						6354 text None
+				6355 row
+					6356 cell
+						6357 text 397
+					6358 cell
+						6359 text 11:19:50
+					6360 cell
+						6361 text 83.8 / 100
+					6362 cell
+						6363 text High
+					6364 cell
+						6365 text HIGH_ALERT
+					6366 cell
+						6367 text Vision-dominant
+					6368 cell
+						6369 text None
+				6370 row
+					6371 cell
+						6372 text 396
+					6373 cell
+						6374 text 11:19:50
+					6375 cell
+						6376 text 89.6 / 100
+					6377 cell
+						6378 text High
+					6379 cell
+						6380 text HIGH_ALERT
+					6381 cell
+						6382 text Vision-dominant
+					6383 cell
+						6384 text None
+				6385 row
+					6386 cell
+						6387 text 395
+					6388 cell
+						6389 text 11:19:50
+					6390 cell
+						6391 text 89.6 / 100
+					6392 cell
+						6393 text High
+					6394 cell
+						6395 text HIGH_ALERT
+					6396 cell
+						6397 text Vision-dominant
+					6398 cell
+						6399 text None
+				6400 row
+					6401 cell
+						6402 text 394
+					6403 cell
+						6404 text 11:19:50
+					6405 cell
+						6406 text 89.6 / 100
+					6407 cell
+						6408 text High
+					6409 cell
+						6410 text HIGH_ALERT
+					6411 cell
+						6412 text Vision-dominant
+					6413 cell
+						6414 text None
+				6415 row
+					6416 cell
+						6417 text 393
+					6418 cell
+						6419 text 11:19:50
+					6420 cell
+						6421 text 89.6 / 100
+					6422 cell
+						6423 text High
+					6424 cell
+						6425 text HIGH_ALERT
+					6426 cell
+						6427 text Vision-dominant
+					6428 cell
+						6429 text None
+				6430 row
+					6431 cell
+						6432 text 392
+					6433 cell
+						6434 text 11:19:50
+					6435 cell
+						6436 text 89.6 / 100
+					6437 cell
+						6438 text High
+					6439 cell
+						6440 text HIGH_ALERT
+					6441 cell
+						6442 text Vision-dominant
+					6443 cell
+						6444 text None
+				6445 row
+					6446 cell
+						6447 text 391
+					6448 cell
+						6449 text 11:19:50
+					6450 cell
+						6451 text 89.6 / 100
+					6452 cell
+						6453 text High
+					6454 cell
+						6455 text HIGH_ALERT
+					6456 cell
+						6457 text Vision-dominant
+					6458 cell
+						6459 text None
+				6460 row
+					6461 cell
+						6462 text 390
+					6463 cell
+						6464 text 11:19:49
+					6465 cell
+						6466 text 89.6 / 100
+					6467 cell
+						6468 text High
+					6469 cell
+						6470 text HIGH_ALERT
+					6471 cell
+						6472 text Vision-dominant
+					6473 cell
+						6474 text None
+				6475 row
+					6476 cell
+						6477 text 389
+					6478 cell
+						6479 text 11:19:49
+					6480 cell
+						6481 text 89.6 / 100
+					6482 cell
+						6483 text High
+					6484 cell
+						6485 text HIGH_ALERT
+					6486 cell
+						6487 text Vision-dominant
+					6488 cell
+						6489 text None
+				6490 row
+					6491 cell
+						6492 text 388
+					6493 cell
+						6494 text 11:19:49
+					6495 cell
+						6496 text 89.6 / 100
+					6497 cell
+						6498 text High
+					6499 cell
+						6500 text HIGH_ALERT
+					6501 cell
+						6502 text Vision-dominant
+					6503 cell
+						6504 text None
+				6505 row
+					6506 cell
+						6507 text 387
+					6508 cell
+						6509 text 11:19:49
+					6510 cell
+						6511 text 89.6 / 100
+					6512 cell
+						6513 text High
+					6514 cell
+						6515 text HIGH_ALERT
+					6516 cell
+						6517 text Vision-dominant
+					6518 cell
+						6519 text None
+				6520 row
+					6521 cell
+						6522 text 386
+					6523 cell
+						6524 text 11:19:49
+					6525 cell
+						6526 text 89.6 / 100
+					6527 cell
+						6528 text High
+					6529 cell
+						6530 text HIGH_ALERT
+					6531 cell
+						6532 text Vision-dominant
+					6533 cell
+						6534 text None
+				6535 row
+					6536 cell
+						6537 text 385
+					6538 cell
+						6539 text 11:19:49
+					6540 cell
+						6541 text 89.6 / 100
+					6542 cell
+						6543 text High
+					6544 cell
+						6545 text HIGH_ALERT
+					6546 cell
+						6547 text Vision-dominant
+					6548 cell
+						6549 text None
+				6550 row
+					6551 cell
+						6552 text 384
+					6553 cell
+						6554 text 11:19:49
+					6555 cell
+						6556 text 89.6 / 100
+					6557 cell
+						6558 text High
+					6559 cell
+						6560 text HIGH_ALERT
+					6561 cell
+						6562 text Vision-dominant
+					6563 cell
+						6564 text None
+				6565 row
+					6566 cell
+						6567 text 383
+					6568 cell
+						6569 text 11:19:49
+					6570 cell
+						6571 text 89.6 / 100
+					6572 cell
+						6573 text High
+					6574 cell
+						6575 text HIGH_ALERT
+					6576 cell
+						6577 text Vision-dominant
+					6578 cell
+						6579 text None
+				6580 row
+					6581 cell
+						6582 text 382
+					6583 cell
+						6584 text 11:19:49
+					6585 cell
+						6586 text 89.6 / 100
+					6587 cell
+						6588 text High
+					6589 cell
+						6590 text HIGH_ALERT
+					6591 cell
+						6592 text Vision-dominant
+					6593 cell
+						6594 text None
+				6595 row
+					6596 cell
+						6597 text 381
+					6598 cell
+						6599 text 11:19:49
+					6600 cell
+						6601 text 89.6 / 100
+					6602 cell
+						6603 text High
+					6604 cell
+						6605 text HIGH_ALERT
+					6606 cell
+						6607 text Vision-dominant
+					6608 cell
+						6609 text None
+				6610 row
+					6611 cell
+						6612 text 380
+					6613 cell
+						6614 text 11:19:48
+					6615 cell
+						6616 text 89.6 / 100
+					6617 cell
+						6618 text High
+					6619 cell
+						6620 text HIGH_ALERT
+					6621 cell
+						6622 text Vision-dominant
+					6623 cell
+						6624 text None
+				6625 row
+					6626 cell
+						6627 text 379
+					6628 cell
+						6629 text 11:19:48
+					6630 cell
+						6631 text 89.6 / 100
+					6632 cell
+						6633 text High
+					6634 cell
+						6635 text HIGH_ALERT
+					6636 cell
+						6637 text Vision-dominant
+					6638 cell
+						6639 text None
+				6640 row
+					6641 cell
+						6642 text 378
+					6643 cell
+						6644 text 11:19:48
+					6645 cell
+						6646 text 89.6 / 100
+					6647 cell
+						6648 text High
+					6649 cell
+						6650 text HIGH_ALERT
+					6651 cell
+						6652 text Vision-dominant
+					6653 cell
+						6654 text None
+				6655 row
+					6656 cell
+						6657 text 377
+					6658 cell
+						6659 text 11:19:48
+					6660 cell
+						6661 text 99.9 / 100
+					6662 cell
+						6663 text High
+					6664 cell
+						6665 text HIGH_ALERT
+					6666 cell
+						6667 text Combined evidence
+					6668 cell
+						6669 text None
+				6670 row
+					6671 cell
+						6672 text 376
+					6673 cell
+						6674 text 11:19:48
+					6675 cell
+						6676 text 99.9 / 100
+					6677 cell
+						6678 text High
+					6679 cell
+						6680 text HIGH_ALERT
+					6681 cell
+						6682 text Combined evidence
+					6683 cell
+						6684 text None
+				6685 row
+					6686 cell
+						6687 text 375
+					6688 cell
+						6689 text 11:19:48
+					6690 cell
+						6691 text 99.9 / 100
+					6692 cell
+						6693 text High
+					6694 cell
+						6695 text HIGH_ALERT
+					6696 cell
+						6697 text Combined evidence
+					6698 cell
+						6699 text None
+				6700 row
+					6701 cell
+						6702 text 374
+					6703 cell
+						6704 text 11:19:48
+					6705 cell
+						6706 text 99.9 / 100
+					6707 cell
+						6708 text High
+					6709 cell
+						6710 text HIGH_ALERT
+					6711 cell
+						6712 text Combined evidence
+					6713 cell
+						6714 text None
+				6715 row
+					6716 cell
+						6717 text 373
+					6718 cell
+						6719 text 11:19:48
+					6720 cell
+						6721 text 99.9 / 100
+					6722 cell
+						6723 text High
+					6724 cell
+						6725 text HIGH_ALERT
+					6726 cell
+						6727 text Combined evidence
+					6728 cell
+						6729 text None
+				6730 row
+					6731 cell
+						6732 text 372
+					6733 cell
+						6734 text 11:19:48
+					6735 cell
+						6736 text 99.9 / 100
+					6737 cell
+						6738 text High
+					6739 cell
+						6740 text HIGH_ALERT
+					6741 cell
+						6742 text Combined evidence
+					6743 cell
+						6744 text None
+				6745 row
+					6746 cell
+						6747 text 371
+					6748 cell
+						6749 text 11:19:48
+					6750 cell
+						6751 text 99.9 / 100
+					6752 cell
+						6753 text High
+					6754 cell
+						6755 text HIGH_ALERT
+					6756 cell
+						6757 text Combined evidence
+					6758 cell
+						6759 text None
+				6760 row
+					6761 cell
+						6762 text 370
+					6763 cell
+						6764 text 11:19:47
+					6765 cell
+						6766 text 99.9 / 100
+					6767 cell
+						6768 text High
+					6769 cell
+						6770 text HIGH_ALERT
+					6771 cell
+						6772 text Combined evidence
+					6773 cell
+						6774 text None
+				6775 row
+					6776 cell
+						6777 text 369
+					6778 cell
+						6779 text 11:19:47
+					6780 cell
+						6781 text 99.9 / 100
+					6782 cell
+						6783 text High
+					6784 cell
+						6785 text HIGH_ALERT
+					6786 cell
+						6787 text Combined evidence
+					6788 cell
+						6789 text None
+				6790 row
+					6791 cell
+						6792 text 368
+					6793 cell
+						6794 text 11:19:47
+					6795 cell
+						6796 text 99.9 / 100
+					6797 cell
+						6798 text High
+					6799 cell
+						6800 text HIGH_ALERT
+					6801 cell
+						6802 text Combined evidence
+					6803 cell
+						6804 text None
+				6805 row
+					6806 cell
+						6807 text 367
+					6808 cell
+						6809 text 11:19:47
+					6810 cell
+						6811 text 99.9 / 100
+					6812 cell
+						6813 text High
+					6814 cell
+						6815 text HIGH_ALERT
+					6816 cell
+						6817 text Combined evidence
+					6818 cell
+						6819 text None
+				6820 row
+					6821 cell
+						6822 text 366
+					6823 cell
+						6824 text 11:19:47
+					6825 cell
+						6826 text 99.9 / 100
+					6827 cell
+						6828 text High
+					6829 cell
+						6830 text HIGH_ALERT
+					6831 cell
+						6832 text Combined evidence
+					6833 cell
+						6834 text None
+				6835 row
+					6836 cell
+						6837 text 365
+					6838 cell
+						6839 text 11:19:47
+					6840 cell
+						6841 text 99.9 / 100
+					6842 cell
+						6843 text High
+					6844 cell
+						6845 text HIGH_ALERT
+					6846 cell
+						6847 text Combined evidence
+					6848 cell
+						6849 text None
+				6850 row
+					6851 cell
+						6852 text 364
+					6853 cell
+						6854 text 11:19:47
+					6855 cell
+						6856 text 99.9 / 100
+					6857 cell
+						6858 text High
+					6859 cell
+						6860 text HIGH_ALERT
+					6861 cell
+						6862 text Combined evidence
+					6863 cell
+						6864 text None
+				6865 row
+					6866 cell
+						6867 text 363
+					6868 cell
+						6869 text 11:19:47
+					6870 cell
+						6871 text 99.9 / 100
+					6872 cell
+						6873 text High
+					6874 cell
+						6875 text HIGH_ALERT
+					6876 cell
+						6877 text Combined evidence
+					6878 cell
+						6879 text None
+				6880 row
+					6881 cell
+						6882 text 362
+					6883 cell
+						6884 text 11:19:47
+					6885 cell
+						6886 text 99.9 / 100
+					6887 cell
+						6888 text High
+					6889 cell
+						6890 text HIGH_ALERT
+					6891 cell
+						6892 text Combined evidence
+					6893 cell
+						6894 text None
+				6895 row
+					6896 cell
+						6897 text 361
+					6898 cell
+						6899 text 11:19:47
+					6900 cell
+						6901 text 99.9 / 100
+					6902 cell
+						6903 text High
+					6904 cell
+						6905 text HIGH_ALERT
+					6906 cell
+						6907 text Combined evidence
+					6908 cell
+						6909 text None
+				6910 row
+					6911 cell
+						6912 text 360
+					6913 cell
+						6914 text 11:19:46
+					6915 cell
+						6916 text 99.9 / 100
+					6917 cell
+						6918 text High
+					6919 cell
+						6920 text HIGH_ALERT
+					6921 cell
+						6922 text Combined evidence
+					6923 cell
+						6924 text None
+				6925 row
+					6926 cell
+						6927 text 359
+					6928 cell
+						6929 text 11:19:46
+					6930 cell
+						6931 text 99.9 / 100
+					6932 cell
+						6933 text High
+					6934 cell
+						6935 text HIGH_ALERT
+					6936 cell
+						6937 text Combined evidence
+					6938 cell
+						6939 text None
+				6940 row
+					6941 cell
+						6942 text 358
+					6943 cell
+						6944 text 11:19:46
+					6945 cell
+						6946 text 99.9 / 100
+					6947 cell
+						6948 text High
+					6949 cell
+						6950 text HIGH_ALERT
+					6951 cell
+						6952 text Combined evidence
+					6953 cell
+						6954 text None
+				6955 row
+					6956 cell
+						6957 text 357
+					6958 cell
+						6959 text 11:19:46
+					6960 cell
+						6961 text 99.9 / 100
+					6962 cell
+						6963 text High
+					6964 cell
+						6965 text HIGH_ALERT
+					6966 cell
+						6967 text Combined evidence
+					6968 cell
+						6969 text None
+				6970 row
+					6971 cell
+						6972 text 356
+					6973 cell
+						6974 text 11:19:46
+					6975 cell
+						6976 text 99.9 / 100
+					6977 cell
+						6978 text High
+					6979 cell
+						6980 text HIGH_ALERT
+					6981 cell
+						6982 text Combined evidence
+					6983 cell
+						6984 text None
+				6985 row
+					6986 cell
+						6987 text 355
+					6988 cell
+						6989 text 11:19:46
+					6990 cell
+						6991 text 99.9 / 100
+					6992 cell
+						6993 text High
+					6994 cell
+						6995 text HIGH_ALERT
+					6996 cell
+						6997 text Combined evidence
+					6998 cell
+						6999 text None
+				7000 row
+					7001 cell
+						7002 text 354
+					7003 cell
+						7004 text 11:19:46
+					7005 cell
+						7006 text 99.9 / 100
+					7007 cell
+						7008 text High
+					7009 cell
+						7010 text HIGH_ALERT
+					7011 cell
+						7012 text Combined evidence
+					7013 cell
+						7014 text None
+				7015 row
+					7016 cell
+						7017 text 353
+					7018 cell
+						7019 text 11:19:46
+					7020 cell
+						7021 text 99.9 / 100
+					7022 cell
+						7023 text High
+					7024 cell
+						7025 text HIGH_ALERT
+					7026 cell
+						7027 text Combined evidence
+					7028 cell
+						7029 text None
+				7030 row
+					7031 cell
+						7032 text 352
+					7033 cell
+						7034 text 11:19:46
+					7035 cell
+						7036 text 99.9 / 100
+					7037 cell
+						7038 text High
+					7039 cell
+						7040 text HIGH_ALERT
+					7041 cell
+						7042 text Combined evidence
+					7043 cell
+						7044 text None
+				7045 row
+					7046 cell
+						7047 text 351
+					7048 cell
+						7049 text 11:19:46
+					7050 cell
+						7051 text 99.9 / 100
+					7052 cell
+						7053 text High
+					7054 cell
+						7055 text HIGH_ALERT
+					7056 cell
+						7057 text Combined evidence
+					7058 cell
+						7059 text None
+				7060 row
+					7061 cell
+						7062 text 350
+					7063 cell
+						7064 text 11:19:45
+					7065 cell
+						7066 text 99.9 / 100
+					7067 cell
+						7068 text High
+					7069 cell
+						7070 text HIGH_ALERT
+					7071 cell
+						7072 text Combined evidence
+					7073 cell
+						7074 text None
+				7075 row
+					7076 cell
+						7077 text 349
+					7078 cell
+						7079 text 11:19:45
+					7080 cell
+						7081 text 99.9 / 100
+					7082 cell
+						7083 text High
+					7084 cell
+						7085 text HIGH_ALERT
+					7086 cell
+						7087 text Combined evidence
+					7088 cell
+						7089 text None
+				7090 row
+					7091 cell
+						7092 text 348
+					7093 cell
+						7094 text 11:19:45
+					7095 cell
+						7096 text 99.9 / 100
+					7097 cell
+						7098 text High
+					7099 cell
+						7100 text HIGH_ALERT
+					7101 cell
+						7102 text Combined evidence
+					7103 cell
+						7104 text None
+				7105 row
+					7106 cell
+						7107 text 347
+					7108 cell
+						7109 text 11:19:45
+					7110 cell
+						7111 text 99.9 / 100
+					7112 cell
+						7113 text High
+					7114 cell
+						7115 text HIGH_ALERT
+					7116 cell
+						7117 text Combined evidence
+					7118 cell
+						7119 text None
+				7120 row
+					7121 cell
+						7122 text 346
+					7123 cell
+						7124 text 11:19:45
+					7125 cell
+						7126 text 99.9 / 100
+					7127 cell
+						7128 text High
+					7129 cell
+						7130 text HIGH_ALERT
+					7131 cell
+						7132 text Combined evidence
+					7133 cell
+						7134 text None
+				7135 row
+					7136 cell
+						7137 text 345
+					7138 cell
+						7139 text 11:19:45
+					7140 cell
+						7141 text 99.9 / 100
+					7142 cell
+						7143 text High
+					7144 cell
+						7145 text HIGH_ALERT
+					7146 cell
+						7147 text Combined evidence
+					7148 cell
+						7149 text None
+				7150 row
+					7151 cell
+						7152 text 344
+					7153 cell
+						7154 text 11:19:45
+					7155 cell
+						7156 text 99.9 / 100
+					7157 cell
+						7158 text High
+					7159 cell
+						7160 text HIGH_ALERT
+					7161 cell
+						7162 text Combined evidence
+					7163 cell
+						7164 text None
+				7165 row
+					7166 cell
+						7167 text 343
+					7168 cell
+						7169 text 11:19:45
+					7170 cell
+						7171 text 99.9 / 100
+					7172 cell
+						7173 text High
+					7174 cell
+						7175 text HIGH_ALERT
+					7176 cell
+						7177 text Combined evidence
+					7178 cell
+						7179 text None
+				7180 row
+					7181 cell
+						7182 text 342
+					7183 cell
+						7184 text 11:19:45
+					7185 cell
+						7186 text 99.9 / 100
+					7187 cell
+						7188 text High
+					7189 cell
+						7190 text HIGH_ALERT
+					7191 cell
+						7192 text Combined evidence
+					7193 cell
+						7194 text None
+				7195 row
+					7196 cell
+						7197 text 341
+					7198 cell
+						7199 text 11:19:45
+					7200 cell
+						7201 text 99.9 / 100
+					7202 cell
+						7203 text High
+					7204 cell
+						7205 text HIGH_ALERT
+					7206 cell
+						7207 text Combined evidence
+					7208 cell
+						7209 text None
+				7210 row
+					7211 cell
+						7212 text 340
+					7213 cell
+						7214 text 11:19:44
+					7215 cell
+						7216 text 99.9 / 100
+					7217 cell
+						7218 text High
+					7219 cell
+						7220 text HIGH_ALERT
+					7221 cell
+						7222 text Combined evidence
+					7223 cell
+						7224 text None
+				7225 row
+					7226 cell
+						7227 text 339
+					7228 cell
+						7229 text 11:19:44
+					7230 cell
+						7231 text 99.9 / 100
+					7232 cell
+						7233 text High
+					7234 cell
+						7235 text HIGH_ALERT
+					7236 cell
+						7237 text Combined evidence
+					7238 cell
+						7239 text None
+				7240 row
+					7241 cell
+						7242 text 338
+					7243 cell
+						7244 text 11:19:44
+					7245 cell
+						7246 text 99.9 / 100
+					7247 cell
+						7248 text High
+					7249 cell
+						7250 text HIGH_ALERT
+					7251 cell
+						7252 text Combined evidence
+					7253 cell
+						7254 text None
+				7255 row
+					7256 cell
+						7257 text 337
+					7258 cell
+						7259 text 11:19:44
+					7260 cell
+						7261 text 99.9 / 100
+					7262 cell
+						7263 text High
+					7264 cell
+						7265 text HIGH_ALERT
+					7266 cell
+						7267 text Partial evidence
+					7268 cell
+						7269 text None
+				7270 row
+					7271 cell
+						7272 text 336
+					7273 cell
+						7274 text 11:19:44
+					7275 cell
+						7276 text 99.9 / 100
+					7277 cell
+						7278 text High
+					7279 cell
+						7280 text HIGH_ALERT
+					7281 cell
+						7282 text Partial evidence
+					7283 cell
+						7284 text None
+				7285 row
+					7286 cell
+						7287 text 335
+					7288 cell
+						7289 text 11:19:44
+					7290 cell
+						7291 text 99.9 / 100
+					7292 cell
+						7293 text High
+					7294 cell
+						7295 text HIGH_ALERT
+					7296 cell
+						7297 text Partial evidence
+					7298 cell
+						7299 text None
+				7300 row
+					7301 cell
+						7302 text 334
+					7303 cell
+						7304 text 11:19:44
+					7305 cell
+						7306 text 99.9 / 100
+					7307 cell
+						7308 text High
+					7309 cell
+						7310 text HIGH_ALERT
+					7311 cell
+						7312 text Partial evidence
+					7313 cell
+						7314 text None
+				7315 row
+					7316 cell
+						7317 text 333
+					7318 cell
+						7319 text 11:19:44
+					7320 cell
+						7321 text 99.9 / 100
+					7322 cell
+						7323 text High
+					7324 cell
+						7325 text HIGH_ALERT
+					7326 cell
+						7327 text Partial evidence
+					7328 cell
+						7329 text None
+				7330 row
+					7331 cell
+						7332 text 332
+					7333 cell
+						7334 text 11:19:44
+					7335 cell
+						7336 text 99.9 / 100
+					7337 cell
+						7338 text High
+					7339 cell
+						7340 text HIGH_ALERT
+					7341 cell
+						7342 text Partial evidence
+					7343 cell
+						7344 text None
+				7345 row
+					7346 cell
+						7347 text 331
+					7348 cell
+						7349 text 11:19:43
+					7350 cell
+						7351 text 99.9 / 100
+					7352 cell
+						7353 text High
+					7354 cell
+						7355 text HIGH_ALERT
+					7356 cell
+						7357 text Partial evidence
+					7358 cell
+						7359 text None
+				7360 row
+					7361 cell
+						7362 text 330
+					7363 cell
+						7364 text 11:19:43
+					7365 cell
+						7366 text 99.9 / 100
+					7367 cell
+						7368 text High
+					7369 cell
+						7370 text HIGH_ALERT
+					7371 cell
+						7372 text Partial evidence
+					7373 cell
+						7374 text None
+				7375 row
+					7376 cell
+						7377 text 329
+					7378 cell
+						7379 text 11:19:43
+					7380 cell
+						7381 text 99.9 / 100
+					7382 cell
+						7383 text High
+					7384 cell
+						7385 text HIGH_ALERT
+					7386 cell
+						7387 text Partial evidence
+					7388 cell
+						7389 text None
+				7390 row
+					7391 cell
+						7392 text 328
+					7393 cell
+						7394 text 11:19:43
+					7395 cell
+						7396 text 99.9 / 100
+					7397 cell
+						7398 text High
+					7399 cell
+						7400 text HIGH_ALERT
+					7401 cell
+						7402 text Partial evidence
+					7403 cell
+						7404 text None
+				7405 row
+					7406 cell
+						7407 text 327
+					7408 cell
+						7409 text 11:19:43
+					7410 cell
+						7411 text 99.9 / 100
+					7412 cell
+						7413 text High
+					7414 cell
+						7415 text HIGH_ALERT
+					7416 cell
+						7417 text Partial evidence
+					7418 cell
+						7419 text None
+				7420 row
+					7421 cell
+						7422 text 326
+					7423 cell
+						7424 text 11:19:43
+					7425 cell
+						7426 text 99.9 / 100
+					7427 cell
+						7428 text High
+					7429 cell
+						7430 text HIGH_ALERT
+					7431 cell
+						7432 text Partial evidence
+					7433 cell
+						7434 text None
+				7435 row
+					7436 cell
+						7437 text 325
+					7438 cell
+						7439 text 11:19:43
+					7440 cell
+						7441 text 99.9 / 100
+					7442 cell
+						7443 text High
+					7444 cell
+						7445 text HIGH_ALERT
+					7446 cell
+						7447 text Partial evidence
+					7448 cell
+						7449 text None
+				7450 row
+					7451 cell
+						7452 text 324
+					7453 cell
+						7454 text 11:19:43
+					7455 cell
+						7456 text 99.9 / 100
+					7457 cell
+						7458 text High
+					7459 cell
+						7460 text HIGH_ALERT
+					7461 cell
+						7462 text Partial evidence
+					7463 cell
+						7464 text None
+				7465 row
+					7466 cell
+						7467 text 323
+					7468 cell
+						7469 text 11:19:43
+					7470 cell
+						7471 text 99.9 / 100
+					7472 cell
+						7473 text High
+					7474 cell
+						7475 text HIGH_ALERT
+					7476 cell
+						7477 text Partial evidence
+					7478 cell
+						7479 text None
+				7480 row
+					7481 cell
+						7482 text 322
+					7483 cell
+						7484 text 11:19:43
+					7485 cell
+						7486 text 99.9 / 100
+					7487 cell
+						7488 text High
+					7489 cell
+						7490 text HIGH_ALERT
+					7491 cell
+						7492 text Partial evidence
+					7493 cell
+						7494 text None
+				7495 row
+					7496 cell
+						7497 text 321
+					7498 cell
+						7499 text 11:19:42
+					7500 cell
+						7501 text 99.9 / 100
+					7502 cell
+						7503 text High
+					7504 cell
+						7505 text HIGH_ALERT
+					7506 cell
+						7507 text Partial evidence
+					7508 cell
+						7509 text None
+				7510 row
+					7511 cell
+						7512 text 320
+					7513 cell
+						7514 text 11:19:42
+					7515 cell
+						7516 text 99.9 / 100
+					7517 cell
+						7518 text High
+					7519 cell
+						7520 text HIGH_ALERT
+					7521 cell
+						7522 text Partial evidence
+					7523 cell
+						7524 text None
+				7525 row
+					7526 cell
+						7527 text 319
+					7528 cell
+						7529 text 11:19:42
+					7530 cell
+						7531 text 99.9 / 100
+					7532 cell
+						7533 text High
+					7534 cell
+						7535 text HIGH_ALERT
+					7536 cell
+						7537 text Partial evidence
+					7538 cell
+						7539 text None
+				7540 row
+					7541 cell
+						7542 text 318
+					7543 cell
+						7544 text 11:19:42
+					7545 cell
+						7546 text 99.9 / 100
+					7547 cell
+						7548 text High
+					7549 cell
+						7550 text HIGH_ALERT
+					7551 cell
+						7552 text Partial evidence
+					7553 cell
+						7554 text None
+				7555 row
+					7556 cell
+						7557 text 317
+					7558 cell
+						7559 text 11:19:42
+					7560 cell
+						7561 text 99.9 / 100
+					7562 cell
+						7563 text High
+					7564 cell
+						7565 text HIGH_ALERT
+					7566 cell
+						7567 text Combined evidence
+					7568 cell
+						7569 text None
+				7570 row
+					7571 cell
+						7572 text 316
+					7573 cell
+						7574 text 11:19:42
+					7575 cell
+						7576 text 99.9 / 100
+					7577 cell
+						7578 text High
+					7579 cell
+						7580 text HIGH_ALERT
+					7581 cell
+						7582 text Combined evidence
+					7583 cell
+						7584 text None
+				7585 row
+					7586 cell
+						7587 text 315
+					7588 cell
+						7589 text 11:19:42
+					7590 cell
+						7591 text 99.9 / 100
+					7592 cell
+						7593 text High
+					7594 cell
+						7595 text HIGH_ALERT
+					7596 cell
+						7597 text Combined evidence
+					7598 cell
+						7599 text None
+				7600 row
+					7601 cell
+						7602 text 314
+					7603 cell
+						7604 text 11:19:42
+					7605 cell
+						7606 text 99.9 / 100
+					7607 cell
+						7608 text High
+					7609 cell
+						7610 text HIGH_ALERT
+					7611 cell
+						7612 text Combined evidence
+					7613 cell
+						7614 text None
+				7615 row
+					7616 cell
+						7617 text 313
+					7618 cell
+						7619 text 11:19:42
+					7620 cell
+						7621 text 99.9 / 100
+					7622 cell
+						7623 text High
+					7624 cell
+						7625 text HIGH_ALERT
+					7626 cell
+						7627 text Combined evidence
+					7628 cell
+						7629 text None
+
+The focused UI element is 14 button Risk Trends
