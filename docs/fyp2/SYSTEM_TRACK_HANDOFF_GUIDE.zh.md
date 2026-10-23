@@ -94,7 +94,7 @@ omissions: record them as NOT_DONE with that reason. Do not edit any file.
 
 | 项 | 状态 | 原因 |
 |---|---|---|
-| E2 / E5 runner（权重与构造配对、反事实） | NOT_DONE | 构造场景的配对规则要等导师对 D06 作出决定（询问邮件已起草） |
+| E2 / E5 runner（权重与构造配对、反事实） | NOT_DONE | D06 已于 2026-10-23 由用户决定（见 `08_OPEN_DECISIONS_FOR_SUPERVISOR.md` 末尾的决定记录），runner 尚未实现 |
 | E3 / E4 的完整 runner | PARTIAL | E3 已有 3×3 新鲜度网格测试；E4 已有 PERF-01 / PERF-02 / ST-LONG-01 / R10 FSM 测试；单独的 runner 与报告表格未做 |
 | E1（模型鲁棒性）与概率可靠性诊断 | ML 轨道 | Codex 负责 |
 | Task 10A 的 provider 改造与离线评估器 | NOT_DONE（W6 拓展项） | schema 已交接；待候选模型包，以及「符号链接 containment」的决定 |
@@ -129,7 +129,7 @@ omissions: record them as NOT_DONE with that reason. Do not edit any file.
 | 6.6 E4（运行时鲁棒性） | 延迟（capture → render p95）；日志完整性（两个分母，注入故障）；长会话；告警 FSM 的 2 s / 10 s 双条件；故障恢复 | `w6-system-tests-acceptance.zh.md`；`perf01.json`；`perf02.json`；`long-session.json`；R10-A 验收 |
 | 6.8 软件测试 | 测试分层（单元 / 集成 / 系统 / 浏览器端到端）；每周 gate 的测试数；**变异测试**作为「测试会抓到错误」的证据；系统测试清单 | 第 2.2 节的数字表；各验收报告第 3 节 |
 | 发现：视觉 domain shift | 同一条实时管线在 State Farm test 集上准确率 0.898、c0 召回 0.921；正面摄像头约 5,170 帧几乎全判为 c8 / c9。结论是视角问题，不是程序缺陷 | `docs/evidence/2026-10-22/vision-runtime-path/README.md` |
-| 6.4 / 6.7 E2 / E5 | 写成「已设计，等待配对规则决定」，作为限制说明 | 覆盖矩阵；`08_OPEN_DECISIONS_FOR_SUPERVISOR.md` D06 |
+| 6.4 / 6.7 E2 / E5 | 按 D06 决定写：人工配对的样本称为「constructed evaluation scenarios」，预先声明 operational reference policy，报告互补性与衰减；限制（没有同时采集的多模态数据、配对是构造的）写进报告。runner 未完成前，写成「已设计、未执行」 | 覆盖矩阵；`08_OPEN_DECISIONS_FOR_SUPERVISOR.md` 末尾的 D06 决定记录 |
 | 6.9 UAT | 未完成，不编造人数 | — |
 
 ### 2.2 关键数字（引用时注明出处文件）

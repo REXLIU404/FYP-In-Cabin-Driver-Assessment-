@@ -83,7 +83,7 @@
 - [x] **TELEMETRY-CONTRIBUTIONS**（用户 10-22 发现、选方案 A；`346f3a6`，验收 PASS；pytest 967 → 979，vitest 910 → 918）：Live 的遥测特征贡献 = TreeSHAP 作用于 Safe 类打分取负（正号推向不安全），REPEAT 沿用登记值，Explanation 卡片标注方法与单位
 - [x] **`npm run dev:all`**（`b98207b`）：一条命令启动后端与 vite；视觉 domain shift 证据 `611b453`、`84a1891`
 - [x] **W5 / W6 系统测试**（executing-plans，执行计划 `docs/plans/2026-10-22-w5-w6-system-tests.md` S1–S10；验收 PASS）：选中跟随最新、ST-SESSION-01、ST-COLDSTART-01（工作树 `.venv` 改为本地虚拟环境）、Task 10A manifest schema 交接、E3 新鲜度网格、ST-LONG-01、PERF-01、PERF-02；**G-W5-A（`5040e9d`）与 G-W6-A（`2897000`，不含 E2–E5 runner）提前关闭**；独立评审后修复 6 项。最终代码在全新克隆上：pytest 1028 / 0 skipped，vitest 922
-- [ ] E2–E5 runner：等导师对 D06 作出决定
+- [ ] E2–E5 runner：**D06 已由用户于 2026-10-23 决定**（constructed evaluation scenarios、预先声明 operational reference policy、报告互补性与衰减、限制写进报告），可以开始实现
 - [ ] Task 10A 的 provider 改造与离线评估器：W6 拓展项，需要候选包，以及稳定模型包目录布局与符号链接 containment 的决定
 
 ### 阶段 5：需用户裁定的政策项（裁定后再实现）

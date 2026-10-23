@@ -25,3 +25,18 @@ These are proposals requiring project/supervisor decisions, not permission reque
 No decision here asserts DMD access, real vehicle deployment, calibrated accident probabilities, completed HPO, or recruited participants. Approved decisions should receive date/version and propagate to test oracles, configuration, report and evidence manifest in the subsequent implementation phase.
 
 **D13 — stale-only alert policy (P0/P1 decision before W6):** `backend/app/inference.py:13–18,43–55` allows indefinitely stale evidence to remain DEGRADED and participate in sustained-High timing. Decide a maximum usable age, whether unchanged repeated capture timestamps may accumulate alert duration, and how the system distinguishes a continuing observed event from replaying old evidence. Recommendation: make evidence-age validity explicit and test stale-only streams; do not silently assume stale values are fresh or that repeated packets prove a persistent event. No implementation change or stale-stream result is claimed by this audit.
+
+---
+
+## D06 决定记录（2026-10-23，用户决定）
+
+> 上面的正文是 2026-10-10 的审计快照，原样保留。本节只记录后续决定。
+
+导师没有回复，用户决定按本表 D06 的建议处理：
+
+1. 所有人工配对的视觉加遥测样本，一律称为 **「constructed evaluation scenarios（构造的评估场景）」**，不称为真实的多模态数据，也不作为风险预测准确率的证据；
+2. **独立、预先声明 operational reference policy**：在看到任何 E2 / E5 结果之前，先写好每类场景的预期参考，期望值不根据输出来调整；
+3. E2 / E5 报告**互补性与衰减（complementarity and attenuation）**：融合相对单分支多了什么，以及在哪里把单分支的强信号稀释了。保留「高视觉分数被衰减」的反例；
+4. **限制写进报告**：没有同时采集的多模态数据集；配对是构造的；参考是运行层面的，不是事故严重度的真值。
+
+影响：E2 / E5 runner 不再因 D06 受阻，可以开始实现。这与演示用的「Constructed scenario」回放模式是两回事：后者是演示手段，它的结果不进入评估。
