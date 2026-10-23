@@ -1,0 +1,151 @@
+Browser tab: 1473715626, Title: "In-Cabin Multi-Modal Driver Monitoring & Risk Assessment", URL: "http://127.0.0.1:8008/".
+0 AXWebArea In-Cabin Multi-Modal Driver Monitoring & Risk Assessment, URL: 127.0.0.1:8008/
+	1 container root
+		2 container
+			3 image
+			4 text Driver Risk MVP Dashboard
+			5 button (expanded) Description: Collapse sidebar, Secondary Actions: Collapse
+				6 image
+			7 container Dashboard views
+				8 button Live Monitor
+					9 image
+					10 text Live Monitor
+				11 button Signal Inspector
+					12 image
+					13 text Signal Inspector
+				14 button Risk Trends
+					15 image
+					16 text Risk Trends
+				17 button Explanation
+					18 image
+					19 text Explanation
+				20 button Configuration
+					21 image
+					22 text Configuration
+		23 container
+			24 heading In-Cabin Multi-Modal Driver Monitoring & Risk Assessment, Value: 1
+				25 text In-Cabin Multi-Modal Driver Monitoring & Risk Assessment
+			26 button (disabled) Start Monitoring
+				27 image
+				28 text Start Monitoring
+			29 button Pause
+				30 image
+				31 text Pause
+			32 button New Session
+				33 image
+				34 text New Session
+			35 container
+				36 text Data mode
+				37 pop up button (disabled, collapsed, settable) Description: Data mode, Value: Live trained models, Secondary Actions: Expand
+					38 menu
+						39 (selected) Live trained models
+						40 Prepared replay demo
+			41 button Refresh saved sessions
+			42 container
+				43 text Saved live sessions
+				44 pop up button (disabled, collapsed, settable) Description: Saved live sessions, Value: Select a session…, Secondary Actions: Expand
+					45 menu
+						46 (selected) Select a session…
+			47 text Vision: camera → trained MobileNetV3 · Telemetry: prepared raw features → trained XGBoost. Frontal-camera accuracy is experimental.
+			48 text Camera:  live  · 30.0 FPS Inference: 10.0  FPS · target  10 Request round trip:  32  ms Visible history:  206  /  206  persisted · export includes all windows
+			49 button (collapsed) Loaded model versions, Secondary Actions: Expand
+				50 text Loaded model versions
+			51 image
+			52 text Current Monitoring Status
+			53 text RiskScore:  99.9 / 100  | Visual distraction: 100%  | Telemetry non-safe: 100% HIGH_ALERT FULL
+			54 text LIVE MONITOR
+			55 heading Camera preview and current risk output, Value: 2
+				56 text Camera preview and current risk output
+			57 text Monitoring active Session
+			58 text S8d4e616a597b4dd5973d31a9ad417049
+			59 text Window
+			60 text 206
+			61 text Timestamp
+			62 text 11:19:31
+			63 text Stored records
+			64 text 206
+			65 container
+				66 container Browser camera preview
+				67 button (disabled) Start Camera
+					68 image
+					69 text Start Camera
+				70 button Stop Camera
+					71 image
+					72 text Stop Camera
+			73 container RiskScore: 99.9 / 100
+				74 text 99.9
+				75 text /100
+				76 text RiskScore
+			77 text High Combined evidence HIGH_ALERT Visual Distraction
+			78 text 100%
+			79 text fresh
+			80 text 1.00
+			81 text Telemetry Non-Safe
+			82 text 100%
+			83 text fresh
+			84 text 1.00
+			85 text VEHICLE SIGNALS
+			86 heading Prepared telemetry replay, Value: 2
+				87 text Prepared telemetry replay
+			88 text Recorded scenario features, not live vehicle sensors. Values below belong to the latest saved window.
+			89 image
+			90 image
+			91 text Speed 88 km/h
+			92 text MODERATE
+			93 image
+			94 text Acceleration 3.9 m/s²
+			95 text HARD
+			96 image
+			97 text Steering 22° left
+			98 text TURNING
+			99 image
+			100 text Braking 90%
+			101 text HEAVY
+			102 image
+			103 text Throttle 92%
+			104 text HEAVY
+			105 image
+			106 text Lane position 1.2 m off
+			107 text DRIFTING
+			108 image
+			109 text Following distance 7 m
+			110 text TOO CLOSE
+			111 text RUNTIME STATE
+			112 heading Health and latency, Value: 2
+				113 text Health and latency
+			114 image
+			115 text SystemHealth FULL Vision freshness fresh Telemetry freshness fresh Server processing (before DB commit)
+			116 container
+				117 text 20  ms
+			118 text RECENT TREND
+			119 heading RiskScore and branch probabilities, Value: 2
+				120 text RiskScore and branch probabilities
+			121 image
+			122 container Risk score timeline
+				123 container
+					124 image
+						125 text 196
+						126 text 198
+						127 text 200
+						128 text 202
+						129 text 204
+						130 text 206
+						131 text 0
+						132 text 25
+						133 text 50
+						134 text 75
+						135 text 100
+						136 text 30
+						137 text 60
+					138 content list
+						139 container
+							140 image
+							141 text RiskScore
+						142 container
+							143 image
+							144 text P_distraction (%)
+						145 container
+							146 image
+							147 text Telemetry non-safe (%)
+
+The focused UI element is 0 AXWebArea In-Cabin Multi-Modal Driver Monitoring & Risk Assessment, URL: 127.0.0.1:8008/

@@ -2,6 +2,7 @@ export type {
   AlertSeverity,
   AppConfig,
   DominantEvidence,
+  EvidenceExpiry,
   FreshnessStatus,
   OperationMode,
   PreparedSessionWindow,
@@ -9,6 +10,9 @@ export type {
   RiskUpdate,
   SessionMeta,
   SystemHealth,
+  TelemetryBehaviorLabel,
+  TelemetryBehaviorProbability,
+  TelemetryFeatureContribution,
   TelemetryFeatures,
   VisualClassProbability,
 } from "../../ai/src/types";

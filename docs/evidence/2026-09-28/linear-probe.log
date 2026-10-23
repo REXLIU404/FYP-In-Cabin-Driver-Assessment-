@@ -1,0 +1,46 @@
+/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/linear_probe.py:36: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter has become the default. Learn more about the new export logic: https://docs.pytorch.org/docs/stable/onnx_export.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html
+  torch.onnx.export(backbone, torch.zeros(1, 3, 224, 224), str(onnx_path),
+mobilenet_v3_large features 32/22424 (0.3s)
+mobilenet_v3_large features 1632/22424 (14.8s)
+mobilenet_v3_large features 3232/22424 (29.9s)
+mobilenet_v3_large features 4832/22424 (44.4s)
+mobilenet_v3_large features 6432/22424 (59.7s)
+mobilenet_v3_large features 8032/22424 (74.0s)
+mobilenet_v3_large features 9632/22424 (88.3s)
+mobilenet_v3_large features 11232/22424 (102.7s)
+mobilenet_v3_large features 12832/22424 (118.9s)
+mobilenet_v3_large features 14432/22424 (133.4s)
+mobilenet_v3_large features 16032/22424 (149.8s)
+mobilenet_v3_large features 17632/22424 (169.1s)
+mobilenet_v3_large features 19232/22424 (191.8s)
+mobilenet_v3_large features 20832/22424 (207.9s)
+mobilenet_v3_large features 22424/22424 (235.3s)
+mobilenet_v3_large {"C": 0.01, "val_accuracy": 0.6370292887029289, "val_macro_f1": 0.6309057892146537, "fit_seconds": 0.7291885409795213, "solver_iterations": [56]}
+mobilenet_v3_large {"C": 0.1, "val_accuracy": 0.6352859135285913, "val_macro_f1": 0.625471805916468, "fit_seconds": 0.3658899590082001, "solver_iterations": [35]}
+mobilenet_v3_large {"C": 1.0, "val_accuracy": 0.6147140864714087, "val_macro_f1": 0.6089634423823924, "fit_seconds": 0.327007332991343, "solver_iterations": [26]}
+mobilenet_v3_large: test accuracy=0.650260, macro-F1=0.635921
+/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/linear_probe.py:36: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter has become the default. Learn more about the new export logic: https://docs.pytorch.org/docs/stable/onnx_export.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html
+  torch.onnx.export(backbone, torch.zeros(1, 3, 224, 224), str(onnx_path),
+efficientnet_b0 features 32/22424 (0.6s)
+efficientnet_b0 features 1632/22424 (37.7s)
+efficientnet_b0 features 3232/22424 (84.2s)
+efficientnet_b0 features 4832/22424 (129.5s)
+efficientnet_b0 features 6432/22424 (157.9s)
+Traceback (most recent call last):
+  File "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/linear_probe.py", line 129, in <module>
+    main()
+    ~~~~^^
+  File "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/linear_probe.py", line 98, in main
+    x, extraction = extract(arch, weights, meta, args.cache_dir, args.threads, args.batch)
+                    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/linear_probe.py", line 48, in extract
+    xs.append(tf(image.convert("RGB")))
+              ~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/torchvision/transforms/transforms.py", line 95, in __call__
+    img = t(img)
+  File "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/torchvision/transforms/transforms.py", line 137, in __call__
+    return F.to_tensor(pic)
+           ~~~~~~~~~~~^^^^^
+  File "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/torchvision/transforms/functional.py", line 174, in to_tensor
+    img = img.permute((2, 0, 1)).contiguous()
+KeyboardInterrupt

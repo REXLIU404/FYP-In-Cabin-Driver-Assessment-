@@ -1,0 +1,39 @@
+{
+  "observational_wrapper_only": true,
+  "images_or_video_saved": false,
+  "request_count": 394,
+  "camera_frame_count": 394,
+  "unique_image_sha256": 394,
+  "statuses": {
+    "201": 394
+  },
+  "first_observed_utc": "2026-10-12T09:40:18.137944+00:00",
+  "last_observed_utc": "2026-10-12T09:40:57.793391+00:00",
+  "dimensions": [
+    [
+      640,
+      480
+    ]
+  ],
+  "top_classes": {
+    "hair_makeup": 394
+  },
+  "rgb_mean_range": [
+    [
+      152.2109375,
+      161.689453125
+    ],
+    [
+      135.5302734375,
+      144.4736328125
+    ],
+    [
+      108.861328125,
+      114.595703125
+    ]
+  ],
+  "raw_distraction_range": [
+    0.9997416138648987,
+    1.0
+  ]
+}

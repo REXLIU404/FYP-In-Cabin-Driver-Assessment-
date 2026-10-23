@@ -1,25 +1,37 @@
+import type { BranchExpiry } from "../../../ai/src/availability";
 import type { FreshnessStatus } from "../types";
-import { formatPercent } from "../utils/format";
-import { Pill } from "./Pill";
+import { formatBranchProbability, formatPercent } from "../utils/format";
+import { BranchStatusPill } from "./BranchStatusPill";
 
 interface ModalityCardProps {
   title: string;
   probability: number;
   freshness: FreshnessStatus;
+  /**
+   * Ruling A (D13): whether the branch had evidence and it was too old. REQUIRED, with
+   * no default: an optional prop with a "not expired" default let a caller forget to
+   * pass it, and an expired branch then read as "missing" with nothing to catch it.
+   */
+  expiry: BranchExpiry;
 }
 
 export function ModalityCard({
   title,
   probability,
   freshness,
+  expiry,
 }: ModalityCardProps) {
   return (
     <div className="modality-card">
       <span>{title}</span>
-      <strong>{formatPercent(probability)}</strong>
+      <strong>
+        {freshness === "missing" ? "—" : formatPercent(probability)}
+      </strong>
       <div>
-        <Pill label={freshness} tone={freshness} />
-        <small>{probability.toFixed(2)}</small>
+        <BranchStatusPill status={freshness} expiry={expiry} />
+        <small>
+          {formatBranchProbability(probability, freshness, expiry.expired)}
+        </small>
       </div>
     </div>
   );

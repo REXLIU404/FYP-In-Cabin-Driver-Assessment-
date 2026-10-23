@@ -1,3 +1,8 @@
+import {
+  FUSION_EPSILON,
+  branchExpiry,
+  describeBranchStatus,
+} from "./availability";
 import type { DominantEvidence, RiskUpdate, SystemHealth } from "./types";
 
 export const EVIDENCE_GAP = 0.15;
@@ -13,7 +18,7 @@ export const evidenceTypes: DominantEvidence[] = [
 interface EvidenceInputs {
   pDistraction: number;
   pTelemetry: number;
-  riskScore: number;
+  riskScore: number | null;
   systemHealth: SystemHealth;
   thresholdLow: number;
   gap?: number;
@@ -26,7 +31,11 @@ export const determineEvidenceType = ({
   systemHealth,
   thresholdLow,
   gap = EVIDENCE_GAP,
-}: EvidenceInputs): DominantEvidence => {
+}: EvidenceInputs): DominantEvidence | null => {
+  // Availability FIRST, before any relational comparison on the score: in
+  // JavaScript `null < 30` is `true`, so a null score reaching the comparison
+  // below would report an unavailable window as "Low observed risk".
+  if (riskScore === null || systemHealth === "UNAVAILABLE") return null;
   if (systemHealth !== "FULL") return "Partial evidence";
   if (riskScore < thresholdLow) return "Low observed risk";
   if (Math.abs(pDistraction - pTelemetry) < gap) return "Combined evidence";
@@ -53,6 +62,8 @@ export const formatEvidenceType = (evidenceType: DominantEvidence) =>
   evidenceType.toUpperCase();
 
 export const getRelativeEvidence = (record: RiskUpdate) => {
+  if (record.RiskScore === null || record.SystemHealth === "UNAVAILABLE")
+    return "No usable evidence";
   if (record.SystemHealth !== "FULL") return "Partial input availability";
 
   const difference = record.P_distraction - record.P_telemetry_anomaly;
@@ -71,14 +82,22 @@ export const getActiveInputSummary = (record: RiskUpdate) => {
     return "Vision + Telemetry available";
   }
 
-  return `Vision ${vision} / Telemetry ${telemetry}`;
+  // An expired branch says so (with its age) rather than reading as "missing".
+  return `Vision ${describeBranchStatus(vision, branchExpiry(record, "vision"))} / Telemetry ${describeBranchStatus(telemetry, branchExpiry(record, "telemetry"))}`;
 };
 
 export const getMatchedEvidenceRule = (
-  evidenceType: DominantEvidence,
+  evidenceType: DominantEvidence | null,
   thresholdLow: number,
   gap = EVIDENCE_GAP,
 ) => {
+  if (evidenceType === null) {
+    return {
+      label: "Unavailable",
+      condition: `effective fusion denominator w_v*fw(vision) + w_t*fw(telemetry) <= ${FUSION_EPSILON.toExponential(0)} (no usable evidence)`,
+    };
+  }
+
   if (evidenceType === "Low observed risk") {
     return {
       label: "Low observed risk",

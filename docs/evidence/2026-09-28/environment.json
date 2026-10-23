@@ -1,0 +1,35 @@
+{
+  "recorded_at_utc": "2026-09-28T06:46:48.969110+00:00",
+  "git_head": "17c4b41bcfe517c8311b7f6fc2a327f616a916fe",
+  "branch": "dev_cc",
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "python": "3.13.3",
+  "packages": {
+    "torch": "2.12.0",
+    "torchvision": "0.27.0",
+    "onnx": "1.21.0",
+    "onnxruntime": "1.26.0",
+    "numpy": "2.4.6",
+    "pandas": "3.0.3",
+    "scikit-learn": "1.9.0",
+    "Pillow": "12.2.0",
+    "xgboost": "3.2.0",
+    "pytest": "9.0.3",
+    "fastapi": "0.136.3",
+    "SQLAlchemy": "2.0.50",
+    "pydantic": "2.13.4"
+  },
+  "scripts_sha256": {
+    "ml/experiments/vision_benchmark.py": "70cb54e82df2e87f5a6fc348d11f990d37c3cdf8811bac1de502ad98dc8b0313",
+    "ml/experiments/linear_probe.py": "6ce383564cb8ef56333d07325f34b30b12d465586b619115fe68812b2ab648a4",
+    "ml/experiments/robustness_probe.py": "58392ab23d3b1f5027220df5c1cf74b90124fd1cf2331e7465097668688f35ed",
+    "ml/experiments/telemetry_benchmark.py": "5245564195edf5401e1bcbbd1783cf9456f553d181e8aec629759ca175b4360f",
+    "backend/tests/test_audit_regressions.py": "69b842fb3ba90dff135bfefee0045c6d58163fc40c278cd5a760aa04f5408c0d"
+  },
+  "notes": [
+    "CPU-only measurements in sandbox; exact physical chip model not verified",
+    "ML artifact weights are original existing weights; EfficientNet ImageNet weights downloaded separately",
+    "Existing frontend test/build/lint logs collected by audit before model experiments",
+    "No application integration or backend defect fixes in this assessment"
+  ]
+}

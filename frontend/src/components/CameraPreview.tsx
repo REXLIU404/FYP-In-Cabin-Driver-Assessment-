@@ -1,9 +1,9 @@
 import { Camera, CameraOff, RefreshCw, Square } from "lucide-react";
-import type { RefObject } from "react";
+import type { Ref } from "react";
 import type { CameraStatus } from "../types";
 
 interface CameraPreviewProps {
-  videoRef: RefObject<HTMLVideoElement>;
+  videoRef: Ref<HTMLVideoElement>;
   status: CameraStatus;
   onStart: () => void;
   onStop: () => void;
@@ -48,6 +48,7 @@ export function CameraPreview({
           type="button"
           className="button button--primary"
           onClick={onStart}
+          disabled={status === "requesting" || status === "live"}
         >
           <RefreshCw size={16} />
           Start Camera

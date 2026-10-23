@@ -1,0 +1,41 @@
+COMMAND: ./node_modules/.bin/vitest run --no-cache
+
+ RUN  v2.1.9 /Users/liu/Desktop/FYP2-Live-System
+
+ ✓ frontend/src/hooks/useLiveSession.test.ts (21 tests) 31ms
+ ✓ frontend/src/hooks/useCameraPreview.test.ts (41 tests) 21ms
+ ✓ frontend/src/api/retryPolicy.test.ts (55 tests) 33ms
+ ✓ frontend/src/data/preparedRawTelemetry.test.ts (51 tests) 13ms
+ ✓ ai/src/availability.test.ts (87 tests) 60ms
+ ✓ frontend/src/components/runtimeNotices.test.ts (29 tests) 62ms
+ ✓ frontend/src/utils/export.test.ts (28 tests) 29ms
+ ✓ frontend/src/data/preparedSessionInput.test.ts (21 tests) 13ms
+ ✓ frontend/src/utils/persistence.test.ts (20 tests) 21ms
+ ✓ ai/src/livePayloadContract.test.ts (19 tests) 15ms
+ ✓ ai/src/fusionVectors.test.ts (149 tests) 15ms
+ ✓ ai/src/liveTiming.test.ts (27 tests) 16ms
+ ✓ frontend/src/views/viewModels.test.ts (19 tests) 20ms
+ ✓ ai/src/riskLogic.test.ts (32 tests) 6ms
+ ✓ frontend/src/api/client.test.ts (16 tests) 25ms
+ ✓ ai/src/alertFsm.test.ts (16 tests) 31ms
+ ✓ frontend/src/components/trendChart.test.ts (16 tests) 12ms
+ ✓ frontend/src/utils/format.test.ts (14 tests) 6ms
+ ✓ frontend/src/views/branchStatusRender.test.ts (15 tests) 64ms
+ ✓ frontend/src/utils/alertOverlay.test.ts (9 tests) 10ms
+ ✓ frontend/src/data/missingCases.test.ts (22 tests) 8ms
+ ✓ frontend/src/utils/display.test.ts (19 tests) 9ms
+ ✓ ai/src/emaParity.test.ts (14 tests) 6ms
+ ✓ frontend/src/components/branchStatusRender.test.ts (18 tests) 14ms
+ ✓ frontend/src/utils/dataMode.test.ts (7 tests) 2ms
+ ✓ frontend/src/views/riskTrends.test.ts (14 tests) 7ms
+ ✓ ai/src/repoGuards.test.ts (6 tests) 146ms
+ ✓ ai/src/liveLoop.test.ts (77 tests) 1910ms
+ ✓ ai/src/liveLoopTiming.test.ts (8 tests) 1838ms
+   ✓ the loop records capture -> send -> response for every answered window > the buffer is bounded: after 520 answered windows exactly the newest 500 remain 1693ms
+
+ Test Files  29 passed (29)
+      Tests  870 passed (870)
+   Start at  18:50:24
+   Duration  2.78s (transform 1.30s, setup 0ms, collect 3.54s, tests 4.44s, environment 8ms, prepare 2.64s)
+
+EXIT: 0

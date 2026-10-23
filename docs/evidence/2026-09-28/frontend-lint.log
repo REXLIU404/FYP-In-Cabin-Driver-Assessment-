@@ -1,0 +1,12 @@
+
+> fyp-in-cabin-driver-assessment@0.1.0 linc
+> eslint .
+
+
+/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ai/src/alertFsm.test.ts
+  31:9  error  's' is never reassigned. Use 'const' instead     prefer-const
+  32:9  error  'next' is never reassigned. Use 'const' instead  prefer-const
+
+✖ 2 problems (2 errors, 0 warnings)
+  2 errors and 0 warnings potentially fixable with the `--fix` option.
+

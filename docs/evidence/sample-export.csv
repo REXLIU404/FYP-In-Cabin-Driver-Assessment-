@@ -1,0 +1,5 @@
+session_id,window_id,timestamp,P_distraction,P_telemetry_anomaly,RiskScore,RiskLevel,DominantEvidence,AlertSeverity,SystemHealth,latency_ms,flagged
+S001,1,2026-05-31T12:02:58.733134+00:00,0.12,0.18,15.0,Low,Low observed risk,NORMAL,FULL,0,False
+S001,2,2026-05-31T12:02:58.743145+00:00,0.22,0.28,25.0,Low,Low observed risk,NORMAL,FULL,0,False
+S001,3,2026-05-31T12:02:58.752025+00:00,0.35,0.82,58.5,Medium,Telemetry-dominant,CAUTION,FULL,0,True
+S001,4,2026-05-31T12:02:58.760429+00:00,0.78,0.0,78.0,High,Partial evidence,HIGH_ALERT,DEGRADED,0,False
