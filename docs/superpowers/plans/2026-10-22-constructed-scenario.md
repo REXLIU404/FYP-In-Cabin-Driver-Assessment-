@@ -48,6 +48,13 @@
 4. **从 Live 切到本模式再开始**：必须新建一个 `CONSTRUCTED_SCENARIO_RUNTIME` 会话，不得沿用 Live 会话。→ Task 6 `test_switching_mode_creates_a_session_of_the_new_mode`。
 5. **采集时间永不超前墙钟**（服务端拒绝超前 5 s 的时间戳，422 会停掉会话）。→ Task 5 `test_acquisition_times_never_run_ahead_of_now`。
 
+## 执行顺序（2026-10-23 补充）
+
+Tasks1-10 还在改与本计划重叠的产品文件，所以：
+- **Task 3**（剧本定义与生成脚本）只新增文件、改 `.gitignore`，与它的改动没有交集，可以在同步之前先做。
+- **Task 1、2、4–9** 等 Step 0 的同步完成之后再做，避免在它改动之前写的代码到合并时冲突。
+- 其余规则不变。
+
 ---
 
 ### Task 1：后端——新模式走同一条 Live / R10 路径（含本地环境）
@@ -64,7 +71,7 @@
 - Produces（`backend/app/schemas.py`）：`LIVE_MODE = "LIVE_MODEL_RUNTIME"`、`CONSTRUCTED_MODE = "CONSTRUCTED_SCENARIO_RUNTIME"`、`def is_live_like(mode: str) -> bool`。`inference.py` 从 schemas 导入并继续导出 `LIVE_MODE`（现有调用方不变）。
 - Produces：`/infer` 用**会话自己的模式**调用 `_persist_window(..., mode=<session mode>)`，记录的 `operation_mode` 就是会话模式。
 
-- [ ] **Step 0：同步起点**（**用户同意后**才做）：Tasks1-10 已完成 W5/W6，`fyp2/live-system` 停在 `447cd2a`，此后它不再修改该分支，自 `bb947f0` 以来的改动不碰本计划要改的产品文件。在本工作副本运行 `git merge --no-edit fyp2/live-system`，应当没有冲突（覆盖矩阵的增补两边内容相同）。之后的基线以合并后的实测为准；Tasks1-10 报告其最终代码 `2897000` 在全新克隆上为 pytest 1028 / 0 skipped、vitest 922。
+- [ ] **Step 0：同步起点**（**用户同意后**才做）：2026-10-23 Tasks1-10 通知暂停同步——它按用户要求继续改 `fyp2/live-system`（合并 `dev_cc`；修 App.tsx / SignalInspector.tsx / inference.py / liveLoop.ts / client.ts / e2e_support.py / conftest.py；做一轮 UI 易用性审查，可能改 LiveMonitor.tsx、各视图与 styles.css）。**不合并 `447cd2a`**；等它发来新的稳定提交号（全量门禁已通过），再在本工作副本 `git merge --no-edit <该提交>`，有冲突就停下报告。基线以合并后的实测为准。
 - [ ] **Step 1：准备本工作副本的环境**（参照 `scripts/coldstart_check.sh`，就地进行）
   - `python3 -m venv .venv && .venv/bin/pip install -r backend/requirements.lock.txt`
   - `npm ci`
