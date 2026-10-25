@@ -71,7 +71,7 @@ Tasks1-10 还在改与本计划重叠的产品文件，所以：
 - Produces（`backend/app/schemas.py`）：`LIVE_MODE = "LIVE_MODEL_RUNTIME"`、`CONSTRUCTED_MODE = "CONSTRUCTED_SCENARIO_RUNTIME"`、`def is_live_like(mode: str) -> bool`。`inference.py` 从 schemas 导入并继续导出 `LIVE_MODE`（现有调用方不变）。
 - Produces：`/infer` 用**会话自己的模式**调用 `_persist_window(..., mode=<session mode>)`，记录的 `operation_mode` 就是会话模式。
 
-- [ ] **Step 0：同步起点**（**用户同意后**才做）：2026-10-23 Tasks1-10 通知暂停同步——它按用户要求继续改 `fyp2/live-system`（合并 `dev_cc`；修 App.tsx / SignalInspector.tsx / inference.py / liveLoop.ts / client.ts / e2e_support.py / conftest.py；做一轮 UI 易用性审查，可能改 LiveMonitor.tsx、各视图与 styles.css）。**不合并 `447cd2a`**；等它发来新的稳定提交号（全量门禁已通过），再在本工作副本 `git merge --no-edit <该提交>`，有冲突就停下报告。基线以合并后的实测为准。
+- [x] **Step 0：同步起点**——**已完成（2026-10-26）**：Tasks1-10 发来稳定提交 `276f059`（门禁全绿：pytest 1046 / 0 skipped / 1 deselected，vitest 954），已合并进本分支，合并提交 `a538e09`，无冲突。下面是当时的背景：2026-10-23 Tasks1-10 通知暂停同步——它按用户要求继续改 `fyp2/live-system`（合并 `dev_cc`；修 App.tsx / SignalInspector.tsx / inference.py / liveLoop.ts / client.ts / e2e_support.py / conftest.py；做一轮 UI 易用性审查，可能改 LiveMonitor.tsx、各视图与 styles.css）。**不合并 `447cd2a`**；等它发来新的稳定提交号（全量门禁已通过），再在本工作副本 `git merge --no-edit <该提交>`，有冲突就停下报告。基线以合并后的实测为准。
   - **Tasks1-10 已告知的接口变化**（2026-10-23；后续任务以同步后的实际代码为准，不要照搬本计划写作时的旧形状）：
     - `App.tsx` 新增 `SelectionBar`，删去传给 `ConfigurationView` 的 `onStart` / `onPause` / `onRestart`；
     - `LiveMonitor.tsx` 新增 `stopped` prop；
@@ -368,6 +368,7 @@ Tasks1-10 还在改与本计划重叠的产品文件，所以：
   - `const isLiveLikeMode = isLiveLike(config.operationMode)`，`const isScenario = config.operationMode === "CONSTRUCTED_SCENARIO_RUNTIME"`。原来的 `isLive` 分支改用 `isLiveLikeMode`，只有摄像头相关部分仍然只限 Live。
   - 本模式：显示剧本下拉框（`aria-label="Scenario"`）与加载进度；`status !== "ready"` 时 Start Monitoring 不可点，并显示 `invalid` 的原因或生成命令 `python3 scripts/build_dataset_replay.py viva_v1`；`start()` 不碰摄像头；把 `scenarioCapture(playback)` 与 `() => playback.telemetry` 传给 `useLiveSession`（Live 模式仍传 `camera.captureFrame`，不传第三个参数）。
   - 顶栏在本模式显示 `CONSTRUCTED SCENARIO`。
+  - **不要每个 tick 设置选中窗口**：`selectedWindowId === null` 就是「跟随最新」。旧回放的 `appendReplay` 每个 tick 都调用 `setSelectedWindowId(...)`，结果选择栏一直显示「pinned」，这是评审的 Important R9/R20。本模式走 Live 循环，不经过 `appendReplay`，不得引入同样的问题。`appendReplay` 本身的修复由 DeepSeek 在单独分支进行，涉及它的合并由 Tasks1-10 协调。
   - **不能破坏的既有行为**（ST-SESSION-01 等浏览器测试依赖）：Live 模式下已保存会话下拉框的 `aria-label="Saved live sessions"` 不变；「选中窗口默认跟随最新，除非用户钉住某个窗口」（`frontend/src/utils/selection.ts`）不变；每次打开页面从 Live 开始。
   - `snapshot.finished` 时调用 `live.pause()`，并显示 `Scenario finished (136 s, 7 segments)`（数字取自 manifest）。
 - `LiveMonitor`：本模式渲染 `ScenarioPlayer` 代替 `CameraPreview`；Vehicle Signals 标题在本模式为 `Scenario telemetry`，并显示当前遥测的真实类别。
@@ -389,7 +390,7 @@ Tasks1-10 还在改与本计划重叠的产品文件，所以：
 ### Task 8：端到端（工程检查，不写入报告结果）
 
 **Files:**
-- Modify: `backend/tests/e2e_support.py`（`start_server` 加可选参数 `extra_env: dict[str, str] | None = None`，默认行为不变）——**修改前先 SendMessage 通知 Tasks1-10**
+- Modify: `backend/tests/e2e_support.py`（`start_server` 加可选参数 `extra_env: dict[str, str] | None = None`，默认行为不变）——**修改前先 SendMessage 通知 Tasks1-10**。Task 10A（候选模型接入）也会加**完全相同签名**的参数：谁先合并进 `fyp2/live-system` 就用谁的版本，后合并的一方复用，不另加参数。
 - Create: `backend/tests/test_constructed_scenario_e2e.py`
 
 **Interfaces:**
