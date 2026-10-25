@@ -1,0 +1,31 @@
+{
+  "scope": "P4-A final closure; no experiment execution",
+  "git_head": "335da4e3de203836c045452f84cc291bcd352a26",
+  "source_manifest": "implementation/final_sources_after_review.json",
+  "integrity_evidence": "implementation/artifact_integrity_after_review.json",
+  "full_ml_suite": "271 passed in 27.63s",
+  "full_ml_log": "implementation/full_ml_suite_after_review.log",
+  "independent_review": {
+    "full_review": "Identified missing telemetry summary P2, non-literal reviewer approval P3, generic QC wording P3",
+    "fix_patch": "core/final_review_fixes.patch",
+    "scoped_re_review": "PASS; no new P1/P2; metadata aggregation wired, literal true required, run pending reason fixed",
+    "deferred_minor": "Generic p4_qc LIMITATIONS names pilot 2 sources/38; version/scope correction required before future formal kit; current pilot correct and its attestation unchanged",
+    "review_execution": "Static only; reviewer ran no pytest, model, export or heldout observations"
+  },
+  "acceptance": {
+    "implementation": "VERIFIED_PASS within P4-A technical scope",
+    "testing": "271 software tests and validation preflight PASS; browser/manual PARTIAL",
+    "evidence": "PARTIAL awaiting R1 pilot outcomes",
+    "reproducibility": "PARTIAL; exact numerical source and final snapshots preserved; initial supervisor bytes missing; historical 38 case parameters UNRECORDED",
+    "overall": "PARTIAL",
+    "P4B": "APPROVAL_PENDING"
+  },
+  "canonical_report": {
+    "path": "docs/fyp2/ml/ML_TRACK_PROGRESS.md",
+    "sha256": "9af37f80b5ab5ba1b97aa2e26166b0e08304ce0f62171317a2476884ef35f325"
+  },
+  "new_training_or_hpo": false,
+  "new_model_execution_in_closure": false,
+  "additional_exports_in_closure": 0,
+  "staged_paths": []
+}

@@ -1,0 +1,41 @@
+{
+  "reason": "Preserve pre-steering preparation source before user changes D3 to record-level missingness",
+  "files": [
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019/source_snapshot/ml/experiments/e1_generators.py",
+      "sha256": "f5f987c8cbd663ed83c080d5aab2465f20c7ce0bad963f39ee24bee9fdb824a2",
+      "bytes": 11247,
+      "original_path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/e1_generators.py"
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019/source_snapshot/ml/experiments/run_e1_preparation.py",
+      "sha256": "ddfa8af80dc058d0a5f4b5beb4ccfff03edf57eb2a29c87164be3e35054cbae5",
+      "bytes": 9498,
+      "original_path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_e1_preparation.py"
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019/source_snapshot/ml/tests/test_e1_generators.py",
+      "sha256": "11fde793828751b99acc5d7961d3fdff5b5396e9aef6eb096dcaa042c8916f56",
+      "bytes": 9957,
+      "original_path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/tests/test_e1_generators.py"
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019/source_snapshot/ml/tests/test_e1_preparation.py",
+      "sha256": "35a0a404bbce6b9186344b786965c2fb2e521632cf79aee2d74897ab45fbfd60",
+      "bytes": 2011,
+      "original_path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/tests/test_e1_preparation.py"
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019/source_snapshot/ml/configs/e1_preparation.json",
+      "sha256": "31605201ce90849ac89fb91f621dcd328848a01350140b9e74e685b13fcbb4db",
+      "bytes": 1877,
+      "original_path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/configs/e1_preparation.json"
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019/source_snapshot/ml/experiments/comparator_common.py",
+      "sha256": "8ede7aa5a0604232ff5b3c54735bd9f2e5479b18a2e80e5091bfa2b07644805d",
+      "bytes": 14336,
+      "original_path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/comparator_common.py"
+    }
+  ]
+}

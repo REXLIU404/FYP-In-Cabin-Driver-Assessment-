@@ -1,0 +1,74 @@
+{
+  "architecture": "mobilenet_v3_large",
+  "class_to_idx": {
+    "c0": 0,
+    "c1": 1,
+    "c2": 2,
+    "c3": 3,
+    "c4": 4,
+    "c5": 5,
+    "c6": 6,
+    "c7": 7,
+    "c8": 8,
+    "c9": 9
+  },
+  "classes": [
+    "c0",
+    "c1",
+    "c2",
+    "c3",
+    "c4",
+    "c5",
+    "c6",
+    "c7",
+    "c8",
+    "c9"
+  ],
+  "contract_smoke_set": {
+    "n": 200,
+    "rule": "per_class_mode_equals_label",
+    "sample_ids_sha256": "601dc3ed6b99e9030f6eb5287e711baf529ea6c0c5b2facab0acd9c3f9373be9",
+    "selection": "Each class sorted by filename, first 20; same stable200 membership.",
+    "split": "val"
+  },
+  "input": {
+    "color": "RGB",
+    "dtype": "float32",
+    "layout": "NCHW",
+    "shape": [
+      1,
+      3,
+      224,
+      224
+    ]
+  },
+  "kind": "vision_classifier",
+  "manifest_version": 1,
+  "model": {
+    "format": "onnx",
+    "path": "model.onnx",
+    "sha256": "9ee60abb78007773cc625af80c313049c1970f63c1f041bed9f5b2539a384828"
+  },
+  "output": {
+    "kind": "logits",
+    "shape": [
+      1,
+      10
+    ]
+  },
+  "preprocess": "rgb_resize_224_bilinear_no_crop_div255_imagenet",
+  "provenance": {
+    "checkpoint_sha256": "bc96e7a230de6391820b1e04e7480087841680ae6cc1b6e73cba42b25eb67295",
+    "graph_batch": "dynamic N",
+    "input_name": "input",
+    "output_name": "logits",
+    "runtime_c0_alias": "safe_driving",
+    "seed": 42,
+    "source_commit": "335da4e3de203836c045452f84cc291bcd352a26",
+    "source_run_id": "p3_vision_20261018",
+    "source_trial_id": "search_006",
+    "training_c0_label": "normal_driving"
+  },
+  "run_id": "p5_mobilenet_v3_large_search006_seed42_20261023",
+  "safe_class": "c0"
+}

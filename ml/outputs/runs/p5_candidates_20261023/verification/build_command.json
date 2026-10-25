@@ -1,0 +1,20 @@
+{
+  "acceptance_date": "2026-10-24",
+  "argv": [
+    "./.venv/bin/python",
+    "-B",
+    "-m",
+    "ml.experiments.package_candidates",
+    "build",
+    "--run-dir",
+    "ml/outputs/runs/p5_candidates_20261023"
+  ],
+  "cwd": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1",
+  "elapsed_seconds": 11.893756083998596,
+  "environment_overrides": {
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2"
+  },
+  "exit_code": 0,
+  "note": "Run ID retained from approved October23 plan"
+}

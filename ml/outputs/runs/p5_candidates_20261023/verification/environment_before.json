@@ -1,0 +1,901 @@
+{
+  "executable": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+  "files": {
+    ".venv/lib/python3.13/site-packages/annotated_doc-0.0.4.dist-info/METADATA": "22b9b9289b9adf7758daa28a02327e3a129a5415487f01467a3fdd49edd9d535",
+    ".venv/lib/python3.13/site-packages/annotated_doc-0.0.4.dist-info/RECORD": "2db971ab600f035214da1423f3dafd864f1a3c5926de80d047f5f2f9cea36676",
+    ".venv/lib/python3.13/site-packages/annotated_types-0.7.0.dist-info/METADATA": "ee5b6ac64b09274c026051813484025939564067801f485115d9cadc207cf791",
+    ".venv/lib/python3.13/site-packages/annotated_types-0.7.0.dist-info/RECORD": "f7c0160ccf09bebdec2eb160bb86d1a170670af060991dd2b16299da91a43b84",
+    ".venv/lib/python3.13/site-packages/anyio-4.13.0.dist-info/METADATA": "1741187e23e5993470989376264b4dc4983518d9e5d301e1cce5a6cfba45be33",
+    ".venv/lib/python3.13/site-packages/anyio-4.13.0.dist-info/RECORD": "b619e472cc6ace271a69c3ba40cda01eb402ac130c443c40008d64aeaa26b816",
+    ".venv/lib/python3.13/site-packages/appnope-0.1.4.dist-info/METADATA": "eb41cc5f94eb413d2864ffa185c845603e6d4881490b9171fa025c00fb968f5f",
+    ".venv/lib/python3.13/site-packages/appnope-0.1.4.dist-info/RECORD": "61e46349ffb87fb3e35efde059e1ad775bde262bf29a9bfa757279bd2e155845",
+    ".venv/lib/python3.13/site-packages/argon2_cffi-25.1.0.dist-info/METADATA": "e90851075b68261faccf407b29430f45e6a5b1a0759a0d50b8d93101b0de2179",
+    ".venv/lib/python3.13/site-packages/argon2_cffi-25.1.0.dist-info/RECORD": "2af7dfa6469bd53e19b1b6f19592178d46ff38ed5a6da3197f583486063ac6a3",
+    ".venv/lib/python3.13/site-packages/argon2_cffi_bindings-25.1.0.dist-info/METADATA": "2e8ecd88b836481ff2a0fcd3206ce14969689f1d382c5277ddd6d7240f129f0f",
+    ".venv/lib/python3.13/site-packages/argon2_cffi_bindings-25.1.0.dist-info/RECORD": "e2cb0e05275c250a8b2c7b9d4d298c815bf6e8f8645e105b49f62e9c11a86ea4",
+    ".venv/lib/python3.13/site-packages/arrow-1.4.0.dist-info/METADATA": "36407a40cd6a7f3147f8c8ab802d516fb4c152d7e2aabab52718ff3407a1706d",
+    ".venv/lib/python3.13/site-packages/arrow-1.4.0.dist-info/RECORD": "3e1b716546d4bb98871a2ee6a48faed9d891d6dabac988ae63c7ca3107acdc7a",
+    ".venv/lib/python3.13/site-packages/asttokens-3.0.1.dist-info/METADATA": "6ad77bc2b1289f0d9232027e1877cc37fa6ddc4af5cac8bd2d29641a733e6888",
+    ".venv/lib/python3.13/site-packages/asttokens-3.0.1.dist-info/RECORD": "65c8f130a9aaca14f2029b26d99083c6d037ae52c1fa3f1c7b841bb631c8d01e",
+    ".venv/lib/python3.13/site-packages/async_lru-2.3.0.dist-info/METADATA": "ce20436dd22cbc90f0da0491c01ec43edc37953a3beaa9b9cb15d6b48bb469a8",
+    ".venv/lib/python3.13/site-packages/async_lru-2.3.0.dist-info/RECORD": "f9e6e3ada61579237e2bf9be4b8ad8bcdb59598d0cb0db2b8cb93d926bc9bdb0",
+    ".venv/lib/python3.13/site-packages/attrs-26.1.0.dist-info/METADATA": "4cd40e690f23bf37cbcad34efd6758e062df1df07c86833f7e3ce95bf1fa38cc",
+    ".venv/lib/python3.13/site-packages/attrs-26.1.0.dist-info/RECORD": "d5e36b4e3a4f8f4eef148e133178740d9291a00515eb59ad678ade2474f85d30",
+    ".venv/lib/python3.13/site-packages/babel-2.18.0.dist-info/METADATA": "11399bc03a6b81fd20e8b82823392052a8db969a8ef150382b0cf5996afcf41a",
+    ".venv/lib/python3.13/site-packages/babel-2.18.0.dist-info/RECORD": "1b2c3367e8cdb65de835c76374b347fa57567312652c87d881553340dacc39b3",
+    ".venv/lib/python3.13/site-packages/beautifulsoup4-4.14.3.dist-info/METADATA": "01cf77bc0f17a7d16d80e70a5c533c1127d5773b629947c9dd652956584ab6c6",
+    ".venv/lib/python3.13/site-packages/beautifulsoup4-4.14.3.dist-info/RECORD": "9cf23645adcd905c34f466a40725e9c143445f8576a1e39729796fd69af605c7",
+    ".venv/lib/python3.13/site-packages/bleach-6.3.0.dist-info/METADATA": "6e956dad47551c6a6121d444df72d0fa16e1f0cc9c75da5b6166186413b04702",
+    ".venv/lib/python3.13/site-packages/bleach-6.3.0.dist-info/RECORD": "3091e6df2fb57086cb010e22da77762f3d6bbc48e43d7353312b6feebfe61ff0",
+    ".venv/lib/python3.13/site-packages/bleach/_vendor/html5lib-1.1.dist-info/METADATA": "637c3e9ddff6d87427411cb7cb2a55b15fe47b6145f78b940f8faf1a97360e72",
+    ".venv/lib/python3.13/site-packages/bleach/_vendor/html5lib-1.1.dist-info/RECORD": "bbecbf5b996176c1c2d4e48c9c0e1b0a2dfed7522043f140216eaf88cbbcfcb0",
+    ".venv/lib/python3.13/site-packages/certifi-2026.5.20.dist-info/METADATA": "1c38826bc95f7744c69501689e00e3a1a2c93a158988937ce32ef4ed5c1df0f6",
+    ".venv/lib/python3.13/site-packages/certifi-2026.5.20.dist-info/RECORD": "ea02f03796b3b3b0bbc9b14e7aa0d257026fb7946548c6e2dca810b4fe1f667e",
+    ".venv/lib/python3.13/site-packages/cffi-2.0.0.dist-info/METADATA": "b98ce7e3417af089bc12d5c73412d9b3b1683ccf8ec73c986c35ac8c9be1ba39",
+    ".venv/lib/python3.13/site-packages/cffi-2.0.0.dist-info/RECORD": "2960d54d2d33d581bbb03d87bb7d1bf861247a2470fdc3b4062cb4c7502382e0",
+    ".venv/lib/python3.13/site-packages/charset_normalizer-3.4.7.dist-info/METADATA": "2bc94af0bf0b699d5898abd62eddf3124a48c6208e0b9f31361cc542b7d02714",
+    ".venv/lib/python3.13/site-packages/charset_normalizer-3.4.7.dist-info/RECORD": "eb5c169be7bfdfa3e240355bf3b698992e23921c06f62122a978ad347a1812be",
+    ".venv/lib/python3.13/site-packages/click-8.4.1.dist-info/METADATA": "b9600b73b63e2318e3df96a5dc1daa36cc9793ed2d7f9efc62022c2f555b9fdf",
+    ".venv/lib/python3.13/site-packages/click-8.4.1.dist-info/RECORD": "a4bad4cefe14d48b6ab94f229cd8c72b434844e2a466d012da7168b606dd97b4",
+    ".venv/lib/python3.13/site-packages/comm-0.2.3.dist-info/METADATA": "e475291f8fdedbecbbfd788a2c5de9c912424d23574aba7b9fc51985d7158878",
+    ".venv/lib/python3.13/site-packages/comm-0.2.3.dist-info/RECORD": "4e84b212c4df5a1fd3a850aac25d60e253619762714a5af443f9349d1f1031b6",
+    ".venv/lib/python3.13/site-packages/contourpy-1.3.3.dist-info/METADATA": "c43cef86baef09cff9c77975e578fa8cca0c9454df40dc176938b499a63de54a",
+    ".venv/lib/python3.13/site-packages/contourpy-1.3.3.dist-info/RECORD": "ca4ae45d3436c66b74f9c79c5e4e189a5a9026ddf721f62d324e05bd5ceac80b",
+    ".venv/lib/python3.13/site-packages/cycler-0.12.1.dist-info/METADATA": "23289e19b76f1e01394227696e6af2b6cd1ce79e89731209bf9195148b18ed36",
+    ".venv/lib/python3.13/site-packages/cycler-0.12.1.dist-info/RECORD": "b1a770ecbe694b5bd51bdf614844a8abef2db76f4ea4334da73bb3734b56b9c6",
+    ".venv/lib/python3.13/site-packages/debugpy-1.8.21.dist-info/METADATA": "a22dcaaa52c12089d5aada8313f7eeaeadc65e139e5c1218f905b1593f827fee",
+    ".venv/lib/python3.13/site-packages/debugpy-1.8.21.dist-info/RECORD": "01e984ba0dbf8e151b3a4ff7ba594a5295ed1e13d3aadf1bfe5de09aa75e504e",
+    ".venv/lib/python3.13/site-packages/decorator-5.3.1.dist-info/METADATA": "2133792485403bbd739e1db5960228bedbcde6d00c0acc052b27f39dbae5b5c4",
+    ".venv/lib/python3.13/site-packages/decorator-5.3.1.dist-info/RECORD": "26eb1bf1f46a43c0b1264e2b521904ad2795b2c283858d19bc7353b9e93568f0",
+    ".venv/lib/python3.13/site-packages/defusedxml-0.7.1.dist-info/METADATA": "369d3cef64870daf849fba711cb8d05a7efe3c8d9ab0f763adc34079fe378bb1",
+    ".venv/lib/python3.13/site-packages/defusedxml-0.7.1.dist-info/RECORD": "f494c4996d3db354933ac0f6bb4ac38d3323ec685a6a3369cf1fabff330ac97b",
+    ".venv/lib/python3.13/site-packages/executing-2.2.1.dist-info/METADATA": "d7586d1ae225bee126c4237eb0c4d7699a8580b81eb558cc500c263d29a633ff",
+    ".venv/lib/python3.13/site-packages/executing-2.2.1.dist-info/RECORD": "730c7f2eefa2fd2ef71b81e1f6a801d3ed83e17efed1ee393750602b7fe03e1b",
+    ".venv/lib/python3.13/site-packages/fastapi-0.136.3.dist-info/METADATA": "0370bef57a44ef18814313fac9ffa7b7c7f9d2112fa4d6e49134cc2f859f69b4",
+    ".venv/lib/python3.13/site-packages/fastapi-0.136.3.dist-info/RECORD": "1c3ce99d7687ea4cc1a49658ea08b0aad64434b100769d2640d993e0f530acc3",
+    ".venv/lib/python3.13/site-packages/fastjsonschema-2.21.2.dist-info/METADATA": "1be8143a33df0ecf82b993d95e91180e28bdf2d128f9a8d03f68bf099d7b69f3",
+    ".venv/lib/python3.13/site-packages/fastjsonschema-2.21.2.dist-info/RECORD": "a11da01fb60b40299a7e3c50c28116314fb5217d8e73052f54cdaeb4795b7aad",
+    ".venv/lib/python3.13/site-packages/filelock-3.29.1.dist-info/METADATA": "a77fc98e18651c6adc6b535bc687ed89e239694433b9860f0daccccd05817583",
+    ".venv/lib/python3.13/site-packages/filelock-3.29.1.dist-info/RECORD": "5c100815a80fb201dc82d95157ac53557b4edf0be5fe0f50a137aa53d9b452e5",
+    ".venv/lib/python3.13/site-packages/flatbuffers-25.12.19.dist-info/METADATA": "9f38239f96faa21522a6aadab6912e1e560708bbe9c9f696a0679c9403fa089e",
+    ".venv/lib/python3.13/site-packages/flatbuffers-25.12.19.dist-info/RECORD": "75f910809eff8c3809f45d9136980fc4b00888fa877188872ca67bd7954e378f",
+    ".venv/lib/python3.13/site-packages/fonttools-4.63.0.dist-info/METADATA": "878374d811bfa83c045c55eabbcaa09e646f426fd4777b5e7f716e4e2198fbc1",
+    ".venv/lib/python3.13/site-packages/fonttools-4.63.0.dist-info/RECORD": "62bd1e5a5b6916343ea4d0d9fd59bfdf5e56e1d7b62d0f3be501a467d8aeca51",
+    ".venv/lib/python3.13/site-packages/fqdn-1.5.1.dist-info/METADATA": "b8f4f402018d1dc56fb20d41eb2c39b9f8faca17f6e8080fbe05abdd0be8b8fb",
+    ".venv/lib/python3.13/site-packages/fqdn-1.5.1.dist-info/RECORD": "cdae0ac376414d8949ea6d8d80ed066f583526acdcb79c6232546dfdc0ff3fca",
+    ".venv/lib/python3.13/site-packages/fsspec-2026.4.0.dist-info/METADATA": "8f49c4404b507182ac953dfd4551641df0bf36ccf67e08ac8a68cce323bf1d4c",
+    ".venv/lib/python3.13/site-packages/fsspec-2026.4.0.dist-info/RECORD": "c1c2e83be3b1de8b4e452c1c3715633b53aba83c55b14c032d2ae4ee243e780b",
+    ".venv/lib/python3.13/site-packages/greenlet-3.5.1.dist-info/METADATA": "065bbbcfcf280f2896fc041b3c81b1d336d92562f7eb5db25f6cb2148e60901b",
+    ".venv/lib/python3.13/site-packages/greenlet-3.5.1.dist-info/RECORD": "380e10564f8e8922be8d75906873a53c8e9da4be2aa74c3f38503e56d4ffe762",
+    ".venv/lib/python3.13/site-packages/h11-0.16.0.dist-info/METADATA": "28f326098ac09fcba79b8f180f96087c841fe2456215cb7b872a9c7d5cd19d64",
+    ".venv/lib/python3.13/site-packages/h11-0.16.0.dist-info/RECORD": "38f9d4e04b4ffd3b889098c3cac68a9854db8b06f2fdd501157c89cdbf0d80f6",
+    ".venv/lib/python3.13/site-packages/httpcore-1.0.9.dist-info/METADATA": "fe2d4fda6199128978779e0cf27f3c045c531863fcdd987eacc74f3a18d41c21",
+    ".venv/lib/python3.13/site-packages/httpcore-1.0.9.dist-info/RECORD": "857d1792fa6969c1fc4169b68159fc032a65f8de14e067d6ea5f3c7a464babed",
+    ".venv/lib/python3.13/site-packages/httptools-0.8.0.dist-info/METADATA": "7b5c0231580b589e7721b111f37324276f2a585bc2d27aedd67297e0c9b4bda8",
+    ".venv/lib/python3.13/site-packages/httptools-0.8.0.dist-info/RECORD": "5a983b96c320d3ae28d3d7b6ea2cf21d98bcece54965d7570577a5159900c529",
+    ".venv/lib/python3.13/site-packages/httpx-0.28.1.dist-info/METADATA": "febb9b0f8f3e80d57c8199c304f35c4336e8581d1d18d7983c92766b82793b25",
+    ".venv/lib/python3.13/site-packages/httpx-0.28.1.dist-info/RECORD": "6b16af11d315cde17dd3f5a3744ee5168dc1e2b0ffe378b6793c6055b619fde6",
+    ".venv/lib/python3.13/site-packages/idna-3.17.dist-info/METADATA": "765c20c73cbd88c30d1a79b4d23899f9a7fca52222f8b6c721f4dfd92f746af2",
+    ".venv/lib/python3.13/site-packages/idna-3.17.dist-info/RECORD": "ddc2ec904fc2b67091bf1e3b95d4ac8ec65847cd2481787037cf54e3ae63eb1c",
+    ".venv/lib/python3.13/site-packages/iniconfig-2.3.0.dist-info/METADATA": "40d773f84e4e112f495bbf4f1be9cbd2d456c0aeb6ef5311f75d1bf322f2165b",
+    ".venv/lib/python3.13/site-packages/iniconfig-2.3.0.dist-info/RECORD": "348cc4c88dc3fa87914c27041043157ef071fc8dcc167523730cbe117712df22",
+    ".venv/lib/python3.13/site-packages/ipykernel-7.2.0.dist-info/METADATA": "da4e111318b796e1d7e739f93894bb02517804094f6a82ad1a5ec40c0dc0fb9e",
+    ".venv/lib/python3.13/site-packages/ipykernel-7.2.0.dist-info/RECORD": "6e80bdc8cf9e4cc6239f1fe85b93166bb3769b9d570740950d355ef32ebafc9f",
+    ".venv/lib/python3.13/site-packages/ipython-9.14.1.dist-info/METADATA": "a6b50e8c96ec216bcbecc044df54a61f57d82559a88f1d6a9db9c96c9bf693db",
+    ".venv/lib/python3.13/site-packages/ipython-9.14.1.dist-info/RECORD": "6f0084d73b6b529ee98c61a004797793be4bde7ab80b81fe7eb77d2359d6ddb5",
+    ".venv/lib/python3.13/site-packages/ipython_pygments_lexers-1.1.1.dist-info/METADATA": "6b38c0946bdbc4778f4e38e2298547cbd7d13aeba9979ec4e4a412eabfbdfadb",
+    ".venv/lib/python3.13/site-packages/ipython_pygments_lexers-1.1.1.dist-info/RECORD": "5c5d0a65d78f9c88968abf189a73f97155b83536dc6b269d638f824fc202122b",
+    ".venv/lib/python3.13/site-packages/isoduration-20.11.0.dist-info/METADATA": "440045201154827793cad24bafbd54deca6800819259e3b17f6edbc06ca7b56b",
+    ".venv/lib/python3.13/site-packages/isoduration-20.11.0.dist-info/RECORD": "94debb86ba23bdec20958d952feec6046c921b7f192d1be6726556ce038bcbed",
+    ".venv/lib/python3.13/site-packages/jedi-0.20.0.dist-info/METADATA": "436bd0fb249b82dee15e85e2fb91d08d8e797481a16af48a725b8e4fb5340478",
+    ".venv/lib/python3.13/site-packages/jedi-0.20.0.dist-info/RECORD": "400b594f1f443c77e68a92ed40daaa864dee36c414e9abf659ac4cf85e8acb0f",
+    ".venv/lib/python3.13/site-packages/jinja2-3.1.6.dist-info/METADATA": "68c5548fb67c4132a13898d9b31ec50c6bea2abdd915d921f214355c3a6499c8",
+    ".venv/lib/python3.13/site-packages/jinja2-3.1.6.dist-info/RECORD": "d763cfca37aa55cfee7c4b1611a09aeb210debc641e68c2c769940ceb49df726",
+    ".venv/lib/python3.13/site-packages/joblib-1.5.3.dist-info/METADATA": "cee9c60896ae4e7a965a840fbde50d111d2f8018f61201d1ed2e9fc3dd4883e6",
+    ".venv/lib/python3.13/site-packages/joblib-1.5.3.dist-info/RECORD": "84db2094d086079be900184d08f0eb9f2bd5c52b3bf02c00d40322ffeb0d6e3c",
+    ".venv/lib/python3.13/site-packages/json5-0.14.0.dist-info/METADATA": "7b475005a69bfd2455c8e236d519da420a9df4ec2ea84941fca891155f28e17c",
+    ".venv/lib/python3.13/site-packages/json5-0.14.0.dist-info/RECORD": "37ed9f8447bf64bd4fb3349b6d1381fbaa13d02821bcb9d0392d8e23df984a24",
+    ".venv/lib/python3.13/site-packages/jsonpointer-3.1.1.dist-info/METADATA": "b461427459b7a1d595585ba05a9d0466b134b849204f4ddfbc1b1ed20775ba5d",
+    ".venv/lib/python3.13/site-packages/jsonpointer-3.1.1.dist-info/RECORD": "6d395a51f0752099f50282e2a33da2cf17c2253f8f038e87b4b63a766046be8b",
+    ".venv/lib/python3.13/site-packages/jsonschema-4.26.0.dist-info/METADATA": "05b189866ca98a96da3934bf6b83687ced3ff85325273b77e16b705f6d8b26d2",
+    ".venv/lib/python3.13/site-packages/jsonschema-4.26.0.dist-info/RECORD": "57024bc7ba90433cd711dfb318ba43bdcf3f9071eeeb643266eda3f458ac1ae7",
+    ".venv/lib/python3.13/site-packages/jsonschema_specifications-2025.9.1.dist-info/METADATA": "35abd41757f32b4ea24756920ded47b70173d77cbc052a5a6d3ab583b2e8d89d",
+    ".venv/lib/python3.13/site-packages/jsonschema_specifications-2025.9.1.dist-info/RECORD": "81556fd7fef103bebb3768a52c78676b124e96ecc61e13a5b0511ae02cb13cfd",
+    ".venv/lib/python3.13/site-packages/jupyter_client-8.8.0.dist-info/METADATA": "6fb377c0135e168b294762a1227d18aa009a54765cdff5a75ee1a85b11f56e0a",
+    ".venv/lib/python3.13/site-packages/jupyter_client-8.8.0.dist-info/RECORD": "7f629a369ba70bef921dbecb0664ef479ec18f14874e7660cf0f2caa5daba471",
+    ".venv/lib/python3.13/site-packages/jupyter_core-5.9.1.dist-info/METADATA": "68a656d7e2ebe45d40becf6032998192790d8a7536942f72167d79b8559e5ded",
+    ".venv/lib/python3.13/site-packages/jupyter_core-5.9.1.dist-info/RECORD": "96bc114514f721062fd5adc1c1dd116bda636b1dd36454ef2a07f30a0c9c0202",
+    ".venv/lib/python3.13/site-packages/jupyter_events-0.12.1.dist-info/METADATA": "eaba123d824409959b98e9d5ab4e725f7bc64de041da34779df7bc993b03d4fa",
+    ".venv/lib/python3.13/site-packages/jupyter_events-0.12.1.dist-info/RECORD": "fe800234473a442c039b07cb914d5ef69701aecab52b1cbf535cf38319f7837c",
+    ".venv/lib/python3.13/site-packages/jupyter_lsp-2.3.1.dist-info/METADATA": "75517195ccde8ffad9eecfc42bb39d26f12d55cfe5623e1f369497eff4d3c334",
+    ".venv/lib/python3.13/site-packages/jupyter_lsp-2.3.1.dist-info/RECORD": "6c2c6aaf3bb7bcdb39d611f1094619e01cc1385ad1f8eec7f70670aaa992ca08",
+    ".venv/lib/python3.13/site-packages/jupyter_server-2.19.0.dist-info/METADATA": "0107b534f070e70029debacb3c84bf77f26153fce7e6ec7c88d14af001807553",
+    ".venv/lib/python3.13/site-packages/jupyter_server-2.19.0.dist-info/RECORD": "c2b590e8c5bc18adec8efee9160a9549c8371e56434360c4981b7a7e1b9d5bda",
+    ".venv/lib/python3.13/site-packages/jupyter_server_terminals-0.5.4.dist-info/METADATA": "811110bdf2240b02fde7baf2a6ace5ba8e6726739daf00547922675919daae8e",
+    ".venv/lib/python3.13/site-packages/jupyter_server_terminals-0.5.4.dist-info/RECORD": "120ecacd5c5d0e5c13524612e2ab4a9fca4f2d465ba7ac28b6fbc521930bf24f",
+    ".venv/lib/python3.13/site-packages/jupyterlab-4.5.8.dist-info/METADATA": "325954beaa50d0da708debea0a0462bcd6ad2a0f7c997a0a628b86131a1abd7c",
+    ".venv/lib/python3.13/site-packages/jupyterlab-4.5.8.dist-info/RECORD": "f698f6e895f7fd0bcffc1ee343d8c7c7e951f3d4179562bb7726301a9757286e",
+    ".venv/lib/python3.13/site-packages/jupyterlab_pygments-0.3.0.dist-info/METADATA": "779802ccb231a915a67e42fd6247daacf6c6f5c2a29d3a61914b58b4c35cae46",
+    ".venv/lib/python3.13/site-packages/jupyterlab_pygments-0.3.0.dist-info/RECORD": "ae32549758d6970286df7e356b3f9df5e5584d5db134c05395ca6ab99b7cdb38",
+    ".venv/lib/python3.13/site-packages/jupyterlab_server-2.28.0.dist-info/METADATA": "1e0a08b8178c15528729a05cb04fd291b9e0db3f7af056220bb77160d5432797",
+    ".venv/lib/python3.13/site-packages/jupyterlab_server-2.28.0.dist-info/RECORD": "7c224f01124ac47bfe91e6cb997a2656a1b4f7ea43ed2cb3d5789529bbe87dd3",
+    ".venv/lib/python3.13/site-packages/kiwisolver-1.5.0.dist-info/METADATA": "bb843307a98b7bd2a7055f831cbfa2fe7c864716dea9d04c7a5c03e51f648b79",
+    ".venv/lib/python3.13/site-packages/kiwisolver-1.5.0.dist-info/RECORD": "497b8827c034860f2b0f274a37c254c1923011ece9c5f26d4c7af55ec2e02e2f",
+    ".venv/lib/python3.13/site-packages/lark-1.3.1.dist-info/METADATA": "730d3f056045a9096bc0a65e4faccae53fe7f3634055174d4b8245cd19cb4cde",
+    ".venv/lib/python3.13/site-packages/lark-1.3.1.dist-info/RECORD": "19b333e04bfb52f09ed92125a9084e37c57d1933652b894158d8c167fdf4dd9d",
+    ".venv/lib/python3.13/site-packages/lxml-6.1.1.dist-info/METADATA": "a9bbc00470881cf133707920044995ffd6063723e203ca68d65e2f2a25886bc7",
+    ".venv/lib/python3.13/site-packages/lxml-6.1.1.dist-info/RECORD": "86b264301b04eecbe1ccd4f8fef95f822c79031ea38c94f6cca69ed098917023",
+    ".venv/lib/python3.13/site-packages/markupsafe-3.0.3.dist-info/METADATA": "12b4cc61a7fa288cf7667ee3f213786d9619db57fb33ff6f934afbcb5c12ec81",
+    ".venv/lib/python3.13/site-packages/markupsafe-3.0.3.dist-info/RECORD": "d5f80b4e85a85913b7fc3da4fe885de101e40761ca7e2303c33cd231fa11b14d",
+    ".venv/lib/python3.13/site-packages/matplotlib-3.10.9.dist-info/METADATA": "bea8a4672bbe4f26b7a4fe5bc5e5023a08c4fb7069cc951f39eef26a403c7ea6",
+    ".venv/lib/python3.13/site-packages/matplotlib-3.10.9.dist-info/RECORD": "971f9c0f786aa8c87faea2b7309de1535c40b467df38d946e43f0d1e6056f28f",
+    ".venv/lib/python3.13/site-packages/matplotlib_inline-0.2.2.dist-info/METADATA": "fedb3d587ec2d3fa4b0a81fd5353df697d2534c8ee714dbf050009afc60bcab7",
+    ".venv/lib/python3.13/site-packages/matplotlib_inline-0.2.2.dist-info/RECORD": "88633df6ea051f47cf19c1cfbcdb7ca1395e059f58c782fad6c9442b0c6492a2",
+    ".venv/lib/python3.13/site-packages/mistune-3.2.1.dist-info/METADATA": "0c97070a7fb5cc2def0afd29ffeb70c3cbfab0f09cc4d13b072d4c493b00b325",
+    ".venv/lib/python3.13/site-packages/mistune-3.2.1.dist-info/RECORD": "c215f3c7aed23fd87b80e1674bb7ae417bab27be9d6fd8e2f2aac29b40eea68b",
+    ".venv/lib/python3.13/site-packages/ml_dtypes-0.5.4.dist-info/METADATA": "51b5729b48ce71736748bbf43d4f355485f42b44977d6016717bbd6b11b7dfc0",
+    ".venv/lib/python3.13/site-packages/ml_dtypes-0.5.4.dist-info/RECORD": "1e0a5ee334f65d54d1440772db97ff910794d28f6de65b7293af66bb4b438178",
+    ".venv/lib/python3.13/site-packages/mpmath-1.3.0.dist-info/METADATA": "44b66ea444b9c0d19ae94815d356bf047ae6b680c19268b5c265687cd6a81406",
+    ".venv/lib/python3.13/site-packages/mpmath-1.3.0.dist-info/RECORD": "b35f0908d5caa59c40b014ec83d0ddb5da8ef933e29ec96db67a1499bf3026ab",
+    ".venv/lib/python3.13/site-packages/narwhals-2.22.0.dist-info/METADATA": "404d0fcb547eadfb0d7011d627ed49e18ee779b3eb91fcd48404105d6a87b920",
+    ".venv/lib/python3.13/site-packages/narwhals-2.22.0.dist-info/RECORD": "2a2f470717f59c3b513408e69e3a696f1c88472b73b92953d3922cb42a3c2918",
+    ".venv/lib/python3.13/site-packages/nbclient-0.11.0.dist-info/METADATA": "97b199c27c838caf67939deb40ea5432a3cc0ce2b68deb5bb20043dd7e295191",
+    ".venv/lib/python3.13/site-packages/nbclient-0.11.0.dist-info/RECORD": "1fbcb9914e01669e1177144adee08be769d53e82ad165a41c60885ce6e1af246",
+    ".venv/lib/python3.13/site-packages/nbconvert-7.17.1.dist-info/METADATA": "ff2b5c1e1f14cc033f39305cc753cc53f5c5735c127a5c3289f68c63a490202e",
+    ".venv/lib/python3.13/site-packages/nbconvert-7.17.1.dist-info/RECORD": "b883138adfceb705eb9d2a33f9f17a657f6a47fafe608d92519d995e3a8e6a8d",
+    ".venv/lib/python3.13/site-packages/nbformat-5.10.4.dist-info/METADATA": "7424d680e3abe693cfca3e71256efad9173987f9f6e8d1ca1adeb03efb54f124",
+    ".venv/lib/python3.13/site-packages/nbformat-5.10.4.dist-info/RECORD": "9d993c8bd9c4f474855abec40c0b88a758bad6c327f7f8e7d3bbacf6d19ade86",
+    ".venv/lib/python3.13/site-packages/nest_asyncio-1.6.0.dist-info/METADATA": "7f7b98f9e1a28a9597d70df9158175a22d05446ce4b328908d920e7293d35bd2",
+    ".venv/lib/python3.13/site-packages/nest_asyncio-1.6.0.dist-info/RECORD": "635958e49cab4883f18293fec7075b889da842b4f0fb1ddbc102723b58dfa05c",
+    ".venv/lib/python3.13/site-packages/networkx-3.6.1.dist-info/METADATA": "aca5d94a97d1f70f301d033addb635f6e66be8973a00aba4127637eed2ef316a",
+    ".venv/lib/python3.13/site-packages/networkx-3.6.1.dist-info/RECORD": "18af3f4c418b393260773da9b0f8146a76ca4f4886bd48aab14dae9d34a11de5",
+    ".venv/lib/python3.13/site-packages/notebook_shim-0.2.4.dist-info/METADATA": "2eb0313d82c04428a5606bf2b3c79987fa778bf6c28bfe315072e607c264eb57",
+    ".venv/lib/python3.13/site-packages/notebook_shim-0.2.4.dist-info/RECORD": "a0bbc3c854c774e5b315aa96a9b59dc493a92a08db88995902d0ef2501e38d7c",
+    ".venv/lib/python3.13/site-packages/numpy-2.4.6.dist-info/METADATA": "b082c52ccbe3b880bae177c35171b52ed6c947f3ad71e3762f2723f60a411de0",
+    ".venv/lib/python3.13/site-packages/numpy-2.4.6.dist-info/RECORD": "530d24f9c6e4ee9e78f608ba9b121b4dfa1c5c75be4d8cf40b93163b2515e0f7",
+    ".venv/lib/python3.13/site-packages/onnx-1.21.0.dist-info/METADATA": "9caec01f9392a7bbdf98056bacf5493d42fec6c4cf4e3999ba6d7d2a719ea832",
+    ".venv/lib/python3.13/site-packages/onnx-1.21.0.dist-info/RECORD": "d30a1d2c5737e9f28e6f10638c3cb7ee645abd50960e7142568387b418981fd3",
+    ".venv/lib/python3.13/site-packages/onnxruntime-1.26.0.dist-info/METADATA": "046e7a9ccc9936961d74ab96d0484e2b21139b0c92b6d4450197d76b9443dd0c",
+    ".venv/lib/python3.13/site-packages/onnxruntime-1.26.0.dist-info/RECORD": "749e2d8b5f82eb8424710510a454749e9023e9c4854ef6bfdc9caec06996faea",
+    ".venv/lib/python3.13/site-packages/packaging-26.2.dist-info/METADATA": "4f9cbcd7933415a4793f7767c98a2b6a512c823fc81c87337815705f230ecabf",
+    ".venv/lib/python3.13/site-packages/packaging-26.2.dist-info/RECORD": "f7922a7174dd56e2f7a1f3cf59219df532f10b2ff65227b41d78fd5506323809",
+    ".venv/lib/python3.13/site-packages/pandas-3.0.3.dist-info/METADATA": "52942cad9bd7e6625ad46f983a55bef6cdd99da3822ddb19393d6d6972d1c40a",
+    ".venv/lib/python3.13/site-packages/pandas-3.0.3.dist-info/RECORD": "f17b24811c954537e131045251a001a125271e813d061b07e42e95089ee97a08",
+    ".venv/lib/python3.13/site-packages/pandocfilters-1.5.1.dist-info/METADATA": "c3ef8768dba260dd46311e1acc3a67863a0e5671a9d23fcd2e1a7b7256aab52e",
+    ".venv/lib/python3.13/site-packages/pandocfilters-1.5.1.dist-info/RECORD": "13d416a46dd807284b11a301e943e4133158abb14d62ec5db1df267d3898b98c",
+    ".venv/lib/python3.13/site-packages/parso-0.8.7.dist-info/METADATA": "2fd8c9f8209218163a6c086ba8075d177122430645fea770cc02c53cd426119d",
+    ".venv/lib/python3.13/site-packages/parso-0.8.7.dist-info/RECORD": "d1b7edf1f3bea9390aa942eced9ab790253eac01a6a0bf55b13ad21a85b98644",
+    ".venv/lib/python3.13/site-packages/pexpect-4.9.0.dist-info/METADATA": "2d7c5ac5fdefde4a0194ec522fbcc0ca70e99e1a2a956eea444168f8591650aa",
+    ".venv/lib/python3.13/site-packages/pexpect-4.9.0.dist-info/RECORD": "6f7e30e50f89923c30d9e3498404c4aa812f28880dacbabd3a652abc71f51576",
+    ".venv/lib/python3.13/site-packages/pillow-12.2.0.dist-info/METADATA": "f921b97ad0d1c94e6e0fe84ac579c998f2c285a8b35f7f934d3fa0c2657e65ab",
+    ".venv/lib/python3.13/site-packages/pillow-12.2.0.dist-info/RECORD": "e55e144b5b31998be2ed5721f1bc4cc59137818de1631aabe1156aa42f10adff",
+    ".venv/lib/python3.13/site-packages/pip-26.1.2.dist-info/METADATA": "17832de47b5dc23e46253ba16462520036f28d9a27d5c30157784952ca4e69b2",
+    ".venv/lib/python3.13/site-packages/pip-26.1.2.dist-info/RECORD": "ffba314d2caad622921ba37b39ab1ffa0cf0fe63204c3825f24ca10fc3c15bd8",
+    ".venv/lib/python3.13/site-packages/platformdirs-4.10.0.dist-info/METADATA": "c4ee18f5b6d2b38512a30c289200b1463f298a8261c8fa63f2584ea97e93cf78",
+    ".venv/lib/python3.13/site-packages/platformdirs-4.10.0.dist-info/RECORD": "9b4651fe5a4b9b5458d206d5abf38aeb12901b4b511fe5cf647b81a6d99bca08",
+    ".venv/lib/python3.13/site-packages/playwright-1.60.0.dist-info/METADATA": "4b41ce16d7570b8fc087586fbc7b5686ee6150f7b7acd4e94b28d12c0c768b12",
+    ".venv/lib/python3.13/site-packages/playwright-1.60.0.dist-info/RECORD": "8bd761338eaa307b5c6d423d8f3f8a7757d5a1fc8802ae5959253e9c8a97aa36",
+    ".venv/lib/python3.13/site-packages/pluggy-1.6.0.dist-info/METADATA": "7438c35ee25a095eb7416f84b461c2d74425c5e734ad54c3912453c65244e01c",
+    ".venv/lib/python3.13/site-packages/pluggy-1.6.0.dist-info/RECORD": "6b99bd450a1aee58cb086b6ef4539a29adcdce11cfd80e53781beeab1662313b",
+    ".venv/lib/python3.13/site-packages/prometheus_client-0.25.0.dist-info/METADATA": "64e15861c7ca8f559d2c7e01006b08e1cfe8b1ba0834578167f1f57e68b1869c",
+    ".venv/lib/python3.13/site-packages/prometheus_client-0.25.0.dist-info/RECORD": "0918390bb2b2b135455a03078ca36284988708bc3590553b597f5efd55d97f7a",
+    ".venv/lib/python3.13/site-packages/prompt_toolkit-3.0.52.dist-info/METADATA": "80d4bd40a6a171dfd25c332baebee1fd8722342f133db5385e2d5719a5da2e29",
+    ".venv/lib/python3.13/site-packages/prompt_toolkit-3.0.52.dist-info/RECORD": "99b07c7afe1a11bce37d34919929037ffdb4329f2f6e2fca03ac63893ae4b1e5",
+    ".venv/lib/python3.13/site-packages/protobuf-7.35.0.dist-info/METADATA": "2953f6d4f80aa453359d9bb51987ae747c0ab0c20c9c24ea84d9a6cff82a0c32",
+    ".venv/lib/python3.13/site-packages/protobuf-7.35.0.dist-info/RECORD": "fcbf2444191d48870972a9b99329db2a737ca39a7dd1e5b6302a1b32e0fdf718",
+    ".venv/lib/python3.13/site-packages/psutil-7.2.2.dist-info/METADATA": "525f8ba78523cf7bc3759d62a105e7c57fd679ea702402b9449fb0746aa0217f",
+    ".venv/lib/python3.13/site-packages/psutil-7.2.2.dist-info/RECORD": "164b3ec47f7f6524769b0e6fefb80ebc2d5d3db6411a4f22e30cadf80e24b15b",
+    ".venv/lib/python3.13/site-packages/ptyprocess-0.7.0.dist-info/METADATA": "c3c2b96b5d9a55da5958c34d08c18a0849f56609026cc46d5c95b8b77fcf3e0c",
+    ".venv/lib/python3.13/site-packages/ptyprocess-0.7.0.dist-info/RECORD": "0d4cff4cd36c7c75ab5f452ec1f275d09698ca65d43f4c619d50a38ae93ab639",
+    ".venv/lib/python3.13/site-packages/pure_eval-0.2.3.dist-info/METADATA": "97cdad3355bf3083668e8a5e98ad2a958cd68839b369a35b171e372ab48ee986",
+    ".venv/lib/python3.13/site-packages/pure_eval-0.2.3.dist-info/RECORD": "27965f0e3953c490c10c6ccfcf0b45e9f108293960f6d4b0281b97486aa54548",
+    ".venv/lib/python3.13/site-packages/pycparser-3.0.dist-info/METADATA": "f547a60b0ab54cc2f242213d1f87960ad80df7dd5dfeb98d17a444d48bfb6b93",
+    ".venv/lib/python3.13/site-packages/pycparser-3.0.dist-info/RECORD": "6c2d4fe9905ea5e4b2f0a57faa47620780a239b62999949bcaa27b60aeaa72c7",
+    ".venv/lib/python3.13/site-packages/pydantic-2.13.4.dist-info/METADATA": "d1e56c3412492512fb6b59a9dfc25ab7af2a8204585cd7bca000513023133394",
+    ".venv/lib/python3.13/site-packages/pydantic-2.13.4.dist-info/RECORD": "b5d30c0f91bb265084b94d66e331c6852b68043dc46c8552d4b833f87fb2a79f",
+    ".venv/lib/python3.13/site-packages/pydantic_core-2.46.4.dist-info/METADATA": "135fa8b2f89473e9191c7078c2164e3ec6c8927a61c2379c2fddcc07f11f3bae",
+    ".venv/lib/python3.13/site-packages/pydantic_core-2.46.4.dist-info/RECORD": "4f26a66329caee2a462a3b67d8812b332035598a4ae0ec6b435851dfc024d8a6",
+    ".venv/lib/python3.13/site-packages/pydantic_settings-2.14.1.dist-info/METADATA": "8b1e9e8e5f8cd18758d85c5b75bfb5be718b6ad7bdee29dd7bae02a092372fbf",
+    ".venv/lib/python3.13/site-packages/pydantic_settings-2.14.1.dist-info/RECORD": "f19e6056e56b06d075e4abb1464c8bd66e0c619271c42afe26ea6ee8a94a2203",
+    ".venv/lib/python3.13/site-packages/pyee-13.0.1.dist-info/METADATA": "7512d063d60cb405124a6c5fdd2c688d78a4c6b6841b8eeb00a59474ef59d43c",
+    ".venv/lib/python3.13/site-packages/pyee-13.0.1.dist-info/RECORD": "53855872420d9ba0511fff495aa24d11cc3941f8b30586fd30fce0174c529950",
+    ".venv/lib/python3.13/site-packages/pygments-2.20.0.dist-info/METADATA": "e0528f51b30427fae94723662ba622f8d8db2a4d8d3f1365698d67a52450a845",
+    ".venv/lib/python3.13/site-packages/pygments-2.20.0.dist-info/RECORD": "efb239d7438f5e4e856200077c04f439b103e2a3570b4f210f1b7393f84e54f5",
+    ".venv/lib/python3.13/site-packages/pyparsing-3.3.2.dist-info/METADATA": "3311a8b949d70f71a2b9788a9327f11d9d5a6a8012d6c046ca254ad2de877f45",
+    ".venv/lib/python3.13/site-packages/pyparsing-3.3.2.dist-info/RECORD": "3d619ecba98eb441e6337150c914c12838954f2d336e3a8dac6a033aa22d6931",
+    ".venv/lib/python3.13/site-packages/pytest-9.0.3.dist-info/METADATA": "c3966f28791686477bae35e518736d4cbea5b626d3a79011215854e2bc670207",
+    ".venv/lib/python3.13/site-packages/pytest-9.0.3.dist-info/RECORD": "acc7af18bbdb84f2fb53386c995ee58201f9df84fb4c8babd287954899087713",
+    ".venv/lib/python3.13/site-packages/python_dateutil-2.9.0.post0.dist-info/METADATA": "a9d436da322be808332f98d88325998e87cb693a678a9969feb4cfad729a6e93",
+    ".venv/lib/python3.13/site-packages/python_dateutil-2.9.0.post0.dist-info/RECORD": "866badf7a5db5499c367a2fad02112433affdd3e6c43a097665922961b2c6f96",
+    ".venv/lib/python3.13/site-packages/python_docx-1.2.0.dist-info/METADATA": "4c4cc819ebe6de4aca44daccfd3f9173e6f46d9ed900ad1c388ff9efb7b6b1d7",
+    ".venv/lib/python3.13/site-packages/python_docx-1.2.0.dist-info/RECORD": "70f6355cef90445b61791e2ef73daa36425b07f116cea547e8239d2ed0f018b4",
+    ".venv/lib/python3.13/site-packages/python_dotenv-1.2.2.dist-info/METADATA": "59430a9dee8f8118dbf693e41c4a3e5150626d19901f4727503da9499f5a64a1",
+    ".venv/lib/python3.13/site-packages/python_dotenv-1.2.2.dist-info/RECORD": "741d9983ef092ec34a92377747659009f4151064cbaa6c20b0c339e922b12c70",
+    ".venv/lib/python3.13/site-packages/python_json_logger-4.1.0.dist-info/METADATA": "de6d91e73621b20a6b9d0908e495b4547425ec1dabde669262319e7a064b235d",
+    ".venv/lib/python3.13/site-packages/python_json_logger-4.1.0.dist-info/RECORD": "0d03777e1dd069a5947813739dd73a4e2ca18557018cb43f97e38f9019d62764",
+    ".venv/lib/python3.13/site-packages/pyyaml-6.0.3.dist-info/METADATA": "03c3b415ed38d09faedc49360e930769b40c58f68585e6de00e2e4916a858d34",
+    ".venv/lib/python3.13/site-packages/pyyaml-6.0.3.dist-info/RECORD": "2a6620e3acf36ad1a9287fe49878a6af8daa3241e978a101d701908915aa9e8c",
+    ".venv/lib/python3.13/site-packages/pyzmq-27.1.0.dist-info/METADATA": "7e05c41b7e28dddfe8617d63b5691aff02b4cf737092842df9f4b2d59d9aef55",
+    ".venv/lib/python3.13/site-packages/pyzmq-27.1.0.dist-info/RECORD": "1cc11c7cea5f8ef5e9e7af905ab1ead05131df759d5fca4a60637d8b154f07c8",
+    ".venv/lib/python3.13/site-packages/referencing-0.37.0.dist-info/METADATA": "c93b00e6ab1524fd60848376604c189a114374776475c25a31d57be47b29de6a",
+    ".venv/lib/python3.13/site-packages/referencing-0.37.0.dist-info/RECORD": "1f000e19b89666cefa152e450750f87a2da152fc1f282f0ad85b1e9c67e7fe68",
+    ".venv/lib/python3.13/site-packages/requests-2.34.2.dist-info/METADATA": "8c384ba3e979480faae2859d3c5e6c1276dd2c3616e322e124d52c8cfc556f27",
+    ".venv/lib/python3.13/site-packages/requests-2.34.2.dist-info/RECORD": "2e48b2db823e566cd0e9c99df87dfa6117fe020e6519f3f9909f4470291fab4b",
+    ".venv/lib/python3.13/site-packages/rfc3339_validator-0.1.4.dist-info/METADATA": "ac4dc2cdea6a8b61c16babbf35c0e9fa6e22e45f1c0338e66e089108dde872d2",
+    ".venv/lib/python3.13/site-packages/rfc3339_validator-0.1.4.dist-info/RECORD": "d57035a0f3a5b20da840bdd4fc63e552be94adb7e7a44032f0878dea887113ee",
+    ".venv/lib/python3.13/site-packages/rfc3986_validator-0.1.1.dist-info/METADATA": "feddd8265433ba7be465e1649b486ec83c4c78f593f36284e7ae6d655cae163c",
+    ".venv/lib/python3.13/site-packages/rfc3986_validator-0.1.1.dist-info/RECORD": "f594fbcf139974a1ef8802b8e2528d8b416922b26fd6a7e4903a1a103b66f132",
+    ".venv/lib/python3.13/site-packages/rfc3987_syntax-1.1.0.dist-info/METADATA": "7a518ae5bb5685568b537061e8207a4dbba766ae785b16ad26d930ad3853cb0d",
+    ".venv/lib/python3.13/site-packages/rfc3987_syntax-1.1.0.dist-info/RECORD": "c0c3d01003ce046f2b3c79e1a916b8be2d5f031311d1425389341254acdf499f",
+    ".venv/lib/python3.13/site-packages/rpds_py-2026.5.1.dist-info/METADATA": "1bc561b7215de8649cb5ecde1885d9d448b27f5341245844c33b4a0e38313be5",
+    ".venv/lib/python3.13/site-packages/rpds_py-2026.5.1.dist-info/RECORD": "6125b7b3a361615e6a7d6d8a48db29d2456fc79ee473372b8464dacb8e0857cd",
+    ".venv/lib/python3.13/site-packages/scikit_learn-1.9.0.dist-info/METADATA": "ee61a579f42d3edabe3e483db483475e33fffec04d7f3e69c539527bd93eaca6",
+    ".venv/lib/python3.13/site-packages/scikit_learn-1.9.0.dist-info/RECORD": "90e9cef1cc1cbf9128370e459da9a100c01cf9a912c8346d17d68a955aa108e7",
+    ".venv/lib/python3.13/site-packages/scipy-1.17.1.dist-info/METADATA": "b1cd2c784f6e003c6c71af4c5ee57f6370ee467d17b656250d9fd38cf579d7d0",
+    ".venv/lib/python3.13/site-packages/scipy-1.17.1.dist-info/RECORD": "fb0ca6b6659a0da87df41877e9e7327bd667f5e4629777174c9f9ecc70e35f07",
+    ".venv/lib/python3.13/site-packages/send2trash-2.1.0.dist-info/METADATA": "04ea43f17e94fa7c08678432c37d5f608a4ca4384b868c8f53d25ec42da44533",
+    ".venv/lib/python3.13/site-packages/send2trash-2.1.0.dist-info/RECORD": "8c711dc82881b507ff4fab6589ab5e5b6d4a45ec4af897802adb09952aef9517",
+    ".venv/lib/python3.13/site-packages/setuptools-81.0.0.dist-info/METADATA": "e3ca2edbff500ebe5ba650aa6d8f10249fb4ceae266029b160ce7058ef40df15",
+    ".venv/lib/python3.13/site-packages/setuptools-81.0.0.dist-info/RECORD": "aad757fd3349e0dd9fc1b404f0588fba8f35249240c8f4617479c8f19fe149ea",
+    ".venv/lib/python3.13/site-packages/setuptools/_vendor/autocommand-2.2.2.dist-info/METADATA": "3800d9b91dceea2065a6ed6279383362e97ac38b8e56b9343f404ee531860099",
+    ".venv/lib/python3.13/site-packages/setuptools/_vendor/autocommand-2.2.2.dist-info/RECORD": "2bee6072cbcec6390c57107c8dfcb0422918a98ecdb5a2cc362187f13d42e96f",
+    ".venv/lib/python3.13/site-packages/setuptools/_vendor/backports.tarfile-1.2.0.dist-info/METADATA": "8215c54ead77d9dc5a108a25c6bdc72b5999aa6f62c9499a440359412afa5a51",
+    ".venv/lib/python3.13/site-packages/setuptools/_vendor/backports.tarfile-1.2.0.dist-info/RECORD": "0f69db719b54220d6a4adff8bfb04ac98affea3dc8b54054a1a787a17567f4d1",
+    ".venv/lib/python3.13/site-packages/setuptools/_vendor/importlib_metadata-8.7.1.dist-info/METADATA": "a3e38b9ee4326289d4864704f30e299ee769e2309ce9f4a75f0de1a50ad0a356",
+    ".venv/lib/python3.13/site-packages/setuptools/_vendor/importlib_metadata-8.7.1.dist-info/RECORD": "52a6b8ee0de15cf7fd99625f43b97cd2e3942ac86f16054ea90de48e66f29355",
+    ".venv/lib/python3.13/site-packages/setuptools/_vendor/jaraco.text-4.0.0.dist-info/METADATA": "5c2fd09012c954f139b10624978d5335a654c34014cd06f6f466ca683dbc9c56",
+    ".venv/lib/python3.13/site-packages/setuptools/_vendor/jaraco.text-4.0.0.dist-info/RECORD": "63b936c308d0fcbe1390e824567cc007536c32a849adb02278e95f1d4c736c31",
+    ".venv/lib/python3.13/site-packages/setuptools/_vendor/jaraco_context-6.1.0.dist-info/METADATA": "0435ebfc52055c5a9974ed20c171b6454383eaf9dbb1508814ba7ad97c59d712",
+    ".venv/lib/python3.13/site-packages/setuptools/_vendor/jaraco_context-6.1.0.dist-info/RECORD": "4599d876ceb42b7eef03aa39e235c4ebeab6aea2409dbe634496852393d1f837",
+    ".venv/lib/python3.13/site-packages/setuptools/_vendor/jaraco_functools-4.4.0.dist-info/METADATA": "2e79da8dc3469924abe3ac8b22a3feb5692a79bf9f47bbc86b6535d618641849",
+    ".venv/lib/python3.13/site-packages/setuptools/_vendor/jaraco_functools-4.4.0.dist-info/RECORD": "baafd2d6d94c1bde453e4c805ac05511dc53986e0a63b02f674ef0f788bec146",
+    ".venv/lib/python3.13/site-packages/setuptools/_vendor/more_itertools-10.8.0.dist-info/METADATA": "6ab3515145abe58b067f087c867631cf4cf5d653fed81b9642ee12086c3904b8",
+    ".venv/lib/python3.13/site-packages/setuptools/_vendor/more_itertools-10.8.0.dist-info/RECORD": "9ed1b134c0aa83722f36e99f3918aa9610ce3a0a514d793bbb74a368d441a01d",
+    ".venv/lib/python3.13/site-packages/setuptools/_vendor/packaging-26.0.dist-info/METADATA": "3362bb7d6a26da2962ba8daaa4785cd0bacac21aba908a1195cc8f59580a265a",
+    ".venv/lib/python3.13/site-packages/setuptools/_vendor/packaging-26.0.dist-info/RECORD": "f50503333aae9517807d2fb4d81fc27cb60aa644666f50176812626d6224ce5d",
+    ".venv/lib/python3.13/site-packages/setuptools/_vendor/platformdirs-4.4.0.dist-info/METADATA": "bbc5216d5f4c77bfbc57227264d52e66bccde71ccf79e75e1a6046d029d30223",
+    ".venv/lib/python3.13/site-packages/setuptools/_vendor/platformdirs-4.4.0.dist-info/RECORD": "3d0d2f1cc018593c4d8baa2395baf0b1c1c645bbd8c18cd064f49cb4e4c95ea0",
+    ".venv/lib/python3.13/site-packages/setuptools/_vendor/tomli-2.4.0.dist-info/METADATA": "f5ac0a1f8fba908b4646cd655309e91aad969b6787616ac571ca462a3832ffce",
+    ".venv/lib/python3.13/site-packages/setuptools/_vendor/tomli-2.4.0.dist-info/RECORD": "225430ce95640e8d4fcdb93cdae2fc38d685aec016d0e293d5fb99a695886fed",
+    ".venv/lib/python3.13/site-packages/setuptools/_vendor/wheel-0.46.3.dist-info/METADATA": "22910aa97ca89cbcc20a019e27fe31360b7929a4bd66ca0d310f99a44f6ccd35",
+    ".venv/lib/python3.13/site-packages/setuptools/_vendor/wheel-0.46.3.dist-info/RECORD": "b0297c3ada17b8727e15ddd6d1e38c8a90a997f779fcf978996f6fec62ecb702",
+    ".venv/lib/python3.13/site-packages/setuptools/_vendor/zipp-3.23.0.dist-info/METADATA": "bdd67d4d16cf0bf3b893e7d18cd3d2d774adb82f37ed985bc7770c607226b35b",
+    ".venv/lib/python3.13/site-packages/setuptools/_vendor/zipp-3.23.0.dist-info/RECORD": "3bfab660a24704f84228e4bb1ce1f0e3fa9ff80e5c806352a626b2f460ead836",
+    ".venv/lib/python3.13/site-packages/six-1.17.0.dist-info/METADATA": "562042078c2752549f6d8a7c86dbc5dd708088a7be6d80672ec7b07100b72468",
+    ".venv/lib/python3.13/site-packages/six-1.17.0.dist-info/RECORD": "6de8d68885f918facfbdf65f4d0fec3ab6d22992593ebbff81699e54b6768081",
+    ".venv/lib/python3.13/site-packages/soupsieve-2.8.4.dist-info/METADATA": "4f8f5d855dabd8b3c10706cbc01d7517bd5f027cc47b59183b604a2080e6b626",
+    ".venv/lib/python3.13/site-packages/soupsieve-2.8.4.dist-info/RECORD": "dede98a2826a89b346f9e8bc3dc84ec74692e21bbbcdb7af618de9c8381eff2f",
+    ".venv/lib/python3.13/site-packages/sqlalchemy-2.0.50.dist-info/METADATA": "31d4d38a933b1dd4f3b5f5d03a2f83ab900ffcc011fbcfae7fdb483860109e43",
+    ".venv/lib/python3.13/site-packages/sqlalchemy-2.0.50.dist-info/RECORD": "6c3b6a9fb3fde7039aa88b48f6921379bade54ff70a99c6af63bfcd7c84f0879",
+    ".venv/lib/python3.13/site-packages/stack_data-0.6.3.dist-info/METADATA": "f28a66f2adde54e7031355e09a166e437bc0d023a31c10c973ac494288ca4c6f",
+    ".venv/lib/python3.13/site-packages/stack_data-0.6.3.dist-info/RECORD": "d1f2b73db4dd4814c10d325b3adf72ddda8aaca44cb31041868a9fff52fcadfc",
+    ".venv/lib/python3.13/site-packages/starlette-1.2.1.dist-info/METADATA": "795dfa4d6cbff9e21dd817da5757dd8a303d5883de8092512b72bcc723e3303e",
+    ".venv/lib/python3.13/site-packages/starlette-1.2.1.dist-info/RECORD": "147c2294c46a63e3ed9d88a2ca7846b11f630cebb54c064fbd3747969922830c",
+    ".venv/lib/python3.13/site-packages/sympy-1.14.0.dist-info/METADATA": "b756c2fbfd5be05ac5bdb0ebca61f55618f30f633ed92d88a5687429313a7595",
+    ".venv/lib/python3.13/site-packages/sympy-1.14.0.dist-info/RECORD": "3ea4a6535a9218185829ca5f274bb984badc1c5bf07a02f82cff52b6fd815337",
+    ".venv/lib/python3.13/site-packages/terminado-0.18.1.dist-info/METADATA": "b8fbc894ff0bdf734736edc53bdac8456eb8a8f251762bcfde4ab89fb4d5ba65",
+    ".venv/lib/python3.13/site-packages/terminado-0.18.1.dist-info/RECORD": "090917aea4be96a9491c4037bae15dbee3687eb3190fb0000dca465ea18490d3",
+    ".venv/lib/python3.13/site-packages/threadpoolctl-3.6.0.dist-info/METADATA": "a45df8d07ea1883d772183a501d7d526076aa70dfcfddb276a2cbdc04def5341",
+    ".venv/lib/python3.13/site-packages/threadpoolctl-3.6.0.dist-info/RECORD": "e71628e86823df0f7a98163fa33600a7cdb38317ec1813e8dacc32c756c4810d",
+    ".venv/lib/python3.13/site-packages/tinycss2-1.4.0.dist-info/METADATA": "b601ac2de37bb73aa73562e407bd789a18a63b7a5873785d3b3d9fd8400087ca",
+    ".venv/lib/python3.13/site-packages/tinycss2-1.4.0.dist-info/RECORD": "28fd2017d3b1b72d55718d9f934b6a857e40ddc4a984ec3aec369d11e2034de3",
+    ".venv/lib/python3.13/site-packages/torch-2.12.0.dist-info/METADATA": "b6d383be28bad9be3ba58d2057c59b33e2e0eb4901da8fad0852c161e35dda05",
+    ".venv/lib/python3.13/site-packages/torch-2.12.0.dist-info/RECORD": "78985e4db606c5c5f362895e251afdef8cf48e9957306dfbc8079aeace0c7cf6",
+    ".venv/lib/python3.13/site-packages/torchvision-0.27.0.dist-info/METADATA": "86f64f2a6e50c4a0ace1dd4fb0fb4aa62a84a121746e74906c28631d99fa6cb4",
+    ".venv/lib/python3.13/site-packages/torchvision-0.27.0.dist-info/RECORD": "3ec0b3f129c6f7e0e01338110dd9bfde77b4ab9c2db9a2cb3b80378514d23e4f",
+    ".venv/lib/python3.13/site-packages/tornado-6.5.6.dist-info/METADATA": "913242fd0f42160377fb3864148b01fdc53137e4a630bd8ee17a82585eedbbe3",
+    ".venv/lib/python3.13/site-packages/tornado-6.5.6.dist-info/RECORD": "e1d41bea45c34120d3b9bb09a056ce8d79e4d32d83cf84a9a5f37812ee2dbbda",
+    ".venv/lib/python3.13/site-packages/traitlets-5.15.1.dist-info/METADATA": "156c6a358f7141b7404240aa206c23487eff9308fdf286e2fe3ac971fae0cb00",
+    ".venv/lib/python3.13/site-packages/traitlets-5.15.1.dist-info/RECORD": "533f32a515f46d5be46ce1be49d01aaf52ae3beec83576a94c507f71b854f597",
+    ".venv/lib/python3.13/site-packages/typing_extensions-4.15.0.dist-info/METADATA": "c138378fe8f18934ac99de060535c53ec6c13aeed65e94c32641da7ee3192a72",
+    ".venv/lib/python3.13/site-packages/typing_extensions-4.15.0.dist-info/RECORD": "bc33f38d8815a517c92b52d412a5a06e1957f4e57fbb4a6fff89295bac427629",
+    ".venv/lib/python3.13/site-packages/typing_inspection-0.4.2.dist-info/METADATA": "61096cd0bfe3c7040b6f98c22b02d190fe01936d0ff7616c5134fed02891953a",
+    ".venv/lib/python3.13/site-packages/typing_inspection-0.4.2.dist-info/RECORD": "0f03ce122a0ee9bbadaf2877040b7b14ca553bdead97797be3333171f7ab153c",
+    ".venv/lib/python3.13/site-packages/tzdata-2026.2.dist-info/METADATA": "1f197d996db42bf40a79d3578084963f6204506dfee9809af81586dbb9607061",
+    ".venv/lib/python3.13/site-packages/tzdata-2026.2.dist-info/RECORD": "77b0550312be6d21dec199813092009cc0dfdfc797bcb6031441cbc6aaa964aa",
+    ".venv/lib/python3.13/site-packages/uri_template-1.3.0.dist-info/METADATA": "3a8c53a915e5755c13b09faa29a4211fcff0c6ee188a169fc02cc092d89f46bc",
+    ".venv/lib/python3.13/site-packages/uri_template-1.3.0.dist-info/RECORD": "5cb18a81077822bfc2847f3558326d19cd7c19f9a0da10ef99c57534cfdb8ecf",
+    ".venv/lib/python3.13/site-packages/urllib3-2.7.0.dist-info/METADATA": "66147856d30bbb6bed01c6ce3326d0f48d84ed5f286ac177633a1486b82eace5",
+    ".venv/lib/python3.13/site-packages/urllib3-2.7.0.dist-info/RECORD": "bab9edcf76ec02bac68329df0e7de530efcbd3dc131551f5f86a83ff4d087106",
+    ".venv/lib/python3.13/site-packages/uvicorn-0.48.0.dist-info/METADATA": "4be5af0825c0d9985da009715036e5b140603bd0debed272c7f6cc82a95d87e4",
+    ".venv/lib/python3.13/site-packages/uvicorn-0.48.0.dist-info/RECORD": "061f8bd9d3c0d5304319411c9020dce81adb3936525100d6a1d8b2b90c5cfe17",
+    ".venv/lib/python3.13/site-packages/uvloop-0.22.1.dist-info/METADATA": "7106328da9670776c358802971b7dc41c0b86ed3673bf9cc4c0d5e11ff2f3583",
+    ".venv/lib/python3.13/site-packages/uvloop-0.22.1.dist-info/RECORD": "6b886fc95cb48439a1545b55bcfa3a728668837be30460a7cc5b7e358c2ad228",
+    ".venv/lib/python3.13/site-packages/watchfiles-1.2.0.dist-info/METADATA": "2c92c0bfebdf6743603f6e7c4da95a53ce4d575f00cede3aa2032a8d5ce3da17",
+    ".venv/lib/python3.13/site-packages/watchfiles-1.2.0.dist-info/RECORD": "f7041ee84f4833af85cbc8abd3733f6f431b8a282872941e4a38525f7d4f84ea",
+    ".venv/lib/python3.13/site-packages/wcwidth-0.7.0.dist-info/METADATA": "611878142d836a2111d580d4debbfa2507bb290952811b6226a9c5989a4453b2",
+    ".venv/lib/python3.13/site-packages/wcwidth-0.7.0.dist-info/RECORD": "6904c69f37a5e51d134da451c1a9ad71bb3908f4f3ed80fabcbe55dfb39b968b",
+    ".venv/lib/python3.13/site-packages/webcolors-25.10.0.dist-info/METADATA": "53b0da874b2e90dd8f1ccaa9c75c41e8db9107eb2568fc7a4e605b71c955d099",
+    ".venv/lib/python3.13/site-packages/webcolors-25.10.0.dist-info/RECORD": "8f48e3ce814db5185862c29e17e3ca011f36e427bd91507e880f17cf68f67777",
+    ".venv/lib/python3.13/site-packages/webencodings-0.5.1.dist-info/METADATA": "290ec583c2efe3f9db5006f3012dbd426897cc6ec79d62c85e9176a0de0fdaee",
+    ".venv/lib/python3.13/site-packages/webencodings-0.5.1.dist-info/RECORD": "b8d638dce56b6f189d3e51331f29e2243517e58972de09ee999cd48752b86ca7",
+    ".venv/lib/python3.13/site-packages/websocket_client-1.9.0.dist-info/METADATA": "29cfc4c6cba2dcfd8757128f893d69ea13fe7598153c4854232c20405a493bb1",
+    ".venv/lib/python3.13/site-packages/websocket_client-1.9.0.dist-info/RECORD": "520ac95380bc66f87fa33c567301c126b9500ca2f966f807770bd5db4354c265",
+    ".venv/lib/python3.13/site-packages/websockets-16.0.dist-info/METADATA": "25c0ef5a8f03552c39ba80c015b93d37c7c95ee449be7adc2d7541172063c0df",
+    ".venv/lib/python3.13/site-packages/websockets-16.0.dist-info/RECORD": "f1d33726ab5a6a74b83436adaa70181cddcb2413cec02b1b43e86fd0ad1a8a78",
+    ".venv/lib/python3.13/site-packages/xgboost-3.2.0.dist-info/METADATA": "8b02a3c6097568dc929580af2a69f83f23d8ec645b6bc9d1e60945b2c37a0d0b",
+    ".venv/lib/python3.13/site-packages/xgboost-3.2.0.dist-info/RECORD": "896c2797b3a29a46279b518f8af159a6109df72413471f7d1ca50b5d25cb739a",
+    ".venv/pyvenv.cfg": "2d3b05ef9afa89ff43346a3f085e3915961f891415bb2246fe67d31a2405e0e8"
+  },
+  "packages": [
+    {
+      "name": "annotated-doc",
+      "version": "0.0.4"
+    },
+    {
+      "name": "annotated-types",
+      "version": "0.7.0"
+    },
+    {
+      "name": "anyio",
+      "version": "4.13.0"
+    },
+    {
+      "name": "appnope",
+      "version": "0.1.4"
+    },
+    {
+      "name": "argon2-cffi",
+      "version": "25.1.0"
+    },
+    {
+      "name": "argon2-cffi-bindings",
+      "version": "25.1.0"
+    },
+    {
+      "name": "arrow",
+      "version": "1.4.0"
+    },
+    {
+      "name": "asttokens",
+      "version": "3.0.1"
+    },
+    {
+      "name": "async-lru",
+      "version": "2.3.0"
+    },
+    {
+      "name": "attrs",
+      "version": "26.1.0"
+    },
+    {
+      "name": "babel",
+      "version": "2.18.0"
+    },
+    {
+      "name": "beautifulsoup4",
+      "version": "4.14.3"
+    },
+    {
+      "name": "bleach",
+      "version": "6.3.0"
+    },
+    {
+      "name": "certifi",
+      "version": "2026.5.20"
+    },
+    {
+      "name": "cffi",
+      "version": "2.0.0"
+    },
+    {
+      "name": "charset-normalizer",
+      "version": "3.4.7"
+    },
+    {
+      "name": "click",
+      "version": "8.4.1"
+    },
+    {
+      "name": "comm",
+      "version": "0.2.3"
+    },
+    {
+      "name": "contourpy",
+      "version": "1.3.3"
+    },
+    {
+      "name": "cycler",
+      "version": "0.12.1"
+    },
+    {
+      "name": "debugpy",
+      "version": "1.8.21"
+    },
+    {
+      "name": "decorator",
+      "version": "5.3.1"
+    },
+    {
+      "name": "defusedxml",
+      "version": "0.7.1"
+    },
+    {
+      "name": "executing",
+      "version": "2.2.1"
+    },
+    {
+      "name": "fastapi",
+      "version": "0.136.3"
+    },
+    {
+      "name": "fastjsonschema",
+      "version": "2.21.2"
+    },
+    {
+      "name": "filelock",
+      "version": "3.29.1"
+    },
+    {
+      "name": "flatbuffers",
+      "version": "25.12.19"
+    },
+    {
+      "name": "fonttools",
+      "version": "4.63.0"
+    },
+    {
+      "name": "fqdn",
+      "version": "1.5.1"
+    },
+    {
+      "name": "fsspec",
+      "version": "2026.4.0"
+    },
+    {
+      "name": "greenlet",
+      "version": "3.5.1"
+    },
+    {
+      "name": "h11",
+      "version": "0.16.0"
+    },
+    {
+      "name": "httpcore",
+      "version": "1.0.9"
+    },
+    {
+      "name": "httptools",
+      "version": "0.8.0"
+    },
+    {
+      "name": "httpx",
+      "version": "0.28.1"
+    },
+    {
+      "name": "idna",
+      "version": "3.17"
+    },
+    {
+      "name": "iniconfig",
+      "version": "2.3.0"
+    },
+    {
+      "name": "ipykernel",
+      "version": "7.2.0"
+    },
+    {
+      "name": "ipython",
+      "version": "9.14.1"
+    },
+    {
+      "name": "ipython_pygments_lexers",
+      "version": "1.1.1"
+    },
+    {
+      "name": "isoduration",
+      "version": "20.11.0"
+    },
+    {
+      "name": "jedi",
+      "version": "0.20.0"
+    },
+    {
+      "name": "Jinja2",
+      "version": "3.1.6"
+    },
+    {
+      "name": "joblib",
+      "version": "1.5.3"
+    },
+    {
+      "name": "json5",
+      "version": "0.14.0"
+    },
+    {
+      "name": "jsonpointer",
+      "version": "3.1.1"
+    },
+    {
+      "name": "jsonschema",
+      "version": "4.26.0"
+    },
+    {
+      "name": "jsonschema-specifications",
+      "version": "2025.9.1"
+    },
+    {
+      "name": "jupyter-events",
+      "version": "0.12.1"
+    },
+    {
+      "name": "jupyter-lsp",
+      "version": "2.3.1"
+    },
+    {
+      "name": "jupyter_client",
+      "version": "8.8.0"
+    },
+    {
+      "name": "jupyter_core",
+      "version": "5.9.1"
+    },
+    {
+      "name": "jupyter_server",
+      "version": "2.19.0"
+    },
+    {
+      "name": "jupyter_server_terminals",
+      "version": "0.5.4"
+    },
+    {
+      "name": "jupyterlab",
+      "version": "4.5.8"
+    },
+    {
+      "name": "jupyterlab_pygments",
+      "version": "0.3.0"
+    },
+    {
+      "name": "jupyterlab_server",
+      "version": "2.28.0"
+    },
+    {
+      "name": "kiwisolver",
+      "version": "1.5.0"
+    },
+    {
+      "name": "lark",
+      "version": "1.3.1"
+    },
+    {
+      "name": "lxml",
+      "version": "6.1.1"
+    },
+    {
+      "name": "MarkupSafe",
+      "version": "3.0.3"
+    },
+    {
+      "name": "matplotlib",
+      "version": "3.10.9"
+    },
+    {
+      "name": "matplotlib-inline",
+      "version": "0.2.2"
+    },
+    {
+      "name": "mistune",
+      "version": "3.2.1"
+    },
+    {
+      "name": "ml_dtypes",
+      "version": "0.5.4"
+    },
+    {
+      "name": "mpmath",
+      "version": "1.3.0"
+    },
+    {
+      "name": "narwhals",
+      "version": "2.22.0"
+    },
+    {
+      "name": "nbclient",
+      "version": "0.11.0"
+    },
+    {
+      "name": "nbconvert",
+      "version": "7.17.1"
+    },
+    {
+      "name": "nbformat",
+      "version": "5.10.4"
+    },
+    {
+      "name": "nest-asyncio",
+      "version": "1.6.0"
+    },
+    {
+      "name": "networkx",
+      "version": "3.6.1"
+    },
+    {
+      "name": "notebook_shim",
+      "version": "0.2.4"
+    },
+    {
+      "name": "numpy",
+      "version": "2.4.6"
+    },
+    {
+      "name": "onnx",
+      "version": "1.21.0"
+    },
+    {
+      "name": "onnxruntime",
+      "version": "1.26.0"
+    },
+    {
+      "name": "packaging",
+      "version": "26.2"
+    },
+    {
+      "name": "pandas",
+      "version": "3.0.3"
+    },
+    {
+      "name": "pandocfilters",
+      "version": "1.5.1"
+    },
+    {
+      "name": "parso",
+      "version": "0.8.7"
+    },
+    {
+      "name": "pexpect",
+      "version": "4.9.0"
+    },
+    {
+      "name": "pillow",
+      "version": "12.2.0"
+    },
+    {
+      "name": "pip",
+      "version": "26.1.2"
+    },
+    {
+      "name": "platformdirs",
+      "version": "4.10.0"
+    },
+    {
+      "name": "playwright",
+      "version": "1.60.0"
+    },
+    {
+      "name": "pluggy",
+      "version": "1.6.0"
+    },
+    {
+      "name": "prometheus_client",
+      "version": "0.25.0"
+    },
+    {
+      "name": "prompt_toolkit",
+      "version": "3.0.52"
+    },
+    {
+      "name": "protobuf",
+      "version": "7.35.0"
+    },
+    {
+      "name": "psutil",
+      "version": "7.2.2"
+    },
+    {
+      "name": "ptyprocess",
+      "version": "0.7.0"
+    },
+    {
+      "name": "pure_eval",
+      "version": "0.2.3"
+    },
+    {
+      "name": "pycparser",
+      "version": "3.0"
+    },
+    {
+      "name": "pydantic",
+      "version": "2.13.4"
+    },
+    {
+      "name": "pydantic-settings",
+      "version": "2.14.1"
+    },
+    {
+      "name": "pydantic_core",
+      "version": "2.46.4"
+    },
+    {
+      "name": "pyee",
+      "version": "13.0.1"
+    },
+    {
+      "name": "Pygments",
+      "version": "2.20.0"
+    },
+    {
+      "name": "pyparsing",
+      "version": "3.3.2"
+    },
+    {
+      "name": "pytest",
+      "version": "9.0.3"
+    },
+    {
+      "name": "python-dateutil",
+      "version": "2.9.0.post0"
+    },
+    {
+      "name": "python-docx",
+      "version": "1.2.0"
+    },
+    {
+      "name": "python-dotenv",
+      "version": "1.2.2"
+    },
+    {
+      "name": "python-json-logger",
+      "version": "4.1.0"
+    },
+    {
+      "name": "PyYAML",
+      "version": "6.0.3"
+    },
+    {
+      "name": "pyzmq",
+      "version": "27.1.0"
+    },
+    {
+      "name": "referencing",
+      "version": "0.37.0"
+    },
+    {
+      "name": "requests",
+      "version": "2.34.2"
+    },
+    {
+      "name": "rfc3339-validator",
+      "version": "0.1.4"
+    },
+    {
+      "name": "rfc3986-validator",
+      "version": "0.1.1"
+    },
+    {
+      "name": "rfc3987-syntax",
+      "version": "1.1.0"
+    },
+    {
+      "name": "rpds-py",
+      "version": "2026.5.1"
+    },
+    {
+      "name": "scikit-learn",
+      "version": "1.9.0"
+    },
+    {
+      "name": "scipy",
+      "version": "1.17.1"
+    },
+    {
+      "name": "Send2Trash",
+      "version": "2.1.0"
+    },
+    {
+      "name": "setuptools",
+      "version": "81.0.0"
+    },
+    {
+      "name": "six",
+      "version": "1.17.0"
+    },
+    {
+      "name": "soupsieve",
+      "version": "2.8.4"
+    },
+    {
+      "name": "SQLAlchemy",
+      "version": "2.0.50"
+    },
+    {
+      "name": "stack-data",
+      "version": "0.6.3"
+    },
+    {
+      "name": "starlette",
+      "version": "1.2.1"
+    },
+    {
+      "name": "sympy",
+      "version": "1.14.0"
+    },
+    {
+      "name": "terminado",
+      "version": "0.18.1"
+    },
+    {
+      "name": "threadpoolctl",
+      "version": "3.6.0"
+    },
+    {
+      "name": "tinycss2",
+      "version": "1.4.0"
+    },
+    {
+      "name": "torch",
+      "version": "2.12.0"
+    },
+    {
+      "name": "torchvision",
+      "version": "0.27.0"
+    },
+    {
+      "name": "tornado",
+      "version": "6.5.6"
+    },
+    {
+      "name": "traitlets",
+      "version": "5.15.1"
+    },
+    {
+      "name": "typing-inspection",
+      "version": "0.4.2"
+    },
+    {
+      "name": "typing_extensions",
+      "version": "4.15.0"
+    },
+    {
+      "name": "tzdata",
+      "version": "2026.2"
+    },
+    {
+      "name": "uri-template",
+      "version": "1.3.0"
+    },
+    {
+      "name": "urllib3",
+      "version": "2.7.0"
+    },
+    {
+      "name": "uvicorn",
+      "version": "0.48.0"
+    },
+    {
+      "name": "uvloop",
+      "version": "0.22.1"
+    },
+    {
+      "name": "watchfiles",
+      "version": "1.2.0"
+    },
+    {
+      "name": "wcwidth",
+      "version": "0.7.0"
+    },
+    {
+      "name": "webcolors",
+      "version": "25.10.0"
+    },
+    {
+      "name": "webencodings",
+      "version": "0.5.1"
+    },
+    {
+      "name": "websocket-client",
+      "version": "1.9.0"
+    },
+    {
+      "name": "websockets",
+      "version": "16.0"
+    },
+    {
+      "name": "xgboost",
+      "version": "3.2.0"
+    }
+  ],
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "python": "3.13.3 (v3.13.3:6280bb54784, Apr  8 2025, 10:47:54) [Clang 15.0.0 (clang-1500.3.9.4)]",
+  "scope": "Environment metadata/inventory fingerprints; no installation or upgrade"
+}

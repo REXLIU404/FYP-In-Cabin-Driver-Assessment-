@@ -1,0 +1,51 @@
+{
+  "checkpoint_path": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_02/checkpoint.joblib",
+  "checkpoint_sha256": "a464481d25ecb13f7db8392e039ac74855ad22fd80078154c7a4375a81097836",
+  "copied_sources": [
+    {
+      "bytes": 3089,
+      "destination": "telemetry_research_evidence/config.json",
+      "sha256": "d2d75015708981b3bad4efcfb6cbe0d8caa03e897789bb30abc65add6f40ee0d",
+      "source": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_02/config.json"
+    },
+    {
+      "bytes": 184,
+      "destination": "telemetry_research_evidence/selection_log.json",
+      "sha256": "3171dccbe79a79cdcbbdcbb0bb275141b523574a20136b85642ec4a26db03796",
+      "source": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_02/selection_log.json"
+    },
+    {
+      "bytes": 1550,
+      "destination": "telemetry_research_evidence/validation_metrics.json",
+      "sha256": "ea0d3a62966ac1ad957b286b68be0a733fa982c77f97b4fae8dbfbed90c282d2",
+      "source": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_02/validation_metrics.json"
+    },
+    {
+      "bytes": 746,
+      "destination": "telemetry_research_evidence/class_report.json",
+      "sha256": "b699e91e86fe09ed52e203868b9c77de3d22dd9920b823695c2cbb99b2f3c4e9",
+      "source": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_02/class_report.json"
+    },
+    {
+      "bytes": 622,
+      "destination": "telemetry_research_evidence/train_statistics.json",
+      "sha256": "381160e3a4acf914565b23e1ac1c5d522b591ba6b4fe06126744ad8763b7038a",
+      "source": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_02/train_statistics.json"
+    },
+    {
+      "bytes": 598219,
+      "destination": "telemetry_research_evidence/predictions_validation.csv",
+      "sha256": "cd9f38a160c129095f876b06a55759493769c13d7d2908b718b79496bb25c6d9",
+      "source": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_02/predictions_validation.csv"
+    },
+    {
+      "bytes": 2260,
+      "destination": "telemetry_research_evidence/frozen_selection_log.json",
+      "sha256": "591aadf2b32d8252551c943dbbf7c9f094cad1d8bab43952759f0edc86ccbebd",
+      "source": "ml/outputs/runs/p3_telemetry_20261018/selection_log.json"
+    }
+  ],
+  "p4_cache_database_sha256": "456bea6ad4ccf8de256dd6d2e98dc18247a1bfb4cff079dcb91cbdb9a4103feb",
+  "p4_completion_sha256": "882e64929ae785d3d70cd722495bedb5441e9677d918d56fa75c31a51c3fd73e",
+  "scope": "Research evidence only; no joblib load/copy, no runtime manifest, no RF/LR candidate."
+}

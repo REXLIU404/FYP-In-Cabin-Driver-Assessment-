@@ -1,0 +1,19 @@
+{
+  "scope": "P3 preparation verification only",
+  "commands": [
+    "./.venv/bin/python -B -m pytest -q ml/tests/test_e1_generators.py -p no:cacheprovider",
+    "./.venv/bin/python -B -m pytest -q ml/tests/test_e1_preparation.py -p no:cacheprovider",
+    "./.venv/bin/python -B -m pytest -q ml/tests/test_e1_preparation.py ml/tests/test_e1_generators.py -p no:cacheprovider",
+    "./.venv/bin/python -B -m pytest -q ml/tests -p no:cacheprovider",
+    "./.venv/bin/python -B ml/experiments/run_e1_preparation.py --run-id e1_preparation_20261019",
+    "./.venv/bin/python -B ml/outputs/runs/e1_preparation_20261019/verification/verify_preparation.py"
+  ],
+  "red_before_implementation": true,
+  "formal_training_or_hpo_trials": 0,
+  "generator_test_counts": {
+    "synthetic_telemetry_sources": 4500,
+    "synthetic_variants": 45000
+  },
+  "held_out_observations_opened": 0,
+  "formal_metrics": null
+}

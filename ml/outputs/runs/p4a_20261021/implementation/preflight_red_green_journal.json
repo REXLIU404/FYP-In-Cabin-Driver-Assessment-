@@ -1,0 +1,51 @@
+{
+  "stage": "P4_A_IMPLEMENTATION_SYNTHETIC_TESTS_ONLY",
+  "observations": [
+    {
+      "run": 1,
+      "tests_failed": 11,
+      "tests_passed": 0,
+      "cause": "ModuleNotFoundError: ml.experiments.p4_preflight; all11new boundary tests before module existed",
+      "capture": "tool output; original raw log not saved to filesystem"
+    },
+    {
+      "run": 2,
+      "tests_failed": 1,
+      "tests_passed": 10,
+      "cause": "External-weight invalid graph raised upstream ValidationError before local ValueError",
+      "capture": "tool output"
+    },
+    {
+      "run": 3,
+      "tests_failed": 4,
+      "tests_passed": 10,
+      "cause": "Previous external-weight case and3new missing resource/access/bank methods",
+      "capture": "tool output"
+    },
+    {
+      "run": 4,
+      "tests_failed": 0,
+      "tests_passed": 14,
+      "capture": "tool output"
+    },
+    {
+      "run": 5,
+      "tests_failed": 0,
+      "tests_passed": 17,
+      "cause": "Added3regression boundary tests after implementation; these were not test-first",
+      "capture": "implementation/preflight_green.log"
+    }
+  ],
+  "real_checkpoint_loads": 0,
+  "real_model_forwards": 0,
+  "real_onnx_export_calls": 0,
+  "test_images_opened": 0,
+  "test_telemetry_records_read": 0,
+  "protected": {
+    "ml/outputs/vision/mobilenetv3_large_vision.pt": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+    "ml/outputs/vision/mobilenetv3_large_vision.onnx": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "ml/outputs/telemetry/xgb_telemetry.json": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+    "docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md": "0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0"
+  },
+  "source_sha256": "98ba6dc78e1d47cc395fa0bf723179511f2ada0fa26583378bbb2a50512e99f3"
+}

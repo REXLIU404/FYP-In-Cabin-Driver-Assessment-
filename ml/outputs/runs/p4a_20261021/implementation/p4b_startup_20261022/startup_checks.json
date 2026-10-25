@@ -1,0 +1,52 @@
+{
+  "phase": "P4-B_STARTUP_ONLY",
+  "status": "BLOCKED_INSUFFICIENT_RAM",
+  "approval_status": "AUTHORIZED_BY_USER",
+  "planned_run_id": "p4b_20261022",
+  "planned_run_directory": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p4b_20261022",
+  "formal_run_directory_exists": false,
+  "resources": {
+    "available_ram_bytes": 6845726720,
+    "available_ram_gib": 6.375579833984375,
+    "minimum_available_ram_bytes": 8589934592,
+    "free_disk_bytes": 311840059392,
+    "free_disk_gib": 290.4236869812012,
+    "minimum_free_disk_bytes": 21474836480,
+    "power_plugged": true,
+    "cpu_count": 8,
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O"
+  },
+  "binding": {
+    "protocol_sha256": "89185f6c56b8af00b2883e27df72c0713141d92b3396a5609462a5ed053cdd41",
+    "run_id": "p4b_20261022",
+    "source_sha256": "79f1ccc857c873969fa177bea54c78eefe3704114604d88d18816ffe73f1c1a5"
+  },
+  "git_head": "335da4e3de203836c045452f84cc291bcd352a26",
+  "git_status": " M docs/fyp2/ml/ML_TRACK_PROGRESS.md\n?? docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md\n?? docs/fyp2/ml/ML_RESULTS_REVIEW_CONTEXT.md\n?? ml/configs/e1_preparation.json\n?? ml/configs/p4_protocol.json\n?? ml/experiments/e1_generators.py\n?? ml/experiments/p4_core.py\n?? ml/experiments/p4_data.py\n?? ml/experiments/p4_preflight.py\n?? ml/experiments/p4_qc.py\n?? ml/experiments/run_e1_preparation.py\n?? ml/experiments/run_p4.py\n?? ml/outputs/runs/e1_preparation_20261019/\n?? ml/outputs/runs/e1_preparation_20261019_record_missingness/\n?? ml/outputs/runs/p3_vision_20261018/search/\n?? ml/outputs/runs/p3_vision_20261018/search_config.json\n?? ml/outputs/runs/p3_vision_20261018/search_state.json\n?? ml/outputs/runs/p3_vision_20261018/selection_log.json\n?? ml/outputs/runs/p3_vision_20261018/verification/\n?? ml/outputs/runs/p4a_20261021/\n?? ml/tests/test_e1_generators.py\n?? ml/tests/test_e1_preparation.py\n?? ml/tests/test_p4_core.py\n?? ml/tests/test_p4_data.py\n?? ml/tests/test_p4_preflight.py\n?? ml/tests/test_p4_qc.py\n",
+  "staging_empty": true,
+  "frozen_identity_hash_count": 7,
+  "prior_source_manifest_files_verified": 12,
+  "protected_hpo_p3_hash_records_verified": 10,
+  "preflight_evidence": "Reused approved P4-A results; no numerical rerun",
+  "new_onnx_exports": 0,
+  "hpo_or_training_runs": 0,
+  "heldout_observations_opened": 0,
+  "prediction_forward_calls": 0,
+  "formal_budget_supervisor_started": false,
+  "launch_command_prepared_not_executed": [
+    "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+    "-B",
+    "-m",
+    "ml.experiments.run_p4",
+    "formal",
+    "--protocol",
+    "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/configs/p4_protocol.json",
+    "--run-id",
+    "p4b_20261022",
+    "--approval",
+    "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p4a_20261021/implementation/p4b_startup_20261022/approved_p4b.json",
+    "--execution-spec",
+    "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p4a_20261021/implementation/p4b_startup_20261022/execution_spec.json"
+  ],
+  "resume_policy": "Existing user approval persists; recheck frozen hashes, fresh resources and absence of prior formal evaluation before launch. No automatic polling, threshold reduction, or process eviction."
+}

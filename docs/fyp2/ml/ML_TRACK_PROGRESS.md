@@ -1,5 +1,639 @@
 # FYP2 ML 轨道进度（唯一规范进度报告）
 
+## 2026-10-25 P5 收尾验收 — VERIFIED_PASS（copy-only candidate delivery；run_id p5_candidates_20261023）
+
+**批准范围内的 P5 已完成：两份 vision 候选目录与 ZIP、XGB research evidence、软件回归、静态合同校验及交付追溯证据均已取得。** 实际打包、完整软件 suite、原样系统 CLI 与独立包审查在2026-10-24完成；10月25日收尾复用这些记录，没有重跑实验。run_id 保留 `p5_candidates_20261023`。本节覆盖下方历史 P5 `APPROVAL_PENDING / NOT_STARTED`；旧 P4-A/P4-B、原 QC 与旧失败记录完整保留，不改写其发生时的状态。
+
+本次结论仅覆盖 **P5 copy-only delivery、软件/静态包检查与 artifact/source traceability**。`provider_load_forward=NOT_RUN`、`official_stable200_behavior=NOT_RUN`、系统候选准入 `BLOCKED_BY_TASK10A_IMPLEMENTATION` 另列，不用 P5 PASS 声称候选已被系统加载、Live E2E、实际 camera 可靠性或部署资格；这些系统后续工作也不被新增为 P5 静态包验收 hard gate。
+
+### 实际交付与冻结身份
+
+| 交付 | 实际内容与身份 | ZIP bytes / SHA256 |
+|---|---|---|
+| [RN vision 包](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p5_candidates_20261023/p5_resnet18_search004_seed42_20261023.zip) | ResNet18 `search_004/seed42`，`VALIDATION_PREFERRED`；40份 inventoried 文件加 `artifact_manifest.json` | 43100529；`9fb9551f49aeb3582dfc7cb76c9050b7690a8856621944eb363fecd73ea35029` |
+| [MN vision 包](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p5_candidates_20261023/p5_mobilenet_v3_large_search006_seed42_20261023.zip) | MobileNetV3-Large `search_006/seed42`，`RETAINED_COMPARATOR`；40份 inventoried 文件加 `artifact_manifest.json` | 17202946；`ae887dabe3588969576ecfb54fead41d0f03bd02267028a8a80f73311811ae13` |
+| [XGB research evidence](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p5_candidates_20261023/telemetry_research_evidence) | `xgboost_02` 冻结研究偏好；selection/config/train-only imputer statistics、validation/class report、4500条既有D0 clean缓存与E1证据 | 非 runtime candidate；没有复制 checkpoint、runtime manifest 或 RF/LR 模型 |
+
+两个 vision 包直接复制既有 FP32 ONNX，RN SHA=`5e226722e0712824c78aa0976afa6fa5b8dc6100b147a7f523a09048171d8cf3`，MN SHA=`9ee60abb78007773cc625af80c313049c1970f63c1f041bed9f5b2539a384828`；没有重导出、训练或按 P4 Test 重新选择 trial/seed。包内分别保存 runtime manifest、独立 evaluation metrics/model card、实际训练 class mapping 与 alias、2868条完整已有 validation 预测、3657条既有 clean test缓存、冻结 selection/config、export/parity/provenance、source snapshot 与逐文件 inventory。clean预测抽取核对原 metadata/NPY payload SHA，不执行模型。来源见 [source_copy_log.json](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p5_candidates_20261023/verification/source_copy_log.json)；实际包与 ZIP 身份见 [final_package_check.json](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p5_candidates_20261023/verification/final_package_check.json)。
+
+系统合同固定于只读 Git 对象 `fyp2/live-system@2745348f3d4587e14c1d4a7e53a2bfc4d72225d5`。v1 manifest 声明 `[1,3,224,224]` float32 NCHW/RGB、项目的直接 bilinear resize224/ImageNet 预处理、`[1,10]` logits、c0…c9及c0 safe class；graph 独立静态检查确认 `input/logits`、dynamic `N`、float32、无 Softmax/LogSoftmax 与 external tensors。包内无 symlink、`.pt/.joblib/.pkl` 或外部 active dependency，不创建 ORT session。schema/CLI/source pin 记录在 [contract_pin.json](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p5_candidates_20261023/verification/contract_pin.json)。
+
+stable200 按 val 各类 filename 排序取前20，重建 filename SHA=`601dc3ed6b99e9030f6eb5287e711baf529ea6c0c5b2facab0acd9c3f9373be9`；两模型在已有 P3 full-val 预测的各类 unique mode 均对应原标签，明确只属 `SAVED_VALIDATION_PREDICTION_DIAGNOSTIC`。这不是 provider 对 stable200 的执行结果。P4A100 的100个不同来源、211个累计样本位置 parity 保留为独立历史附件，不能冒称 stable200 行为验证。
+
+### 实际命令、软件与独立检查
+
+- 构建：`OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 ./.venv/bin/python -B -m ml.experiments.package_candidates build --run-dir ml/outputs/runs/p5_candidates_20261023`，**exit0 / 11.893756s**；记录为 [build_command.json](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p5_candidates_20261023/verification/build_command.json)与 [build.log](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p5_candidates_20261023/verification/build.log)。
+- 完整软件回归：`OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 ./.venv/bin/python -B -m pytest ml/tests -q`，**302 passed in36.00s / exit0**。受控执行用于预算监督器软件测试观测自身子进程 RSS，没有正式模型实验。保留原 TDD **22 failed/1.13s →22 passed/1.26s** 日志，不把历史输出冒充收尾重跑。命令与实际结果见 [full_ml_suite_command.json](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p5_candidates_20261023/verification/full_ml_suite_command.json)、[full_ml_suite.log](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p5_candidates_20261023/verification/full_ml_suite.log)、[原RED](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p5_candidates_20261023/verification/tdd_red.log)、[原GREEN](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p5_candidates_20261023/verification/tdd_green.log)。
+- 原样系统 CLI：从 `2745348` 逐字复制 `backend/app/runtime_manifest.py`、`.schema.json` 与 `scripts/validate_runtime_manifest.py` 到隔离 snapshot，保持原相对布局，对两份实际 manifest 均返回 **valid / exit0**；没有修改真实 backend。另运行 `./.venv/bin/python -B -m ml.experiments.package_candidates verify --run-dir ml/outputs/runs/p5_candidates_20261023`，**exit0**。完整 argv/stdout/stderr 与边界见 [validator_commands.json](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p5_candidates_20261023/verification/validator_commands.json)。
+- 独立审查 **59/59 PASS、failures=[]**：重新核对 pinned schema/hash/path、ONNX静态图、两个 ZIP 的逐项 CRC/安全路径/内容/hash、67份复制来源、两模型各3657条和XGB4500条原cache payload SHA及clean重算、stable200已有预测诊断、369份保护文件；没有 load模型、predict、训练或原图解码。见 [independent_review.json](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p5_candidates_20261023/verification/independent_review.json)，范围为独立静态包与缓存审计，不能称完整数值重新推理。
+- 前后 **369份受保护旧文件** SHA一致，含部署模型、09、冻结checkpoint/两既有ONNX、数据CSV、P4源码/cache DB/WAL与既有证据；SQLite临时`-shm`及大型NPY bank不在该369逐文件集合。**14份 source/config/test snapshot** 一致；**315份环境 metadata 指纹、144项包版本 inventory** 一致，后者不是整个venv的全字节哈希。没有修改共享环境。见 [source_manifest.json](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p5_candidates_20261023/verification/source_manifest.json)、[preservation_after.json](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p5_candidates_20261023/verification/preservation_after.json)、[最终闭合](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p5_candidates_20261023/verification/final_closure.json)。
+
+当前执行 `package_candidates.py` SHA=`b52350198c1b13e8d5fde8d48797f984413f6db50091a2b92c2507c18d5a1403`，对应测试SHA=`3dee8de808ff1e1840f0fc0bd31d2541105f30b79794f551eecffe3972aeb13d`。本次收尾复用这些冻结代码、已完成命令及验收日志，不再运行模型、HPO、训练、导出或 benchmark。完整本地交付分析见 [local_evidence.md](</Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/docs/fyp2/ml/research_notes/FYP2 模型 系统准入 审查/local_evidence.md>)；研究决策见 [FYP2 模型 系统准入 审查.md](</Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/docs/fyp2/ml/reports/FYP2 模型 系统准入 审查.md>)。
+
+### Git 来源说明
+
+收尾重新核对 cwd/root、branch、HEAD、status与worktree：仍为 `/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1`、`fyp2/ml-training@335da4e3de203836c045452f84cc291bcd352a26`，**dirty 工作树，staging为空**，没有切分支、commit、push、reset或clean。既有未提交实现及研究证据继续保留，不主张整个tree clean或clean-commit复现。
+
+除 P5 范围内文件外，`.gitignore` 的变更仅新增 `backend.dev.log`；该日志记录 Uvicorn PID98246启动、`GET /docs`/`GET /api/sessions`与正常shutdown。根目录 `driver_risk.db-wal`、`driver_risk.db-shm` 为 backend SQLite sidecar，时间与该启动记录相近。**启动者未确认，不归因于用户或任何agent**；这些范围外条目原样保留，不暂存、删除或覆盖，也不据此阻断已经完成的P5验收。P5打包、隔离CLI、静态审计及本次文档收尾未写入真实backend或根目录数据库，也没有新增模型forward；不能把该范围内事实扩展成整个工作区从未运行backend。闭合时dirty记录见 [final_closure.json](/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p5_candidates_20261023/verification/final_closure.json)。
+
+### 四维验收与后续系统边界
+
+| 维度 | P5判定 | 证据和适用范围 |
+|---|---|---|
+| Implementation | VERIFIED_PASS（copy-only delivery） | 两vision目录/ZIP与XGB研究证据实际生成；冻结身份和基线保留，无新增训练/HPO/导出/forward/benchmark |
+| Testing | VERIFIED_PASS（软件与静态包） | 完整302软件测试、两原样CLI valid、package verify、独立59项检查；不是provider/load-forward或Live测试 |
+| Evidence | VERIFIED_PASS | 包/ZIP/模型SHA与inventory、来源副本、缓存预测、2868 validation、stable200诊断与独立P4A100、commands/日志及369文件保护可定位 |
+| Reproducibility | VERIFIED_PASS（artifact/source traceability） | exact system pin、14源码快照、HEAD+dirty、环境metadata/版本及命令原始输出完整；没有独立重训/完整数值重跑，不主张clean commit或bitwise保证 |
+
+**P5 VERIFIED_PASS（上述限定范围）。** 当前系统 `2745348` 只交接了 vision manifest schema/validator；provider仍读取固定MN文件路径和旧metrics，尚未消费manifest，Task10A provider/evaluator未完成，XGB无候选importer。两vision的 `provider_load_forward` 和 `official_stable200_behavior` 仍 **NOT_RUN**；系统集成 **BLOCKED_BY_TASK10A_IMPLEMENTATION**，候选Live E2E与目标camera性能未验证。这些是系统侧后续工作，不是P5包结构未完成，不改写为本次新增hard gate。
+
+RN-HPO42与XGB-HPO42仍是validation冻结的研究偏好，MN候选保留配对，RF/LR benchmark-only，现有部署MN+XGB不替换。没有证据要求先追加fine-tuning才能完成本阶段；未来若有目标域失败证据，再单独讨论数据/预处理/训练方案。manual QC仍 **REMOVED_FROM_SCOPE，非PASS**，stress标签仍 `LABEL_VALIDITY_UNVERIFIED`；四司机、历史Test曝光、synthetic telemetry独立性未知、DMD BLOCKED及真实camera视角限制均保留。本阶段不扩大到融合/EMA/FSM/E2–E5、部署或未经授权的新实验。
+
+## 2026-10-23 P4-B 验收 — VERIFIED_PASS（user-amended P4-PROTOCOL-v2；run_id p4b_20261022）
+
+**当前阶段已完成：冻结模型Clean Test、完整配对E1输出稳定性评估及受控CPU ORT benchmark。** 本节覆盖下方历史RUNNING、RAM阻塞和P4-B APPROVAL_PENDING状态；P5仍APPROVAL_PENDING / NOT_STARTED。本次通过限定于用户修订后的mandatory范围与以下实际证据，不表示部署批准、原版R4人工QC条款通过或独立完整数值复跑。
+
+用户先明确批准“进行下一个stage”、随后“继续”，并在RAM阻塞后明确要求“**不用强求冻结门槛**”。本次据此仅调整启动RAM策略8→4GiB，作为参考已测1.52248GiB预检峰值后的工程启动余量，不称为经过验证的安全阈值。当前约6GiB可用内存下不再因旧8GiB门槛阻塞；14,400s总cap、stage/model时间、RSS/disk观察上限、模型/数据/seed冻结及QC removal保持不变。该用户决定覆盖下方旧启动阻塞记录，不授权P5、HPO、训练、重导出或部署。
+
+- 最小变更：`p4_protocol.json`增加`resource_amendment=USER_APPROVED_RAM_GATE_RELAXATION_20261022`并将`minimum_available_ram_bytes`改为4294967296；runner校验新值，formal/cached两路径显式传给BudgetSupervisor。通用supervisor默认仍8GiB，其他调用未改。
+- TDD先RED **3 failed/1 passed**，修复后GREEN **4 passed/0.14s**；完整ML suite **280 passed in23.20s / exit0**，独立RAM-only review PASS。覆盖6GiB可启动、3GiB仍停止、formal/cached确实消费协议值；没有模型/held-out测试。这些原始日志、3文件前后snapshot/patch和review存于`ml/outputs/runs/p4a_20261021/implementation/p4b_startup_20261022/ram_relaxation/`。
+- 新protocol SHA=`08cbbc25685a4c6a68781ebff2b174f747c68090bb0f24176f8277ee47a9e9de`，active source SHA=`8a41c99e1fd47e91e1e4f75522cb9e6eb3948eca9fd6d7f771278bdf32a80d5f`。旧approval绑定已验证拒绝，未覆盖；本次明确用户指令重新绑定到同一计划run_id，新的`ram_relaxation/approved_p4b.json`是当前执行授权。
+- 启动前实际available RAM **5.84367GiB / 新门槛4GiB**、free disk **290.41433GiB**、接电=true。7身份、4 protected+3 HPO+3 P3 hash不变、staging为空。完整执行源码/依赖/config/tests共13份在启动前已写入`ram_relaxation/launch_source_snapshot/`及manifest，包含本轮实际BudgetSupervisor，避免重现旧预检未提前snapshot的缺口。Python进程只读检查未见训练入口/并发benchmark，其他常驻应用继续存在，不能声称独占整台机器。
+- 已实际启动命令：`OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 caffeinate -dims ./.venv/bin/python -B -m ml.experiments.run_p4 formal --protocol ml/configs/p4_protocol.json --run-id p4b_20261022 --approval ml/outputs/runs/p4a_20261021/implementation/p4b_startup_20261022/ram_relaxation/approved_p4b.json --execution-spec ml/outputs/runs/p4a_20261021/implementation/p4b_startup_20261022/ram_relaxation/execution_spec.json`。为管理自己启动worker的RSS/超时，按既有受控权限在sandbox外执行；caffeinate仅维持本次执行唤醒，不修改持久系统电源设置。
+- 正式目录`ml/outputs/runs/p4b_20261022/`保存独立protocol、execution_spec、source_manifest、provenance及预算日志。首worker纯preflight evidence校验 **2.18465s / exit0**，没有新导出/数值parity；随后执行已批准的shared inputs、Clean Test、E1与runtime。正式执行确实读取held-out来源，不再沿用旧P4-A“held-out observations=0”描述本次实验。
+
+### 实际执行与闭合证据
+
+- `completion.json`为 **MACHINE_EVALUATION_COMPLETED**，`candidate_package=false / deployment_eligible=false`。**25/25 worker returncode=0、reason=null**，没有自动重试、预算排除、训练、HPO、新导出或模型替换。预算监督器累计 **3323.898287s（55分23.90秒）/14400s**；`budget_state.json`的末次检查点状态READY不表示仍在运行，完成状态以completion及全部worker退出记录交叉核实。
+- 阶段耗时：preflight 2.184653s、shared inputs 191.914019s、vision clean 176.854073s、vision stress 2777.639083s、telemetry 83.849678s、runtime 70.925995s、aggregation 20.527877s，均在原stage/model/worker上限内。总数额外含0.002908s阶段外监督器开销。最高**采样观测**worker RSS为2920726528 bytes（2.72014GiB），低于对应RSS上限；验收时run文件约10.36572GiB，低于20GiB输出上限。
+- cache共 **388449条COMPLETED**：vision **3657×19×3=208449**，telemetry **4500×10×4=180000**；7身份、97个model-condition组完整，90个stress组均与各自clean/D0同source-ID配对。vision三模型对同一source/condition消费同一uint8输入；telemetry四模型共享同一预处理输入。clean每模型/来源缓存一次，runtime另用原validation bank，不增加正式test样本。
+- 2026-10-23独立缓存审计 **309/309 PASS、failures=[]**：388449行payload SHA及source-ID/label/input SHA完整匹配；概率维度、有限性、范围及归一通过，最大归一误差8.94e−8。未复用项目scoring helper，独立用sklearn/scipy/NumPy重算7模型clean confusion/逐类指标/Accuracy/Macro-F1/log loss、90组stability、3视觉模型四driver及leave-one-driver-out、paired deltas，**最大指标差2.22e−16**。证据`verification/independent_cached_audit.json`，SHA=`e387a114d075841e7350f160541acc55eac325ff6f011717e9e1a1bfe09f6992`。
+- 主agent另核查 **33份shared bank/metadata文件SHA**、13份启动源码/config/test snapshot、6份active source binding、7 checkpoint、3 ONNX、4 protected+3 HPO+3 P3记录及provenance前后保护，全部匹配；独立重算12轮runtime的1200条latency和吞吐、3AB/3BA顺序、预算/RSS/磁盘上限，全部通过。证据`verification/closure_integrity.json`。protocol原文件字节SHA用于授权绑定，run中的canonical JSON归档与原协议内容相等，不要求两种JSON序列化的字节SHA相等。
+- 本轮实际验收操作为六项Git检查、读取completion/budget/metrics/日志、只读SQLite缓存、Python SHA与NumPy/sklearn/scipy复算、`git diff --cached --name-only`及`git diff --check`；**没有再次调用formal/aggregate worker、模型predict/forward、原图解码或raw telemetry CSV读取**。两个新JSON只是缓存验收证据，不是新实验或新进度文档。软件测试复用并核验上述实际执行版本的 **280 passed in23.20s**日志；271/278历史测试日志仍原样保留，没有把它们冒充本轮新跑的测试。
+
+### Clean Test：五模型及稳定参照
+
+以下均为固定seed42候选或既有stable身份，来自同一冻结held-out split；不是新的validation选型。完整逐类precision/recall/F1/support、confusion matrix、raw/scoring dtype与diagnostic保存在`evaluation_metrics.json`。Vision support=3657、10类c0…c9；telemetry support=4500、各类1500，统一输出顺序`Safe / Aggressive / Distracted`。评分使用float64，保留原float32/float64输出，不与旧不同dtype的log-loss无条件等同。
+
+| 模型身份 | Accuracy | Macro-F1 | Log loss |
+|---|---:|---:|---:|
+| RN-HPO42（ResNet18 search_004） | 0.901559 | 0.889236 | 0.450868 |
+| MN-HPO42（MobileNetV3-Large search_006） | 0.873120 | 0.867654 | 0.740502 |
+| MN-STABLE（现有MobileNetV3参照） | 0.898824 | 0.874641 | 0.574453 |
+| XGB-HPO42（xgboost_02） | 0.998889 | 0.998889 | 0.003670 |
+| RF-HPO42（random_forest_06） | 0.998889 | 0.998889 | 0.007535 |
+| LR-HPO42（logistic_regression_06） | 0.998000 | 0.997999 | 0.007199 |
+| XGB-STABLE（原模型，iteration_range=(0,91)） | 0.999333 | 0.999333 | 0.003712 |
+
+RN相对MN-HPO的Accuracy高2.84386个百分点、Macro-F1高0.021582；相对MN-STABLE分别高0.27345个百分点、0.014596。**MN-HPO没有超过MN-STABLE**；本次HPO不构成普遍升级证据。XGB-HPO与RF均错5/4500，Macro-F1差约7.48e−8，不支持有意义的优劣结论；LR错9条、XGB-STABLE错3条。合成telemetry的接近满分只适用于该合成分布，不能外推真实驾驶泛化。
+
+Vision仅4名test司机：p012=823、p026=1196、p035=848、p050=790帧。RN的逐司机Macro-F1分别0.748208、0.924132、0.955527、0.851932；不是每个司机都优于MN候选/稳定参照。RN pooled c9 F1仅0.605941，p050的c9 F1=0；pooled均值不能掩盖类/司机弱项。RN leave-one-driver-out Macro-F1范围0.860811–0.921866，MN-HPO为0.838722–0.897271，MN-STABLE为0.828881–0.899918。这里是**缓存分组剔除后的描述性重算，没有重训**，不做frame bootstrap、p-value或独立人物样本量3657的主张。
+
+### E1：完整配对输出稳定性
+
+主要指标保持Prediction Flip Rate、Probability L1 Shift及Prediction Distribution Changes；**不计算corruption原标签F1**，`LABEL_VALIDITY_UNVERIFIED / f1_eligible=false / human_validated=false`。下表仅压缩展示预先固定的最高强度（level index2），其余全部强度及逐类distribution/count/rate/平均概率变化保存在原metrics JSON，未按结果删除条件或重新加权。
+
+| Vision最高强度条件 | MN-HPO flip / L1 | RN-HPO flip / L1 | MN-STABLE flip / L1 |
+|---|---:|---:|---:|
+| brightness_down=0.3 | 5.7424% / 0.121390 | 10.4457% / 0.258254 | 3.8009% / 0.086473 |
+| brightness_up=1.8 | 6.2073% / 0.125047 | 5.5783% / 0.138351 | 4.8400% / 0.112326 |
+| grayscale_blend=1.0 | 28.8488% / 0.594174 | 16.2428% / 0.396160 | 28.0284% / 0.589698 |
+| motion_blur kernel11 | 41.0172% / 0.829122 | 48.3183% / 1.004541 | 56.9866% / 1.141464 |
+| occlusion target area0.2 | 31.3645% / 0.637826 | 33.3607% / 0.695447 | 26.7432% / 0.550249 |
+| rotation_crop ±12deg | 17.8835% / 0.371924 | 11.3208% / 0.293946 | 17.3366% / 0.370119 |
+
+RN在灰度、rotation/crop下输出较稳定，MN-HPO在强暗化、强模糊、强遮挡下变化较小；brightness_up的flip与L1甚至给出不同相对顺序，不能宣称统一赢家。强模糊时MN-HPO的c0预测增加1291条（+35.3022个百分点），RN的c6预测增加885条（+24.2002个百分点）；这是输出分布偏移，不是行为发生率变化或安全改善。
+
+| Telemetry最高强度条件 | XGB-HPO flip / L1 | RF-HPO flip / L1 | LR-HPO flip / L1 | XGB-STABLE flip / L1 |
+|---|---:|---:|---:|---:|
+| D1=0.5 | 11.0444% / 0.252638 | 24.4667% / 0.503303 | 3.5778% / 0.076886 | 13.9778% / 0.326854 |
+| D2=0.75 | 54.3556% / 1.049149 | 60.2222% / 1.085294 | 52.7556% / 1.050236 | 49.6444% / 1.030158 |
+| D3 drift1.0 + missing20% records | 55.0444% / 0.983918 | 61.6889% / 1.087425 | 32.4444% / 0.650170 | 43.4444% / 0.953704 |
+
+D2仍为label-conditioned stress；D3仍为**combined positive-bias and record-level missingness stress**，8维正向漂移，不称为独立缺失特征实验。D3实际affected record为225/450/900（5/10/20%），每条恰新增mask一列，seed42、嵌套共享mask及train-only median填补一致；并非每列独立5/10/20%缺失。物理/经验范围按既定REPORT_ONLY_NO_CLIP报告，未按test结果裁剪。较低flip/L1不保证正确：错误且恒定的输出也可能稳定，严重occlusion/crop亦不能假定保留行为标签。
+
+### 受控Runtime与非阻断警告
+
+两候选均复用原FP32 ONNX；ORT CPU、intra2/inter1、sequential、batch1，原validation100来源，六轮3AB/3BA，每模型每轮50warmup+100 latency+100 throughput请求；每模型600条latency合并计算p50/p95，吞吐以总请求/总loop时间计算。
+
+| 指标 | MN-HPO42 | RN-HPO42 |
+|---|---:|---:|
+| p50 / p95 latency | 6.947542 / 7.247200 ms | 25.120188 / 25.421450 ms |
+| throughput | 141.953439 images/s | 39.713008 images/s |
+| 六轮p95范围 | 7.213748–7.568449 ms | 25.297616–26.125865 ms |
+| ONNX / checkpoint bytes | 16849370 / 17052801 | 44717068 / 44803787 |
+| worker采样peak RSS范围 | 353.75–354.86 MiB | 375.00–375.12 MiB |
+| peak减session前baseline范围 | 43.70–43.80 MiB | 64.83–64.98 MiB |
+
+Runtime严格限定 **CPU_ORT_SESSION_RUN_ONLY_NOT_CAPTURE_TO_RENDER**，不包括camera、请求、融合、数据库、UI；不能称Live吞吐、端到端延迟或edge/车规性能。RSS target20ms，但实际runtime最大采样间隔38.73–42.52ms，整个formal run最大0.53155s；观测可能漏掉瞬时峰值，delta不是模型独占内存，`ru_maxrss`只描述整个worker生命周期。未证明机器独占或恒温；不以固定内存数值替代后续部署验证。
+
+三HPO telemetry stderr各保留 **1410条**同类SimpleImputer特征名warning（共4230，Traceback=0）：train用DataFrame特征名，P4输入为NumPy数组。独立核查45000 variants的8列固定顺序、三份训练统计feature_order/median及LR train-only scaler路径一致，没有P4 fit或重排列，故在已核查范围内判为**NONBLOCKING_METADATA_WARNING**。本轮没有load checkpoint内部作额外检查；结论基于冻结身份、已有训练metadata和源码路径，保留这一验证边界。原stderr未抹除，也没有为消除warning重跑test。
+
+### 四维验收、局限与下一阶段
+
+| 维度 | P4-B判定 | 证据和适用范围 |
+|---|---|---|
+| Implementation | VERIFIED_PASS | 修订v2完整执行，shared input/once-only cache/预算/clean与stability/runtime路径落实；QC按用户决定移除 |
+| Testing | VERIFIED_PASS | 保存并核验的280项软件回归、25成功worker、本轮309项独立缓存检查及runtime重算；不是本轮重跑280测试或重复完整推理 |
+| Evidence | VERIFIED_PASS | 原始cache/日志/metrics/completion/budget/provenance、33输入文件SHA、7身份/3ONNX和两份只读验收JSON完整 |
+| Reproducibility | VERIFIED_PASS（可追溯与缓存复算范围） | 实际源码/配置13份启动snapshot、HEAD+dirty、seed42、数据/输入hash、环境/线程/模型可定位，独立复算通过；未独立重训/重跑完整数值实验，不主张clean commit或bitwise保证 |
+
+**P4-B VERIFIED_PASS（user-amended P4-PROTOCOL-v2 scope，含已披露局限）。** 人工38-case pilot、formal Recognizability QC、QC-conditioned F1、human validity rates及inter-rater claims仍全部 **REMOVED_FROM_SCOPE，非PASS**。本决定保留R4 §2.3被用户显式覆盖的记录，不伪造人类标签保真证据。历史test多次曝光、仅4司机、合成telemetry独立性未知、DMD BLOCKED及旧P4-A监督器未提前snapshot的历史限制仍存在；本次正式执行13份预启动snapshot解决的是本次来源追溯，不追补旧历史。
+
+模型偏好仍是**validation先验确定的RN-HPO42与XGB-HPO42研究候选**，两视觉身份和三telemetry comparator全量保留。Clean/E1只作预声明的最终描述性比较，不据此retune、改seed、重新选checkpoint或静默改规则；最终工程部署选择仍需单独讨论兼容性与系统证据。现有部署MN+XGB的bytes/SHA均不变，后端/前端/fusion/FSM未修改，未进入P5或制作candidate package。
+
+验收时Git仍`fyp2/ml-training / 335da4e3de203836c045452f84cc291bcd352a26`，staging为空；**执行工作树含已记录改动和untracked ML文件，并非干净commit实验**。用户本轮提供的`AGENTS.md`及匹配工具角色的`.codex/agents/`配置另行出现，原样保留，未纳入执行source binding或暂存；09报告未修改/删除/暂存。最新generic handbook中的旧分支/暂停额外实验描述不覆盖本会话明确的ML分支及P4授权，没有切branch/worktree、commit或push。
+
+Week6对应的本ML轨道Clean/E1及证据生成项为 **VERIFIED_PASS（修订范围）**；不据此宣称整周Live-system验收完成。Week7 Candidate Model Package/P5为 **APPROVAL_PENDING / NOT_STARTED**。下一步仅在用户单独批准P5后，按R4 §3精确结构及届时最新runtime compatibility contract准备隔离candidate package与重放证据；需确认打包身份/目标兼容合同及可消费的P4证据，不自动部署、不追加训练/HPO/导出。本阶段停止于P4-B验收。
+
+## 2026-10-22 P4-B 开工检查 — 历史AUTHORIZED / BLOCKED_INSUFFICIENT_RAM（已由上方执行与验收覆盖）
+
+用户在P4-A修订验收后明确要求“进行下一个stage”，本次据此授权进入 **P4-B：P4-PROTOCOL-v2的正式Clean Test、完整配对E1及受控CPU runtime benchmark**，沿用已呈报的14400s总机器硬上限、各阶段/模型上限、no retry/no expansion规则。该授权不包含P5、新训练/HPO、额外导出、模型替换或部署；人工QC仍REMOVED_FROM_SCOPE。下方旧P4-A的P4-B APPROVAL_PENDING是历史状态，本节覆盖其权限状态。
+
+- 六项Git开工检查：cwd/root正确，branch=`fyp2/ml-training`，HEAD=`335da4e3de203836c045452f84cc291bcd352a26`，status仍为26条已知路径，staging为空；未切branch/worktree、提交/push或进入Live-System目录。
+- 完整性检查PASS：12份P4-A冻结源码/依赖与snapshot SHA一致，7模型身份、4 protected+3 HPO+3 P3记录匹配；三部署原件与09未变。两个authority blobs仍`5ac2dbe…`/`dab04a…`，278-test日志与验收记录一致。另有一次独立只读复核PASS；没有重复运行测试或数值预检。
+- **资源门禁未通过**：首次available RAM6.3951GiB，完成启动准备后复核为 **6.37558GiB / 要求≥8GiB**；free disk **290.42369GiB / 要求≥20GiB**，接电=true。RAM不足依据`ml/configs/p4_protocol.json`的`budgets.minimum_available_ram_bytes=8589934592`及现有BudgetSupervisor启动门禁；不自行降低该要求、不退出用户应用、不清理系统内存。
+- 计划正式run_id=`p4b_20261022`。当前仍**不存在正式run目录、cache、held-out预测或completion**；没有启动BudgetSupervisor/worker，held-out observations=0、model forward=0、training/HPO=0、new export=0。只创建启动控制文件，不把它们当正式实验结果。
+- 准备文件位于`ml/outputs/runs/p4a_20261021/implementation/p4b_startup_20261022/`：`approved_p4b.json`记录本次明确用户授权，绑定protocol SHA=`89185f6c56b8af00b2883e27df72c0713141d92b3396a5609462a5ed053cdd41`、source SHA=`79f1ccc857c873969fa177bea54c78eefe3704114604d88d18816ffe73f1c1a5`及新run_id；`execution_spec.json`复用既有数据root和P4-A preflight/attestation；`startup_checks.json`记录资源、Git、完整性和 **PREPARED_NOT_EXECUTED** 的启动参数。未改动冻结protocol去伪造execution approval flag，也没有覆盖旧P4-A artifact。
+- 实际执行仅六项Git检查、Python/psutil内存/磁盘/电源读取、来源与模型文件hash、JSON配置/授权准备；没有调用`run_p4 formal`、`_worker`、模型推理或原始test读入。未因配置文件准备而重复跑278测试；其证据复用范围与执行版本已核验。
+
+当前阶段结果：**P4-B AUTHORIZED，执行BLOCKED_INSUFFICIENT_RAM，非FAILED或VERIFIED_PASS**。Implementation/Testing/Evidence/Reproducibility的P4-A判定保留；P4-B仅完成开工完整性与控制文件准备，正式评估四维验收均尚未发生。下一步为释放暂不用应用的内存后重新检测available RAM≥8GiB，再核验source/protocol/model hashes及正式run目录仍不存在，使用本次已绑定的授权启动。**无需重复批准P4-B**；不自动监控、不降低门槛、不换run_id来重跑已曝光test，也不进入P5。
+
+## 2026-10-22 P4-A 范围修订审阅 — 历史P4-PROTOCOL-v2验收（后续P4-B状态以上方为准）
+
+**本节为当前生效范围，覆盖下方旧版P4-A的人工QC待办及因此产生的PARTIAL结论；旧版报告和实验文件保留为历史证据。** 用户明确取消本FYP的人工Recognizability QC，本轮仅批准协议/实现修订和P4-A验收审阅，不授权P4-B held-out观察、正式Test/E1、P5、重新导出、HPO、fine-tuning或部署。当前阶段为P4-A revised acceptance review；下一阶段P4-B仍APPROVAL_PENDING / NOT_STARTED。
+
+### 范围裁定与方法取舍
+
+- 两份权威文件已再次从当前repository完整`git show`核对，blob仍为prompt `5ac2dbe9798080015cff647f55d3dc38248280fd`及R4 `dab04a6b0f561a8260d4737729a6507eefde5f83`。R4 §2.3原文要求“遮挡或裁切可能移除动作判据，所以需要独立的可识别性 QC”。本次用户明确范围决定覆盖这一项，记录为 **USER_APPROVED_MANUAL_QC_REMOVAL**；不能声称仍逐字满足原版R4该项，也不因此擅改R4原文件。其他模型、配对输入、split/seed、训练/部署保护、阶段审批和E1-only边界继续有效。
+- 38-case validation人工pilot、正式人工QC、QC-conditioned F1、human validity rates、inter-rater claims全部 **REMOVED_FROM_SCOPE**，不标PASS、FAILED或人工验证完成。R1/R2人选、盲审操作、实际审阅时间/保留率、formal人时预算及浏览器QC页面验证不再是当前验收门槛。旧38张图、空判定表、源码/byte attestation保留，不删除、不改写、不生成判断；旧helper的合成测试只证明历史软件行为，不充当人类评价。
+- Vision完整范围不缩减：**3657 held-out sources ×19条件（clean+18 corruption）=69483个共享输入；RN-HPO42、MN-HPO42、MN-STABLE共208449条预测**。每source/condition的输入字节、参数、ID和hash按原协议配对，seed42、6×3强度、rotation/crop几何不变。clean缓存一次，每condition按batch32/尾批9；不会因取消QC筛掉样本、补抽样本或标记默认VALID。
+- **Clean分类主结果**保持Accuracy、Macro-F1、逐类precision/recall/F1/support和confusion matrix，vision全3657来源；telemetry按冻结D0合成原标签报告。稳定模型对照、四driver描述性指标和原有validation偏好保持不变。
+- **Corruption主要结果**改为全量配对Prediction Flip Rate、Probability L1 Shift及Prediction Distribution Changes。Flip Rate=`mean(argmax(p_stress) != argmax(p_clean))`；L1 Shift=`mean(sum(abs(p_stress-p_clean)))`；distribution报告逐类预测计数/比例变化及平均概率变化，明确support和固定class order。它们测量输出相对clean的稳定性；模型稳定地给出错误答案仍可能有低flip/L1，不能把这些数字称为准确率、label-preserving robustness或安全改善。
+- **原标签corruption Macro-F1本轮不计算**，不增加新的敏感性分析实验。若报告该项，必须明确标注`ASSUMPTION_BASED_SENSITIVITY_ANALYSIS`，其标签保持是假设而非人工验证；严重occlusion、rotation/crop可能移除或改变动作判据，不能声称必然保留behavioral label。当前正式汇总仅对clean计算分类指标，stress保持`LABEL_VALIDITY_UNVERIFIED / f1_eligible=false`。
+- 取舍：保留可复现、全量同源输入的模型输出稳定性比较，降低人工工作量；失去经过人工确认的label-valid subset与相应有效标签鲁棒性结论。没有实际human validity rate、inter-rater agreement或可识别性保留率。历史test多次曝光、仅4名test司机、不能把3657帧视为独立人物、合成telemetry泛化限制继续披露。D3仍是combined positive-bias and record-level missingness stress，D2仍是label-conditioned stress；不改telemetry标签政策。
+
+### 证据保留与本轮实现
+
+- 六项开工检查确认cwd/root、`fyp2/ml-training`及HEAD=`335da4e3de203836c045452f84cc291bcd352a26`正确；26条status路径均为已知既有工作。本轮不切branch/worktree、不暂存/commit/push、不进入Live-System物理目录。Live分支在其他工作区前进不影响两个authority blobs，本轮未修改该轨道。
+- 修订前对既有run目录 **169个文件**逐一保存bytes/SHA，并独立保留10份旧源码/config/test和旧规范报告，证据为`ml/outputs/runs/p4a_20261021/implementation/no_manual_qc_20261022/before_manifest.json`及`before/`。原`implementation/full_ml_suite_after_review.log`的 **271 passed in27.63s**永久保留；新修订的测试结果另记，不把旧结果泛化到新源码。
+- 两份既有FP32 ONNX、三身份parity、validation-only CPU throughput和原projection只做hash/metadata复核，没有重新生成或运行。RN新ONNX SHA=`5e226722e0712824c78aa0976afa6fa5b8dc6100b147a7f523a09048171d8cf3`，MN新ONNX SHA=`9ee60abb78007773cc625af80c313049c1970f63c1f041bed9f5b2539a384828`；preflight数值源码`p4_preflight.py`及历史QC源码`p4_qc.py`冻结不动。原11worker预检60.016934s、三身份parity PASS、吞吐MN-HPO159.6048/RN-HPO41.5537/MN-STABLE160.5767 images/s均为REUSED_AND_VERIFIED的历史validation结果，不是本轮新增运行。
+- 已实现：v2消费者取消reviewer/人工amendment gate；共享输入准备不再挑QC子集、复制QC图或生成review kit；汇总不再等待人工判定或生成QC-conditioned F1/validity/inter-rater指标，相关项目只返回REMOVED_FROM_SCOPE；只读cached聚合不要求QC文件。旧`qc_conditioned_report` helper只为保留历史软件测试，v2 active路径无调用，也不进入active source binding。另行P4-B外部approval仍绑定新protocol/source/run，旧v1绑定不能自动沿用。`formal_execution_authorized=false`与所有冻结模型/预算不变，取消QC不转换为执行批准或可用训练预算。
+- v2明确`preflight.export_execution_authorized=false`、`formal_runner_export_authorized=false`、`existing_exports_status=REUSED_AND_VERIFIED`、`historical_export_count=2`；原来两份导出权限已经消费，本轮没有授权第三份导出或重导出。新增distribution字段为stress−clean的count/rate差，保留原flip/L1/mean_delta_probability公式；各行`human_validated=false`，不自动产生VALID。
+- 实际改动仅`ml/experiments/{p4_core.py,run_p4.py}`、`ml/configs/p4_protocol.json`、`ml/tests/test_p4_core.py`及本规范报告。差异与四文件执行版本为同一证据目录的`v2_no_manual_qc.patch`、`after_manifest.json`、`after/`。config SHA=`89185f6c56b8af00b2883e27df72c0713141d92b3396a5609462a5ed053cdd41`，run_p4 SHA=`3542e14e318a3d2cbff8cd3a0decaf2c88ec592e6229bd8b6573c620da1fe3ba`，active source binding SHA=`79f1ccc857c873969fa177bea54c78eefe3704114604d88d18816ffe73f1c1a5`；`consumer_verification.json`中的run_id只是现有P4-A证据定位，不是P4-B授权文件。
+
+### 本轮实际验证
+
+证据目录统一为`ml/outputs/runs/p4a_20261021/implementation/no_manual_qc_20261022/`，没有新增进度文档。
+
+- TDD：首批新回归RED为5 failed，修复后5 passed；补充回归RED为2 failed/1 passed，最终core focused **48 passed in5.18s**。原始输出分别为`red.log`、`green_initial.log`、`red_followup.log`、`core_focused.log`。仅使用synthetic source/微型实际NPY与SQLite cache，mock外部数据读取/固定全量membership边界和worker启动；formal orchestration测试捕获25次计划dispatch，并未启动25个正式worker。没有真实test来源、模型forward、fit或导出。历史QC helper测试依旧仅用合成判定，不是人工结果。
+- 最终实际命令：`set -o pipefail; OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 ./.venv/bin/python -B -m pytest ml/tests -q | tee ml/outputs/runs/p4a_20261021/implementation/no_manual_qc_20261022/full_ml_suite.log`。**278 passed in37.76s / exit0**。这是新源码的软件回归，区别于保留的旧271结果；包括无QC准备、无reviewer调度、实际cache汇总clean/stability、cached CLI不要求QC且使用剩余预算、v1拒绝、五种malformed外部approval在数据/worker前拒绝、手算distribution delta等。监督器合成测试为读取自身worker RSS受控在sandbox外运行，不修改共享环境或执行正式实验。
+- 独立保留审计`preservation_checks.json`：原169文件size/SHA全部不变，4 protected+3 HPO+3 P3记录匹配，7模型仅hash匹配，新ONNX恰2份、旧271日志未改；耗时0.346900s，没有读取源图片/源telemetry CSV、解码QC图片或运行模型。
+- 新版纯消费者核验`consumer_verification.json`：validate v2并核验原parity/export/attestation、原val bank字节和synthetic geometry，实际3.665555s，169旧文件再次全部匹配；模型forward=0、source images=0、telemetry records=0、held-out observations=0、new exports=0。这是已有artifact复核，不是重复CPU throughput或parity推理。
+- 独立scoped代码复审`scoped_review.json`：**PASS，未发现新P1/P2或material P3**；确认active路径不准备/要求/消费人工QC、无conditioned/validity/IRR指标，配对scope与冻结身份完整、delta使用同一N、外部P4-B授权与v1拒绝有效、新导出未获授权。review只读，没有运行测试或模型。
+- 最终源码和必要依赖共12份存于`final_source_snapshot/`，`final_source_manifest.json`逐一记录bytes/SHA；最终纯完整性检查0.287255s再次确认169旧artifact、7身份及10 protected/HPO/P3记录不变、staging为空、Git仍为`335da4e`、正式执行flag=false。`revised_acceptance.json`记录本次修订判定，明确仅覆盖旧`implementation/final_closure.json`的当前验收状态，旧closure原样保留，不覆盖实验结果。
+
+### 修订验收与剩余边界
+
+| 维度 | 修订后P4-A判定 | 证据与适用边界 |
+|---|---|---|
+| Implementation | VERIFIED_PASS | v2配置、数据准备、预算/外部授权、once-only cache及clean/stability汇总落实；没有新增mandatory实现缺口。历史QC helper保留但不在v2执行路径 |
+| Testing | VERIFIED_PASS（软件与既有validation预检范围） | 新278项回归、core48项及只读复审PASS；旧271、两ONNX/三parity/CPU预检完整保留。正式held-out端到端执行未开始，不从单元测试外推为完成 |
+| Evidence | VERIFIED_PASS（修订后的mandatory范围） | 169旧artifact、7身份/三组保护hash不变；新RED/GREEN、完整suite、consumer、review、协议/源码SHA与snapshot可定位。人工判定并非缺证，而是REMOVED_FROM_SCOPE |
+| Reproducibility | VERIFIED_PASS（当前记录与可追溯性；保留历史重放限制） | 当前源码、协议、模型/数据/输入hash、seed42、环境、HEAD+dirty和原始日志可定位；不保证补回原始监督器完整源码、独立数值重放或干净commit复现，具体限制见下 |
+
+**P4-A：VERIFIED_PASS（revised P4-PROTOCOL-v2 scope, with documented limits）。** 38人工pilot、formal人工QC、QC-conditioned F1、human validity rates及inter-rater claims全部 **REMOVED_FROM_SCOPE，绝非PASS**。本次改变的是用户认可的mandatory范围及对应结论强度，不是补造人工证据、删除旧失败记录或声称原版R4所有条款仍被满足。
+
+原始监督器源码未在后续修复前snapshot的复现限制仍保留；不能追补声称当时版本已完整冻结。当前数值导出源码、模型/数据/输入hash、seed、环境、原始计时/RSS日志及最终源码snapshot可定位。旧38case参数UNRECORDED属于已移除QC的历史限制，不再构成当前必做工作。正式总cap仍为提案 **14400s**，原validation外推 **8097.7602s**只供规划，不保证正式耗时；取消QC后不重跑模型来重新估计，不自动提高任何预算。
+
+**P4-B：APPROVAL_PENDING / NOT_STARTED。** 剩余的是单独批准v2 protocol/source/新的正式run binding及既有14400s总cap，启动时复核RAM≥8GiB、disk≥20GiB、线程/电源与模型保护。无需再提供reviewer、完成38张盲审或批准人时预算。正式Clean Test/E1/六轮runtime、P5及部署均未执行；P4-A通过不等于这些阶段或Week6/Week7全部通过。当前停止在修订后P4-A验收，不自动开始下一阶段。
+
+## 2026-10-22 P4-A — Implementation and Validation/Synthetic Preflight（历史单人QC范围；已被上方v2修订覆盖）
+
+当前用户已原则认可 P4-PROTOCOL-v1，并明确仅批准 P4-A 实现与 validation/synthetic 预检、两份隔离 FP32 ONNX 导出。P4-B held-out / 正式 Test/E1、P5、部署仍未授权。下方 2026-10-20 的“未获导出授权”等描述是历史状态，本节覆盖其权限状态，不改变实验设计。
+
+- 开工：六项 Git 检查通过，`fyp2/ml-training` / `335da4e3de203836c045452f84cc291bcd352a26`；15项既有 dirty 路径与上轮相同。保护基线、09审阅、HPO selection/state 和 P3 generator/profile 原始 hashes 保存在 `ml/outputs/runs/p4a_20261021/startup_snapshot.json`。未暂存、提交、切分支或进入 Live-System。
+- 实施任务：① formal runner、独立 P4-B gate、一次 clean cache、预算监督和指标；②按用户修订的单人 R1 盲审 QC、共享生成输入、分阶段 bounds、validation pilot；③两份隔离 ONNX、三身份 parity、CPU throughput 有界预检；④整套 ML 测试和独立 review 后汇总。使用 Superpowers TDD 与隔离子任务，原始 RED/GREEN 证据保留在同一 run 下。
+- 接口检查：①与②共享 source ID/condition metadata 和授权 gate；①与③共享 frozen identity/ONNX provenance；②与③只打开 metadata 已证实的 val 图片。禁止用把 test 标为 val 的方式复用 P3；P3 源码和旧准备产物保持原样。实现各组件的 synthetic test 不代表 formal run 已完成。
+- Ruling：按用户最小文档政策，本报告兼作实施 ledger，机器日志在 run 目录，不另建 plan/progress 文档；继续当前已核实 ML 分支，不创建工作树、不按 skill 默认提交。代价是交付需要 source snapshot/dirty 记录，不能称干净 commit 复现。
+- Ruling：本轮 export/checker/parity 使用 v1 的 600s 阶段上限；额外 validation CPU throughput 预检自行收紧到 600s 上限，非正式 6-round runtime benchmark，不转移/扩大 14400s 正式预算；超时或 parity 失败停止，不改容差、模型、设备或再次导出。
+- QC：用户已明确修订 P4-A 为单人 feasibility pilot：`R1 = project developer`，没有 R2、不计算 inter-rater agreement。准备 2 个 validation source ×19 =38 案例，盲审时隐藏原标签和模型输出；记录 VALID/INVALID/UNCERTAIN、选择的行为类别、理由与逐案例实际耗时，锁定后核对原始动作证据。单人偏差、小样本及相关变体局限必须披露；延迟随机重复审阅可选，不设为门禁。未收到 R1 实际判定前，保留率/人工耗时写 PENDING，不影响其他 P4-A 实施/预检。正式 P4-B 的单人 QC 方案随下一次审批明确，不能仍以不存在 R2 阻塞。
+- D3 的正式表述为 **combined positive-bias and record-level missingness stress**，同时施加正向偏置与记录级缺失，不解释成 isolated missing-feature 实验。
+
+当前工作是评估准备，不是新增训练。已核对 `ml/vision/train_hpo.py`：两种视觉模型在加载冻结 ImageNet 预训练权重后替换10类分类头，AdamW 优化 `model.parameters()`，没有冻结 backbone，因此 P3 已进行全网络 fine-tuning，并非只有随机初始化或 linear probe。已冻结 RN `search_004/seed42` 与 MN `search_006/seed42`；validation macro-F1 分别为0.9406150484662007和0.9162198680081481，3-seed均值分别为0.9247975522065762和0.8936628163255497。XGB/RF/LR也已有正式训练与bounded HPO。是否额外 fine-tune 是新实验决定，需要单独假设、train/validation方案、预算及用户批准；不能用之后的Test/E1结果继续调参并仍把同一test称作独立确认。本轮不增加HPO或训练，部署旧MN+XGB保持不变。
+
+- 资源：首次可用 RAM 6.33 GiB，按≥8 GiB 门槛暂停模型工作；用户选择“先完成实现，资源不足记录阻塞”。后续自然回升至8.55/8.36 GiB，仍在每次实际启动前复核，不结束系统进程、不降低门槛。`ps`/进程树采样在 sandbox 中被拒绝；小型 synthetic 监督器测试另行受控验证，RSS不可观测时必须 fail closed。
+- 实施子任务曾因会话额度中断；已继续原子任务，保留真实中间 RED/失败日志，不把未完成 agent 当作完成证据。
+
+### 已执行的 validation-only 证据（不含正式 Test/E1）
+
+实际执行入口为 `./.venv/bin/python -B ml/experiments/p4_preflight.py run-preflight --run-dir ml/outputs/runs/p4a_20261021`。为观测自己启动的 worker RSS，在受控授权下于 sandbox 外运行同一入口；未变更共享环境、未发起网络下载。启动前自然恢复内存后才执行，每个 worker 启动时可用 RAM 最低 **8.3624 GiB**，磁盘>300 GiB。监督器合计 **11 workers / 60.016934 s**（preflight **42.512368 s**，timing **17.504565 s**；从 invocation 到 summary 文件时间约 **60.037369 s**），低于600+600=1200s内部预检上限。没有重试或再次导出；正式14400s没有启动或扩额。
+
+| Identity | 新 ONNX bytes / SHA256 | validation PyTorch–ORT parity | batch32 CPU吞吐预检 |
+|---|---|---|---:|
+| MN-HPO42 | 16849370；`9ee60abb78007773cc625af80c313049c1970f63c1f041bed9f5b2539a384828` | PASS；211 sample appearances；max abs `4.100799560546875e-05`；max prob差`6.364584130613693e-06`；全部argmax一致 | 159.6048 images/s |
+| RN-HPO42 | 44717068；`5e226722e0712824c78aa0976afa6fa5b8dc6100b147a7f523a09048171d8cf3` | PASS；211 sample appearances；max abs `1.9073486328125e-05`；max prob差`2.302238954254854e-06`；全部argmax一致 | 41.5537 images/s |
+| MN-STABLE | 只读现存ONNX，**没有重新导出** | PASS；211 sample appearances；max abs `5.340576171875e-05`；max prob差`4.846009571957133e-06`；全部argmax一致 | 160.5767 images/s |
+
+每身份的211是同100个val来源在100×batch1、32/32/32/4、2、9中的重复出现，不是211个独立样本。三者共享100样本、10类各10的同一tensor bank，hash=`07adb0…42e`（完整值见manifest）。检查均使用原约定`atol=rtol=1e-4`，没有放宽。ONNX checker、FP32 logits、dynamic N、strict weights-only/PT头及真实class顺序通过；两新图是bench/evaluation-only，`candidate_package=false, deployment_eligible=false`。上述吞吐每身份100 warmup +200 measured images，排除完整Live流程；**不是**正式6-round batch1 latency benchmark，不据此改validation候选优先级。最大观测worker RSS **1.52248 GiB**；20ms是采样目标，实际最大片段间隔约100.1ms，不能声称捕获瞬时全部峰值。
+
+`projection.json`按实测100val throughput、1900变体生成耗时以及1.25 margin外推：vision clean167.12s、stress3008.11s、共享生成122.54s；RN stress1980.15s/2400s cap，MN-HPO515.54s/2400s，MN-STABLE512.42s/2400s。加其余未实测阶段按cap预留后总计 **8097.7602s ≈2小时15分**，低于14400s提案。该估计不包含正式cache/QC图片与全量bank写入的实测成本、热/系统负载变化，不能保证整次执行时长；尤其RN模型cap余量约420s，到限仍停，不扩额。
+
+复现记录：`environment_snapshot.json`记录Python3.13.3、torch2.12.0、torchvision0.27.0、onnx1.21.0、ORT1.26.0、numpy2.4.6、Pillow12.2.0、psutil7.2.2及macOS/arm64；这是预检后记录的同一未修改环境。执行过的导出源码保留为`implementation/p4_preflight_executed.py`，SHA=`ffdfa6637bace58c9818ade3b9a84e812a59d2f681543927b10403061301dece`。每worker另记HEAD、dirty、protected前后hash、source hash与线程池。工作树有明确记录的未提交实现，不声称是干净commit运行。
+
+### 单人 QC feasibility pilot
+
+实际命令：`./.venv/bin/python -B -m ml.experiments.p4_qc pilot --metadata /Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/vision/vision_metadata_with_split.csv --metadata-sha256 b4f8e90dec769bb419eaa490aea869668bed6484089cebe4d545c7667baa8ea4 --output ml/outputs/runs/p4a_20261021/qc/validation_pilot`。只打开2个已证实val来源，生成38张匿名PNG及`review.html`、盲审表、受限source key；准备软件耗时 **0.510560708s**，不是人工审阅耗时。与模型预检100来源无重叠，因此本轮实际使用共102个distinct val来源；未打开held-out图片或telemetry test记录。
+
+R1流程为 `review.html → 导出blind JSON → p4_qc lock → reveal → source_review.html或cue CSV → finalize`。逐case包含VALID/INVALID/UNCERTAIN、选择class、理由、elapsed wall seconds（含中断），锁定后才揭示source并确认preserved cue。最终VALID还需blind类别匹配source且cue=True；统计class/driver/family/common-valid支持、实际时间均值/中位/p95，均不调用模型。没有R2、没有inter-rater agreement；延迟随机repeat非必需，本轮未执行。
+
+**当前人工判定0，实际每case耗时、有效保留率和共同集合覆盖仍PENDING。** 38变体仅2个source，完整10类macro-F1不可估计，不代表38个独立参与者。仅给非实测场景：若5/10/20s每case，pilot约3.17/6.33/12.67分钟，最多3800正式case约5.28/10.56/21.11小时；这不是实际人时或新批准预算。原“两人各8h”不再自动转为R1的16h，正式单人时间预算待pilot数据与P4-B审批明确。R1为开发者，存在开发者/单人判断偏差及既往数据熟悉度，须与四test司机/历史test曝光局限同时披露。
+
+页面JavaScript静态语法检查通过（`node --check`），内置浏览器因file URL策略拒绝打开，**未完成浏览器实际渲染/人工操作验证**；没有更换浏览器/代理来绕过。可以由R1本机浏览器手动打开本地文件；软件流程测试不替代人工判断。
+
+### 最终审阅、测试与证据
+
+- 完整 ML suite 最终命令：`set -o pipefail; OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 ./.venv/bin/python -B -m pytest ml/tests -q | tee ml/outputs/runs/p4a_20261021/implementation/full_ml_suite_after_review.log`；实际 **271 passed in 27.63s / exit 0**。修复前完整套件264 passed/26.95s的旧日志保留，修复后focused P4 suite为95 passed/6.21s；不把单元/合成测试称为正式held-out端到端结果。需读取自身测试worker RSS的部分在受控sandbox外执行，未训练或执行正式Test/E1。
+- 原 parity JSON 缺直接 ONNX hash 的 P2 已关闭：consumer 使用原始export记录、冻结ONNX SHA及`core/preflight_attestation.json`共同核验；验证三身份都使用已冻结validation bank和原导出源码。未改变已执行导出脚本、重导出或重复模型forward。
+- QC PNG/source key 未绑定的 P2 已关闭：`qc/validation_pilot_byte_attestation.json`核验既存38图的文件/像素、2个val原始source、source key和生成源码；lock/reveal/finalize再消费绑定。该sidecar为 **CURRENT_KIT_BYTE_FREEZE / initial_generation_proof=false**，38个历史case缺失的参数仍为UNRECORDED，不重建或冒称当时已记录。JSON文件SHA为`ae9b78cea795e0c50829cffa820d0ccdb7604017a316619d46c350ff441cd1a6`，内部canonical attestation digest为`a61964f46545f2fb6c67b39f5ebb483b13364c67c61466fbc852724a75ce8930`。`p4_qc.py`冻结SHA=`ff04696f5a2abbde841a19a10f7e77bd760bb4b2dde9288ff2b1d94bcb8f01c8`；pilot旧文件未改写。cue理由需非空字符串、PNG/source篡改拒绝、锁定后才揭示均有回归验证。
+- 全包独立审阅的 telemetry 汇总 P2 已关闭：`evaluation_metrics.json`将消费已有`telemetry_variants.json`的纯metadata聚合，不增加推理。逐condition/feature报告source/injected/combined缺失的记录与cell数量/比例；四阶段source/pre_mask/observed/imputed分别报告domain/经验status和上下越界count/sum/max，保留UNKNOWN/MISSING与真实分母，不能用imputation掩盖mask前异常。D1–D3仍无有效真值F1。
+- 同轮 P3 审批值truthiness已修正为literal `is True`；QC pending文字改为当前run范围。新回归先RED（5 failed/2 passed），修复后7 passed；证据在`core/final_review_fix_red.log`、`core/final_review_fix_green.log`、`core/final_review_fixes.patch`。只读scoped复审确认上述修复PASS，未发现新增P1/P2；该review自身没有运行模型或测试。
+- 剩余minor：`p4_qc.py`通用LIMITATIONS仍写2 sources/38 cases，对本轮pilot准确，未来正式QC kit须按scope修订并保留当前pilot的源码/attestation版本；不把此问题解释成当前38案例无效。已执行preflight脚本若保护hash检查在finally失败，结果JSON可能为空，stderr/监督器失败状态仍保留；本轮没有发生，保留执行源码，不为此再次导出/推理。
+- 复现限制：实际11worker执行时的`BudgetSupervisor/p4_core.py`没有在后续修复前保存完整源码快照，不能把当前修复版说成当时版本。原始worker预算/RSS/退出日志及精确数值导出脚本仍保留；当前10份最终源码已独立冻结在`source_snapshot_after_review/`，对应`implementation/final_sources_after_review.json`，不覆盖初审snapshot。最终run_p4 SHA=`3b2350b161043a2e3007c99a65ba00695a3793c910986eadb991209575f95ada`。没有重跑实际preflight来掩盖该限制。
+- 最终纯artifact核验实际0.860096s：7冻结身份、三组保护hash、exactly2新ONNX、38图attestation、10份源码snapshot、staging为空、正式授权flag=false均PASS，结果在`implementation/artifact_integrity_after_review.json`。此核验仅读取既有val bank/QC字节及hash，模型forward=0、held-out observations=0。修复后仅run_p4及其测试相对初审源码发生变化。四保护原件、3份HPO selection/state、3份P3源码/profile与开工snapshot相同；没有新增HPO/training、修改源CSV、覆盖部署、提交或push。
+
+实现文件：`ml/experiments/{p4_core.py,run_p4.py,p4_data.py,p4_qc.py,p4_preflight.py}`、`ml/configs/p4_protocol.json`及四个`ml/tests/test_p4_*.py`。复用已核验的P3生成器/统计/profile、冻结split/selection/checkpoint、稳定baseline和原实验日志（REUSED_AND_VERIFIED），没有复制第二套训练或fusion实现。仅本规范报告更新；同run下的manifest、机器日志、模型、差异包和快照属于实验原始证据，不是重复进度文档。
+
+### 四维验收与下一阶段门禁
+
+| 维度 | 当前判定 | 实际证据与边界 |
+|---|---|---|
+| Implementation | VERIFIED_PASS（P4-A技术范围）；人工部分PARTIAL | formal runner、paired共享bank、once-only cache、预算监督、R1盲审/锁定流程、两份隔离导出及三身份parity均已实现并验证；正式QC通用scope文字保留已知minor，正式执行本身未运行 |
+| Testing | VERIFIED_PASS（271项软件测试和实际validation预检）；人工/浏览器PARTIAL | 完整日志exit0，实际11worker完成；38案例已有静态JS检查与合成流程测试，但浏览器渲染未验证、R1真实判定为0 |
+| Evidence | PARTIAL | ONNX/模型SHA、原始parity/throughput/计时/RSS、validation输入bank、保护hash、测试与review差异证据齐全；实际人工时间、有效保留率及coverage仍PENDING；没有正式Test/E1指标 |
+| Reproducibility | PARTIAL（限制已披露） | 精确导出源码、最终10文件snapshot、数据/模型/输入hash、seed42、Git HEAD+dirty、环境版本可定位；没有干净commit复现，初次监督器源码快照缺口不可追补，38历史参数UNRECORDED，不声称逐位重现 |
+
+**P4-A整体：PARTIAL（技术验证通过，人工feasibility交付未完成）；P4-B：APPROVAL_PENDING，尚非无条件READY。** 不新增模型分数门槛，也不以271个测试替代人工QC或正式实验。R1完成pilot后，才可用实际每case耗时、valid/uncertain/invalid与class/family覆盖修订可行性判断；2个pilot来源本来不能证明完整10类覆盖，不据此补抽或伪造结果。
+
+P4-B前须逐项处理：
+
+1. R1在本机打开`ml/outputs/runs/p4a_20261021/qc/validation_pilot/review.html`，完成38案例并导出blind JSON；按lock→reveal→cue checks→finalize取得真实结果。当前等待的是用户人工操作，不需要第二人，也不阻塞已经完成的预检。
+2. 明确批准正式单人R1 QC适用范围与人工时间cap；旧两人16人时不能自动沿用。已知formal kit scope文字先做版本化修订，保留当前pilot全部文件及绑定，不重新生成38图来掩盖历史参数缺失。
+3. 单独批准P4-B的冻结protocol/source/run binding与**14400s总机器硬上限**；实测外推约8097.76s仅为估计。RN stress约1980.15s/2400s余量较小，到限仍停，不重试/扩额/新HPO。下一次启动重新检测RAM≥8GiB、disk≥20GiB和线程/电源状态，不把之前资源快照当未来保证。
+4. 继续保留full clean、QC-conditioned与full-set stability三种结果口径、历史test曝光与仅4名test司机的限制。ResNet/XGB仍是validation优先，MN/RF/LR完整比较；结果不触发重选seed、改阈值、微调或部署。
+
+本轮已停止模型执行。**下一阶段仅在单独授权后为P4-B正式Clean Test/E1/受控runtime；P5与额外fine-tuning均不在当前授权内。** 本节不重新裁定历史Week2/Week3已验证范围，也不因P4-A实现将Week6/Week7、正式评估或候选包标为完成。
+
+
+## 2026-10-20 P4 Protocol Freeze Review — P4-PROTOCOL-v1（待批准，未执行）
+
+**本节是可供批准的最终协议提案，取代此前pending参数的讨论；尚未获准执行或导出。** 用户已确认ResNet18 `search_004` / seed42为validation优先视觉候选，同时要求MobileNetV3-Large `search_006` / seed42参加完整配对Clean Test与E1；XGB `xgboost_02` / seed42为遥测研究优先，RF/LR保留benchmark，旧部署MobileNet+XGB不变。本轮只做协议审阅和本报告更新，没有实现P4 runner、运行模型、加载checkpoint/反序列化joblib、访问原始held-out观察、生成test ID manifest、执行test/E1/runtime、导出ONNX或提交/push。下面所有数量与预算均为**拟议设计**，不是新实验结果。
+
+### 1. 权威、Git与真实核验
+
+- 本轮以`using-superpowers`进行方案核对，并由三个只读agent分别审查identity、E1/QC、runtime；主agent核对并整合。两份权威文件均从当前repo完整`git show fyp2/live-system:docs/fyp2/review/CODEX_ML_TRACK_PROMPT.md`及`.../CODEX_ML_TRACK_ADDENDUM_R4.md`读取；最新P2/P3执行细则也完整复核。优先级：**用户当前决定/本次review授权 > 已批准P2/P3细则 > R4 > 原prompt > 审计参考**。
+- 六项检查仍为cwd/root=`/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1`，branch=`fyp2/ml-training`，HEAD=`335da4e3de203836c045452f84cc291bcd352a26`；dirty全部为已知S3/P3产物、context和本规范报告，另有受保护09。未切branch/worktree，未进入Live-System物理目录；fast-context缺Windsurf key，改用精确读取，未提取凭据。旧prompt的空status/切回dev_cc要求不覆盖用户后续明确的保留已知改动/不切分支要求。
+- identity审阅对五个选中目录的checkpoint/config/局部selection/trials/validation metrics做**25/25 exists+bytes+SHA匹配**，最终身份与根selection、summary/state **5/5一致**。局部telemetry selection仍保留训练时`AWAITING_MODEL_SEARCH_COMPLETION`，正式冻结以根`FROZEN_VALIDATION_SELECTION`为准，不能误判为重选。
+- vision ledger及正式目录均16 attempts、全部COMPLETED；telemetry ledger26行=24 COMPLETED+1实际LR确定性重复+1未执行skip，目录25个（XGB10/RF8/LR7）。正式运行仍**41**，无extra/missing正式目录，未发现新增HPO或P4 run、正式目录无`predictions_test.csv`。此结论限定核验的ledger/目录，不声称做了全系统进程审计。
+- 四项保护hash与P0 **4/4一致**。HPO七份唯一source/config中六份仍等于执行hash；telemetry supervisor有此前已记录的timeout/process-group修复，原执行snapshot **5/5匹配**，不把当前源码冒充原25次fit的版本。
+- 为确定bounds报告，仅从SHA匹配的**train CSV 21000条**读取8列计算min/max；无fit、无val/test取值用于边界选择。用普通JSON解析旧XGB的属性确认`best_iteration=90`，没有构造Booster或预测。未重跑历史176tests/3761checks；本轮新增的是只读完整性与协议审查证据。
+- 交付前主agent另作只读复核：五checkpoint的实际SHA/bytes **5/5**、四保护hash **4/4**、P3准备源码/profile等 **10/10 source records**不变；正式目录仍16+25、无`p4*` run，`formal_execution_authorized=false`、staging为空；预测/QC计数和机器预算算术通过，`git diff --check`通过。实际命令包括上述六项Git检查、两项`git show`、`git diff --cached --name-only`、`git diff --check`、`df -k .`及`./.venv/bin/python -B`内联JSON/SHA/metadata/train-only min-max程序；torch检查仅`inspect.signature(torch.onnx.export)`与MPS可见性，ORT检查仅provider inventory，无session/forward。
+
+### 2. 冻结模型身份与对照范围
+
+下表五个优化模型全部固定seed42。V=`ml/outputs/runs/p3_vision_20261018/search/`；T=`ml/outputs/runs/p3_telemetry_20261018/`；路径缩写仅为本表可读性，未来机器manifest必须写明完整解析路径。
+
+| Identity / checkpoint | validation选定配置 | bytes | 实际SHA256 |
+|---|---|---:|---|
+| `MN-HPO42`；V`mobilenet_v3_large/search_006/attempt_01/checkpoint.pt` | lr=.0008, wd=.001, best epoch6；训练8epochs | 17052801 | `bc96e7a230de6391820b1e04e7480087841680ae6cc1b6e73cba42b25eb67295` |
+| `RN-HPO42`；V`resnet18/search_004/attempt_01/checkpoint.pt` | lr=.0003, wd=.001, best epoch3；训练5epochs | 44803787 | `008d831c98ea5e4b6c5c821787b3dc9a1dcbc6ca47a74dd1d8f7110eb4ac7d20` |
+| `XGB-HPO42`；T`xgboost/xgboost_02/checkpoint.joblib` | depth3, lr=.03, subsample1, 实际400 trees | 1194354 | `a464481d25ecb13f7db8392e039ac74855ad22fd80078154c7a4375a81097836` |
+| `RF-HPO42`；T`random_forest/random_forest_06/checkpoint.joblib` | trees400, depth24, min_samples_leaf2 | 6578922 | `cca6d8c7a7832b53c7cc0e6d1777e1c9e37b721612bb58e29df26be875c65aba` |
+| `LR-HPO42`；T`logistic_regression/logistic_regression_06/checkpoint.joblib` | C1000, lbfgs；原train-fitted median+scaler | 2449 | `558ac2cbda976822b370f257def52fa1a2dca9bb4cfe0b5e64f29623061c0274` |
+
+审计04明确“Compare untouched baselines too”，R4以该审计为依据。因此本提案另纳入两个**只读stable reference**，不新增架构、不训练，不只引用旧test分数代替当前配对对照：
+
+- `MN-STABLE`：`ml/outputs/vision/mobilenetv3_large_vision.pt` SHA=`196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7`；对应现存ONNX SHA=`b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf`。二者是同一旧训练身份的不同格式，不算两个独立模型，不重新导出旧baseline。
+- `XGB-STABLE`：`ml/outputs/telemetry/xgb_telemetry.json` SHA=`9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07`；固定`iteration_range=(0,91)`，与保存best_iteration90一致，不能静默使用全部旧trees。
+- 保护09 SHA=`0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0`。以上都不写、不移动、不覆盖、不暂存。
+
+核心比较仍是**2个HPO vision+3个HPO telemetry**；stable references单列。身份去重按训练来源、checkpoint SHA、格式映射及树范围联合登记；不同格式SHA不同不自动算新训练身份，同一身份的复制件也不重复推理。43/44 checkpoint不进入P4择优或额外评估。
+
+### 3. 数据、一次clean cache与source-ID provenance
+
+**正式批准后**才允许构造以下manifest、打开held-out图像/CSV或运行forward；本轮只引用P0保存的membership统计和期望SHA：
+
+| 数据 | 固定来源/预期SHA | 计划使用 |
+|---|---|---|
+| State Farm frozen metadata | `b4f8e90dec769bb419eaa490aea869668bed6484089cebe4d545c7667baa8ea4` | 全部test3657图像，10类；四司机`p012,p026,p035,p050`；不另抽正式预测子集 |
+| Telemetry frozen test CSV | `3bc3d47680a87359e1470fd8ffaf5ff330dc4419b37cc645e5736d51a91c96de` | 全部4500 source，3类各1500，合成数据；本轮未重读该CSV |
+| Telemetry train CSV | `97dd20ee9c0832ba33455e5c31088f9b4abb65c198bf988699a959d545d1e5b5` | 已验证统计与本轮min/max唯一来源；不重新fit模型/部署预处理 |
+| Telemetry val CSV | `1b02792df846b5af138bae59e4f4ccfa8fa421fbb4fd6d42fad88d57722774f1` | 既有选择证据；不混入final held-out结果 |
+
+P4首次打开数据时重新核SHA、membership、train/val/test driver不相交及源8特征finite/无NaN；不符即停止，不能修CSV或自动换split。Vision ID=`vision-v1:<class_id>/<filename>`，记录原metadata行号、driver、原始文件SHA与metadata SHA；telemetry ID=`telemetry-v1:<test_csv_sha>:test:<原CSV零起始数据行号>`，先赋ID再过滤/排序，不重新编号。后者只是版本化位置ID，不是恢复出真实驾驶员/旅程或generator群组。没有可信clip字段，不编造clip ID。
+
+每个`(model_identity,source_id,clean)`只做**本轮一次**完整clean预测，缓存logits/probabilities、原标签、class/feature order、模型/输入hash、runtime和数据版本；E1、QC子集和逐driver统计只引用该clean cache，不再forward。原test历史已曝光，故“一次”只指当前冻结模型的本轮final clean，不是生命周期首次见过。
+
+一次生成/读取shared输入bank，三vision或四telemetry identity逐字节共用，保存输入hash及前后未修改检查。Vision流式batch32，避免保存全部69k张PNG；保留原图hash、生成参数、pixel/tensor SHA，QC subset才保存盲审图片。Telemetry保留同一份45k共享数组/行集及mask，不能为每模型单独抽样。若batch32 OOM不自动改batch/runtime，而是停止并报告协议偏离。
+
+### 4. Clean Test、计数与指标
+
+建议所有vision正式预测统一 **ONNX Runtime CPUExecutionProvider / FP32 / intra-op2 / inter-op1 / sequential / batch32**，两HPO模型先通过下文的val-only导出与parity门禁；stable MN使用已有只读ONNX。这样同一推理实现用于clean/E1，不混用ResNet PyTorch/MPS与MobileNet ORT结果。当前沙箱`mps.is_built=true`但`is_available=false`；不假定历史用户终端MPS可用性等于当前环境。此CPU评估提案不是对既有MPS训练规则的静默fallback，须随本协议获批；不自动启用CoreML。
+
+Telemetry全用CPU2计算线程，依次加载本机已核SHA的可信benchmark pipelines；RF/LR不进入候选包。先共用train median填补，再走各自已冻结pipeline（LR沿用原train-fitted scaler）；无`.fit`。旧XGB也用相同median和8列顺序作离线对照，不能称为修改了部署预处理。非来源明确/哈希不匹配的pickle/joblib不得加载。
+
+| 计划范围 | 共享输入数 | 核心模型预测数 | 含stable reference预测数 |
+|---|---:|---:|---:|
+| Vision clean（也是E1-V0缓存） | 3657 | 7314（2模型） | 10971（3身份） |
+| Vision clean+6×3 E1 | **69483** | **138966** | **208449** |
+| Telemetry D0 clean（也是E1缓存） | 4500 | 13500（3模型） | 18000（4身份） |
+| Telemetry D0–D3全部 | **45000** | **135000** | **180000** |
+| 正式预测总数（clean已包含，不重复相加） | 两种模态分别计算 | **273966** | **388449** |
+
+上表不是独立样本/人的数量。每个source仍保留所有固定变体，即使QC无效，也保留其模型输出用于非真值指标。
+
+Clean主报accuracy、10/3类固定顺序的macro-F1、class precision/recall/F1/support、confusion与log-loss；vision另报c0与c9等全部类，不仅挑弱类。原始logits保持FP32；评分时vision在float64副本上作稳定softmax（温度1），telemetry概率转float64并检查row sum在1±1e-6、范围合法。log-loss固定`eps=np.finfo(float64).eps`，`q=clip(p,eps,1−eps)`后逐行归一化，计算`−mean(log(q[i,y_i]))`；argmax指标使用原logits/概率，不因clip改预测。保存原输出与评分dtype，软件版本固定记录。该P4统一评分口径与历史部分float32评分分开标注，不重算HPO排名、不将不同dtype历史log-loss当新改善证据。
+
+二分类`P_distraction=1−P(c0)`、threshold=.5仅作预声明的附加诊断（包括c0误报代理），与10类argmax区分；不校准、不调threshold，不把它叫实际事故/风险概率或Live告警表现。
+
+### 5. E1-V：变换与rotation/crop几何
+
+全部变换在原图RGB直接bilinear resize224²后执行，再`/255`、ImageNet mean/std、NCHW float32；clean无crop。**有意corruption中的rotation+crop不是把部署eval预处理改为CenterCrop**。同一source/seed42派生同参数，所有模型读取同一生成结果；不horizontal flip，不重标左右类别。
+
+| Family | 冻结提案的3强度 / 细节 |
+|---|---|
+| brightness_up | 1.2/1.5/1.8；PIL brightness；记录饱和channel计数 |
+| brightness_down | .8/.5/.3；不拿历史.35 pilot替代 |
+| motion_blur | 真正线性kernel3/7/11，方向从0/45/90/135按source ID+seed固定；edge padding、nearest-even取整；方向约定image x向右/y向下 |
+| occlusion | 约5/10/20%面积，黑色方块；side=round(sqrt(area)×224)，位置由同ID/seed锚点确定；保存实际面积与box |
+| rotation_then_centered_inscribed_square_resize | 同source跨强度固定正负号，±3/7/12°；PIL bilinear rotate、expand=false、黑fill；见下式 |
+| grayscale_blend | .3/.6/1.0；PIL L→RGB与原RGB线性blend；不是IR/NIR |
+
+Rotation冻结**现有P3几何**：先把角度转为radians，`s=floor(224/(cos(abs(theta))+sin(abs(theta))))`，`l=floor((224−s)/2)`，`crop=(l,l,l+s,l+s)`，crop后bilinear回224²；边长213/201/188，裁去约9.6%/19.5%/29.6%的resize方形面积。保存实际angle/crop box/PIL版本，声明旋转、裁切及放大的联合效应，不能称为纯旋转或新相机视角验证。正式实现前用synthetic覆盖mask检查六个角度的离散边缘/fill，不通过就在**held-out打开前**停止修订协议；不能看到test表现后改变crop margin或强度。
+
+### 6. 独立Recognizability QC：完整预测＋预登记评分子集
+
+**明确范围选择，等待批准：**全3657 source全部19变体都预测；人工QC只对事前锁定、最多200个source的子集评分，未审部分不自动设VALID。全量双人QC需要138966个判定，按未实测5秒/判定约193人时，本提案不假装已具备该资源。
+
+QC source选择在P4批准后、任何模型预测/结果查看前完成：每个`driver×原class`层，按`SHA256("42|qc-source|"+source_id)`排序取`min(5,层内数)`，不跨层补抽，不按已有错误或置信度挑图。四driver×10类最多40层、200source；每source clean+18 corruption，共≤3800个case，**两位reviewer共≤7600次判定**。稀疏/缺失层如实记载，不在看过结果后换样本。此source子集不缩减全量配对预测。
+
+流程与oracle：
+
+1. 开始前指定两位实际reviewer，冻结class动作说明和判断表；用val/synthetic例子练习，不依据test模型表现更改QC规则。agent或模型自动打分不能代替这两位独立人工判断。
+2. 盲化所有模型身份、预测、概率、排名、source类目录及原标签；以匿名case ID、seed42固定shuffle展示。第一遍只看变体，独立选择`c0…c9 / UNRECOGNIZABLE / AMBIGUOUS`及可见动作依据并锁定；之后才核对source标签/必要原图，记录“原动作证据是否仍保留”。
+3. 两人都独立、无歧义识别为同一原标签且动作依据保留，才VALID；明确移除/改变依据记INVALID，其余分歧记UNCERTAIN。没有第三审人自动裁决，也不因某模型猜对而改标签。原始判定/时间/理由/版本都保留，完成后锁定QC再向reviewer展示模型结果。
+4. 每family取`clean_VALID ∩ s1_VALID ∩ s2_VALID ∩ s3_VALID`作为**同一共同有效集合**，三强度、clean及所有vision模型都在该集合上报告F1和paired Δ。另报各severity原始valid率、排除原因及driver/class支持数；不要用随强度变化的分母制造改善。
+5. 若共同集合为空或缺失某类，完整10类macro-F1记`NOT_ESTIMABLE`并说明覆盖局限；仍可报告有支持的类及描述性结果，不能补抽、换subset或用零支持类别的默认0冒充有效总体比较。这不是要求模型必须达某分的新gate。
+
+正式报告明确区分**full clean test**、**QC-subset conditioned F1**和**full-set无真值一致性分析**。所有full-set/invalid/uncertain/unreviewed case都保留flip rate、`mean ||p_corrupt−p_clean||_1`、逐类平均Δp与预测分布；flip只是对自身clean输出的改变，不是分类错误或安全改善。
+
+### 7. E1-T：D0–D3、方向、bounds、mask及标签政策
+
+8特征固定顺序为`speed_kmph,accel_x,accel_y,brake_pressure,steering_angle,throttle,lane_deviation,headway_distance`。统计复用P0 train-only median/global mean/class mean/SD(ddof0)并与三个HPO pipeline核对，不从test重新估计。
+
+- D0：原4500 source，`synthetic=true, perturbed=false`，保留raw与shared-imputed特征；clean预测缓存一次。
+- D1：`x'=x+sigma×train_SD×z_source`，sigma=.1/.3/.5；每source同一8维标准正态draw跨强度复用。
+- D2：`x'=x+lambda×(train_global_mean−train_class_y_mean)`，lambda=.25/.5/.75；使用原source标签查train class均值，明确`LABEL_CONDITIONED_STRESS`，不是独立自然domain shift或test选参。
+- **D3方向本提案解决为固定`[+1,+1,+1,+1,+1,+1,+1,+1]`**，bias=.25/.5/1×train_SD。方向是事前登记的统一positive sensor-offset stress，不是train-derived风险方向；只有幅度由train决定。不用标签、test结果、均值符号或额外方向搜索，不称所有特征都“更危险”。这采纳P3已验证的固定正向路径，而非增加数据驱动headroom方向规则。
+- D3记录级missing率=.05/.1/.2：在固定4500个source ID上按seed42派生hash全局排序，取嵌套prefix恰225/450/900条；每affected source按独立seed42 RNG随机选恰1/8特征，跨强度/模型保持同一feature。保存population ID hash、选择rank、feature index、请求/实际比例、source/injected/combined mask。先确认源无NaN；若出现，停止协议检查，不能把mask已有NaN冒充“新增1格”。原始8列不增删，不引入标签/风险等排除特征。
+
+**Bounds冻结为分层报告，不裁剪、不丢行：** `REPORT_ONLY_NO_CLIP`。speed与headway的逻辑/domain下界0来自其速度/距离语义与既有km/h、m契约，不是设备认证；upper未知。accel/steering符号允许正负，brake/throttle/lane单位与物理上下限缺乏充分契约，记UNKNOWN；不猜0–1、0–100或法定速度上限。以下仅为本轮train21000条新计算的**经验支持区间**，绝不称为physical validity bounds：
+
+| Feature | train min | train max | 已有domain范围 / 未知 |
+|---|---:|---:|---|
+| speed_kmph | 20.0 | 118.43983141168286 | 下界0；上界UNKNOWN |
+| accel_x | -.9496171195275332 | 5.308924454984119 | physical bounds UNKNOWN |
+| accel_y | -.4797183579219134 | 1.664604719278922 | physical bounds UNKNOWN |
+| brake_pressure | .0031284689143873 | 99.99436534101304 | 单位/physical bounds UNKNOWN |
+| steering_angle | -49.10802185530833 | 53.42680553362417 | physical bounds UNKNOWN |
+| throttle | 20.001443716829353 | 99.99476210241048 | 单位/physical bounds UNKNOWN |
+| lane_deviation | .0000013439689708905078 | 2.3359161325462123 | 单位/符号定义/physical bounds UNKNOWN |
+| headway_distance | 5.011333019940173 | 49.99892385921925 | 下界0；上界UNKNOWN |
+
+每feature分别记录source、raw+delta（mask之前）、observed（mask后）和median-imputed final的domain/经验越界flag与幅度；missing处的状态为MISSING/UNKNOWN，不当作通过。保留mask前异常，不能让median填补把原越界证据抹掉。当前generator只检查final、只支持有限双边bounds的接口需要后续有界实现与synthetic测试，本轮不改代码。
+
+**标签政策最终提案：**D0按原合成标签报告F1。D1/D2/D3没有独立数值行为标签有效性oracle，本轮正式E1主报告全部45k行的paired flip、L1概率漂移、逐类Δp/分布、missing与bounds统计，扰动标签统一`LABEL_VALIDITY_UNVERIFIED / f1_eligible=false`；不把“latent行为没变”的假设冒充已验证真值，不以D2 F1下降论证自然泛化。若以后要增加source-label-conditioned F1，须另行明确方法假设，不能看结果后补进本协议有效F1表。此保守处理遵循审计03“标签有效时才F1，否则flip/distribution”，没有缩减45k共享输入或三个benchmark模型。
+
+### 8. 统计、决策优先级与预声明验收
+
+- Vision primary clean为全3657 source的pooled描述性macro-F1；同时报告四driver各自指标、paired model差及leave-one-driver-out范围。QC各family也按相同driver分组。**只有4名test司机**，不将帧/变体当独立人群，不做帧bootstrap/p值或宣称显著优胜；无可靠clip ID不伪造clip聚类。Telemetry按source配对，真实人物/旅程/generator独立群组未知，只解释本合成集。
+- 历史test已多次评估的R27限制始终写入；未发现直接用test选参的既有审计结论不等于证明test从未影响开发。两视觉ImageNet recipe不同（MN V2/RN V1），MPS训练非逐位确定，DMD仍BLOCKED。
+- **决策顺序事前锁定：**先检查身份/契约/数值有效性及执行证据；然后按冻结设计描述clean/robustness/类级权衡；runtime单独提供工程资源事实。ResNet与XGB的**validation优先**由用户已确定，P4任何结果不触发HPO、重选seed、阈值调整、裁切/方向改变或新加权排名。结果不理想也原样报告，不自动改选MobileNet、seed43或更换test。
+- 审计03继承的vision macro-F1≥.80、telemetry≥.85仅作**clean结果目标达成/未达的独立报告**，不倒推为R4新增“比较实验必须通过”gate；corruption不套用该clean阈值。没有新增“必须优于baseline”“E1必须改善”“必须满足1s”等模型性能gate；离线benchmark不代替系统capture→render指标。
+- 正式执行验收为四维：Implementation=已批准runner忠实执行；Testing=开test前val/synthetic门禁通过；Evidence=完整IDs/预测/参数/QC/计时/预算/失败日志；Reproducibility=模型/数据/源码/协议SHA、seed、软件/设备和真实Git状态可定位。技术门禁失败记FAILED/BLOCKED；预算截断记PARTIAL/TIME_BUDGET_EXCEEDED；模型分数或鲁棒性差是结果，不能伪装软件失败或删去。
+- 后续**工程部署选择**另走系统轨道授权、实际目标环境和影子评估。若需要新工程门槛，须在对应评估前声明；不得用本次test再搜索超参/种子或自动覆盖当前部署。
+
+### 9. 公平non-deployment Runtime Benchmark与ONNX权限
+
+仅比较`MN-HPO42`与`RN-HPO42`，各获得相同输入/重复次数；不测random-weight架构，不把stable baseline与candidate不同格式体积或不同runtime延迟混排。当前只读inventory：Apple M2、8核(4P+4E)、24 GiB；macOS26.6.2 arm64；Python3.13.3、torch2.12.0、torchvision0.27.0、ONNX1.21.0、ORT1.26.0、numpy2.4.6、Pillow12.2.0、psutil7.2.2；onnxscript未安装。ORT列出CoreML/Azure/CPU仅证明provider可见，不证明两模型可加载或加速；本轮没有创建session。
+
+**统一ORT CPU FP32协议**：intra_op2、inter_op1、ORT_SEQUENTIAL、ORT_ENABLE_ALL、关闭intra/inter spinning，单活动worker，不做per-model线程/图优化/provider搜索。线程含义与顺序执行依据[ORT官方线程说明](https://onnxruntime.ai/docs/performance/tune-performance/threading.html)。不和训练、E1或系统性能测量并行；接电保持开盖，记录电源/OS/温度相关可用状态，不改系统电源设置。
+
+- 固定val100个来源（每类10，seed42按ID选择，与正确率/置信度无关），批准后从冻结val metadata选取，原图/预处理张量/顺序hash均记录；不是test、不是新选型集。两模型逐字节使用同一contiguous NCHW float32 bank。
+- **6 paired rounds**，预登记3×AB、3×BA，再用seed42shuffle；每模型每round单独新worker，50 warmups、100逐请求latency、100连续batch1 throughput调用。因此每模型**300 warmups+600 latency+600 throughput**，不把warmup混入指标。
+- 主timer=`perf_counter_ns()`围绕`session.run`至CPU logits返回，包括Python/ORT调度/输出分配；input dict/张量在timer外准备。排除session load、图像I/O/decode/resize/normalize、softmax、camera/network/fusion/UI。session初始化时间另列，不冒充端到端Live时延。
+- 报每round及pooled p50/p95（统一`numpy.percentile(method="linear")`）、6round范围与全部原始时间；throughput=`100 / 完整100次batch1 loop总秒数`，不是1/p95。暂不增加batch8/16或MPS/CoreML实验；正式accuracy batch32的吞吐不可冒充batch1时延。600次调用也不是600名独立受试者。
+- 每worker在import和输入bank就绪、session加载前记RSS baseline；另记加载后RSS。父进程每20ms采样RSS、保留实际采样间隔，报告sampled peak、peak−baseline；macOS `ru_maxrss`另列为整个worker生命周期高水位。会漏瞬时峰值、delta不等于精确模型独占内存，CPU RSS不等于MPS/统一内存全部使用量。
+- 大小按同格式报实际bytes：当前两PT分别17052801/44803787；将来两份同设置ONNX分别量实际bytes，包含所有sidecar时注明。不得据较小PT推断更快/更低实际RAM。
+
+**兼容门禁（下列数值是本次提案，不是R4原阈值）：**
+
+1. 只读`.pt`用`weights_only=True`/CPU、strict state_dict，正确10类头、eval/inference_mode；构造`weights=None`但必须先完整载入冻结state，不能推理random模型或调用训练入口。核验class_to_idx c0…c9；保留原名`normal_driving`及runtime alias`safe_driving`，不换索引。
+2. ONNX checker通过；输入`input` FP32 `[N,3,224,224]`，输出`logits` FP32 `[N,10]`、N动态、finite原始logits，不在输出端Softmax/LogSoftmax。**三vision身份都做parity**：两HPO新图，以及`MN-STABLE`旧PT对既有ONNX（只读、绝不重新导出baseline）。在同100个val张量上，以batch1和32/32/32/4分批，与**同batch**的PyTorch CPU reference比对，所有元素`abs(error) ≤ 1e-4 + 1e-4×abs(reference)`、argmax全部一致，记录max abs/relative/probability差；同bank的前2个及前9个再验证动态batch2与**正式每condition3657条的尾批9**。不增加val来源，不碰test，synthetic shape检查不能代替batch32/尾批数值parity。实际正式流程每condition独立按32分批，不能flatten后静默改变尾批设计。
+3. 行为/类别映射由真实训练metadata、state head、保存val ID/类别及对应预测共同核对；不能只靠manifest字符串。上述是实现parity，不要求val100全猜对。任一兼容门禁失败，在test前停止，不放宽容差、挑样本或自动换exporter。
+
+**需要另行明确授权的导出范围：**
+
+- 仅两HPO冻结PT各导出一份benchmark/evaluation-only FP32 ONNX，位于新的`ml/outputs/runs/<approved_p4_run_id>/runtime_benchmark/{mobilenet_v3_large_search006_seed42,resnet18_search004_seed42}/model.onnx`；目录不得已存在，无symlink/覆盖、无外部权重引用。记录`candidate_package=false, deployment_eligible=false`、原PT SHA、ONNX SHA与I/O的`benchmark_manifest.json`。
+- 统一现有legacy `dynamo=False`、opset17、`export_params=True`、`keep_initializers_as_inputs=False`、`external_data=False`嵌入权重、dynamic_axes batch、eval模式；constant folding保持相同（当前torch版本始终启用），不量化/FP16、不onnxsim、不自动安装onnxscript、不下载。当前torch API已只读确认支持这些参数，[PyTorch 2.12文档](https://docs.pytorch.org/docs/2.12/onnx.html)区分dynamic_axes与dynamo路径；该legacy路线尚未实测且已属弃用路径，失败就停止，不能宣称一定导出成功或静默切换。
+- 本轮不得执行以上导出。未来“批准P4”若没有明确包含两份导出，也不能自行推定导出获批。P5的自包含candidate package、最终`runtime_manifest.json` schema及系统loader验包不在本轮；schema尚未确定不阻止**另获批准的benchmark-only**导出，但阻止宣称系统候选包已合格。R4§3的预处理/logits/I/O/class/hash要求仍遵守，不以benchmark名义导出其他模型。
+
+### 10. 提议执行预算、停机规则与实际阻塞
+
+**以下是新P4请求的硬上限提案，非已批准预算，也非耗时预测。** CPU batch评估没有本轮实测速度，不能把历史MPS val约240–250img/s当CPU预计速度。既有HPO剩余预算不转移到P4，也不授权新增HPO。
+
+| 顺序阶段 | 机器墙钟上限（含本阶段开销） | 限定范围 |
+|---|---:|---|
+| val-only preflight / 两ONNX导出与checker/parity | 600 s | 只export两HPO各≤120s；三vision身份各checker/parity≤120s（包含stable）；所有开销仍受600s总cap，失败整组停止 |
+| 正式ID/共享输入与盲审case准备 | 1200 s | 全量manifest/参数/hash；QC图片仅≤3800，不存69k重复PNG |
+| Vision clean cache | 1200 s | 3身份各≤400s，最多10971条clean预测 |
+| Vision 18种stress | 7200 s | 3身份各≤2400s；最多197478条stress预测；clean只复用 |
+| Telemetry D0及D1–D3 | 1200 s | 4身份各≤300s，共180000条；同一45k输入；无fit |
+| 两HPO vision runtime benchmark | 1800 s | 每模型≤900s，12worker各≤90s（初始化计入worker）；6 rounds |
+| QC合并、指标与证据完整性核验 | 1200 s | 只聚合已缓存预测/人工判定，不再forward |
+| **总机器硬上限** | **14400 s = 4小时** | 串行累计，包含进程启动/失败开销；人工等待暂停累计，不算成机器测量时间 |
+
+CPU计算≤2线程、单活动推理worker、评估batch32/runtime batch1；runtime worker观测RSS到4GiB、评估/生成worker观测RSS到8GiB就停，采样不是内核硬限额且可能漏瞬时峰值。run磁盘输出≤20GiB（不需要dump全部FP32输入张量）；启动前可用磁盘≥20GiB、可用RAM≥8GiB，缺资源就停，不驱逐系统进程。线程限制只作用于独立worker并记录实际thread pools，不改共享环境。当前`df -k .` available319026436KiB仅是review时快照，不保证执行时仍有空间。实现/val-synthetic软件验证需先获授权并完成，不将本表伪装成它们已存在/已通过。
+
+**人工QC提案：两位reviewer合计≤16人时**（每人≤8h，跨天可进行；不是agent自动等待16h）。7600判定×未实测5s≈10.56人时仅供规划，剩余用于说明/盲化/复核；没有承诺该速率。达人工cap仍未双审的case保持UNREVIEWED/UNCERTAIN，QC评分覆盖记PARTIAL，不降低标准、不自动增加source或假判有效。两位实际人选、可用性与该预算尚未落实，这是执行阻塞而非训练阻塞。
+
+任一hash/ID/契约/NaN/finite/parity失败在正式test前停止；正式过程中错误、模型/阶段/总时间或内存/磁盘触顶，安全保存原始失败与已完成ID，`TIME_BUDGET_EXCEEDED/PARTIAL`，不自动重跑、缩样本、删reference、降精度、改batch、换设备或扩预算。若需续跑，另获批准，仅补相同协议/相同身份尚未计算的ID并复用已完成cache，不重算已完成clean，不据已看结果改方案。部分配对只能标实际共同覆盖，不能冒充全量比较成功。
+
+**现状判定与审批边界：**
+
+| 项 | 本轮状态 |
+|---|---|
+| validation模型优先级/配置/seed与identity | VERIFIED_PASS：用户已决定，五身份SHA与旧baseline保护通过，无新HPO |
+| P4-PROTOCOL-v1技术/统计方案 | **READY FOR PROTOCOL APPROVAL**：本节给出完整具体proposal，未执行、未自批准 |
+| 正式P4执行器/QC界面与统计合并 | **NOT_READY / IMPLEMENTATION_REQUIRED**：现有generator只准val/synthetic；缺test reader/授权门禁、single-clean cache、双reviewer合并、QC common-valid、半开放/unknown bounds及mask前flags、paired benchmark与预算监督器 |
+| 合成/val门禁、导出与parity | **NOT_RUN / APPROVAL_PENDING**：旧176tests/3761checks不验证这些新增P4要求；旧vision_benchmark含random导出且默认all/test，不可直接运行 |
+| 人工QC | **APPROVAL_PENDING**：两位reviewer与≤16人时待确认；≤200source的评分范围须明确接受 |
+| ONNX benchmark/evaluation导出 | **APPROVAL_PENDING**：需要明确批准两份、固定legacy/opset17路径及600s阶段cap；失败不装包、不换exporter |
+| held-out clean/E1/runtime实际执行 | **NOT_STARTED / 未授权**：14400s与资源上限是提议，不是默认准许；正式执行之前必须先通过上述实现/val门禁 |
+| P5/部署 | NOT_STARTED：最终schema、候选打包、系统影子评估和替换均另批 |
+
+因此回答“P4是否READY FOR APPROVAL”：**协议可供审批；P4执行尚未就绪，也没有获准。** 等待用户确认本节的baseline reference范围、QC子集/人力、D3正向/unknown-bounds/扰动标签政策、CPU协议、新兼容容差和14400s预算，并明确ONNX权限。随后才可在新授权范围补齐执行器和val/synthetic验证；不得因为协议获批就跳过门禁直接访问test。当前只更新本规范报告，不新增review文档、不提交，不改现有preparation profile的`formal_execution_authorized=false`。
+
+## 2026-10-20 补充：独立agent模型选择分析完成，仍停在P3之后
+
+用户补充要求其他agent分析刚刚的训练/HPO结果并建议选择什么model。本次仅在既有`ML_RESULTS_REVIEW_CONTEXT.md`加入明确的模型选择审阅任务、两位独立agent的已完成结论及证据路径，不新建进度/分析报告。遥测审阅首次因额度未完成，用户要求继续后重试成功；视觉与遥测现在均已完成只读分析。没有启动P4、额外训练/HPO/forward/test/E1、下载、候选导出或部署。
+
+六项Git开工检查仍为正确root、`fyp2/ml-training`、HEAD335da4e；dirty均为此前已知ML产物/报告及受保护09，无新增异常路径。主agent仅读现有原始JSON核对两个vision选中class reports、三telemetry选中metrics/seed/selection，以及五模型汇总；另复算ResNet seed42 macro-F1差2.439518个百分点、确认均值差3.113474个百分点，XGB/RF macro-F1差4.938272e-13。没有打开原始test数据或加载模型。
+
+| 模态 | 独立审阅与主复核建议 | 明确局限 |
+|---|---|---|
+| Vision | 优先评估ResNet18 `search_004` / seed42；保留MobileNet `search_006` / seed42配对比较 | ResNet val宏F1/均值较高，但std较大、c0 recall较低；不选最高seed43，不改预注册目标。文件大小不证明运行时延 |
+| Telemetry | 架构优先XGBoost、离线关注`tuned xgboost_02` / seed42；保留RF/LR对照 | XGB/RF分类实质持平（各错5/4500），XGB log-loss更低；合成高分/零std不等于真实域泛化或显著性。RF/LR仅benchmark，当前tuned XGB joblib也非部署文件 |
+| 当前部署 | 继续旧MobileNetV3-Large + 旧XGBoost baseline | 推荐候选不等于替换批准；P4/P5仍未开始 |
+
+证据来源及完整权衡保存在同一份`docs/fyp2/ml/ML_RESULTS_REVIEW_CONTEXT.md`的“已完成的独立模型选择分析”节，原始路径/精确数值可供其他agent继续复核。Implementation/Testing/Evidence/Reproducibility均只在**文档与保存结果核对范围**交付；未重跑176软件tests或3761准备checks，不把历史通过数声称为本轮新执行。原训练/生成器代码、配置、模型、selection及日志不变。本次只修改context和本规范报告，保护hash与暂存区另作最终核对；不commit、不push，继续等待P4协议/预算与执行授权。
+
+## 2026-10-19 最新停止点：P3 E1 generator / QC接口准备与独立分析context
+
+用户在S3结果说明后批准“进入下一步”，并要求提供其他agent分析context。本轮按S3已列出的下一动作，仅补齐P3的E1生成器与QC接口并用synthetic/val验证；**不是P4正式test/E1授权**。没有追加模型训练/HPO、模型加载或forward、权重下载、test图像/telemetry_test CSV读取、候选导出或部署。本节为当前状态，下方S3及更早章节保留为历史证据。
+
+开工六项Git检查确认cwd/root正确，branch=`fyp2/ml-training`、HEAD=`335da4e3de203836c045452f84cc291bcd352a26`，staging为空；既有dirty项仅S3规范报告、受保护09报告和已知正式search/核验产物。fast-context仍缺Windsurf key，使用精确文件读取替代。两份权威说明由当前repo的`git show fyp2/live-system:...`读取，最新P2/P3 prompt仍只允许synthetic/val生成器准备。本轮没有进入Live-System目录、改共享环境/应用/CSV、commit或push；09报告及三个部署基线保护hash前后相同。
+
+### 实现、复用与参数边界
+
+- 新增`ml/experiments/e1_generators.py`：确定性的source ID+seed42 SHA派生随机数；E1-V clean+6×3=19种，包含真正线性motion kernels3/7/11、方向、遮挡box/实际面积、旋转符号和crop几何、grayscale blend参数及pixel SHA。保留RGB/PIL bilinear直接224²预处理，不引入horizontal flip；Gaussian不叫motion，grayscale不叫IR。
+- E1-T D0+3×3=10种/source：D1按train SD加噪；D2按train global/class mean作`LABEL_CONDITIONED_STRESS`；D3记录固定方向bias与可复现嵌套missing masks。按用户本轮补充，D3为**5%/10%/20%的记录受影响，每条恰好新增1个缺失特征**，不是8特征各自独立Bernoulli。保留raw/observed/shared-imputed特征、delta、源/注入/合并mask、选中特征索引、population hash、请求/实际缺失率、train hash及source ID。**每个source只生成一份，三模型共用**，LR后续仍使用既有train-fitted scaler。
+- `qc_decision()`记录独立reviewer/reason/validity，默认PENDING、f1_eligible=false；无效样本仍保留flip/distribution。接口测试通过不等于实际独立人工QC已完成；本次全部490条validation记录F1 eligibility=0，无任何robustness性能分数。
+- `ml/experiments/run_e1_preparation.py`固定仅10张val图像（10类各1）与30条val遥测（3类各10），新run拒绝覆盖。两次应用同一canonical transform，190个输入均finite、float32 `[1,3,224,224]`且逐字节相同。只做生成/预处理，无model forward。
+- **REUSED_AND_VERIFIED**：P0 `w2_preparation_20261015/preparation_evidence.json`的train-only median/global mean/SD/class means。只读train21000条重新计算统计并比对，train SHA=`97dd20ee9c0832ba33455e5c31088f9b4abb65c198bf988699a959d545d1e5b5`；与三个选中遥测trial的train hash/feature order/median也一致。没有重新拟合分类器或改写历史统计；数据冻结、class order、source ID命名、预处理、五模型HPO选型/结果和S3审计全部复用。
+
+`ml/configs/e1_preparation.json`记录用户补充决定：D3 **record-level** `.05/.1/.2`、每条随机1/8特征、seed42、三模型shared masks、train-only median，状态`PROPOSED_UNTIL_FULL_P4_PROTOCOL_FREEZE`，**不构成P4执行批准**。实现按seed42+source ID hash对本次输入population排序，取嵌套prefix；人数取`floor(N*rate+0.5)`（明确披露的整数取整实现），特征独立按source ID+seed42选择并跨severity固定。4500 synthetic sources恰为225/450/900条；30 val样本为2/3/6条，实际6.6667%/10%/20%，记录请求和实际比例，不伪称小样本恰5%。原始source缺失与新增缺失分别记录；当前干净8特征无原始NaN。
+
+全正D3漂移方向仍只是准备示例；physical bounds保持UNRESOLVED且不静默clip；`centered_inscribed_square`是可复现的拟议旋转裁切实现，正式几何仍待确认。正式freeze字段继续null，proposal与批准执行分开。生成器在P3主动拒绝train/test observations；P4须在新授权下增加held-out reader，不绕过此门禁。
+
+### 实际命令与验证结果
+
+以下命令均真实执行；最终stdout/stderr日志已复制至`ml/outputs/runs/e1_preparation_20261019_record_missingness/verification/`，命令列表、源码/输入/日志SHA分别见config与artifact manifests。
+
+| 命令 | 日志 / 实际结果 |
+|---|---|
+| `./.venv/bin/python -B -m pytest -q ml/tests/test_e1_generators.py -p no:cacheprovider` | `generators-red.log`：先**29 failed / .34 s**，确认为缺少生成器；不是训练失败 |
+| `./.venv/bin/python -B -m pytest -q ml/tests/test_e1_preparation.py -p no:cacheprovider` | `preparation-red.log`：先**13 failed / 1.43 s**，确认为缺少准备runner的统计/范围门禁 |
+| `./.venv/bin/python -B -m pytest -q ml/tests/test_e1_generators.py -k 'd3 or 4500' -p no:cacheprovider` | `record-missingness-red.log`：用户补充后先**4 failed / 27 deselected / 1.45 s**；实际复现旧草案每条可能mask多个特征、受影响记录数不符 |
+| `./.venv/bin/python -B -m pytest -q ml/tests/test_e1_generators.py ml/tests/test_e1_preparation.py -p no:cacheprovider` | `e1-green.log`：**44 passed / 2.13 s**；像素oracle、motion非Gaussian、crop/occlusion参数、seed/顺序独立性、train-only/NaN imputation、D2公式、D3记录计数/一条一特征/嵌套mask/小样本取整、bounds不clip、QC、4500 synthetic→45000计数及范围门禁 |
+| `./.venv/bin/python -B -m pytest -q ml/tests -p no:cacheprovider` | `suite-green.log`：**176 passed / 21.25 s**；软件测试不替代正式E1 |
+| `./.venv/bin/python -B ml/experiments/run_e1_preparation.py --run-id e1_preparation_20261019_record_missingness` | `execution.log`：**E1_PREPARATION_COMPLETE**；10 val图像→190变体、30 val遥测→300变体；runner主体墙钟**2.223334834 s**（不含进入main前import）；CPU threads2，OS峰值RSS**456212480 bytes**，userCPU1.575948/systemCPU.318937 s；0fit/0模型加载/0forward/0held-out observations |
+| `./.venv/bin/python -B ml/outputs/runs/e1_preparation_20261019_record_missingness/verification/verify_preparation.py` | `verification.log`：**3761 checks通过**；产物/源码hash、计数/IDs/class balance、共享median、D2独立公式、D3实际2/3/6条与一条一特征/嵌套mask、QC门禁、保护hash及dirty/staging真实性 |
+
+用户补充前的初稿也实际执行过29项GREEN、42项GREEN、174项suite及一次190+300 val准备（1.785324167s、3118checks），保留在`e1_preparation_20261019/`，现有`superseded_protocol.json`明确其D3逐特征语义已被取代；源码/测试/profile在改动前按原SHA存入该run的`source_snapshot/`，旧config/CSV/日志未改写。重现旧版本须使用snapshot，不拿已变动的当前源码去冒充旧hash。**最新接受的准备结果是record_missingness run**。最终suite与val生成检查曾同时运行，以上耗时仅记录执行情况，不是性能benchmark。
+
+45000是**合成单元测试的生成计数**，正式4500条test source未读取；实际val准备仅300条共享遥测变体，不能称正式45k E1已执行。vision split metadata含既有test membership且为验证冻结SHA被读取，但未返回或打开任何test图像；telemetry仅train/val CSV。R26/R27、合成遥测限制、DMD BLOCKED继续适用。
+
+### 文件、证据与独立agent context
+
+代码/测试为`e1_generators.py`、`run_e1_preparation.py`、`test_e1_generators.py`、`test_e1_preparation.py`；准备profile为`ml/configs/e1_preparation.json`。隔离run下的`config.json`、`preparation_checks.json`、`vision_manifest.csv`、`telemetry_variants.csv`、`source_images.json`、`artifact_manifest.json`保存ID、train/val/源码/版本/参数/hash与结果，`verification/`保存RED/GREEN/执行及核验日志。图片变体只在内存生成，未保存190张重复PNG；pixel/tensor hash+源图hash+固定代码/参数可复现，不构成最终E1图像集freeze。
+
+按用户本轮明确要求额外提供 **`docs/fyp2/ml/ML_RESULTS_REVIEW_CONTEXT.md`**：五模型结果、配置、seed波动、证据路径、历史baseline与smoke/probe区别、结论边界、P4待决问题及给独立agent的分析范围；它不是第二份progress/status。没有实际向任何agent发送消息或启动新agent。
+
+本轮准备源码未提交，执行config如实记录HEAD335da4e及dirty state，另保存源码SHA；**不声称准备运行来自clean commit**。这与正式search原始clean335da4e记录分开，未改写任何旧HPO输入/输出。当前未暂存/提交新文件，源CSV和四项保护hash不变。
+
+### 四维验收、sprint与下一阶段
+
+| 范围 | Implementation | Testing | Evidence | Reproducibility | Verdict |
+|---|---|---|---|---|---|
+| P3 E1生成器/QC接口软件准备 | 完整6×3及D0–D3、记录级一条一特征mask、参数/ID/QC接口与仅val门禁 | 44新增tests与完整176tests；190+300实际val生成；3761产物checks | 独立run日志/manifest/hash/config齐全，无正式指标 | seed/source/population/参数/版本/SHA明确；原始统计复用；未提交状态如实记录 | **VERIFIED_PASS（软件/validation准备范围）** |
+| 五模型HPO / S3 | 继承上节冻结选型与41次正式训练/fit | 原16视觉+25遥测与保存审计复用 | 原完整metrics/checkpoints/selection logs复用 | 原执行commit/snapshots/seed不改 | **REUSED_AND_VERIFIED / VERIFIED_PASS** |
+| P3整体E1协议准备 | 生成器已补齐；记录级missing方案已proposed，整体drift/bounds/crop/QC与身份/统计协议待冻结 | 独立recognizability QC未执行；正式配对test未创建 | proposal/准备示例明确，无伪造正式E1证据 | 正式freeze待批准 | **PARTIAL / APPROVAL_PENDING**，不倒推为R4新增性能阈值 |
+| P4最终clean test / 正式E1 | 未启动；保持一次final test规则 | NOT_RUN | 无本轮test/E1性能 | 依赖冻结协议和新授权 | **NOT_STARTED / 未授权** |
+| P5候选包/ML证据冻结 | 未启动 | NOT_RUN | 无新package | 依赖P4及系统最终runtime manifest schema | **NOT_STARTED / 未授权** |
+
+Week2 ML准备、Week3 trainer+真实smoke、Week4 comparator正式训练均保持**VERIFIED_PASS**；Week5的HPO和生成器软件已通过，正式E1准备协议仍**PARTIAL / APPROVAL_PENDING**；Week6正式test/E1与Week7候选包**NOT_STARTED**。这是ML范围，不替系统轨道验收，也不更改Week5/Week7主里程碑。
+
+**本阶段到此停止。** 按用户补充，不进入P4。P4前将D3记录级5/10/20%方案连同漂移方向、physical bounds/out-of-range处理、旋转裁切几何、独立QC protocol、冻结模型/untouched baseline对照身份，以及driver/clip统计口径、设备/墙钟预算整体冻结并批准。held-out ID manifest在P4授权后创建；不把P3禁止test读取解释为允许提前读取观察数据。本轮不发明最小macro-F1、必须优于baseline等新硬门槛。先供其他agent独立分析现有结果，不自动开始正式实验。
+
+## 2026-10-19 最新停止点 S3：五模型正式HPO结果核验与validation比较
+
+用户终端已完成 `caffeinate -dims ./.venv/bin/python -B ml/experiments/run_vision_hpo.py search --run-id p3_vision_20261018`，输出`SEARCH_COMPLETE`、`BUDGET_EXCLUDED_TRIALS []`及`VISION_STATUS search COMPLETED used_seconds 15288.353217291064`。本节取代下方“等待search”的历史状态。S3只核验保存产物、汇总五模型val选型与确认波动，之后停止；**本轮代理没有fit、model forward、下载、重新训练、打开原始test CSV/图像、正式E1或打包/部署**。
+
+本轮Git六项检查：cwd/root正确，branch=`fyp2/ml-training`、HEAD=`335da4e`；开始时仅有受保护09报告与用户刚生成的`search/`、`search_config.json`、`search_state.json`和根selection日志为untracked，均符合当前run。实际训练记录`execution_commit=335da4e3de203836c045452f84cc291bcd352a26`、`tracked_worktree_clean=true`、无staged、首次仅09报告untracked。执行源码4文件、预注册protocol、批准预算与该Git blob及当前字节一致。Prompt/R4再次字节hash核对，仍为`53c53b...9b48` / `5a46fe...5ff`；没有进入Live-System工作区。fast-context因缺Windsurf key失败，改用精确文件读取。
+
+### 实际次数、预算与资源
+
+| 模型 | 搜索/确认、epochs | 本次墙钟 / 批准模型预算 | 最慢trial | 结果 |
+|---|---|---:|---:|---|
+| MobileNetV3-Large | 6个seed42搜索+43/44确认；8 attempts；43 epochs | 8244.061593375 / 17100 s | 1624.689750667 s < 2400 s | 全部COMPLETED / returncode0 |
+| ResNet18 | 同6+2；8 attempts；38 epochs | 7041.178746042 / 15300 s | 1489.546447125 s < 2400 s | 全部COMPLETED / returncode0 |
+| 视觉合计 | 16逻辑trial=16实际attempt；81 epochs | **15288.353217291 / 32400 s** | 包含约3.112877874 s监督器开销 | **无失败、中断、超时或NOT_RUN_BUDGET；excluded=[]** |
+
+视觉约 **4小时14分48秒**，使用批准总预算47.1863%；早停使实际epochs少于128上限，不能把剩余预算当作追加trial授权。每模型首网格作为P2且只计一次，probe另账且不计正式HPO。本轮复用遥测25次实际fit（XGB10/RF8/LR7）；加上视觉16次，共41次实际正式fit/训练操作，未超过原各模型上限。LR确定性重复虽消耗fit次数，不作为独立随机性证据。
+
+训练保存的OS峰值RSS最大值：MobileNet1047281664 bytes、ResNet927268864 bytes；同步batch后观测MPS driver最大值4688871424 / 3700080640 bytes。两种口径不相加，采样可能漏瞬时峰值，不用作部署内存硬保证；本轮未另做runtime推理时延benchmark。
+
+### 五模型validation结果：按模态比较，统一冻结seed42
+
+| 模态 / 模型 | 选中trial、配置 / best epoch | Val accuracy | 选中seed42 val macro-F1 | 对选中配置的seed macro-F1 mean ± std(ddof=0) |
+|---|---|---:|---:|---|
+| Vision / MobileNetV3-Large | `search_006`；lr=.0008、wd=.001；best epoch6（实际8epochs） | .922942817 | **.916219868** | 42/43/44：**.893662816 ± .015950461** |
+| Vision / ResNet18 | `search_004`；lr=.0003、wd=.001；best epoch3（实际5epochs） | .942119944 | **.940615048** | 42/43/44：**.924797552 ± .027113633** |
+| Telemetry / XGBoost | `xgboost_02`；depth3、lr=.03、subsample1、400 trees | .998888889 | .998888888 | 42/43/44：.998888888 ± 0 |
+| Telemetry / Random Forest | `random_forest_06`；400 trees、depth24 | .998888889 | .998888888 | 42/43/44：.998888888 ± 0 |
+| Telemetry / Logistic Regression | `logistic_regression_06`；C1000、lbfgs | .996888889 | .996888581 | 42/43：.996888581 ± 0；43确定性重复、44按批准规则跳过 |
+
+selected seed42 log-loss依次为MobileNet .306039094925、ResNet .186423733830、XGB .004925716203、RF .008043999630、LR .008746305336。机器汇总与源报告路径见`ml/outputs/runs/p3_vision_20261018/verification/validation_metrics.json`；各trial逐类报告、confusion、原始logits/probabilities继续复用原文件，不生成重复人类总结。
+
+视觉固定模型为：
+
+- `search/mobilenet_v3_large/search_006/attempt_01/checkpoint.pt`，17052801 bytes；seed42，lr8e-4/wd1e-3、epoch6。
+- `search/resnet18/search_004/attempt_01/checkpoint.pt`，44803787 bytes；seed42，lr3e-4/wd1e-3、epoch3。
+
+这些路径均相对于`ml/outputs/runs/p3_vision_20261018/`，完整SHA见机器汇总与原manifest。ResNet seed43的.947139072虽高于seed42，**不得替换被冻结的seed42**。旧MobileNet `.pt/.onnx`与旧XGB权重hash未变，未导出新ONNX或部署。
+
+### 结果解释与类级限制
+
+本次validation中ResNet的选中seed42分数和三seed均值均较高；这是指定完整pipeline在同一val split上的观察，不是最终test或显著性结论。MobileNet三seed为`.916219868/.882486085/.882282496`（范围约3.394个百分点）；ResNet为`.940615048/.947139072/.886638536`（范围约6.050个百分点），ResNet波动更大。三点标准差只描述此次运行，既不是置信区间，也不能把变化全部归因为MPS或证明逐位复现。
+
+类级结果也非全面胜出：选中MobileNet的`c9 talking_to_passenger` F1=.669767442，仍为弱类；ResNet相应F1=.877637131。`c0 normal_driving`则MobileNet .866556837、ResNet .840531561；ResNet的`c8 hair_makeup` F1=.879712747。全部10类支持数/precision/recall/F1与confusion已独立复算，详见原`class_report.json`及预测审计，不能仅凭macro-F1推广为全部行为或真实风险改善。
+
+复用原val基线仅标`STORED_NOT_RERUN`：MobileNet accuracy=.897489540、macro-F1=.890650772；XGB accuracy=.998444444、macro-F1=.998444443。不引用旧test作为本轮对照，不把单次旧基线与HPO选中峰值差异当作无偏改善估计。所有选型/early-stop/确认都使用同一val split，seed42在6组配置中择优具有选择偏差；正式held-out test尚未运行。两种ImageNet预训练仍为MobileNet V2 / ResNet V1，不能把全部差异归因为架构。Telemetry为合成、近线性可分数据，高分与零std不证明真实驾驶泛化、概率逐位一致或安全收益；RF/LR仍仅benchmark。
+
+### S3核验：实际命令、结果与证据
+
+一个主核验与两项独立只读核验，各只在该run的新`verification/`子目录写脚本/日志/机器证据，不改原训练产物：
+
+```bash
+./.venv/bin/python -B ml/outputs/runs/p3_vision_20261018/verification/artifacts/verify_artifacts.py
+./.venv/bin/python -B ml/outputs/runs/p3_vision_20261018/verification/predictions/verify_predictions.py
+./.venv/bin/python -B ml/outputs/runs/p3_vision_20261018/verification/protocol/verify_protocol.py
+```
+
+| 核验范围 | 实际结果 / 限制 |
+|---|---|
+| `artifacts/verification.log` | **5276断言 / 0失败 / 1.510180208 s**；176条视觉产物与250条遥测产物exists/bytes/SHA复核；16个视觉checkpoint仅CPU `weights_only=True`读取，核class/head/recipe/seed/best epoch及全部finite tensors；无模型构造/forward；旧遥测执行源码snapshot hash吻合 |
+| `predictions/execution.log` | **2249断言 / 0失败 / .696202500 s**；16attempt、45,888条保存val预测、96输入文件前后SHA不变；同train15899/val2868、18/4名司机无交集、IDs/原metadata索引/顺序一致；float32 NPY/CSV、logits→softmax/argmax、accuracy/macro-F1/log-loss、confusion及全部class report一致；81epochs的batch/sample/timing记录核对 |
+| `protocol/verification.log` | **557/557断言通过**；6×2搜索+43/44确认、grid/P2归属、T_max8/patience2、stdout逐epoch、returncode/预算、独立排序/mean/std、Git335da4e clean来源与config/signature匹配。此脚本未另记录墙钟测量，不虚构耗时 |
+
+这些是保存结果的核验断言数，不是新训练次数或全仓库CI。上阶段132软件tests属于已保存证据，本轮没有为改进进度标签而重跑。所有完成worker原记录16样本reload已通过；本轮读取checkpoint不代替独立数值重训或重新forward。
+
+两个核验细节已如实保留：预测验证器初版误把`source_row`当作split局部连续索引，出现32个验证器误报；确认loader保留完整metadata索引后，改验唯一/非负/递增，初次日志保存在`initial_validator.log`，没有改训练数据。另一次Unix start与monotonic elapsed拼接出现−41ms差值，不能据此认定并发；同步监督器源码和顺序日志支持逐trial执行，但没有捕获同一时钟的独立结束时间，局限记入协议审计。
+
+### 四维验收、sprint与停止点
+
+| 范围 | Implementation | Testing | Evidence | Reproducibility | Verdict |
+|---|---|---|---|---|---|
+| P2三个comparator正式单配置训练 | RF/LR首网格复用；ResNet首网格现已完成并计入HPO | 全量train/val、合法早停、finite/shape/order、原save/reload已执行并核验 | 正式checkpoint/config/预测/ID/metrics完整 | 固定输入/seed/source hashes可追溯；不追加重复fit | **VERIFIED_PASS（formal validation范围）** |
+| 五模型bounded HPO子任务 / S3 | 原grid/上限/选型/冻结规则全部执行 | 视觉16成功+遥测25实际fits，确认/独立核验通过，无新截断 | trial/selection/预算与五模型val汇总齐全 | 执行commit或历史snapshot可定位，确认波动披露 | **VERIFIED_PASS（HPO子任务及S3交付）** |
+| 整个P3 / Week5 ML milestone | HPO已完成；R4 E1 generator/QC准备仍未齐 | 未验证完整配对扰动/参数/计数/QC流程 | 旧`robustness_probe.py`仅val1000样本、brightness+Gaussian blur、单基线聚合评估，不能代替R4完整vision/telemetry生成器 | 正式生成器freeze/paired manifests尚缺 | **PARTIAL**，不将本次HPO完成冒称P3/Week5全验收 |
+| P4最终test/E1；P5包 | 尚未执行 | NOT_RUN | 无新test/E1/candidate证据 | 待新授权及冻结协议 | **NOT_STARTED / 未授权** |
+
+Week2准备及Week3 ML comparator+smoke的原VERIFIED_PASS继续复用；Week4完整comparator训练已有真实正式证据，但不替系统轨道验收，不改W5/W7主里程碑。R27“旧test曾被多次评估”继续披露，后续P4也不能称全新从未见过holdout。
+
+**停在S3。** 下一轮应在既有P3范围内补齐并验证R4 E1 generator/QC准备，仅synthetic/val软件检查，不运行正式held-out E1；之后先明确P4冻结模型清单（包括适用的untouched baseline checkpoint对照、按身份去重）、一次final clean test与E1参数/标签有效性/QC/分组统计，再请求P4执行授权。P5按R4§3完整打包，另行批准，不自动替换线上基线。本轮只更新本规范报告及机器核验证据，不提交、不push，不自动开启下一阶段。
+
 ## 2026-10-19 最新交付：S2预算已批准，模型预算隔离修复已提交
 
 用户明确批准 `per_trial=2400 s`、MobileNet `17100 s`、ResNet `15300 s`、`total=32400 s`，要求先修复模型预算互相阻断、TDD及完整ML tests，再分别提交监督器、测试、预算，不push。该批准覆盖正式视觉search的具体数字，**视觉训练仍由用户自己的终端运行**；本轮没有启动probe/search、fit/forward、下载、held-out test、E1或package。

@@ -1,0 +1,21 @@
+{
+  "protocol_sha256": "89185f6c56b8af00b2883e27df72c0713141d92b3396a5609462a5ed053cdd41",
+  "run_id": "p4b_20261022",
+  "source_sha256": "79f1ccc857c873969fa177bea54c78eefe3704114604d88d18816ffe73f1c1a5",
+  "phase": "P4-B",
+  "authorized": true,
+  "human_approval": "User message: 进行下一个stage — proceed to P4-B under frozen P4-PROTOCOL-v2 after revised P4-A acceptance.",
+  "approved_at_utc": "2026-10-22T10:26:17.909075+00:00",
+  "scope": [
+    "Frozen-model Clean Test",
+    "Full paired E1 prediction stability",
+    "Controlled ORT CPU runtime benchmark"
+  ],
+  "formal_total_machine_seconds": 14400,
+  "no_hpo": true,
+  "no_training": true,
+  "no_export": true,
+  "no_deployment": true,
+  "manual_qc": "REMOVED_FROM_SCOPE",
+  "resource_gate_required": true
+}

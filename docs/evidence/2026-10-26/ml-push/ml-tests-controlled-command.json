@@ -1,0 +1,31 @@
+{
+  "cwd": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1",
+  "branch": "fyp2/ml-training",
+  "head": "335da4e3de203836c045452f84cc291bcd352a26",
+  "argv": [
+    ".venv/bin/python",
+    "-B",
+    "-m",
+    "pytest",
+    "ml/tests",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/fyp2-push-test-controlled-20261026-s2_twpgr"
+  ],
+  "environment_overrides": {
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "basetemp": "/tmp/fyp2-push-test-controlled-20261026-s2_twpgr",
+  "started_at": "2026-10-25T16:37:16.374282+00:00",
+  "scope": "Controlled software regression only; original test budgets preserved. No training, downloads, actual model forwards, real exports, formal benchmarks or Live integration.",
+  "reason": "Initial sandbox run failed 6 RSS-observation tests due to psutil sysctl PermissionError. This controlled repeat changes execution permissions only.",
+  "returncode": 0,
+  "wall_seconds": 27.086806792009156,
+  "finished_at": "2026-10-25T16:37:43.461585+00:00",
+  "source_unchanged": true,
+  "changed_source_files": []
+}

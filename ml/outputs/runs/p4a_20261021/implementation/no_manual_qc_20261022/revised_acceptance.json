@@ -1,0 +1,83 @@
+{
+  "phase": "P4-A_REVISED_ACCEPTANCE_REVIEW_ONLY",
+  "protocol": "P4-PROTOCOL-v2",
+  "amendment": "USER_APPROVED_MANUAL_QC_REMOVAL",
+  "authority_override": "User explicitly removes R4 section2.3 manual Recognizability QC; other protections remain",
+  "verdict": "VERIFIED_PASS",
+  "verdict_scope": "Revised P4-A mandatory scope, with documented historical reproducibility limits; not P4-B completion",
+  "four_dimensions": {
+    "Implementation": "VERIFIED_PASS",
+    "Testing": "VERIFIED_PASS within software and preserved validation-preflight scope",
+    "Evidence": "VERIFIED_PASS within revised mandatory scope",
+    "Reproducibility": "VERIFIED_PASS for recorded provenance and current source traceability, with historical supervisor replay limitation"
+  },
+  "removed_from_scope": {
+    "status": "REMOVED_FROM_SCOPE",
+    "pilot": "REMOVED_FROM_SCOPE",
+    "formal": "REMOVED_FROM_SCOPE",
+    "conditioned_f1": "REMOVED_FROM_SCOPE",
+    "human_label_validity": "REMOVED_FROM_SCOPE",
+    "inter_rater_agreement": "REMOVED_FROM_SCOPE",
+    "automatic_human_validation": false
+  },
+  "primary_clean_metrics": [
+    "accuracy",
+    "macro_f1",
+    "per_class_precision_recall_f1_support",
+    "confusion_matrix"
+  ],
+  "primary_stress_metrics": [
+    "flip_rate",
+    "mean_l1",
+    "prediction_distribution_delta_count",
+    "prediction_distribution_delta_rate",
+    "mean_delta_probability"
+  ],
+  "corruption_source_label_f1": "NOT_COMPUTED; if reported, assumption-based sensitivity analysis only",
+  "human_validated": false,
+  "original_software_evidence": "271 passed in 27.63s, preserved unchanged",
+  "revised_software_evidence": {
+    "result": "278 passed in 37.76s",
+    "path": "full_ml_suite.log",
+    "sha256": "973a16c750d9bb920ebea5d4b7c3b97ae536321fa5677c7096ca51ed454bee1a"
+  },
+  "source_manifest": {
+    "path": "final_source_manifest.json",
+    "sha256": "0d56d8cc3dce0795a3ed2ae766ab0d34f3444d8768483c24c5650218ddc93b65",
+    "files": 12
+  },
+  "independent_review": {
+    "path": "scoped_review.json",
+    "sha256": "717b2a558c3e852b7e7ae3623f50ecea6a7ebaeedbf937b86b64411900405d83"
+  },
+  "preservation": {
+    "original_artifacts_unchanged": 169,
+    "frozen_model_identities": 7,
+    "protected_hpo_p3_records_unchanged": 10,
+    "new_onnx_existing_count": 2
+  },
+  "canonical_report": {
+    "path": "docs/fyp2/ml/ML_TRACK_PROGRESS.md",
+    "sha256": "da20afbfb2f85c5e8814b2ab5a7940fc62fa04edb6bb0759c9a0bd3ea655878b"
+  },
+  "git": {
+    "head": "335da4e3de203836c045452f84cc291bcd352a26",
+    "branch": "fyp2/ml-training",
+    "status": " M docs/fyp2/ml/ML_TRACK_PROGRESS.md\n?? docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md\n?? docs/fyp2/ml/ML_RESULTS_REVIEW_CONTEXT.md\n?? ml/configs/e1_preparation.json\n?? ml/configs/p4_protocol.json\n?? ml/experiments/e1_generators.py\n?? ml/experiments/p4_core.py\n?? ml/experiments/p4_data.py\n?? ml/experiments/p4_preflight.py\n?? ml/experiments/p4_qc.py\n?? ml/experiments/run_e1_preparation.py\n?? ml/experiments/run_p4.py\n?? ml/outputs/runs/e1_preparation_20261019/\n?? ml/outputs/runs/e1_preparation_20261019_record_missingness/\n?? ml/outputs/runs/p3_vision_20261018/search/\n?? ml/outputs/runs/p3_vision_20261018/search_config.json\n?? ml/outputs/runs/p3_vision_20261018/search_state.json\n?? ml/outputs/runs/p3_vision_20261018/selection_log.json\n?? ml/outputs/runs/p3_vision_20261018/verification/\n?? ml/outputs/runs/p4a_20261021/\n?? ml/tests/test_e1_generators.py\n?? ml/tests/test_e1_preparation.py\n?? ml/tests/test_p4_core.py\n?? ml/tests/test_p4_data.py\n?? ml/tests/test_p4_preflight.py\n?? ml/tests/test_p4_qc.py\n",
+    "staging_empty": true
+  },
+  "limitations": [
+    "Original numerical preflight supervisor bytes were not snapshotted before later fixes; exact historical controller replay is not claimed.",
+    "No clean-commit or independent numerical reproduction is claimed.",
+    "No human label-preservation validation; severe occlusion/crop can remove action evidence.",
+    "Historical test exposure and four test drivers remain limitations."
+  ],
+  "model_experiments_executed_this_revision": 0,
+  "new_exports": 0,
+  "new_hpo_or_training": 0,
+  "actual_heldout_observations_opened": 0,
+  "P4B": "APPROVAL_PENDING / NOT_STARTED",
+  "formal_execution_authorized": false,
+  "elapsed_final_integrity_seconds": 0.28725537506397814,
+  "supersedes": "implementation/final_closure.json acceptance status only; original closure preserved as historical evidence"
+}

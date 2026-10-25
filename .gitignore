@@ -8,11 +8,31 @@ tsconfig.tsbuildinfo
 
 # local agent team config — keep out of the pushed repo
 .claude/
+.codex/
+.superpowers/
+.local/
+
+# Local environments, credentials and tool caches
+.venv/
+.env
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
 
 # backend runtime artifacts
 backend/*.db
 backend/**/__pycache__/
 *.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
 
 # local report assembly artifacts
 docs/chapter5_report_ready/
@@ -22,3 +42,4 @@ docs/chapter5_report_ready/
 
 # local run output (Playwright screenshots, ad-hoc exports) — not tracked
 output/
+backend.dev.log

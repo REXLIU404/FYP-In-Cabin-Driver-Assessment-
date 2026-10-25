@@ -1,0 +1,273 @@
+{
+  "status": "VERIFIED_PASS",
+  "checks_passed": 557,
+  "checks_total": 557,
+  "summary": {
+    "mobilenet_v3_large": {
+      "selected_trial": "search_006",
+      "config": {
+        "learning_rate": 0.0008,
+        "weight_decay": 0.001
+      },
+      "best_seed42_macro_f1": 0.9162198680081481,
+      "seed_macro_f1": [
+        0.9162198680081481,
+        0.8824860851282594,
+        0.8822824958402411
+      ],
+      "macro_f1_mean": 0.8936628163255496,
+      "macro_f1_std_ddof0": 0.01595046075840479,
+      "seed_range": 0.03393737216790704,
+      "wall_seconds": 8244.06159337482,
+      "wall_budget_seconds": 17100,
+      "epochs_completed": 43,
+      "trials": [
+        {
+          "trial_id": "search_001",
+          "seed": 42,
+          "macro_f1": 0.816016309761929,
+          "log_loss": 0.5585045218467712,
+          "best_epoch": 2,
+          "epochs_completed": 4,
+          "wall_seconds": 811.7451754999347
+        },
+        {
+          "trial_id": "search_002",
+          "seed": 42,
+          "macro_f1": 0.8241046552545338,
+          "log_loss": 0.6381171345710754,
+          "best_epoch": 8,
+          "epochs_completed": 8,
+          "wall_seconds": 1624.689750666963
+        },
+        {
+          "trial_id": "search_003",
+          "seed": 42,
+          "macro_f1": 0.8078309119148063,
+          "log_loss": 0.6035701036453247,
+          "best_epoch": 1,
+          "epochs_completed": 3,
+          "wall_seconds": 601.2175302499672
+        },
+        {
+          "trial_id": "search_004",
+          "seed": 42,
+          "macro_f1": 0.852433940293268,
+          "log_loss": 0.6164547801017761,
+          "best_epoch": 5,
+          "epochs_completed": 7,
+          "wall_seconds": 1304.2984602090437
+        },
+        {
+          "trial_id": "search_005",
+          "seed": 42,
+          "macro_f1": 0.8804565240887922,
+          "log_loss": 0.35698774456977844,
+          "best_epoch": 3,
+          "epochs_completed": 5,
+          "wall_seconds": 918.2156401249813
+        },
+        {
+          "trial_id": "search_006",
+          "seed": 42,
+          "macro_f1": 0.9162198680081481,
+          "log_loss": 0.30603909492492676,
+          "best_epoch": 6,
+          "epochs_completed": 8,
+          "wall_seconds": 1518.9043358749477
+        },
+        {
+          "trial_id": "confirm_43",
+          "seed": 43,
+          "macro_f1": 0.8824860851282594,
+          "log_loss": 0.3594505488872528,
+          "best_epoch": 3,
+          "epochs_completed": 5,
+          "wall_seconds": 912.9755088330712
+        },
+        {
+          "trial_id": "confirm_44",
+          "seed": 44,
+          "macro_f1": 0.8822824958402411,
+          "log_loss": 0.5035703182220459,
+          "best_epoch": 1,
+          "epochs_completed": 3,
+          "wall_seconds": 552.0151919159107
+        }
+      ]
+    },
+    "resnet18": {
+      "selected_trial": "search_004",
+      "config": {
+        "learning_rate": 0.0003,
+        "weight_decay": 0.001
+      },
+      "best_seed42_macro_f1": 0.9406150484662007,
+      "seed_macro_f1": [
+        0.9406150484662007,
+        0.9471390721342718,
+        0.8866385360192561
+      ],
+      "macro_f1_mean": 0.9247975522065762,
+      "macro_f1_std_ddof0": 0.02711363259190852,
+      "seed_range": 0.06050053611501571,
+      "wall_seconds": 7041.178746042191,
+      "wall_budget_seconds": 15300,
+      "epochs_completed": 38,
+      "trials": [
+        {
+          "trial_id": "search_001",
+          "seed": 42,
+          "macro_f1": 0.8940280582860026,
+          "log_loss": 0.39863699674606323,
+          "best_epoch": 1,
+          "epochs_completed": 3,
+          "wall_seconds": 545.5727975000627
+        },
+        {
+          "trial_id": "search_002",
+          "seed": 42,
+          "macro_f1": 0.8936387529774132,
+          "log_loss": 0.40362998843193054,
+          "best_epoch": 1,
+          "epochs_completed": 3,
+          "wall_seconds": 543.6476678750478
+        },
+        {
+          "trial_id": "search_003",
+          "seed": 42,
+          "macro_f1": 0.9380612960142412,
+          "log_loss": 0.206026092171669,
+          "best_epoch": 7,
+          "epochs_completed": 8,
+          "wall_seconds": 1474.715934042004
+        },
+        {
+          "trial_id": "search_004",
+          "seed": 42,
+          "macro_f1": 0.9406150484662007,
+          "log_loss": 0.18642373383045197,
+          "best_epoch": 3,
+          "epochs_completed": 5,
+          "wall_seconds": 932.7497009580256
+        },
+        {
+          "trial_id": "search_005",
+          "seed": 42,
+          "macro_f1": 0.9085165501797136,
+          "log_loss": 0.3509314954280853,
+          "best_epoch": 1,
+          "epochs_completed": 3,
+          "wall_seconds": 561.5650043750647
+        },
+        {
+          "trial_id": "search_006",
+          "seed": 42,
+          "macro_f1": 0.9318623409914976,
+          "log_loss": 0.3229959309101105,
+          "best_epoch": 6,
+          "epochs_completed": 8,
+          "wall_seconds": 1489.5464471249143
+        },
+        {
+          "trial_id": "confirm_43",
+          "seed": 43,
+          "macro_f1": 0.9471390721342718,
+          "log_loss": 0.18302404880523682,
+          "best_epoch": 3,
+          "epochs_completed": 5,
+          "wall_seconds": 932.5278804170666
+        },
+        {
+          "trial_id": "confirm_44",
+          "seed": 44,
+          "macro_f1": 0.8866385360192561,
+          "log_loss": 0.3398011028766632,
+          "best_epoch": 1,
+          "epochs_completed": 3,
+          "wall_seconds": 560.8533137500053
+        }
+      ]
+    },
+    "total": {
+      "attempt_seconds": 15285.24033941701,
+      "used_wall_seconds": 15288.353217291064,
+      "controller_overhead_seconds": 3.1128778740530834,
+      "approved_total_seconds": 32400,
+      "budget_excluded_trials": [],
+      "epochs_completed": 81,
+      "mixed_clock_gaps": [
+        {
+          "trial": "mobilenet_v3_large/search_002",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.03014850616455078
+        },
+        {
+          "trial": "mobilenet_v3_large/search_003",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.019916296005249023
+        },
+        {
+          "trial": "mobilenet_v3_large/search_004",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.026495695114135742
+        },
+        {
+          "trial": "mobilenet_v3_large/search_005",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.023073673248291016
+        },
+        {
+          "trial": "mobilenet_v3_large/search_006",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.01001596450805664
+        },
+        {
+          "trial": "mobilenet_v3_large/confirm_43",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.026710987091064453
+        },
+        {
+          "trial": "mobilenet_v3_large/confirm_44",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.02484607696533203
+        },
+        {
+          "trial": "resnet18/search_001",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.006947040557861328
+        },
+        {
+          "trial": "resnet18/search_002",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": -0.041136741638183594
+        },
+        {
+          "trial": "resnet18/search_003",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.0018763542175292969
+        },
+        {
+          "trial": "resnet18/search_004",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.03682398796081543
+        },
+        {
+          "trial": "resnet18/search_005",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.02255988121032715
+        },
+        {
+          "trial": "resnet18/search_006",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.0077304840087890625
+        },
+        {
+          "trial": "resnet18/confirm_43",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.04746103286743164
+        },
+        {
+          "trial": "resnet18/confirm_44",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.041330814361572266
+        }
+      ]
+    }
+  },
+  "limitations": [
+    "Evidence-only verification cannot prove absence of unlogged raw-data access; source and logs record zero test images/predictions.",
+    "Only one fixed validation split; seed42 is selected among 6 configurations, so its peak score is selected and optimistic.",
+    "Confirmation seeds validate variation without reselecting; n=3 mean/std is descriptive, not a confidence interval or significance claim.",
+    "MobileNet V2 versus ResNet18 V1 ImageNet pretraining recipes differ; report comparison as complete specified pipelines.",
+    "MPS bitwise determinism is not guaranteed.",
+    "Unix start times and monotonic elapsed durations cannot be strictly concatenated: one mixed-clock derived gap is -0.0411s. The controller synchronously waits for each worker; source and increasing starts support sequential execution, but no single-clock per-worker end timestamps were captured. This is an audit limitation, not evidence of overlapping fits.",
+    "Held-out test and E1 remain deferred to new P4 authorization; no safety or real-world generalization claim.",
+    "Bounded HPO config retains prior S1 pending-decision text; explicit committed S2 approved_vision_budget.json is the newer applicable budget authorization."
+  ]
+}

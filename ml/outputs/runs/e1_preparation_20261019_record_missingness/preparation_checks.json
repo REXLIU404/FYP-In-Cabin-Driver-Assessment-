@@ -1,0 +1,116 @@
+{
+  "status": "VERIFIED_PASS_PREPARATION_ONLY",
+  "vision_sources": 10,
+  "vision_variants": 190,
+  "telemetry_sources": 30,
+  "telemetry_variants": 300,
+  "shared_vision_tensor_checks": 190,
+  "shared_telemetry_dataset_copies": 1,
+  "D3_record_missingness": [
+    {
+      "requested_record_rate": 0.05,
+      "affected_records": 2,
+      "population": 30,
+      "realized_record_rate": 0.06666666666666667,
+      "injected_cells_per_affected_record": 1
+    },
+    {
+      "requested_record_rate": 0.1,
+      "affected_records": 3,
+      "population": 30,
+      "realized_record_rate": 0.1,
+      "injected_cells_per_affected_record": 1
+    },
+    {
+      "requested_record_rate": 0.2,
+      "affected_records": 6,
+      "population": 30,
+      "realized_record_rate": 0.2,
+      "injected_cells_per_affected_record": 1
+    }
+  ],
+  "class_balanced_validation_only": true,
+  "source_images": [
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c4/img_46854.jpg",
+      "sha256": "f4ce76e02dd9f4c497471c74eac2338199a3659de0cd78bd5618ff51ea992108",
+      "bytes": 45507
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c8/img_26.jpg",
+      "sha256": "d3c8f5a20f02c2b545ee1c505a4c88b043291703896cd0874b1858c959a6328f",
+      "bytes": 42259
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c2/img_641.jpg",
+      "sha256": "a8e70e76606f01a46934e9f16be69a3aacd1dae8132784d96a501681bff435ed",
+      "bytes": 46848
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c6/img_16339.jpg",
+      "sha256": "de7bd0824a001a083ffdc40851a37ba336e231a147d3e88ade1aa488f637928b",
+      "bytes": 44299
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c5/img_89476.jpg",
+      "sha256": "996bc4cac76768e98bdbeee63ef29be099b1ce3213f7161d3befa7b1c102d7ab",
+      "bytes": 38126
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c9/img_18309.jpg",
+      "sha256": "5f9414c238b5f2826d69a8a246c88f01b56e60f57e409dbad393a46953359fa3",
+      "bytes": 44659
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c7/img_70976.jpg",
+      "sha256": "7e191de10529815d700eddd06501549edfc22a739a7ea9ac5657627a6abb7bc2",
+      "bytes": 47957
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c3/img_44021.jpg",
+      "sha256": "d8567bba3788c27bc10db52a58232e4ddfaead991f35be64801b6cebd1b86429",
+      "bytes": 33999
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c0/img_15934.jpg",
+      "sha256": "79b9d7c55cdc86fceb8855aed37629a39c9e030c6c48baad4c84905be6ff82fd",
+      "bytes": 40783
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c1/img_76447.jpg",
+      "sha256": "935e0db55dc1e111bf180032de31bcd7edf51735a853c90973b242ee3c44c9fc",
+      "bytes": 48301
+    }
+  ],
+  "train_statistics": "REUSED_AND_VERIFIED",
+  "train_rows_for_statistics_verification": 21000,
+  "qc_f1_eligible_count": 0,
+  "fits": 0,
+  "model_loads": 0,
+  "model_forwards": 0,
+  "held_out_observations_opened": 0,
+  "metadata_test_membership_read": true,
+  "formal_metrics": null,
+  "runtime_seconds": 2.2233348339796066,
+  "resources": {
+    "max_rss_bytes": 456212480,
+    "user_cpu_seconds": 1.5759480000000001,
+    "system_cpu_seconds": 0.3189369999999999
+  },
+  "protected_hashes_after": {
+    "ml/outputs/vision/mobilenetv3_large_vision.pt": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+    "ml/outputs/vision/mobilenetv3_large_vision.onnx": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "ml/outputs/telemetry/xgb_telemetry.json": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+    "docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md": "0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0"
+  },
+  "formal_protocol_pending": {
+    "D3_missing_rates": null,
+    "D3_drift_direction": null,
+    "physical_bounds_and_out_of_range_policy": null,
+    "rotation_crop_geometry_approval": null,
+    "independent_recognizability_QC_protocol": null,
+    "frozen_model_identities_including_baselines_and_deduplication": null,
+    "held_out_source_manifest": "NOT_CREATED_IN_P3",
+    "cluster_inference": "driver (clip if available); few driver clusters limit inference"
+  }
+}

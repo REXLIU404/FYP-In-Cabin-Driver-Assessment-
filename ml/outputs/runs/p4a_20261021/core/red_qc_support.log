@@ -1,0 +1,25 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____ test_qc_common_report_retains_driver_support_even_without_ten_classes _____
+
+core = <module 'ml.experiments.p4_core' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_core.py'>
+
+    def test_qc_common_report_retains_driver_support_even_without_ten_classes(core):
+        from ml.experiments import run_p4
+        predictions=[];qc=[]
+        for source,driver,label in [('s0','p1',0),('s1','p2',1)]:
+            for family,severity in [('clean',0),('occlusion',0),('occlusion',1),('occlusion',2)]:
+                output=[0.]*10;output[label]=2.
+                predictions.append(dict(identity='toy',source_id=source,label=label,
+                    condition='clean' if family=='clean' else f'occlusion:{severity}',output=output))
+                qc.append(dict(source_id=source,class_id=f'c{label}',driver_id=driver,condition=family,severity=severity,status='VALID'))
+        report=run_p4.qc_conditioned_report(predictions,qc,identities=['toy'])
+        family=report['families']['occlusion']
+>       assert family['driver_class_support']=={'p1':{'c0':1},'p2':{'c1':1}}
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'driver_class_support'
+
+ml/tests/test_p4_core.py:243: KeyError
+=========================== short test summary info ============================
+FAILED ml/tests/test_p4_core.py::test_qc_common_report_retains_driver_support_even_without_ten_classes
+1 failed in 1.29s

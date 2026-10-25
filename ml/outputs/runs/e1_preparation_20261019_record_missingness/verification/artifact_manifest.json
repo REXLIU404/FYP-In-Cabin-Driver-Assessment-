@@ -1,0 +1,54 @@
+{
+  "files": [
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019_record_missingness/verification/config.json",
+      "sha256": "e215d10ded32ff573b7f80c3c600942ff72df38ca40aaab29fecc16ca0344847",
+      "bytes": 1431
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019_record_missingness/verification/e1-green.log",
+      "sha256": "20e8ced6296e55aa7ae7cd5d3c022d136c08daa6bec75c118c4d7ef534290244",
+      "bytes": 99
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019_record_missingness/verification/execution.log",
+      "sha256": "d6c04bd6034ba6cde888e3c1d41e1903a95b0b47610a904c2cf4709cbc6cba1f",
+      "bytes": 136
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019_record_missingness/verification/generators-red.log",
+      "sha256": "2d0707f59c88954654c935e7f81c39fce593d7411af1e359ada371c9d82d1f53",
+      "bytes": 28596
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019_record_missingness/verification/preparation-red.log",
+      "sha256": "16904f9d2a03d6a7560373b9f257e91ffa449a2556a9a1165b2a327518bbce0b",
+      "bytes": 17387
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019_record_missingness/verification/record-missingness-red.log",
+      "sha256": "f1d2b82df7f3c60e33a5f8306232502f0a99237dc2a1f24070a023ab12d511ee",
+      "bytes": 4228
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019_record_missingness/verification/suite-green.log",
+      "sha256": "154da1f6ad0a9b901ba94faaced78bf8f4493d14ed798158cf81b4cc661c425b",
+      "bytes": 261
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019_record_missingness/verification/verification.log",
+      "sha256": "d8dc167350059fee556b28a312ac28173ef5925596e78228e63589bef395ebc5",
+      "bytes": 67
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019_record_missingness/verification/verify_preparation.py",
+      "sha256": "fbacf587533a7d8046a135e2f96ec66db1029ccdb41a61dca781b4335d86aebd",
+      "bytes": 5750
+    }
+  ],
+  "preparation_root_manifest": {
+    "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019_record_missingness/artifact_manifest.json",
+    "sha256": "7b082a39478fb164b9c2faef6c516b3d3cc8e98e373fafc4c7a4b8164ac94d4b",
+    "bytes": 3882
+  }
+}

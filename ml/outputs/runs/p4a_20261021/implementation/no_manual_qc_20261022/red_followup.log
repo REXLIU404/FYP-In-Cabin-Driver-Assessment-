@@ -1,0 +1,85 @@
+F.F                                                                      [100%]
+=================================== FAILURES ===================================
+______ test_v2_prepare_inputs_writes_only_shared_banks_without_qc_subset _______
+
+core = <module 'ml.experiments.p4_core' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_core.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-130/test_v2_prepare_inputs_writes_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x108686780>
+
+    def test_v2_prepare_inputs_writes_only_shared_banks_without_qc_subset(core,tmp_path,monkeypatch):
+        from ml.experiments import run_p4,p4_data,p4_qc,e1_generators,comparator_common as common
+        from PIL import Image
+        run=tmp_path/'run';run.mkdir()
+        vision=[]
+        for i in range(2):
+            source=tmp_path/f'synthetic_{i}.png';Image.new('RGB',(16,16),(i,2,3)).save(source)
+            vision.append(dict(source_id=f'synthetic:c{i}',class_id=f'c{i}',driver_id=f'p{i}',
+                image_path=str(source),source_split='synthetic'))
+        sets={split:[dict(source_id=f'synthetic:{split}:{i}',source_label=label,
+            features=[float(i+j) for j in range(8)]) for i,label in enumerate(common.LABELS)]
+            for split in ('train','val','test')}
+        statistics=e1_generators.fit_train_statistics([r['features'] for r in sets['train']],common.LABELS,
+            split='train',source_sha256=run_p4.DATA_HASHES['telemetry_train'])
+        monkeypatch.setattr(p4_data,'read_vision_metadata',lambda *args,**kwargs:vision)
+        monkeypatch.setattr(p4_data,'read_telemetry_csv',lambda *args,**kwargs:sets[kwargs['split']])
+        monkeypatch.setattr(run_p4,'validate_vision_sources',lambda records:None,raising=False)
+        monkeypatch.setattr(run_p4,'validate_telemetry_sources',lambda *args:None,raising=False)
+        saved={'feature_order':common.FEATURES,'train_csv_sha256':run_p4.DATA_HASHES['telemetry_train'],'median':statistics['median']}
+        monkeypatch.setattr(run_p4,'read_json',lambda path:{'train_only_statistics':statistics}
+            if Path(path).name=='preparation_evidence.json' else saved)
+        monkeypatch.setattr(p4_qc,'select_sources',lambda *args,**kwargs:pytest.fail('manual QC selection called'))
+        monkeypatch.setattr(p4_qc,'build_review_kit',lambda *args,**kwargs:pytest.fail('manual QC kit copied'))
+        token=core.authorize_p4b(approval(),**binding())
+        run_p4.prepare_inputs({'run_dir':str(run),'data_root':str(tmp_path/'synthetic'),'binding':binding()},token)
+        shared=run/'shared_inputs'
+        manifest=json.loads((shared/'bank_manifest.json').read_text())
+        assert len(manifest['banks'])==29
+        assert manifest['vision_sources']==2 and manifest['vision_inputs']==38
+        assert manifest['telemetry_sources']==3 and manifest['telemetry_inputs']==30
+        rows=json.loads((shared/'vision_variants.json').read_text())
+        assert len(rows)==38 and all(row['qc_status']=='REMOVED_FROM_SCOPE' for row in rows)
+        assert all(row['label_validity']=='LABEL_VALIDITY_UNVERIFIED' and row['f1_eligible'] is False
+            for row in rows if row['condition']!='clean')
+        telemetry=json.loads((shared/'telemetry_variants.json').read_text())
+>       assert all(row['qc_status']=='REMOVED_FROM_SCOPE' and row['human_validated'] is False for row in telemetry)
+E       assert False
+E        +  where False = all(<generator object test_v2_prepare_inputs_writes_only_shared_banks_without_qc_subset.<locals>.<genexpr> at 0x11172b920>)
+
+ml/tests/test_p4_core.py:554: AssertionError
+___ test_v2_private_preflight_rejects_old_protocol_before_any_evidence_read ____
+
+core = <module 'ml.experiments.p4_core' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_core.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-130/test_v2_private_preflight_reje0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1117d4710>
+
+    def test_v2_private_preflight_rejects_old_protocol_before_any_evidence_read(core,tmp_path,monkeypatch):
+        from ml.experiments import run_p4
+        protocol=json.loads((run_p4.ROOT/'ml/configs/p4_protocol.json').read_text());protocol['protocol']='P4-PROTOCOL-v1'
+        old=tmp_path/'old_protocol.json';old.write_text(json.dumps(protocol))
+        frozen=run_p4.binding_for(old,'synthetic_old_protocol')
+        approval_path=tmp_path/'synthetic_approval.json'
+        approval_path.write_text(json.dumps(dict(frozen,phase='P4-B',authorized=True,human_approval='SYNTHETIC_ONLY')))
+        spec=tmp_path/'spec.json';spec.write_text(json.dumps(dict(binding=frozen,protocol_path=str(old),approval_path=str(approval_path))))
+        monkeypatch.setenv('P4_BUDGET_WORKER','1')
+        monkeypatch.setattr(run_p4,'verify_preflight',lambda *args:pytest.fail('old protocol accessed evidence'))
+        with pytest.raises(ValueError,match='protocol'):
+>           run_p4.main(['_verify-preflight','--execution-spec',str(spec)])
+
+ml/tests/test_p4_core.py:638: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/experiments/run_p4.py:719: in main
+    spec=read_json(args.execution_spec);authorize_p4b(read_json(spec['approval_path']),**binding_for(spec['protocol_path'],spec['binding']['run_id']));verify_preflight(spec);return 0
+                                                                                                                                                       ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ({'approval_path': '/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-130/test_v2_private_...ders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-130/test_v2_private_preflight_reje0/old_protocol.json'},)
+
+>   monkeypatch.setattr(run_p4,'verify_preflight',lambda *args:pytest.fail('old protocol accessed evidence'))
+                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: old protocol accessed evidence
+
+ml/tests/test_p4_core.py:636: Failed
+=========================== short test summary info ============================
+FAILED ml/tests/test_p4_core.py::test_v2_prepare_inputs_writes_only_shared_banks_without_qc_subset
+FAILED ml/tests/test_p4_core.py::test_v2_private_preflight_rejects_old_protocol_before_any_evidence_read
+2 failed, 1 passed, 45 deselected in 3.34s

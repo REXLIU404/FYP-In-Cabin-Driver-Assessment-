@@ -1,0 +1,51 @@
+{
+  "status": "PASS_ARTIFACT_VALIDATION_ONLY",
+  "elapsed_seconds": 0.67173791595269,
+  "preflight": {
+    "status": "PASS",
+    "models": {
+      "MN-HPO42": {
+        "onnx_path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p4a_20261021/runtime_benchmark/mobilenet_v3_large_search006_seed42/model.onnx",
+        "onnx_sha256": "9ee60abb78007773cc625af80c313049c1970f63c1f041bed9f5b2539a384828",
+        "checkpoint_sha256": "bc96e7a230de6391820b1e04e7480087841680ae6cc1b6e73cba42b25eb67295",
+        "parity_status": "PASS"
+      },
+      "RN-HPO42": {
+        "onnx_path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p4a_20261021/runtime_benchmark/resnet18_search004_seed42/model.onnx",
+        "onnx_sha256": "5e226722e0712824c78aa0976afa6fa5b8dc6100b147a7f523a09048171d8cf3",
+        "checkpoint_sha256": "008d831c98ea5e4b6c5c821787b3dc9a1dcbc6ca47a74dd1d8f7110eb4ac7d20",
+        "parity_status": "PASS"
+      },
+      "MN-STABLE": {
+        "onnx_path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/vision/mobilenetv3_large_vision.onnx",
+        "onnx_sha256": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+        "checkpoint_sha256": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+        "parity_status": "PASS"
+      }
+    },
+    "validation_bank_path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p4a_20261021/validation/validation_bank.npy",
+    "validation_bank_sha256": "7a40f0c3ae4d7cdb73b2f00dadda4c641c2ea759e55cc2e76e0b071c900dfdfc",
+    "tensor_sha256": "07adb0f1a37281659c298bb79e5404fa770cdea511d5ccb99710966b48a8d42e"
+  },
+  "qc_byte_attestation": {
+    "sha256": "a61964f46545f2fb6c67b39f5ebb483b13364c67c61466fbc852724a75ce8930",
+    "cases": 38,
+    "scope": "CURRENT_KIT_BYTE_FREEZE",
+    "initial_generation_proof": false,
+    "source_images": 2,
+    "human_ratings_received": 0
+  },
+  "protection_groups_unchanged": {
+    "protected": true,
+    "hpo_records": true,
+    "p3_source_records": true
+  },
+  "frozen_identity_count": 7,
+  "final_source_hash_checks": 10,
+  "exact_new_onnx_count": 2,
+  "heldout_observations_opened": 0,
+  "model_forward_calls": 0,
+  "formal_execution_authorized": false,
+  "staging_empty": true,
+  "git_head": "335da4e3de203836c045452f84cc291bcd352a26"
+}

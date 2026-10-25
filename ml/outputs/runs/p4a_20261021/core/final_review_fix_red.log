@@ -1,0 +1,158 @@
+FFFFF..                                                                  [100%]
+=================================== FAILURES ===================================
+__ test_telemetry_metadata_summary_preserves_masks_and_pre_imputation_bounds ___
+
+core = <module 'ml.experiments.p4_core' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_core.py'>
+
+    def test_telemetry_metadata_summary_preserves_masks_and_pre_imputation_bounds(core):
+        from ml.experiments import run_p4
+>       report=run_p4.telemetry_metadata_summary(telemetry_metadata_fixture())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'ml.experiments.run_p4' has no attribute 'telemetry_metadata_summary'
+
+ml/tests/test_p4_core.py:400: AttributeError
+_ test_telemetry_metadata_file_report_rejects_tamper_and_keeps_condition_denominators _
+
+core = <module 'ml.experiments.p4_core' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_core.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-108/test_telemetry_metadata_file_r0')
+
+    def test_telemetry_metadata_file_report_rejects_tamper_and_keeps_condition_denominators(core,tmp_path):
+        from ml.experiments import run_p4
+        from copy import deepcopy
+        rows=telemetry_metadata_fixture()
+        clean=deepcopy(rows[1]);clean.update(domain='D0',severity=0,record_affected=False,
+            label_validity='SOURCE_SYNTHETIC_LABEL',f1_eligible=True)
+        rows.append(clean)
+        path=tmp_path/'telemetry_variants.json';path.write_text(json.dumps(rows))
+        (tmp_path/'bank_manifest.json').write_text(json.dumps({'metadata':{path.name:core.sha256_file(path)}}))
+>       report=run_p4.load_telemetry_metadata_summary(tmp_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'ml.experiments.run_p4' has no attribute 'load_telemetry_metadata_summary'
+
+ml/tests/test_p4_core.py:433: AttributeError
+______ test_formal_single_reviewer_approval_requires_literal_true[false] _______
+
+core = <module 'ml.experiments.p4_core' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_core.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-108/test_formal_single_reviewer_ap0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x112b0a8b0>
+value = 'false'
+
+    @pytest.mark.parametrize('value',['false','true',1,False,None])
+    def test_formal_single_reviewer_approval_requires_literal_true(core,tmp_path,monkeypatch,value):
+        from ml.experiments import run_p4
+        protocol=Path(run_p4.ROOT)/'ml/configs/p4_protocol.json'
+        frozen=run_p4.binding_for(protocol,'synthetic_boolean_gate')
+        approval_path=tmp_path/'synthetic_approval.json'
+        approval_path.write_text(json.dumps(dict(frozen,phase='P4-B',authorized=True,
+            human_approval='SYNTHETIC_TEST_FIXTURE_ONLY',single_reviewer_amendment_approved=value)))
+        execution=tmp_path/'execution_spec.json';execution.write_text(json.dumps({'reviewers':['R1']}))
+        monkeypatch.setattr(run_p4,'formal_provenance',lambda:{})
+        monkeypatch.setattr(run_p4,'BudgetSupervisor',lambda *args,**kwargs:pytest.fail('resource/worker started without literal approval'))
+        with pytest.raises(ValueError,match='amendment approval'):
+>           run_p4.main(['formal','--protocol',str(protocol),'--run-id',frozen['run_id'],
+                '--approval',str(approval_path),'--execution-spec',str(execution)])
+
+ml/tests/test_p4_core.py:454: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/experiments/run_p4.py:621: in main
+    if args.mode=='formal':return formal(args)
+                                  ^^^^^^^^^^^^
+ml/experiments/run_p4.py:548: in formal
+    supervisor=BudgetSupervisor(run) # Resource gate precedes model loading/export/forward.
+               ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (PosixPath('/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/synthetic_boolean_gate'),)
+kwargs = {}
+
+>   monkeypatch.setattr(run_p4,'BudgetSupervisor',lambda *args,**kwargs:pytest.fail('resource/worker started without literal approval'))
+                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: resource/worker started without literal approval
+
+ml/tests/test_p4_core.py:452: Failed
+_______ test_formal_single_reviewer_approval_requires_literal_true[true] _______
+
+core = <module 'ml.experiments.p4_core' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_core.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-108/test_formal_single_reviewer_ap1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x112b0b820>
+value = 'true'
+
+    @pytest.mark.parametrize('value',['false','true',1,False,None])
+    def test_formal_single_reviewer_approval_requires_literal_true(core,tmp_path,monkeypatch,value):
+        from ml.experiments import run_p4
+        protocol=Path(run_p4.ROOT)/'ml/configs/p4_protocol.json'
+        frozen=run_p4.binding_for(protocol,'synthetic_boolean_gate')
+        approval_path=tmp_path/'synthetic_approval.json'
+        approval_path.write_text(json.dumps(dict(frozen,phase='P4-B',authorized=True,
+            human_approval='SYNTHETIC_TEST_FIXTURE_ONLY',single_reviewer_amendment_approved=value)))
+        execution=tmp_path/'execution_spec.json';execution.write_text(json.dumps({'reviewers':['R1']}))
+        monkeypatch.setattr(run_p4,'formal_provenance',lambda:{})
+        monkeypatch.setattr(run_p4,'BudgetSupervisor',lambda *args,**kwargs:pytest.fail('resource/worker started without literal approval'))
+        with pytest.raises(ValueError,match='amendment approval'):
+>           run_p4.main(['formal','--protocol',str(protocol),'--run-id',frozen['run_id'],
+                '--approval',str(approval_path),'--execution-spec',str(execution)])
+
+ml/tests/test_p4_core.py:454: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/experiments/run_p4.py:621: in main
+    if args.mode=='formal':return formal(args)
+                                  ^^^^^^^^^^^^
+ml/experiments/run_p4.py:548: in formal
+    supervisor=BudgetSupervisor(run) # Resource gate precedes model loading/export/forward.
+               ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (PosixPath('/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/synthetic_boolean_gate'),)
+kwargs = {}
+
+>   monkeypatch.setattr(run_p4,'BudgetSupervisor',lambda *args,**kwargs:pytest.fail('resource/worker started without literal approval'))
+                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: resource/worker started without literal approval
+
+ml/tests/test_p4_core.py:452: Failed
+________ test_formal_single_reviewer_approval_requires_literal_true[1] _________
+
+core = <module 'ml.experiments.p4_core' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_core.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-108/test_formal_single_reviewer_ap2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x112d4cef0>, value = 1
+
+    @pytest.mark.parametrize('value',['false','true',1,False,None])
+    def test_formal_single_reviewer_approval_requires_literal_true(core,tmp_path,monkeypatch,value):
+        from ml.experiments import run_p4
+        protocol=Path(run_p4.ROOT)/'ml/configs/p4_protocol.json'
+        frozen=run_p4.binding_for(protocol,'synthetic_boolean_gate')
+        approval_path=tmp_path/'synthetic_approval.json'
+        approval_path.write_text(json.dumps(dict(frozen,phase='P4-B',authorized=True,
+            human_approval='SYNTHETIC_TEST_FIXTURE_ONLY',single_reviewer_amendment_approved=value)))
+        execution=tmp_path/'execution_spec.json';execution.write_text(json.dumps({'reviewers':['R1']}))
+        monkeypatch.setattr(run_p4,'formal_provenance',lambda:{})
+        monkeypatch.setattr(run_p4,'BudgetSupervisor',lambda *args,**kwargs:pytest.fail('resource/worker started without literal approval'))
+        with pytest.raises(ValueError,match='amendment approval'):
+>           run_p4.main(['formal','--protocol',str(protocol),'--run-id',frozen['run_id'],
+                '--approval',str(approval_path),'--execution-spec',str(execution)])
+
+ml/tests/test_p4_core.py:454: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/experiments/run_p4.py:621: in main
+    if args.mode=='formal':return formal(args)
+                                  ^^^^^^^^^^^^
+ml/experiments/run_p4.py:548: in formal
+    supervisor=BudgetSupervisor(run) # Resource gate precedes model loading/export/forward.
+               ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (PosixPath('/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/synthetic_boolean_gate'),)
+kwargs = {}
+
+>   monkeypatch.setattr(run_p4,'BudgetSupervisor',lambda *args,**kwargs:pytest.fail('resource/worker started without literal approval'))
+                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: resource/worker started without literal approval
+
+ml/tests/test_p4_core.py:452: Failed
+=========================== short test summary info ============================
+FAILED ml/tests/test_p4_core.py::test_telemetry_metadata_summary_preserves_masks_and_pre_imputation_bounds
+FAILED ml/tests/test_p4_core.py::test_telemetry_metadata_file_report_rejects_tamper_and_keeps_condition_denominators
+FAILED ml/tests/test_p4_core.py::test_formal_single_reviewer_approval_requires_literal_true[false]
+FAILED ml/tests/test_p4_core.py::test_formal_single_reviewer_approval_requires_literal_true[true]
+FAILED ml/tests/test_p4_core.py::test_formal_single_reviewer_approval_requires_literal_true[1]
+5 failed, 2 passed, 34 deselected in 7.76s

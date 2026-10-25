@@ -1,0 +1,82 @@
+{
+  "cases": 38,
+  "heldout_images_opened": 0,
+  "human_ratings_count": 0,
+  "human_review_seconds": null,
+  "limitations": [
+    "Single reviewer R1 is the project developer; developer/reviewer bias.",
+    "Small validation pilot: 2 source images and 38 related cases, not 38 independent people.",
+    "No second reviewer and no inter-rater agreement.",
+    "No validity retention or human timing result exists before actual R1 judgments."
+  ],
+  "model_predictions": 0,
+  "preparation_seconds": 0.51056070800405,
+  "reviewer_role": "project developer",
+  "reviewers": [
+    "R1"
+  ],
+  "scenario_estimates": [
+    {
+      "assumed_seconds_per_case": 5,
+      "maximum_formal_3800_cases_hours": 5.277777777777778,
+      "measured": false,
+      "pilot_seconds": 190
+    },
+    {
+      "assumed_seconds_per_case": 10,
+      "maximum_formal_3800_cases_hours": 10.555555555555555,
+      "measured": false,
+      "pilot_seconds": 380
+    },
+    {
+      "assumed_seconds_per_case": 20,
+      "maximum_formal_3800_cases_hours": 21.11111111111111,
+      "measured": false,
+      "pilot_seconds": 760
+    }
+  ],
+  "source_generation_seconds": [
+    0.13061458303127438,
+    0.1275017079897225
+  ],
+  "sources": [
+    {
+      "aspect_ratio": "1.3333333333333333",
+      "class_id": "c9",
+      "class_name": "talking_to_passenger",
+      "driver_csv_classname": "c9",
+      "driver_id": "p041",
+      "filename": "img_13982.jpg",
+      "height": "480",
+      "image_path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c9/img_13982.jpg",
+      "metadata_path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/vision/vision_metadata_with_split.csv",
+      "metadata_sha256": "b4f8e90dec769bb419eaa490aea869668bed6484089cebe4d545c7667baa8ea4",
+      "source_id": "vision-v1:c9/img_13982.jpg",
+      "source_row": 20411,
+      "source_sha256": "f906579946948eef00ca4f7f73c0f621035dd24dfba2c856d7f22dcea66cdbf8",
+      "source_split": "val",
+      "split": "val",
+      "width": "640"
+    },
+    {
+      "aspect_ratio": "1.3333333333333333",
+      "class_id": "c1",
+      "class_name": "texting_right",
+      "driver_csv_classname": "c1",
+      "driver_id": "p045",
+      "filename": "img_38347.jpg",
+      "height": "480",
+      "image_path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c1/img_38347.jpg",
+      "metadata_path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/vision/vision_metadata_with_split.csv",
+      "metadata_sha256": "b4f8e90dec769bb419eaa490aea869668bed6484089cebe4d545c7667baa8ea4",
+      "source_id": "vision-v1:c1/img_38347.jpg",
+      "source_row": 3229,
+      "source_sha256": "e36a812c4e50b953717c8a951c3da081630689a105ae622f0fab99a77e9e11a4",
+      "source_split": "val",
+      "split": "val",
+      "width": "640"
+    }
+  ],
+  "status": "HUMAN_PILOT_PENDING",
+  "valid_retention": null
+}

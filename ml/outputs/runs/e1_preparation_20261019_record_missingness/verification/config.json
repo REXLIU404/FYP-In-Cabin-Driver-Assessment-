@@ -1,0 +1,36 @@
+{
+  "scope": "P3 record-level missingness preparation only; proposed parameters, no P4 approval",
+  "commands": [
+    "./.venv/bin/python -B -m pytest -q ml/tests/test_e1_generators.py -p no:cacheprovider",
+    "./.venv/bin/python -B -m pytest -q ml/tests/test_e1_preparation.py -p no:cacheprovider",
+    "./.venv/bin/python -B -m pytest -q ml/tests/test_e1_generators.py -k 'd3 or 4500' -p no:cacheprovider",
+    "./.venv/bin/python -B -m pytest -q ml/tests/test_e1_generators.py ml/tests/test_e1_preparation.py -p no:cacheprovider",
+    "./.venv/bin/python -B -m pytest -q ml/tests -p no:cacheprovider",
+    "./.venv/bin/python -B ml/experiments/run_e1_preparation.py --run-id e1_preparation_20261019_record_missingness",
+    "./.venv/bin/python -B ml/outputs/runs/e1_preparation_20261019_record_missingness/verification/verify_preparation.py"
+  ],
+  "formal_training_or_hpo_trials": 0,
+  "generator_test_counts": {
+    "synthetic_sources": 4500,
+    "synthetic_variants": 45000,
+    "affected_records_per_severity": [
+      225,
+      450,
+      900
+    ],
+    "injected_missing_features_per_affected_record": 1
+  },
+  "validation_counts": {
+    "sources": 30,
+    "variants": 300,
+    "affected_records_per_severity": [
+      2,
+      3,
+      6
+    ]
+  },
+  "held_out_observations_opened": 0,
+  "formal_metrics": null,
+  "supersedes": "e1_preparation_20261019 D3 missingness semantics only",
+  "old_outputs_preserved": true
+}

@@ -1,0 +1,19 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______ test_source_key_binding_prevents_reveal_under_another_case_mapping ______
+
+qc = <module 'ml.experiments.p4_qc' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_qc.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-88/test_source_key_binding_preven0')
+
+    def test_source_key_binding_prevents_reveal_under_another_case_mapping(qc,tmp_path):
+        first=qc.build_review_kit(cases(),tmp_path/'one')
+        second=qc.build_review_kit([(image,dict(row,class_id='c1')) for image,row in cases()],tmp_path/'two')
+        ids=[r['case_id'] for r in first['restricted_cases']]
+>       locked=qc.lock_blind_judgments([judgement(i) for i in ids],reviewer='R1',case_ids=ids,
+            source_key_sha256=first['source_key_sha256'])
+E       TypeError: lock_blind_judgments() got an unexpected keyword argument 'source_key_sha256'
+
+ml/tests/test_p4_qc.py:89: TypeError
+=========================== short test summary info ============================
+FAILED ml/tests/test_p4_qc.py::test_source_key_binding_prevents_reveal_under_another_case_mapping
+1 failed in 1.23s

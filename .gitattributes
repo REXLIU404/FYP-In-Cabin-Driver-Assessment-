@@ -1,0 +1,8 @@
+# Preserve the exact bytes of frozen evidence archived on 2026-10-26.
+# Hashes in historical manifests refer to these files before Git EOL filtering.
+ml/outputs/runs/e1_preparation_20261019/** -text
+ml/outputs/runs/e1_preparation_20261019_record_missingness/** -text
+ml/outputs/runs/p3_vision_20261018/search/** -text
+ml/outputs/runs/p4a_20261021/** -text
+ml/outputs/runs/p4b_20261022/** -text
+ml/outputs/runs/p5_candidates_20261023/** -text

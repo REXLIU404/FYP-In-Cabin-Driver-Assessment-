@@ -1,0 +1,83 @@
+{
+  "archives": [
+    {
+      "bytes": 17202946,
+      "file": "p5_mobilenet_v3_large_search006_seed42_20261023.zip",
+      "sha256": "ae887dabe3588969576ecfb54fead41d0f03bd02267028a8a80f73311811ae13"
+    },
+    {
+      "bytes": 43100529,
+      "file": "p5_resnet18_search004_seed42_20261023.zip",
+      "sha256": "9fb9551f49aeb3582dfc7cb76c9050b7690a8856621944eb363fecd73ea35029"
+    }
+  ],
+  "model_forwards": 0,
+  "new_benchmarks": 0,
+  "new_exports": 0,
+  "new_heldout_inference": 0,
+  "new_training": 0,
+  "packages": [
+    {
+      "graph": {
+        "dtype": "float32",
+        "external_tensors": 0,
+        "forward_passes": 0,
+        "input_name": "input",
+        "input_shape": [
+          "N",
+          3,
+          224,
+          224
+        ],
+        "output_name": "logits",
+        "output_shape": [
+          "N",
+          10
+        ],
+        "softmax_nodes": 0,
+        "status": "PASS"
+      },
+      "inventory_files": 40,
+      "official_stable200_behavior": "NOT_RUN",
+      "package": "p5_resnet18_search004_seed42_20261023",
+      "provider_load_forward": "NOT_RUN",
+      "schema_hash_path": "PASS",
+      "status": "PASS",
+      "system_integration": "BLOCKED_NOT_IMPLEMENTED"
+    },
+    {
+      "graph": {
+        "dtype": "float32",
+        "external_tensors": 0,
+        "forward_passes": 0,
+        "input_name": "input",
+        "input_shape": [
+          "N",
+          3,
+          224,
+          224
+        ],
+        "output_name": "logits",
+        "output_shape": [
+          "N",
+          10
+        ],
+        "softmax_nodes": 0,
+        "status": "PASS"
+      },
+      "inventory_files": 40,
+      "official_stable200_behavior": "NOT_RUN",
+      "package": "p5_mobilenet_v3_large_search006_seed42_20261023",
+      "provider_load_forward": "NOT_RUN",
+      "schema_hash_path": "PASS",
+      "status": "PASS",
+      "system_integration": "BLOCKED_NOT_IMPLEMENTED"
+    }
+  ],
+  "protected_files_unchanged": 369,
+  "provider_load_forward": "NOT_RUN",
+  "scope": "P5_COPY_ONLY_PACKAGING",
+  "status": "PASS",
+  "system_integration": "BLOCKED_NOT_IMPLEMENTED",
+  "telemetry": "RESEARCH_EVIDENCE_ONLY_NO_RUNTIME_CANDIDATE"
+}

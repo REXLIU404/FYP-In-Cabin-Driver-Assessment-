@@ -1,0 +1,13 @@
+{
+  "status": "BLOCKED_INSUFFICIENT_RAM",
+  "approval": "AUTHORIZED_BY_USER",
+  "formal_started": false,
+  "heldout_observations_opened": 0,
+  "canonical_report_sha256": "b4daa7a2fa89c20f49bc2ab08c38b9ee26104e817c0026f0c4056ff2cda6e005",
+  "control_files": {
+    "approved_p4b.json": "11d5fa74b28573168db265e8743103b2db629198bed48cd8ca284b698504f275",
+    "execution_spec.json": "b421f6fe1be811119651901674a98483ae1b8785febe75aaecd7b296b6428e3e",
+    "startup_checks.json": "1502e097fc8dd1ceb2640e5481cd9bc1f2711e520e0a9e85505d932df6874ccc"
+  },
+  "staging_empty": true
+}

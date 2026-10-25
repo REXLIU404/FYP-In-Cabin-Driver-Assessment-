@@ -1,0 +1,72 @@
+[
+  {
+    "path": "ml/experiments/p4_core.py",
+    "bytes": 24875,
+    "sha256": "ff6ad31b4ef9e60ff4aead392650a03c46302e3bf4a87d8ae06697e6842d5e7d",
+    "snapshot": "source_snapshot_after_review/ml/experiments/p4_core.py",
+    "changed_since_initial_review": false
+  },
+  {
+    "path": "ml/experiments/run_p4.py",
+    "bytes": 50073,
+    "sha256": "3b2350b161043a2e3007c99a65ba00695a3793c910986eadb991209575f95ada",
+    "snapshot": "source_snapshot_after_review/ml/experiments/run_p4.py",
+    "changed_since_initial_review": true
+  },
+  {
+    "path": "ml/experiments/p4_data.py",
+    "bytes": 12467,
+    "sha256": "9773621240881355f730ac75665c255a7db98f83afd7b26de10c8b337a477448",
+    "snapshot": "source_snapshot_after_review/ml/experiments/p4_data.py",
+    "changed_since_initial_review": false
+  },
+  {
+    "path": "ml/experiments/p4_qc.py",
+    "bytes": 35132,
+    "sha256": "ff04696f5a2abbde841a19a10f7e77bd760bb4b2dde9288ff2b1d94bcb8f01c8",
+    "snapshot": "source_snapshot_after_review/ml/experiments/p4_qc.py",
+    "changed_since_initial_review": false
+  },
+  {
+    "path": "ml/experiments/p4_preflight.py",
+    "bytes": 31626,
+    "sha256": "ffdfa6637bace58c9818ade3b9a84e812a59d2f681543927b10403061301dece",
+    "snapshot": "source_snapshot_after_review/ml/experiments/p4_preflight.py",
+    "changed_since_initial_review": false
+  },
+  {
+    "path": "ml/configs/p4_protocol.json",
+    "bytes": 7370,
+    "sha256": "daa20d346bde047c7b823a552c0f4596fef697f965be2956792b812b9c80fa2b",
+    "snapshot": "source_snapshot_after_review/ml/configs/p4_protocol.json",
+    "changed_since_initial_review": false
+  },
+  {
+    "path": "ml/tests/test_p4_core.py",
+    "bytes": 25264,
+    "sha256": "ef66e1bc0072faa5fd83373289d57bdfd773736fbaf560bfef6bcc9ab16eb858",
+    "snapshot": "source_snapshot_after_review/ml/tests/test_p4_core.py",
+    "changed_since_initial_review": true
+  },
+  {
+    "path": "ml/tests/test_p4_data.py",
+    "bytes": 7429,
+    "sha256": "e3aa876eb1e786c9ae61923e5f1fad273ccef4586b24f8776c3988b55881219e",
+    "snapshot": "source_snapshot_after_review/ml/tests/test_p4_data.py",
+    "changed_since_initial_review": false
+  },
+  {
+    "path": "ml/tests/test_p4_qc.py",
+    "bytes": 15821,
+    "sha256": "764ba46e956ee7ec8e10c47fb35e0294ec8dabe0ce63ad1a8f8a28cb265ed78d",
+    "snapshot": "source_snapshot_after_review/ml/tests/test_p4_qc.py",
+    "changed_since_initial_review": false
+  },
+  {
+    "path": "ml/tests/test_p4_preflight.py",
+    "bytes": 12603,
+    "sha256": "d25c0229755d104782c64d8235bec2af511303a289c82f987b217ac11e7553bb",
+    "snapshot": "source_snapshot_after_review/ml/tests/test_p4_preflight.py",
+    "changed_since_initial_review": false
+  }
+]

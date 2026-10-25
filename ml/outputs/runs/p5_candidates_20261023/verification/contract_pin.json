@@ -1,0 +1,21 @@
+{
+  "blobs": {
+    "backend/app/runtime_manifest.py": {
+      "git_blob_sha1": "cb888fb3c4a4a46b6644334a2cdbcfa32a4743d0",
+      "sha256": "f2e4b39ad6708d2feeb110b7308f6a924fe752b9a6e6a48df1927b7e058997ce"
+    },
+    "backend/app/runtime_manifest.schema.json": {
+      "git_blob_sha1": "49b9b8654dc1cf55208a2c98d869a71866f4aa2a",
+      "sha256": "db78678d7e00dbb7935e9c122e514957e0a5913857e5ef367353a925a1b59084"
+    },
+    "docs/fyp2/handoff/task-10a-runtime-manifest.md": {
+      "git_blob_sha1": "cfa549ec1cfd1f3082c1b9bc84c8ce8eb6dd645b",
+      "sha256": "419deed3d25ab93af062442f280f026fd854f33f8f212731c4588900129e8d53"
+    },
+    "scripts/validate_runtime_manifest.py": {
+      "git_blob_sha1": "dd4b069deba04cfa57ab8eecbaea3cee90f467c8",
+      "sha256": "9b0ed4a0f7369f453768cfdac92e4a1b963eba971f9f5a36b1864becd1055d8a"
+    }
+  },
+  "system_contract_commit": "2745348"
+}

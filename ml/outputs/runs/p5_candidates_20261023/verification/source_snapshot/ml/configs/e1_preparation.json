@@ -1,0 +1,57 @@
+{
+  "status": "PREPARATION_ONLY",
+  "formal_execution_authorized": false,
+  "source_split": "val",
+  "seed": 42,
+  "vision_source_count": 10,
+  "telemetry_source_count": 30,
+  "vision_strengths": {
+    "brightness_up": [1.2, 1.5, 1.8],
+    "brightness_down": [0.8, 0.5, 0.3],
+    "motion_blur": [3, 7, 11],
+    "occlusion": [0.05, 0.1, 0.2],
+    "rotation_crop": [3, 7, 12],
+    "grayscale_blend": [0.3, 0.6, 1.0]
+  },
+  "telemetry_strengths": {"D1": [0.1, 0.3, 0.5], "D2": [0.25, 0.5, 0.75], "D3": [0.25, 0.5, 1.0]},
+  "preparation_example_only": {
+    "D3_record_missing_rates": [0.05, 0.1, 0.2],
+    "D3_drift_direction": [1, 1, 1, 1, 1, 1, 1, 1],
+    "bounds": null,
+    "bounds_policy": "UNRESOLVED; no clipping",
+    "rotation_crop_geometry": "centered_inscribed_square"
+  },
+  "proposed_protocol_decisions": {
+    "status": "PROPOSED_UNTIL_FULL_P4_PROTOCOL_FREEZE",
+    "user_decision": "2026-10-19: 5/10/20 percent of records; exactly one randomly selected feature per affected record",
+    "D3_missingness_unit": "RECORD",
+    "D3_record_missing_rates": [0.05, 0.1, 0.2],
+    "missing_features_per_affected_record": 1,
+    "record_selection": "seed42 source-ID hash ranking; nested prefixes; floor(N*rate+0.5)",
+    "feature_selection": "seed42 per-source RNG, one of eight, fixed across severity and models",
+    "models_share_masks": ["xgboost", "random_forest", "logistic_regression"],
+    "imputation": "train-only median",
+    "formal_execution_authorized": false
+  },
+  "formal_protocol_pending": {
+    "D3_missing_rates": null,
+    "D3_drift_direction": null,
+    "physical_bounds_and_out_of_range_policy": null,
+    "rotation_crop_geometry_approval": null,
+    "independent_recognizability_QC_protocol": null,
+    "frozen_model_identities_including_baselines_and_deduplication": null,
+    "held_out_source_manifest": "NOT_CREATED_IN_P3",
+    "cluster_inference": "driver (clip if available); few driver clusters limit inference"
+  },
+  "constraints": {
+    "train_or_model_forward": false,
+    "test_images_or_telemetry_test_csv": false,
+    "formal_metrics": false,
+    "shared_preprocessing": "RGB -> PIL bilinear direct224 -> /255 -> ImageNet mean/std -> NCHW float32",
+    "shared_telemetry_imputation": "frozen train-only median for all three; LR train-fitted scaler downstream",
+    "qc_default": "PENDING; no transformed-label macro-F1 without independent validity decision",
+    "D2_interpretation": "LABEL_CONDITIONED_STRESS",
+    "D0": {"synthetic": true, "perturbed": false},
+    "test_exposure": "previously evaluated; do not describe as never seen"
+  }
+}

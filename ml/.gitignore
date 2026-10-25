@@ -37,3 +37,24 @@ outputs/runs/**/*.json
 !outputs/runs/**/probe_config.json
 !outputs/runs/**/search_config.json
 !outputs/runs/**/source_snapshot/ml/configs/bounded_hpo.json
+
+# Frozen metadata from completed runs: preserve audit reports, source hashes,
+# protocols and validation evidence without allowing JSON weights in future runs.
+!outputs/runs/e1_preparation_20261019/**/*.json
+!outputs/runs/e1_preparation_20261019_record_missingness/**/*.json
+!outputs/runs/p4a_20261021/**/*.json
+!outputs/runs/p4b_20261022/**/*.json
+!outputs/runs/p5_candidates_20261023/**/*.json
+
+# Local computation inputs, databases, archives and worker/resume state.
+# Keep the small shared-input manifest as evidence; the input payloads stay local.
+outputs/runs/**/cache/
+outputs/runs/**/shared_inputs/*
+!outputs/runs/**/shared_inputs/bank_manifest.json
+outputs/runs/**/process.json
+outputs/runs/**/budget_state.json
+outputs/runs/**/*.zip
+
+# Historical QC review inputs and its generated browser page are local artifacts.
+outputs/runs/**/qc/validation_pilot/images/
+outputs/runs/**/qc/validation_pilot/review.html

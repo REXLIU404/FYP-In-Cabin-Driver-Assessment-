@@ -1,0 +1,2 @@
+trial_id,model,role,seed,config,max_epochs,is_p2,status,counts_toward_hpo,best_epoch,macro_f1,log_loss
+confirm_43,mobilenet_v3_large,CONFIRMATION,43,"{""learning_rate"": 0.0008, ""weight_decay"": 0.001}",8,False,COMPLETED,True,3,0.8824860851282594,0.3594505488872528

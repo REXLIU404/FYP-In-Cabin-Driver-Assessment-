@@ -1,0 +1,7 @@
+{
+  "best_epoch": 8,
+  "selection_split": "val",
+  "probe_used_for_model_selection": false,
+  "test_predictions": "NOT_YET_DUE",
+  "model_selection": "root selection_log after all search configs"
+}

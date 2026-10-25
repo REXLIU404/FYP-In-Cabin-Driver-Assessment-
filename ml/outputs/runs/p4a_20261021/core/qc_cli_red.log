@@ -1,0 +1,299 @@
+................FFFFFFF                                                  [100%]
+=================================== FAILURES ===================================
+______ test_new_kit_rejects_supplied_pixel_hash_that_does_not_match_image ______
+
+qc = <module 'ml.experiments.p4_qc' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_qc.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-104/test_new_kit_rejects_supplied_0')
+
+    def test_new_kit_rejects_supplied_pixel_hash_that_does_not_match_image(qc,tmp_path):
+        items=cases();items[0][1]['pixel_sha256']='0'*64
+>       with pytest.raises(ValueError,match='pixel'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+ml/tests/test_p4_qc.py:222: Failed
+_ test_cli_execution_spec_carries_authorization_through_complete_synthetic_workflow _
+
+qc = <module 'ml.experiments.p4_qc' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_qc.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-104/test_cli_execution_spec_carrie0')
+
+    def test_cli_execution_spec_carries_authorization_through_complete_synthetic_workflow(qc,tmp_path):
+        kit,manifest,spec,_=formal_fixture(qc,tmp_path)
+        qc.byte_attestation_path(kit).unlink()  # Simulate a legacy un-attested kit.
+>       assert qc.main(['attest','--kit',str(kit),'--execution-spec',str(spec)])==0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_qc.py:253: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/experiments/p4_qc.py:446: in main
+    args=parser.parse_args(argv)
+         ^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/argparse.py:1893: in parse_args
+    self.error(msg)
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/argparse.py:2645: in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = ArgumentParser(prog='__main__.py', usage=None, description='Single-reviewer R1 QC preparation and lock-before-reveal w...ent or invented ratings.\n', formatter_class=<class 'argparse.HelpFormatter'>, conflict_handler='error', add_help=True)
+status = 2
+message = '__main__.py: error: unrecognized arguments: --execution-spec /private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-104/test_cli_execution_spec_carrie0/synthetic_formal/execution_spec.json\n'
+
+    def exit(self, status=0, message=None):
+        if message:
+            self._print_message(message, _sys.stderr)
+>       _sys.exit(status)
+E       SystemExit: 2
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/argparse.py:2632: SystemExit
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] {pilot,lock,reveal,attest,finalize} ...
+__main__.py: error: unrecognized arguments: --execution-spec /private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-104/test_cli_execution_spec_carrie0/synthetic_formal/execution_spec.json
+___________ test_cli_bad_binding_refuses_before_kit_bytes[protocol] ____________
+
+qc = <module 'ml.experiments.p4_qc' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_qc.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-104/test_cli_bad_binding_refuses_b0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x11364fa80>
+mutation = 'protocol'
+
+    @pytest.mark.parametrize('mutation',['protocol','source','run','kit','approval'])
+    def test_cli_bad_binding_refuses_before_kit_bytes(qc,tmp_path,monkeypatch,mutation):
+        kit,_,spec,approval=formal_fixture(qc,tmp_path)
+        value=json.loads(spec.read_text())
+        if mutation=='protocol':value['binding']['protocol_sha256']='0'*64
+        elif mutation=='source':value['binding']['source_sha256']='0'*64
+        elif mutation=='run':value['binding']['run_id']='different_run'
+        elif mutation=='kit':value['run_dir']=str(tmp_path/'another_run')
+        else:
+            approved=json.loads(approval.read_text());approved['authorized']=False
+            approval.write_text(json.dumps(approved))
+        spec.write_text(json.dumps(value))
+        monkeypatch.setattr(qc,'load_byte_attestation',lambda *args,**kwargs:pytest.fail('kit byte read before authorization'))
+        with pytest.raises((ValueError,PermissionError)):
+>           qc.main(['reveal','--kit',str(kit),'--execution-spec',str(spec)])
+
+ml/tests/test_p4_qc.py:281: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/experiments/p4_qc.py:446: in main
+    args=parser.parse_args(argv)
+         ^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/argparse.py:1893: in parse_args
+    self.error(msg)
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/argparse.py:2645: in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = ArgumentParser(prog='__main__.py', usage=None, description='Single-reviewer R1 QC preparation and lock-before-reveal w...ent or invented ratings.\n', formatter_class=<class 'argparse.HelpFormatter'>, conflict_handler='error', add_help=True)
+status = 2
+message = '__main__.py: error: unrecognized arguments: --execution-spec /private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-104/test_cli_bad_binding_refuses_b0/synthetic_formal/execution_spec.json\n'
+
+    def exit(self, status=0, message=None):
+        if message:
+            self._print_message(message, _sys.stderr)
+>       _sys.exit(status)
+E       SystemExit: 2
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/argparse.py:2632: SystemExit
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] {pilot,lock,reveal,attest,finalize} ...
+__main__.py: error: unrecognized arguments: --execution-spec /private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-104/test_cli_bad_binding_refuses_b0/synthetic_formal/execution_spec.json
+____________ test_cli_bad_binding_refuses_before_kit_bytes[source] _____________
+
+qc = <module 'ml.experiments.p4_qc' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_qc.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-104/test_cli_bad_binding_refuses_b1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x113d04180>
+mutation = 'source'
+
+    @pytest.mark.parametrize('mutation',['protocol','source','run','kit','approval'])
+    def test_cli_bad_binding_refuses_before_kit_bytes(qc,tmp_path,monkeypatch,mutation):
+        kit,_,spec,approval=formal_fixture(qc,tmp_path)
+        value=json.loads(spec.read_text())
+        if mutation=='protocol':value['binding']['protocol_sha256']='0'*64
+        elif mutation=='source':value['binding']['source_sha256']='0'*64
+        elif mutation=='run':value['binding']['run_id']='different_run'
+        elif mutation=='kit':value['run_dir']=str(tmp_path/'another_run')
+        else:
+            approved=json.loads(approval.read_text());approved['authorized']=False
+            approval.write_text(json.dumps(approved))
+        spec.write_text(json.dumps(value))
+        monkeypatch.setattr(qc,'load_byte_attestation',lambda *args,**kwargs:pytest.fail('kit byte read before authorization'))
+        with pytest.raises((ValueError,PermissionError)):
+>           qc.main(['reveal','--kit',str(kit),'--execution-spec',str(spec)])
+
+ml/tests/test_p4_qc.py:281: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/experiments/p4_qc.py:446: in main
+    args=parser.parse_args(argv)
+         ^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/argparse.py:1893: in parse_args
+    self.error(msg)
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/argparse.py:2645: in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = ArgumentParser(prog='__main__.py', usage=None, description='Single-reviewer R1 QC preparation and lock-before-reveal w...ent or invented ratings.\n', formatter_class=<class 'argparse.HelpFormatter'>, conflict_handler='error', add_help=True)
+status = 2
+message = '__main__.py: error: unrecognized arguments: --execution-spec /private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-104/test_cli_bad_binding_refuses_b1/synthetic_formal/execution_spec.json\n'
+
+    def exit(self, status=0, message=None):
+        if message:
+            self._print_message(message, _sys.stderr)
+>       _sys.exit(status)
+E       SystemExit: 2
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/argparse.py:2632: SystemExit
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] {pilot,lock,reveal,attest,finalize} ...
+__main__.py: error: unrecognized arguments: --execution-spec /private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-104/test_cli_bad_binding_refuses_b1/synthetic_formal/execution_spec.json
+______________ test_cli_bad_binding_refuses_before_kit_bytes[run] ______________
+
+qc = <module 'ml.experiments.p4_qc' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_qc.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-104/test_cli_bad_binding_refuses_b2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x11397f1d0>
+mutation = 'run'
+
+    @pytest.mark.parametrize('mutation',['protocol','source','run','kit','approval'])
+    def test_cli_bad_binding_refuses_before_kit_bytes(qc,tmp_path,monkeypatch,mutation):
+        kit,_,spec,approval=formal_fixture(qc,tmp_path)
+        value=json.loads(spec.read_text())
+        if mutation=='protocol':value['binding']['protocol_sha256']='0'*64
+        elif mutation=='source':value['binding']['source_sha256']='0'*64
+        elif mutation=='run':value['binding']['run_id']='different_run'
+        elif mutation=='kit':value['run_dir']=str(tmp_path/'another_run')
+        else:
+            approved=json.loads(approval.read_text());approved['authorized']=False
+            approval.write_text(json.dumps(approved))
+        spec.write_text(json.dumps(value))
+        monkeypatch.setattr(qc,'load_byte_attestation',lambda *args,**kwargs:pytest.fail('kit byte read before authorization'))
+        with pytest.raises((ValueError,PermissionError)):
+>           qc.main(['reveal','--kit',str(kit),'--execution-spec',str(spec)])
+
+ml/tests/test_p4_qc.py:281: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/experiments/p4_qc.py:446: in main
+    args=parser.parse_args(argv)
+         ^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/argparse.py:1893: in parse_args
+    self.error(msg)
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/argparse.py:2645: in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = ArgumentParser(prog='__main__.py', usage=None, description='Single-reviewer R1 QC preparation and lock-before-reveal w...ent or invented ratings.\n', formatter_class=<class 'argparse.HelpFormatter'>, conflict_handler='error', add_help=True)
+status = 2
+message = '__main__.py: error: unrecognized arguments: --execution-spec /private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-104/test_cli_bad_binding_refuses_b2/synthetic_formal/execution_spec.json\n'
+
+    def exit(self, status=0, message=None):
+        if message:
+            self._print_message(message, _sys.stderr)
+>       _sys.exit(status)
+E       SystemExit: 2
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/argparse.py:2632: SystemExit
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] {pilot,lock,reveal,attest,finalize} ...
+__main__.py: error: unrecognized arguments: --execution-spec /private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-104/test_cli_bad_binding_refuses_b2/synthetic_formal/execution_spec.json
+______________ test_cli_bad_binding_refuses_before_kit_bytes[kit] ______________
+
+qc = <module 'ml.experiments.p4_qc' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_qc.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-104/test_cli_bad_binding_refuses_b3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x113993680>
+mutation = 'kit'
+
+    @pytest.mark.parametrize('mutation',['protocol','source','run','kit','approval'])
+    def test_cli_bad_binding_refuses_before_kit_bytes(qc,tmp_path,monkeypatch,mutation):
+        kit,_,spec,approval=formal_fixture(qc,tmp_path)
+        value=json.loads(spec.read_text())
+        if mutation=='protocol':value['binding']['protocol_sha256']='0'*64
+        elif mutation=='source':value['binding']['source_sha256']='0'*64
+        elif mutation=='run':value['binding']['run_id']='different_run'
+        elif mutation=='kit':value['run_dir']=str(tmp_path/'another_run')
+        else:
+            approved=json.loads(approval.read_text());approved['authorized']=False
+            approval.write_text(json.dumps(approved))
+        spec.write_text(json.dumps(value))
+        monkeypatch.setattr(qc,'load_byte_attestation',lambda *args,**kwargs:pytest.fail('kit byte read before authorization'))
+        with pytest.raises((ValueError,PermissionError)):
+>           qc.main(['reveal','--kit',str(kit),'--execution-spec',str(spec)])
+
+ml/tests/test_p4_qc.py:281: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/experiments/p4_qc.py:446: in main
+    args=parser.parse_args(argv)
+         ^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/argparse.py:1893: in parse_args
+    self.error(msg)
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/argparse.py:2645: in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = ArgumentParser(prog='__main__.py', usage=None, description='Single-reviewer R1 QC preparation and lock-before-reveal w...ent or invented ratings.\n', formatter_class=<class 'argparse.HelpFormatter'>, conflict_handler='error', add_help=True)
+status = 2
+message = '__main__.py: error: unrecognized arguments: --execution-spec /private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-104/test_cli_bad_binding_refuses_b3/synthetic_formal/execution_spec.json\n'
+
+    def exit(self, status=0, message=None):
+        if message:
+            self._print_message(message, _sys.stderr)
+>       _sys.exit(status)
+E       SystemExit: 2
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/argparse.py:2632: SystemExit
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] {pilot,lock,reveal,attest,finalize} ...
+__main__.py: error: unrecognized arguments: --execution-spec /private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-104/test_cli_bad_binding_refuses_b3/synthetic_formal/execution_spec.json
+___________ test_cli_bad_binding_refuses_before_kit_bytes[approval] ____________
+
+qc = <module 'ml.experiments.p4_qc' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_qc.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-104/test_cli_bad_binding_refuses_b4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x113993130>
+mutation = 'approval'
+
+    @pytest.mark.parametrize('mutation',['protocol','source','run','kit','approval'])
+    def test_cli_bad_binding_refuses_before_kit_bytes(qc,tmp_path,monkeypatch,mutation):
+        kit,_,spec,approval=formal_fixture(qc,tmp_path)
+        value=json.loads(spec.read_text())
+        if mutation=='protocol':value['binding']['protocol_sha256']='0'*64
+        elif mutation=='source':value['binding']['source_sha256']='0'*64
+        elif mutation=='run':value['binding']['run_id']='different_run'
+        elif mutation=='kit':value['run_dir']=str(tmp_path/'another_run')
+        else:
+            approved=json.loads(approval.read_text());approved['authorized']=False
+            approval.write_text(json.dumps(approved))
+        spec.write_text(json.dumps(value))
+        monkeypatch.setattr(qc,'load_byte_attestation',lambda *args,**kwargs:pytest.fail('kit byte read before authorization'))
+        with pytest.raises((ValueError,PermissionError)):
+>           qc.main(['reveal','--kit',str(kit),'--execution-spec',str(spec)])
+
+ml/tests/test_p4_qc.py:281: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/experiments/p4_qc.py:446: in main
+    args=parser.parse_args(argv)
+         ^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/argparse.py:1893: in parse_args
+    self.error(msg)
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/argparse.py:2645: in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = ArgumentParser(prog='__main__.py', usage=None, description='Single-reviewer R1 QC preparation and lock-before-reveal w...ent or invented ratings.\n', formatter_class=<class 'argparse.HelpFormatter'>, conflict_handler='error', add_help=True)
+status = 2
+message = '__main__.py: error: unrecognized arguments: --execution-spec /private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-104/test_cli_bad_binding_refuses_b4/synthetic_formal/execution_spec.json\n'
+
+    def exit(self, status=0, message=None):
+        if message:
+            self._print_message(message, _sys.stderr)
+>       _sys.exit(status)
+E       SystemExit: 2
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/argparse.py:2632: SystemExit
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] {pilot,lock,reveal,attest,finalize} ...
+__main__.py: error: unrecognized arguments: --execution-spec /private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-104/test_cli_bad_binding_refuses_b4/synthetic_formal/execution_spec.json
+=========================== short test summary info ============================
+FAILED ml/tests/test_p4_qc.py::test_new_kit_rejects_supplied_pixel_hash_that_does_not_match_image
+FAILED ml/tests/test_p4_qc.py::test_cli_execution_spec_carries_authorization_through_complete_synthetic_workflow
+FAILED ml/tests/test_p4_qc.py::test_cli_bad_binding_refuses_before_kit_bytes[protocol]
+FAILED ml/tests/test_p4_qc.py::test_cli_bad_binding_refuses_before_kit_bytes[source]
+FAILED ml/tests/test_p4_qc.py::test_cli_bad_binding_refuses_before_kit_bytes[run]
+FAILED ml/tests/test_p4_qc.py::test_cli_bad_binding_refuses_before_kit_bytes[kit]
+FAILED ml/tests/test_p4_qc.py::test_cli_bad_binding_refuses_before_kit_bytes[approval]
+7 failed, 16 passed in 3.81s

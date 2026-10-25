@@ -1,0 +1,374 @@
+{
+  "status": "PASS",
+  "phase": "P4-B_CACHED_CLOSURE_REVIEW_ONLY",
+  "verified_at_utc": "2026-10-23T04:26:19.142382+00:00",
+  "git_head": "335da4e3de203836c045452f84cc291bcd352a26",
+  "branch": "fyp2/ml-training",
+  "binding": {
+    "protocol_sha256": "08cbbc25685a4c6a68781ebff2b174f747c68090bb0f24176f8277ee47a9e9de",
+    "run_id": "p4b_20261022",
+    "source_sha256": "8a41c99e1fd47e91e1e4f75522cb9e6eb3948eca9fd6d7f771278bdf32a80d5f"
+  },
+  "checks": {
+    "completion": true,
+    "binding": true,
+    "active_source_binding": true,
+    "launch_source_snapshots_13": true,
+    "protected": true,
+    "hpo_records": true,
+    "p3_source_records": true,
+    "frozen_identities_7": true,
+    "frozen_onnx_3": true,
+    "execution_protection": true,
+    "shared_inputs_hash_33": true,
+    "workers_25": true,
+    "budget": true,
+    "observed_worker_rss": true,
+    "runtime_recalculation": true,
+    "runtime_order": true,
+    "output_size": true,
+    "staging_empty": true
+  },
+  "shared_input_files": [
+    {
+      "name": "telemetry_D0.npy",
+      "bytes": 288128,
+      "sha256": "2c99edf28be3713fbe77e1af49a91d9fc8c3534b82df7e5d43914c11f1e3d2f6",
+      "expected_sha256": "2c99edf28be3713fbe77e1af49a91d9fc8c3534b82df7e5d43914c11f1e3d2f6"
+    },
+    {
+      "name": "telemetry_D1_0.npy",
+      "bytes": 288128,
+      "sha256": "12c3e5a42a321bf402beb7159f44ca4792ecdb383e9aa4f8ff24c4689bba93f6",
+      "expected_sha256": "12c3e5a42a321bf402beb7159f44ca4792ecdb383e9aa4f8ff24c4689bba93f6"
+    },
+    {
+      "name": "telemetry_D1_1.npy",
+      "bytes": 288128,
+      "sha256": "7e8f42049ed1de9f37b8be74323092ae9697c74b7dcfcaf0b295b7b1e73dea80",
+      "expected_sha256": "7e8f42049ed1de9f37b8be74323092ae9697c74b7dcfcaf0b295b7b1e73dea80"
+    },
+    {
+      "name": "telemetry_D1_2.npy",
+      "bytes": 288128,
+      "sha256": "002dd6a5710383a07fdd6dbbe67d04e2680848f0eb85ea7c3d276d2912732f2d",
+      "expected_sha256": "002dd6a5710383a07fdd6dbbe67d04e2680848f0eb85ea7c3d276d2912732f2d"
+    },
+    {
+      "name": "telemetry_D2_0.npy",
+      "bytes": 288128,
+      "sha256": "5a8d9a98f62d7226bd4dc26fffacc398e6e674ee98a1ba3182125ccab214910e",
+      "expected_sha256": "5a8d9a98f62d7226bd4dc26fffacc398e6e674ee98a1ba3182125ccab214910e"
+    },
+    {
+      "name": "telemetry_D2_1.npy",
+      "bytes": 288128,
+      "sha256": "e44f58971a268121a3a9fd1351586b4c3079974489aab60ec95b30f0f05bd7a0",
+      "expected_sha256": "e44f58971a268121a3a9fd1351586b4c3079974489aab60ec95b30f0f05bd7a0"
+    },
+    {
+      "name": "telemetry_D2_2.npy",
+      "bytes": 288128,
+      "sha256": "92b1e613c0bdfbf956b197a4e05d892c543652faa8a91811026e6b94fa560c20",
+      "expected_sha256": "92b1e613c0bdfbf956b197a4e05d892c543652faa8a91811026e6b94fa560c20"
+    },
+    {
+      "name": "telemetry_D3_0.npy",
+      "bytes": 288128,
+      "sha256": "770f2e62577e13f54577d4c6c6a0c8f34cc2f83315e693c7a82a53bd921e4fee",
+      "expected_sha256": "770f2e62577e13f54577d4c6c6a0c8f34cc2f83315e693c7a82a53bd921e4fee"
+    },
+    {
+      "name": "telemetry_D3_1.npy",
+      "bytes": 288128,
+      "sha256": "b91ecc23b763cef13a02c2a17dc737f41cc545f08620b58b524beb58f90c6ab6",
+      "expected_sha256": "b91ecc23b763cef13a02c2a17dc737f41cc545f08620b58b524beb58f90c6ab6"
+    },
+    {
+      "name": "telemetry_D3_2.npy",
+      "bytes": 288128,
+      "sha256": "4e781670775400a7d7b841cc3688eb811d36145b87fb97572e0add9fa9ff1a0f",
+      "expected_sha256": "4e781670775400a7d7b841cc3688eb811d36145b87fb97572e0add9fa9ff1a0f"
+    },
+    {
+      "name": "vision_brightness_down_0.npy",
+      "bytes": 550481024,
+      "sha256": "1e430d69739945021ecc3d167b81ffd35ec08d816fc613dc6dabce14ba2cb5b6",
+      "expected_sha256": "1e430d69739945021ecc3d167b81ffd35ec08d816fc613dc6dabce14ba2cb5b6"
+    },
+    {
+      "name": "vision_brightness_down_1.npy",
+      "bytes": 550481024,
+      "sha256": "9f45a2b1977870bb09b6cef49b1042eda3054a70875e3596e4a20328a53cf0e7",
+      "expected_sha256": "9f45a2b1977870bb09b6cef49b1042eda3054a70875e3596e4a20328a53cf0e7"
+    },
+    {
+      "name": "vision_brightness_down_2.npy",
+      "bytes": 550481024,
+      "sha256": "4004143843f2cb3601dacb8d2b72f5c7ed3d464869a6697bfc12cdefc8927876",
+      "expected_sha256": "4004143843f2cb3601dacb8d2b72f5c7ed3d464869a6697bfc12cdefc8927876"
+    },
+    {
+      "name": "vision_brightness_up_0.npy",
+      "bytes": 550481024,
+      "sha256": "5c355e55e3b453873afc2ff4eda407e6ecc5666fe8010f6dcae1d0ed8dfc469e",
+      "expected_sha256": "5c355e55e3b453873afc2ff4eda407e6ecc5666fe8010f6dcae1d0ed8dfc469e"
+    },
+    {
+      "name": "vision_brightness_up_1.npy",
+      "bytes": 550481024,
+      "sha256": "93efcfd25fc10594d8bedd8a7d217ac942c6190b4ca208d1b2b6e4231948a8bb",
+      "expected_sha256": "93efcfd25fc10594d8bedd8a7d217ac942c6190b4ca208d1b2b6e4231948a8bb"
+    },
+    {
+      "name": "vision_brightness_up_2.npy",
+      "bytes": 550481024,
+      "sha256": "4fcd2da36db6547ce5a23cc0ee784caec2d6f7197074543a6e5927a0c674f2ff",
+      "expected_sha256": "4fcd2da36db6547ce5a23cc0ee784caec2d6f7197074543a6e5927a0c674f2ff"
+    },
+    {
+      "name": "vision_clean.npy",
+      "bytes": 550481024,
+      "sha256": "212f66b41fcf9e8669f464ba3171dd402aac95ff8d9699fb6638799dc6b9609a",
+      "expected_sha256": "212f66b41fcf9e8669f464ba3171dd402aac95ff8d9699fb6638799dc6b9609a"
+    },
+    {
+      "name": "vision_grayscale_blend_0.npy",
+      "bytes": 550481024,
+      "sha256": "57081010c055031862983e0ae1a282f6e6c1fbf2736de71c7bcd7f203dcda685",
+      "expected_sha256": "57081010c055031862983e0ae1a282f6e6c1fbf2736de71c7bcd7f203dcda685"
+    },
+    {
+      "name": "vision_grayscale_blend_1.npy",
+      "bytes": 550481024,
+      "sha256": "05b2241e2d1a23f9a55e33db1010b3d365b948d4f1255d119b32948c5a59dcbc",
+      "expected_sha256": "05b2241e2d1a23f9a55e33db1010b3d365b948d4f1255d119b32948c5a59dcbc"
+    },
+    {
+      "name": "vision_grayscale_blend_2.npy",
+      "bytes": 550481024,
+      "sha256": "dc4bd3260c89f7c87a696fc75b15c516fa6a10d387796cb3c4e78f27ac432e17",
+      "expected_sha256": "dc4bd3260c89f7c87a696fc75b15c516fa6a10d387796cb3c4e78f27ac432e17"
+    },
+    {
+      "name": "vision_motion_blur_0.npy",
+      "bytes": 550481024,
+      "sha256": "5dc80ca2256ed1575e0ef66435091880e6be4d04bc9fb61b7bfdc2603fee1d29",
+      "expected_sha256": "5dc80ca2256ed1575e0ef66435091880e6be4d04bc9fb61b7bfdc2603fee1d29"
+    },
+    {
+      "name": "vision_motion_blur_1.npy",
+      "bytes": 550481024,
+      "sha256": "f6f3a3f6fbd9ca38fd40a8aea3bffaf62bdd1cecf6b436b4c6309dd0cb753211",
+      "expected_sha256": "f6f3a3f6fbd9ca38fd40a8aea3bffaf62bdd1cecf6b436b4c6309dd0cb753211"
+    },
+    {
+      "name": "vision_motion_blur_2.npy",
+      "bytes": 550481024,
+      "sha256": "15976ac704cc1a96c48affdd61cafad4430fe33db5227f6863ba5db275857b99",
+      "expected_sha256": "15976ac704cc1a96c48affdd61cafad4430fe33db5227f6863ba5db275857b99"
+    },
+    {
+      "name": "vision_occlusion_0.npy",
+      "bytes": 550481024,
+      "sha256": "e6ea0a5aa775d3f5996018c7553851cfe975bf17ccc87b168785a16af27ebd6c",
+      "expected_sha256": "e6ea0a5aa775d3f5996018c7553851cfe975bf17ccc87b168785a16af27ebd6c"
+    },
+    {
+      "name": "vision_occlusion_1.npy",
+      "bytes": 550481024,
+      "sha256": "82e7d35a6fd5f1ac02c441556c14c04d19cf8484f4fabd64f7933762ed1b768e",
+      "expected_sha256": "82e7d35a6fd5f1ac02c441556c14c04d19cf8484f4fabd64f7933762ed1b768e"
+    },
+    {
+      "name": "vision_occlusion_2.npy",
+      "bytes": 550481024,
+      "sha256": "03b6cacfcbcbc733a8fa47e14376674fc6839089e1f9de3ca0baa61a34e1a344",
+      "expected_sha256": "03b6cacfcbcbc733a8fa47e14376674fc6839089e1f9de3ca0baa61a34e1a344"
+    },
+    {
+      "name": "vision_rotation_crop_0.npy",
+      "bytes": 550481024,
+      "sha256": "9932d1b5b4db2c00421a0d4c8bc36fa6b98631628fc537f32d50d17b5960d8c5",
+      "expected_sha256": "9932d1b5b4db2c00421a0d4c8bc36fa6b98631628fc537f32d50d17b5960d8c5"
+    },
+    {
+      "name": "vision_rotation_crop_1.npy",
+      "bytes": 550481024,
+      "sha256": "1d628a573432359ac4e7e1a00e9105475785fdf30641aa5dfaf7d77827efb671",
+      "expected_sha256": "1d628a573432359ac4e7e1a00e9105475785fdf30641aa5dfaf7d77827efb671"
+    },
+    {
+      "name": "vision_rotation_crop_2.npy",
+      "bytes": 550481024,
+      "sha256": "5731846b6e1c264365c6e0cfb1006d3d35850c74bfd02185b4ce2ce9b04de00f",
+      "expected_sha256": "5731846b6e1c264365c6e0cfb1006d3d35850c74bfd02185b4ce2ce9b04de00f"
+    },
+    {
+      "name": "telemetry_sources.json",
+      "bytes": 1861583,
+      "sha256": "17c100de8e4a7dd17eaed639eee7ee012a76952168654b2b15d6c141661168d8",
+      "expected_sha256": "17c100de8e4a7dd17eaed639eee7ee012a76952168654b2b15d6c141661168d8"
+    },
+    {
+      "name": "telemetry_variants.json",
+      "bytes": 372935077,
+      "sha256": "3b1f4c8074edb2bdd10b93a431da39bcac804cccd057fd6b625c15073ef8967f",
+      "expected_sha256": "3b1f4c8074edb2bdd10b93a431da39bcac804cccd057fd6b625c15073ef8967f"
+    },
+    {
+      "name": "vision_sources.json",
+      "bytes": 2610014,
+      "sha256": "098001f1816dd2aea40d5efcdd50ee349e1b1b7af6f20abf9dc6bbfb15bb08bb",
+      "expected_sha256": "098001f1816dd2aea40d5efcdd50ee349e1b1b7af6f20abf9dc6bbfb15bb08bb"
+    },
+    {
+      "name": "vision_variants.json",
+      "bytes": 77889344,
+      "sha256": "5e444c6f184ed6ba57d22c8c72b0ad99b4275d17f8e7e4f87e614b7040095b7f",
+      "expected_sha256": "5e444c6f184ed6ba57d22c8c72b0ad99b4275d17f8e7e4f87e614b7040095b7f"
+    }
+  ],
+  "budget": {
+    "total_used_seconds": 3323.898287332966,
+    "cap_seconds": 14400,
+    "stage_used_seconds": {
+      "aggregation": 20.527877249987796,
+      "preflight": 2.1846533741336316,
+      "runtime": 70.92599504173268,
+      "shared_inputs": 191.91401895799208,
+      "telemetry": 83.84967775188852,
+      "vision_clean": 176.85407337499782,
+      "vision_stress": 2777.6390831250465
+    },
+    "global_overhead_outside_stages_seconds": 0.0029084571870043874,
+    "max_sampled_worker_rss_bytes": 2920726528,
+    "max_sampling_gap_seconds": 0.5315511670196429,
+    "run_output_bytes": 11130107880
+  },
+  "runtime": {
+    "MN-HPO42": {
+      "p50_ms": 6.9475415,
+      "p95_ms": 7.2472,
+      "pooled_throughput_per_second": 141.95343880741024,
+      "checkpoint_bytes": 17052801,
+      "onnx_bytes": 16849370,
+      "round_p50_range_ms": [
+        6.937521,
+        6.969042
+      ],
+      "round_p95_range_ms": [
+        7.21374825,
+        7.56844935
+      ],
+      "rss_before_session_bytes_range": [
+        325042176,
+        326189056
+      ],
+      "rss_after_session_bytes_range": [
+        368754688,
+        369967104
+      ],
+      "sampled_peak_rss_bytes_range": [
+        370933760,
+        372097024
+      ],
+      "sampled_peak_minus_baseline_bytes_range": [
+        45826048,
+        45924352
+      ],
+      "lifecycle_ru_maxrss_range": [
+        370442240,
+        371703808
+      ],
+      "maximum_sampling_gap_seconds_range": [
+        0.03913491708226502,
+        0.04053816699888557
+      ],
+      "session_load_nanoseconds_range": [
+        13475583,
+        15016333
+      ],
+      "latency_observations": 600
+    },
+    "RN-HPO42": {
+      "p50_ms": 25.120188,
+      "p95_ms": 25.4214503,
+      "pooled_throughput_per_second": 39.71300788303319,
+      "checkpoint_bytes": 44803787,
+      "onnx_bytes": 44717068,
+      "round_p50_range_ms": [
+        25.1020005,
+        25.164375
+      ],
+      "round_p95_range_ms": [
+        25.297616350000002,
+        26.12586455
+      ],
+      "rss_before_session_bytes_range": [
+        325140480,
+        325353472
+      ],
+      "rss_after_session_bytes_range": [
+        388104192,
+        388251648
+      ],
+      "sampled_peak_rss_bytes_range": [
+        393216000,
+        393347072
+      ],
+      "sampled_peak_minus_baseline_bytes_range": [
+        67977216,
+        68141056
+      ],
+      "lifecycle_ru_maxrss_range": [
+        392740864,
+        392871936
+      ],
+      "maximum_sampling_gap_seconds_range": [
+        0.03872691700235009,
+        0.042523000040091574
+      ],
+      "session_load_nanoseconds_range": [
+        13680250,
+        34266625
+      ],
+      "latency_observations": 600
+    }
+  },
+  "warnings": [
+    {
+      "path": "ml/outputs/runs/p4b_20261022/008_telemetry.stderr.log",
+      "bytes": 334170,
+      "feature_name_warning_count": 1410,
+      "traceback_count": 0,
+      "warning_types": [
+        "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/utils/validation.py:2827: UserWarning: X does not have valid feature names, but SimpleImputer was fitted with feature names"
+      ]
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/009_telemetry.stderr.log",
+      "bytes": 334170,
+      "feature_name_warning_count": 1410,
+      "traceback_count": 0,
+      "warning_types": [
+        "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/utils/validation.py:2827: UserWarning: X does not have valid feature names, but SimpleImputer was fitted with feature names"
+      ]
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/010_telemetry.stderr.log",
+      "bytes": 334170,
+      "feature_name_warning_count": 1410,
+      "traceback_count": 0,
+      "warning_types": [
+        "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/utils/validation.py:2827: UserWarning: X does not have valid feature names, but SimpleImputer was fitted with feature names"
+      ]
+    }
+  ],
+  "source_images_decoded": 0,
+  "raw_telemetry_records_read": 0,
+  "model_forwards": 0,
+  "new_exports": 0,
+  "new_hpo": 0,
+  "elapsed_seconds": 8.159590540999943
+}

@@ -1,0 +1,192 @@
+{
+  "status": "VERIFIED_PASS",
+  "checks_passed": 5276,
+  "failures": [],
+  "runtime_seconds": 1.5101802080171183,
+  "execution_commit": "335da4e3de203836c045452f84cc291bcd352a26",
+  "vision_artifact_records": 176,
+  "vision_checkpoints_inspected_weights_only_cpu": 16,
+  "telemetry_artifact_records_rehashed": 250,
+  "models": [
+    {
+      "key": "mobilenet_v3_large/search_001",
+      "role": "SEARCH",
+      "seed": 42,
+      "checkpoint_bytes": 17052801,
+      "checkpoint_sha256": "12804b9d8129b3864152c72ed73fce66d4534c019e32fb4eb0a491fd58eeb403",
+      "tensor_count": 312,
+      "reload_max_abs_logit_difference_recorded": 0.0,
+      "max_rss_bytes": 808648704,
+      "mps_observed_driver_bytes": 4688871424
+    },
+    {
+      "key": "mobilenet_v3_large/search_002",
+      "role": "SEARCH",
+      "seed": 42,
+      "checkpoint_bytes": 17052801,
+      "checkpoint_sha256": "541e07c3a577754ae3310092042be0e0e97bc7d168eabc51aea05f7948cc2767",
+      "tensor_count": 312,
+      "reload_max_abs_logit_difference_recorded": 0.0,
+      "max_rss_bytes": 970407936,
+      "mps_observed_driver_bytes": 4688871424
+    },
+    {
+      "key": "mobilenet_v3_large/search_003",
+      "role": "SEARCH",
+      "seed": 42,
+      "checkpoint_bytes": 17052801,
+      "checkpoint_sha256": "c2a5d5d7f50f614e685c11401787d7cdec2144e6ca99f4950d7f87f93a3e2cc2",
+      "tensor_count": 312,
+      "reload_max_abs_logit_difference_recorded": 0.0,
+      "max_rss_bytes": 933756928,
+      "mps_observed_driver_bytes": 4688871424
+    },
+    {
+      "key": "mobilenet_v3_large/search_004",
+      "role": "SEARCH",
+      "seed": 42,
+      "checkpoint_bytes": 17052801,
+      "checkpoint_sha256": "427e3991094384b78a16aa17d3594b18f5d4e669c2f241e7cffdfb9d0af7cebe",
+      "tensor_count": 312,
+      "reload_max_abs_logit_difference_recorded": 0.0,
+      "max_rss_bytes": 971816960,
+      "mps_observed_driver_bytes": 4688871424
+    },
+    {
+      "key": "mobilenet_v3_large/search_005",
+      "role": "SEARCH",
+      "seed": 42,
+      "checkpoint_bytes": 17052801,
+      "checkpoint_sha256": "f92c235a758abcd2c5b8ea6cd1d8af22c3e0a7622207078de2b0eddaf30ff939",
+      "tensor_count": 312,
+      "reload_max_abs_logit_difference_recorded": 0.0,
+      "max_rss_bytes": 969981952,
+      "mps_observed_driver_bytes": 4686774272
+    },
+    {
+      "key": "mobilenet_v3_large/search_006",
+      "role": "SEARCH",
+      "seed": 42,
+      "checkpoint_bytes": 17052801,
+      "checkpoint_sha256": "bc96e7a230de6391820b1e04e7480087841680ae6cc1b6e73cba42b25eb67295",
+      "tensor_count": 312,
+      "reload_max_abs_logit_difference_recorded": 0.0,
+      "max_rss_bytes": 1047281664,
+      "mps_observed_driver_bytes": 4686774272
+    },
+    {
+      "key": "mobilenet_v3_large/confirm_43",
+      "role": "CONFIRMATION",
+      "seed": 43,
+      "checkpoint_bytes": 17052801,
+      "checkpoint_sha256": "80e66aa35236b0133e5cc80e0e0ae1142b058f3ec48634b1f49f04fcdcb97826",
+      "tensor_count": 312,
+      "reload_max_abs_logit_difference_recorded": 0.0,
+      "max_rss_bytes": 973914112,
+      "mps_observed_driver_bytes": 4686774272
+    },
+    {
+      "key": "mobilenet_v3_large/confirm_44",
+      "role": "CONFIRMATION",
+      "seed": 44,
+      "checkpoint_bytes": 17052801,
+      "checkpoint_sha256": "b29af6f09f6036353906a40d119ce4ea1c0bc938ec6b2761c2ce2294d0af5663",
+      "tensor_count": 312,
+      "reload_max_abs_logit_difference_recorded": 0.0,
+      "max_rss_bytes": 972734464,
+      "mps_observed_driver_bytes": 4686774272
+    },
+    {
+      "key": "resnet18/search_001",
+      "role": "SEARCH",
+      "seed": 42,
+      "checkpoint_bytes": 44803787,
+      "checkpoint_sha256": "e4c9a78bd4eace1ba71e505564b59e4ad2ee055a1437a7f52f14bf0a7ae118c4",
+      "tensor_count": 122,
+      "reload_max_abs_logit_difference_recorded": 0.0,
+      "max_rss_bytes": 910262272,
+      "mps_observed_driver_bytes": 3549085696
+    },
+    {
+      "key": "resnet18/search_002",
+      "role": "SEARCH",
+      "seed": 42,
+      "checkpoint_bytes": 44803787,
+      "checkpoint_sha256": "37ad05702980c369cef3ac0acb8976e3e6deaf0f8ec1e3474e60dc4a5dd7a317",
+      "tensor_count": 122,
+      "reload_max_abs_logit_difference_recorded": 0.0,
+      "max_rss_bytes": 910163968,
+      "mps_observed_driver_bytes": 3549085696
+    },
+    {
+      "key": "resnet18/search_003",
+      "role": "SEARCH",
+      "seed": 42,
+      "checkpoint_bytes": 44803787,
+      "checkpoint_sha256": "fb3d863f6b7fd391e79b7c5b72034433318fd8a55271ef6cae7c705343f9cb9e",
+      "tensor_count": 122,
+      "reload_max_abs_logit_difference_recorded": 0.0,
+      "max_rss_bytes": 904658944,
+      "mps_observed_driver_bytes": 3700080640
+    },
+    {
+      "key": "resnet18/search_004",
+      "role": "SEARCH",
+      "seed": 42,
+      "checkpoint_bytes": 44803787,
+      "checkpoint_sha256": "008d831c98ea5e4b6c5c821787b3dc9a1dcbc6ca47a74dd1d8f7110eb4ac7d20",
+      "tensor_count": 122,
+      "reload_max_abs_logit_difference_recorded": 0.0,
+      "max_rss_bytes": 927268864,
+      "mps_observed_driver_bytes": 3549085696
+    },
+    {
+      "key": "resnet18/search_005",
+      "role": "SEARCH",
+      "seed": 42,
+      "checkpoint_bytes": 44803787,
+      "checkpoint_sha256": "084bfe1b93726309809bd518a0124e68738b595e43d7b0f0ed9f10fb0ddb5de1",
+      "tensor_count": 122,
+      "reload_max_abs_logit_difference_recorded": 0.0,
+      "max_rss_bytes": 904609792,
+      "mps_observed_driver_bytes": 3549085696
+    },
+    {
+      "key": "resnet18/search_006",
+      "role": "SEARCH",
+      "seed": 42,
+      "checkpoint_bytes": 44803787,
+      "checkpoint_sha256": "d8c4764e4a1c97d094a7326b0fec03e450dd83fce7d7330e7bfff104d616f147",
+      "tensor_count": 122,
+      "reload_max_abs_logit_difference_recorded": 0.0,
+      "max_rss_bytes": 904904704,
+      "mps_observed_driver_bytes": 3549085696
+    },
+    {
+      "key": "resnet18/confirm_43",
+      "role": "CONFIRMATION",
+      "seed": 43,
+      "checkpoint_bytes": 44803787,
+      "checkpoint_sha256": "ae0dbd1003b9299ef3c61e273821a0c1e6d975fbe89d6cfe8dd16757dde8e265",
+      "tensor_count": 122,
+      "reload_max_abs_logit_difference_recorded": 0.0,
+      "max_rss_bytes": 923516928,
+      "mps_observed_driver_bytes": 3549085696
+    },
+    {
+      "key": "resnet18/confirm_44",
+      "role": "CONFIRMATION",
+      "seed": 44,
+      "checkpoint_bytes": 44803787,
+      "checkpoint_sha256": "3880be1821c883dd2911cb498962ee1f58396fecd47ca71c1fd1be563f58fc4b",
+      "tensor_count": 122,
+      "reload_max_abs_logit_difference_recorded": 0.0,
+      "max_rss_bytes": 905674752,
+      "mps_observed_driver_bytes": 3549085696
+    }
+  ],
+  "new_fits": 0,
+  "new_model_forward_calls": 0,
+  "test_csv_or_images_opened": false,
+  "scope": "Saved artifacts and CPU tensor inspection; worker reload evidence reused, no independent numerical retraining"
+}

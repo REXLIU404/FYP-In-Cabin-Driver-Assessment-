@@ -1,0 +1,58 @@
+{
+  "mobilenet_v3_large": {
+    "status": "SELECTED_FROM_COMPLETED_SEARCH",
+    "selected_trial_id": "search_006",
+    "frozen_seed": 42,
+    "config": {
+      "learning_rate": 0.0008,
+      "weight_decay": 0.001
+    },
+    "confirmation_cannot_reselect": true,
+    "checkpoint": "search/mobilenet_v3_large/search_006/attempt_01/checkpoint.pt",
+    "validation_seed_ids": [
+      42,
+      43,
+      44
+    ],
+    "validation_seed_values": [
+      0.9162198680081481,
+      0.8824860851282594,
+      0.8822824958402411
+    ],
+    "macro_f1_mean": 0.8936628163255497,
+    "macro_f1_std": 0.01595046075840479,
+    "std_ddof": 0,
+    "missing_confirmation_seeds": [],
+    "search_trials_completed": 6,
+    "search_trials_planned": 6,
+    "mps_bitwise_reproducibility_guaranteed": false
+  },
+  "resnet18": {
+    "status": "SELECTED_FROM_COMPLETED_SEARCH",
+    "selected_trial_id": "search_004",
+    "frozen_seed": 42,
+    "config": {
+      "learning_rate": 0.0003,
+      "weight_decay": 0.001
+    },
+    "confirmation_cannot_reselect": true,
+    "checkpoint": "search/resnet18/search_004/attempt_01/checkpoint.pt",
+    "validation_seed_ids": [
+      42,
+      43,
+      44
+    ],
+    "validation_seed_values": [
+      0.9406150484662007,
+      0.9471390721342718,
+      0.8866385360192561
+    ],
+    "macro_f1_mean": 0.9247975522065762,
+    "macro_f1_std": 0.02711363259190852,
+    "std_ddof": 0,
+    "missing_confirmation_seeds": [],
+    "search_trials_completed": 6,
+    "search_trials_planned": 6,
+    "mps_bitwise_reproducibility_guaranteed": false
+  }
+}

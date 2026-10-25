@@ -1,0 +1,246 @@
+FFFFFFF                                                                  [100%]
+=================================== FAILURES ===================================
+___________ test_cache_aggregation_detects_metadata_tamper[label-1] ____________
+
+core = <module 'ml.experiments.p4_core' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_core.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-93/test_cache_aggregation_detects0')
+column = 'label', value = 1
+
+    @pytest.mark.parametrize('column,value',[('label',1),('input_sha','changed'),('source_id','changed')])
+    def test_cache_aggregation_detects_metadata_tamper(core,tmp_path,column,value):
+        cache=core.PredictionCache.create(tmp_path/'cache',binding(),{'toy':'1'*64})
+        cache.predict_once('toy',[dict(source_id='s',condition='clean',input_sha256='2'*64,label=0)],
+            lambda:np.array([[1.,0.]],dtype=np.float32))
+        cache.connection.execute(f'UPDATE predictions SET {column}=?',(value,));cache.connection.commit()
+>       with pytest.raises(ValueError,match='tamper'):cache.records()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+ml/tests/test_p4_core.py:253: Failed
+______ test_cache_aggregation_detects_metadata_tamper[input_sha-changed] _______
+
+core = <module 'ml.experiments.p4_core' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_core.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-93/test_cache_aggregation_detects1')
+column = 'input_sha', value = 'changed'
+
+    @pytest.mark.parametrize('column,value',[('label',1),('input_sha','changed'),('source_id','changed')])
+    def test_cache_aggregation_detects_metadata_tamper(core,tmp_path,column,value):
+        cache=core.PredictionCache.create(tmp_path/'cache',binding(),{'toy':'1'*64})
+        cache.predict_once('toy',[dict(source_id='s',condition='clean',input_sha256='2'*64,label=0)],
+            lambda:np.array([[1.,0.]],dtype=np.float32))
+        cache.connection.execute(f'UPDATE predictions SET {column}=?',(value,));cache.connection.commit()
+>       with pytest.raises(ValueError,match='tamper'):cache.records()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+ml/tests/test_p4_core.py:253: Failed
+______ test_cache_aggregation_detects_metadata_tamper[source_id-changed] _______
+
+core = <module 'ml.experiments.p4_core' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_core.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-93/test_cache_aggregation_detects2')
+column = 'source_id', value = 'changed'
+
+    @pytest.mark.parametrize('column,value',[('label',1),('input_sha','changed'),('source_id','changed')])
+    def test_cache_aggregation_detects_metadata_tamper(core,tmp_path,column,value):
+        cache=core.PredictionCache.create(tmp_path/'cache',binding(),{'toy':'1'*64})
+        cache.predict_once('toy',[dict(source_id='s',condition='clean',input_sha256='2'*64,label=0)],
+            lambda:np.array([[1.,0.]],dtype=np.float32))
+        cache.connection.execute(f'UPDATE predictions SET {column}=?',(value,));cache.connection.commit()
+>       with pytest.raises(ValueError,match='tamper'):cache.records()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+ml/tests/test_p4_core.py:253: Failed
+________ test_streaming_bank_writer_preserves_npy_without_resident_maps ________
+
+core = <module 'ml.experiments.p4_core' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_core.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-93/test_streaming_bank_writer_pre0')
+
+    def test_streaming_bank_writer_preserves_npy_without_resident_maps(core,tmp_path):
+        from ml.experiments import run_p4
+        path=tmp_path/'bank.npy'
+>       writer=run_p4.StreamingNpyWriter(path,(3,2,2,3),np.uint8)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'ml.experiments.run_p4' has no attribute 'StreamingNpyWriter'
+
+ml/tests/test_p4_core.py:260: AttributeError
+____________ test_total_budget_includes_parent_work_between_workers ____________
+
+self = <ml.experiments.p4_core.BudgetSupervisor object at 0x10695c440>
+command = ['/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python', '-c', 'pass']
+
+    def run(self,command,*,stage,model,model_cap_seconds,worker_cap_seconds,rss_cap_bytes,cwd=None):
+        if self.stopped:raise ValueError('Budget supervisor stopped; no automatic resume/rerun')
+        if stage not in self.stage_caps:raise ValueError('Unregistered budget stage')
+        key=f'{stage}:{model}';index=len(self.workers)
+        allowed=min(worker_cap_seconds,self.total_cap-self.total_used,
+                    self.stage_caps[stage]-self.stage_used.get(stage,0),model_cap_seconds-self.model_used.get(key,0))
+        if allowed<=0:
+            self.stopped=True;self._save('PARTIAL','TIME_BUDGET_EXCEEDED');raise BudgetExceeded('TIME_BUDGET_EXCEEDED')
+        env=os.environ.copy()
+        env['P4_BUDGET_WORKER']='1'
+        env.update({k:'2' for k in ('OMP_NUM_THREADS','OPENBLAS_NUM_THREADS','MKL_NUM_THREADS','VECLIB_MAXIMUM_THREADS','NUMEXPR_NUM_THREADS')})
+        started=time.monotonic();samples=[];process=None;reason=None;returncode=None
+        stdout_path=self.path/f'{index:03d}_{stage}.stdout.log';stderr_path=self.path/f'{index:03d}_{stage}.stderr.log'
+        try:
+            with stdout_path.open('xb') as stdout,stderr_path.open('xb') as stderr:
+                process=subprocess.Popen(command,cwd=cwd or self.path,env=env,start_new_session=True,stdout=stdout,stderr=stderr)
+                worker=psutil.Process(process.pid)
+                while True:
+                    elapsed=time.monotonic()-started
+                    try:
+>                       tree=[worker]+worker.children(recursive=True)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/experiments/p4_core.py:328: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.13/site-packages/psutil/__init__.py:978: in children
+    ppid_map = _ppid_map()
+               ^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/psutil/__init__.py:256: in _ppid_map
+    for pid in pids():
+               ^^^^^^
+.venv/lib/python3.13/site-packages/psutil/__init__.py:1485: in pids
+    ret = sorted(_psplatform.pids())
+                 ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def pids():
+>       ls = cext.pids()
+             ^^^^^^^^^^^
+E       PermissionError: [Errno 1] Operation not permitted (originated from sysctl() malloc 1/3)
+
+.venv/lib/python3.13/site-packages/psutil/_psosx.py:320: PermissionError
+
+The above exception was the direct cause of the following exception:
+
+core = <module 'ml.experiments.p4_core' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_core.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-93/test_total_budget_includes_par0')
+
+    def test_total_budget_includes_parent_work_between_workers(core,tmp_path):
+        supervisor=core.BudgetSupervisor(tmp_path/'run',total_seconds=.08,stage_caps={'toy':2},
+            min_free_bytes=0,min_available_ram=0,disk_cap_bytes=1024**2)
+        time.sleep(.1)
+        with pytest.raises(core.BudgetExceeded,match='TIME_BUDGET_EXCEEDED'):
+>           supervisor.run([sys.executable,'-c','pass'],stage='toy',model='toy',
+                model_cap_seconds=1,worker_cap_seconds=1,rss_cap_bytes=1024**3)
+
+ml/tests/test_p4_core.py:274: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <ml.experiments.p4_core.BudgetSupervisor object at 0x10695c440>
+command = ['/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python', '-c', 'pass']
+
+    def run(self,command,*,stage,model,model_cap_seconds,worker_cap_seconds,rss_cap_bytes,cwd=None):
+        if self.stopped:raise ValueError('Budget supervisor stopped; no automatic resume/rerun')
+        if stage not in self.stage_caps:raise ValueError('Unregistered budget stage')
+        key=f'{stage}:{model}';index=len(self.workers)
+        allowed=min(worker_cap_seconds,self.total_cap-self.total_used,
+                    self.stage_caps[stage]-self.stage_used.get(stage,0),model_cap_seconds-self.model_used.get(key,0))
+        if allowed<=0:
+            self.stopped=True;self._save('PARTIAL','TIME_BUDGET_EXCEEDED');raise BudgetExceeded('TIME_BUDGET_EXCEEDED')
+        env=os.environ.copy()
+        env['P4_BUDGET_WORKER']='1'
+        env.update({k:'2' for k in ('OMP_NUM_THREADS','OPENBLAS_NUM_THREADS','MKL_NUM_THREADS','VECLIB_MAXIMUM_THREADS','NUMEXPR_NUM_THREADS')})
+        started=time.monotonic();samples=[];process=None;reason=None;returncode=None
+        stdout_path=self.path/f'{index:03d}_{stage}.stdout.log';stderr_path=self.path/f'{index:03d}_{stage}.stderr.log'
+        try:
+            with stdout_path.open('xb') as stdout,stderr_path.open('xb') as stderr:
+                process=subprocess.Popen(command,cwd=cwd or self.path,env=env,start_new_session=True,stdout=stdout,stderr=stderr)
+                worker=psutil.Process(process.pid)
+                while True:
+                    elapsed=time.monotonic()-started
+                    try:
+                        tree=[worker]+worker.children(recursive=True)
+                        rss=sum(p.memory_info().rss for p in tree if p.is_running())
+                    except psutil.NoSuchProcess:rss=0
+                    except (psutil.AccessDenied,PermissionError) as error:
+                        reason='RSS_OBSERVATION_BLOCKED'
+>                       raise BudgetExceeded(reason) from error
+E                       ml.experiments.p4_core.BudgetExceeded: RSS_OBSERVATION_BLOCKED
+
+ml/experiments/p4_core.py:333: BudgetExceeded
+
+During handling of the above exception, another exception occurred:
+
+core = <module 'ml.experiments.p4_core' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_core.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-93/test_total_budget_includes_par0')
+
+    def test_total_budget_includes_parent_work_between_workers(core,tmp_path):
+        supervisor=core.BudgetSupervisor(tmp_path/'run',total_seconds=.08,stage_caps={'toy':2},
+            min_free_bytes=0,min_available_ram=0,disk_cap_bytes=1024**2)
+        time.sleep(.1)
+>       with pytest.raises(core.BudgetExceeded,match='TIME_BUDGET_EXCEEDED'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'TIME_BUDGET_EXCEEDED'
+E         Actual message: 'RSS_OBSERVATION_BLOCKED'
+
+ml/tests/test_p4_core.py:273: AssertionError
+___________ test_private_worker_requires_supervisor_before_spec_read ___________
+
+core = <module 'ml.experiments.p4_core' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_core.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-93/test_private_worker_requires_s0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1068c7820>
+
+    def test_private_worker_requires_supervisor_before_spec_read(core,tmp_path,monkeypatch):
+        from ml.experiments import run_p4
+        monkeypatch.delenv('P4_BUDGET_WORKER',raising=False)
+        with pytest.raises(PermissionError,match='supervisor'):
+>           run_p4.worker(tmp_path/'nonexistent.json','shared_inputs')
+
+ml/tests/test_p4_core.py:283: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/experiments/run_p4.py:369: in worker
+    spec=read_json(spec_path);current=binding_for(spec['protocol_path'],spec['binding']['run_id'])
+         ^^^^^^^^^^^^^^^^^^^^
+ml/experiments/run_p4.py:41: in read_json
+    def read_json(path):return json.loads(Path(path).read_text())
+                                          ^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-93/test_private_worker_requires_s0/nonexistent.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-93/test_private_worker_requires_s0/nonexistent.json'
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_local.py:537: FileNotFoundError
+_____________ test_protocol_change_cannot_silently_change_runtime ______________
+
+core = <module 'ml.experiments.p4_core' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_core.py'>
+
+    def test_protocol_change_cannot_silently_change_runtime(core):
+        from ml.experiments import run_p4
+        protocol=json.loads((Path(run_p4.ROOT)/'ml/configs/p4_protocol.json').read_text())
+        protocol['runtime']['intra_op_threads']=3
+        with pytest.raises(ValueError,match='protocol'):
+>           run_p4.validate_protocol(protocol)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'ml.experiments.run_p4' has no attribute 'validate_protocol'
+
+ml/tests/test_p4_core.py:291: AttributeError
+=========================== short test summary info ============================
+FAILED ml/tests/test_p4_core.py::test_cache_aggregation_detects_metadata_tamper[label-1]
+FAILED ml/tests/test_p4_core.py::test_cache_aggregation_detects_metadata_tamper[input_sha-changed]
+FAILED ml/tests/test_p4_core.py::test_cache_aggregation_detects_metadata_tamper[source_id-changed]
+FAILED ml/tests/test_p4_core.py::test_streaming_bank_writer_preserves_npy_without_resident_maps
+FAILED ml/tests/test_p4_core.py::test_total_budget_includes_parent_work_between_workers
+FAILED ml/tests/test_p4_core.py::test_private_worker_requires_supervisor_before_spec_read
+FAILED ml/tests/test_p4_core.py::test_protocol_change_cannot_silently_change_runtime
+7 failed, 23 deselected in 0.47s

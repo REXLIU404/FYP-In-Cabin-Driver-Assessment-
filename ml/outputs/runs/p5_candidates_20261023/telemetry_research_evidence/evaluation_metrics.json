@@ -1,0 +1,469 @@
+{
+  "candidate_package": false,
+  "checkpoint_copied": false,
+  "class_order": [
+    "Safe",
+    "Aggressive",
+    "Distracted"
+  ],
+  "clean_test_and_stress": {
+    "clean": {
+      "accuracy": 0.9988888888888889,
+      "class_order": [
+        0,
+        1,
+        2
+      ],
+      "classes": [
+        {
+          "f1": 0.9996667777407531,
+          "index": 0,
+          "precision": 0.9993337774816788,
+          "recall": 1.0,
+          "support": 1500
+        },
+        {
+          "f1": 0.9986666666666667,
+          "index": 1,
+          "precision": 0.9986666666666667,
+          "recall": 0.9986666666666667,
+          "support": 1500
+        },
+        {
+          "f1": 0.9983327775925308,
+          "index": 2,
+          "precision": 0.9986657771847899,
+          "recall": 0.998,
+          "support": 1500
+        }
+      ],
+      "confusion": [
+        [
+          1500,
+          0,
+          0
+        ],
+        [
+          0,
+          1498,
+          2
+        ],
+        [
+          1,
+          2,
+          1497
+        ]
+      ],
+      "log_loss": 0.003670259069544631,
+      "macro_f1": 0.9988887406666502,
+      "raw_dtype": "float32",
+      "scoring_dtype": "float64",
+      "status": "ESTIMABLE",
+      "target_attained": true
+    },
+    "stress": {
+      "D1:0": {
+        "clean_prediction_distribution": [
+          1501,
+          1500,
+          1499
+        ],
+        "clean_prediction_distribution_rate": [
+          0.33355555555555555,
+          0.3333333333333333,
+          0.33311111111111114
+        ],
+        "f1_eligible": false,
+        "flip_rate": 0.013111111111111112,
+        "human_validated": false,
+        "label_validity": "LABEL_VALIDITY_UNVERIFIED",
+        "mean_delta_probability": [
+          -0.0070733614558744695,
+          0.003425237439729042,
+          0.0036481229139096994
+        ],
+        "mean_l1": 0.036738145759364065,
+        "prediction_distribution_delta_count": [
+          -31,
+          16,
+          15
+        ],
+        "prediction_distribution_delta_rate": [
+          -0.006888888888888889,
+          0.0035555555555555557,
+          0.0033333333333333335
+        ],
+        "stress_prediction_distribution": [
+          1470,
+          1516,
+          1514
+        ],
+        "stress_prediction_distribution_rate": [
+          0.32666666666666666,
+          0.3368888888888889,
+          0.33644444444444443
+        ],
+        "support": 4500
+      },
+      "D1:1": {
+        "clean_prediction_distribution": [
+          1501,
+          1500,
+          1499
+        ],
+        "clean_prediction_distribution_rate": [
+          0.33355555555555555,
+          0.3333333333333333,
+          0.33311111111111114
+        ],
+        "f1_eligible": false,
+        "flip_rate": 0.052444444444444446,
+        "human_validated": false,
+        "label_validity": "LABEL_VALIDITY_UNVERIFIED",
+        "mean_delta_probability": [
+          -0.025476136265513864,
+          0.012992022585729603,
+          0.012484112459111303
+        ],
+        "mean_l1": 0.13230808741555758,
+        "prediction_distribution_delta_count": [
+          -107,
+          47,
+          60
+        ],
+        "prediction_distribution_delta_rate": [
+          -0.023777777777777776,
+          0.010444444444444444,
+          0.013333333333333334
+        ],
+        "stress_prediction_distribution": [
+          1394,
+          1547,
+          1559
+        ],
+        "stress_prediction_distribution_rate": [
+          0.30977777777777776,
+          0.3437777777777778,
+          0.34644444444444444
+        ],
+        "support": 4500
+      },
+      "D1:2": {
+        "clean_prediction_distribution": [
+          1501,
+          1500,
+          1499
+        ],
+        "clean_prediction_distribution_rate": [
+          0.33355555555555555,
+          0.3333333333333333,
+          0.33311111111111114
+        ],
+        "f1_eligible": false,
+        "flip_rate": 0.11044444444444444,
+        "human_validated": false,
+        "label_validity": "LABEL_VALIDITY_UNVERIFIED",
+        "mean_delta_probability": [
+          -0.050193520659981006,
+          0.02093454558964327,
+          0.029258975090825617
+        ],
+        "mean_l1": 0.2526378422338067,
+        "prediction_distribution_delta_count": [
+          -228,
+          91,
+          137
+        ],
+        "prediction_distribution_delta_rate": [
+          -0.050666666666666665,
+          0.02022222222222222,
+          0.030444444444444444
+        ],
+        "stress_prediction_distribution": [
+          1273,
+          1591,
+          1636
+        ],
+        "stress_prediction_distribution_rate": [
+          0.2828888888888889,
+          0.35355555555555557,
+          0.3635555555555556
+        ],
+        "support": 4500
+      },
+      "D2:0": {
+        "clean_prediction_distribution": [
+          1501,
+          1500,
+          1499
+        ],
+        "clean_prediction_distribution_rate": [
+          0.33355555555555555,
+          0.3333333333333333,
+          0.33311111111111114
+        ],
+        "f1_eligible": false,
+        "flip_rate": 0.1131111111111111,
+        "human_validated": false,
+        "label_validity": "LABEL_VALIDITY_UNVERIFIED",
+        "mean_delta_probability": [
+          -0.07592988656457691,
+          -0.0352113666168143,
+          0.1111412550772977
+        ],
+        "mean_l1": 0.2477064910532577,
+        "prediction_distribution_delta_count": [
+          -325,
+          -142,
+          467
+        ],
+        "prediction_distribution_delta_rate": [
+          -0.07222222222222222,
+          -0.03155555555555556,
+          0.10377777777777777
+        ],
+        "stress_prediction_distribution": [
+          1176,
+          1358,
+          1966
+        ],
+        "stress_prediction_distribution_rate": [
+          0.2613333333333333,
+          0.30177777777777776,
+          0.4368888888888889
+        ],
+        "support": 4500
+      },
+      "D2:1": {
+        "clean_prediction_distribution": [
+          1501,
+          1500,
+          1499
+        ],
+        "clean_prediction_distribution_rate": [
+          0.33355555555555555,
+          0.3333333333333333,
+          0.33311111111111114
+        ],
+        "f1_eligible": false,
+        "flip_rate": 0.3333333333333333,
+        "human_validated": false,
+        "label_validity": "LABEL_VALIDITY_UNVERIFIED",
+        "mean_delta_probability": [
+          -0.1932316777800646,
+          -0.0997427919254556,
+          0.2929744707700977
+        ],
+        "mean_l1": 0.6558274765427489,
+        "prediction_distribution_delta_count": [
+          -936,
+          -436,
+          1372
+        ],
+        "prediction_distribution_delta_rate": [
+          -0.208,
+          -0.09688888888888889,
+          0.3048888888888889
+        ],
+        "stress_prediction_distribution": [
+          565,
+          1064,
+          2871
+        ],
+        "stress_prediction_distribution_rate": [
+          0.12555555555555556,
+          0.23644444444444446,
+          0.638
+        ],
+        "support": 4500
+      },
+      "D2:2": {
+        "clean_prediction_distribution": [
+          1501,
+          1500,
+          1499
+        ],
+        "clean_prediction_distribution_rate": [
+          0.33355555555555555,
+          0.3333333333333333,
+          0.33311111111111114
+        ],
+        "f1_eligible": false,
+        "flip_rate": 0.5435555555555556,
+        "human_validated": false,
+        "label_validity": "LABEL_VALIDITY_UNVERIFIED",
+        "mean_delta_probability": [
+          -0.278372920608877,
+          -0.17832918335740588,
+          0.456702105153351
+        ],
+        "mean_l1": 1.0491489075922829,
+        "prediction_distribution_delta_count": [
+          -1375,
+          -825,
+          2200
+        ],
+        "prediction_distribution_delta_rate": [
+          -0.3055555555555556,
+          -0.18333333333333332,
+          0.4888888888888889
+        ],
+        "stress_prediction_distribution": [
+          126,
+          675,
+          3699
+        ],
+        "stress_prediction_distribution_rate": [
+          0.028,
+          0.15,
+          0.822
+        ],
+        "support": 4500
+      },
+      "D3:0": {
+        "clean_prediction_distribution": [
+          1501,
+          1500,
+          1499
+        ],
+        "clean_prediction_distribution_rate": [
+          0.33355555555555555,
+          0.3333333333333333,
+          0.33311111111111114
+        ],
+        "f1_eligible": false,
+        "flip_rate": 0.058444444444444445,
+        "human_validated": false,
+        "label_validity": "LABEL_VALIDITY_UNVERIFIED",
+        "mean_delta_probability": [
+          -0.030787078813672552,
+          0.037311835397182726,
+          -0.006524754880624338
+        ],
+        "mean_l1": 0.16666322546267504,
+        "prediction_distribution_delta_count": [
+          -86,
+          151,
+          -65
+        ],
+        "prediction_distribution_delta_rate": [
+          -0.01911111111111111,
+          0.033555555555555554,
+          -0.014444444444444444
+        ],
+        "stress_prediction_distribution": [
+          1415,
+          1651,
+          1434
+        ],
+        "stress_prediction_distribution_rate": [
+          0.31444444444444447,
+          0.3668888888888889,
+          0.31866666666666665
+        ],
+        "support": 4500
+      },
+      "D3:1": {
+        "clean_prediction_distribution": [
+          1501,
+          1500,
+          1499
+        ],
+        "clean_prediction_distribution_rate": [
+          0.33355555555555555,
+          0.3333333333333333,
+          0.33311111111111114
+        ],
+        "f1_eligible": false,
+        "flip_rate": 0.23,
+        "human_validated": false,
+        "label_validity": "LABEL_VALIDITY_UNVERIFIED",
+        "mean_delta_probability": [
+          -0.11175583262625757,
+          0.0847122808313834,
+          0.027043553182364424
+        ],
+        "mean_l1": 0.45527664480400676,
+        "prediction_distribution_delta_count": [
+          -624,
+          367,
+          257
+        ],
+        "prediction_distribution_delta_rate": [
+          -0.13866666666666666,
+          0.08155555555555556,
+          0.05711111111111111
+        ],
+        "stress_prediction_distribution": [
+          877,
+          1867,
+          1756
+        ],
+        "stress_prediction_distribution_rate": [
+          0.1948888888888889,
+          0.41488888888888886,
+          0.39022222222222225
+        ],
+        "support": 4500
+      },
+      "D3:2": {
+        "clean_prediction_distribution": [
+          1501,
+          1500,
+          1499
+        ],
+        "clean_prediction_distribution_rate": [
+          0.33355555555555555,
+          0.3333333333333333,
+          0.33311111111111114
+        ],
+        "f1_eligible": false,
+        "flip_rate": 0.5504444444444444,
+        "human_validated": false,
+        "label_validity": "LABEL_VALIDITY_UNVERIFIED",
+        "mean_delta_probability": [
+          -0.21346047714810842,
+          0.2098572220915703,
+          0.0036032564243467075
+        ],
+        "mean_l1": 0.9839176432151152,
+        "prediction_distribution_delta_count": [
+          -1351,
+          1082,
+          269
+        ],
+        "prediction_distribution_delta_rate": [
+          -0.3002222222222222,
+          0.24044444444444443,
+          0.05977777777777778
+        ],
+        "stress_prediction_distribution": [
+          150,
+          2582,
+          1768
+        ],
+        "stress_prediction_distribution_rate": [
+          0.03333333333333333,
+          0.5737777777777778,
+          0.3928888888888889
+        ],
+        "support": 4500
+      }
+    }
+  },
+  "identity": "XGB-HPO42",
+  "limitations": [
+    "Only four State Farm test drivers; descriptive comparisons, no frame bootstrap or p-values.",
+    "Manual Recognizability QC is removed. Corruption label validity is unverified; stress outputs describe model stability, not preserved actions or human-validated robustness.",
+    "Source-label corruption F1 is not computed. Any such descriptive sensitivity analysis would depend on explicit label-preservation assumptions.",
+    "Telemetry sources are synthetic; driver/trip/generator independence unknown.",
+    "Historical test split has been repeatedly evaluated; no directly test-driven parameter selection code was found.",
+    "ResNet and XGB validation priorities remain frozen; no new selection or tuning.",
+    "DMD remains BLOCKED; offline benchmark does not establish live performance."
+  ],
+  "new_export": false,
+  "new_inference": false,
+  "prediction_semantics": "Cached original probabilities; float64 normalized for table, no logits.",
+  "runtime_candidate": "BLOCKED_NO_IMPORTER_OR_SCHEMA",
+  "source_run_id": "p4b_20261022"
+}

@@ -1,0 +1,56 @@
+{
+  "status": "PASS_V2_CONSUMER_AND_PRESERVATION",
+  "protocol": "P4-PROTOCOL-v2",
+  "protocol_sha256": "89185f6c56b8af00b2883e27df72c0713141d92b3396a5609462a5ed053cdd41",
+  "source_binding": {
+    "protocol_sha256": "89185f6c56b8af00b2883e27df72c0713141d92b3396a5609462a5ed053cdd41",
+    "run_id": "p4a_20261021",
+    "source_sha256": "79f1ccc857c873969fa177bea54c78eefe3704114604d88d18816ffe73f1c1a5"
+  },
+  "preflight_consumer": {
+    "status": "PASS",
+    "models": {
+      "MN-HPO42": {
+        "onnx_path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p4a_20261021/runtime_benchmark/mobilenet_v3_large_search006_seed42/model.onnx",
+        "onnx_sha256": "9ee60abb78007773cc625af80c313049c1970f63c1f041bed9f5b2539a384828",
+        "checkpoint_sha256": "bc96e7a230de6391820b1e04e7480087841680ae6cc1b6e73cba42b25eb67295",
+        "parity_status": "PASS"
+      },
+      "RN-HPO42": {
+        "onnx_path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p4a_20261021/runtime_benchmark/resnet18_search004_seed42/model.onnx",
+        "onnx_sha256": "5e226722e0712824c78aa0976afa6fa5b8dc6100b147a7f523a09048171d8cf3",
+        "checkpoint_sha256": "008d831c98ea5e4b6c5c821787b3dc9a1dcbc6ca47a74dd1d8f7110eb4ac7d20",
+        "parity_status": "PASS"
+      },
+      "MN-STABLE": {
+        "onnx_path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/vision/mobilenetv3_large_vision.onnx",
+        "onnx_sha256": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+        "checkpoint_sha256": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+        "parity_status": "PASS"
+      }
+    },
+    "validation_bank_path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p4a_20261021/validation/validation_bank.npy",
+    "validation_bank_sha256": "7a40f0c3ae4d7cdb73b2f00dadda4c641c2ea759e55cc2e76e0b071c900dfdfc",
+    "tensor_sha256": "07adb0f1a37281659c298bb79e5404fa770cdea511d5ccb99710966b48a8d42e"
+  },
+  "preserved_original_artifact_count": 169,
+  "changed_original_artifacts": [],
+  "qc_status": {
+    "status": "REMOVED_FROM_SCOPE",
+    "pilot": "REMOVED_FROM_SCOPE",
+    "formal": "REMOVED_FROM_SCOPE",
+    "conditioned_f1": "REMOVED_FROM_SCOPE",
+    "human_label_validity": "REMOVED_FROM_SCOPE",
+    "inter_rater_agreement": "REMOVED_FROM_SCOPE",
+    "automatic_human_validation": false
+  },
+  "formal_execution_authorized": false,
+  "export_execution_authorized": false,
+  "elapsed_seconds": 3.6655547090340406,
+  "model_forward_calls": 0,
+  "source_images_opened": 0,
+  "source_telemetry_records_read": 0,
+  "heldout_observations_opened": 0,
+  "new_exports": 0,
+  "interpretation": "Hash/reuse validation and existing cached validation bank; synthetic geometry guard only. Historical parity and throughput were not rerun. No approval file created."
+}

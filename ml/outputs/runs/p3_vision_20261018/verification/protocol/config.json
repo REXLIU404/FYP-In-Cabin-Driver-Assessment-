@@ -1,0 +1,3132 @@
+{
+  "status": "VERIFIED_PASS",
+  "scope": "Saved protocol, selection, budgets, epoch logs, executed Git commit; no training, model load, forward, raw test data, or original artifact edits",
+  "checks_passed": 557,
+  "checks_total": 557,
+  "summary": {
+    "mobilenet_v3_large": {
+      "selected_trial": "search_006",
+      "config": {
+        "learning_rate": 0.0008,
+        "weight_decay": 0.001
+      },
+      "best_seed42_macro_f1": 0.9162198680081481,
+      "seed_macro_f1": [
+        0.9162198680081481,
+        0.8824860851282594,
+        0.8822824958402411
+      ],
+      "macro_f1_mean": 0.8936628163255496,
+      "macro_f1_std_ddof0": 0.01595046075840479,
+      "seed_range": 0.03393737216790704,
+      "wall_seconds": 8244.06159337482,
+      "wall_budget_seconds": 17100,
+      "epochs_completed": 43,
+      "trials": [
+        {
+          "trial_id": "search_001",
+          "seed": 42,
+          "macro_f1": 0.816016309761929,
+          "log_loss": 0.5585045218467712,
+          "best_epoch": 2,
+          "epochs_completed": 4,
+          "wall_seconds": 811.7451754999347
+        },
+        {
+          "trial_id": "search_002",
+          "seed": 42,
+          "macro_f1": 0.8241046552545338,
+          "log_loss": 0.6381171345710754,
+          "best_epoch": 8,
+          "epochs_completed": 8,
+          "wall_seconds": 1624.689750666963
+        },
+        {
+          "trial_id": "search_003",
+          "seed": 42,
+          "macro_f1": 0.8078309119148063,
+          "log_loss": 0.6035701036453247,
+          "best_epoch": 1,
+          "epochs_completed": 3,
+          "wall_seconds": 601.2175302499672
+        },
+        {
+          "trial_id": "search_004",
+          "seed": 42,
+          "macro_f1": 0.852433940293268,
+          "log_loss": 0.6164547801017761,
+          "best_epoch": 5,
+          "epochs_completed": 7,
+          "wall_seconds": 1304.2984602090437
+        },
+        {
+          "trial_id": "search_005",
+          "seed": 42,
+          "macro_f1": 0.8804565240887922,
+          "log_loss": 0.35698774456977844,
+          "best_epoch": 3,
+          "epochs_completed": 5,
+          "wall_seconds": 918.2156401249813
+        },
+        {
+          "trial_id": "search_006",
+          "seed": 42,
+          "macro_f1": 0.9162198680081481,
+          "log_loss": 0.30603909492492676,
+          "best_epoch": 6,
+          "epochs_completed": 8,
+          "wall_seconds": 1518.9043358749477
+        },
+        {
+          "trial_id": "confirm_43",
+          "seed": 43,
+          "macro_f1": 0.8824860851282594,
+          "log_loss": 0.3594505488872528,
+          "best_epoch": 3,
+          "epochs_completed": 5,
+          "wall_seconds": 912.9755088330712
+        },
+        {
+          "trial_id": "confirm_44",
+          "seed": 44,
+          "macro_f1": 0.8822824958402411,
+          "log_loss": 0.5035703182220459,
+          "best_epoch": 1,
+          "epochs_completed": 3,
+          "wall_seconds": 552.0151919159107
+        }
+      ]
+    },
+    "resnet18": {
+      "selected_trial": "search_004",
+      "config": {
+        "learning_rate": 0.0003,
+        "weight_decay": 0.001
+      },
+      "best_seed42_macro_f1": 0.9406150484662007,
+      "seed_macro_f1": [
+        0.9406150484662007,
+        0.9471390721342718,
+        0.8866385360192561
+      ],
+      "macro_f1_mean": 0.9247975522065762,
+      "macro_f1_std_ddof0": 0.02711363259190852,
+      "seed_range": 0.06050053611501571,
+      "wall_seconds": 7041.178746042191,
+      "wall_budget_seconds": 15300,
+      "epochs_completed": 38,
+      "trials": [
+        {
+          "trial_id": "search_001",
+          "seed": 42,
+          "macro_f1": 0.8940280582860026,
+          "log_loss": 0.39863699674606323,
+          "best_epoch": 1,
+          "epochs_completed": 3,
+          "wall_seconds": 545.5727975000627
+        },
+        {
+          "trial_id": "search_002",
+          "seed": 42,
+          "macro_f1": 0.8936387529774132,
+          "log_loss": 0.40362998843193054,
+          "best_epoch": 1,
+          "epochs_completed": 3,
+          "wall_seconds": 543.6476678750478
+        },
+        {
+          "trial_id": "search_003",
+          "seed": 42,
+          "macro_f1": 0.9380612960142412,
+          "log_loss": 0.206026092171669,
+          "best_epoch": 7,
+          "epochs_completed": 8,
+          "wall_seconds": 1474.715934042004
+        },
+        {
+          "trial_id": "search_004",
+          "seed": 42,
+          "macro_f1": 0.9406150484662007,
+          "log_loss": 0.18642373383045197,
+          "best_epoch": 3,
+          "epochs_completed": 5,
+          "wall_seconds": 932.7497009580256
+        },
+        {
+          "trial_id": "search_005",
+          "seed": 42,
+          "macro_f1": 0.9085165501797136,
+          "log_loss": 0.3509314954280853,
+          "best_epoch": 1,
+          "epochs_completed": 3,
+          "wall_seconds": 561.5650043750647
+        },
+        {
+          "trial_id": "search_006",
+          "seed": 42,
+          "macro_f1": 0.9318623409914976,
+          "log_loss": 0.3229959309101105,
+          "best_epoch": 6,
+          "epochs_completed": 8,
+          "wall_seconds": 1489.5464471249143
+        },
+        {
+          "trial_id": "confirm_43",
+          "seed": 43,
+          "macro_f1": 0.9471390721342718,
+          "log_loss": 0.18302404880523682,
+          "best_epoch": 3,
+          "epochs_completed": 5,
+          "wall_seconds": 932.5278804170666
+        },
+        {
+          "trial_id": "confirm_44",
+          "seed": 44,
+          "macro_f1": 0.8866385360192561,
+          "log_loss": 0.3398011028766632,
+          "best_epoch": 1,
+          "epochs_completed": 3,
+          "wall_seconds": 560.8533137500053
+        }
+      ]
+    },
+    "total": {
+      "attempt_seconds": 15285.24033941701,
+      "used_wall_seconds": 15288.353217291064,
+      "controller_overhead_seconds": 3.1128778740530834,
+      "approved_total_seconds": 32400,
+      "budget_excluded_trials": [],
+      "epochs_completed": 81,
+      "mixed_clock_gaps": [
+        {
+          "trial": "mobilenet_v3_large/search_002",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.03014850616455078
+        },
+        {
+          "trial": "mobilenet_v3_large/search_003",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.019916296005249023
+        },
+        {
+          "trial": "mobilenet_v3_large/search_004",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.026495695114135742
+        },
+        {
+          "trial": "mobilenet_v3_large/search_005",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.023073673248291016
+        },
+        {
+          "trial": "mobilenet_v3_large/search_006",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.01001596450805664
+        },
+        {
+          "trial": "mobilenet_v3_large/confirm_43",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.026710987091064453
+        },
+        {
+          "trial": "mobilenet_v3_large/confirm_44",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.02484607696533203
+        },
+        {
+          "trial": "resnet18/search_001",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.006947040557861328
+        },
+        {
+          "trial": "resnet18/search_002",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": -0.041136741638183594
+        },
+        {
+          "trial": "resnet18/search_003",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.0018763542175292969
+        },
+        {
+          "trial": "resnet18/search_004",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.03682398796081543
+        },
+        {
+          "trial": "resnet18/search_005",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.02255988121032715
+        },
+        {
+          "trial": "resnet18/search_006",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.0077304840087890625
+        },
+        {
+          "trial": "resnet18/confirm_43",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.04746103286743164
+        },
+        {
+          "trial": "resnet18/confirm_44",
+          "unix_start_minus_previous_unix_plus_monotonic_elapsed": 0.041330814361572266
+        }
+      ]
+    }
+  },
+  "checks": [
+    {
+      "name": "execution commit matches 335da4e",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "HEAD matches executed commit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "branch identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "tracked clean recorded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "staging empty recorded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "only protected audit untracked at first start",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "budget explicit exact limits",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "budget no automatic extension",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "budget resources unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "current bytes equal executed commit: ml/experiments/run_vision_hpo.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "recorded source SHA matches executed blob: ml/experiments/run_vision_hpo.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "current bytes equal executed commit: ml/vision/train_hpo.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "recorded source SHA matches executed blob: ml/vision/train_hpo.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "current bytes equal executed commit: ml/experiments/hpo_protocol.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "recorded source SHA matches executed blob: ml/experiments/hpo_protocol.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "current bytes equal executed commit: ml/experiments/comparator_common.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "recorded source SHA matches executed blob: ml/experiments/comparator_common.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "current bytes equal executed commit: ml/configs/bounded_hpo.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "current bytes equal executed commit: ml/configs/approved_vision_budget.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protocol hash matches execution commit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "phase COMPLETED",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "root selection equals ledger",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "no excluded or budget stopped trials",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exactly 16 attempts and logical trials",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "logical keys unique",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large exact grid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large 6 searches and 2 confirmations",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large search plans match exact registered grid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large P2 first search counted once",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large search seed42 only",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large confirmations 43 and 44",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large budget cap respected",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large independent tolerance/loss/epoch/id selection",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large frozen seed42 checkpoint, no confirmation reselection",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large confirmation configs frozen to selected search",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large confirmations completed after all search",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large seed IDs and values",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large mean independently recomputed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large std ddof0 independently recomputed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large all searches and confirmations covered",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 one completed attempt returncode0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 trial ledger points completed attempt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 trial wall within cap and timeout",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 saved request exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 metrics match ledger",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 fixed train/val batch/resources/scheduler",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 formal validation not test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 selection split only val and deferred test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 <=8 completed epochs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 epoch1 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 epoch1 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 epoch1 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 epoch2 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 epoch2 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 epoch2 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 epoch3 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 epoch3 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 epoch3 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 epoch4 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 epoch4 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 epoch4 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 stop only at epoch8 or patience2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 best epoch and metric recomputed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 best logloss matches selected epoch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 actual stdout epoch records match saved metrics",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 stdout TRIAL_COMPLETE matches checkpoint epoch/score",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 trials.csv exactly one formal row",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_001 strictly increasing recorded start order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 one completed attempt returncode0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 trial ledger points completed attempt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 trial wall within cap and timeout",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 saved request exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 metrics match ledger",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 fixed train/val batch/resources/scheduler",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 formal validation not test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 selection split only val and deferred test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 <=8 completed epochs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 epoch1 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 epoch1 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 epoch1 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 epoch2 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 epoch2 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 epoch2 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 epoch3 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 epoch3 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 epoch3 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 epoch4 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 epoch4 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 epoch4 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 epoch5 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 epoch5 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 epoch5 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 epoch6 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 epoch6 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 epoch6 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 epoch7 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 epoch7 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 epoch7 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 epoch8 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 epoch8 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 epoch8 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 stop only at epoch8 or patience2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 best epoch and metric recomputed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 best logloss matches selected epoch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 actual stdout epoch records match saved metrics",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 stdout TRIAL_COMPLETE matches checkpoint epoch/score",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 trials.csv exactly one formal row",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_002 strictly increasing recorded start order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 one completed attempt returncode0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 trial ledger points completed attempt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 trial wall within cap and timeout",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 saved request exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 metrics match ledger",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 fixed train/val batch/resources/scheduler",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 formal validation not test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 selection split only val and deferred test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 <=8 completed epochs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 epoch1 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 epoch1 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 epoch1 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 epoch2 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 epoch2 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 epoch2 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 epoch3 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 epoch3 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 epoch3 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 stop only at epoch8 or patience2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 best epoch and metric recomputed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 best logloss matches selected epoch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 actual stdout epoch records match saved metrics",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 stdout TRIAL_COMPLETE matches checkpoint epoch/score",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 trials.csv exactly one formal row",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_003 strictly increasing recorded start order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 one completed attempt returncode0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 trial ledger points completed attempt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 trial wall within cap and timeout",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 saved request exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 metrics match ledger",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 fixed train/val batch/resources/scheduler",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 formal validation not test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 selection split only val and deferred test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 <=8 completed epochs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 epoch1 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 epoch1 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 epoch1 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 epoch2 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 epoch2 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 epoch2 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 epoch3 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 epoch3 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 epoch3 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 epoch4 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 epoch4 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 epoch4 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 epoch5 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 epoch5 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 epoch5 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 epoch6 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 epoch6 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 epoch6 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 epoch7 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 epoch7 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 epoch7 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 stop only at epoch8 or patience2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 best epoch and metric recomputed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 best logloss matches selected epoch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 actual stdout epoch records match saved metrics",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 stdout TRIAL_COMPLETE matches checkpoint epoch/score",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 trials.csv exactly one formal row",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_004 strictly increasing recorded start order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 one completed attempt returncode0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 trial ledger points completed attempt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 trial wall within cap and timeout",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 saved request exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 metrics match ledger",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 fixed train/val batch/resources/scheduler",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 formal validation not test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 selection split only val and deferred test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 <=8 completed epochs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 epoch1 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 epoch1 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 epoch1 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 epoch2 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 epoch2 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 epoch2 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 epoch3 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 epoch3 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 epoch3 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 epoch4 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 epoch4 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 epoch4 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 epoch5 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 epoch5 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 epoch5 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 stop only at epoch8 or patience2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 best epoch and metric recomputed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 best logloss matches selected epoch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 actual stdout epoch records match saved metrics",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 stdout TRIAL_COMPLETE matches checkpoint epoch/score",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 trials.csv exactly one formal row",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_005 strictly increasing recorded start order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 one completed attempt returncode0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 trial ledger points completed attempt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 trial wall within cap and timeout",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 saved request exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 metrics match ledger",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 fixed train/val batch/resources/scheduler",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 formal validation not test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 selection split only val and deferred test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 <=8 completed epochs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 epoch1 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 epoch1 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 epoch1 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 epoch2 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 epoch2 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 epoch2 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 epoch3 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 epoch3 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 epoch3 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 epoch4 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 epoch4 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 epoch4 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 epoch5 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 epoch5 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 epoch5 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 epoch6 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 epoch6 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 epoch6 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 epoch7 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 epoch7 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 epoch7 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 epoch8 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 epoch8 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 epoch8 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 stop only at epoch8 or patience2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 best epoch and metric recomputed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 best logloss matches selected epoch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 actual stdout epoch records match saved metrics",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 stdout TRIAL_COMPLETE matches checkpoint epoch/score",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 trials.csv exactly one formal row",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/search_006 strictly increasing recorded start order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 one completed attempt returncode0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 trial ledger points completed attempt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 trial wall within cap and timeout",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 saved request exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 metrics match ledger",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 fixed train/val batch/resources/scheduler",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 formal validation not test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 selection split only val and deferred test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 <=8 completed epochs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 epoch1 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 epoch1 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 epoch1 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 epoch2 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 epoch2 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 epoch2 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 epoch3 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 epoch3 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 epoch3 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 epoch4 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 epoch4 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 epoch4 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 epoch5 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 epoch5 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 epoch5 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 stop only at epoch8 or patience2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 best epoch and metric recomputed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 best logloss matches selected epoch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 actual stdout epoch records match saved metrics",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 stdout TRIAL_COMPLETE matches checkpoint epoch/score",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 trials.csv exactly one formal row",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_43 strictly increasing recorded start order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 one completed attempt returncode0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 trial ledger points completed attempt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 trial wall within cap and timeout",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 saved request exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 metrics match ledger",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 fixed train/val batch/resources/scheduler",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 formal validation not test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 selection split only val and deferred test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 <=8 completed epochs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 epoch1 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 epoch1 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 epoch1 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 epoch2 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 epoch2 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 epoch2 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 epoch3 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 epoch3 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 epoch3 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 stop only at epoch8 or patience2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 best epoch and metric recomputed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 best logloss matches selected epoch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 actual stdout epoch records match saved metrics",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 stdout TRIAL_COMPLETE matches checkpoint epoch/score",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 trials.csv exactly one formal row",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobilenet_v3_large/confirm_44 strictly increasing recorded start order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18 exact grid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18 6 searches and 2 confirmations",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18 search plans match exact registered grid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18 P2 first search counted once",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18 search seed42 only",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18 confirmations 43 and 44",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18 budget cap respected",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18 independent tolerance/loss/epoch/id selection",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18 frozen seed42 checkpoint, no confirmation reselection",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18 confirmation configs frozen to selected search",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18 confirmations completed after all search",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18 seed IDs and values",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18 mean independently recomputed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18 std ddof0 independently recomputed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18 all searches and confirmations covered",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 one completed attempt returncode0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 trial ledger points completed attempt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 trial wall within cap and timeout",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 saved request exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 metrics match ledger",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 fixed train/val batch/resources/scheduler",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 formal validation not test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 selection split only val and deferred test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 <=8 completed epochs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 epoch1 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 epoch1 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 epoch1 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 epoch2 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 epoch2 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 epoch2 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 epoch3 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 epoch3 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 epoch3 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 stop only at epoch8 or patience2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 best epoch and metric recomputed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 best logloss matches selected epoch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 actual stdout epoch records match saved metrics",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 stdout TRIAL_COMPLETE matches checkpoint epoch/score",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 trials.csv exactly one formal row",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_001 strictly increasing recorded start order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 one completed attempt returncode0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 trial ledger points completed attempt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 trial wall within cap and timeout",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 saved request exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 metrics match ledger",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 fixed train/val batch/resources/scheduler",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 formal validation not test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 selection split only val and deferred test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 <=8 completed epochs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 epoch1 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 epoch1 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 epoch1 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 epoch2 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 epoch2 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 epoch2 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 epoch3 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 epoch3 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 epoch3 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 stop only at epoch8 or patience2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 best epoch and metric recomputed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 best logloss matches selected epoch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 actual stdout epoch records match saved metrics",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 stdout TRIAL_COMPLETE matches checkpoint epoch/score",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 trials.csv exactly one formal row",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_002 strictly increasing recorded start order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 one completed attempt returncode0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 trial ledger points completed attempt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 trial wall within cap and timeout",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 saved request exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 metrics match ledger",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 fixed train/val batch/resources/scheduler",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 formal validation not test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 selection split only val and deferred test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 <=8 completed epochs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 epoch1 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 epoch1 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 epoch1 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 epoch2 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 epoch2 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 epoch2 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 epoch3 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 epoch3 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 epoch3 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 epoch4 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 epoch4 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 epoch4 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 epoch5 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 epoch5 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 epoch5 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 epoch6 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 epoch6 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 epoch6 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 epoch7 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 epoch7 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 epoch7 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 epoch8 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 epoch8 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 epoch8 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 stop only at epoch8 or patience2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 best epoch and metric recomputed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 best logloss matches selected epoch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 actual stdout epoch records match saved metrics",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 stdout TRIAL_COMPLETE matches checkpoint epoch/score",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 trials.csv exactly one formal row",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_003 strictly increasing recorded start order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 one completed attempt returncode0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 trial ledger points completed attempt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 trial wall within cap and timeout",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 saved request exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 metrics match ledger",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 fixed train/val batch/resources/scheduler",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 formal validation not test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 selection split only val and deferred test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 <=8 completed epochs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 epoch1 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 epoch1 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 epoch1 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 epoch2 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 epoch2 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 epoch2 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 epoch3 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 epoch3 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 epoch3 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 epoch4 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 epoch4 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 epoch4 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 epoch5 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 epoch5 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 epoch5 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 stop only at epoch8 or patience2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 best epoch and metric recomputed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 best logloss matches selected epoch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 actual stdout epoch records match saved metrics",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 stdout TRIAL_COMPLETE matches checkpoint epoch/score",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 trials.csv exactly one formal row",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_004 strictly increasing recorded start order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 one completed attempt returncode0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 trial ledger points completed attempt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 trial wall within cap and timeout",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 saved request exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 metrics match ledger",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 fixed train/val batch/resources/scheduler",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 formal validation not test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 selection split only val and deferred test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 <=8 completed epochs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 epoch1 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 epoch1 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 epoch1 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 epoch2 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 epoch2 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 epoch2 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 epoch3 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 epoch3 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 epoch3 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 stop only at epoch8 or patience2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 best epoch and metric recomputed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 best logloss matches selected epoch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 actual stdout epoch records match saved metrics",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 stdout TRIAL_COMPLETE matches checkpoint epoch/score",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 trials.csv exactly one formal row",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_005 strictly increasing recorded start order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 one completed attempt returncode0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 trial ledger points completed attempt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 trial wall within cap and timeout",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 saved request exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 metrics match ledger",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 fixed train/val batch/resources/scheduler",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 formal validation not test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 selection split only val and deferred test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 <=8 completed epochs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 epoch1 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 epoch1 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 epoch1 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 epoch2 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 epoch2 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 epoch2 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 epoch3 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 epoch3 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 epoch3 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 epoch4 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 epoch4 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 epoch4 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 epoch5 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 epoch5 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 epoch5 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 epoch6 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 epoch6 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 epoch6 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 epoch7 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 epoch7 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 epoch7 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 epoch8 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 epoch8 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 epoch8 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 stop only at epoch8 or patience2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 best epoch and metric recomputed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 best logloss matches selected epoch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 actual stdout epoch records match saved metrics",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 stdout TRIAL_COMPLETE matches checkpoint epoch/score",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 trials.csv exactly one formal row",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/search_006 strictly increasing recorded start order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 one completed attempt returncode0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 trial ledger points completed attempt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 trial wall within cap and timeout",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 saved request exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 metrics match ledger",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 fixed train/val batch/resources/scheduler",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 formal validation not test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 selection split only val and deferred test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 <=8 completed epochs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 epoch1 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 epoch1 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 epoch1 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 epoch2 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 epoch2 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 epoch2 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 epoch3 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 epoch3 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 epoch3 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 epoch4 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 epoch4 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 epoch4 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 epoch5 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 epoch5 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 epoch5 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 stop only at epoch8 or patience2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 best epoch and metric recomputed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 best logloss matches selected epoch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 actual stdout epoch records match saved metrics",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 stdout TRIAL_COMPLETE matches checkpoint epoch/score",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 trials.csv exactly one formal row",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_43 strictly increasing recorded start order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 one completed attempt returncode0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 trial ledger points completed attempt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 trial wall within cap and timeout",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 saved request exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 metrics match ledger",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 fixed train/val batch/resources/scheduler",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 formal validation not test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 selection split only val and deferred test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 <=8 completed epochs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 epoch1 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 epoch1 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 epoch1 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 epoch2 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 epoch2 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 epoch2 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 epoch3 finite metrics/time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 epoch3 cosine Tmax8 rate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 epoch3 was not run after patience reached",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 stop only at epoch8 or patience2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 best epoch and metric recomputed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 best logloss matches selected epoch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 actual stdout epoch records match saved metrics",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 stdout TRIAL_COMPLETE matches checkpoint epoch/score",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 trials.csv exactly one formal row",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resnet18/confirm_44 strictly increasing recorded start order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "canonical plan/budget/context signature",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "total wall ledger includes attempt time and within cap",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "total elapsed independently consistent with first/last worker times",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "input_sha256": {
+    "ml/outputs/runs/p3_vision_20261018/search_state.json": "3cb4f71842b6b7da5f4fe5ad421d3f4c7f4b746d394bd5ca64fc08cc6ddd91e8",
+    "ml/outputs/runs/p3_vision_20261018/search_config.json": "d77545fa5014bd28c87d1a844ed692a6dfdea10922a8bf01aed255f993cb89ea",
+    "ml/outputs/runs/p3_vision_20261018/selection_log.json": "4a329762e21425e773493eebb347739abdc917c6d04ec09b8426795310ce8f85",
+    "ml/configs/bounded_hpo.json": "913e4852c0b00588e4372951807650282e46b8dbf1cc6de4675f63dca0976e5d",
+    "ml/configs/approved_vision_budget.json": "91abbac8ec85c6f0ced50acdfbd59822576a6b26969c4a7fe2170a808bf50334",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_001/attempt_01/config.json": "5d3bb3045e753a13f2ef2730dd53cd62c1649a62ec086bb48a8dd20e3912cdf2",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_001/attempt_01/validation_metrics.json": "013459be497a9dc2157ebc85fd56368aa3685ee9ba9074647d0ae03c56497921",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_001/attempt_01/selection_log.json": "99c1a089fc6f823e8a89a5062ca11c6fe2369abbacc4ea7e970a85e757107599",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_001/attempt_01/execution.log": "107a753fb2ff17b65a0d8731a779cd8dca02d750aec61a18ff910b68e99c4bbd",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_002/attempt_01/config.json": "7541ed3c3eb488308ff9a4061ea5cc6788e3e368d7b826b1f6c6749e90ef871a",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_002/attempt_01/validation_metrics.json": "81432f4a15e52861cef4057d18403e08074053f1d606f2f7e26e1a66c05987ba",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_002/attempt_01/selection_log.json": "2a74cd404f3af8ba1014f87c5c646141fe80f808680585b1ffa03f88badf470d",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_002/attempt_01/execution.log": "8416dd7905344eda8534542a9102cec8dca65a71fcdf74e69f01c6ef414a078f",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_003/attempt_01/config.json": "1d8aeb639a7caf4c6371aeeae5d1113115758eef7dbb0f84439484052f075832",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_003/attempt_01/validation_metrics.json": "98b72ac796b94c49fe61aeaee4b9118cda76809af0857926809c9bd697a2b4b9",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_003/attempt_01/selection_log.json": "fce5ced9ca5b34d2f64d41d07b156df059591ca609033cc8bad9c7453648349b",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_003/attempt_01/execution.log": "84bc21a7554a84f7c8bdb773254577c34b36e3c69ea984f02673ce79e7b6c4a8",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_004/attempt_01/config.json": "5cf3b36cbba7eaef87f808a705f964bbfd4b4b09c58a42989fa60b221db137d3",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_004/attempt_01/validation_metrics.json": "f8fb1615ffc9beea1bc63254bc4735617394393760c7e509461b8041277cdc1b",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_004/attempt_01/selection_log.json": "50bac285418c189b8e5c02293404a39b2e297c368a365b0177146fc2a459fd0a",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_004/attempt_01/execution.log": "9949549ba7e7f36ca4f8d3b3e1a6beefe3c140a8ec1316c482a9094dd555f514",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_005/attempt_01/config.json": "93b3a1dcfa523315dcf9f3e84daf6ebd3f140b07cfb676744c7e7a0398145de7",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_005/attempt_01/validation_metrics.json": "a279710fcf234efc87bc09f4e0562b16ab732078c5a9be81bb0dd3668b63eb7f",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_005/attempt_01/selection_log.json": "79dd7aa79b2b510b02e4a4b01ecd7d8c86b55509756c8c411948bda93497e42d",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_005/attempt_01/execution.log": "858bc0824765dbcbef76210d7d82f51edb80bef1fd316b0adfab2dac2d45770c",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_006/attempt_01/config.json": "b26e39aa1b7fcc388bf0b8744606eda1c80ff7238666403f811c8e00f4d2aa4f",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_006/attempt_01/validation_metrics.json": "56f1c190c30dee8d8bb3b5ff1d11563237bd8b144e5b7ac05e31f4ed1e4ee573",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_006/attempt_01/selection_log.json": "7d1d265cfe4fc15a3259fa9564e36af33a8d31590444fc6a099bb1799e4bac8b",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_006/attempt_01/execution.log": "3b9ea54cd3980fb1008c4a9d1821cb83e7e8f440d98e72f9712de7a7cc5b61db",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/confirm_43/attempt_01/config.json": "1b0b2b3c321da15ecb4b9af21fba34df9b3e516cc0f0a68da4f1081618bf5d86",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/confirm_43/attempt_01/validation_metrics.json": "29f09484cd3b70ba7beb084709c638f093999e54026291e62ad6ef8f83f9c886",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/confirm_43/attempt_01/selection_log.json": "79dd7aa79b2b510b02e4a4b01ecd7d8c86b55509756c8c411948bda93497e42d",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/confirm_43/attempt_01/execution.log": "6744a0842a8f803ca0852f353d577b83cc83f5055069169037359f81521c8e54",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/confirm_44/attempt_01/config.json": "cc4ff77c1f864e21014ac270d4a8b5de490851c6a46d2004b9e13486db565128",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/confirm_44/attempt_01/validation_metrics.json": "370ba0efda6416e6f7f98bdc81eba94defc9f4d0d2e9313634206df0b3710669",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/confirm_44/attempt_01/selection_log.json": "fce5ced9ca5b34d2f64d41d07b156df059591ca609033cc8bad9c7453648349b",
+    "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/confirm_44/attempt_01/execution.log": "245743a0346c3a5597bdac2647a426906cc1888c59e03788552284f11b921393",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_001/attempt_01/config.json": "84768e4bb0a6adddc4c70389a9f161bdddefd7c6a059bc292784794fb1a74443",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_001/attempt_01/validation_metrics.json": "a91a91f5058edeb0cc1ad3a2875c3ce66d189979bda6e6d2ae27d0349ce8f3fe",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_001/attempt_01/selection_log.json": "fce5ced9ca5b34d2f64d41d07b156df059591ca609033cc8bad9c7453648349b",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_001/attempt_01/execution.log": "f99e6f75405e0dc4f5f5c47f86f28e22ad583c827925fe79715faed6f6c53823",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_002/attempt_01/config.json": "f61c074903251e1f1505d5b587eacfeb7e28268dd2b03fe8144c5bdacfde538a",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_002/attempt_01/validation_metrics.json": "2de954fef7007624f3181754332d66a63df900ee1bfefdddfce48dcc53416295",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_002/attempt_01/selection_log.json": "fce5ced9ca5b34d2f64d41d07b156df059591ca609033cc8bad9c7453648349b",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_002/attempt_01/execution.log": "82868a345f483b8cd6deb8ade9b2a9d9bb4ce5442ba6d3ca0aab0136e7ce0656",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_003/attempt_01/config.json": "8de92a6a6ee3a8512cc72db8bcf496f99cf0b98dff6c297ead24e32f7088b7a3",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_003/attempt_01/validation_metrics.json": "beb3ff380ae3e344cae2fc2b453c0200f0a1e9d96ece4a3c0e50a67629f4896d",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_003/attempt_01/selection_log.json": "f23712a78ba10313f912b26efa59b7df3ddd6b65ae9551c77037986e3fd49ce8",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_003/attempt_01/execution.log": "527016c122db2469d39485c3a57d43f451a50734341357bf42447b95875e8098",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_004/attempt_01/config.json": "edb22e0b00ceb3b272a5afc22dd50a5d8c212a9ddd861ee0b92cbeef0f674da3",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_004/attempt_01/validation_metrics.json": "3d4668ed94af5212d72370a8503358200fea7f14a3b5d24e0656bb0608045ae6",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_004/attempt_01/selection_log.json": "79dd7aa79b2b510b02e4a4b01ecd7d8c86b55509756c8c411948bda93497e42d",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_004/attempt_01/execution.log": "40f3218c651c2d73d231344a5cabb1f5925a0be36bc2de7463d44a555e46126f",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_005/attempt_01/config.json": "be88ec5983fdc6369282f06b23033089e7b413c99d8932ff624401dfc3e0af00",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_005/attempt_01/validation_metrics.json": "dd428d1485a12de81a06ee1baf53349b7c83d74103513e9f9b1213b86559287e",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_005/attempt_01/selection_log.json": "fce5ced9ca5b34d2f64d41d07b156df059591ca609033cc8bad9c7453648349b",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_005/attempt_01/execution.log": "f4af8f360183201e1531bbee7714898e79eb2dda08ddf7c50acf281a725ef9e7",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_006/attempt_01/config.json": "ae45ac2147ff25f62faf7932754601740f21b63ed5f3e790affe0825d3583900",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_006/attempt_01/validation_metrics.json": "647570a2692a798082fc70beb11caa6fb46e987270960d5991fbea8bd971a18d",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_006/attempt_01/selection_log.json": "7d1d265cfe4fc15a3259fa9564e36af33a8d31590444fc6a099bb1799e4bac8b",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_006/attempt_01/execution.log": "b7a3616ea11b036426b7980352595676c909b752180707f62202d98f45b026a7",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/confirm_43/attempt_01/config.json": "00cf33ee52129f695dcab762424079a98c49bd76e008aeb04e9a55c45bc2bbbf",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/confirm_43/attempt_01/validation_metrics.json": "4a9a743fa0783bd3042fee30ae442a1a93992d34adcde004ed88ec3c28ae3e2e",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/confirm_43/attempt_01/selection_log.json": "79dd7aa79b2b510b02e4a4b01ecd7d8c86b55509756c8c411948bda93497e42d",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/confirm_43/attempt_01/execution.log": "2a385c1d417fa97fe333e58a5b358462371e282ba8fe8297a09fba758495497d",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/confirm_44/attempt_01/config.json": "c54b704667c135f4f3cc25b67dcf966ddb19069e82761dae2b8d5540c3c3d4b3",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/confirm_44/attempt_01/validation_metrics.json": "96353c9a73d361ca0aaeb32343bffaae8d4c22a9529e861b5cc00ba9eb5646f6",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/confirm_44/attempt_01/selection_log.json": "fce5ced9ca5b34d2f64d41d07b156df059591ca609033cc8bad9c7453648349b",
+    "ml/outputs/runs/p3_vision_20261018/search/resnet18/confirm_44/attempt_01/execution.log": "7481c7f3e88e01e2892aa4541edabdc6bd8bda7ebbf2731500c2184529527b9d"
+  },
+  "limitations": [
+    "Evidence-only verification cannot prove absence of unlogged raw-data access; source and logs record zero test images/predictions.",
+    "Only one fixed validation split; seed42 is selected among 6 configurations, so its peak score is selected and optimistic.",
+    "Confirmation seeds validate variation without reselecting; n=3 mean/std is descriptive, not a confidence interval or significance claim.",
+    "MobileNet V2 versus ResNet18 V1 ImageNet pretraining recipes differ; report comparison as complete specified pipelines.",
+    "MPS bitwise determinism is not guaranteed.",
+    "Unix start times and monotonic elapsed durations cannot be strictly concatenated: one mixed-clock derived gap is -0.0411s. The controller synchronously waits for each worker; source and increasing starts support sequential execution, but no single-clock per-worker end timestamps were captured. This is an audit limitation, not evidence of overlapping fits.",
+    "Held-out test and E1 remain deferred to new P4 authorization; no safety or real-world generalization claim.",
+    "Bounded HPO config retains prior S1 pending-decision text; explicit committed S2 approved_vision_budget.json is the newer applicable budget authorization."
+  ]
+}

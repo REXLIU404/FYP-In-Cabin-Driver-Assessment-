@@ -1,0 +1,17 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______ test_new_kit_rejects_supplied_pixel_hash_that_does_not_match_image ______
+
+qc = <module 'ml.experiments.p4_qc' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_qc.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-103/test_new_kit_rejects_supplied_0')
+
+    def test_new_kit_rejects_supplied_pixel_hash_that_does_not_match_image(qc,tmp_path):
+        items=cases();items[0][1]['pixel_sha256']='0'*64
+>       with pytest.raises(ValueError,match='pixel'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+ml/tests/test_p4_qc.py:222: Failed
+=========================== short test summary info ============================
+FAILED ml/tests/test_p4_qc.py::test_new_kit_rejects_supplied_pixel_hash_that_does_not_match_image
+1 failed in 1.81s

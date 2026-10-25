@@ -1,0 +1,13 @@
+{
+  "scope": "STATIC_JAVASCRIPT_SYNTAX_ONLY",
+  "scripts": 1,
+  "results": [
+    {
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "browser_rendering": "NOT_RUN_FILE_URL_BLOCKED_BY_BROWSER_POLICY",
+  "human_ratings_generated": 0
+}

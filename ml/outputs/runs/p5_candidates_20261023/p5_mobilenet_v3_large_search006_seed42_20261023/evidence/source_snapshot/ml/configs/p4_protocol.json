@@ -1,0 +1,253 @@
+{
+  "protocol": "P4-PROTOCOL-v2",
+  "amendment": "USER_APPROVED_MANUAL_QC_REMOVAL",
+  "resource_amendment": "USER_APPROVED_RAM_GATE_RELAXATION_20261022",
+  "phase": "P4-A",
+  "formal_execution_authorized": false,
+  "frozen_identities": {
+    "MN-HPO42": {
+      "modality": "vision",
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_006/attempt_01/checkpoint.pt",
+      "sha256": "bc96e7a230de6391820b1e04e7480087841680ae6cc1b6e73cba42b25eb67295"
+    },
+    "RN-HPO42": {
+      "modality": "vision",
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_004/attempt_01/checkpoint.pt",
+      "sha256": "008d831c98ea5e4b6c5c821787b3dc9a1dcbc6ca47a74dd1d8f7110eb4ac7d20"
+    },
+    "XGB-HPO42": {
+      "modality": "telemetry",
+      "path": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_02/checkpoint.joblib",
+      "sha256": "a464481d25ecb13f7db8392e039ac74855ad22fd80078154c7a4375a81097836"
+    },
+    "RF-HPO42": {
+      "modality": "telemetry",
+      "path": "ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_06/checkpoint.joblib",
+      "sha256": "cca6d8c7a7832b53c7cc0e6d1777e1c9e37b721612bb58e29df26be875c65aba"
+    },
+    "LR-HPO42": {
+      "modality": "telemetry",
+      "path": "ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_06/checkpoint.joblib",
+      "sha256": "558ac2cbda976822b370f257def52fa1a2dca9bb4cfe0b5e64f29623061c0274"
+    },
+    "MN-STABLE": {
+      "modality": "vision",
+      "path": "ml/outputs/vision/mobilenetv3_large_vision.pt",
+      "sha256": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+      "onnx_path": "ml/outputs/vision/mobilenetv3_large_vision.onnx",
+      "onnx_sha256": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf"
+    },
+    "XGB-STABLE": {
+      "modality": "telemetry",
+      "path": "ml/outputs/telemetry/xgb_telemetry.json",
+      "sha256": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+      "iteration_range": [
+        0,
+        91
+      ]
+    }
+  },
+  "source_sha256": {
+    "vision": "b4f8e90dec769bb419eaa490aea869668bed6484089cebe4d545c7667baa8ea4",
+    "telemetry_test": "3bc3d47680a87359e1470fd8ffaf5ff330dc4419b37cc645e5736d51a91c96de",
+    "telemetry_train": "97dd20ee9c0832ba33455e5c31088f9b4abb65c198bf988699a959d545d1e5b5",
+    "telemetry_val": "1b02792df846b5af138bae59e4f4ccfa8fa421fbb4fd6d42fad88d57722774f1"
+  },
+  "seed": 42,
+  "scope": {
+    "vision_sources": 3657,
+    "vision_conditions": 19,
+    "vision_shared_inputs": 69483,
+    "vision_identities": 3,
+    "vision_predictions": 208449,
+    "telemetry_sources": 4500,
+    "telemetry_conditions": 10,
+    "telemetry_shared_inputs": 45000,
+    "telemetry_identities": 4,
+    "telemetry_predictions": 180000,
+    "total_predictions": 388449
+  },
+  "budgets": {
+    "formal_total_machine_seconds": 14400,
+    "stage_caps_seconds": {
+      "preflight": 600,
+      "shared_inputs": 1200,
+      "vision_clean": 1200,
+      "vision_stress": 7200,
+      "telemetry": 1200,
+      "runtime": 1800,
+      "aggregation": 1200
+    },
+    "per_identity_seconds": {
+      "vision_clean": 400,
+      "vision_stress": 2400,
+      "telemetry": 300,
+      "runtime": 900
+    },
+    "runtime_worker_seconds": 90,
+    "export_worker_seconds": 120,
+    "parity_worker_seconds": 120,
+    "minimum_free_disk_bytes": 21474836480,
+    "minimum_available_ram_bytes": 4294967296,
+    "run_output_cap_bytes": 21474836480,
+    "evaluation_rss_cap_bytes": 8589934592,
+    "runtime_rss_cap_bytes": 4294967296,
+    "rss_sampling_seconds": 0.02,
+    "automatic_resume": false,
+    "automatic_retry": false
+  },
+  "runtime": {
+    "provider": "CPUExecutionProvider",
+    "dtype": "float32",
+    "intra_op_threads": 2,
+    "inter_op_threads": 1,
+    "execution_mode": "ORT_SEQUENTIAL",
+    "graph_optimization": "ORT_ENABLE_ALL",
+    "allow_spinning": false,
+    "active_workers": 1,
+    "evaluation_batch_size": 32,
+    "vision_per_condition_tail": 9,
+    "runtime_batch_size": 1,
+    "paired_rounds": 6,
+    "orders_before_seed42_shuffle": [
+      "AB",
+      "AB",
+      "AB",
+      "BA",
+      "BA",
+      "BA"
+    ],
+    "warmups_per_worker": 50,
+    "latency_requests_per_worker": 100,
+    "throughput_requests_per_worker": 100,
+    "percentile_method": "linear"
+  },
+  "preflight": {
+    "allowed_source_split": "val",
+    "validation_sources": 100,
+    "sources_per_class": 10,
+    "parity_batch_plan": [
+      1,
+      32,
+      32,
+      32,
+      4,
+      2,
+      9
+    ],
+    "parity_atol": 0.0001,
+    "parity_rtol": 0.0001,
+    "argmax_equal_required": true,
+    "identities": [
+      "MN-HPO42",
+      "RN-HPO42",
+      "MN-STABLE"
+    ],
+    "exports_allowed_identities": [
+      "MN-HPO42",
+      "RN-HPO42"
+    ],
+    "export_opset": 17,
+    "export_dynamo": false,
+    "export_external_data": false,
+    "candidate_package": false,
+    "deployment_eligible": false,
+    "export_execution_authorized": false,
+    "existing_exports_status": "REUSED_AND_VERIFIED",
+    "historical_export_count": 2,
+    "frozen_onnx_sha256": {
+      "MN-HPO42": "9ee60abb78007773cc625af80c313049c1970f63c1f041bed9f5b2539a384828",
+      "RN-HPO42": "5e226722e0712824c78aa0976afa6fa5b8dc6100b147a7f523a09048171d8cf3",
+      "MN-STABLE": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf"
+    },
+    "executed_source_sha256": "ffdfa6637bace58c9818ade3b9a84e812a59d2f681543927b10403061301dece",
+    "validation_tensor_sha256": "07adb0f1a37281659c298bb79e5404fa770cdea511d5ccb99710966b48a8d42e",
+    "attestation_sha256": "dc8f7cc36126aa994ae7ffebf9fb06cb92596246484f645f85956e052ddddaa3"
+  },
+  "qc": {
+    "status": "REMOVED_FROM_SCOPE",
+    "pilot": "REMOVED_FROM_SCOPE",
+    "formal": "REMOVED_FROM_SCOPE",
+    "conditioned_f1": "REMOVED_FROM_SCOPE",
+    "human_label_validity": "REMOVED_FROM_SCOPE",
+    "inter_rater_agreement": "REMOVED_FROM_SCOPE",
+    "automatic_human_validation": false
+  },
+  "vision": {
+    "primary_clean_metrics": ["accuracy", "macro_f1", "class_precision", "class_recall", "class_f1", "confusion", "log_loss"],
+    "stress_metrics": ["flip_rate", "mean_l1", "mean_delta_probability", "prediction_distribution_delta_count", "prediction_distribution_delta_rate"],
+    "stress_label_validity": "LABEL_VALIDITY_UNVERIFIED",
+    "corruption_source_label_f1": "NOT_COMPUTED",
+    "human_validated": false,
+    "interpretation": "DESCRIPTIVE_MODEL_STABILITY_NOT_LABEL_PRESERVATION_OR_SAFETY",
+    "source_label_sensitivity_interpretation": "ASSUMPTION_BASED_SENSITIVITY_NOT_HUMAN_VALIDATED"
+  },
+  "telemetry": {
+    "train_only_statistics": true,
+    "d3_direction": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "missing_rates": [
+      0.05,
+      0.1,
+      0.2
+    ],
+    "missing_record_counts": [
+      225,
+      450,
+      900
+    ],
+    "new_missing_features_per_affected_record": 1,
+    "bounds_policy": "REPORT_ONLY_NO_CLIP",
+    "empirical_train_support": [
+      [
+        20.0,
+        118.43983141168286
+      ],
+      [
+        -0.9496171195275332,
+        5.308924454984119
+      ],
+      [
+        -0.4797183579219134,
+        1.664604719278922
+      ],
+      [
+        0.0031284689143873,
+        99.99436534101304
+      ],
+      [
+        -49.10802185530833,
+        53.42680553362417
+      ],
+      [
+        20.001443716829353,
+        99.99476210241048
+      ],
+      [
+        1.3439689708905078e-06,
+        2.3359161325462123
+      ],
+      [
+        5.011333019940173,
+        49.99892385921925
+      ]
+    ],
+    "perturbed_label_policy": "LABEL_VALIDITY_UNVERIFIED",
+    "perturbed_f1_eligible": false
+  },
+  "stopping": {
+    "on_gate_failure": "BLOCKED",
+    "on_execution_error": "FAILED",
+    "on_budget": "PARTIAL",
+    "no_auto_tuning": true
+  },
+  "formal_runner_export_authorized": false
+}

@@ -1,0 +1,259 @@
+{
+  "run_id": "e1_preparation_20261019_record_missingness",
+  "stage": "P3_E1_GENERATOR_PREPARATION_ONLY",
+  "profile": {
+    "status": "PREPARATION_ONLY",
+    "formal_execution_authorized": false,
+    "source_split": "val",
+    "seed": 42,
+    "vision_source_count": 10,
+    "telemetry_source_count": 30,
+    "vision_strengths": {
+      "brightness_up": [
+        1.2,
+        1.5,
+        1.8
+      ],
+      "brightness_down": [
+        0.8,
+        0.5,
+        0.3
+      ],
+      "motion_blur": [
+        3,
+        7,
+        11
+      ],
+      "occlusion": [
+        0.05,
+        0.1,
+        0.2
+      ],
+      "rotation_crop": [
+        3,
+        7,
+        12
+      ],
+      "grayscale_blend": [
+        0.3,
+        0.6,
+        1.0
+      ]
+    },
+    "telemetry_strengths": {
+      "D1": [
+        0.1,
+        0.3,
+        0.5
+      ],
+      "D2": [
+        0.25,
+        0.5,
+        0.75
+      ],
+      "D3": [
+        0.25,
+        0.5,
+        1.0
+      ]
+    },
+    "preparation_example_only": {
+      "D3_record_missing_rates": [
+        0.05,
+        0.1,
+        0.2
+      ],
+      "D3_drift_direction": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "bounds": null,
+      "bounds_policy": "UNRESOLVED; no clipping",
+      "rotation_crop_geometry": "centered_inscribed_square"
+    },
+    "proposed_protocol_decisions": {
+      "status": "PROPOSED_UNTIL_FULL_P4_PROTOCOL_FREEZE",
+      "user_decision": "2026-10-19: 5/10/20 percent of records; exactly one randomly selected feature per affected record",
+      "D3_missingness_unit": "RECORD",
+      "D3_record_missing_rates": [
+        0.05,
+        0.1,
+        0.2
+      ],
+      "missing_features_per_affected_record": 1,
+      "record_selection": "seed42 source-ID hash ranking; nested prefixes; floor(N*rate+0.5)",
+      "feature_selection": "seed42 per-source RNG, one of eight, fixed across severity and models",
+      "models_share_masks": [
+        "xgboost",
+        "random_forest",
+        "logistic_regression"
+      ],
+      "imputation": "train-only median",
+      "formal_execution_authorized": false
+    },
+    "formal_protocol_pending": {
+      "D3_missing_rates": null,
+      "D3_drift_direction": null,
+      "physical_bounds_and_out_of_range_policy": null,
+      "rotation_crop_geometry_approval": null,
+      "independent_recognizability_QC_protocol": null,
+      "frozen_model_identities_including_baselines_and_deduplication": null,
+      "held_out_source_manifest": "NOT_CREATED_IN_P3",
+      "cluster_inference": "driver (clip if available); few driver clusters limit inference"
+    },
+    "constraints": {
+      "train_or_model_forward": false,
+      "test_images_or_telemetry_test_csv": false,
+      "formal_metrics": false,
+      "shared_preprocessing": "RGB -> PIL bilinear direct224 -> /255 -> ImageNet mean/std -> NCHW float32",
+      "shared_telemetry_imputation": "frozen train-only median for all three; LR train-fitted scaler downstream",
+      "qc_default": "PENDING; no transformed-label macro-F1 without independent validity decision",
+      "D2_interpretation": "LABEL_CONDITIONED_STRESS",
+      "D0": {
+        "synthetic": true,
+        "perturbed": false
+      },
+      "test_exposure": "previously evaluated; do not describe as never seen"
+    }
+  },
+  "command": [
+    "./.venv/bin/python",
+    "-B",
+    "ml/experiments/run_e1_preparation.py",
+    "--run-id",
+    "e1_preparation_20261019_record_missingness"
+  ],
+  "git": {
+    "branch": "fyp2/ml-training",
+    "head": "335da4e3de203836c045452f84cc291bcd352a26",
+    "dirty_state": "M docs/fyp2/ml/ML_TRACK_PROGRESS.md\n?? docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md\n?? docs/fyp2/ml/ML_RESULTS_REVIEW_CONTEXT.md\n?? ml/configs/e1_preparation.json\n?? ml/experiments/e1_generators.py\n?? ml/experiments/run_e1_preparation.py\n?? ml/outputs/runs/e1_preparation_20261019/\n?? ml/outputs/runs/p3_vision_20261018/search/\n?? ml/outputs/runs/p3_vision_20261018/search_config.json\n?? ml/outputs/runs/p3_vision_20261018/search_state.json\n?? ml/outputs/runs/p3_vision_20261018/selection_log.json\n?? ml/outputs/runs/p3_vision_20261018/verification/\n?? ml/tests/test_e1_generators.py\n?? ml/tests/test_e1_preparation.py",
+    "staged_paths": ""
+  },
+  "versions": {
+    "python": "3.13.3",
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "torch": "2.12.0",
+    "torchvision": "0.27.0",
+    "scikit-learn": "1.9.0",
+    "numpy": "2.4.6",
+    "pandas": "3.0.3",
+    "Pillow": "12.2.0",
+    "joblib": "1.5.3",
+    "threadpoolctl": "3.6.0"
+  },
+  "source_files": [
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/configs/e1_preparation.json",
+      "sha256": "d53f1de9c2327d7d2796fb5050cf1d6d9cfabb5d5758152739833bb754a1c783",
+      "bytes": 2585
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/w2_preparation_20261015/preparation_evidence.json",
+      "sha256": "511c1400a8b04567f5e5b031f359defb3fd3918c07040fd2d9281f3b5b127e25",
+      "bytes": 36570
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_02/train_statistics.json",
+      "sha256": "381160e3a4acf914565b23e1ac1c5d522b591ba6b4fe06126744ad8763b7038a",
+      "bytes": 622
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_06/train_statistics.json",
+      "sha256": "381160e3a4acf914565b23e1ac1c5d522b591ba6b4fe06126744ad8763b7038a",
+      "bytes": 622
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_06/train_statistics.json",
+      "sha256": "3aef9d7c71d0c9b26d2359d34ffdf126c86106c9ea37f76855119cce575947da",
+      "bytes": 1296
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/e1_generators.py",
+      "sha256": "b0b92519ef093ba0370b6e258a7cfaba9434f2e2de8ed113d333ffd6d1b10ce3",
+      "bytes": 13129
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_e1_preparation.py",
+      "sha256": "507c4cfa2105256648f427a322d7cf40c283d67a086c9d0c9e8920860499793a",
+      "bytes": 10324
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/comparator_common.py",
+      "sha256": "8ede7aa5a0604232ff5b3c54735bd9f2e5479b18a2e80e5091bfa2b07644805d",
+      "bytes": 14336
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/tests/test_e1_generators.py",
+      "sha256": "86a6c38cb54fa5383dbe59cb00922bba21f3a6678b8ddbdbcea032e0488a6a60",
+      "bytes": 11964
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/tests/test_e1_preparation.py",
+      "sha256": "35a0a404bbce6b9186344b786965c2fb2e521632cf79aee2d74897ab45fbfd60",
+      "bytes": 2011
+    }
+  ],
+  "dataset_ids": {
+    "vision": "StateFarm/frozen-v1",
+    "telemetry": "synthetic-telemetry/frozen-v1"
+  },
+  "dataset_sources": {
+    "vision": {
+      "metadata": {
+        "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/vision/vision_metadata_with_split.csv",
+        "sha256": "b4f8e90dec769bb419eaa490aea869668bed6484089cebe4d545c7667baa8ea4"
+      }
+    },
+    "telemetry": {
+      "train": {
+        "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_train.csv",
+        "sha256": "97dd20ee9c0832ba33455e5c31088f9b4abb65c198bf988699a959d545d1e5b5"
+      },
+      "val": {
+        "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_val.csv",
+        "sha256": "1b02792df846b5af138bae59e4f4ccfa8fa421fbb4fd6d42fad88d57722774f1"
+      }
+    }
+  },
+  "protected_hashes_before": {
+    "ml/outputs/vision/mobilenetv3_large_vision.pt": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+    "ml/outputs/vision/mobilenetv3_large_vision.onnx": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "ml/outputs/telemetry/xgb_telemetry.json": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+    "docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md": "0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0"
+  },
+  "reused_train_statistics": "REUSED_AND_VERIFIED",
+  "class_names": {
+    "c0": "normal_driving",
+    "c1": "texting_right",
+    "c2": "talking_phone_right",
+    "c3": "texting_left",
+    "c4": "talking_phone_left",
+    "c5": "operating_radio",
+    "c6": "drinking",
+    "c7": "reaching_behind",
+    "c8": "hair_makeup",
+    "c9": "talking_to_passenger"
+  },
+  "class_to_idx": {
+    "c0": 0,
+    "c1": 1,
+    "c2": 2,
+    "c3": 3,
+    "c4": 4,
+    "c5": 5,
+    "c6": 6,
+    "c7": 7,
+    "c8": 8,
+    "c9": 9
+  },
+  "clip_ids_available": false,
+  "threads": 2,
+  "device": "CPU; no model execution",
+  "authorization": "User next-step approval; P3 val/synthetic preparation only; P4/P5 not authorized"
+}

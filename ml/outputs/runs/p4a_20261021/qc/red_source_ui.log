@@ -1,0 +1,49 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____ test_local_cli_reveals_only_after_lock_and_finalizes_real_input_files _____
+
+qc = <module 'ml.experiments.p4_qc' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_qc.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-91/test_local_cli_reveals_only_af0')
+
+    def test_local_cli_reveals_only_after_lock_and_finalizes_real_input_files(qc,tmp_path):
+        kit=tmp_path/'kit';manifest=qc.build_review_kit(cases(),kit)
+        with pytest.raises(FileNotFoundError):qc.main(['reveal','--kit',str(kit)])
+        ids=[r['case_id'] for r in manifest['restricted_cases']]
+        ratings=tmp_path/'synthetic_ratings.json';ratings.write_text(json.dumps([judgement(i) for i in ids]))
+        assert qc.main(['lock','--kit',str(kit),'--ratings',str(ratings)])==0
+        assert qc.main(['reveal','--kit',str(kit)])==0
+>       source_page=(kit/'restricted/source_review.html').read_text()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_qc.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-91/test_local_cli_reveals_only_af0/kit/restricted/source_review.html')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-91/test_local_cli_reveals_only_af0/kit/restricted/source_review.html'
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_local.py:537: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+R1_BLIND_LOCKED cc52b3e19c2964c6e89263118465cdb645b1be8669c190486689060ca6c7b578
+R1_SOURCE_REVEALED; complete post-lock cue checks; no automatic VALID ratings
+=========================== short test summary info ============================
+FAILED ml/tests/test_p4_qc.py::test_local_cli_reveals_only_after_lock_and_finalizes_real_input_files
+1 failed in 1.23s

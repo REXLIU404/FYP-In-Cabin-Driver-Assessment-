@@ -1,0 +1,656 @@
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFF                                            [100%]
+=================================== FAILURES ===================================
+______ test_vision_19_variants_are_reproducible_and_leave_input_unchanged ______
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa60ad0>
+
+    def test_vision_19_variants_are_reproducible_and_leave_input_unchanged(e1):
+        source=image();before=source.tobytes()
+>       first=list(e1.vision_variants(source,'vision-v1:c0/toy.jpg','toy-driver',source_split='synthetic'))
+                   ^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa60ad0>
+name = 'vision_variants'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+___________________ test_vision_strengths_and_correct_names ____________________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10a584440>
+
+    def test_vision_strengths_and_correct_names(e1):
+>       rows=[r for _,r in e1.vision_variants(image(),'toy','driver',source_split='synthetic')]
+                           ^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10a584440>
+name = 'vision_variants'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+____________ test_motion_kernel_is_normalized_directional_line[3-0] ____________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61010>, angle = 0
+size = 3
+
+    @pytest.mark.parametrize('angle',[0,45,90,135])
+    @pytest.mark.parametrize('size',[3,7,11])
+    def test_motion_kernel_is_normalized_directional_line(e1,angle,size):
+>       kernel=e1.motion_kernel(size,angle)
+               ^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61010>
+name = 'motion_kernel'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+___________ test_motion_kernel_is_normalized_directional_line[3-45] ____________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa616a0>, angle = 45
+size = 3
+
+    @pytest.mark.parametrize('angle',[0,45,90,135])
+    @pytest.mark.parametrize('size',[3,7,11])
+    def test_motion_kernel_is_normalized_directional_line(e1,angle,size):
+>       kernel=e1.motion_kernel(size,angle)
+               ^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa616a0>
+name = 'motion_kernel'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+___________ test_motion_kernel_is_normalized_directional_line[3-90] ____________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa617f0>, angle = 90
+size = 3
+
+    @pytest.mark.parametrize('angle',[0,45,90,135])
+    @pytest.mark.parametrize('size',[3,7,11])
+    def test_motion_kernel_is_normalized_directional_line(e1,angle,size):
+>       kernel=e1.motion_kernel(size,angle)
+               ^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa617f0>
+name = 'motion_kernel'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+___________ test_motion_kernel_is_normalized_directional_line[3-135] ___________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61940>, angle = 135
+size = 3
+
+    @pytest.mark.parametrize('angle',[0,45,90,135])
+    @pytest.mark.parametrize('size',[3,7,11])
+    def test_motion_kernel_is_normalized_directional_line(e1,angle,size):
+>       kernel=e1.motion_kernel(size,angle)
+               ^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61940>
+name = 'motion_kernel'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+____________ test_motion_kernel_is_normalized_directional_line[7-0] ____________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61a90>, angle = 0
+size = 7
+
+    @pytest.mark.parametrize('angle',[0,45,90,135])
+    @pytest.mark.parametrize('size',[3,7,11])
+    def test_motion_kernel_is_normalized_directional_line(e1,angle,size):
+>       kernel=e1.motion_kernel(size,angle)
+               ^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61a90>
+name = 'motion_kernel'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+___________ test_motion_kernel_is_normalized_directional_line[7-45] ____________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61be0>, angle = 45
+size = 7
+
+    @pytest.mark.parametrize('angle',[0,45,90,135])
+    @pytest.mark.parametrize('size',[3,7,11])
+    def test_motion_kernel_is_normalized_directional_line(e1,angle,size):
+>       kernel=e1.motion_kernel(size,angle)
+               ^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61be0>
+name = 'motion_kernel'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+___________ test_motion_kernel_is_normalized_directional_line[7-90] ____________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61d30>, angle = 90
+size = 7
+
+    @pytest.mark.parametrize('angle',[0,45,90,135])
+    @pytest.mark.parametrize('size',[3,7,11])
+    def test_motion_kernel_is_normalized_directional_line(e1,angle,size):
+>       kernel=e1.motion_kernel(size,angle)
+               ^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61d30>
+name = 'motion_kernel'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+___________ test_motion_kernel_is_normalized_directional_line[7-135] ___________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61e80>, angle = 135
+size = 7
+
+    @pytest.mark.parametrize('angle',[0,45,90,135])
+    @pytest.mark.parametrize('size',[3,7,11])
+    def test_motion_kernel_is_normalized_directional_line(e1,angle,size):
+>       kernel=e1.motion_kernel(size,angle)
+               ^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61e80>
+name = 'motion_kernel'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+___________ test_motion_kernel_is_normalized_directional_line[11-0] ____________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10a584440>, angle = 0
+size = 11
+
+    @pytest.mark.parametrize('angle',[0,45,90,135])
+    @pytest.mark.parametrize('size',[3,7,11])
+    def test_motion_kernel_is_normalized_directional_line(e1,angle,size):
+>       kernel=e1.motion_kernel(size,angle)
+               ^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10a584440>
+name = 'motion_kernel'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+___________ test_motion_kernel_is_normalized_directional_line[11-45] ___________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61d30>, angle = 45
+size = 11
+
+    @pytest.mark.parametrize('angle',[0,45,90,135])
+    @pytest.mark.parametrize('size',[3,7,11])
+    def test_motion_kernel_is_normalized_directional_line(e1,angle,size):
+>       kernel=e1.motion_kernel(size,angle)
+               ^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61d30>
+name = 'motion_kernel'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+___________ test_motion_kernel_is_normalized_directional_line[11-90] ___________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61be0>, angle = 90
+size = 11
+
+    @pytest.mark.parametrize('angle',[0,45,90,135])
+    @pytest.mark.parametrize('size',[3,7,11])
+    def test_motion_kernel_is_normalized_directional_line(e1,angle,size):
+>       kernel=e1.motion_kernel(size,angle)
+               ^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61be0>
+name = 'motion_kernel'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+__________ test_motion_kernel_is_normalized_directional_line[11-135] ___________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61a90>, angle = 135
+size = 11
+
+    @pytest.mark.parametrize('angle',[0,45,90,135])
+    @pytest.mark.parametrize('size',[3,7,11])
+    def test_motion_kernel_is_normalized_directional_line(e1,angle,size):
+>       kernel=e1.motion_kernel(size,angle)
+               ^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61a90>
+name = 'motion_kernel'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+___________________ test_motion_blur_impulse_is_not_gaussian ___________________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61940>
+
+    def test_motion_blur_impulse_is_not_gaussian(e1):
+        array=np.zeros((224,224,3),dtype=np.uint8);array[112,112]=255
+>       variants=list(e1.vision_variants(Image.fromarray(array),'impulse','driver',source_split='synthetic'))
+                      ^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61940>
+name = 'vision_variants'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+________________ test_occlusion_and_crop_geometry_are_recorded _________________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa617f0>
+
+    def test_occlusion_and_crop_geometry_are_recorded(e1):
+>       variants=list(e1.vision_variants(image(),'geometry','driver',source_split='synthetic'))
+                      ^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa617f0>
+name = 'vision_variants'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+___________ test_brightness_and_grayscale_independent_pixel_oracles ____________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa616a0>
+
+    def test_brightness_and_grayscale_independent_pixel_oracles(e1):
+>       variants=list(e1.vision_variants(Image.new('RGB',(224,224),(100,50,10)),'solid','driver',source_split='synthetic'))
+                      ^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa616a0>
+name = 'vision_variants'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+____ test_train_only_statistics_and_imputation_do_not_depend_on_validation _____
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61010>
+
+    def test_train_only_statistics_and_imputation_do_not_depend_on_validation(e1):
+        train=np.repeat(np.array([[0.],[2.]]),8,axis=1)
+>       stats=e1.fit_train_statistics(train,['Safe','Safe'],split='train',source_sha256='train-only')
+              ^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61010>
+name = 'fit_train_statistics'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+__________________ test_statistics_refuse_non_train_fit[val] ___________________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa60d70>
+split = 'val'
+
+    @pytest.mark.parametrize('split',['val','test'])
+    def test_statistics_refuse_non_train_fit(e1,split):
+        with pytest.raises(ValueError,match='train'):
+>           e1.fit_train_statistics(np.ones((3,8)),['Safe']*3,split=split,source_sha256='not-train')
+            ^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:124: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa60d70>
+name = 'fit_train_statistics'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+__________________ test_statistics_refuse_non_train_fit[test] __________________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa60ad0>
+split = 'test'
+
+    @pytest.mark.parametrize('split',['val','test'])
+    def test_statistics_refuse_non_train_fit(e1,split):
+        with pytest.raises(ValueError,match='train'):
+>           e1.fit_train_statistics(np.ones((3,8)),['Safe']*3,split=split,source_sha256='not-train')
+            ^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:124: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa60ad0>
+name = 'fit_train_statistics'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+__________ test_telemetry_counts_shared_masks_and_order_independence ___________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61fd0>
+
+    def test_telemetry_counts_shared_masks_and_order_independence(e1):
+>       rows=telemetry(e1);again=telemetry(e1,ids=['toy:2','toy:1','toy:0'])
+             ^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:128: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_e1_generators.py:36: in telemetry
+    return list(e1.telemetry_variants(x,labels or ['Safe']*len(x),ids or [f'toy:{i}' for i in range(len(x))],
+                ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61fd0>
+name = 'telemetry_variants'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+____________ test_d1_reuses_noise_draw_and_d2_is_label_conditioned _____________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa62270>
+
+    def test_d1_reuses_noise_draw_and_d2_is_label_conditioned(e1):
+>       rows=telemetry(e1);stats=statistics(e1)
+             ^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:137: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_e1_generators.py:36: in telemetry
+    return list(e1.telemetry_variants(x,labels or ['Safe']*len(x),ids or [f'toy:{i}' for i in range(len(x))],
+                ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa62270>
+name = 'telemetry_variants'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+____________ test_d3_nested_masks_missing_extremes_and_train_median ____________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10a584440>
+
+    def test_d3_nested_masks_missing_extremes_and_train_median(e1):
+>       rows=[r for r in telemetry(e1,rates=(0,.5,1)) if r['domain']=='D3' and r['source_id']=='toy:0']
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:149: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_e1_generators.py:36: in telemetry
+    return list(e1.telemetry_variants(x,labels or ['Safe']*len(x),ids or [f'toy:{i}' for i in range(len(x))],
+                ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10a584440>
+name = 'telemetry_variants'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+_______________ test_bounds_are_reported_without_silent_clipping _______________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa62120>
+
+    def test_bounds_are_reported_without_silent_clipping(e1):
+>       rows=telemetry(e1,values=np.full((3,8),100.),bounds=[[0.,1.]]*8)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:157: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_e1_generators.py:36: in telemetry
+    return list(e1.telemetry_variants(x,labels or ['Safe']*len(x),ids or [f'toy:{i}' for i in range(len(x))],
+                ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa62120>
+name = 'telemetry_variants'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+_ test_preparation_generators_refuse_non_validation_or_synthetic_inputs[train] _
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa60d70>
+split = 'train'
+
+    @pytest.mark.parametrize('split',['train','test'])
+    def test_preparation_generators_refuse_non_validation_or_synthetic_inputs(e1,split):
+        with pytest.raises(ValueError,match='preparation'):
+>           list(e1.vision_variants(image(),'source','driver',source_split=split))
+                 ^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:166: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa60d70>
+name = 'vision_variants'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+_ test_preparation_generators_refuse_non_validation_or_synthetic_inputs[test] __
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61010>
+split = 'test'
+
+    @pytest.mark.parametrize('split',['train','test'])
+    def test_preparation_generators_refuse_non_validation_or_synthetic_inputs(e1,split):
+        with pytest.raises(ValueError,match='preparation'):
+>           list(e1.vision_variants(image(),'source','driver',source_split=split))
+                 ^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:166: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61010>
+name = 'vision_variants'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+__________ test_missing_protocol_parameters_and_duplicate_ids_refuse ___________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa616a0>
+
+    def test_missing_protocol_parameters_and_duplicate_ids_refuse(e1):
+        for rates,direction,ids in [(None,[1]*8,['a']),([.05,.1,.2],None,['a']),([.05,.1,.2],[1]*8,['a','a'])]:
+            with pytest.raises(ValueError):
+>               list(e1.telemetry_variants(np.ones((len(ids),8)),['Safe']*len(ids),ids,statistics(e1),
+                     ^^^^^^^^^^^^^^^^^^^^^
+                     missing_rates=rates,drift_direction=direction,bounds=None,source_split='synthetic'))
+
+ml/tests/test_e1_generators.py:175: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa616a0>
+name = 'telemetry_variants'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+____________ test_independent_qc_is_required_before_f1_eligibility _____________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa617f0>
+
+    def test_independent_qc_is_required_before_f1_eligibility(e1):
+>       assert e1.qc_decision()['status']=='PENDING' and not e1.qc_decision()['f1_eligible']
+               ^^^^^^^^^^^^^^
+
+ml/tests/test_e1_generators.py:180: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa617f0>
+name = 'qc_decision'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+__________ test_4500_synthetic_sources_produce_45000_shared_variants ___________
+
+e1 = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61940>
+
+    def test_4500_synthetic_sources_produce_45000_shared_variants(e1):
+>       count=sum(1 for _ in e1.telemetry_variants(np.ones((4500,8)),['Safe']*4500,
+                             ^^^^^^^^^^^^^^^^^^^^^
+            [f'synthetic:{i}' for i in range(4500)],statistics(e1),missing_rates=[.05,.1,.2],
+            drift_direction=[1]*8,bounds=None,source_split='synthetic'))
+
+ml/tests/test_e1_generators.py:188: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_generators.e1.<locals>.Missing object at 0x10aa61940>
+name = 'telemetry_variants'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing reproducible E1 preparation generators')
+E       Failed: Missing reproducible E1 preparation generators
+
+ml/tests/test_e1_generators.py:20: Failed
+=========================== short test summary info ============================
+FAILED ml/tests/test_e1_generators.py::test_vision_19_variants_are_reproducible_and_leave_input_unchanged
+FAILED ml/tests/test_e1_generators.py::test_vision_strengths_and_correct_names
+FAILED ml/tests/test_e1_generators.py::test_motion_kernel_is_normalized_directional_line[3-0]
+FAILED ml/tests/test_e1_generators.py::test_motion_kernel_is_normalized_directional_line[3-45]
+FAILED ml/tests/test_e1_generators.py::test_motion_kernel_is_normalized_directional_line[3-90]
+FAILED ml/tests/test_e1_generators.py::test_motion_kernel_is_normalized_directional_line[3-135]
+FAILED ml/tests/test_e1_generators.py::test_motion_kernel_is_normalized_directional_line[7-0]
+FAILED ml/tests/test_e1_generators.py::test_motion_kernel_is_normalized_directional_line[7-45]
+FAILED ml/tests/test_e1_generators.py::test_motion_kernel_is_normalized_directional_line[7-90]
+FAILED ml/tests/test_e1_generators.py::test_motion_kernel_is_normalized_directional_line[7-135]
+FAILED ml/tests/test_e1_generators.py::test_motion_kernel_is_normalized_directional_line[11-0]
+FAILED ml/tests/test_e1_generators.py::test_motion_kernel_is_normalized_directional_line[11-45]
+FAILED ml/tests/test_e1_generators.py::test_motion_kernel_is_normalized_directional_line[11-90]
+FAILED ml/tests/test_e1_generators.py::test_motion_kernel_is_normalized_directional_line[11-135]
+FAILED ml/tests/test_e1_generators.py::test_motion_blur_impulse_is_not_gaussian
+FAILED ml/tests/test_e1_generators.py::test_occlusion_and_crop_geometry_are_recorded
+FAILED ml/tests/test_e1_generators.py::test_brightness_and_grayscale_independent_pixel_oracles
+FAILED ml/tests/test_e1_generators.py::test_train_only_statistics_and_imputation_do_not_depend_on_validation
+FAILED ml/tests/test_e1_generators.py::test_statistics_refuse_non_train_fit[val]
+FAILED ml/tests/test_e1_generators.py::test_statistics_refuse_non_train_fit[test]
+FAILED ml/tests/test_e1_generators.py::test_telemetry_counts_shared_masks_and_order_independence
+FAILED ml/tests/test_e1_generators.py::test_d1_reuses_noise_draw_and_d2_is_label_conditioned
+FAILED ml/tests/test_e1_generators.py::test_d3_nested_masks_missing_extremes_and_train_median
+FAILED ml/tests/test_e1_generators.py::test_bounds_are_reported_without_silent_clipping
+FAILED ml/tests/test_e1_generators.py::test_preparation_generators_refuse_non_validation_or_synthetic_inputs[train]
+FAILED ml/tests/test_e1_generators.py::test_preparation_generators_refuse_non_validation_or_synthetic_inputs[test]
+FAILED ml/tests/test_e1_generators.py::test_missing_protocol_parameters_and_duplicate_ids_refuse
+FAILED ml/tests/test_e1_generators.py::test_independent_qc_is_required_before_f1_eligibility
+FAILED ml/tests/test_e1_generators.py::test_4500_synthetic_sources_produce_45000_shared_variants
+29 failed in 0.34s

@@ -1,0 +1,70 @@
+........FFFF.                                                            [100%]
+=================================== FAILURES ===================================
+______ test_attestation_freezes_png_bytes_and_decoded_pixels_before_lock _______
+
+qc = <module 'ml.experiments.p4_qc' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_qc.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-99/test_attestation_freezes_png_b0')
+
+    def test_attestation_freezes_png_bytes_and_decoded_pixels_before_lock(qc,tmp_path):
+        kit=tmp_path/'kit';manifest=qc.build_review_kit(cases(),kit)
+>       attestation=qc.load_byte_attestation(kit)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'ml.experiments.p4_qc' has no attribute 'load_byte_attestation'
+
+ml/tests/test_p4_qc.py:135: AttributeError
+____________ test_original_source_tamper_stops_reveal_and_finalize _____________
+
+qc = <module 'ml.experiments.p4_qc' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_qc.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-99/test_original_source_tamper_st0')
+
+    def test_original_source_tamper_stops_reveal_and_finalize(qc,tmp_path):
+        source,items=val_cases(tmp_path);kit=tmp_path/'kit'
+>       manifest=qc.build_review_kit(items,kit);attestation=qc.load_byte_attestation(kit)
+                                                            ^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'ml.experiments.p4_qc' has no attribute 'load_byte_attestation'
+
+ml/tests/test_p4_qc.py:163: AttributeError
+_____________ test_postlock_cue_reason_requires_nonblank_text[   ] _____________
+
+qc = <module 'ml.experiments.p4_qc' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_qc.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-99/test_postlock_cue_reason_requi0')
+reason = '   '
+
+    @pytest.mark.parametrize('reason',['   ',7,None])
+    def test_postlock_cue_reason_requires_nonblank_text(qc,tmp_path,reason):
+        kit=tmp_path/'kit';manifest=qc.build_review_kit(cases(),kit)
+        ids=[r['case_id'] for r in manifest['restricted_cases']]
+        locked=qc.lock_blind_judgments([judgement(i) for i in ids],reviewer='R1',case_ids=ids,
+            source_key_sha256=manifest['source_key_sha256'])
+        cues=[{'case_id':i,'preserved_cue':True,'reason':reason,
+               'duration_seconds':1.,'timestamp':'2026-10-21T11:00:00+08:00'} for i in ids]
+>       with pytest.raises(ValueError):qc.finalize_qc(manifest,locked,cues)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+ml/tests/test_p4_qc.py:183: Failed
+______________ test_postlock_cue_reason_requires_nonblank_text[7] ______________
+
+qc = <module 'ml.experiments.p4_qc' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_qc.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-99/test_postlock_cue_reason_requi1')
+reason = 7
+
+    @pytest.mark.parametrize('reason',['   ',7,None])
+    def test_postlock_cue_reason_requires_nonblank_text(qc,tmp_path,reason):
+        kit=tmp_path/'kit';manifest=qc.build_review_kit(cases(),kit)
+        ids=[r['case_id'] for r in manifest['restricted_cases']]
+        locked=qc.lock_blind_judgments([judgement(i) for i in ids],reviewer='R1',case_ids=ids,
+            source_key_sha256=manifest['source_key_sha256'])
+        cues=[{'case_id':i,'preserved_cue':True,'reason':reason,
+               'duration_seconds':1.,'timestamp':'2026-10-21T11:00:00+08:00'} for i in ids]
+>       with pytest.raises(ValueError):qc.finalize_qc(manifest,locked,cues)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+ml/tests/test_p4_qc.py:183: Failed
+=========================== short test summary info ============================
+FAILED ml/tests/test_p4_qc.py::test_attestation_freezes_png_bytes_and_decoded_pixels_before_lock
+FAILED ml/tests/test_p4_qc.py::test_original_source_tamper_stops_reveal_and_finalize
+FAILED ml/tests/test_p4_qc.py::test_postlock_cue_reason_requires_nonblank_text[   ]
+FAILED ml/tests/test_p4_qc.py::test_postlock_cue_reason_requires_nonblank_text[7]
+4 failed, 9 passed in 1.39s

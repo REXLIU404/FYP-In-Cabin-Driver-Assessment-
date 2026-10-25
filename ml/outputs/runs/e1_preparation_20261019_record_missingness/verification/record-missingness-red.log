@@ -1,0 +1,68 @@
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+____________ test_d3_nested_masks_missing_extremes_and_train_median ____________
+
+e1 = <module 'ml.experiments.e1_generators' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/e1_generators.py'>
+
+    def test_d3_nested_masks_missing_extremes_and_train_median(e1):
+        rows=[r for r in telemetry(e1,rates=(0,.5,1)) if r['domain']=='D3' and r['source_id']=='toy:0']
+>       assert not any(rows[0]['missing_mask']) and sum(rows[2]['missing_mask'])==1
+E       assert (not False and 8 == 1)
+E        +  where False = any([False, False, False, False, False, False, ...])
+E        +  and   8 = sum([True, True, True, True, True, True, ...])
+
+ml/tests/test_e1_generators.py:150: AssertionError
+______ test_d3_record_missingness_exact_counts_one_feature_and_reordering ______
+
+e1 = <module 'ml.experiments.e1_generators' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/e1_generators.py'>
+
+    def test_d3_record_missingness_exact_counts_one_feature_and_reordering(e1):
+        ids=[f'population:{i}' for i in range(100)]
+        rows=telemetry(e1,values=np.ones((100,8)),ids=ids)
+        reverse=telemetry(e1,values=np.ones((100,8)),ids=ids[::-1])
+        assert {r['variant_id']:r for r in rows}=={r['variant_id']:r for r in reverse}
+        affected=[]
+        for severity,expected in enumerate([5,10,20]):
+            variants=[r for r in rows if r['domain']=='D3' and r['severity']==severity]
+            assert len(variants)==100
+            selected={r['source_id'] for r in variants if any(r['missing_mask'])}
+>           assert len(selected)==expected
+E           AssertionError: assert 29 == 5
+E            +  where 29 = len({'population:18', 'population:26', 'population:28', 'population:32', 'population:35', 'population:40', ...})
+
+ml/tests/test_e1_generators.py:171: AssertionError
+_ test_d3_small_population_rounds_record_count_half_up_and_logs_realized_rate __
+
+e1 = <module 'ml.experiments.e1_generators' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/e1_generators.py'>
+
+    def test_d3_small_population_rounds_record_count_half_up_and_logs_realized_rate(e1):
+        rows=telemetry(e1,values=np.ones((30,8)),ids=[f'small:{i}' for i in range(30)])
+        for severity,expected in enumerate([2,3,6]):
+            variants=[r for r in rows if r['domain']=='D3' and r['severity']==severity]
+>           assert sum(any(r['missing_mask']) for r in variants)==expected
+E           assert 11 == 2
+E            +  where 11 = sum(<generator object test_d3_small_population_rounds_record_count_half_up_and_logs_realized_rate.<locals>.<genexpr> at 0x10afc89e0>)
+
+ml/tests/test_e1_generators.py:185: AssertionError
+__________ test_4500_synthetic_sources_produce_45000_shared_variants ___________
+
+e1 = <module 'ml.experiments.e1_generators' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/e1_generators.py'>
+
+    def test_4500_synthetic_sources_produce_45000_shared_variants(e1):
+        count=0;affected=[0,0,0]
+        for row in e1.telemetry_variants(np.ones((4500,8)),['Safe']*4500,
+            [f'synthetic:{i}' for i in range(4500)],statistics(e1),missing_rates=[.05,.1,.2],
+            drift_direction=[1]*8,bounds=None,source_split='synthetic'):
+            count+=1
+            if row['domain']=='D3':
+>               assert sum(row['missing_mask']) in [0,1]
+E               assert 2 in [0, 1]
+E                +  where 2 = sum([True, False, False, False, True, False, ...])
+
+ml/tests/test_e1_generators.py:228: AssertionError
+=========================== short test summary info ============================
+FAILED ml/tests/test_e1_generators.py::test_d3_nested_masks_missing_extremes_and_train_median
+FAILED ml/tests/test_e1_generators.py::test_d3_record_missingness_exact_counts_one_feature_and_reordering
+FAILED ml/tests/test_e1_generators.py::test_d3_small_population_rounds_record_count_half_up_and_logs_realized_rate
+FAILED ml/tests/test_e1_generators.py::test_4500_synthetic_sources_produce_45000_shared_variants
+4 failed, 27 deselected in 1.45s

@@ -1,0 +1,66 @@
+{
+  "scope": "ML_SOFTWARE_REGRESSION_ONLY",
+  "tested_head": "335da4e3de203836c045452f84cc291bcd352a26",
+  "tested_branch": "fyp2/ml-training",
+  "tested_tree": "Pre-commit dirty working tree with submitted ML source/config/test changes; source SHA inventory recorded.",
+  "initial": {
+    "status": "FAILED_DUE_TO_SANDBOX_RSS_OBSERVATION",
+    "returncode": 1,
+    "pytest_result": "6 failed, 296 passed in 26.92s",
+    "wall_seconds": 28.810543041996425,
+    "failed_tests": [
+      "ml/tests/test_p4_core.py::test_budget_kills_timed_out_process_group_and_forbids_resume",
+      "ml/tests/test_p4_core.py::test_budget_observed_disk_and_rss_guards",
+      "ml/tests/test_p4_core.py::test_worker_failure_is_final_and_raw_logs_saved",
+      "ml/tests/test_p4_core.py::test_budget_model_and_total_time_are_cumulative",
+      "ml/tests/test_p4_core.py::test_supervisor_monitors_entire_output_root",
+      "ml/tests/test_p4_core.py::test_human_wait_explicitly_pauses_machine_budget"
+    ]
+  },
+  "controlled_repeat": {
+    "status": "PASS",
+    "returncode": 0,
+    "pytest_result": "302 passed in 25.36s",
+    "wall_seconds": 27.086806792009156,
+    "command_metadata": "ml-tests-controlled-command.json",
+    "log": "ml-tests-controlled.txt",
+    "source_unchanged": true
+  },
+  "interpretation": "Identical test logic and original toy subprocess budgets pass when process RSS inspection is permitted. No implementation fix, skip, xfail or budget expansion was applied. Original sandbox failure evidence is retained.",
+  "source_file_count": 37,
+  "not_run": {
+    "npx tsc --noEmit": "Outside delegated ML archive verification; frontend and ai implementations are unchanged.",
+    "npx vitest run": "Outside delegated ML archive verification; frontend and ai implementations are unchanged.",
+    "npx vite build": "Outside delegated ML archive verification; would produce unneeded dist output outside evidence ownership.",
+    "backend pytest tests/test_api.py": "Outside delegated ML archive verification; test also uses a fixed shared temporary database, which this task must not modify.",
+    "npm run linc": "Optional baseline check; outside delegated ML archive verification."
+  },
+  "limitations": [
+    "Not model accuracy evaluation.",
+    "Not new training, HPO, download, real export, actual model inference or formal benchmark.",
+    "Not candidate provider-load-forward or stable200 model behavior validation.",
+    "Not backend/frontend Live integration, camera/device UAT or deployment approval."
+  ],
+  "artifacts": {
+    "ml-test-side-effect-review.json": {
+      "bytes": 4952,
+      "sha256": "c6cd0bb7dcf9b16e85b1a1fb5800f854b02254a34e85b1a164b87b596c09ee08"
+    },
+    "ml-tests-command.json": {
+      "bytes": 939,
+      "sha256": "f8106a9c5498f2fdf4def5a3f9c84b09ab6ffa0160f14a1a40cbac7d9692ed40"
+    },
+    "ml-tests-controlled-command.json": {
+      "bytes": 1125,
+      "sha256": "53cc957542ab4da0265eefc1331f0e1f50f64688a17aa5dbdbb9645e62da2e33"
+    },
+    "ml-tests-controlled.txt": {
+      "bytes": 421,
+      "sha256": "e19f88fc986db94062b2297fd39914721f2ccc3e93ad41a872d034a86c1191a1"
+    },
+    "ml-tests.txt": {
+      "bytes": 46759,
+      "sha256": "7e854ab52d82f5716c5096778f634d376aaab9ac37d6017ca815cdabace56f53"
+    }
+  }
+}

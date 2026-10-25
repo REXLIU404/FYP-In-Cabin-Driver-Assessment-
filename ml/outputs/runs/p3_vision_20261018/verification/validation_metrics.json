@@ -1,0 +1,191 @@
+{
+  "scope": "S3 validation-only five-model comparison, compare within modalities; no held-out test or E1 results",
+  "models": [
+    {
+      "modality": "vision",
+      "model": "mobilenet_v3_large",
+      "selected_trial_id": "search_006",
+      "config": {
+        "learning_rate": 0.0008,
+        "weight_decay": 0.001
+      },
+      "frozen_seed": 42,
+      "checkpoint": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_006/attempt_01/checkpoint.pt",
+      "checkpoint_bytes": 17052801,
+      "checkpoint_sha256": "bc96e7a230de6391820b1e04e7480087841680ae6cc1b6e73cba42b25eb67295",
+      "validation_accuracy": 0.9229428172942817,
+      "validation_macro_f1": 0.9162198680081481,
+      "validation_log_loss": 0.30603909492492676,
+      "validation_seed_ids": [
+        42,
+        43,
+        44
+      ],
+      "validation_seed_values": [
+        0.9162198680081481,
+        0.8824860851282594,
+        0.8822824958402411
+      ],
+      "validation_seed_mean": 0.8936628163255497,
+      "validation_seed_std_ddof0": 0.01595046075840479,
+      "class_report_path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_006/attempt_01/class_report.json",
+      "synthetic": false,
+      "selection_split": "val",
+      "test_predictions": 0,
+      "independent_retraining_numerical_reproducibility": "NOT_RUN_BY_AUDIT"
+    },
+    {
+      "modality": "vision",
+      "model": "resnet18",
+      "selected_trial_id": "search_004",
+      "config": {
+        "learning_rate": 0.0003,
+        "weight_decay": 0.001
+      },
+      "frozen_seed": 42,
+      "checkpoint": "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_004/attempt_01/checkpoint.pt",
+      "checkpoint_bytes": 44803787,
+      "checkpoint_sha256": "008d831c98ea5e4b6c5c821787b3dc9a1dcbc6ca47a74dd1d8f7110eb4ac7d20",
+      "validation_accuracy": 0.9421199442119944,
+      "validation_macro_f1": 0.9406150484662007,
+      "validation_log_loss": 0.18642373383045197,
+      "validation_seed_ids": [
+        42,
+        43,
+        44
+      ],
+      "validation_seed_values": [
+        0.9406150484662007,
+        0.9471390721342718,
+        0.8866385360192561
+      ],
+      "validation_seed_mean": 0.9247975522065762,
+      "validation_seed_std_ddof0": 0.02711363259190852,
+      "class_report_path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_004/attempt_01/class_report.json",
+      "synthetic": false,
+      "selection_split": "val",
+      "test_predictions": 0,
+      "independent_retraining_numerical_reproducibility": "NOT_RUN_BY_AUDIT"
+    },
+    {
+      "modality": "telemetry",
+      "model": "xgboost",
+      "selected_trial_id": "xgboost_02",
+      "config": {
+        "max_depth": 3,
+        "learning_rate": 0.03,
+        "subsample": 1.0
+      },
+      "frozen_seed": 42,
+      "checkpoint": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_02/checkpoint.joblib",
+      "checkpoint_bytes": 1194354,
+      "checkpoint_sha256": "a464481d25ecb13f7db8392e039ac74855ad22fd80078154c7a4375a81097836",
+      "validation_accuracy": 0.9988888888888889,
+      "validation_macro_f1": 0.9988888883953083,
+      "validation_log_loss": 0.0049257162027060986,
+      "validation_seed_ids": [
+        42,
+        43,
+        44
+      ],
+      "validation_seed_mean": 0.9988888883953083,
+      "validation_seed_std_ddof0": 0.0,
+      "class_report_path": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_02/class_report.json",
+      "synthetic": true,
+      "deterministic_duplicate": false,
+      "selection_split": "val",
+      "test_predictions": 0,
+      "audit_reused": "Historical independent 4987 checks; current 250 artifact records rehashed without refit or model reload"
+    },
+    {
+      "modality": "telemetry",
+      "model": "random_forest",
+      "selected_trial_id": "random_forest_06",
+      "config": {
+        "n_estimators": 400,
+        "max_depth": 24
+      },
+      "frozen_seed": 42,
+      "checkpoint": "ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_06/checkpoint.joblib",
+      "checkpoint_bytes": 6578922,
+      "checkpoint_sha256": "cca6d8c7a7832b53c7cc0e6d1777e1c9e37b721612bb58e29df26be875c65aba",
+      "validation_accuracy": 0.9988888888888889,
+      "validation_macro_f1": 0.9988888883948145,
+      "validation_log_loss": 0.008043999630180704,
+      "validation_seed_ids": [
+        42,
+        43,
+        44
+      ],
+      "validation_seed_mean": 0.9988888883948145,
+      "validation_seed_std_ddof0": 0.0,
+      "class_report_path": "ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_06/class_report.json",
+      "synthetic": true,
+      "deterministic_duplicate": false,
+      "selection_split": "val",
+      "test_predictions": 0,
+      "audit_reused": "Historical independent 4987 checks; current 250 artifact records rehashed without refit or model reload"
+    },
+    {
+      "modality": "telemetry",
+      "model": "logistic_regression",
+      "selected_trial_id": "logistic_regression_06",
+      "config": {
+        "C": 1000
+      },
+      "frozen_seed": 42,
+      "checkpoint": "ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_06/checkpoint.joblib",
+      "checkpoint_bytes": 2449,
+      "checkpoint_sha256": "558ac2cbda976822b370f257def52fa1a2dca9bb4cfe0b5e64f29623061c0274",
+      "validation_accuracy": 0.9968888888888889,
+      "validation_macro_f1": 0.9968885811194106,
+      "validation_log_loss": 0.008746305335608752,
+      "validation_seed_ids": [
+        42,
+        43
+      ],
+      "validation_seed_mean": 0.9968885811194106,
+      "validation_seed_std_ddof0": 0.0,
+      "class_report_path": "ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_06/class_report.json",
+      "synthetic": true,
+      "deterministic_duplicate": true,
+      "selection_split": "val",
+      "test_predictions": 0,
+      "audit_reused": "Historical independent 4987 checks; current 250 artifact records rehashed without refit or model reload"
+    }
+  ],
+  "stored_baselines": [
+    {
+      "modality": "vision",
+      "model": "mobilenet_v3_large (ImageNet-pretrained, fine-tuned)",
+      "evidence": "STORED_NOT_RERUN",
+      "validation_accuracy": 0.897489539748954,
+      "validation_macro_f1": 0.8906507716026614,
+      "source": "ml/outputs/vision/metrics.json"
+    },
+    {
+      "modality": "telemetry",
+      "model": "XGBoost multi:softprob",
+      "evidence": "STORED_NOT_RERUN",
+      "validation_accuracy": 0.9984444444444445,
+      "validation_macro_f1": 0.9984444432338747,
+      "source": "ml/outputs/telemetry/metrics.json"
+    }
+  ],
+  "vision_status": "COMPLETED",
+  "budget_excluded_trials": [],
+  "vision_wall_seconds": 15288.353217291064,
+  "vision_budget_seconds": 32400,
+  "vision_trials_executed": 16,
+  "telemetry_fits_reused": 25,
+  "all_five_actual_fits": 41,
+  "lr_duplicate_is_not_independent_evidence": true,
+  "claims_not_supported": [
+    "statistical significance",
+    "real-world generalization",
+    "safety or accident reduction",
+    "deployment readiness",
+    "completed E1"
+  ],
+  "next_phase": "P3 E1 generator/QC preparation remains incomplete; P4 test/E1 and P5 packaging require explicit approval"
+}
