@@ -32,6 +32,37 @@ const legacyAvailable = {
 };
 const legacyUnavailable = toLegacyRow(makeRecord("missing", "missing", 2));
 
+describe("infer() hands the Server-Timing header to the caller (deferred final minor)", () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  const answer = (headers: Record<string, string>) =>
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        async () =>
+          new Response(JSON.stringify(makeRecord("fresh", "fresh", 1)), {
+            status: 201,
+            headers: { "Content-Type": "application/json", ...headers },
+          }),
+      ),
+    );
+  const payload = {} as Parameters<typeof api.infer>[1];
+
+  it("the header value, verbatim", async () => {
+    answer({ "Server-Timing": "infer;dur=8.2, total;dur=12.5" });
+    const seen = vi.fn();
+    await api.infer("s1", payload, new AbortController().signal, 1, seen);
+    expect(seen).toHaveBeenCalledWith("infer;dur=8.2, total;dur=12.5");
+  });
+
+  it("null when the answer has none", async () => {
+    answer({});
+    const seen = vi.fn();
+    await api.infer("s1", payload, new AbortController().signal, 1, seen);
+    expect(seen).toHaveBeenCalledWith(null);
+  });
+});
+
 // api/client.ts is the second untrusted boundary (the first is localStorage):
 // it used to hand `response.json()` to the UI behind an unchecked `as T`.
 describe("api client normalises RiskUpdate payloads at the network boundary", () => {

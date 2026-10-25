@@ -327,7 +327,9 @@ class TestStLiveE2E01:
         assert stats["Latency"] == f"{wanted['latency_ms']} ms"
         assert stats["Flag"] == "None"
         bars = page.evaluate(r"""() => [...document.querySelectorAll('.bar-row')].map((r) => [r.querySelector('span').textContent.trim(), r.querySelector('strong').textContent.trim()])""")
-        assert bars == [[c["label"], fixed(c["probability"], 2)] for c in wanted["visual_top_classes"]]
+        # Highest probability first (UI review 10-23); a stable sort, as Array.prototype.sort is.
+        by_probability = sorted(wanted["visual_top_classes"], key=lambda c: -c["probability"])
+        assert bars == [[c["label"], fixed(c["probability"], 2)] for c in by_probability]
         shoot(page, "02-signal-inspector")
 
         # Risk Trends: one row per window, newest first.

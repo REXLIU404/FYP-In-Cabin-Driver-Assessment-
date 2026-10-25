@@ -1,0 +1,32 @@
+{
+  "command": [
+    "npm",
+    "run",
+    "build"
+  ],
+  "cwd": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1",
+  "start_utc": "2026-10-10T09:01:54.157941+00:00",
+  "duration_s": 3.887,
+  "exit_code": 0,
+  "scratch": "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-oct10-build-wb7h4qlo",
+  "scope": "Existing source, no training or application edits; temporary DB for pytest."
+}
+
+
+> fyp-in-cabin-driver-assessment@0.1.0 build
+> tsc -b && vite build
+
+vite v6.4.2 building for production...
+transforming...
+✓ 2225 modules transformed.
+rendering chunks...
+computing gzip size...
+../dist/index.html                   0.82 kB │ gzip:   0.52 kB
+../dist/assets/index-1IRhKFX5.css   15.21 kB │ gzip:   3.85 kB
+../dist/assets/index-DjqNPtrr.js   610.82 kB │ gzip: 174.67 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1.83s

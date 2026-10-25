@@ -71,7 +71,7 @@ describe("LiveMonitor: both modality cards and both freshness pills carry the ex
       "— | expired:expired (4 s) | Expired",
     );
     expect(modalityCard(html, "Telemetry Non-Safe")).toBe(
-      "30% | fresh:fresh | 0.30",
+      "30% | fresh:fresh | P = 0.30",
     );
     expect(pillsAfter(html, "Vision freshness")).toEqual([
       "expired:expired (4 s)",
@@ -82,7 +82,7 @@ describe("LiveMonitor: both modality cards and both freshness pills carry the ex
   it("telemetry expired (7.5 s), vision fresh", () => {
     const html = renderLive(expiryRecords.telemetryExpired());
     expect(modalityCard(html, "Visual Distraction")).toBe(
-      "50% | fresh:fresh | 0.50",
+      "50% | fresh:fresh | P = 0.50",
     );
     expect(modalityCard(html, "Telemetry Non-Safe")).toBe(
       "— | expired:expired (7.5 s) | Expired",
@@ -96,7 +96,7 @@ describe("LiveMonitor: both modality cards and both freshness pills carry the ex
   it("both expired: no assessment, and each branch still says why", () => {
     const html = renderLive(expiryRecords.bothExpired());
     expect(html).toContain("Assessment unavailable");
-    expect(pillsAfter(html, "SystemHealth")).toEqual([
+    expect(pillsAfter(html, "System health")).toEqual([
       "UNAVAILABLE:UNAVAILABLE",
     ]);
     expect(modalityCard(html, "Visual Distraction")).toBe(
@@ -124,7 +124,7 @@ describe("LiveMonitor: both modality cards and both freshness pills carry the ex
   it("a historical `stale` record still renders as stale, with its number", () => {
     const html = renderLive(expiryRecords.legacyStale());
     expect(modalityCard(html, "Visual Distraction")).toBe(
-      "50% | stale:stale | 0.50",
+      "50% | stale:stale | P = 0.50",
     );
     expect(pillsAfter(html, "Vision freshness")).toEqual(["stale:stale"]);
   });

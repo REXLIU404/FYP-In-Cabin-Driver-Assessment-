@@ -141,6 +141,23 @@ def _requires_models_markers():
     return found
 
 
+def test_every_model_skipif_checks_all_three_stable_model_files():
+    """Deferred minor M8: a marker that checks only one file lets a test run - and fail confusingly -
+    when another model is missing, instead of being reported as a model skip."""
+    files = ("mobilenetv3_large_vision.onnx", "mobilenetv3_large_vision.pt", "xgb_telemetry.json")
+    for path in sorted(TESTS_DIR.glob("test_*.py")):
+        source = path.read_text()
+        for node in ast.walk(ast.parse(source)):
+            if not (isinstance(node, ast.Call) and ast.unparse(node.func).endswith("mark.skipif")):
+                continue
+            segment = ast.get_source_segment(source, node) or ""
+            if "MODEL_ROOT" in segment or "ml/outputs" in segment:
+                # The files are named in the condition itself or in a module constant it reads.
+                assert all(name in source for name in files), path.name
+                condition = ast.unparse(node.args[0]) if node.args else ""
+                assert "onnx').exists()" not in condition and 'onnx").exists()' not in condition, (path.name, condition)
+
+
 def test_every_model_skipif_uses_the_reason_the_gate_recognises():
     """The gate recognises a model skip by its reason text. A marker spelled differently
     would be skipped silently and survive DRA_REQUIRE_MODELS=1."""

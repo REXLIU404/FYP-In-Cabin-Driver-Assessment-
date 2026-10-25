@@ -46,7 +46,7 @@ export function Sidebar({
           <Camera size={24} />
           <div className="brand-copy">
             <strong>Driver Risk</strong>
-            <span>MVP Dashboard</span>
+            <span>Research prototype</span>
           </div>
         </div>
         <button

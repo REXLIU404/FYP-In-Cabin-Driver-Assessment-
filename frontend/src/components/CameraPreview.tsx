@@ -43,20 +43,25 @@ export function CameraPreview({
           <strong>{statusText[status]}</strong>
         </div>
       ) : null}
+      {/* Only the action that applies: a disabled Start Camera painted over a running
+          preview, or a Stop Camera with nothing to stop, read as broken controls. */}
       <div className="camera-actions">
-        <button
-          type="button"
-          className="button button--primary"
-          onClick={onStart}
-          disabled={status === "requesting" || status === "live"}
-        >
-          <RefreshCw size={16} />
-          Start Camera
-        </button>
-        <button type="button" className="button" onClick={onStop}>
-          <Square size={16} />
-          Stop Camera
-        </button>
+        {isLive ? (
+          <button type="button" className="button" onClick={onStop}>
+            <Square size={16} />
+            Stop Camera
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="button button--primary"
+            onClick={onStart}
+            disabled={status === "requesting"}
+          >
+            <RefreshCw size={16} />
+            Start Camera
+          </button>
+        )}
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import { branchExpiry } from "../../../ai/src/availability";
 import { makeRecord, replayRecords } from "../testing/records";
 import type { RiskUpdate } from "../types";
 import {
+  alertHoldNote,
   evidenceDistribution,
   resolveBranchPill,
   resolveDominantEvidence,
@@ -168,5 +169,42 @@ describe("resolveBranchPill: an expired branch no longer looks like a missing on
     expect(
       resolveBranchPill(records[13].modality_freshness.telemetry, expiry(14)),
     ).toEqual({ label: "missing", tone: "missing" });
+  });
+});
+
+describe("alertHoldNote: an alert that differs from the level is explained, with literal text", () => {
+  it.each([
+    [
+      "Low",
+      "CAUTION",
+      "Alert held at CAUTION: it returns to NORMAL only after RiskLevel has stayed Low for 10 s.",
+    ],
+    [
+      "Low",
+      "HIGH_ALERT",
+      "Alert held at HIGH_ALERT: it returns to NORMAL only after RiskLevel has stayed Low for 10 s.",
+    ],
+    [
+      "Medium",
+      "HIGH_ALERT",
+      "Alert held at HIGH_ALERT: it returns to NORMAL only after RiskLevel has stayed Low for 10 s.",
+    ],
+    [
+      "High",
+      "CAUTION",
+      "Escalation pending: HIGH_ALERT follows only if RiskLevel stays High for 2 s.",
+    ],
+  ] as const)("%s level with %s", (level, severity, note) => {
+    expect(alertHoldNote(level, severity)).toBe(note);
+  });
+
+  it.each([
+    ["Low", "NORMAL"],
+    ["Medium", "NORMAL"],
+    ["Medium", "CAUTION"],
+    ["High", "HIGH_ALERT"],
+    [null, null],
+  ] as const)("%s with %s: nothing to explain", (level, severity) => {
+    expect(alertHoldNote(level, severity)).toBeNull();
   });
 });

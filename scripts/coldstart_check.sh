@@ -7,15 +7,19 @@
 #   scripts/coldstart_check.sh [COMMIT]          # default: HEAD of this checkout
 #
 # Steps, each timed and logged: clone + checkout -> python venv + pip install -r
-# backend/requirements.lock.txt -> npm ci -> link the models -> scripts/run_gates.py with
+# backend/requirements.lock.txt -> npm ci -> link the models -> Playwright's Chromium starts from
+# the clean venv (checked on its own, not only implicitly by the browser tests) -> scripts/run_gates.py with
 # DRA_REQUIRE_MODELS=1 (build, full pytest incl. the browser tests, vitest, tsc, eslint) -> start
 # uvicorn from the clean checkout on a free port with a throw-away database and check /api/health,
 # /api/models (hashes) and / (the built dashboard).
 #
 # Env: PYTHON (interpreter for the venv, default python3), COLDSTART_MODEL_ROOT (default
-# <this checkout>/ml/outputs), COLDSTART_OUT (default docs/evidence/<UTC date>/coldstart).
-# The scratch checkout is left under $TMPDIR for inspection; nothing in this checkout is changed
-# except the evidence directory.
+# <this checkout>/ml/outputs), COLDSTART_OUT (default docs/evidence/<UTC date>/coldstart),
+# COLDSTART_KEEP=1 (keep the scratch checkout after a PASS).
+# The scratch checkout (about 1 GB with the venv and node_modules) is under $TMPDIR. It is removed
+# after a PASS unless COLDSTART_KEEP=1, and always kept after a FAIL, for inspection. Nothing in
+# this checkout is changed except the evidence directory. Paths are passed as arguments, never
+# spliced into a command string, so a path with a quote or a space works.
 set -uo pipefail
 
 SRC="$(cd "$(dirname "$0")/.." && pwd)"
@@ -61,6 +65,18 @@ summary() {
   note "ST-COLDSTART-01: $1 (summary in $OUT/SUMMARY.md)"
 }
 
+clone_repo() {
+  git clone --quiet --no-checkout "$SRC" "$REPO" && git -C "$REPO" checkout --quiet "$COMMIT" && git -C "$REPO" log --oneline -1
+}
+npm_ci() {
+  (cd "$REPO" && npm ci --prefer-offline --no-audit --no-fund)
+}
+playwright_chromium() {  # the browser the e2e tests drive must start from the clean venv
+  "$REPO/.venv/bin/python" -c 'from playwright.sync_api import sync_playwright
+with sync_playwright() as p:
+    b = p.chromium.launch(); print("chromium", b.version); b.close()'
+}
+
 link_models() {
   local f
   for f in vision/mobilenetv3_large_vision.onnx vision/mobilenetv3_large_vision.pt telemetry/xgb_telemetry.json; do
@@ -70,13 +86,19 @@ link_models() {
     shasum -a 256 "$REPO/ml/outputs/$f"
   done
 }
+SERVE_PID=""
+stop_server() { if [ -n "$SERVE_PID" ]; then kill "$SERVE_PID" 2>/dev/null; wait "$SERVE_PID" 2>/dev/null; SERVE_PID=""; fi; }
+trap stop_server EXIT
+
 serve_check() {
-  local port db pid ok=1
+  local port db ok=1
   port="$("$REPO/.venv/bin/python" -c 'import socket; s=socket.socket(); s.bind(("127.0.0.1",0)); print(s.getsockname()[1])')"
   db="$WORK/serve.db"
-  ( cd "$WORK" && env -u DRA_MODEL_ROOT DRA_DATABASE_URL="sqlite:///$db" PYTHONDONTWRITEBYTECODE=1 \
+  # exec: the background job IS uvicorn, so $! is its PID and stop_server really stops it (without
+  # exec, $! is the subshell's PID and killing it leaves uvicorn running under macOS bash 3.2).
+  ( cd "$WORK" && exec env -u DRA_MODEL_ROOT DRA_DATABASE_URL="sqlite:///$db" PYTHONDONTWRITEBYTECODE=1 \
       "$REPO/.venv/bin/python" -m uvicorn app.main:app --app-dir "$REPO/backend" --host 127.0.0.1 --port "$port" ) >"$WORK/serve.log" 2>&1 &
-  pid=$!
+  SERVE_PID=$!
   for _ in $(seq 1 60); do curl -s -m 1 "http://127.0.0.1:$port/api/health" >/dev/null 2>&1 && break; sleep 0.5; done
   echo "health: $(curl -s -m 5 -o /dev/null -w '%{http_code}' "http://127.0.0.1:$port/api/health")"
   echo "models: $(curl -s -m 10 "http://127.0.0.1:$port/api/models")"
@@ -85,17 +107,24 @@ serve_check() {
   curl -s -m 10 "http://127.0.0.1:$port/api/models" | grep -q b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf || ok=0
   curl -s -m 10 "http://127.0.0.1:$port/api/models" | grep -q 9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07 || ok=0
   [ "$(curl -s -m 5 -o /dev/null -w '%{http_code}' "http://127.0.0.1:$port/")" = 200 ] || ok=0
-  kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null
+  stop_server
+  if ps -axo command= | grep -F -- "--app-dir $REPO/backend" | grep -v grep >/dev/null; then
+    echo "a server from this checkout is still running after stop"; ok=0
+  fi
   [ "$ok" = 1 ]
 }
 
 note "ST-COLDSTART-01 commit $COMMIT -> $REPO"
-step "clone" bash -c "git clone --quiet --no-checkout '$SRC' '$REPO' && git -C '$REPO' checkout --quiet '$COMMIT' && git -C '$REPO' log --oneline -1"
+step "clone" clone_repo
 step "python venv" "$PYTHON" -m venv "$REPO/.venv"
 step "pip install (requirements.lock.txt)" "$REPO/.venv/bin/python" -m pip install --disable-pip-version-check -q -r "$REPO/backend/requirements.lock.txt"
 step "pip freeze" "$REPO/.venv/bin/python" -m pip freeze
-step "npm ci" bash -c "cd '$REPO' && npm ci --prefer-offline --no-audit --no-fund"
+step "npm ci" npm_ci
 step "link models (read-only)" link_models
+step "playwright chromium starts" playwright_chromium
 step "gates (run_gates.py, DRA_REQUIRE_MODELS=1)" env DRA_REQUIRE_MODELS=1 PYTHONDONTWRITEBYTECODE=1 "$REPO/.venv/bin/python" "$REPO/scripts/run_gates.py" --out "$OUT/gates"
 step "serve from the clean checkout" serve_check
 summary PASS
+if [ "${COLDSTART_KEEP:-0}" != 1 ]; then
+  rm -rf "$WORK" && note "scratch checkout removed (COLDSTART_KEEP=1 keeps it)"
+fi

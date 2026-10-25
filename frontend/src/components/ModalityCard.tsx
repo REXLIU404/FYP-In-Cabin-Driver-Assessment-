@@ -21,17 +21,17 @@ export function ModalityCard({
   freshness,
   expiry,
 }: ModalityCardProps) {
+  // The percent is shown once; the exact probability (or why there is none) is the tooltip.
+  // A second "0.50" printed beside "50%" read as a different quantity.
+  const exact = formatBranchProbability(probability, freshness, expiry.expired);
   return (
     <div className="modality-card">
       <span>{title}</span>
-      <strong>
+      <strong title={freshness === "missing" ? exact : `P = ${exact}`}>
         {freshness === "missing" ? "—" : formatPercent(probability)}
       </strong>
       <div>
         <BranchStatusPill status={freshness} expiry={expiry} />
-        <small>
-          {formatBranchProbability(probability, freshness, expiry.expired)}
-        </small>
       </div>
     </div>
   );

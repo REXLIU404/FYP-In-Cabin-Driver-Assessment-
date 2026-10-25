@@ -373,8 +373,11 @@ class ApiTap:
         call.outcome = "ok"
         route.fulfill(response=response)
         if self.drop_images:
-            call.body = {k: ("<dropped>" if k == "image_base64" and v is not None else v) for k, v in call.body.items()}
-            call.raw, call.sent_raw = "", None
+            def without_image(body: dict) -> dict:
+                return {k: ("<dropped>" if k == "image_base64" and v is not None else v) for k, v in body.items()}
+            call.body, call.raw = without_image(call.body), ""
+            if call.sent_raw is not None:  # rewritten: keep what the SERVER got, minus the picture
+                call.sent_raw = json.dumps(without_image(json.loads(call.sent_raw)), separators=(",", ":"))
 
 
 class Chrome:
@@ -611,7 +614,8 @@ LATEST_PANEL_JS = r"""
       title: clean(c.querySelector(':scope > span')?.textContent),
       percent: clean(c.querySelector(':scope > strong')?.textContent),
       freshness: clean(c.querySelector('.pill')?.textContent),
-      probability: clean(c.querySelector('small')?.textContent),
+      // UI review 10-23: the exact probability moved from a second printed number to the tooltip.
+      probability: clean(c.querySelector(':scope > strong')?.getAttribute('title')),
     })),
   };
 }
@@ -631,9 +635,9 @@ def expected_latest_panel(record: dict, session_id: str, total_windows: int) -> 
     strip = {"Session": session_id, "Window": str(record["window_id"]), "Stored records": str(total_windows)}
     cards = [
         {"title": "Visual Distraction", "percent": "—" if fresh["vision"] == "missing" else percent(pd),
-         "freshness": fresh["vision"], "probability": _branch(record, "vision", fixed(pd, 2))},
+         "freshness": fresh["vision"], "probability": _branch(record, "vision", f"P = {fixed(pd, 2)}")},
         {"title": "Telemetry Non-Safe", "percent": "—" if fresh["telemetry"] == "missing" else percent(pt),
-         "freshness": fresh["telemetry"], "probability": _branch(record, "telemetry", fixed(pt, 2))},
+         "freshness": fresh["telemetry"], "probability": _branch(record, "telemetry", f"P = {fixed(pt, 2)}")},
     ]
     if not record["assessment_available"]:
         # Part 2b: a window with no assessment (AlertBanner / LiveMonitor "unavailable" state): the

@@ -35,13 +35,14 @@ app = FastAPI(
 # Local development uses a Vite proxy; explicit origins also allow direct API use.
 # ``expose_headers``: across origins a page can read only the CORS-safelisted response headers,
 # so without this the front end would never see ``X-DRA-Backend`` on a direct (non-proxied)
-# call and would take every error answer of this backend for a proxy's. Same-origin needs nothing.
+# call and would take every error answer of this backend for a proxy's. ``Server-Timing`` likewise:
+# the page's latency buffer records the server's stages from it. Same-origin needs nothing.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
     allow_methods=["*"],
     allow_headers=["*"],
-    expose_headers=[faults.BACKEND_HEADER],
+    expose_headers=[faults.BACKEND_HEADER, "Server-Timing"],
 )
 
 

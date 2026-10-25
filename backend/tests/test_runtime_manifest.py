@@ -76,6 +76,7 @@ def _package(tmp_path: Path, body: bytes = b"onnx bytes") -> tuple[Path, dict]:
     (root / "model.onnx").write_bytes(body)
     manifest = _set(example(), "model.path", "model.onnx")
     manifest["model"]["sha256"] = hashlib.sha256(body).hexdigest()
+    manifest["run_id"] = root.name
     return root, manifest
 
 
@@ -103,3 +104,46 @@ def test_a_symlink_that_leaves_the_package_is_rejected(tmp_path):
     (root / "model.onnx").unlink()
     (root / "model.onnx").symlink_to(outside)
     assert any("outside the package" in e for e in validate_package(manifest, root))
+
+
+# ---- final-review fix: the validator enforces what the handoff document promises -------------------
+def _named_package(tmp_path: Path, run_id: str = "run_001") -> tuple[Path, dict]:
+    root, manifest = _package(tmp_path)
+    manifest["run_id"] = run_id
+    return root, manifest
+
+
+def test_a_model_path_that_is_a_directory_is_an_error_not_a_crash(tmp_path):
+    root, manifest = _named_package(tmp_path)
+    (root / "weights").mkdir()
+    manifest["model"]["path"] = "weights"
+    errors = validate_package(manifest, root)
+    assert any("not a file" in e for e in errors), errors
+
+
+@pytest.mark.parametrize("provenance", [{"macro_f1": 0.87}, {"notes": {"val_accuracy": 0.9}}, {"ECE": 0.02}],
+                         ids=["macro_f1", "nested accuracy", "ECE"])
+def test_evaluation_metrics_are_rejected_inside_provenance_too(provenance):
+    manifest = example()
+    manifest["provenance"] = provenance
+    errors = validate_manifest(manifest)
+    assert any("metric" in e for e in errors), errors
+
+
+def test_the_run_id_must_be_the_package_directory_name(tmp_path):
+    root, manifest = _named_package(tmp_path, run_id="some_other_run")
+    assert any("run_id" in e for e in validate_package(manifest, root))
+    manifest["run_id"] = root.name
+    assert validate_package(manifest, root) == []
+
+
+def test_the_cli_reports_invalid_json_without_a_traceback(tmp_path):
+    import subprocess
+    import sys
+
+    bad = tmp_path / "runtime_manifest.json"
+    bad.write_text("{ not json")
+    script = Path(__file__).resolve().parents[2] / "scripts/validate_runtime_manifest.py"
+    done = subprocess.run([sys.executable, str(script), str(bad)], capture_output=True, text=True)
+    assert done.returncode == 1
+    assert "not valid JSON" in done.stdout and "Traceback" not in done.stderr, (done.stdout, done.stderr)

@@ -8,6 +8,7 @@ import { VehicleDynamics } from "../components/VehicleDynamics";
 import { TrendChart } from "../components/TrendChart";
 import type { useCameraPreview } from "../hooks/useCameraPreview";
 import type { RiskUpdate } from "../types";
+import { alertHoldNote } from "../utils/display";
 import { formatTimestamp } from "../utils/format";
 import { buildLiveMonitorModel } from "./liveMonitorModel";
 
@@ -17,6 +18,8 @@ interface LiveMonitorProps {
   sessionId: string;
   recordCount: number;
   isMonitoring: boolean;
+  /** Not running because a fault stopped it (the FaultPanel is showing), not because of Pause. */
+  stopped?: boolean;
   camera: ReturnType<typeof useCameraPreview>;
   thresholdLow: number;
   thresholdHigh: number;
@@ -29,6 +32,7 @@ export function LiveMonitor({
   sessionId,
   recordCount,
   isMonitoring,
+  stopped = false,
   camera,
   thresholdLow,
   thresholdHigh,
@@ -45,6 +49,7 @@ export function LiveMonitor({
     telemetryExpiry,
     evidenceType,
   } = buildLiveMonitorModel(latest, stale, thresholdLow);
+  const holdNote = alertHoldNote(latest.RiskLevel, latest.AlertSeverity);
 
   return (
     <div className="page-grid page-grid--live">
@@ -55,14 +60,22 @@ export function LiveMonitor({
             <h2>Camera preview and current risk output</h2>
           </div>
           <Pill
-            label={isMonitoring ? "Monitoring active" : "Monitoring paused"}
+            label={
+              isMonitoring
+                ? "Monitoring active"
+                : stopped
+                  ? "Monitoring stopped"
+                  : "Monitoring paused"
+            }
           />
         </div>
 
         <div className="session-strip">
           <div>
             <span>Session</span>
-            <strong>{sessionId}</strong>
+            <strong className="session-id" title={sessionId}>
+              {sessionId}
+            </strong>
           </div>
           <div>
             <span>Window</span>
@@ -114,13 +127,25 @@ export function LiveMonitor({
                   thresholdHigh={thresholdHigh}
                 />
                 <div className="risk-badges">
-                  <Pill label={latest.RiskLevel} tone={latest.RiskLevel} />
-                  <Pill label={evidenceType} />
-                  <Pill
-                    label={latest.AlertSeverity}
-                    tone={latest.AlertSeverity}
-                  />
+                  <span className="badge-field">
+                    <span>Risk level</span>
+                    <Pill label={latest.RiskLevel} tone={latest.RiskLevel} />
+                  </span>
+                  <span className="badge-field">
+                    <span>Evidence</span>
+                    <Pill label={evidenceType} />
+                  </span>
+                  <span className="badge-field">
+                    <span>Alert</span>
+                    <Pill
+                      label={latest.AlertSeverity}
+                      tone={latest.AlertSeverity}
+                    />
+                  </span>
                 </div>
+                {holdNote === null ? null : (
+                  <p className="alert-note">{holdNote}</p>
+                )}
               </>
             )}
             <div className="modality-grid">
@@ -164,9 +189,9 @@ export function LiveMonitor({
           </div>
           <Timer size={20} />
         </div>
-        <div className="stat-list">
+        <div className="stat-list stat-list--compact">
           <div>
-            <span>SystemHealth</span>
+            <span>System health</span>
             <Pill label={systemHealth} tone={systemHealth} />
           </div>
           <div>
@@ -188,8 +213,8 @@ export function LiveMonitor({
               expiry={telemetryExpiry}
             />
           </div>
-          <div>
-            <span>Server processing (before DB commit)</span>
+          <div title="Time the server spent on this window, measured before it was written to the database">
+            <span>Server processing time</span>
             <strong>{latest.latency_ms} ms</strong>
           </div>
         </div>

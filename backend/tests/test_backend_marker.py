@@ -128,7 +128,9 @@ def test_a_cors_preflight_is_marked_and_the_header_is_exposed_to_pages(live):
     cross_origin = live.client.get("/api/health", headers={"Origin": origin})
     assert_marked(cross_origin, 200)
     assert cross_origin.headers["access-control-allow-origin"] == origin
-    assert cross_origin.headers["access-control-expose-headers"] == "X-DRA-Backend"
+    # Server-Timing too: the page's latency buffer reads the server's stages from it.
+    exposed = {h.strip() for h in cross_origin.headers["access-control-expose-headers"].split(",")}
+    assert exposed == {"X-DRA-Backend", "Server-Timing"}
 
 
 @pytest.fixture

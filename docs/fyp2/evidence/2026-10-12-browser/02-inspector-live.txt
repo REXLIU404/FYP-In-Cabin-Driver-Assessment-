@@ -1,0 +1,1439 @@
+Browser tab: 1473715626, Title: "In-Cabin Multi-Modal Driver Monitoring & Risk Assessment", URL: "http://127.0.0.1:8008/".
+0 AXWebArea In-Cabin Multi-Modal Driver Monitoring & Risk Assessment, URL: 127.0.0.1:8008/
+	1 container root
+		2 container
+			3 image
+			4 text Driver Risk MVP Dashboard
+			5 button (expanded) Description: Collapse sidebar, Secondary Actions: Collapse
+				6 image
+			7 container Dashboard views
+				8 button Live Monitor
+					9 image
+					10 text Live Monitor
+				11 button Signal Inspector
+					12 image
+					13 text Signal Inspector
+				14 button Risk Trends
+					15 image
+					16 text Risk Trends
+				17 button Explanation
+					18 image
+					19 text Explanation
+				20 button Configuration
+					21 image
+					22 text Configuration
+		23 container
+			24 heading In-Cabin Multi-Modal Driver Monitoring & Risk Assessment, Value: 1
+				25 text In-Cabin Multi-Modal Driver Monitoring & Risk Assessment
+			26 button (disabled) Start Monitoring
+				27 image
+				28 text Start Monitoring
+			29 button Pause
+				30 image
+				31 text Pause
+			32 button New Session
+				33 image
+				34 text New Session
+			35 container
+				36 text Data mode
+				37 pop up button (disabled, collapsed, settable) Description: Data mode, Value: Live trained models, Secondary Actions: Expand
+					38 menu
+						39 (selected) Live trained models
+						40 Prepared replay demo
+			41 button Refresh saved sessions
+			42 container
+				43 text Saved live sessions
+				44 pop up button (disabled, collapsed, settable) Description: Saved live sessions, Value: Select a session…, Secondary Actions: Expand
+					45 menu
+						46 (selected) Select a session…
+			47 text Vision: camera → trained MobileNetV3 · Telemetry: prepared raw features → trained XGBoost. Frontal-camera accuracy is experimental.
+			48 text Camera:  live  · 30.0 FPS Inference: 9.9  FPS · target  10 Request round trip:  35  ms Visible history:  437  /  437  persisted · export includes all windows
+			49 button (collapsed) Loaded model versions, Secondary Actions: Expand
+				50 text Loaded model versions
+			51 image
+			52 text Current Monitoring Status
+			53 text RiskScore:  50.0 / 100  | Visual distraction: 100%  | Telemetry non-safe: 0% CAUTION FULL
+			54 text SIGNAL INSPECTOR
+			55 heading Window list, Value: 2
+				56 text Window list
+			57 image
+			58 container
+				59 button Window 437
+					60 text Window 
+					61 text 437
+				62 button Window 436
+					63 text Window 
+					64 text 436
+				65 button Window 435
+					66 text Window 
+					67 text 435
+				68 button Window 434
+					69 text Window 
+					70 text 434
+				71 button Window 433
+					72 text Window 
+					73 text 433
+				74 button Window 432
+					75 text Window 
+					76 text 432
+				77 button Window 431
+					78 text Window 
+					79 text 431
+				80 button Window 430
+					81 text Window 
+					82 text 430
+				83 button Window 429
+					84 text Window 
+					85 text 429
+				86 button Window 428
+					87 text Window 
+					88 text 428
+				89 button Window 427
+					90 text Window 
+					91 text 427
+				92 button Window 426
+					93 text Window 
+					94 text 426
+				95 button Window 425
+					96 text Window 
+					97 text 425
+				98 button Window 424
+					99 text Window 
+					100 text 424
+				101 button Window 423
+					102 text Window 
+					103 text 423
+				104 button Window 422
+					105 text Window 
+					106 text 422
+				107 button Window 421
+					108 text Window 
+					109 text 421
+				110 button Window 420
+					111 text Window 
+					112 text 420
+				113 button Window 419
+					114 text Window 
+					115 text 419
+				116 button Window 418
+					117 text Window 
+					118 text 418
+				119 button Window 417
+					120 text Window 
+					121 text 417
+				122 button Window 416
+					123 text Window 
+					124 text 416
+				125 button Window 415
+					126 text Window 
+					127 text 415
+				128 button Window 414
+					129 text Window 
+					130 text 414
+				131 button Window 413
+					132 text Window 
+					133 text 413
+				134 button Window 412
+					135 text Window 
+					136 text 412
+				137 button Window 411
+					138 text Window 
+					139 text 411
+				140 button Window 410
+					141 text Window 
+					142 text 410
+				143 button Window 409
+					144 text Window 
+					145 text 409
+				146 button Window 408
+					147 text Window 
+					148 text 408
+				149 button Window 407
+					150 text Window 
+					151 text 407
+				152 button Window 406
+					153 text Window 
+					154 text 406
+				155 button Window 405
+					156 text Window 
+					157 text 405
+				158 button Window 404
+					159 text Window 
+					160 text 404
+				161 button Window 403
+					162 text Window 
+					163 text 403
+				164 button Window 402
+					165 text Window 
+					166 text 402
+				167 button Window 401
+					168 text Window 
+					169 text 401
+				170 button Window 400
+					171 text Window 
+					172 text 400
+				173 button Window 399
+					174 text Window 
+					175 text 399
+				176 button Window 398
+					177 text Window 
+					178 text 398
+				179 button Window 397
+					180 text Window 
+					181 text 397
+				182 button Window 396
+					183 text Window 
+					184 text 396
+				185 button Window 395
+					186 text Window 
+					187 text 395
+				188 button Window 394
+					189 text Window 
+					190 text 394
+				191 button Window 393
+					192 text Window 
+					193 text 393
+				194 button Window 392
+					195 text Window 
+					196 text 392
+				197 button Window 391
+					198 text Window 
+					199 text 391
+				200 button Window 390
+					201 text Window 
+					202 text 390
+				203 button Window 389
+					204 text Window 
+					205 text 389
+				206 button Window 388
+					207 text Window 
+					208 text 388
+				209 button Window 387
+					210 text Window 
+					211 text 387
+				212 button Window 386
+					213 text Window 
+					214 text 386
+				215 button Window 385
+					216 text Window 
+					217 text 385
+				218 button Window 384
+					219 text Window 
+					220 text 384
+				221 button Window 383
+					222 text Window 
+					223 text 383
+				224 button Window 382
+					225 text Window 
+					226 text 382
+				227 button Window 381
+					228 text Window 
+					229 text 381
+				230 button Window 380
+					231 text Window 
+					232 text 380
+				233 button Window 379
+					234 text Window 
+					235 text 379
+				236 button Window 378
+					237 text Window 
+					238 text 378
+				239 button Window 377
+					240 text Window 
+					241 text 377
+				242 button Window 376
+					243 text Window 
+					244 text 376
+				245 button Window 375
+					246 text Window 
+					247 text 375
+				248 button Window 374
+					249 text Window 
+					250 text 374
+				251 button Window 373
+					252 text Window 
+					253 text 373
+				254 button Window 372
+					255 text Window 
+					256 text 372
+				257 button Window 371
+					258 text Window 
+					259 text 371
+				260 button Window 370
+					261 text Window 
+					262 text 370
+				263 button Window 369
+					264 text Window 
+					265 text 369
+				266 button Window 368
+					267 text Window 
+					268 text 368
+				269 button Window 367
+					270 text Window 
+					271 text 367
+				272 button Window 366
+					273 text Window 
+					274 text 366
+				275 button Window 365
+					276 text Window 
+					277 text 365
+				278 button Window 364
+					279 text Window 
+					280 text 364
+				281 button Window 363
+					282 text Window 
+					283 text 363
+				284 button Window 362
+					285 text Window 
+					286 text 362
+				287 button Window 361
+					288 text Window 
+					289 text 361
+				290 button Window 360
+					291 text Window 
+					292 text 360
+				293 button Window 359
+					294 text Window 
+					295 text 359
+				296 button Window 358
+					297 text Window 
+					298 text 358
+				299 button Window 357
+					300 text Window 
+					301 text 357
+				302 button Window 356
+					303 text Window 
+					304 text 356
+				305 button Window 355
+					306 text Window 
+					307 text 355
+				308 button Window 354
+					309 text Window 
+					310 text 354
+				311 button Window 353
+					312 text Window 
+					313 text 353
+				314 button Window 352
+					315 text Window 
+					316 text 352
+				317 button Window 351
+					318 text Window 
+					319 text 351
+				320 button Window 350
+					321 text Window 
+					322 text 350
+				323 button Window 349
+					324 text Window 
+					325 text 349
+				326 button Window 348
+					327 text Window 
+					328 text 348
+				329 button Window 347
+					330 text Window 
+					331 text 347
+				332 button Window 346
+					333 text Window 
+					334 text 346
+				335 button Window 345
+					336 text Window 
+					337 text 345
+				338 button Window 344
+					339 text Window 
+					340 text 344
+				341 button Window 343
+					342 text Window 
+					343 text 343
+				344 button Window 342
+					345 text Window 
+					346 text 342
+				347 button Window 341
+					348 text Window 
+					349 text 341
+				350 button Window 340
+					351 text Window 
+					352 text 340
+				353 button Window 339
+					354 text Window 
+					355 text 339
+				356 button Window 338
+					357 text Window 
+					358 text 338
+				359 button Window 337
+					360 text Window 
+					361 text 337
+				362 button Window 336
+					363 text Window 
+					364 text 336
+				365 button Window 335
+					366 text Window 
+					367 text 335
+				368 button Window 334
+					369 text Window 
+					370 text 334
+				371 button Window 333
+					372 text Window 
+					373 text 333
+				374 button Window 332
+					375 text Window 
+					376 text 332
+				377 button Window 331
+					378 text Window 
+					379 text 331
+				380 button Window 330
+					381 text Window 
+					382 text 330
+				383 button Window 329
+					384 text Window 
+					385 text 329
+				386 button Window 328
+					387 text Window 
+					388 text 328
+				389 button Window 327
+					390 text Window 
+					391 text 327
+				392 button Window 326
+					393 text Window 
+					394 text 326
+				395 button Window 325
+					396 text Window 
+					397 text 325
+				398 button Window 324
+					399 text Window 
+					400 text 324
+				401 button Window 323
+					402 text Window 
+					403 text 323
+				404 button Window 322
+					405 text Window 
+					406 text 322
+				407 button Window 321
+					408 text Window 
+					409 text 321
+				410 button Window 320
+					411 text Window 
+					412 text 320
+				413 button Window 319
+					414 text Window 
+					415 text 319
+				416 button Window 318
+					417 text Window 
+					418 text 318
+				419 button Window 317
+					420 text Window 
+					421 text 317
+				422 button Window 316
+					423 text Window 
+					424 text 316
+				425 button Window 315
+					426 text Window 
+					427 text 315
+				428 button Window 314
+					429 text Window 
+					430 text 314
+				431 button Window 313
+					432 text Window 
+					433 text 313
+				434 button Window 312
+					435 text Window 
+					436 text 312
+				437 button Window 311
+					438 text Window 
+					439 text 311
+				440 button Window 310
+					441 text Window 
+					442 text 310
+				443 button Window 309
+					444 text Window 
+					445 text 309
+				446 button Window 308
+					447 text Window 
+					448 text 308
+				449 button Window 307
+					450 text Window 
+					451 text 307
+				452 button Window 306
+					453 text Window 
+					454 text 306
+				455 button Window 305
+					456 text Window 
+					457 text 305
+				458 button Window 304
+					459 text Window 
+					460 text 304
+				461 button Window 303
+					462 text Window 
+					463 text 303
+				464 button Window 302
+					465 text Window 
+					466 text 302
+				467 button Window 301
+					468 text Window 
+					469 text 301
+				470 button Window 300
+					471 text Window 
+					472 text 300
+				473 button Window 299
+					474 text Window 
+					475 text 299
+				476 button Window 298
+					477 text Window 
+					478 text 298
+				479 button Window 297
+					480 text Window 
+					481 text 297
+				482 button Window 296
+					483 text Window 
+					484 text 296
+				485 button Window 295
+					486 text Window 
+					487 text 295
+				488 button Window 294
+					489 text Window 
+					490 text 294
+				491 button Window 293
+					492 text Window 
+					493 text 293
+				494 button Window 292
+					495 text Window 
+					496 text 292
+				497 button Window 291
+					498 text Window 
+					499 text 291
+				500 button Window 290
+					501 text Window 
+					502 text 290
+				503 button Window 289
+					504 text Window 
+					505 text 289
+				506 button Window 288
+					507 text Window 
+					508 text 288
+				509 button Window 287
+					510 text Window 
+					511 text 287
+				512 button Window 286
+					513 text Window 
+					514 text 286
+				515 button Window 285
+					516 text Window 
+					517 text 285
+				518 button Window 284
+					519 text Window 
+					520 text 284
+				521 button Window 283
+					522 text Window 
+					523 text 283
+				524 button Window 282
+					525 text Window 
+					526 text 282
+				527 button Window 281
+					528 text Window 
+					529 text 281
+				530 button Window 280
+					531 text Window 
+					532 text 280
+				533 button Window 279
+					534 text Window 
+					535 text 279
+				536 button Window 278
+					537 text Window 
+					538 text 278
+				539 button Window 277
+					540 text Window 
+					541 text 277
+				542 button Window 276
+					543 text Window 
+					544 text 276
+				545 button Window 275
+					546 text Window 
+					547 text 275
+				548 button Window 274
+					549 text Window 
+					550 text 274
+				551 button Window 273
+					552 text Window 
+					553 text 273
+				554 button Window 272
+					555 text Window 
+					556 text 272
+				557 button Window 271
+					558 text Window 
+					559 text 271
+				560 button Window 270
+					561 text Window 
+					562 text 270
+				563 button Window 269
+					564 text Window 
+					565 text 269
+				566 button Window 268
+					567 text Window 
+					568 text 268
+				569 button Window 267
+					570 text Window 
+					571 text 267
+				572 button Window 266
+					573 text Window 
+					574 text 266
+				575 button Window 265
+					576 text Window 
+					577 text 265
+				578 button Window 264
+					579 text Window 
+					580 text 264
+				581 button Window 263
+					582 text Window 
+					583 text 263
+				584 button Window 262
+					585 text Window 
+					586 text 262
+				587 button Window 261
+					588 text Window 
+					589 text 261
+				590 button Window 260
+					591 text Window 
+					592 text 260
+				593 button Window 259
+					594 text Window 
+					595 text 259
+				596 button Window 258
+					597 text Window 
+					598 text 258
+				599 button Window 257
+					600 text Window 
+					601 text 257
+				602 button Window 256
+					603 text Window 
+					604 text 256
+				605 button Window 255
+					606 text Window 
+					607 text 255
+				608 button Window 254
+					609 text Window 
+					610 text 254
+				611 button Window 253
+					612 text Window 
+					613 text 253
+				614 button Window 252
+					615 text Window 
+					616 text 252
+				617 button Window 251
+					618 text Window 
+					619 text 251
+				620 button Window 250
+					621 text Window 
+					622 text 250
+				623 button Window 249
+					624 text Window 
+					625 text 249
+				626 button Window 248
+					627 text Window 
+					628 text 248
+				629 button Window 247
+					630 text Window 
+					631 text 247
+				632 button Window 246
+					633 text Window 
+					634 text 246
+				635 button Window 245
+					636 text Window 
+					637 text 245
+				638 button Window 244
+					639 text Window 
+					640 text 244
+				641 button Window 243
+					642 text Window 
+					643 text 243
+				644 button Window 242
+					645 text Window 
+					646 text 242
+				647 button Window 241
+					648 text Window 
+					649 text 241
+				650 button Window 240
+					651 text Window 
+					652 text 240
+				653 button Window 239
+					654 text Window 
+					655 text 239
+				656 button Window 238
+					657 text Window 
+					658 text 238
+				659 button Window 237
+					660 text Window 
+					661 text 237
+				662 button Window 236
+					663 text Window 
+					664 text 236
+				665 button Window 235
+					666 text Window 
+					667 text 235
+				668 button Window 234
+					669 text Window 
+					670 text 234
+				671 button Window 233
+					672 text Window 
+					673 text 233
+				674 button Window 232
+					675 text Window 
+					676 text 232
+				677 button Window 231
+					678 text Window 
+					679 text 231
+				680 button Window 230
+					681 text Window 
+					682 text 230
+				683 button Window 229
+					684 text Window 
+					685 text 229
+				686 button Window 228
+					687 text Window 
+					688 text 228
+				689 button Window 227
+					690 text Window 
+					691 text 227
+				692 button Window 226
+					693 text Window 
+					694 text 226
+				695 button Window 225
+					696 text Window 
+					697 text 225
+				698 button Window 224
+					699 text Window 
+					700 text 224
+				701 button Window 223
+					702 text Window 
+					703 text 223
+				704 button Window 222
+					705 text Window 
+					706 text 222
+				707 button Window 221
+					708 text Window 
+					709 text 221
+				710 button Window 220
+					711 text Window 
+					712 text 220
+				713 button Window 219
+					714 text Window 
+					715 text 219
+				716 button Window 218
+					717 text Window 
+					718 text 218
+				719 button Window 217
+					720 text Window 
+					721 text 217
+				722 button Window 216
+					723 text Window 
+					724 text 216
+				725 button Window 215
+					726 text Window 
+					727 text 215
+				728 button Window 214
+					729 text Window 
+					730 text 214
+				731 button Window 213
+					732 text Window 
+					733 text 213
+				734 button Window 212
+					735 text Window 
+					736 text 212
+				737 button Window 211
+					738 text Window 
+					739 text 211
+				740 button Window 210
+					741 text Window 
+					742 text 210
+				743 button Window 209
+					744 text Window 
+					745 text 209
+				746 button Window 208
+					747 text Window 
+					748 text 208
+				749 button Window 207
+					750 text Window 
+					751 text 207
+				752 button Window 206
+					753 text Window 
+					754 text 206
+				755 button Window 205
+					756 text Window 
+					757 text 205
+				758 button Window 204
+					759 text Window 
+					760 text 204
+				761 button Window 203
+					762 text Window 
+					763 text 203
+				764 button Window 202
+					765 text Window 
+					766 text 202
+				767 button Window 201
+					768 text Window 
+					769 text 201
+				770 button Window 200
+					771 text Window 
+					772 text 200
+				773 button Window 199
+					774 text Window 
+					775 text 199
+				776 button Window 198
+					777 text Window 
+					778 text 198
+				779 button Window 197
+					780 text Window 
+					781 text 197
+				782 button Window 196
+					783 text Window 
+					784 text 196
+				785 button Window 195
+					786 text Window 
+					787 text 195
+				788 button Window 194
+					789 text Window 
+					790 text 194
+				791 button Window 193
+					792 text Window 
+					793 text 193
+				794 button Window 192
+					795 text Window 
+					796 text 192
+				797 button Window 191
+					798 text Window 
+					799 text 191
+				800 button Window 190
+					801 text Window 
+					802 text 190
+				803 button Window 189
+					804 text Window 
+					805 text 189
+				806 button Window 188
+					807 text Window 
+					808 text 188
+				809 button Window 187
+					810 text Window 
+					811 text 187
+				812 button Window 186
+					813 text Window 
+					814 text 186
+				815 button Window 185
+					816 text Window 
+					817 text 185
+				818 button Window 184
+					819 text Window 
+					820 text 184
+				821 button Window 183
+					822 text Window 
+					823 text 183
+				824 button Window 182
+					825 text Window 
+					826 text 182
+				827 button Window 181
+					828 text Window 
+					829 text 181
+				830 button Window 180
+					831 text Window 
+					832 text 180
+				833 button Window 179
+					834 text Window 
+					835 text 179
+				836 button Window 178
+					837 text Window 
+					838 text 178
+				839 button Window 177
+					840 text Window 
+					841 text 177
+				842 button Window 176
+					843 text Window 
+					844 text 176
+				845 button Window 175
+					846 text Window 
+					847 text 175
+				848 button Window 174
+					849 text Window 
+					850 text 174
+				851 button Window 173
+					852 text Window 
+					853 text 173
+				854 button Window 172
+					855 text Window 
+					856 text 172
+				857 button Window 171
+					858 text Window 
+					859 text 171
+				860 button Window 170
+					861 text Window 
+					862 text 170
+				863 button Window 169
+					864 text Window 
+					865 text 169
+				866 button Window 168
+					867 text Window 
+					868 text 168
+				869 button Window 167
+					870 text Window 
+					871 text 167
+				872 button Window 166
+					873 text Window 
+					874 text 166
+				875 button Window 165
+					876 text Window 
+					877 text 165
+				878 button Window 164
+					879 text Window 
+					880 text 164
+				881 button Window 163
+					882 text Window 
+					883 text 163
+				884 button Window 162
+					885 text Window 
+					886 text 162
+				887 button Window 161
+					888 text Window 
+					889 text 161
+				890 button Window 160
+					891 text Window 
+					892 text 160
+				893 button Window 159
+					894 text Window 
+					895 text 159
+				896 button Window 158
+					897 text Window 
+					898 text 158
+				899 button Window 157
+					900 text Window 
+					901 text 157
+				902 button Window 156
+					903 text Window 
+					904 text 156
+				905 button Window 155
+					906 text Window 
+					907 text 155
+				908 button Window 154
+					909 text Window 
+					910 text 154
+				911 button Window 153
+					912 text Window 
+					913 text 153
+				914 button Window 152
+					915 text Window 
+					916 text 152
+				917 button Window 151
+					918 text Window 
+					919 text 151
+				920 button Window 150
+					921 text Window 
+					922 text 150
+				923 button Window 149
+					924 text Window 
+					925 text 149
+				926 button Window 148
+					927 text Window 
+					928 text 148
+				929 button Window 147
+					930 text Window 
+					931 text 147
+				932 button Window 146
+					933 text Window 
+					934 text 146
+				935 button Window 145
+					936 text Window 
+					937 text 145
+				938 button Window 144
+					939 text Window 
+					940 text 144
+				941 button Window 143
+					942 text Window 
+					943 text 143
+				944 button Window 142
+					945 text Window 
+					946 text 142
+				947 button Window 141
+					948 text Window 
+					949 text 141
+				950 button Window 140
+					951 text Window 
+					952 text 140
+				953 button Window 139
+					954 text Window 
+					955 text 139
+				956 button Window 138
+					957 text Window 
+					958 text 138
+				959 button Window 137
+					960 text Window 
+					961 text 137
+				962 button Window 136
+					963 text Window 
+					964 text 136
+				965 button Window 135
+					966 text Window 
+					967 text 135
+				968 button Window 134
+					969 text Window 
+					970 text 134
+				971 button Window 133
+					972 text Window 
+					973 text 133
+				974 button Window 132
+					975 text Window 
+					976 text 132
+				977 button Window 131
+					978 text Window 
+					979 text 131
+				980 button Window 130
+					981 text Window 
+					982 text 130
+				983 button Window 129
+					984 text Window 
+					985 text 129
+				986 button Window 128
+					987 text Window 
+					988 text 128
+				989 button Window 127
+					990 text Window 
+					991 text 127
+				992 button Window 126
+					993 text Window 
+					994 text 126
+				995 button Window 125
+					996 text Window 
+					997 text 125
+				998 button Window 124
+					999 text Window 
+					1000 text 124
+				1001 button Window 123
+					1002 text Window 
+					1003 text 123
+				1004 button Window 122
+					1005 text Window 
+					1006 text 122
+				1007 button Window 121
+					1008 text Window 
+					1009 text 121
+				1010 button Window 120
+					1011 text Window 
+					1012 text 120
+				1013 button Window 119
+					1014 text Window 
+					1015 text 119
+				1016 button Window 118
+					1017 text Window 
+					1018 text 118
+				1019 button Window 117
+					1020 text Window 
+					1021 text 117
+				1022 button Window 116
+					1023 text Window 
+					1024 text 116
+				1025 button Window 115
+					1026 text Window 
+					1027 text 115
+				1028 button Window 114
+					1029 text Window 
+					1030 text 114
+				1031 button Window 113
+					1032 text Window 
+					1033 text 113
+				1034 button Window 112
+					1035 text Window 
+					1036 text 112
+				1037 button Window 111
+					1038 text Window 
+					1039 text 111
+				1040 button Window 110
+					1041 text Window 
+					1042 text 110
+				1043 button Window 109
+					1044 text Window 
+					1045 text 109
+				1046 button Window 108
+					1047 text Window 
+					1048 text 108
+				1049 button Window 107
+					1050 text Window 
+					1051 text 107
+				1052 button Window 106
+					1053 text Window 
+					1054 text 106
+				1055 button Window 105
+					1056 text Window 
+					1057 text 105
+				1058 button Window 104
+					1059 text Window 
+					1060 text 104
+				1061 button Window 103
+					1062 text Window 
+					1063 text 103
+				1064 button Window 102
+					1065 text Window 
+					1066 text 102
+				1067 button Window 101
+					1068 text Window 
+					1069 text 101
+				1070 button Window 100
+					1071 text Window 
+					1072 text 100
+				1073 button Window 99
+					1074 text Window 
+					1075 text 99
+				1076 button Window 98
+					1077 text Window 
+					1078 text 98
+				1079 button Window 97
+					1080 text Window 
+					1081 text 97
+				1082 button Window 96
+					1083 text Window 
+					1084 text 96
+				1085 button Window 95
+					1086 text Window 
+					1087 text 95
+				1088 button Window 94
+					1089 text Window 
+					1090 text 94
+				1091 button Window 93
+					1092 text Window 
+					1093 text 93
+				1094 button Window 92
+					1095 text Window 
+					1096 text 92
+				1097 button Window 91
+					1098 text Window 
+					1099 text 91
+				1100 button Window 90
+					1101 text Window 
+					1102 text 90
+				1103 button Window 89
+					1104 text Window 
+					1105 text 89
+				1106 button Window 88
+					1107 text Window 
+					1108 text 88
+				1109 button Window 87
+					1110 text Window 
+					1111 text 87
+				1112 button Window 86
+					1113 text Window 
+					1114 text 86
+				1115 button Window 85
+					1116 text Window 
+					1117 text 85
+				1118 button Window 84
+					1119 text Window 
+					1120 text 84
+				1121 button Window 83
+					1122 text Window 
+					1123 text 83
+				1124 button Window 82
+					1125 text Window 
+					1126 text 82
+				1127 button Window 81
+					1128 text Window 
+					1129 text 81
+				1130 button Window 80
+					1131 text Window 
+					1132 text 80
+				1133 button Window 79
+					1134 text Window 
+					1135 text 79
+				1136 button Window 78
+					1137 text Window 
+					1138 text 78
+				1139 button Window 77
+					1140 text Window 
+					1141 text 77
+				1142 button Window 76
+					1143 text Window 
+					1144 text 76
+				1145 button Window 75
+					1146 text Window 
+					1147 text 75
+				1148 button Window 74
+					1149 text Window 
+					1150 text 74
+				1151 button Window 73
+					1152 text Window 
+					1153 text 73
+				1154 button Window 72
+					1155 text Window 
+					1156 text 72
+				1157 button Window 71
+					1158 text Window 
+					1159 text 71
+				1160 button Window 70
+					1161 text Window 
+					1162 text 70
+				1163 button Window 69
+					1164 text Window 
+					1165 text 69
+				1166 button Window 68
+					1167 text Window 
+					1168 text 68
+				1169 button Window 67
+					1170 text Window 
+					1171 text 67
+				1172 button Window 66
+					1173 text Window 
+					1174 text 66
+				1175 button Window 65
+					1176 text Window 
+					1177 text 65
+				1178 button Window 64
+					1179 text Window 
+					1180 text 64
+				1181 button Window 63
+					1182 text Window 
+					1183 text 63
+				1184 button Window 62
+					1185 text Window 
+					1186 text 62
+				1187 button Window 61
+					1188 text Window 
+					1189 text 61
+				1190 button Window 60
+					1191 text Window 
+					1192 text 60
+				1193 button Window 59
+					1194 text Window 
+					1195 text 59
+				1196 button Window 58
+					1197 text Window 
+					1198 text 58
+				1199 button Window 57
+					1200 text Window 
+					1201 text 57
+				1202 button Window 56
+					1203 text Window 
+					1204 text 56
+				1205 button Window 55
+					1206 text Window 
+					1207 text 55
+				1208 button Window 54
+					1209 text Window 
+					1210 text 54
+				1211 button Window 53
+					1212 text Window 
+					1213 text 53
+				1214 button Window 52
+					1215 text Window 
+					1216 text 52
+				1217 button Window 51
+					1218 text Window 
+					1219 text 51
+				1220 button Window 50
+					1221 text Window 
+					1222 text 50
+				1223 button Window 49
+					1224 text Window 
+					1225 text 49
+				1226 button Window 48
+					1227 text Window 
+					1228 text 48
+				1229 button Window 47
+					1230 text Window 
+					1231 text 47
+				1232 button Window 46
+					1233 text Window 
+					1234 text 46
+				1235 button Window 45
+					1236 text Window 
+					1237 text 45
+				1238 button Window 44
+					1239 text Window 
+					1240 text 44
+				1241 button Window 43
+					1242 text Window 
+					1243 text 43
+				1244 button Window 42
+					1245 text Window 
+					1246 text 42
+				1247 button Window 41
+					1248 text Window 
+					1249 text 41
+				1250 button Window 40
+					1251 text Window 
+					1252 text 40
+				1253 button Window 39
+					1254 text Window 
+					1255 text 39
+				1256 button Window 38
+					1257 text Window 
+					1258 text 38
+				1259 button Window 37
+					1260 text Window 
+					1261 text 37
+				1262 button Window 36
+					1263 text Window 
+					1264 text 36
+				1265 button Window 35
+					1266 text Window 
+					1267 text 35
+				1268 button Window 34
+					1269 text Window 
+					1270 text 34
+				1271 button Window 33
+					1272 text Window 
+					1273 text 33
+				1274 button Window 32
+					1275 text Window 
+					1276 text 32
+				1277 button Window 31
+					1278 text Window 
+					1279 text 31
+				1280 button Window 30
+					1281 text Window 
+					1282 text 30
+				1283 button Window 29
+					1284 text Window 
+					1285 text 29
+				1286 button Window 28
+					1287 text Window 
+					1288 text 28
+				1289 button Window 27
+					1290 text Window 
+					1291 text 27
+				1292 button Window 26
+					1293 text Window 
+					1294 text 26
+				1295 button Window 25
+					1296 text Window 
+					1297 text 25
+				1298 button Window 24
+					1299 text Window 
+					1300 text 24
+				1301 button Window 23
+					1302 text Window 
+					1303 text 23
+				1304 button Window 22
+					1305 text Window 
+					1306 text 22
+				1307 button Window 21
+					1308 text Window 
+					1309 text 21
+				1310 button Window 20
+					1311 text Window 
+					1312 text 20
+				1313 button Window 19
+					1314 text Window 
+					1315 text 19
+				1316 button Window 18
+					1317 text Window 
+					1318 text 18
+				1319 button Window 17
+					1320 text Window 
+					1321 text 17
+				1322 button Window 16
+					1323 text Window 
+					1324 text 16
+				1325 button Window 15
+					1326 text Window 
+					1327 text 15
+				1328 button Window 14
+					1329 text Window 
+					1330 text 14
+				1331 button Window 13
+					1332 text Window 
+					1333 text 13
+				1334 button Window 12
+					1335 text Window 
+					1336 text 12
+				1337 button Window 11
+					1338 text Window 
+					1339 text 11
+				1340 button Window 10
+					1341 text Window 
+					1342 text 10
+				1343 button Window 9
+					1344 text Window 
+					1345 text 9
+				1346 button Window 8
+					1347 text Window 
+					1348 text 8
+				1349 button Window 7
+					1350 text Window 
+					1351 text 7
+				1352 button Window 6
+					1353 text Window 
+					1354 text 6
+				1355 button Window 5
+					1356 text Window 
+					1357 text 5
+				1358 button Window 4
+					1359 text Window 
+					1360 text 4
+				1361 button Window 3
+					1362 text Window 
+					1363 text 3
+				1364 button Window 2
+					1365 text Window 
+					1366 text 2
+				1367 button Window 1
+					1368 text Window 
+					1369 text 1
+			1370 text SELECTED WINDOW
+			1371 heading 1. Current window summary, Value: 2
+				1372 text 1. Current window summary
+			1373 button Flag
+				1374 image
+				1375 text Flag
+			1376 text RiskScore
+			1377 text 50.0 / 100
+			1378 text RiskLevel Medium Evidence Type
+			1379 text Vision-dominant
+			1380 text Relative Evidence
+			1381 text Vision stronger than telemetry
+			1382 text VISION BRANCH
+			1383 heading 2. Top visual probabilities, Value: 2
+				1384 text 2. Top visual probabilities
+			1385 text safe_driving
+			1386 text 0.00
+			1387 text texting_right
+			1388 text 0.00
+			1389 text talking_phone_right
+			1390 text 0.00
+			1391 text texting_left
+			1392 text 0.00
+			1393 text talking_phone_left
+			1394 text 0.00
+			1395 text operating_radio
+			1396 text 0.00
+			1397 text drinking
+			1398 text 0.00
+			1399 text reaching_behind
+			1400 text 0.00
+			1401 text hair_makeup
+			1402 text 1.00
+			1403 text talking_to_passenger
+			1404 text 0.00
+			1405 text TELEMETRY BRANCH
+			1406 heading 3. Vehicle-dynamics features, Value: 2
+				1407 text 3. Vehicle-dynamics features
+			1408 text Speed
+			1409 text 34.0 km/h
+			1410 text Accel X
+			1411 text 0.30 m/s2
+			1412 text Accel Y
+			1413 text 0.10 m/s2
+			1414 text Brake pressure
+			1415 text 12.0
+			1416 text Steering
+			1417 text -2.0 deg
+			1418 text Throttle
+			1419 text 30.0
+			1420 text Lane deviation
+			1421 text 0.30
+			1422 text Headway
+			1423 text 26.0 m
+			1424 text BRANCH SIGNALS
+			1425 heading 4. Scores, freshness, latency, Value: 2
+				1426 text 4. Scores, freshness, latency
+			1427 text P_distraction
+			1428 text 100%
+			1429 text Telemetry non-safe risk
+			1430 text 0%
+			1431 text Vision freshness fresh Telemetry freshness fresh Latency
+			1432 container
+				1433 text 89  ms
+			1434 text Flag
+			1435 text None
+
+The focused UI element is 11 button Signal Inspector

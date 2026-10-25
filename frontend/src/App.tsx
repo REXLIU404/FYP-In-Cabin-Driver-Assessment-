@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Pause, Play, RotateCw } from "lucide-react";
 import { AlertBanner } from "./components/AlertBanner";
 import { CameraPreview } from "./components/CameraPreview";
+import { SelectionBar } from "./components/SelectionBar";
 import {
   CameraStatusLine,
   CaptureMissNotice,
@@ -18,7 +19,7 @@ import { useLiveSession } from "./hooks/useLiveSession";
 import { useSessionLog } from "./hooks/useSessionLog";
 import type { AppConfig } from "./types";
 import { DATA_MODE_NOTE, DATA_MODE_OPTIONS } from "./utils/dataMode";
-import { selectRecord } from "./utils/selection";
+import { describeSelection, selectRecord } from "./utils/selection";
 import { exportSessionLogCSV, exportSessionLogJSON } from "./utils/export";
 import { retryHandler } from "./utils/runtimeNotices";
 import {
@@ -79,6 +80,12 @@ export default function App() {
   const history = isLive ? live.history : replayLog.log;
   const latest = history[history.length - 1];
   const selectedRecord = selectRecord(history, selectedWindowId);
+  const selection = describeSelection(history, selectedWindowId);
+  // The banner already says "No current assessment" on these views; the runtime panel repeats it
+  // only where the banner is not shown (Explanation, Configuration).
+  const bannerShown =
+    latest !== undefined &&
+    ["live", "inspector", "trends"].includes(activeView);
   const sessionId = isLive ? live.sessionId : replayId;
   // Another session (new, or loaded from the saved list) opens on its newest window: drop the pin.
   // Reset during render, not in an effect, so no frame shows the old pin against the new history.
@@ -270,8 +277,8 @@ export default function App() {
                 Request round trip: {live.requestMs?.toFixed(0) ?? "—"} ms
               </span>
               <span>
-                Visible history: {history.length} / {live.total} persisted ·
-                export includes all windows
+                Showing {history.length} of {live.total} saved windows · export
+                includes all
               </span>
               {live.droppedFrames > 0 && (
                 <span>Late frames dropped: {live.droppedFrames}</span>
@@ -304,7 +311,7 @@ export default function App() {
           {isLive && monitoring && live.lastCaptureMiss && (
             <CaptureMissNotice reason={live.lastCaptureMiss} />
           )}
-          {isLive && live.stale && (
+          {isLive && live.stale && !bannerShown && (
             <p className="runtime-warning" role="status">
               Latest result is stale. Historical values are retained; there is
               no current risk assessment.
@@ -312,8 +319,17 @@ export default function App() {
           )}
         </section>
 
-        {latest && ["live", "inspector", "trends"].includes(activeView) ? (
+        {bannerShown && latest ? (
           <AlertBanner latest={latest} stale={isLive && live.stale} />
+        ) : null}
+
+        {selection &&
+        ["inspector", "trends", "explanation"].includes(activeView) ? (
+          <SelectionBar
+            windowId={selection.windowId}
+            pinned={selection.pinned}
+            onFollowLatest={() => setSelectedWindowId(null)}
+          />
         ) : null}
 
         {activeView === "live" &&
@@ -324,6 +340,7 @@ export default function App() {
               sessionId={sessionId}
               recordCount={isLive ? live.total : history.length}
               isMonitoring={monitoring}
+              stopped={isLive && Boolean(live.fault?.stopped)}
               camera={camera}
               thresholdLow={
                 latest.provenance?.fusion_config?.threshold_low ??
@@ -398,9 +415,6 @@ export default function App() {
             config={config}
             onConfigChange={updateConfig}
             isMonitoring={monitoring || live.busy}
-            onStartMonitoring={() => void start()}
-            onPauseMonitoring={pause}
-            onRestartSession={() => void start(true)}
             onExportJson={() => exportLog("json")}
             onExportCsv={() => exportLog("csv")}
           />

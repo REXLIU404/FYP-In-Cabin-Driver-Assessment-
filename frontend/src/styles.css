@@ -116,6 +116,7 @@ button {
 .brand-block span {
   color: var(--muted);
   font-size: 0.78rem;
+  white-space: nowrap;
 }
 
 .sidebar-toggle {
@@ -282,14 +283,62 @@ button {
   border: 1px dashed #94a3b8;
 }
 
-.alert-banner strong,
-.alert-banner span {
+/* The title and the text of the banner. Not the pills: a pill is a span too, and a
+   blanket ".alert-banner span" stretched it to a block and greyed out its tone. */
+.alert-banner > div:not(.banner-pills) > strong,
+.alert-banner > div:not(.banner-pills) > span {
   display: block;
 }
 
-.alert-banner span {
+.alert-banner > div:not(.banner-pills) > span {
   margin-top: 2px;
   color: var(--muted);
+}
+
+/* A pill with its label above it: the chips used to be unlabelled ("High", "HIGH_ALERT",
+   "DEGRADED" side by side with nothing saying which is which). */
+.badge-field {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+}
+
+.badge-field > span:first-child {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.alert-note {
+  margin: 0;
+  padding: 8px 10px;
+  color: #713f12;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+  font-size: 0.8rem;
+}
+
+.selection-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  color: var(--navy-2);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.selection-bar--pinned {
+  background: var(--blue-soft);
+  border-color: #c7d2fe;
 }
 
 .page-grid {
@@ -360,11 +409,13 @@ button {
   border-radius: 8px;
 }
 
-.session-strip span,
-.telemetry-cell span,
-.modality-card span,
-.summary-metric-grid span,
-.stat-list span {
+/* Row labels only: `:not(.pill)` keeps a pill's own size and tone colour (the label rule
+   used to turn every pill in these lists into a full-width grey bar). */
+.session-strip span:not(.pill),
+.telemetry-cell span:not(.pill),
+.modality-card span:not(.pill),
+.summary-metric-grid span:not(.pill),
+.stat-list span:not(.pill) {
   display: block;
   color: var(--muted);
   font-size: 0.84rem;
@@ -378,6 +429,19 @@ button {
   display: block;
   margin-top: 5px;
   overflow-wrap: anywhere;
+}
+
+.session-strip strong.session-id {
+  overflow: hidden;
+  overflow-wrap: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.session-strip .pill,
+.stat-list .pill,
+.summary-metric-grid .pill {
+  margin-top: 5px;
 }
 
 .live-layout {
@@ -610,14 +674,16 @@ button {
 
 .bar-row {
   display: grid;
-  grid-template-columns: minmax(120px, 0.9fr) minmax(120px, 1.4fr) 48px;
+  grid-template-columns: minmax(150px, 1.2fr) minmax(100px, 1fr) 48px;
   align-items: center;
   gap: 10px;
 }
 
 .bar-row span {
+  overflow: hidden;
   color: #334155;
-  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .bar-track {
@@ -715,6 +781,21 @@ button {
 
 .table-wrap {
   overflow-x: auto;
+}
+
+/* The window log grows by ~10 rows a second; bounded, with the header kept in view. */
+.table-wrap--scroll {
+  max-height: 520px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.table-wrap--scroll thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--panel);
 }
 
 table {
@@ -856,6 +937,14 @@ tbody tr.is-unavailable {
   margin-top: 2px;
   color: var(--muted);
   font-size: 0.74rem;
+}
+
+.feature-contribution-note {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.4;
 }
 
 .feature-contribution-list {
@@ -1070,21 +1159,39 @@ tbody tr.is-unavailable {
 }
 
 @media (max-width: 900px) {
+  /* minmax(0, 1fr), not 1fr: a 1fr track never shrinks below its items' min-content, and the
+     one-row nav would widen the whole page past a phone screen. */
   .app-shell,
   .app-shell--sidebar-collapsed {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .sidebar {
+  /* A narrow screen gets a slim sticky bar with the views in one scrolling row. The full
+     sidebar used to stick to the top as a ~280 px block and cover a third of a phone screen. */
+  .sidebar,
+  .sidebar--collapsed {
     position: sticky;
     top: 0;
     z-index: 10;
-    gap: 14px;
-    padding: 16px;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
   }
 
-  .sidebar--collapsed {
-    align-items: stretch;
+  .sidebar-header,
+  .sidebar--collapsed .sidebar-header {
+    width: auto;
+  }
+
+  .sidebar-toggle {
+    display: none;
+  }
+
+  .brand-block {
+    padding: 4px;
   }
 
   .sidebar--collapsed .sidebar-header {
@@ -1104,7 +1211,26 @@ tbody tr.is-unavailable {
   }
 
   .nav-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav-list button,
+  .sidebar--collapsed .nav-list button {
+    flex: 0 0 auto;
+    padding: 0 10px;
+    white-space: nowrap;
+    border-left: 0;
+    border-bottom: 3px solid transparent;
+  }
+
+  .nav-list button:hover,
+  .nav-list button.is-active {
+    border-bottom-color: var(--blue);
   }
 
   .page-grid--inspector {
@@ -1139,8 +1265,9 @@ tbody tr.is-unavailable {
     grid-template-columns: 1fr;
   }
 
-  .nav-list {
-    grid-template-columns: 1fr;
+  .sidebar .brand-copy,
+  .sidebar--collapsed .brand-copy {
+    display: none;
   }
 
   .bar-row {

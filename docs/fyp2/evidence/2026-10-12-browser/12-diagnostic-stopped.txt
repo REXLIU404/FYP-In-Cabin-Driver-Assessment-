@@ -1,0 +1,156 @@
+Browser tab: 1473715718, Title: "In-Cabin Multi-Modal Driver Monitoring & Risk Assessment", URL: "http://127.0.0.1:8008/".
+0 AXWebArea In-Cabin Multi-Modal Driver Monitoring & Risk Assessment, URL: 127.0.0.1:8008/
+	1 container root
+		2 container
+			3 image
+			4 text Driver Risk MVP Dashboard
+			5 button (expanded) Description: Collapse sidebar, Secondary Actions: Collapse
+				6 image
+			7 container Dashboard views
+				8 button Live Monitor
+					9 image
+					10 text Live Monitor
+				11 button Signal Inspector
+					12 image
+					13 text Signal Inspector
+				14 button Risk Trends
+					15 image
+					16 text Risk Trends
+				17 button Explanation
+					18 image
+					19 text Explanation
+				20 button Configuration
+					21 image
+					22 text Configuration
+		23 container
+			24 heading In-Cabin Multi-Modal Driver Monitoring & Risk Assessment, Value: 1
+				25 text In-Cabin Multi-Modal Driver Monitoring & Risk Assessment
+			26 button Start Monitoring
+				27 image
+				28 text Start Monitoring
+			29 button (disabled) Pause
+				30 image
+				31 text Pause
+			32 button New Session
+				33 image
+				34 text New Session
+			35 container
+				36 text Data mode
+				37 pop up button (collapsed, settable) Description: Data mode, Value: Live trained models, Secondary Actions: Expand
+					38 menu
+						39 (selected) Live trained models
+						40 Prepared replay demo
+			41 button Refresh saved sessions
+			42 container
+				43 text Saved live sessions
+				44 pop up button (collapsed, settable) Description: Saved live sessions, Value: Select a session…, Secondary Actions: Expand
+					45 menu
+						46 (selected) Select a session…
+						62 S8d4e616a597b4dd5973d31a9ad417049 · 811 windows
+						63 S9540e6b97c804e23a71b6b6edf8d80f5 · 134 windows
+						64 S85c09da3b43d44ea820ab246cec175cb · 413 windows
+			47 text Vision: camera → trained MobileNetV3 · Telemetry: prepared raw features → trained XGBoost. Frontal-camera accuracy is experimental.
+			48 text Camera:  idle Inference: —  FPS · target  10 Request round trip:  32  ms Visible history:  394  /  394  persisted · export includes all windows
+			65 button (collapsed) Loaded model versions, Secondary Actions: Expand
+				66 text Loaded model versions
+			67 image
+			68 text Current Monitoring Status
+			69 text RiskScore:  89.6 / 100  | Visual distraction: 100%  | Telemetry non-safe: 79% HIGH_ALERT FULL
+			70 text LIVE MONITOR
+			71 heading Camera preview and current risk output, Value: 2
+				72 text Camera preview and current risk output
+			73 text Monitoring paused Session
+			74 text S05a3faf1461640c2855f6830a7282f2d
+			75 text Window
+			76 text 394
+			77 text Timestamp
+			78 text 17:40:57
+			79 text Stored records
+			80 text 394
+			81 container
+				82 container 无法播放媒体。
+				169 image
+				170 text Camera preview idle
+				83 button Start Camera
+					84 image
+					85 text Start Camera
+				86 button Stop Camera
+					87 image
+					88 text Stop Camera
+			89 container RiskScore: 89.6 / 100
+				90 text 89.6
+				91 text /100
+				92 text RiskScore
+			93 text High Vision-dominant HIGH_ALERT Visual Distraction
+			94 text 100%
+			95 text fresh
+			96 text 1.00
+			97 text Telemetry Non-Safe
+			98 text 79%
+			99 text fresh
+			100 text 0.79
+			101 text VEHICLE SIGNALS
+			102 heading Prepared telemetry replay, Value: 2
+				103 text Prepared telemetry replay
+			104 text Recorded scenario features, not live vehicle sensors. Values below belong to the latest saved window.
+			105 image
+			171 image
+			172 text Speed 42 km/h
+			173 text LOW
+			174 image
+			175 text Acceleration 0.6 m/s²
+			176 text GENTLE
+			177 image
+			178 text Steering 4° left
+			179 text STRAIGHT
+			180 image
+			181 text Braking 18%
+			182 text LIGHT
+			183 image
+			184 text Throttle 38%
+			185 text EASING
+			186 image
+			187 text Lane position 0.4 m off
+			188 text CENTRED
+			189 image
+			190 text Following distance 20 m
+			191 text MODERATE
+			127 text RUNTIME STATE
+			128 heading Health and latency, Value: 2
+				129 text Health and latency
+			130 image
+			131 text SystemHealth FULL Vision freshness fresh Telemetry freshness fresh Server processing (before DB commit)
+			132 container
+				133 text 16  ms
+			134 text RECENT TREND
+			135 heading RiskScore and branch probabilities, Value: 2
+				136 text RiskScore and branch probabilities
+			137 image
+			138 container Risk score timeline
+				139 container
+					140 image
+						192 text 384
+						193 text 386
+						194 text 388
+						195 text 390
+						196 text 392
+						197 text 394
+						152 text 0
+						153 text 25
+						154 text 50
+						155 text 75
+						156 text 100
+						157 text 30
+						158 text 60
+					159 content list
+						160 container
+							161 image
+							162 text RiskScore
+						163 container
+							164 image
+							165 text P_distraction (%)
+						166 container
+							167 image
+							168 text Telemetry non-safe (%)
+
+The focused UI element is 86 button Stop Camera

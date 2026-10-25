@@ -62,7 +62,7 @@ const TELEMETRY: TelemetryFeatures = {
   headway_distance: 18,
 };
 type Models = { ready: boolean };
-type Step = { fail: Error } | { after: number } | "hang";
+type Step = { fail: Error } | { after: number; serverTiming?: string } | "hang";
 
 function rig(options: {
   /** What successive `infer` calls do; once exhausted, answer after 0 ms. */
@@ -102,6 +102,8 @@ function rig(options: {
       _sid: string,
       _payload: LivePayload,
       signal: AbortSignal,
+      _attemptIndex: number,
+      onServerTiming?: (header: string | null) => void,
     ): Promise<RiskUpdate> => {
       const step = script.shift() ?? { after: 0 };
       if (step === "hang")
@@ -116,6 +118,8 @@ function rig(options: {
       return new Promise<RiskUpdate>((resolve) =>
         time.setTimeout(() => {
           windowId += 1;
+          if (step.serverTiming !== undefined)
+            onServerTiming?.(step.serverTiming);
           resolve(makeRecord("fresh", "fresh", windowId));
         }, step.after),
       );
@@ -187,6 +191,27 @@ describe("the loop records capture -> send -> response for every answered window
       renderMs: 15,
       networkMs: 150,
     });
+  });
+
+  it("the server's own Server-Timing stages reach the entry (deferred final minor)", async () => {
+    const r = rig({
+      script: [
+        {
+          after: 40,
+          serverTiming: "infer;dur=8.2, commit;dur=3.1, total;dur=12.5",
+        },
+        { after: 40 },
+      ],
+    });
+    await r.begin();
+    await r.time.advance(40);
+    expect(r.loop.getTimings()[0].server).toEqual({
+      infer: 8.2,
+      commit: 3.1,
+      total: 12.5,
+    });
+    await r.time.advance(500); // the next tick; this answer carries no header
+    expect(r.loop.getTimings()[1].server).toBeNull();
   });
 
   it("a window that needed a retry is timed from the original capture, with its attempt index", async () => {
