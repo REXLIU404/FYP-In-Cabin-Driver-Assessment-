@@ -47,6 +47,7 @@
 | TELEMETRY-CONTRIBUTIONS：Live 遥测特征贡献（TreeSHAP，解释非安全风险） | `telemetry-contributions-acceptance.zh.md` | `telemetry-contributions.md` | `346f3a6` | 967 → 979 / 910 → 918 |
 | W5 系统测试（S1–S5、S10）：选中跟随最新、ST-SESSION-01、ST-COLDSTART-01、Task 10A manifest 交接、E3 网格 | `w5-system-tests-acceptance.zh.md` | 执行计划 `docs/plans/2026-10-22-w5-w6-system-tests.md` | `62f13fb`…`6491dd7`，评审后修复 `183d38f`、`258e380`、`0530b1a`、`7110615` | 979 → 1021 / 918 → 922 |
 | W6 系统测试（S6–S9）：ST-LONG-01、PERF-01、PERF-02、G-W6-A | `w6-system-tests-acceptance.zh.md` | 同上 | `bb947f0`、`4f38cfc`、`66327ee`，评审后修复 `349ee61`、`e03ed41`、证据重跑 `2897000` | 1021 → 1028 / 922 |
+| 界面易用性审查与暂缓 Minor（M1–M4、M6–M11、M13、Server-Timing） | `ui-review-minors-acceptance.zh.md` | 提交信息即技术说明；截图在 `docs/evidence/2026-10-23/ui-review/` | `6886a2e`、`2745348` | 1028 → 1046 / 922 → 954 |
 
 每份验收报告的第 3 节都列出了变异检验：每项变异在隔离副本里运行，并写明变红的测试。
 
@@ -61,6 +62,7 @@
 | G-W4-A（提前关闭） | `docs/evidence/2026-10-20/live-e2e/` | `87bdc3f` | 全绿：build；pytest 952，0 skipped；vitest 870；tsc 0；eslint 0。另有五视图截图、会话导出、rVFC 实测 |
 | G-W5-A（硬性，提前关闭） | `docs/evidence/2026-10-22/w5-gate/`，冷启动 `docs/evidence/2026-10-22/coldstart/` | `5040e9d` | 全绿：pytest 1021 / 0 skipped（1 deselected = ST-LONG-01），vitest 922，tsc，eslint，build |
 | G-W6-A（提前完成，不含 E2–E5 runner） | `docs/evidence/2026-10-22/perf/`，回归 `docs/evidence/2026-10-22/coldstart-final/` | `2897000` | 全绿：全新克隆上 pytest 1028 / 0 skipped，vitest 922；长会话 8,867 窗口；capture→render p95 39 ms；日志完整性 100%；E2–E5 等 D06 |
+| 界面审查与 Minor 修复（不是计划内的 gate） | `docs/evidence/2026-10-23/ui-minors-gate/` | `2745348` | 全绿：pytest 1046 / 0 skipped，vitest 954，tsc，eslint，build |
 
 每个 gate 目录都包含以下文件：
 

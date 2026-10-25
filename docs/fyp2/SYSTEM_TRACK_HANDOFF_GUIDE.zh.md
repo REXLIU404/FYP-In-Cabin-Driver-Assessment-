@@ -27,6 +27,7 @@
 | G-W4-A（Live 端到端 + 单分支系统测试） | `docs/evidence/2026-10-20/live-e2e/` | 全绿 |
 | G-W5-A（会话生命周期、冷启动） | `docs/evidence/2026-10-22/w5-gate/`，冷启动在 `docs/evidence/2026-10-22/coldstart/` | 全绿 |
 | G-W6-A（长会话、PERF；不含 E2–E5 runner） | `docs/evidence/2026-10-22/perf/`，回归在 `docs/evidence/2026-10-22/coldstart-final/` | 全绿（全新克隆上 pytest 1028 / 0 skipped） |
+| 界面审查与暂缓 Minor 修复（2026-10-23） | `docs/evidence/2026-10-23/ui-minors-gate/`，截图在 `docs/evidence/2026-10-23/ui-review/` | 全绿（pytest 1046 / 0 skipped，vitest 954）；独立评审的 31 条交给 DeepSeek 验证与修复 |
 | 视觉 domain shift 的证据 | `docs/evidence/2026-10-22/vision-runtime-path/` | 管线正确，问题在摄像头视角 |
 
 **不在仓库里的两样东西**：
@@ -101,7 +102,6 @@ omissions: record them as NOT_DONE with that reason. Do not edit any file.
 | R14：DominantEvidence 是否考虑权重 | 等你决定 | 涉及三份实现与夹具 |
 | UAT | NOT_DONE | 需要真实参与者，由你主导 |
 | Constructed scenario 回放模式 | 进行中 | 在 `fyp2/constructed-scenario` 分支开发，合并前有独立的门禁；**它的运行结果不作为报告结果** |
-| 浏览器计时缓冲收不到 Server-Timing | 已知 Minor | 数字已由 PERF-01 从网络层取得；修复要等回放分支合并后改 `liveLoop.ts` |
 | 真实摄像头 / 目标硬件上的性能 | NOT_DONE | 只测了一台开发机加假摄像头 |
 
 ---
@@ -138,6 +138,7 @@ omissions: record them as NOT_DONE with that reason. Do not edit any file.
 |---|---|---|
 | G-W5-A 门禁 | pytest 1021 passed / 0 skipped；vitest 922；tsc 0；eslint 0；build 通过 | `docs/evidence/2026-10-22/w5-gate/SUMMARY.md` |
 | 最终代码的全量门禁（全新克隆） | pytest 1028 passed / 0 skipped；vitest 922；启动服务检查通过 | `docs/evidence/2026-10-22/coldstart-final/SUMMARY.md` |
+| 界面审查与 Minor 修复后的全量门禁 | pytest 1046 passed / 0 skipped；vitest 954；tsc 0；eslint 0；build 通过 | `docs/evidence/2026-10-23/ui-minors-gate/SUMMARY.md` |
 | 冷启动（全新克隆） | 依赖安装 82 s，门禁 268 s；pytest 987 / 0 skipped；服务健康检查 200 | `docs/evidence/2026-10-22/coldstart/SUMMARY.md` |
 | capture → render 延迟 | p50 28 ms，**p95 39 ms**，最大 280 ms（600 窗口，9.8 Hz） | `docs/evidence/2026-10-22/perf/perf01.json` |
 | 服务端分段（中位数） | 总计 16.7 ms；视觉 8.6 ms；预处理 2.6 ms；遥测 1.1 ms；提交 0.9 ms | 同上 |
