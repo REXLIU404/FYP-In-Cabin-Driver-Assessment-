@@ -428,8 +428,15 @@ Tasks1-10 还在改与本计划重叠的产品文件，所以：
 
 ### Task 10：合并回 `fyp2/live-system`（每个合并点执行一次）
 
-- [ ] **Step 1：** 用 SendMessage 告诉 Tasks1-10 会话（`local_51808963-6280-4a75-a5a4-1354fa430268`）要合并的提交范围，**等它回复确认**之后才继续，期间不拉取。
-- [ ] **Step 2：** 在本工作副本 `git merge --no-edit fyp2/live-system`（把对方的新提交合进来）。有冲突时停下，报告给用户。
-- [ ] **Step 3：** 在合并后的树上运行 `DRA_REQUIRE_MODELS=1 python3 scripts/run_gates.py --out <scratch>`。全绿才继续；不绿就修，修完重跑。
-- [ ] **Step 4：** 快进 `fyp2/live-system`：`git -C /Users/liu/Desktop/FYP2-Live-System merge --ff-only fyp2/constructed-scenario`。前提是那个工作树干净；不干净时停下，问 Tasks1-10。
-- [ ] **Step 5：** 通知 Tasks1-10 合并完成，告知新的提交号。推送与否由用户决定。
+**2026-10-26 起的规则**（Tasks1-10 通知；协作状态板 `/Users/liu/Desktop/FYP2-Live-System/.superpowers/collab/BOARD.md`，本会话只读）：
+- 只有 Tasks1-10（集成负责人）向 `fyp2/live-system` 提交或合并；本会话**不再 fast-forward**，也不直接写那个分支或工作树。
+- 共同规则：不 push；不碰 8000 端口和 `driver_risk.db*`；不改 ML 工作区。
+- 并行的 lane 会改到与本计划重叠的文件：
+  - CL-1（Task 10A）：`backend/app/config.py`、`backend/app/providers/trained.py`、新增 `app/vision_candidates.py`、`frontend/src/App.tsx` 与 `utils/dataMode.ts`（写死的「MobileNetV3」改为读 `/api/models` 的模型名），以及 `e2e_support.start_server(extra_env=...)`；
+  - DeepSeek lane `fyp2/ds-review-fixes`：可能改 `App.tsx` 的 `appendReplay`。
+- 冲突处理：`dataMode.ts` 以「Live 类模式统一判断（`isLiveLike`）」为准；`start_server(extra_env)` 用先合并的一方的版本；其他冲突停下报告。
+
+- [ ] **Step 1：** 把**最新的** `fyp2/live-system` 合并进本分支：`git merge --no-edit fyp2/live-system`。有冲突时按上面的规则处理；规则覆盖不到的，停下报告用户与 Tasks1-10。
+- [ ] **Step 2：** 在合并后的树上运行 `DRA_REQUIRE_MODELS=1 python3 scripts/run_gates.py --out <scratch>`。全绿才继续；不绿就修，修完重跑。
+- [ ] **Step 3：** 用 SendMessage 通知 Tasks1-10（`local_51808963-6280-4a75-a5a4-1354fa430268`），内容包括：分支 `fyp2/constructed-scenario` 与提交号、门禁计数、本次合并点包含的 Task。**由它把本分支合并进 `fyp2/live-system`**。
+- [ ] **Step 4：** 等它回复合并完成的提交号。之后从新的 `fyp2/live-system` 继续下一个合并点之前，仍先等它的通知。推送与否由用户决定。
