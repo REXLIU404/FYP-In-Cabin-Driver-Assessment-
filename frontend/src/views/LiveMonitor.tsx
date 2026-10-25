@@ -1,14 +1,16 @@
 import { Database, Timer, Video } from "lucide-react";
+import { BranchStatusPill } from "../components/BranchStatusPill";
 import { CameraPreview } from "../components/CameraPreview";
 import { ModalityCard } from "../components/ModalityCard";
 import { Pill } from "../components/Pill";
 import { ScoreGauge } from "../components/ScoreGauge";
-import { TelemetrySummary } from "../components/TelemetrySummary";
+import { VehicleDynamics } from "../components/VehicleDynamics";
 import { TrendChart } from "../components/TrendChart";
 import type { useCameraPreview } from "../hooks/useCameraPreview";
 import type { RiskUpdate } from "../types";
-import { getEvidenceType } from "../../../ai/src/evidence";
+import { alertHoldNote } from "../utils/display";
 import { formatTimestamp } from "../utils/format";
+import { buildLiveMonitorModel } from "./liveMonitorModel";
 
 interface LiveMonitorProps {
   latest: RiskUpdate;
@@ -16,8 +18,12 @@ interface LiveMonitorProps {
   sessionId: string;
   recordCount: number;
   isMonitoring: boolean;
+  /** Not running because a fault stopped it (the FaultPanel is showing), not because of Pause. */
+  stopped?: boolean;
   camera: ReturnType<typeof useCameraPreview>;
   thresholdLow: number;
+  thresholdHigh: number;
+  stale?: boolean;
 }
 
 export function LiveMonitor({
@@ -26,10 +32,24 @@ export function LiveMonitor({
   sessionId,
   recordCount,
   isMonitoring,
+  stopped = false,
   camera,
   thresholdLow,
+  thresholdHigh,
+  stale = false,
 }: LiveMonitorProps) {
-  const evidenceType = getEvidenceType(latest, thresholdLow);
+  // Everything below is the record's OWN value (see liveMonitorModel.ts): `stale`
+  // describes the record's age and must not rewrite what the record says.
+  const {
+    displayState,
+    systemHealth,
+    vision: visionFreshness,
+    telemetry: telemetryFreshness,
+    visionExpiry,
+    telemetryExpiry,
+    evidenceType,
+  } = buildLiveMonitorModel(latest, stale, thresholdLow);
+  const holdNote = alertHoldNote(latest.RiskLevel, latest.AlertSeverity);
 
   return (
     <div className="page-grid page-grid--live">
@@ -40,14 +60,22 @@ export function LiveMonitor({
             <h2>Camera preview and current risk output</h2>
           </div>
           <Pill
-            label={isMonitoring ? "Monitoring active" : "Monitoring paused"}
+            label={
+              isMonitoring
+                ? "Monitoring active"
+                : stopped
+                  ? "Monitoring stopped"
+                  : "Monitoring paused"
+            }
           />
         </div>
 
         <div className="session-strip">
           <div>
             <span>Session</span>
-            <strong>{sessionId}</strong>
+            <strong className="session-id" title={sessionId}>
+              {sessionId}
+            </strong>
           </div>
           <div>
             <span>Window</span>
@@ -72,22 +100,66 @@ export function LiveMonitor({
           />
 
           <div className="risk-summary">
-            <ScoreGauge score={latest.RiskScore} label="RiskScore" />
-            <div className="risk-badges">
-              <Pill label={latest.RiskLevel} tone={latest.RiskLevel} />
-              <Pill label={evidenceType} />
-              <Pill label={latest.AlertSeverity} tone={latest.AlertSeverity} />
-            </div>
+            {displayState === "unavailable" ? (
+              <div className="empty-state">
+                <h2>Assessment unavailable</h2>
+                <p>
+                  This window has no usable evidence, so no RiskScore, RiskLevel
+                  or alert is reported for it. Earlier windows remain available
+                  in Signal Inspector.
+                </p>
+              </div>
+            ) : displayState === "stale" ? (
+              <div className="empty-state">
+                <h2>Latest result is stale</h2>
+                <p>
+                  Waiting for fresh input. The last assessment is historical and
+                  is not shown as current; it remains available in Signal
+                  Inspector.
+                </p>
+              </div>
+            ) : (
+              <>
+                <ScoreGauge
+                  score={latest.RiskScore}
+                  label="RiskScore"
+                  thresholdLow={thresholdLow}
+                  thresholdHigh={thresholdHigh}
+                />
+                <div className="risk-badges">
+                  <span className="badge-field">
+                    <span>Risk level</span>
+                    <Pill label={latest.RiskLevel} tone={latest.RiskLevel} />
+                  </span>
+                  <span className="badge-field">
+                    <span>Evidence</span>
+                    <Pill label={evidenceType} />
+                  </span>
+                  <span className="badge-field">
+                    <span>Alert</span>
+                    <Pill
+                      label={latest.AlertSeverity}
+                      tone={latest.AlertSeverity}
+                    />
+                  </span>
+                </div>
+                {holdNote === null ? null : (
+                  <p className="alert-note">{holdNote}</p>
+                )}
+              </>
+            )}
             <div className="modality-grid">
               <ModalityCard
-                title="P_distraction"
+                title="Visual Distraction"
                 probability={latest.P_distraction}
-                freshness={latest.modality_freshness.vision}
+                freshness={visionFreshness}
+                expiry={visionExpiry}
               />
               <ModalityCard
-                title="P_telemetry_anomaly"
+                title="Telemetry Non-Safe"
                 probability={latest.P_telemetry_anomaly}
-                freshness={latest.modality_freshness.telemetry}
+                freshness={telemetryFreshness}
+                expiry={telemetryExpiry}
               />
             </div>
           </div>
@@ -97,12 +169,16 @@ export function LiveMonitor({
       <section className="panel">
         <div className="section-header">
           <div>
-            <p className="eyebrow">Telemetry Summary</p>
-            <h2>Structured input</h2>
+            <p className="eyebrow">Vehicle Signals</p>
+            <h2>Prepared telemetry replay</h2>
+            <p>
+              Recorded scenario features, not live vehicle sensors. Values below
+              belong to the latest saved window.
+            </p>
           </div>
           <Database size={20} />
         </div>
-        <TelemetrySummary telemetry={latest.telemetry_features} />
+        <VehicleDynamics telemetry={latest.telemetry_features} />
       </section>
 
       <section className="panel">
@@ -113,27 +189,32 @@ export function LiveMonitor({
           </div>
           <Timer size={20} />
         </div>
-        <div className="stat-list">
+        <div className="stat-list stat-list--compact">
           <div>
-            <span>SystemHealth</span>
-            <Pill label={latest.SystemHealth} tone={latest.SystemHealth} />
+            <span>System health</span>
+            <Pill label={systemHealth} tone={systemHealth} />
+          </div>
+          <div>
+            <span>Result age</span>
+            {stale ? (
+              <Pill label="Stale" tone="stale" />
+            ) : (
+              <Pill label="Current" tone="fresh" />
+            )}
           </div>
           <div>
             <span>Vision freshness</span>
-            <Pill
-              label={latest.modality_freshness.vision}
-              tone={latest.modality_freshness.vision}
-            />
+            <BranchStatusPill status={visionFreshness} expiry={visionExpiry} />
           </div>
           <div>
             <span>Telemetry freshness</span>
-            <Pill
-              label={latest.modality_freshness.telemetry}
-              tone={latest.modality_freshness.telemetry}
+            <BranchStatusPill
+              status={telemetryFreshness}
+              expiry={telemetryExpiry}
             />
           </div>
-          <div>
-            <span>Latency</span>
+          <div title="Time the server spent on this window, measured before it was written to the database">
+            <span>Server processing time</span>
             <strong>{latest.latency_ms} ms</strong>
           </div>
         </div>
@@ -147,7 +228,11 @@ export function LiveMonitor({
           </div>
           <Video size={20} />
         </div>
-        <TrendChart history={history.slice(-12)} />
+        <TrendChart
+          history={history.slice(-12)}
+          thresholdLow={thresholdLow}
+          thresholdHigh={thresholdHigh}
+        />
       </section>
     </div>
   );

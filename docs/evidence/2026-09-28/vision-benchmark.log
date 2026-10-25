@@ -1,0 +1,18 @@
+{"architecture": "mobilenet_v3_large", "runtime": "pytorch_cpu", "batch": 1, "input_shape": [1, 3, 224, 224], "dtype": "float32", "weight_status": "trained_driver_checkpoint", "parameters": 4214842, "tensor_weights_mib": 16.078346252441406, "warmup": 20, "iterations": 100, "mean_ms": 50.989919969579205, "p50_ms": 46.42266649170779, "p95_ms": 69.7761371891829, "p99_ms": 116.4081673946932, "serial_model_only_fps": 19.61171934760055}
+{"architecture": "mobilenet_v3_small", "runtime": "pytorch_cpu", "batch": 1, "input_shape": [1, 3, 224, 224], "dtype": "float32", "weight_status": "random_latency_only", "parameters": 1528106, "tensor_weights_mib": 5.829261779785156, "warmup": 20, "iterations": 100, "mean_ms": 30.30531873111613, "p50_ms": 30.12685450084973, "p95_ms": 32.84112019027816, "p99_ms": 45.00470492581379, "serial_model_only_fps": 32.99750808999891}
+{"architecture": "efficientnet_b0", "runtime": "pytorch_cpu", "batch": 1, "input_shape": [1, 3, 224, 224], "dtype": "float32", "weight_status": "random_latency_only", "parameters": 4020358, "tensor_weights_mib": 15.336448669433594, "warmup": 20, "iterations": 100, "mean_ms": 94.0485078515485, "p50_ms": 90.11385399207938, "p95_ms": 128.03995596186724, "p99_ms": 156.44541977118942, "serial_model_only_fps": 10.632810906244858}
+{"architecture": "mobilenet_v3_large", "runtime": "onnxruntime_cpu", "batch": 1, "weight_status": "trained_driver_checkpoint", "file_mib": 16.068819046020508, "warmup": 20, "iterations": 100, "mean_ms": 7.5929408392403275, "p50_ms": 7.488333503715694, "p95_ms": 8.256037172395736, "p99_ms": 8.842398991109803, "serial_model_only_fps": 131.70127637923883}
+evaluated 16/3657
+evaluated 336/3657
+evaluated 656/3657
+evaluated 976/3657
+evaluated 1296/3657
+evaluated 1616/3657
+evaluated 1936/3657
+evaluated 2256/3657
+evaluated 2576/3657
+evaluated 2896/3657
+evaluated 3216/3657
+evaluated 3536/3657
+{"evaluation": {"split": "test", "runtime": "onnxruntime_cpu", "checkpoint_sha256": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7", "onnx_sha256": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf", "preprocess": "PIL RGB, bilinear Resize(224,224), ToTensor, ImageNet mean/std", "seconds_including_decode_and_parity": 41.18037904202356, "samples": 3657, "accuracy": 0.8988241728192508, "macro_f1": 0.8746408408872671, "distraction_threshold": 0.5, "binary_distraction_recall": 0.972101673899566, "safe_false_positive_rate": 0.09048723897911833, "binary_brier_score": 0.029045164585113525}, "onnx_parity": {"samples": 128, "max_abs_logit_difference": 3.719329833984375e-05, "max_abs_probability_difference": 3.7550926208496094e-06, "argmax_disagreements": 0}}
+Saved docs/evidence/2026-09-28/vision-benchmark.json

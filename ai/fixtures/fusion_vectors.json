@@ -1,0 +1,407 @@
+[
+  {
+    "id": "F-W1",
+    "pd": 0.1,
+    "pt": 0.9,
+    "wv": 0.5,
+    "wt": 0.5,
+    "vision": "fresh",
+    "telemetry": "fresh",
+    "expect": {
+      "available": true,
+      "score": 50,
+      "level": "Medium",
+      "health": "FULL",
+      "dominant": "Telemetry-dominant"
+    }
+  },
+  {
+    "id": "F-W2",
+    "pd": 0.1,
+    "pt": 0.9,
+    "wv": 0.6,
+    "wt": 0.4,
+    "vision": "fresh",
+    "telemetry": "fresh",
+    "expect": {
+      "available": true,
+      "score": 42,
+      "level": "Medium",
+      "health": "FULL",
+      "dominant": "Telemetry-dominant"
+    }
+  },
+  {
+    "id": "F-W3",
+    "pd": 0.1,
+    "pt": 0.9,
+    "wv": 0.4,
+    "wt": 0.6,
+    "vision": "fresh",
+    "telemetry": "fresh",
+    "expect": {
+      "available": true,
+      "score": 58,
+      "level": "Medium",
+      "health": "FULL",
+      "dominant": "Telemetry-dominant"
+    }
+  },
+  {
+    "id": "F-W4",
+    "pd": 0.1,
+    "pt": 0.9,
+    "wv": 0.7,
+    "wt": 0.3,
+    "vision": "fresh",
+    "telemetry": "fresh",
+    "expect": {
+      "available": true,
+      "score": 34,
+      "level": "Medium",
+      "health": "FULL",
+      "dominant": "Telemetry-dominant"
+    }
+  },
+  {
+    "id": "F-W5",
+    "pd": 0.1,
+    "pt": 0.9,
+    "wv": 0.3,
+    "wt": 0.7,
+    "vision": "fresh",
+    "telemetry": "fresh",
+    "expect": {
+      "available": true,
+      "score": 66,
+      "level": "High",
+      "health": "FULL",
+      "dominant": "Telemetry-dominant"
+    }
+  },
+  {
+    "id": "F-S1",
+    "legacy": "Historical stale tier (0.45 weight), kept so records written before ruling A (D13) stay readable. The runtime no longer produces 'stale': expired evidence scores as missing. The pure fusion functions still implement this row.",
+    "pd": 0.1,
+    "pt": 0.9,
+    "wv": 0.5,
+    "wt": 0.5,
+    "vision": "stale",
+    "telemetry": "fresh",
+    "expect": {
+      "available": true,
+      "score": 65.2,
+      "level": "High",
+      "health": "DEGRADED",
+      "dominant": "Partial evidence"
+    }
+  },
+  {
+    "id": "F-S2",
+    "legacy": "Historical stale tier (0.45 weight), kept so records written before ruling A (D13) stay readable. The runtime no longer produces 'stale': expired evidence scores as missing. The pure fusion functions still implement this row.",
+    "pd": 0.1,
+    "pt": 0.9,
+    "wv": 0.5,
+    "wt": 0.5,
+    "vision": "fresh",
+    "telemetry": "stale",
+    "expect": {
+      "available": true,
+      "score": 34.8,
+      "level": "Medium",
+      "health": "DEGRADED",
+      "dominant": "Partial evidence"
+    }
+  },
+  {
+    "id": "F-S3",
+    "legacy": "Historical stale tier (0.45 weight), kept so records written before ruling A (D13) stay readable. The runtime no longer produces 'stale': expired evidence scores as missing. The pure fusion functions still implement this row.",
+    "pd": 0.1,
+    "pt": 0.9,
+    "wv": 0.5,
+    "wt": 0.5,
+    "vision": "stale",
+    "telemetry": "stale",
+    "expect": {
+      "available": true,
+      "score": 50,
+      "level": "Medium",
+      "health": "DEGRADED",
+      "dominant": "Partial evidence"
+    }
+  },
+  {
+    "id": "F-M1",
+    "pd": 0.1,
+    "pt": 0.9,
+    "wv": 0.5,
+    "wt": 0.5,
+    "vision": "missing",
+    "telemetry": "fresh",
+    "expect": {
+      "available": true,
+      "score": 90,
+      "level": "High",
+      "health": "DEGRADED",
+      "dominant": "Partial evidence"
+    }
+  },
+  {
+    "id": "F-M2",
+    "pd": 0.1,
+    "pt": 0.9,
+    "wv": 0.5,
+    "wt": 0.5,
+    "vision": "fresh",
+    "telemetry": "missing",
+    "expect": {
+      "available": true,
+      "score": 10,
+      "level": "Low",
+      "health": "DEGRADED",
+      "dominant": "Partial evidence"
+    }
+  },
+  {
+    "id": "F-M3",
+    "legacy": "Historical stale tier (0.45 weight), kept so records written before ruling A (D13) stay readable. The runtime no longer produces 'stale': expired evidence scores as missing. The pure fusion functions still implement this row.",
+    "pd": 0.1,
+    "pt": 0.9,
+    "wv": 0.5,
+    "wt": 0.5,
+    "vision": "stale",
+    "telemetry": "missing",
+    "expect": {
+      "available": true,
+      "score": 10,
+      "level": "Low",
+      "health": "DEGRADED",
+      "dominant": "Partial evidence"
+    }
+  },
+  {
+    "id": "F-M4",
+    "legacy": "Historical stale tier (0.45 weight), kept so records written before ruling A (D13) stay readable. The runtime no longer produces 'stale': expired evidence scores as missing. The pure fusion functions still implement this row.",
+    "pd": 0.1,
+    "pt": 0.9,
+    "wv": 0.5,
+    "wt": 0.5,
+    "vision": "missing",
+    "telemetry": "stale",
+    "expect": {
+      "available": true,
+      "score": 90,
+      "level": "High",
+      "health": "DEGRADED",
+      "dominant": "Partial evidence"
+    }
+  },
+  {
+    "id": "F-U1",
+    "pd": 0.1,
+    "pt": 0.9,
+    "wv": 0.5,
+    "wt": 0.5,
+    "vision": "missing",
+    "telemetry": "missing",
+    "expect": {
+      "available": false,
+      "score": null,
+      "level": null,
+      "health": "UNAVAILABLE",
+      "dominant": null
+    }
+  },
+  {
+    "id": "F-Z1",
+    "pd": 0.1,
+    "pt": 0.9,
+    "wv": 1.0,
+    "wt": 0.0,
+    "vision": "missing",
+    "telemetry": "fresh",
+    "expect": {
+      "available": false,
+      "score": null,
+      "level": null,
+      "health": "UNAVAILABLE",
+      "dominant": null
+    }
+  },
+  {
+    "id": "F-Z2",
+    "pd": 0.1,
+    "pt": 0.9,
+    "wv": 0.0,
+    "wt": 1.0,
+    "vision": "fresh",
+    "telemetry": "missing",
+    "expect": {
+      "available": false,
+      "score": null,
+      "level": null,
+      "health": "UNAVAILABLE",
+      "dominant": null
+    }
+  },
+  {
+    "id": "F-Z3",
+    "pd": 0.1,
+    "pt": 0.9,
+    "wv": 1.0,
+    "wt": 0.0,
+    "vision": "fresh",
+    "telemetry": "missing",
+    "expect": {
+      "available": true,
+      "score": 10,
+      "level": "Low",
+      "health": "DEGRADED",
+      "dominant": "Partial evidence"
+    }
+  },
+  {
+    "id": "F-T1",
+    "pd": 0.299,
+    "pt": 0.299,
+    "wv": 0.5,
+    "wt": 0.5,
+    "vision": "fresh",
+    "telemetry": "fresh",
+    "expect": {
+      "available": true,
+      "score": 29.9,
+      "level": "Low",
+      "health": "FULL",
+      "dominant": "Low observed risk"
+    }
+  },
+  {
+    "id": "F-T2",
+    "pd": 0.3,
+    "pt": 0.3,
+    "wv": 0.5,
+    "wt": 0.5,
+    "vision": "fresh",
+    "telemetry": "fresh",
+    "expect": {
+      "available": true,
+      "score": 30,
+      "level": "Medium",
+      "health": "FULL",
+      "dominant": "Combined evidence"
+    }
+  },
+  {
+    "id": "F-T3",
+    "pd": 0.599,
+    "pt": 0.599,
+    "wv": 0.5,
+    "wt": 0.5,
+    "vision": "fresh",
+    "telemetry": "fresh",
+    "expect": {
+      "available": true,
+      "score": 59.9,
+      "level": "Medium",
+      "health": "FULL",
+      "dominant": "Combined evidence"
+    }
+  },
+  {
+    "id": "F-T4",
+    "pd": 0.6,
+    "pt": 0.6,
+    "wv": 0.5,
+    "wt": 0.5,
+    "vision": "fresh",
+    "telemetry": "fresh",
+    "expect": {
+      "available": true,
+      "score": 60,
+      "level": "High",
+      "health": "FULL",
+      "dominant": "Combined evidence"
+    }
+  },
+  {
+    "id": "F-T5",
+    "pd": 0.29951,
+    "pt": 0.29951,
+    "wv": 0.5,
+    "wt": 0.5,
+    "vision": "fresh",
+    "telemetry": "fresh",
+    "expect": {
+      "available": true,
+      "score": 30,
+      "level": "Medium",
+      "health": "FULL",
+      "dominant": "Combined evidence"
+    }
+  },
+  {
+    "id": "F-R1",
+    "pd": 0.916,
+    "pt": 0.769,
+    "wv": 0.5,
+    "wt": 0.5,
+    "vision": "fresh",
+    "telemetry": "fresh",
+    "expect": {
+      "available": true,
+      "score": 84.3,
+      "level": "High",
+      "health": "FULL",
+      "dominant": "Combined evidence"
+    }
+  },
+  {
+    "id": "F-R2",
+    "pd": 0.2995,
+    "pt": 0.2995,
+    "wv": 0.5,
+    "wt": 0.5,
+    "vision": "fresh",
+    "telemetry": "fresh",
+    "expect": {
+      "available": true,
+      "score": 30,
+      "level": "Medium",
+      "health": "FULL",
+      "dominant": "Combined evidence"
+    }
+  },
+  {
+    "id": "F-R3",
+    "pd": 0.299,
+    "pt": 0.3,
+    "wv": 0.5,
+    "wt": 0.5,
+    "vision": "fresh",
+    "telemetry": "fresh",
+    "expect": {
+      "available": true,
+      "score": 30,
+      "level": "Medium",
+      "health": "FULL",
+      "dominant": "Combined evidence"
+    }
+  },
+  {
+    "id": "F-R4",
+    "pd": 0.2,
+    "pt": 0.245,
+    "wv": 0.5,
+    "wt": 0.5,
+    "vision": "fresh",
+    "telemetry": "fresh",
+    "expect": {
+      "available": true,
+      "score": 22.3,
+      "level": "Low",
+      "health": "FULL",
+      "dominant": "Low observed risk"
+    }
+  }
+]

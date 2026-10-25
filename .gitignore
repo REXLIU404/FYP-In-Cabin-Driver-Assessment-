@@ -5,3 +5,22 @@ tsconfig.tsbuildinfo
 *.local
 .playwright-cli
 .vscode
+
+# local agent team config — keep out of the pushed repo
+.claude/
+
+# backend runtime artifacts
+backend/*.db
+backend/logs/
+backend/**/__pycache__/
+__pycache__/
+*.db
+
+# local report assembly artifacts
+docs/chapter5_report_ready/
+
+# Private Claude export manifests, source archives and recovered conversations
+.local/claude-recovery/
+
+# local run output (Playwright screenshots, ad-hoc exports) — not tracked
+output/

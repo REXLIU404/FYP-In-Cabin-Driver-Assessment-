@@ -1,0 +1,6 @@
+# Trained model weights / exports — regenerable by running the notebooks, kept
+# out of version control to avoid large binaries in the repo. Only the result
+# artifacts (metrics.json, figures, classification reports, notebooks) are tracked.
+*.pt
+*.onnx
+outputs/telemetry/xgb_telemetry.json

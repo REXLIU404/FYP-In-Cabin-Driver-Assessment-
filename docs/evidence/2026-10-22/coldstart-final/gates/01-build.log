@@ -1,0 +1,49 @@
+GATE: build
+STATUS: PASS
+EXIT CODE: 0
+STARTED (UTC): 2026-10-22T15:07:12Z
+FINISHED (UTC): 2026-10-22T15:07:21Z
+DURATION (s): 8.44
+ARGV: ["npm", "run", "build"]
+CWD: /private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/coldstart.jk58Tu/repo
+ENV (selected):
+  PYTHONDONTWRITEBYTECODE=1
+  PYTHONPATH=(unset)
+  TMPDIR=/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/
+  DRA_REQUIRE_MODELS=1
+  DRA_DATABASE_URL=(unset)
+  FYP_DATA_ROOT=(unset)
+  NODE_ENV=(unset)
+  CI=(unset)
+  VIRTUAL_ENV=(unset)
+TOOL VERSIONS:
+  python (this script): 3.13.3
+  python (.venv): Python 3.13.3
+  pytest: pytest 9.0.3
+  node: v24.1.0
+  npm: 11.4.2
+  vitest: vitest/2.1.9 darwin-arm64 node-v24.1.0
+  tsc: Version 5.9.3
+  eslint: v9.39.4
+----- STDOUT -----
+
+> fyp-in-cabin-driver-assessment@0.1.0 build
+> tsc -b && vite build
+
+vite v6.4.2 building for production...
+transforming...
+✓ 2240 modules transformed.
+rendering chunks...
+computing gzip size...
+../dist/index.html                   0.82 kB │ gzip:   0.52 kB
+../dist/assets/index-CuotzGSj.css   15.57 kB │ gzip:   3.93 kB
+../dist/assets/index-DlVAqfuw.js   636.41 kB │ gzip: 183.45 kB
+✓ built in 3.43s
+----- END STDOUT -----
+----- STDERR -----
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+----- END STDERR -----

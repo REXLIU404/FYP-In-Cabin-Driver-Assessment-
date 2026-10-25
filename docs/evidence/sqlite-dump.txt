@@ -1,0 +1,42 @@
+### SQLite schema (.tables + .schema) ###
+inference_records  sessions         
+
+CREATE TABLE sessions (
+	id VARCHAR NOT NULL, 
+	created_at DATETIME, 
+	description VARCHAR, 
+	PRIMARY KEY (id)
+);
+CREATE TABLE inference_records (
+	id INTEGER NOT NULL, 
+	session_id VARCHAR, 
+	window_id INTEGER, 
+	timestamp VARCHAR, 
+	p_distraction FLOAT, 
+	p_telemetry_anomaly FLOAT, 
+	risk_score FLOAT, 
+	risk_level VARCHAR, 
+	dominant_evidence VARCHAR, 
+	alert_severity VARCHAR, 
+	system_health VARCHAR, 
+	latency_ms INTEGER, 
+	flagged BOOLEAN, 
+	payload JSON, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(session_id) REFERENCES sessions (id) ON DELETE CASCADE
+);
+CREATE INDEX ix_inference_records_window_id ON inference_records (window_id);
+CREATE INDEX ix_inference_records_session_id ON inference_records (session_id);
+
+### sessions table ###
+id    description         created_at                
+----  ------------------  --------------------------
+S001  Day 3 evidence run  2026-05-31 12:02:58.715629
+
+### inference_records (key columns) ###
+window_id  pD    pT    risk_score  risk_level  dominant_evidence   alert_severity  system_health  flagged
+---------  ----  ----  ----------  ----------  ------------------  --------------  -------------  -------
+1          0.12  0.18  15.0        Low         Low observed risk   NORMAL          FULL           0      
+2          0.22  0.28  25.0        Low         Low observed risk   NORMAL          FULL           0      
+3          0.35  0.82  58.5        Medium      Telemetry-dominant  CAUTION         FULL           1      
+4          0.78  0.0   78.0        High        Partial evidence    HIGH_ALERT      DEGRADED       0      

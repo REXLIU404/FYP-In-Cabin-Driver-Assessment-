@@ -1,0 +1,19 @@
+...xxxxxxxxxx                                                            [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+XFAIL backend/tests/test_audit_regressions.py::test_latest_reflects_flag_update - flag_window does not invalidate latest cache
+XFAIL backend/tests/test_audit_regressions.py::test_latest_falls_back_after_deletion - delete_window leaves deleted latest record cached
+XFAIL backend/tests/test_audit_regressions.py::test_latest_is_empty_after_all_windows_deleted - latest endpoint returns a deleted sole window
+XFAIL backend/tests/test_audit_regressions.py::test_concurrent_writers_receive_unique_window_ids - max(window_id)+1 races without unique constraint
+XFAIL backend/tests/test_audit_regressions.py::test_invalid_timestamp_is_rejected - timestamp is an unconstrained string
+XFAIL backend/tests/test_audit_regressions.py::test_old_capture_timestamp_cannot_be_full_health - freshness_tolerance_s is unused; client freshness is trusted
+XFAIL backend/tests/test_audit_regressions.py::test_first_high_window_observes_alert_sustain_period - backend uses instantaneous mapping; frontend requires 2 seconds
+XFAIL backend/tests/test_audit_regressions.py::test_second_window_uses_vision_ema - backend does not apply the frontend vision EMA
+XFAIL backend/tests/test_audit_regressions.py::test_invalid_measurements_are_rejected[negative-latency] - nested probability and latency lack value bounds
+XFAIL backend/tests/test_audit_regressions.py::test_invalid_measurements_are_rejected[class-probability-over-one] - nested probability and latency lack value bounds
+3 passed, 10 xfailed, 1 warning in 1.09s

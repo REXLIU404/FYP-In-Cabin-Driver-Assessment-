@@ -1,22 +1,26 @@
 import { BarChart3, FileText, Scale } from "lucide-react";
+import { branchExpiry } from "../../../ai/src/availability";
+import { BranchStatusPill } from "../components/BranchStatusPill";
 import { DistributionChart } from "../components/DistributionChart";
 import { Pill } from "../components/Pill";
-import type { AppConfig, DominantEvidence, RiskUpdate } from "../types";
+import type { AppConfig, RiskUpdate } from "../types";
 import {
+  UNAVAILABLE_LABEL,
+  formatBranchProbability,
   formatContribution,
+  formatFixed,
   formatPercent,
-  formatProbability,
   formatRiskScore,
 } from "../utils/format";
+import { evidenceDistribution } from "../utils/display";
+import { buildExplanationModel } from "./explanationModel";
 import {
   evidenceTypes,
   formatEvidenceType,
   getActiveInputSummary,
-  getEvidenceType,
   getMatchedEvidenceRule,
   getRelativeEvidence,
 } from "../../../ai/src/evidence";
-import { computeRiskContributions } from "../../../ai/src/riskLogic";
 
 interface ExplanationViewProps {
   selectedRecord: RiskUpdate;
@@ -24,12 +28,35 @@ interface ExplanationViewProps {
   config: AppConfig;
 }
 
-const evidenceChartLabels: Record<DominantEvidence, string> = {
-  "Vision-dominant": "Vision",
-  "Telemetry-dominant": "Telemetry",
-  "Combined evidence": "Combined",
-  "Partial evidence": "Partial",
-  "Low observed risk": "Low risk",
+const visualLabelMap: Record<string, string> = {
+  safe_driving: "Safe Driving",
+  normal_driving: "Safe Driving",
+  texting_right: "Texting (Right)",
+  phone_right: "Phone Call (Right)",
+  texting_left: "Texting (Left)",
+  phone_left: "Phone Call (Left)",
+  operating_radio: "Operating Radio",
+  drinking: "Drinking",
+  reaching_behind: "Reaching Behind",
+  hair_makeup: "Hair and Makeup",
+  talking_to_passenger: "Talking to Passenger",
+};
+
+const telemetryBehaviorLabelMap: Record<string, string> = {
+  Safe: "Safe",
+  Aggressive: "Aggressive",
+  Distracted: "Distracted",
+};
+
+const telemetryFeatureLabelMap: Record<string, string> = {
+  speed_kmph: "Speed",
+  accel_x: "Longitudinal Accel",
+  accel_y: "Lateral Accel",
+  brake_pressure: "Brake Pressure",
+  steering_angle: "Steering Angle",
+  throttle: "Throttle",
+  lane_deviation: "Lane Deviation",
+  headway_distance: "Headway Distance",
 };
 
 const titleCaseToken = (value: string) =>
@@ -41,63 +68,69 @@ const titleCaseToken = (value: string) =>
 
 const getTopVisualCue = (record: RiskUpdate) => {
   const visualCues = record.visual_top_classes.filter(
-    (item) => item.label !== "normal_driving",
+    (item) => !["safe_driving", "normal_driving"].includes(item.label),
   );
   const candidates =
     visualCues.length > 0 ? visualCues : record.visual_top_classes;
   return [...candidates].sort((a, b) => b.probability - a.probability)[0];
 };
 
-const getTelemetrySignals = (record: RiskUpdate) => {
-  const telemetry = record.telemetry_features;
+const getTopTelemetryBehavior = (record: RiskUpdate) =>
+  [...record.telemetry_behavior_classes].sort(
+    (a, b) => b.probability - a.probability,
+  )[0];
 
-  if (!telemetry) {
-    return [];
-  }
+const getTopTelemetryFeatureContributions = (record: RiskUpdate) =>
+  [...(record.telemetry_feature_contributions ?? [])]
+    .sort((a, b) => Math.abs(b.contribution) - Math.abs(a.contribution))
+    .slice(0, 3);
 
-  return [
-    { label: "lane_deviation", value: telemetry.lane_deviation },
-    { label: "brake_usage", value: telemetry.brake_usage },
-    {
-      label: "acceleration",
-      value: Math.min(1, telemetry.acceleration / 3),
-    },
-    {
-      label: "steering_angle",
-      value: Math.min(1, Math.abs(telemetry.steering_angle) / 18),
-    },
-  ];
-};
+const formatSignedContribution = (value: number) =>
+  `${value >= 0 ? "+" : ""}${formatFixed(value, 2)}`;
+
+// What a Live record's feature contributions MEAN, said only for the method the backend
+// names in the record's provenance (a replay record has none: its contributions are the
+// hand-written FYP1 table, and this sentence would be false for them). TreeSHAP local
+// attribution on the Safe-class score, sign flipped, so + pushes toward unsafe; log-odds.
+const TREESHAP_CONTRIBUTION_METHOD = "xgboost_treeshap_neg_safe_margin";
+const TREESHAP_CONTRIBUTION_NOTE =
+  "Explains Telemetry Non-Safe Risk; + pushes toward unsafe. TreeSHAP local attribution in model-score (log-odds) units; not causal.";
 
 export function ExplanationView({
   selectedRecord,
   history,
   config,
 }: ExplanationViewProps) {
-  const contributions = computeRiskContributions(
-    selectedRecord.P_distraction,
-    selectedRecord.P_telemetry_anomaly,
-    config.weightVision,
-    config.weightTelemetry,
-    selectedRecord.modality_freshness.vision,
-    selectedRecord.modality_freshness.telemetry,
-  );
+  // Reached through `selectedRecord`, not `latest`: a user can pick an unassessed
+  // window in Signal Inspector and switch here. The model nulls everything that
+  // would otherwise be fabricated for it (see explanationModel.ts).
+  const { unavailable, contributions, contributionIssue, evidenceType } =
+    buildExplanationModel(selectedRecord, config);
+  const visionFreshness = selectedRecord.modality_freshness.vision;
+  const telemetryFreshness = selectedRecord.modality_freshness.telemetry;
+  // Ruling A (D13): a branch can be missing because it never arrived or because its
+  // evidence expired; the words differ, the number is withheld either way.
+  const visionExpiry = branchExpiry(selectedRecord, "vision");
+  const telemetryExpiry = branchExpiry(selectedRecord, "telemetry");
+  const visionExpired = visionExpiry.expired;
+  const telemetryExpired = telemetryExpiry.expired;
   const visualCue = getTopVisualCue(selectedRecord);
-  const telemetrySignals = getTelemetrySignals(selectedRecord);
-  const telemetryCue = [...telemetrySignals].sort(
-    (a, b) => b.value - a.value,
-  )[0];
-  const evidenceType = getEvidenceType(selectedRecord, config.thresholdLow);
+  const telemetryBehavior = getTopTelemetryBehavior(selectedRecord);
+  const telemetryFeatureContributions =
+    getTopTelemetryFeatureContributions(selectedRecord);
+  const treeShapContributions =
+    selectedRecord.provenance?.telemetry_contribution_method ===
+    TREESHAP_CONTRIBUTION_METHOD;
+  const maxTelemetryContribution = Math.max(
+    0.01,
+    ...telemetryFeatureContributions.map((item) => Math.abs(item.contribution)),
+  );
   const matchedRule = getMatchedEvidenceRule(evidenceType, config.thresholdLow);
   const relativeEvidence = getRelativeEvidence(selectedRecord);
   const activeInputs = getActiveInputSummary(selectedRecord);
-  const evidenceDistribution = evidenceTypes.map((type) => ({
-    label: evidenceChartLabels[type],
-    count: history.filter(
-      (record) => getEvidenceType(record, config.thresholdLow) === type,
-    ).length,
-  }));
-  const formatWeight = (weight: number) => Number(weight.toFixed(2)).toString();
+  const evidenceChartData = evidenceDistribution(history, config.thresholdLow);
+  const formatWeight = (weight: number) =>
+    Number(formatFixed(weight, 2)).toString();
 
   return (
     <div className="page-grid page-grid--explanation">
@@ -111,21 +144,44 @@ export function ExplanationView({
             <FileText size={20} />
           </div>
 
+          {unavailable ? (
+            <p className="runtime-warning" role="status">
+              Window {selectedRecord.window_id} has no assessment: neither
+              branch contributed usable evidence, so RiskScore, RiskLevel,
+              Evidence Type and Alert status are not reported for it. Branch
+              values below are shown as recorded.
+            </p>
+          ) : null}
+
           <div className="evidence-type-block">
             <span>Evidence Type</span>
-            <strong>{formatEvidenceType(evidenceType)}</strong>
+            <strong>
+              {evidenceType === null
+                ? UNAVAILABLE_LABEL
+                : formatEvidenceType(evidenceType)}
+            </strong>
             <small>Relative Evidence: {relativeEvidence}</small>
           </div>
 
           <div className="summary-metric-grid">
             <div>
               <span>P_distraction</span>
-              <strong>{formatProbability(selectedRecord.P_distraction)}</strong>
+              <strong>
+                {formatBranchProbability(
+                  selectedRecord.P_distraction,
+                  visionFreshness,
+                  visionExpired,
+                )}
+              </strong>
             </div>
             <div>
-              <span>P_telemetry_anomaly</span>
+              <span>Telemetry Non-Safe Risk</span>
               <strong>
-                {formatProbability(selectedRecord.P_telemetry_anomaly)}
+                {formatBranchProbability(
+                  selectedRecord.P_telemetry_anomaly,
+                  telemetryFreshness,
+                  telemetryExpired,
+                )}
               </strong>
             </div>
             <div>
@@ -142,7 +198,11 @@ export function ExplanationView({
             <div>
               <span>AlertStatus</span>
               <Pill
-                label={titleCaseToken(selectedRecord.AlertSeverity)}
+                label={
+                  selectedRecord.AlertSeverity === null
+                    ? null
+                    : titleCaseToken(selectedRecord.AlertSeverity)
+                }
                 tone={selectedRecord.AlertSeverity}
               />
             </div>
@@ -168,14 +228,22 @@ export function ExplanationView({
             <div>
               <span>P_distraction</span>
               <strong>
-                {formatProbability(selectedRecord.P_distraction)}
-                <small>{formatPercent(selectedRecord.P_distraction)}</small>
+                {formatBranchProbability(
+                  selectedRecord.P_distraction,
+                  visionFreshness,
+                  visionExpired,
+                )}
+                {visionFreshness === "missing" ? null : (
+                  <small>{formatPercent(selectedRecord.P_distraction)}</small>
+                )}
               </strong>
             </div>
             <div>
-              <span>Top visual cue</span>
+              <span>Primary Distraction Cue</span>
               <strong>
-                {visualCue?.label ?? "unavailable"}
+                {visualCue
+                  ? (visualLabelMap[visualCue.label] ?? visualCue.label)
+                  : "unavailable"}
                 {visualCue ? (
                   <small>{formatPercent(visualCue.probability)}</small>
                 ) : null}
@@ -183,14 +251,18 @@ export function ExplanationView({
             </div>
             <div>
               <span>Freshness</span>
-              <Pill
-                label={selectedRecord.modality_freshness.vision}
-                tone={selectedRecord.modality_freshness.vision}
+              <BranchStatusPill
+                status={visionFreshness}
+                expiry={visionExpiry}
               />
             </div>
             <div>
               <span>Contribution</span>
-              <strong>{formatContribution(contributions.vision)}</strong>
+              <strong>
+                {contributions === null
+                  ? UNAVAILABLE_LABEL
+                  : formatContribution(contributions.vision)}
+              </strong>
             </div>
           </div>
         </section>
@@ -204,42 +276,65 @@ export function ExplanationView({
           </div>
 
           <div className="contribution-formula">
-            RiskScore = {formatWeight(config.weightVision)} x P_distraction +{" "}
-            {formatWeight(config.weightTelemetry)} x P_telemetry_anomaly
+            RiskScore = {formatWeight(config.weightVision)} x Visual Distraction
+            + {formatWeight(config.weightTelemetry)} x Telemetry Non-Safe
+            Behaviour
           </div>
 
-          <div
-            className="contribution-bar"
-            aria-label="Vision and telemetry contribution to RiskScore"
-          >
-            <div
-              className="contribution-bar__vision"
-              style={{ width: `${contributions.vision}%` }}
-            />
-            <div
-              className="contribution-bar__telemetry"
-              style={{ width: `${contributions.telemetry}%` }}
-            />
-            <div className="contribution-bar__remainder" />
-          </div>
+          {contributions === null ? (
+            <p className="runtime-warning" role="status">
+              No contribution breakdown:{" "}
+              {contributionIssue === "no_assessment"
+                ? "this window has no assessment, so there is no RiskScore to split between the branches."
+                : contributionIssue === "weights_differ"
+                  ? "the fusion weights in scope are not the ones this record was produced with, so a split would not add up to its stored RiskScore."
+                  : "the fusion weights in scope leave no evidence to split."}
+            </p>
+          ) : (
+            <>
+              <div
+                className="contribution-bar"
+                aria-label="Vision and telemetry contribution to RiskScore"
+              >
+                <div
+                  className="contribution-bar__vision"
+                  style={{ width: `${contributions.vision}%` }}
+                />
+                <div
+                  className="contribution-bar__telemetry"
+                  style={{ width: `${contributions.telemetry}%` }}
+                />
+                <div className="contribution-bar__remainder" />
+              </div>
 
-          <div className="contribution-equation">
-            <span>Vision {Math.round(contributions.vision)}</span>
-            <strong>+</strong>
-            <span>Telemetry {Math.round(contributions.telemetry)}</span>
-            <strong>=</strong>
-            <span>RiskScore {formatRiskScore(selectedRecord.RiskScore)}</span>
-          </div>
+              <div className="contribution-equation">
+                <span>
+                  Visual Distraction {formatFixed(contributions.vision, 0)}
+                </span>
+                <strong>+</strong>
+                <span>
+                  Telemetry Non-Safe {formatFixed(contributions.telemetry, 0)}
+                </span>
+                <strong>=</strong>
+                <span>
+                  RiskScore {formatRiskScore(selectedRecord.RiskScore)}
+                </span>
+              </div>
 
-          <div className="contribution-labels">
-            <span>Vision contribution {Math.round(contributions.vision)}</span>
-            <span>
-              Telemetry contribution {Math.round(contributions.telemetry)}
-            </span>
-            <span>
-              Total RiskScore {formatRiskScore(selectedRecord.RiskScore)}
-            </span>
-          </div>
+              <div className="contribution-labels">
+                <span>
+                  Vision contribution {formatFixed(contributions.vision, 0)}
+                </span>
+                <span>
+                  Telemetry non-safe contribution{" "}
+                  {formatFixed(contributions.telemetry, 0)}
+                </span>
+                <span>
+                  Total RiskScore {formatRiskScore(selectedRecord.RiskScore)}
+                </span>
+              </div>
+            </>
+          )}
         </section>
       </div>
 
@@ -286,33 +381,96 @@ export function ExplanationView({
 
           <div className="evidence-metrics">
             <div>
-              <span>P_telemetry_anomaly</span>
+              <span>Current Behaviour</span>
               <strong>
-                {formatProbability(selectedRecord.P_telemetry_anomaly)}
-                <small>
-                  {formatPercent(selectedRecord.P_telemetry_anomaly)}
-                </small>
-              </strong>
-            </div>
-            <div>
-              <span>Top telemetry cue</span>
-              <strong>
-                {telemetryCue?.label ?? "unavailable"}
-                {telemetryCue ? (
-                  <small>{formatPercent(telemetryCue.value)}</small>
+                {telemetryBehavior
+                  ? (telemetryBehaviorLabelMap[telemetryBehavior.label] ??
+                    telemetryBehavior.label)
+                  : "unavailable"}
+                {telemetryBehavior ? (
+                  <small>
+                    {formatPercent(telemetryBehavior.probability)} confidence
+                  </small>
                 ) : null}
               </strong>
             </div>
             <div>
+              <span>Telemetry Non-Safe Risk</span>
+              <strong>
+                {formatBranchProbability(
+                  selectedRecord.P_telemetry_anomaly,
+                  telemetryFreshness,
+                  telemetryExpired,
+                )}
+                {telemetryFreshness === "missing" ? null : (
+                  <small>
+                    {formatPercent(selectedRecord.P_telemetry_anomaly)}
+                  </small>
+                )}
+              </strong>
+            </div>
+            <div className="evidence-metrics__stacked">
+              <span>Feature Contribution</span>
+              {telemetryFeatureContributions.length > 0 ? (
+                <div className="feature-contribution-list">
+                  {telemetryFeatureContributions.map((item) => (
+                    <div
+                      className="feature-contribution-row"
+                      key={item.feature}
+                    >
+                      <div className="feature-contribution-row__meta">
+                        <strong>
+                          {telemetryFeatureLabelMap[item.feature] ??
+                            item.feature}
+                        </strong>
+                        <span>
+                          {formatSignedContribution(item.contribution)}
+                        </span>
+                      </div>
+                      <div className="feature-contribution-row__track">
+                        <div
+                          className={
+                            item.contribution >= 0
+                              ? "feature-contribution-row__bar"
+                              : "feature-contribution-row__bar feature-contribution-row__bar--negative"
+                          }
+                          style={{
+                            width: `${Math.max(
+                              8,
+                              (Math.abs(item.contribution) /
+                                maxTelemetryContribution) *
+                                100,
+                            )}%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <strong>unavailable</strong>
+              )}
+              {treeShapContributions &&
+              telemetryFeatureContributions.length > 0 ? (
+                <small className="feature-contribution-note">
+                  {TREESHAP_CONTRIBUTION_NOTE}
+                </small>
+              ) : null}
+            </div>
+            <div>
               <span>Freshness</span>
-              <Pill
-                label={selectedRecord.modality_freshness.telemetry}
-                tone={selectedRecord.modality_freshness.telemetry}
+              <BranchStatusPill
+                status={telemetryFreshness}
+                expiry={telemetryExpiry}
               />
             </div>
             <div>
               <span>Contribution</span>
-              <strong>{formatContribution(contributions.telemetry)}</strong>
+              <strong>
+                {contributions === null
+                  ? UNAVAILABLE_LABEL
+                  : formatContribution(contributions.telemetry)}
+              </strong>
             </div>
           </div>
         </section>
@@ -325,7 +483,7 @@ export function ExplanationView({
             </div>
             <BarChart3 size={20} />
           </div>
-          <DistributionChart data={evidenceDistribution} />
+          <DistributionChart data={evidenceChartData} />
         </section>
       </aside>
     </div>

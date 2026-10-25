@@ -1,9 +1,17 @@
 import { Flag, Search } from "lucide-react";
+import { branchExpiry } from "../../../ai/src/availability";
+import { BranchStatusPill } from "../components/BranchStatusPill";
 import { Pill } from "../components/Pill";
 import { TelemetrySummary } from "../components/TelemetrySummary";
 import type { RiskUpdate } from "../types";
-import { getEvidenceType, getRelativeEvidence } from "../../../ai/src/evidence";
-import { formatPercent, formatRiskScore } from "../utils/format";
+import { getRelativeEvidence } from "../../../ai/src/evidence";
+import { resolveDominantEvidence } from "../utils/display";
+import {
+  UNAVAILABLE_LABEL,
+  formatBranchPercent,
+  formatProbability,
+  formatRiskScore,
+} from "../utils/format";
 
 interface SignalInspectorProps {
   history: RiskUpdate[];
@@ -20,8 +28,10 @@ export function SignalInspector({
   onSelectWindow,
   onToggleFlag,
 }: SignalInspectorProps) {
-  const evidenceType = getEvidenceType(selectedRecord, thresholdLow);
+  const evidenceType = resolveDominantEvidence(selectedRecord, thresholdLow);
   const relativeEvidence = getRelativeEvidence(selectedRecord);
+  const visionExpiry = branchExpiry(selectedRecord, "vision");
+  const telemetryExpiry = branchExpiry(selectedRecord, "telemetry");
 
   return (
     <div className="page-grid page-grid--inspector">
@@ -46,6 +56,9 @@ export function SignalInspector({
               onClick={() => onSelectWindow(record.window_id)}
             >
               <span>Window {record.window_id}</span>
+              {record.assessment_available ? null : (
+                <Pill label={null} tone="unavailable" />
+              )}
             </button>
           ))}
         </div>
@@ -83,7 +96,7 @@ export function SignalInspector({
           </div>
           <div>
             <span>Evidence Type</span>
-            <strong>{evidenceType}</strong>
+            <strong>{evidenceType ?? UNAVAILABLE_LABEL}</strong>
           </div>
           <div>
             <span>Relative Evidence</span>
@@ -101,15 +114,18 @@ export function SignalInspector({
         </div>
 
         <div className="bar-list">
-          {selectedRecord.visual_top_classes.map((item) => (
-            <div className="bar-row" key={item.label}>
-              <span>{item.label}</span>
-              <div className="bar-track">
-                <div style={{ width: `${item.probability * 100}%` }} />
+          {/* Highest first: in class order (c0..c9) the one that matters could be anywhere. */}
+          {[...selectedRecord.visual_top_classes]
+            .sort((a, b) => b.probability - a.probability)
+            .map((item) => (
+              <div className="bar-row" key={item.label}>
+                <span title={item.label}>{item.label}</span>
+                <div className="bar-track">
+                  <div style={{ width: `${item.probability * 100}%` }} />
+                </div>
+                <strong>{formatProbability(item.probability)}</strong>
               </div>
-              <strong>{item.probability.toFixed(2)}</strong>
-            </div>
-          ))}
+            ))}
         </div>
       </section>
 
@@ -117,7 +133,7 @@ export function SignalInspector({
         <div className="section-header">
           <div>
             <p className="eyebrow">Telemetry Branch</p>
-            <h2>3. Telemetry features</h2>
+            <h2>3. Vehicle-dynamics features</h2>
           </div>
         </div>
         <TelemetrySummary telemetry={selectedRecord.telemetry_features} />
@@ -134,24 +150,36 @@ export function SignalInspector({
         <div className="stat-list stat-list--compact">
           <div>
             <span>P_distraction</span>
-            <strong>{formatPercent(selectedRecord.P_distraction)}</strong>
+            <strong>
+              {formatBranchPercent(
+                selectedRecord.P_distraction,
+                selectedRecord.modality_freshness.vision,
+                visionExpiry.expired,
+              )}
+            </strong>
           </div>
           <div>
-            <span>P_telemetry_anomaly</span>
-            <strong>{formatPercent(selectedRecord.P_telemetry_anomaly)}</strong>
+            <span>Telemetry non-safe risk</span>
+            <strong>
+              {formatBranchPercent(
+                selectedRecord.P_telemetry_anomaly,
+                selectedRecord.modality_freshness.telemetry,
+                telemetryExpiry.expired,
+              )}
+            </strong>
           </div>
           <div>
             <span>Vision freshness</span>
-            <Pill
-              label={selectedRecord.modality_freshness.vision}
-              tone={selectedRecord.modality_freshness.vision}
+            <BranchStatusPill
+              status={selectedRecord.modality_freshness.vision}
+              expiry={visionExpiry}
             />
           </div>
           <div>
             <span>Telemetry freshness</span>
-            <Pill
-              label={selectedRecord.modality_freshness.telemetry}
-              tone={selectedRecord.modality_freshness.telemetry}
+            <BranchStatusPill
+              status={selectedRecord.modality_freshness.telemetry}
+              expiry={telemetryExpiry}
             />
           </div>
           <div>

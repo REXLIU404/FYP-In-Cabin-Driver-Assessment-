@@ -1,13 +1,13 @@
-import { Download, Pause, Play, RotateCw, Settings } from "lucide-react";
+import { Download, Settings } from "lucide-react";
 import type { AppConfig } from "../types";
+import { roundHalfUp } from "../../../ai/src/riskLogic";
+import { zeroWeightNotice } from "../utils/display";
+import { formatFixed } from "../utils/format";
 
 interface ConfigurationViewProps {
   config: AppConfig;
   onConfigChange: (config: AppConfig) => void;
   isMonitoring: boolean;
-  onStartMonitoring: () => void;
-  onPauseMonitoring: () => void;
-  onRestartSession: () => void;
   onExportJson: () => void;
   onExportCsv: () => void;
 }
@@ -19,9 +19,6 @@ export function ConfigurationView({
   config,
   onConfigChange,
   isMonitoring,
-  onStartMonitoring,
-  onPauseMonitoring,
-  onRestartSession,
   onExportJson,
   onExportCsv,
 }: ConfigurationViewProps) {
@@ -32,9 +29,14 @@ export function ConfigurationView({
     const weightVision = clamp(value, 0, 1);
     patchConfig({
       weightVision,
-      weightTelemetry: Number((1 - weightVision).toFixed(2)),
+      weightTelemetry: roundHalfUp(1 - weightVision, 2),
     });
   };
+
+  const weightNotice = zeroWeightNotice(
+    config.weightVision,
+    config.weightTelemetry,
+  );
 
   return (
     <section className="panel configuration-panel">
@@ -49,37 +51,32 @@ export function ConfigurationView({
       <div className="config-sections">
         <section className="config-section">
           <h3>Runtime Configuration</h3>
-          <div className="action-strip">
-            <button
-              type="button"
-              className="button button--primary"
-              onClick={onStartMonitoring}
+          <p>
+            Changing settings pauses monitoring. The next Start Monitoring (top
+            of the page) creates a session with the new configuration.
+          </p>
+          <label className="field">
+            <span>Target inference FPS (camera preview requests 30 FPS)</span>
+            <input
+              type="number"
+              min="1"
+              max="30"
+              value={config.inferenceFps}
               disabled={isMonitoring}
-            >
-              <Play size={16} />
-              Start Monitoring
-            </button>
-            <button
-              type="button"
-              className="button"
-              onClick={onPauseMonitoring}
-              disabled={!isMonitoring}
-            >
-              <Pause size={16} />
-              Pause
-            </button>
-            <button type="button" className="button" onClick={onRestartSession}>
-              <RotateCw size={16} />
-              Restart Session
-            </button>
-          </div>
+              onChange={(e) =>
+                patchConfig({
+                  inferenceFps: clamp(Number(e.target.value) || 1, 1, 30),
+                })
+              }
+            />
+          </label>
         </section>
 
         <section className="config-section">
           <h3>Risk Fusion Parameters</h3>
           <div className="config-grid">
             <label className="field">
-              <span>Vision Weight: {config.weightVision.toFixed(2)}</span>
+              <span>Vision Weight: {formatFixed(config.weightVision, 2)}</span>
               <input
                 type="range"
                 min="0"
@@ -93,7 +90,9 @@ export function ConfigurationView({
             </label>
 
             <label className="field">
-              <span>Telemetry Weight: {config.weightTelemetry.toFixed(2)}</span>
+              <span>
+                Telemetry Weight: {formatFixed(config.weightTelemetry, 2)}
+              </span>
               <input
                 type="range"
                 min="0"
@@ -105,6 +104,12 @@ export function ConfigurationView({
                 }
               />
             </label>
+
+            {weightNotice === null ? null : (
+              <p className="runtime-warning config-grid__notice" role="status">
+                {weightNotice}
+              </p>
+            )}
 
             <label className="field">
               <span>Low / Medium Threshold</span>
@@ -139,18 +144,25 @@ export function ConfigurationView({
         <section className="config-section">
           <h3>Output Options</h3>
           <div className="output-options">
-            <label className="checkbox-field">
-              <input
-                type="checkbox"
-                checked={config.enableEvidenceInterpretation}
-                onChange={(event) =>
-                  patchConfig({
-                    enableEvidenceInterpretation: event.target.checked,
-                  })
-                }
-              />
-              <span>Enable Evidence Interpretation</span>
-            </label>
+            {config.operationMode === "PREPARED_SESSION_RUNTIME" ? (
+              <label className="checkbox-field">
+                <input
+                  type="checkbox"
+                  checked={config.enableEvidenceInterpretation}
+                  onChange={(event) =>
+                    patchConfig({
+                      enableEvidenceInterpretation: event.target.checked,
+                    })
+                  }
+                />
+                <span>Enable Evidence Interpretation</span>
+              </label>
+            ) : (
+              <p>
+                Exports contain all persisted model evidence, source labels,
+                model versions and the session fusion configuration.
+              </p>
+            )}
             <div className="action-strip">
               <button
                 type="button"

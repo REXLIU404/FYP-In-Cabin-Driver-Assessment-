@@ -1,0 +1,41 @@
+.....................F.                                                  [100%]
+=================================== FAILURES ===================================
+____________ test_pil_service_preprocess_matches_training_notebook _____________
+
+    def test_pil_service_preprocess_matches_training_notebook():
+        # Training uses PyTorch, serving uses ORT/XGBoost. Keep these native thread
+        # runtimes in separate processes (macOS OpenMP can deadlock when mixed).
+        import subprocess
+        import sys
+        code = """
+    import base64, io, sys
+    import torch
+    import numpy as np
+    from PIL import Image
+    from torchvision import transforms
+    from app.providers.trained import TrainedProvider
+    torch.set_num_threads(1)
+    encoded = sys.argv[1]
+    with Image.open(io.BytesIO(base64.b64decode(encoded))) as image:
+        expected = transforms.Compose([transforms.Resize((224,224)), transforms.ToTensor(),
+            transforms.Normalize([.485,.456,.406],[.229,.224,.225])])(image.convert('RGB'))
+    np.testing.assert_allclose(TrainedProvider.preprocess(encoded), expected.unsqueeze(0).numpy(), atol=1e-6)
+    """
+        # Non-uniform pixels exercise resize interpolation as well as normalization.
+        pixels = np.random.default_rng(42).integers(0, 256, size=(71, 113, 3), dtype=np.uint8)
+        buffer = io.BytesIO()
+        Image.fromarray(pixels).save(buffer, format="PNG")
+>       encoded = base64.b64decode(buffer.getvalue()).decode()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       UnicodeDecodeError: 'utf-8' codec can't decode byte 0xb5 in position 7: invalid start byte
+
+backend/tests/test_live_inference.py:196: UnicodeDecodeError
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED backend/tests/test_live_inference.py::test_pil_service_preprocess_matches_training_notebook
+1 failed, 22 passed, 1 warning in 3.28s

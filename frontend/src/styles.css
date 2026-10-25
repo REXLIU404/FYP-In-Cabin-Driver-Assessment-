@@ -116,6 +116,7 @@ button {
 .brand-block span {
   color: var(--muted);
   font-size: 0.78rem;
+  white-space: nowrap;
 }
 
 .sidebar-toggle {
@@ -275,14 +276,69 @@ button {
   border-color: #fecaca;
 }
 
-.alert-banner strong,
-.alert-banner span {
+/* An unassessed window. Without its own rule an unknown modifier falls back to
+   the base (green) banner, and "no assessment" would look like "all clear". */
+.alert-banner--unavailable {
+  background: #f1f5f9;
+  border: 1px dashed #94a3b8;
+}
+
+/* The title and the text of the banner. Not the pills: a pill is a span too, and a
+   blanket ".alert-banner span" stretched it to a block and greyed out its tone. */
+.alert-banner > div:not(.banner-pills) > strong,
+.alert-banner > div:not(.banner-pills) > span {
   display: block;
 }
 
-.alert-banner span {
+.alert-banner > div:not(.banner-pills) > span {
   margin-top: 2px;
   color: var(--muted);
+}
+
+/* A pill with its label above it: the chips used to be unlabelled ("High", "HIGH_ALERT",
+   "DEGRADED" side by side with nothing saying which is which). */
+.badge-field {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+}
+
+.badge-field > span:first-child {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.alert-note {
+  margin: 0;
+  padding: 8px 10px;
+  color: #713f12;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+  font-size: 0.8rem;
+}
+
+.selection-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  color: var(--navy-2);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.selection-bar--pinned {
+  background: var(--blue-soft);
+  border-color: #c7d2fe;
 }
 
 .page-grid {
@@ -353,11 +409,13 @@ button {
   border-radius: 8px;
 }
 
-.session-strip span,
-.telemetry-cell span,
-.modality-card span,
-.summary-metric-grid span,
-.stat-list span {
+/* Row labels only: `:not(.pill)` keeps a pill's own size and tone colour (the label rule
+   used to turn every pill in these lists into a full-width grey bar). */
+.session-strip span:not(.pill),
+.telemetry-cell span:not(.pill),
+.modality-card span:not(.pill),
+.summary-metric-grid span:not(.pill),
+.stat-list span:not(.pill) {
   display: block;
   color: var(--muted);
   font-size: 0.84rem;
@@ -371,6 +429,19 @@ button {
   display: block;
   margin-top: 5px;
   overflow-wrap: anywhere;
+}
+
+.session-strip strong.session-id {
+  overflow: hidden;
+  overflow-wrap: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.session-strip .pill,
+.stat-list .pill,
+.summary-metric-grid .pill {
+  margin-top: 5px;
 }
 
 .live-layout {
@@ -461,6 +532,10 @@ button {
   font-weight: 800;
 }
 
+.risk-gauge--unavailable .risk-gauge__value {
+  color: var(--muted);
+}
+
 .modality-grid,
 .telemetry-grid,
 .stat-list,
@@ -521,7 +596,8 @@ button {
 .pill--Medium,
 .pill--CAUTION,
 .pill--DEGRADED,
-.pill--stale {
+.pill--stale,
+.pill--expired {
   color: #713f12;
   background: #fef3c7;
   border-color: #fde68a;
@@ -535,6 +611,14 @@ button {
   color: #7f1d1d;
   background: #fee2e2;
   border-color: #fecaca;
+}
+
+/* "No assessment": deliberately neither green, amber nor red. A null level or
+   alert resolves to this tone; it must not fall through to the neutral pill. */
+.pill--unavailable {
+  color: #475569;
+  background: #f8fafc;
+  border: 1px dashed #94a3b8;
 }
 
 .trend-chart,
@@ -590,14 +674,16 @@ button {
 
 .bar-row {
   display: grid;
-  grid-template-columns: minmax(120px, 0.9fr) minmax(120px, 1.4fr) 48px;
+  grid-template-columns: minmax(150px, 1.2fr) minmax(100px, 1fr) 48px;
   align-items: center;
   gap: 10px;
 }
 
 .bar-row span {
+  overflow: hidden;
   color: #334155;
-  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .bar-track {
@@ -613,8 +699,103 @@ button {
   border-radius: inherit;
 }
 
+.vehicle-dynamics {
+  display: grid;
+  gap: 12px;
+}
+
+.vehicle-dynamics__row {
+  display: grid;
+  gap: 7px;
+  padding: 11px 13px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.vehicle-dynamics__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.vehicle-dynamics__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #475569;
+  font-weight: 700;
+}
+
+.vehicle-dynamics__label svg {
+  color: #64748b;
+}
+
+.vehicle-dynamics__value {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.vehicle-dynamics__note {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: #16a34a;
+}
+
+.vehicle-dynamics__note.is-watch {
+  color: #d97706;
+}
+
+.vehicle-dynamics__note.is-alert {
+  color: #dc2626;
+}
+
+.vehicle-dynamics__track {
+  height: 8px;
+  overflow: hidden;
+  background: #e5e7eb;
+  border-radius: 999px;
+}
+
+.vehicle-dynamics__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: #22c55e;
+  transition: width 0.3s ease;
+}
+
+.vehicle-dynamics__fill.is-watch {
+  background: #f59e0b;
+}
+
+.vehicle-dynamics__fill.is-alert {
+  background: #ef4444;
+}
+
 .table-wrap {
   overflow-x: auto;
+}
+
+/* The window log grows by ~10 rows a second; bounded, with the header kept in view. */
+.table-wrap--scroll {
+  max-height: 520px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.table-wrap--scroll thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--panel);
 }
 
 table {
@@ -647,6 +828,12 @@ tbody tr.is-selected {
 
 tbody tr.is-high-risk {
   background: #fff1f2;
+}
+
+tbody tr.is-unavailable {
+  color: var(--muted);
+  background: #f8fafc;
+  font-style: italic;
 }
 
 .explanation-summary,
@@ -725,6 +912,13 @@ tbody tr.is-high-risk {
   border-bottom: 1px solid var(--line);
 }
 
+.evidence-metrics > .evidence-metrics__stacked {
+  display: grid;
+  justify-content: stretch;
+  align-items: start;
+  gap: 10px;
+}
+
 .rule-list span,
 .evidence-metrics span {
   color: var(--muted);
@@ -743,6 +937,57 @@ tbody tr.is-high-risk {
   margin-top: 2px;
   color: var(--muted);
   font-size: 0.74rem;
+}
+
+.feature-contribution-note {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+
+.feature-contribution-list {
+  display: grid;
+  gap: 8px;
+}
+
+.feature-contribution-row {
+  display: grid;
+  gap: 5px;
+}
+
+.feature-contribution-row__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.feature-contribution-row__meta strong,
+.feature-contribution-row__meta span {
+  font-size: 0.82rem;
+}
+
+.feature-contribution-row__meta span {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.feature-contribution-row__track {
+  height: 6px;
+  overflow: hidden;
+  background: #e2e8f0;
+  border-radius: 999px;
+}
+
+.feature-contribution-row__bar {
+  height: 100%;
+  background: var(--blue);
+  border-radius: inherit;
+}
+
+.feature-contribution-row__bar--negative {
+  background: #94a3b8;
 }
 
 .rule-badge {
@@ -914,21 +1159,39 @@ tbody tr.is-high-risk {
 }
 
 @media (max-width: 900px) {
+  /* minmax(0, 1fr), not 1fr: a 1fr track never shrinks below its items' min-content, and the
+     one-row nav would widen the whole page past a phone screen. */
   .app-shell,
   .app-shell--sidebar-collapsed {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .sidebar {
+  /* A narrow screen gets a slim sticky bar with the views in one scrolling row. The full
+     sidebar used to stick to the top as a ~280 px block and cover a third of a phone screen. */
+  .sidebar,
+  .sidebar--collapsed {
     position: sticky;
     top: 0;
     z-index: 10;
-    gap: 14px;
-    padding: 16px;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
   }
 
-  .sidebar--collapsed {
-    align-items: stretch;
+  .sidebar-header,
+  .sidebar--collapsed .sidebar-header {
+    width: auto;
+  }
+
+  .sidebar-toggle {
+    display: none;
+  }
+
+  .brand-block {
+    padding: 4px;
   }
 
   .sidebar--collapsed .sidebar-header {
@@ -948,7 +1211,26 @@ tbody tr.is-high-risk {
   }
 
   .nav-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav-list button,
+  .sidebar--collapsed .nav-list button {
+    flex: 0 0 auto;
+    padding: 0 10px;
+    white-space: nowrap;
+    border-left: 0;
+    border-bottom: 3px solid transparent;
+  }
+
+  .nav-list button:hover,
+  .nav-list button.is-active {
+    border-bottom-color: var(--blue);
   }
 
   .page-grid--inspector {
@@ -983,8 +1265,9 @@ tbody tr.is-high-risk {
     grid-template-columns: 1fr;
   }
 
-  .nav-list {
-    grid-template-columns: 1fr;
+  .sidebar .brand-copy,
+  .sidebar--collapsed .brand-copy {
+    display: none;
   }
 
   .bar-row {
@@ -997,4 +1280,66 @@ tbody tr.is-high-risk {
     background: #ffffff;
     border-top: 1px solid var(--line);
   }
+}
+
+.runtime-panel {
+  display: grid;
+  gap: 12px;
+}
+.runtime-controls {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.runtime-controls .field {
+  min-width: 210px;
+}
+.runtime-controls select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: white;
+  color: #0f172a;
+}
+.runtime-panel p {
+  margin: 0;
+  line-height: 1.5;
+}
+.runtime-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  font-size: 13px;
+  color: #475569;
+}
+.runtime-panel code {
+  overflow-wrap: anywhere;
+  font-size: 11px;
+}
+.runtime-error {
+  padding: 12px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: #991b1b;
+}
+.config-grid__notice {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+.runtime-warning {
+  padding: 12px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+  color: #92400e;
+}
+.empty-state {
+  padding: 24px;
+}
+.empty-state > .camera-preview {
+  max-width: 640px;
+  margin-top: 20px;
 }

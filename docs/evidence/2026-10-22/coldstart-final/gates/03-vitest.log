@@ -1,0 +1,72 @@
+GATE: vitest
+STATUS: PASS
+EXIT CODE: 0
+STARTED (UTC): 2026-10-22T15:11:40Z
+FINISHED (UTC): 2026-10-22T15:11:45Z
+DURATION (s): 4.5
+ARGV: ["./node_modules/.bin/vitest", "run", "--no-cache"]
+CWD: /private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/coldstart.jk58Tu/repo
+ENV (selected):
+  PYTHONDONTWRITEBYTECODE=1
+  PYTHONPATH=(unset)
+  TMPDIR=/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/
+  DRA_REQUIRE_MODELS=1
+  DRA_DATABASE_URL=(unset)
+  FYP_DATA_ROOT=(unset)
+  NODE_ENV=(unset)
+  CI=(unset)
+  VIRTUAL_ENV=(unset)
+TOOL VERSIONS:
+  python (this script): 3.13.3
+  python (.venv): Python 3.13.3
+  pytest: pytest 9.0.3
+  node: v24.1.0
+  npm: 11.4.2
+  vitest: vitest/2.1.9 darwin-arm64 node-v24.1.0
+  tsc: Version 5.9.3
+  eslint: v9.39.4
+----- STDOUT -----
+
+ RUN  v2.1.9 /private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/coldstart.jk58Tu/repo
+
+ ✓ frontend/src/hooks/useCameraPreview.test.ts (41 tests) 27ms
+ ✓ frontend/src/api/retryPolicy.test.ts (72 tests) 18ms
+ ✓ frontend/src/data/preparedRawTelemetry.test.ts (51 tests) 16ms
+ ✓ frontend/src/api/client.test.ts (32 tests) 23ms
+ ✓ ai/src/availability.test.ts (87 tests) 19ms
+ ✓ frontend/src/hooks/useLiveSession.test.ts (21 tests) 27ms
+ ✓ frontend/src/components/runtimeNotices.test.ts (36 tests) 260ms
+ ✓ frontend/src/utils/export.test.ts (28 tests) 10ms
+ ✓ frontend/src/data/preparedSessionInput.test.ts (21 tests) 12ms
+ ✓ frontend/src/utils/persistence.test.ts (20 tests) 13ms
+ ✓ ai/src/livePayloadContract.test.ts (19 tests) 36ms
+ ✓ ai/src/fusionVectors.test.ts (149 tests) 21ms
+ ✓ frontend/src/views/viewModels.test.ts (19 tests) 16ms
+ ✓ ai/src/liveTiming.test.ts (27 tests) 12ms
+ ✓ ai/src/riskLogic.test.ts (32 tests) 8ms
+ ✓ ai/src/alertFsm.test.ts (16 tests) 7ms
+ ✓ frontend/src/components/trendChart.test.ts (16 tests) 8ms
+ ✓ frontend/src/utils/format.test.ts (14 tests) 6ms
+ ✓ frontend/src/views/branchStatusRender.test.ts (15 tests) 115ms
+ ✓ frontend/src/data/missingCases.test.ts (22 tests) 47ms
+ ✓ frontend/src/utils/alertOverlay.test.ts (9 tests) 8ms
+ ✓ frontend/src/utils/display.test.ts (19 tests) 31ms
+ ✓ ai/src/liveLoop.test.ts (77 tests) 2302ms
+ ✓ frontend/src/views/featureContributionRender.test.ts (8 tests) 170ms
+ ✓ frontend/src/views/riskTrends.test.ts (14 tests) 3ms
+ ✓ frontend/src/utils/dataMode.test.ts (7 tests) 4ms
+ ✓ ai/src/emaParity.test.ts (14 tests) 22ms
+ ✓ frontend/src/utils/selection.test.ts (4 tests) 3ms
+ ✓ ai/src/liveLoopTiming.test.ts (8 tests) 2278ms
+   ✓ the loop records capture -> send -> response for every answered window > the buffer is bounded: after 520 answered windows exactly the newest 500 remain 2142ms
+ ✓ frontend/src/components/branchStatusRender.test.ts (18 tests) 50ms
+ ✓ ai/src/repoGuards.test.ts (6 tests) 282ms
+
+ Test Files  31 passed (31)
+      Tests  922 passed (922)
+   Start at  23:11:41
+   Duration  3.94s (transform 2.18s, setup 0ms, collect 6.98s, tests 5.85s, environment 5ms, prepare 4.17s)
+----- END STDOUT -----
+----- STDERR -----
+
+----- END STDERR -----

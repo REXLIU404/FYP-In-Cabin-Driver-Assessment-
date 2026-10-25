@@ -1,0 +1,32 @@
+{
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "--no-cache"
+  ],
+  "cwd": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1",
+  "start_utc": "2026-10-10T09:01:54.160701+00:00",
+  "duration_s": 0.966,
+  "exit_code": 0,
+  "scratch": "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-oct10-frontend-tests-bi4ecdl2",
+  "scope": "Existing source, no training or application edits; temporary DB for pytest."
+}
+
+
+> fyp-in-cabin-driver-assessment@0.1.0 test
+> vitest run --no-cache
+
+
+ RUN  v2.1.9 /Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1
+
+ ✓ ai/src/riskLogic.test.ts (16 tests) 2ms
+ ✓ ai/src/alertFsm.test.ts (7 tests) 6ms
+ ✓ frontend/src/data/preparedSessionInput.test.ts (6 tests) 3ms
+ ✓ frontend/src/utils/persistence.test.ts (3 tests) 4ms
+
+ Test Files  4 passed (4)
+      Tests  32 passed (32)
+   Start at  17:01:54
+   Duration  475ms (transform 111ms, setup 0ms, collect 197ms, tests 16ms, environment 1ms, prepare 401ms)
+
