@@ -97,8 +97,8 @@
 | 谁 | 工作区 | 分支 | 来源 |
 |---|---|---|---|
 | Claude | `/Users/liu/Desktop/FYP2-Live-System` | `fyp2/live-system`（集成分支） | — |
-| DeepSeek | `/Users/liu/Desktop/FYP2-DeepSeek`（**已建好**，`.venv`、`node_modules` 和三个模型都已链接） | `fyp2/ds-review-fixes`，从 `276f059` 切；之后的 lane 由 Claude 从最新基线另切新分支 | Claude 建 |
-| Codex | 只读访问 Live System；它自己的 ML 工作区不动 | 不建分支 | 报告写到 `/Users/liu/Desktop/FYP2-Live-System/.superpowers/collab/codex/`，被 git 忽略，由 Claude 提交进 `docs/fyp2/task10a/` |
+| DeepSeek | `/Users/liu/Desktop/FYP2-DeepSeek`（**已建好**，`.venv`、`node_modules` 和三个模型都已链接） | `fyp2/ds-review-fixes`，从 `fyp2/live-system` 的最新提交切出（见状态板上的「当前基线」）；之后的 lane 由 Claude 从最新基线另切新分支 | Claude 建 |
+| Codex | 只读访问 Live System（读的是 `fyp2/live-system` 的当前代码）；它自己的 ML 工作区（`fyp2/ml-training`）不动 | **不建分支**：CX-0 和各次审计都不改代码 | 报告写到 `/Users/liu/Desktop/FYP2-Live-System/.superpowers/collab/codex/`，被 git 忽略，由 Claude 提交进 `docs/fyp2/task10a/`。以后如果让 Codex 写代码（例如 E2 / E5），再由 Claude 另建 `FYP2-Codex` 工作区和 `fyp2/cx-*` 分支 |
 | 回放会话 | `/Users/liu/Desktop/FYP2-Constructed-Scenario` | `fyp2/constructed-scenario` | 基线 `276f059` |
 
 ### 4.4 同步协议
@@ -137,7 +137,7 @@
 ### 5.1 DeepSeek：DS-0 评审验证与修复（现在就可以开始）
 
 ```text
-你是本项目的实现者之一，工作目录是 /Users/liu/Desktop/FYP2-DeepSeek（git worktree，分支 fyp2/ds-review-fixes，基于 276f059）。项目是 FYP 原型「In-Cabin Multi-Modal Driver Risk Assessment」：FastAPI + SQLite 后端（backend/app），React 前端（frontend/src），共享的风险逻辑在 ai/src。
+你是本项目的实现者之一，工作目录是 /Users/liu/Desktop/FYP2-DeepSeek（git worktree，分支 fyp2/ds-review-fixes，从 fyp2/live-system 的最新提交切出；先运行 git log -1，与状态板上的「当前基线」核对是否一致）。项目是 FYP 原型「In-Cabin Multi-Modal Driver Risk Assessment」：FastAPI + SQLite 后端（backend/app），React 前端（frontend/src），共享的风险逻辑在 ai/src。
 
 先读：
 1) ./CLAUDE.md（项目规则：分层、RiskScore 0–100、AlertSeverity FSM、范围红线）；
