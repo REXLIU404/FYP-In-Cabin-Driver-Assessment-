@@ -1,0 +1,1397 @@
+GATE: pytest
+STATUS: FAIL
+EXIT CODE: 1
+STARTED (UTC): 2026-10-26T04:53:22Z
+FINISHED (UTC): 2026-10-26T04:56:17Z
+DURATION (s): 175.08
+ARGV: ["../.venv/bin/python", "-m", "pytest", "tests", "-q", "-p", "no:cacheprovider"]
+CWD: /Users/liu/Desktop/FYP2-Live-System/backend
+ENV (selected):
+  PYTHONDONTWRITEBYTECODE=1
+  PYTHONPATH=.
+  TMPDIR=/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk
+  DRA_REQUIRE_MODELS=1
+  DRA_DATABASE_URL=(unset)
+  FYP_DATA_ROOT=(unset)
+  NODE_ENV=(unset)
+  CI=(unset)
+  VIRTUAL_ENV=(unset)
+TOOL VERSIONS:
+  python (this script): 3.13.3
+  python (.venv): Python 3.13.3
+  pytest: pytest 9.0.3
+  node: v24.1.0
+  npm: 11.4.2
+  vitest: vitest/2.1.9 darwin-arm64 node-v24.1.0
+  tsc: Version 5.9.3
+  eslint: v9.39.4
+PYTEST SKIPPED: 0
+----- STDOUT -----
+................F....................................................... [  6%]
+........................................................................ [ 13%]
+........FFFFFFF...........FFFFF..F...........F..........F....F.F........ [ 20%]
+........................................................................ [ 27%]
+........................................................................ [ 33%]
+........................................................................ [ 40%]
+........................................................................ [ 47%]
+........................................................................ [ 54%]
+........................................................................ [ 61%]
+........................................................................ [ 67%]
+........................................................................ [ 74%]
+........................................................................ [ 81%]
+..............................................F.FFF.F................... [ 88%]
+........................................................................ [ 94%]
+......................................................                   [100%]
+=================================== FAILURES ===================================
+_______________________ test_success_answers_are_marked ________________________
+
+live = namespace(client=<starlette.testclient.TestClient object at 0x10e92e890>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_success_answers_are_marke0/fault_events.log'))
+
+    def test_success_answers_are_marked(live):
+        assert_marked(live.client.get("/api/health"), 200)
+        assert_marked(live.client.get(f"/api/sessions/{live.sid}"), 200)
+        assert_marked(live.client.get("/api/models"), 200)
+>       assert_marked(infer(live, make_payload("marker-ok-1")), 201)
+
+tests/test_backend_marker.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = <Response [500 Internal Server Error]>, status = 201
+
+    def assert_marked(response, status):
+>       assert response.status_code == status, response.text
+E       AssertionError: Internal Server Error
+E       assert 500 == 201
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+
+tests/test_backend_marker.py:31: AssertionError
+_ test_st_fail_03_commit_failure_is_a_storage_fault_and_the_original_error_surfaces _
+
+live = namespace(client=<starlette.testclient.TestClient object at 0x118b0fe70>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_st_fail_03_commit_failure0/fault_events.log'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x117b21390>
+
+    def test_st_fail_03_commit_failure_is_a_storage_fault_and_the_original_error_surfaces(live, monkeypatch):
+        commit, calls = commit_fails_once_with("disk I/O error")
+        with monkeypatch.context() as patched:
+            patched.setattr(Session, "commit", commit)
+            # What the application raised, untouched: the storage error, not the fault logger's.
+            with pytest.raises(OperationalError) as caught:
+>               infer(live, make_payload("storage-1"), client=live.strict)
+
+tests/test_fault_events.py:272: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_fault_events.py:143: in infer
+    return (client or env.client).post(f"/api/sessions/{sid or env.sid}/infer", json=body, headers=headers)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/starlette/testclient.py:560: in post
+    return super().post(
+../.venv/lib/python3.13/site-packages/httpx/_client.py:1144: in post
+    return self.request(
+../.venv/lib/python3.13/site-packages/starlette/testclient.py:459: in request
+    return super().request(
+../.venv/lib/python3.13/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+../.venv/lib/python3.13/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+../.venv/lib/python3.13/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/starlette/testclient.py:362: in handle_request
+    raise exc
+../.venv/lib/python3.13/site-packages/starlette/testclient.py:359: in handle_request
+    portal.call(self.app, scope, receive, send)
+../.venv/lib/python3.13/site-packages/anyio/from_thread.py:334: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/concurrent/futures/_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+../.venv/lib/python3.13/site-packages/anyio/from_thread.py:259: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/fastapi/applications.py:1159: in __call__
+    await super().__call__(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/applications.py:90: in __call__
+    await self.middleware_stack(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/middleware/errors.py:186: in __call__
+    raise exc
+../.venv/lib/python3.13/site-packages/starlette/middleware/errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+app/main.py:77: in __call__
+    await self.app(scope, receive, send_marked)
+../.venv/lib/python3.13/site-packages/starlette/middleware/cors.py:88: in __call__
+    await self.app(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/middleware/exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+../.venv/lib/python3.13/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+../.venv/lib/python3.13/site-packages/fastapi/middleware/asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/routing.py:660: in __call__
+    await self.middleware_stack(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/routing.py:680: in app
+    await route.handle(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/routing.py:276: in handle
+    await self.app(scope, receive, send)
+../.venv/lib/python3.13/site-packages/fastapi/routing.py:134: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+../.venv/lib/python3.13/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+../.venv/lib/python3.13/site-packages/fastapi/routing.py:120: in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/fastapi/routing.py:674: in app
+    raw_response = await run_endpoint_function(
+../.venv/lib/python3.13/site-packages/fastapi/routing.py:330: in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/starlette/concurrency.py:32: in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/anyio/to_thread.py:63: in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+../.venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py:2518: in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py:1002: in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+app/routers/windows.py:345: in infer_frame
+    result = _infer(db, session_id, payload)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/routers/windows.py:324: in _infer
+    window, provenance = _run_models(payload)
+                         ^^^^^^^^^^^^^^^^^^^^
+app/routers/windows.py:294: in _run_models
+    return get_provider().infer(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <app.providers.trained.TrainedProvider object at 0x118a4fcd0>
+data = LiveInput(request_id='storage-1', image_base64='/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHR...3:28.569489+00:00', telemetry_source='prepared_replay', telemetry_seq=None, vision_frame=None, captured_at_source=None)
+
+    def infer(self, data: LiveInput):
+        import numpy as np
+        started = time.perf_counter()
+        pd, pt, visual, behaviors = 0.0, 0.0, [], []
+        contributions, baseline = [], None  # no telemetry -> no contributions, exactly like ``behaviors``
+        timing = {}
+        if data.image_base64 is not None:
+            x = self.preprocess(data.image_base64)
+            timing["preprocess_ms"] = (time.perf_counter() - started) * 1000
+            before = time.perf_counter()
+            try:
+                logits = np.asarray(self.vision.run(None, {self.input_name: x})[0][0], dtype=np.float32)
+            except Exception as exc:
+                raise ModelRuntimeError("Vision model failed during inference", origin=ORIGIN_VISION_MODEL) from exc
+            if logits.shape != (len(self.labels),) or not np.isfinite(logits).all():
+                raise ModelRuntimeError("Vision model produced non-finite or wrongly shaped output",
+                                        origin=ORIGIN_VISION_MODEL)
+            exp = np.exp(logits - np.max(logits))
+            probs = exp / exp.sum()
+            pd = float(1 - probs[0])
+            visual = [{"label": label, "probability": float(prob)} for label, prob in zip(self.labels, probs)]
+            timing["vision_ms"] = (time.perf_counter() - before) * 1000
+        if data.telemetry_features is not None:
+            before = time.perf_counter()
+            values = data.telemetry_features.model_dump()
+            try:
+                matrix = self.xgb.DMatrix(np.array([[values[k] for k in self.features]], dtype=np.float32), feature_names=self.features)
+                probs = np.asarray(self.telemetry.predict(matrix, iteration_range=(0, self.iteration_end))[0], dtype=np.float32)
+                # TreeSHAP of the SAME trees the probabilities came from: (1, 3 classes, features + bias).
+                shap = np.asarray(self.telemetry.predict(matrix, iteration_range=(0, self.iteration_end), pred_contribs=True),
+                                  dtype=np.float32)
+            except Exception as exc:
+                raise ModelRuntimeError("Telemetry model failed during inference", origin=ORIGIN_TELEMETRY_MODEL) from exc
+            if probs.shape != (3,) or not np.isfinite(probs).all():
+                raise ModelRuntimeError("Telemetry model produced non-finite or wrongly shaped output",
+                                        origin=ORIGIN_TELEMETRY_MODEL)
+            if shap.shape != (1, 3, len(self.features) + 1) or not np.isfinite(shap).all():
+                raise ModelRuntimeError("Telemetry model produced non-finite or wrongly shaped feature contributions",
+                                        origin=ORIGIN_TELEMETRY_MODEL)
+            pt = float(1 - probs[0])
+            behaviors = [{"label": label, "probability": float(prob)} for label, prob in zip(["Safe", "Aggressive", "Distracted"], probs)]
+            # Class 0 is Safe. The score that is fused is the NON-SAFE risk, 1 - P(Safe), so the
+            # Safe-class attribution is negated: a positive value pushes toward unsafe. The bias
+            # (last column) is not a feature; it is the baseline, sum(contributions) + baseline
+            # = -(the Safe-class margin).
+            safe = shap[0, 0]
+            contributions = [{"feature": name, "contribution": -float(value)} for name, value in zip(self.features, safe[:-1])]
+            baseline = -float(safe[-1])
+            timing["telemetry_ms"] = (time.perf_counter() - before) * 1000
+        window = WindowInput(P_distraction=pd, P_telemetry_anomaly=pt,
+                             vision_status="fresh" if data.image_base64 is not None else "missing",
+                             telemetry_status="fresh" if data.telemetry_features is not None else "missing",
+                             visual_top_classes=visual, telemetry_behavior_classes=behaviors,
+                             telemetry_feature_contributions=contributions,
+                             telemetry_features=data.telemetry_features,
+                             latency_ms=round((time.perf_counter() - started) * 1000))
+        provenance = {"provider": self.name, "request_id": data.request_id,
+                      "vision_source": "camera_frame" if data.image_base64 is not None else "missing",
+                      "telemetry_source": data.telemetry_source,
+>                     "vision_model_id": self.info["vision"]["model_id"],
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "vision_model_sha256": self.info["vision"]["sha256"],
+                      "telemetry_model_sha256": self.info["telemetry"]["sha256"],
+                      "captured_at": data.captured_at, "telemetry_timestamp": data.telemetry_timestamp,
+                      "processed_at": datetime.now(timezone.utc).isoformat(), "timing_ms": timing,
+                      "P_distraction_raw": pd, "P_telemetry_raw": pt}
+E       KeyError: 'model_id'
+
+app/providers/trained.py:197: KeyError
+------------------------------ Captured log call -------------------------------
+ERROR    app.faults:faults.py:309 could not store fault event in the database; the sink keeps it
+Traceback (most recent call last):
+  File "/Users/liu/Desktop/FYP2-Live-System/backend/app/routers/windows.py", line 345, in infer_frame
+    result = _infer(db, session_id, payload)
+  File "/Users/liu/Desktop/FYP2-Live-System/backend/app/routers/windows.py", line 324, in _infer
+    window, provenance = _run_models(payload)
+                         ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/liu/Desktop/FYP2-Live-System/backend/app/routers/windows.py", line 294, in _run_models
+    return get_provider().infer(payload)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/liu/Desktop/FYP2-Live-System/backend/app/providers/trained.py", line 197, in infer
+    "vision_model_id": self.info["vision"]["model_id"],
+                       ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'model_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/liu/Desktop/FYP2-Live-System/backend/app/faults.py", line 306, in record_fault
+    fault_db.commit()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/liu/Desktop/FYP2-Live-System/backend/tests/test_fault_events.py", line 192, in commit
+    raise OperationalError("COMMIT", {}, Exception(message))
+sqlalchemy.exc.OperationalError: (builtins.Exception) disk I/O error
+[SQL: COMMIT]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+_____ test_st_fail_03_fault_logger_failure_never_masks_the_original_error ______
+
+live = namespace(client=<starlette.testclient.TestClient object at 0x118afadd0>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_st_fail_03_fault_logger_f0/fault_events.log'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1197904b0>
+
+    def test_st_fail_03_fault_logger_failure_never_masks_the_original_error(live, monkeypatch):
+        calls = []
+    
+        def commit(self):
+            calls.append(1)
+            if len(calls) == 1:
+                raise OperationalError("COMMIT", {}, Exception("disk I/O error"))
+            raise RuntimeError("fault logger commit failed")  # the fault session's own commit
+    
+        with monkeypatch.context() as patched:
+            patched.setattr(Session, "commit", commit)
+            with pytest.raises(OperationalError) as caught:
+>               infer(live, make_payload("storage-3"), client=live.strict)
+
+tests/test_fault_events.py:306: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_fault_events.py:143: in infer
+    return (client or env.client).post(f"/api/sessions/{sid or env.sid}/infer", json=body, headers=headers)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/starlette/testclient.py:560: in post
+    return super().post(
+../.venv/lib/python3.13/site-packages/httpx/_client.py:1144: in post
+    return self.request(
+../.venv/lib/python3.13/site-packages/starlette/testclient.py:459: in request
+    return super().request(
+../.venv/lib/python3.13/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+../.venv/lib/python3.13/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+../.venv/lib/python3.13/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/starlette/testclient.py:362: in handle_request
+    raise exc
+../.venv/lib/python3.13/site-packages/starlette/testclient.py:359: in handle_request
+    portal.call(self.app, scope, receive, send)
+../.venv/lib/python3.13/site-packages/anyio/from_thread.py:334: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/concurrent/futures/_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+../.venv/lib/python3.13/site-packages/anyio/from_thread.py:259: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/fastapi/applications.py:1159: in __call__
+    await super().__call__(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/applications.py:90: in __call__
+    await self.middleware_stack(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/middleware/errors.py:186: in __call__
+    raise exc
+../.venv/lib/python3.13/site-packages/starlette/middleware/errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+app/main.py:77: in __call__
+    await self.app(scope, receive, send_marked)
+../.venv/lib/python3.13/site-packages/starlette/middleware/cors.py:88: in __call__
+    await self.app(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/middleware/exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+../.venv/lib/python3.13/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+../.venv/lib/python3.13/site-packages/fastapi/middleware/asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/routing.py:660: in __call__
+    await self.middleware_stack(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/routing.py:680: in app
+    await route.handle(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/routing.py:276: in handle
+    await self.app(scope, receive, send)
+../.venv/lib/python3.13/site-packages/fastapi/routing.py:134: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+../.venv/lib/python3.13/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+../.venv/lib/python3.13/site-packages/fastapi/routing.py:120: in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/fastapi/routing.py:674: in app
+    raw_response = await run_endpoint_function(
+../.venv/lib/python3.13/site-packages/fastapi/routing.py:330: in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/starlette/concurrency.py:32: in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/anyio/to_thread.py:63: in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+../.venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py:2518: in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py:1002: in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+app/routers/windows.py:345: in infer_frame
+    result = _infer(db, session_id, payload)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/routers/windows.py:324: in _infer
+    window, provenance = _run_models(payload)
+                         ^^^^^^^^^^^^^^^^^^^^
+app/routers/windows.py:294: in _run_models
+    return get_provider().infer(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <app.providers.trained.TrainedProvider object at 0x118a02850>
+data = LiveInput(request_id='storage-3', image_base64='/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHR...3:28.813052+00:00', telemetry_source='prepared_replay', telemetry_seq=None, vision_frame=None, captured_at_source=None)
+
+    def infer(self, data: LiveInput):
+        import numpy as np
+        started = time.perf_counter()
+        pd, pt, visual, behaviors = 0.0, 0.0, [], []
+        contributions, baseline = [], None  # no telemetry -> no contributions, exactly like ``behaviors``
+        timing = {}
+        if data.image_base64 is not None:
+            x = self.preprocess(data.image_base64)
+            timing["preprocess_ms"] = (time.perf_counter() - started) * 1000
+            before = time.perf_counter()
+            try:
+                logits = np.asarray(self.vision.run(None, {self.input_name: x})[0][0], dtype=np.float32)
+            except Exception as exc:
+                raise ModelRuntimeError("Vision model failed during inference", origin=ORIGIN_VISION_MODEL) from exc
+            if logits.shape != (len(self.labels),) or not np.isfinite(logits).all():
+                raise ModelRuntimeError("Vision model produced non-finite or wrongly shaped output",
+                                        origin=ORIGIN_VISION_MODEL)
+            exp = np.exp(logits - np.max(logits))
+            probs = exp / exp.sum()
+            pd = float(1 - probs[0])
+            visual = [{"label": label, "probability": float(prob)} for label, prob in zip(self.labels, probs)]
+            timing["vision_ms"] = (time.perf_counter() - before) * 1000
+        if data.telemetry_features is not None:
+            before = time.perf_counter()
+            values = data.telemetry_features.model_dump()
+            try:
+                matrix = self.xgb.DMatrix(np.array([[values[k] for k in self.features]], dtype=np.float32), feature_names=self.features)
+                probs = np.asarray(self.telemetry.predict(matrix, iteration_range=(0, self.iteration_end))[0], dtype=np.float32)
+                # TreeSHAP of the SAME trees the probabilities came from: (1, 3 classes, features + bias).
+                shap = np.asarray(self.telemetry.predict(matrix, iteration_range=(0, self.iteration_end), pred_contribs=True),
+                                  dtype=np.float32)
+            except Exception as exc:
+                raise ModelRuntimeError("Telemetry model failed during inference", origin=ORIGIN_TELEMETRY_MODEL) from exc
+            if probs.shape != (3,) or not np.isfinite(probs).all():
+                raise ModelRuntimeError("Telemetry model produced non-finite or wrongly shaped output",
+                                        origin=ORIGIN_TELEMETRY_MODEL)
+            if shap.shape != (1, 3, len(self.features) + 1) or not np.isfinite(shap).all():
+                raise ModelRuntimeError("Telemetry model produced non-finite or wrongly shaped feature contributions",
+                                        origin=ORIGIN_TELEMETRY_MODEL)
+            pt = float(1 - probs[0])
+            behaviors = [{"label": label, "probability": float(prob)} for label, prob in zip(["Safe", "Aggressive", "Distracted"], probs)]
+            # Class 0 is Safe. The score that is fused is the NON-SAFE risk, 1 - P(Safe), so the
+            # Safe-class attribution is negated: a positive value pushes toward unsafe. The bias
+            # (last column) is not a feature; it is the baseline, sum(contributions) + baseline
+            # = -(the Safe-class margin).
+            safe = shap[0, 0]
+            contributions = [{"feature": name, "contribution": -float(value)} for name, value in zip(self.features, safe[:-1])]
+            baseline = -float(safe[-1])
+            timing["telemetry_ms"] = (time.perf_counter() - before) * 1000
+        window = WindowInput(P_distraction=pd, P_telemetry_anomaly=pt,
+                             vision_status="fresh" if data.image_base64 is not None else "missing",
+                             telemetry_status="fresh" if data.telemetry_features is not None else "missing",
+                             visual_top_classes=visual, telemetry_behavior_classes=behaviors,
+                             telemetry_feature_contributions=contributions,
+                             telemetry_features=data.telemetry_features,
+                             latency_ms=round((time.perf_counter() - started) * 1000))
+        provenance = {"provider": self.name, "request_id": data.request_id,
+                      "vision_source": "camera_frame" if data.image_base64 is not None else "missing",
+                      "telemetry_source": data.telemetry_source,
+>                     "vision_model_id": self.info["vision"]["model_id"],
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "vision_model_sha256": self.info["vision"]["sha256"],
+                      "telemetry_model_sha256": self.info["telemetry"]["sha256"],
+                      "captured_at": data.captured_at, "telemetry_timestamp": data.telemetry_timestamp,
+                      "processed_at": datetime.now(timezone.utc).isoformat(), "timing_ms": timing,
+                      "P_distraction_raw": pd, "P_telemetry_raw": pt}
+E       KeyError: 'model_id'
+
+app/providers/trained.py:197: KeyError
+------------------------------ Captured log call -------------------------------
+ERROR    app.faults:faults.py:309 could not store fault event in the database; the sink keeps it
+Traceback (most recent call last):
+  File "/Users/liu/Desktop/FYP2-Live-System/backend/app/routers/windows.py", line 345, in infer_frame
+    result = _infer(db, session_id, payload)
+  File "/Users/liu/Desktop/FYP2-Live-System/backend/app/routers/windows.py", line 324, in _infer
+    window, provenance = _run_models(payload)
+                         ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/liu/Desktop/FYP2-Live-System/backend/app/routers/windows.py", line 294, in _run_models
+    return get_provider().infer(payload)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/liu/Desktop/FYP2-Live-System/backend/app/providers/trained.py", line 197, in infer
+    "vision_model_id": self.info["vision"]["model_id"],
+                       ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'model_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/liu/Desktop/FYP2-Live-System/backend/app/faults.py", line 306, in record_fault
+    fault_db.commit()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/liu/Desktop/FYP2-Live-System/backend/tests/test_fault_events.py", line 300, in commit
+    raise OperationalError("COMMIT", {}, Exception("disk I/O error"))
+sqlalchemy.exc.OperationalError: (builtins.Exception) disk I/O error
+[SQL: COMMIT]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+_________ test_st_fail_03_a_broken_sink_never_masks_the_original_error _________
+
+live = namespace(client=<starlette.testclient.TestClient object at 0x118a0d1d0>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_st_fail_03_a_broken_sink_0/fault_events.log'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x118b4cf30>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_st_fail_03_a_broken_sink_0')
+
+    def test_st_fail_03_a_broken_sink_never_masks_the_original_error(live, monkeypatch, tmp_path):
+        from app.faults import FaultSink, get_fault_sink
+        from app.main import app
+        blocker = tmp_path / "a-file-not-a-directory"
+        blocker.write_text("x")
+        app.dependency_overrides[get_fault_sink] = lambda: FaultSink(blocker / "fault_events.log")  # mkdir fails
+        commit, _ = commit_fails_once_with("disk I/O error")
+        with monkeypatch.context() as patched:
+            patched.setattr(Session, "commit", commit)
+            with pytest.raises(OperationalError) as caught:
+>               infer(live, make_payload("storage-5"), client=live.strict)
+
+tests/test_fault_events.py:329: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_fault_events.py:143: in infer
+    return (client or env.client).post(f"/api/sessions/{sid or env.sid}/infer", json=body, headers=headers)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/starlette/testclient.py:560: in post
+    return super().post(
+../.venv/lib/python3.13/site-packages/httpx/_client.py:1144: in post
+    return self.request(
+../.venv/lib/python3.13/site-packages/starlette/testclient.py:459: in request
+    return super().request(
+../.venv/lib/python3.13/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+../.venv/lib/python3.13/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+../.venv/lib/python3.13/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/starlette/testclient.py:362: in handle_request
+    raise exc
+../.venv/lib/python3.13/site-packages/starlette/testclient.py:359: in handle_request
+    portal.call(self.app, scope, receive, send)
+../.venv/lib/python3.13/site-packages/anyio/from_thread.py:334: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/concurrent/futures/_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+../.venv/lib/python3.13/site-packages/anyio/from_thread.py:259: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/fastapi/applications.py:1159: in __call__
+    await super().__call__(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/applications.py:90: in __call__
+    await self.middleware_stack(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/middleware/errors.py:186: in __call__
+    raise exc
+../.venv/lib/python3.13/site-packages/starlette/middleware/errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+app/main.py:77: in __call__
+    await self.app(scope, receive, send_marked)
+../.venv/lib/python3.13/site-packages/starlette/middleware/cors.py:88: in __call__
+    await self.app(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/middleware/exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+../.venv/lib/python3.13/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+../.venv/lib/python3.13/site-packages/fastapi/middleware/asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/routing.py:660: in __call__
+    await self.middleware_stack(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/routing.py:680: in app
+    await route.handle(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/routing.py:276: in handle
+    await self.app(scope, receive, send)
+../.venv/lib/python3.13/site-packages/fastapi/routing.py:134: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+../.venv/lib/python3.13/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+../.venv/lib/python3.13/site-packages/fastapi/routing.py:120: in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/fastapi/routing.py:674: in app
+    raw_response = await run_endpoint_function(
+../.venv/lib/python3.13/site-packages/fastapi/routing.py:330: in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/starlette/concurrency.py:32: in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/anyio/to_thread.py:63: in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+../.venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py:2518: in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py:1002: in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+app/routers/windows.py:345: in infer_frame
+    result = _infer(db, session_id, payload)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/routers/windows.py:324: in _infer
+    window, provenance = _run_models(payload)
+                         ^^^^^^^^^^^^^^^^^^^^
+app/routers/windows.py:294: in _run_models
+    return get_provider().infer(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <app.providers.trained.TrainedProvider object at 0x118a74eb0>
+data = LiveInput(request_id='storage-5', image_base64='/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHR...3:29.035555+00:00', telemetry_source='prepared_replay', telemetry_seq=None, vision_frame=None, captured_at_source=None)
+
+    def infer(self, data: LiveInput):
+        import numpy as np
+        started = time.perf_counter()
+        pd, pt, visual, behaviors = 0.0, 0.0, [], []
+        contributions, baseline = [], None  # no telemetry -> no contributions, exactly like ``behaviors``
+        timing = {}
+        if data.image_base64 is not None:
+            x = self.preprocess(data.image_base64)
+            timing["preprocess_ms"] = (time.perf_counter() - started) * 1000
+            before = time.perf_counter()
+            try:
+                logits = np.asarray(self.vision.run(None, {self.input_name: x})[0][0], dtype=np.float32)
+            except Exception as exc:
+                raise ModelRuntimeError("Vision model failed during inference", origin=ORIGIN_VISION_MODEL) from exc
+            if logits.shape != (len(self.labels),) or not np.isfinite(logits).all():
+                raise ModelRuntimeError("Vision model produced non-finite or wrongly shaped output",
+                                        origin=ORIGIN_VISION_MODEL)
+            exp = np.exp(logits - np.max(logits))
+            probs = exp / exp.sum()
+            pd = float(1 - probs[0])
+            visual = [{"label": label, "probability": float(prob)} for label, prob in zip(self.labels, probs)]
+            timing["vision_ms"] = (time.perf_counter() - before) * 1000
+        if data.telemetry_features is not None:
+            before = time.perf_counter()
+            values = data.telemetry_features.model_dump()
+            try:
+                matrix = self.xgb.DMatrix(np.array([[values[k] for k in self.features]], dtype=np.float32), feature_names=self.features)
+                probs = np.asarray(self.telemetry.predict(matrix, iteration_range=(0, self.iteration_end))[0], dtype=np.float32)
+                # TreeSHAP of the SAME trees the probabilities came from: (1, 3 classes, features + bias).
+                shap = np.asarray(self.telemetry.predict(matrix, iteration_range=(0, self.iteration_end), pred_contribs=True),
+                                  dtype=np.float32)
+            except Exception as exc:
+                raise ModelRuntimeError("Telemetry model failed during inference", origin=ORIGIN_TELEMETRY_MODEL) from exc
+            if probs.shape != (3,) or not np.isfinite(probs).all():
+                raise ModelRuntimeError("Telemetry model produced non-finite or wrongly shaped output",
+                                        origin=ORIGIN_TELEMETRY_MODEL)
+            if shap.shape != (1, 3, len(self.features) + 1) or not np.isfinite(shap).all():
+                raise ModelRuntimeError("Telemetry model produced non-finite or wrongly shaped feature contributions",
+                                        origin=ORIGIN_TELEMETRY_MODEL)
+            pt = float(1 - probs[0])
+            behaviors = [{"label": label, "probability": float(prob)} for label, prob in zip(["Safe", "Aggressive", "Distracted"], probs)]
+            # Class 0 is Safe. The score that is fused is the NON-SAFE risk, 1 - P(Safe), so the
+            # Safe-class attribution is negated: a positive value pushes toward unsafe. The bias
+            # (last column) is not a feature; it is the baseline, sum(contributions) + baseline
+            # = -(the Safe-class margin).
+            safe = shap[0, 0]
+            contributions = [{"feature": name, "contribution": -float(value)} for name, value in zip(self.features, safe[:-1])]
+            baseline = -float(safe[-1])
+            timing["telemetry_ms"] = (time.perf_counter() - before) * 1000
+        window = WindowInput(P_distraction=pd, P_telemetry_anomaly=pt,
+                             vision_status="fresh" if data.image_base64 is not None else "missing",
+                             telemetry_status="fresh" if data.telemetry_features is not None else "missing",
+                             visual_top_classes=visual, telemetry_behavior_classes=behaviors,
+                             telemetry_feature_contributions=contributions,
+                             telemetry_features=data.telemetry_features,
+                             latency_ms=round((time.perf_counter() - started) * 1000))
+        provenance = {"provider": self.name, "request_id": data.request_id,
+                      "vision_source": "camera_frame" if data.image_base64 is not None else "missing",
+                      "telemetry_source": data.telemetry_source,
+>                     "vision_model_id": self.info["vision"]["model_id"],
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "vision_model_sha256": self.info["vision"]["sha256"],
+                      "telemetry_model_sha256": self.info["telemetry"]["sha256"],
+                      "captured_at": data.captured_at, "telemetry_timestamp": data.telemetry_timestamp,
+                      "processed_at": datetime.now(timezone.utc).isoformat(), "timing_ms": timing,
+                      "P_distraction_raw": pd, "P_telemetry_raw": pt}
+E       KeyError: 'model_id'
+
+app/providers/trained.py:197: KeyError
+------------------------------ Captured log call -------------------------------
+ERROR    app.faults:faults.py:309 could not store fault event in the database; the sink keeps it
+Traceback (most recent call last):
+  File "/Users/liu/Desktop/FYP2-Live-System/backend/app/routers/windows.py", line 345, in infer_frame
+    result = _infer(db, session_id, payload)
+  File "/Users/liu/Desktop/FYP2-Live-System/backend/app/routers/windows.py", line 324, in _infer
+    window, provenance = _run_models(payload)
+                         ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/liu/Desktop/FYP2-Live-System/backend/app/routers/windows.py", line 294, in _run_models
+    return get_provider().infer(payload)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/liu/Desktop/FYP2-Live-System/backend/app/providers/trained.py", line 197, in infer
+    "vision_model_id": self.info["vision"]["model_id"],
+                       ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'model_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/liu/Desktop/FYP2-Live-System/backend/app/faults.py", line 306, in record_fault
+    fault_db.commit()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/liu/Desktop/FYP2-Live-System/backend/tests/test_fault_events.py", line 192, in commit
+    raise OperationalError("COMMIT", {}, Exception(message))
+sqlalchemy.exc.OperationalError: (builtins.Exception) disk I/O error
+[SQL: COMMIT]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+ERROR    app.faults:faults.py:265 fault sink write failed (/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_st_fail_03_a_broken_sink_0/a-file-not-a-directory/fault_events.log)
+Traceback (most recent call last):
+  File "/Users/liu/Desktop/FYP2-Live-System/backend/app/routers/windows.py", line 345, in infer_frame
+    result = _infer(db, session_id, payload)
+  File "/Users/liu/Desktop/FYP2-Live-System/backend/app/routers/windows.py", line 324, in _infer
+    window, provenance = _run_models(payload)
+                         ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/liu/Desktop/FYP2-Live-System/backend/app/routers/windows.py", line 294, in _run_models
+    return get_provider().infer(payload)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/liu/Desktop/FYP2-Live-System/backend/app/providers/trained.py", line 197, in infer
+    "vision_model_id": self.info["vision"]["model_id"],
+                       ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'model_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/liu/Desktop/FYP2-Live-System/backend/app/faults.py", line 261, in write
+    self.path.parent.mkdir(parents=True, exist_ok=True)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_local.py", line 722, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+FileExistsError: [Errno 17] File exists: '/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_st_fail_03_a_broken_sink_0/a-file-not-a-directory'
+__________________ test_st_fail_01_faults_outlive_the_session __________________
+
+live = namespace(client=<starlette.testclient.TestClient object at 0x118b27a10>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_st_fail_01_faults_outlive0/fault_events.log'))
+
+    def test_st_fail_01_faults_outlive_the_session(live):
+>       assert infer(live, make_payload("alive-1")).status_code == 201
+E       AssertionError: assert 500 == 201
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+E        +    where <Response [500 Internal Server Error]> = infer(namespace(client=<starlette.testclient.TestClient object at 0x118b27a10>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_st_fail_01_faults_outlive0/fault_events.log')), {'captured_at': '2026-10-26T04:53:29.245907+00:00', 'image_base64': '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJC...ive-1', 'telemetry_features': {'accel_x': 0.7, 'accel_y': 0.2, 'brake_pressure': 20, 'headway_distance': 18, ...}, ...})
+E        +      where {'captured_at': '2026-10-26T04:53:29.245907+00:00', 'image_base64': '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJC...ive-1', 'telemetry_features': {'accel_x': 0.7, 'accel_y': 0.2, 'brake_pressure': 20, 'headway_distance': 18, ...}, ...} = make_payload('alive-1')
+
+tests/test_fault_events.py:336: AssertionError
+_____ test_st_recover_01_failures_are_recovered_by_a_new_committed_record ______
+
+live = namespace(client=<starlette.testclient.TestClient object at 0x118ba2c10>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_st_recover_01_failures_ar0/fault_events.log'))
+
+    def test_st_recover_01_failures_are_recovered_by_a_new_committed_record(live):
+        first = make_payload("rec-1")
+>       assert infer(live, first).status_code == 201
+E       AssertionError: assert 500 == 201
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+E        +    where <Response [500 Internal Server Error]> = infer(namespace(client=<starlette.testclient.TestClient object at 0x118ba2c10>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_st_recover_01_failures_ar0/fault_events.log')), {'captured_at': '2026-10-26T04:53:29.275320+00:00', 'image_base64': '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJC...rec-1', 'telemetry_features': {'accel_x': 0.7, 'accel_y': 0.2, 'brake_pressure': 20, 'headway_distance': 18, ...}, ...})
+
+tests/test_fault_events.py:355: AssertionError
+_________________ test_an_idempotent_replay_is_not_a_recovery __________________
+
+live = namespace(client=<starlette.testclient.TestClient object at 0x118b97d90>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_an_idempotent_replay_is_n0/fault_events.log'))
+
+    def test_an_idempotent_replay_is_not_a_recovery(live):
+        done = make_payload("replay-done")
+>       assert infer(live, done).status_code == 201
+E       AssertionError: assert 500 == 201
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+E        +    where <Response [500 Internal Server Error]> = infer(namespace(client=<starlette.testclient.TestClient object at 0x118b97d90>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_an_idempotent_replay_is_n0/fault_events.log')), {'captured_at': '2026-10-26T04:53:29.314584+00:00', 'image_base64': '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJC...-done', 'telemetry_features': {'accel_x': 0.7, 'accel_y': 0.2, 'brake_pressure': 20, 'headway_distance': 18, ...}, ...})
+
+tests/test_fault_events.py:392: AssertionError
+____________________ test_recovery_is_scoped_to_the_session ____________________
+
+live = namespace(client=<starlette.testclient.TestClient object at 0x118bb34d0>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_recovery_is_scoped_to_the0/fault_events.log'))
+
+    def test_recovery_is_scoped_to_the_session(live):
+        other = f"other-{live.sid}"
+        assert live.client.post("/api/sessions", json={"session_id": other,
+                                                       "operation_mode": "LIVE_MODEL_RUNTIME"}).status_code == 201
+        assert infer(live, bad_frame("scoped-bad")).status_code == 422
+>       assert infer(live, make_payload("scoped-good"), sid=other).status_code == 201
+E       AssertionError: assert 500 == 201
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+E        +    where <Response [500 Internal Server Error]> = infer(namespace(client=<starlette.testclient.TestClient object at 0x118bb34d0>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_recovery_is_scoped_to_the0/fault_events.log')), {'captured_at': '2026-10-26T04:53:29.365268+00:00', 'image_base64': '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJC...-good', 'telemetry_features': {'accel_x': 0.7, 'accel_y': 0.2, 'brake_pressure': 20, 'headway_distance': 18, ...}, ...}, sid='other-live-test_recovery_is_scoped_to_the0')
+E        +      where {'captured_at': '2026-10-26T04:53:29.365268+00:00', 'image_base64': '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJC...-good', 'telemetry_features': {'accel_x': 0.7, 'accel_y': 0.2, 'brake_pressure': 20, 'headway_distance': 18, ...}, ...} = make_payload('scoped-good')
+
+tests/test_fault_events.py:409: AssertionError
+_ test_it_fault_single_branch_failure_fails_the_whole_request[vision-vision_model] _
+
+live = namespace(client=<starlette.testclient.TestClient object at 0x1192984b0>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_it_fault_single_branch_fa0/fault_events.log'))
+failing = 'vision', origin = 'vision_model'
+
+    @pytest.mark.parametrize("failing, origin", [("vision", "vision_model"), ("telemetry", "telemetry_model")])
+    def test_it_fault_single_branch_failure_fails_the_whole_request(live, failing, origin):
+        (live.vision if failing == "vision" else live.booster).fail = RuntimeError("branch down")
+        body = make_payload("branch-1")  # both branches present, exactly one raises
+        assert infer(live, body).status_code == 500
+    
+        [row] = faults_of(live)
+        assert (row["error_category"], row["origin"], row["retryable"]) == ("model_runtime", origin, True)
+        assert record_count(live) == 0 and total_windows(live) == 0
+        assert live.client.get(f"/api/sessions/{live.sid}/risk/latest").status_code == 404
+        assert live.client.get(f"/api/sessions/{live.sid}/windows").json() == []  # no degraded window
+    
+        # The identical payload is fine once the branch works: the 500 was the branch's doing.
+        (live.vision if failing == "vision" else live.booster).fail = None
+        ok = infer(live, body, attempt=2)
+>       assert ok.status_code == 201
+E       assert 500 == 201
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+
+tests/test_fault_events.py:479: AssertionError
+_ test_it_fault_single_branch_failure_fails_the_whole_request[telemetry-telemetry_model] _
+
+live = namespace(client=<starlette.testclient.TestClient object at 0x11929a6d0>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_it_fault_single_branch_fa1/fault_events.log'))
+failing = 'telemetry', origin = 'telemetry_model'
+
+    @pytest.mark.parametrize("failing, origin", [("vision", "vision_model"), ("telemetry", "telemetry_model")])
+    def test_it_fault_single_branch_failure_fails_the_whole_request(live, failing, origin):
+        (live.vision if failing == "vision" else live.booster).fail = RuntimeError("branch down")
+        body = make_payload("branch-1")  # both branches present, exactly one raises
+        assert infer(live, body).status_code == 500
+    
+        [row] = faults_of(live)
+        assert (row["error_category"], row["origin"], row["retryable"]) == ("model_runtime", origin, True)
+        assert record_count(live) == 0 and total_windows(live) == 0
+        assert live.client.get(f"/api/sessions/{live.sid}/risk/latest").status_code == 404
+        assert live.client.get(f"/api/sessions/{live.sid}/windows").json() == []  # no degraded window
+    
+        # The identical payload is fine once the branch works: the 500 was the branch's doing.
+        (live.vision if failing == "vision" else live.booster).fail = None
+        ok = infer(live, body, attempt=2)
+>       assert ok.status_code == 201
+E       assert 500 == 201
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+
+tests/test_fault_events.py:479: AssertionError
+_ test_it_fault_integrity_a_concurrent_twin_with_the_same_input_returns_the_stored_record _
+
+live = namespace(client=<starlette.testclient.TestClient object at 0x1196de350>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_it_fault_integrity_a_conc0/fault_events.log'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x118bbd4e0>
+
+    def test_it_fault_integrity_a_concurrent_twin_with_the_same_input_returns_the_stored_record(live, monkeypatch):
+        body = make_payload("twin-1")
+        winner = infer(live, body)
+>       assert winner.status_code == 201
+E       assert 500 == 201
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+
+tests/test_fault_events.py:500: AssertionError
+____ test_it_fault_integrity_a_concurrent_twin_with_different_input_is_409 _____
+
+live = namespace(client=<starlette.testclient.TestClient object at 0x1197a8f30>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_it_fault_integrity_a_conc1/fault_events.log'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x118ba9710>
+
+    def test_it_fault_integrity_a_concurrent_twin_with_different_input_is_409(live, monkeypatch):
+        body = make_payload("twin-2")
+>       assert infer(live, body).status_code == 201
+E       AssertionError: assert 500 == 201
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+E        +    where <Response [500 Internal Server Error]> = infer(namespace(client=<starlette.testclient.TestClient object at 0x1197a8f30>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_it_fault_integrity_a_conc1/fault_events.log')), {'captured_at': '2026-10-26T04:53:29.733602+00:00', 'image_base64': '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJC...win-2', 'telemetry_features': {'accel_x': 0.7, 'accel_y': 0.2, 'brake_pressure': 20, 'headway_distance': 18, ...}, ...})
+
+tests/test_fault_events.py:512: AssertionError
+_____ test_it_outcome_01_every_attempt_has_exactly_one_persistent_outcome ______
+
+live = namespace(client=<starlette.testclient.TestClient object at 0x118b27cb0>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_it_outcome_01_every_attem0/fault_events.log'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x119254f30>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_it_outcome_01_every_attem0')
+
+    def test_it_outcome_01_every_attempt_has_exactly_one_persistent_outcome(live, monkeypatch, tmp_path):
+        """Eligible attempt = every POST /api/sessions/{id}/infer that reaches the application,
+        schema-invalid ones included. The denominators come from the script below (its own list
+        of requests and the statuses it got back), never from what the database says it stored."""
+        from app.providers import trained
+        replay_sid = f"replay-mode-{live.sid}"
+        assert live.client.post("/api/sessions", json={"session_id": replay_sid}).status_code == 201
+        empty_models = tmp_path / "no-model-files"
+        empty_models.mkdir()
+        ok1 = make_payload("ok-1")
+    
+        def storage_down(body):
+            with monkeypatch.context() as m:  # no commit works at all: the database is unwritable
+                def commit(self):
+                    raise OperationalError("COMMIT", {}, Exception("database is unwritable"))
+                m.setattr(Session, "commit", commit)
+                return infer(live, body)
+    
+        def models_gone(body):
+            with monkeypatch.context() as m:
+                m.setattr(trained, "_provider", None)
+                m.setattr(trained.settings, "model_root", empty_models)
+                return infer(live, body)
+    
+        def runtime_failure(branch, body):
+            target = live.vision if branch == "vision" else live.booster
+            target.fail = RuntimeError("runtime failure")
+            try:
+                return infer(live, body)
+            finally:
+                target.fail = None
+    
+        long_ago = datetime(2000, 1, 1, tzinfo=timezone.utc)
+        header_zero = {"X-Attempt-Index": "0"}
+        sid = live.sid
+        # (label, request id, send, expected status, expected kind, expected fault row)
+        # Kinds: new_record | replay | fault | sink. A fault row is
+        # (error_category, origin, http_status, retryable, session_id, attempt_index).
+        script = [
+            ("success", "ok-1", lambda: infer(live, ok1), 201, "new_record", None),
+            ("idempotent replay, attempt 2", "ok-1", lambda: infer(live, ok1, attempt=2), 201, "replay", None),
+            ("schema 422 (unknown field)", "schema-1",
+             lambda: infer(live, {"request_id": "schema-1", "unexpected": True}), 422, "fault",
+             ("input_validation", "request_validation", 422, False, sid, 1)),
+            ("schema 422 (no request_id)", None, lambda: infer(live, {}), 422, "fault",
+             ("input_validation", "request_validation", 422, False, sid, 1)),
+            ("bad frame 422", "bad-image-1", lambda: infer(live, bad_frame("bad-image-1")), 422, "fault",
+             ("input_validation", "request_validation", 422, False, sid, 1)),
+            ("session not found 404", "ghost-1",
+             lambda: infer(live, make_payload("ghost-1"), sid="no-such-session"), 404, "fault",
+             ("not_found", "session", 404, False, "no-such-session", 1)),
+            ("wrong session mode 409", "mode-1",
+             lambda: infer(live, make_payload("mode-1"), sid=replay_sid), 409, "fault",
+             ("mode_conflict", "session", 409, False, replay_sid, 1)),
+            ("hash conflict 409", "ok-1",
+             lambda: infer(live, {**ok1, "image_base64": image_data((255, 0, 0))}), 409, "fault",
+             ("idempotency_conflict", "session", 409, False, sid, 1)),
+            ("out-of-order timestamp 409", "old-1",
+             lambda: infer(live, make_payload("old-1", at=long_ago)), 409, "fault",
+             ("out_of_order_evidence", "session", 409, False, sid, 1)),
+            ("model runtime 500", "runtime-1",
+             lambda: runtime_failure("vision", make_payload("runtime-1")), 500, "fault",
+             ("model_runtime", "vision_model", 500, True, sid, 1)),
+            ("models unavailable 503", "models-1", lambda: models_gone(make_payload("models-1")), 503, "fault",
+             ("models_unavailable", "model_load", 503, False, sid, 1)),
+            ("storage failure, database unwritable", "storage-1",
+             lambda: storage_down(make_payload("storage-1")), 500, "sink", None),
+            ("success after the failures", "ok-2", lambda: infer(live, make_payload("ok-2")), 201, "new_record", None),
+            ("telemetry-only success", "ok-3",
+             lambda: infer(live, make_payload("ok-3", image=False)), 201, "new_record", None),
+            ("invalid attempt header 422", "header-1",
+             lambda: live.client.post(f"/api/sessions/{sid}/infer", json=make_payload("header-1"),
+                                      headers=header_zero), 422, "fault",
+             ("input_validation", "request_validation", 422, False, sid, None)),
+            ("telemetry runtime 500", "runtime-2",
+             lambda: runtime_failure("telemetry", make_payload("runtime-2")), 500, "fault",
+             ("model_runtime", "telemetry_model", 500, True, sid, 1)),
+        ]
+    
+        def totals():
+            return (scalar(live, "SELECT COUNT(*) FROM inference_records"),
+                    scalar(live, "SELECT COUNT(*) FROM fault_events"), len(sink_lines(live)))
+    
+        results = []  # (request id, status, persistent outcomes found for this attempt)
+        for label, request_id, send, expected_status, expected_kind, expected_fault in script:
+            records_before, faults_before, sink_before = totals()
+            response = send()
+            records_after, faults_after, sink_after = totals()
+            new_records = records_after - records_before
+            new_faults = faults_after - faults_before
+            new_sink = sink_after - sink_before
+            # A replay answers 201 from a record that already exists and writes nothing.
+            replayed = (response.status_code == 201 and new_records == 0 and new_faults == 0
+                        and scalar(live, "SELECT COUNT(*) FROM inference_records WHERE request_id = :r",
+                                   r=request_id) == 1)
+            # The sink line is THE outcome only when the database holds nothing for the attempt.
+            sink_only = new_records == 0 and new_faults == 0 and not replayed and new_sink == 1
+            outcomes = new_records + new_faults + int(replayed) + int(sink_only)
+            kind = ("new_record" if new_records else "fault" if new_faults else "replay" if replayed
+                    else "sink" if sink_only else "none")
+>           assert response.status_code == expected_status, label
+E           AssertionError: success
+E           assert 500 == 201
+E            +  where 500 = <Response [500 Internal Server Error]>.status_code
+
+tests/test_fault_events.py:625: AssertionError
+_ test_attempt_index_is_told_by_the_client_and_is_not_part_of_the_request_hash _
+
+live = namespace(client=<starlette.testclient.TestClient object at 0x118b975b0>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_attempt_index_is_told_by_0/fault_events.log'))
+
+    def test_attempt_index_is_told_by_the_client_and_is_not_part_of_the_request_hash(live):
+        live.vision.fail = RuntimeError("down")
+        body = make_payload("attempt-1")
+        infer(live, body)                # no header: attempt 1
+        infer(live, body, attempt=2)
+        infer(live, body, attempt=99)    # no retry budget on the server (only the 1000 sanity bound, tested below)
+        assert [r["attempt_index"] for r in faults_of(live)] == [1, 2, 99]
+    
+        live.vision.fail = None
+        stored = infer(live, body, attempt=3)
+>       assert stored.status_code == 201
+E       assert 500 == 201
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+
+tests/test_fault_events.py:700: AssertionError
+______ test_a_contradictory_producer_is_one_unknown_fault_and_still_a_500 ______
+
+live = namespace(client=<starlette.testclient.TestClient object at 0x11878add0>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_a_contradictory_producer_0/fault_events.log'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x118991710>
+
+    def test_a_contradictory_producer_is_one_unknown_fault_and_still_a_500(live, monkeypatch):
+        from app import inference
+        from app.schemas import ModalityFreshness, RiskUpdate
+    
+        def contradictory(session_id, window_id, w, **kwargs):
+            return RiskUpdate(session_id=session_id, window_id=window_id, timestamp="2026-10-14T00:00:00+00:00",
+                              assessment_available=True, P_distraction=0, P_telemetry_anomaly=0,
+                              RiskScore=None, RiskLevel=None, DominantEvidence=None, AlertSeverity=None,
+                              SystemHealth="FULL", modality_freshness=ModalityFreshness(vision="fresh", telemetry="fresh"),
+                              latency_ms=0)
+        monkeypatch.setattr(inference, "run_inference", contradictory)
+    
+        with pytest.raises(ValidationError):
+>           infer(live, make_payload("contradiction-1"), client=live.strict)
+
+tests/test_fault_events.py:759: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_fault_events.py:143: in infer
+    return (client or env.client).post(f"/api/sessions/{sid or env.sid}/infer", json=body, headers=headers)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/starlette/testclient.py:560: in post
+    return super().post(
+../.venv/lib/python3.13/site-packages/httpx/_client.py:1144: in post
+    return self.request(
+../.venv/lib/python3.13/site-packages/starlette/testclient.py:459: in request
+    return super().request(
+../.venv/lib/python3.13/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+../.venv/lib/python3.13/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+../.venv/lib/python3.13/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/starlette/testclient.py:362: in handle_request
+    raise exc
+../.venv/lib/python3.13/site-packages/starlette/testclient.py:359: in handle_request
+    portal.call(self.app, scope, receive, send)
+../.venv/lib/python3.13/site-packages/anyio/from_thread.py:334: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/concurrent/futures/_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+../.venv/lib/python3.13/site-packages/anyio/from_thread.py:259: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/fastapi/applications.py:1159: in __call__
+    await super().__call__(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/applications.py:90: in __call__
+    await self.middleware_stack(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/middleware/errors.py:186: in __call__
+    raise exc
+../.venv/lib/python3.13/site-packages/starlette/middleware/errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+app/main.py:77: in __call__
+    await self.app(scope, receive, send_marked)
+../.venv/lib/python3.13/site-packages/starlette/middleware/cors.py:88: in __call__
+    await self.app(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/middleware/exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+../.venv/lib/python3.13/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+../.venv/lib/python3.13/site-packages/fastapi/middleware/asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/routing.py:660: in __call__
+    await self.middleware_stack(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/routing.py:680: in app
+    await route.handle(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/routing.py:276: in handle
+    await self.app(scope, receive, send)
+../.venv/lib/python3.13/site-packages/fastapi/routing.py:134: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+../.venv/lib/python3.13/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+../.venv/lib/python3.13/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+../.venv/lib/python3.13/site-packages/fastapi/routing.py:120: in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/fastapi/routing.py:674: in app
+    raw_response = await run_endpoint_function(
+../.venv/lib/python3.13/site-packages/fastapi/routing.py:330: in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/starlette/concurrency.py:32: in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/anyio/to_thread.py:63: in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+../.venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py:2518: in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+../.venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py:1002: in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+app/routers/windows.py:345: in infer_frame
+    result = _infer(db, session_id, payload)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/routers/windows.py:324: in _infer
+    window, provenance = _run_models(payload)
+                         ^^^^^^^^^^^^^^^^^^^^
+app/routers/windows.py:294: in _run_models
+    return get_provider().infer(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <app.providers.trained.TrainedProvider object at 0x1187f0320>
+data = LiveInput(request_id='contradiction-1', image_base64='/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkS...3:30.171082+00:00', telemetry_source='prepared_replay', telemetry_seq=None, vision_frame=None, captured_at_source=None)
+
+    def infer(self, data: LiveInput):
+        import numpy as np
+        started = time.perf_counter()
+        pd, pt, visual, behaviors = 0.0, 0.0, [], []
+        contributions, baseline = [], None  # no telemetry -> no contributions, exactly like ``behaviors``
+        timing = {}
+        if data.image_base64 is not None:
+            x = self.preprocess(data.image_base64)
+            timing["preprocess_ms"] = (time.perf_counter() - started) * 1000
+            before = time.perf_counter()
+            try:
+                logits = np.asarray(self.vision.run(None, {self.input_name: x})[0][0], dtype=np.float32)
+            except Exception as exc:
+                raise ModelRuntimeError("Vision model failed during inference", origin=ORIGIN_VISION_MODEL) from exc
+            if logits.shape != (len(self.labels),) or not np.isfinite(logits).all():
+                raise ModelRuntimeError("Vision model produced non-finite or wrongly shaped output",
+                                        origin=ORIGIN_VISION_MODEL)
+            exp = np.exp(logits - np.max(logits))
+            probs = exp / exp.sum()
+            pd = float(1 - probs[0])
+            visual = [{"label": label, "probability": float(prob)} for label, prob in zip(self.labels, probs)]
+            timing["vision_ms"] = (time.perf_counter() - before) * 1000
+        if data.telemetry_features is not None:
+            before = time.perf_counter()
+            values = data.telemetry_features.model_dump()
+            try:
+                matrix = self.xgb.DMatrix(np.array([[values[k] for k in self.features]], dtype=np.float32), feature_names=self.features)
+                probs = np.asarray(self.telemetry.predict(matrix, iteration_range=(0, self.iteration_end))[0], dtype=np.float32)
+                # TreeSHAP of the SAME trees the probabilities came from: (1, 3 classes, features + bias).
+                shap = np.asarray(self.telemetry.predict(matrix, iteration_range=(0, self.iteration_end), pred_contribs=True),
+                                  dtype=np.float32)
+            except Exception as exc:
+                raise ModelRuntimeError("Telemetry model failed during inference", origin=ORIGIN_TELEMETRY_MODEL) from exc
+            if probs.shape != (3,) or not np.isfinite(probs).all():
+                raise ModelRuntimeError("Telemetry model produced non-finite or wrongly shaped output",
+                                        origin=ORIGIN_TELEMETRY_MODEL)
+            if shap.shape != (1, 3, len(self.features) + 1) or not np.isfinite(shap).all():
+                raise ModelRuntimeError("Telemetry model produced non-finite or wrongly shaped feature contributions",
+                                        origin=ORIGIN_TELEMETRY_MODEL)
+            pt = float(1 - probs[0])
+            behaviors = [{"label": label, "probability": float(prob)} for label, prob in zip(["Safe", "Aggressive", "Distracted"], probs)]
+            # Class 0 is Safe. The score that is fused is the NON-SAFE risk, 1 - P(Safe), so the
+            # Safe-class attribution is negated: a positive value pushes toward unsafe. The bias
+            # (last column) is not a feature; it is the baseline, sum(contributions) + baseline
+            # = -(the Safe-class margin).
+            safe = shap[0, 0]
+            contributions = [{"feature": name, "contribution": -float(value)} for name, value in zip(self.features, safe[:-1])]
+            baseline = -float(safe[-1])
+            timing["telemetry_ms"] = (time.perf_counter() - before) * 1000
+        window = WindowInput(P_distraction=pd, P_telemetry_anomaly=pt,
+                             vision_status="fresh" if data.image_base64 is not None else "missing",
+                             telemetry_status="fresh" if data.telemetry_features is not None else "missing",
+                             visual_top_classes=visual, telemetry_behavior_classes=behaviors,
+                             telemetry_feature_contributions=contributions,
+                             telemetry_features=data.telemetry_features,
+                             latency_ms=round((time.perf_counter() - started) * 1000))
+        provenance = {"provider": self.name, "request_id": data.request_id,
+                      "vision_source": "camera_frame" if data.image_base64 is not None else "missing",
+                      "telemetry_source": data.telemetry_source,
+>                     "vision_model_id": self.info["vision"]["model_id"],
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "vision_model_sha256": self.info["vision"]["sha256"],
+                      "telemetry_model_sha256": self.info["telemetry"]["sha256"],
+                      "captured_at": data.captured_at, "telemetry_timestamp": data.telemetry_timestamp,
+                      "processed_at": datetime.now(timezone.utc).isoformat(), "timing_ms": timing,
+                      "P_distraction_raw": pd, "P_telemetry_raw": pt}
+E       KeyError: 'model_id'
+
+app/providers/trained.py:197: KeyError
+______________ test_attempt_index_1000_is_the_last_accepted_value ______________
+
+live = namespace(client=<starlette.testclient.TestClient object at 0x117e6ef90>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_attempt_index_1000_is_the0/fault_events.log'))
+
+    def test_attempt_index_1000_is_the_last_accepted_value(live):
+        body = make_payload("limit-1")
+        live.vision.fail = RuntimeError("down")
+        assert infer(live, body, attempt=1000).status_code == 500  # the normal failure path
+        [row] = faults_of(live)
+        assert (row["request_id"], row["attempt_index"], row["error_category"], row["origin"],
+                row["http_status"], row["retryable"]) == ("limit-1", 1000, "model_runtime", "vision_model", 500, True)
+    
+        # A schema 422 is recorded by the global handler, which parses the header on its own: it must
+        # agree with the route that 1000 is a real attempt index, not an unparseable one.
+        assert infer(live, {"request_id": "limit-schema", "unexpected": True}, attempt=1000).status_code == 422
+        schema_row = {r["request_id"]: r for r in faults_of(live)}["limit-schema"]
+        assert (schema_row["attempt_index"], schema_row["error_category"]) == (1000, "input_validation")
+    
+        live.vision.fail = None
+>       assert infer(live, body, attempt=1000).status_code == 201  # and the normal success path
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 500 == 201
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+E        +    where <Response [500 Internal Server Error]> = infer(namespace(client=<starlette.testclient.TestClient object at 0x117e6ef90>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_attempt_index_1000_is_the0/fault_events.log')), {'captured_at': '2026-10-26T04:53:30.532307+00:00', 'image_base64': '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJC...mit-1', 'telemetry_features': {'accel_x': 0.7, 'accel_y': 0.2, 'brake_pressure': 20, 'headway_distance': 18, ...}, ...}, attempt=1000)
+
+tests/test_fault_events.py:939: AssertionError
+_ test_it_fault_integrity_the_concurrent_twin_path_does_not_recover_open_faults _
+
+live = namespace(client=<starlette.testclient.TestClient object at 0x117c80830>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_it_fault_integrity_the_co0/fault_events.log'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x118a5e350>
+
+    def test_it_fault_integrity_the_concurrent_twin_path_does_not_recover_open_faults(live, monkeypatch):
+        body = make_payload("twin-3")
+        winner = infer(live, body)
+>       assert winner.status_code == 201
+E       assert 500 == 201
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+
+tests/test_fault_events.py:1052: AssertionError
+_ test_a_twin_found_by_the_check_under_the_writer_lock_is_a_replay_and_recovers_nothing _
+
+live = namespace(client=<starlette.testclient.TestClient object at 0x117c29630>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_a_twin_found_by_the_check0/fault_events.log'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x119240830>
+
+    def test_a_twin_found_by_the_check_under_the_writer_lock_is_a_replay_and_recovers_nothing(live, monkeypatch):
+        from app import inference
+        from app.routers import windows
+        body = make_payload("twin-4")
+        winner = infer(live, body)
+>       assert winner.status_code == 201
+E       assert 500 == 201
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+
+tests/test_fault_events.py:1140: AssertionError
+____________ test_a_full_request_reports_all_six_segments_in_order _____________
+
+live = namespace(client=<starlette.testclient.TestClient object at 0x118961010>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_a_full_request_reports_al0/fault_events.log'))
+
+    def test_a_full_request_reports_all_six_segments_in_order(live):
+>       sent = timing_of(infer(live, make_payload("t-full")))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_server_timing.py:92: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = <Response [500 Internal Server Error]>
+
+    def timing_of(response):
+>       assert response.status_code == 201, response.text
+E       AssertionError: Internal Server Error
+E       assert 500 == 201
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+
+tests/test_server_timing.py:34: AssertionError
+_ test_a_branch_that_did_not_run_is_reported_as_skipped_not_left_out[kwargs0-skipped0-ran0] _
+
+live = namespace(client=<starlette.testclient.TestClient object at 0x118937cb0>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_a_branch_that_did_not_run0/fault_events.log'))
+kwargs = {'image': False}, skipped = {'preprocess', 'vision'}
+ran = {'telemetry'}
+
+    @pytest.mark.parametrize("kwargs,skipped,ran", [
+        ({"image": False}, {"preprocess", "vision"}, {"telemetry"}),
+        ({"telemetry": False}, {"telemetry"}, {"preprocess", "vision"}),
+        ({"image": False, "telemetry": False}, {"preprocess", "vision", "telemetry"}, set()),
+    ])
+    def test_a_branch_that_did_not_run_is_reported_as_skipped_not_left_out(live, kwargs, skipped, ran):
+>       sent = timing_of(infer(live, make_payload("t-skip", **kwargs)))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_server_timing.py:116: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = <Response [500 Internal Server Error]>
+
+    def timing_of(response):
+>       assert response.status_code == 201, response.text
+E       AssertionError: Internal Server Error
+E       assert 500 == 201
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+
+tests/test_server_timing.py:34: AssertionError
+_ test_a_branch_that_did_not_run_is_reported_as_skipped_not_left_out[kwargs1-skipped1-ran1] _
+
+live = namespace(client=<starlette.testclient.TestClient object at 0x118955ef0>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_a_branch_that_did_not_run1/fault_events.log'))
+kwargs = {'telemetry': False}, skipped = {'telemetry'}
+ran = {'preprocess', 'vision'}
+
+    @pytest.mark.parametrize("kwargs,skipped,ran", [
+        ({"image": False}, {"preprocess", "vision"}, {"telemetry"}),
+        ({"telemetry": False}, {"telemetry"}, {"preprocess", "vision"}),
+        ({"image": False, "telemetry": False}, {"preprocess", "vision", "telemetry"}, set()),
+    ])
+    def test_a_branch_that_did_not_run_is_reported_as_skipped_not_left_out(live, kwargs, skipped, ran):
+>       sent = timing_of(infer(live, make_payload("t-skip", **kwargs)))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_server_timing.py:116: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = <Response [500 Internal Server Error]>
+
+    def timing_of(response):
+>       assert response.status_code == 201, response.text
+E       AssertionError: Internal Server Error
+E       assert 500 == 201
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+
+tests/test_server_timing.py:34: AssertionError
+_ test_a_branch_that_did_not_run_is_reported_as_skipped_not_left_out[kwargs2-skipped2-ran2] _
+
+live = namespace(client=<starlette.testclient.TestClient object at 0x1188ff850>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_a_branch_that_did_not_run2/fault_events.log'))
+kwargs = {'image': False, 'telemetry': False}
+skipped = {'preprocess', 'telemetry', 'vision'}, ran = set()
+
+    @pytest.mark.parametrize("kwargs,skipped,ran", [
+        ({"image": False}, {"preprocess", "vision"}, {"telemetry"}),
+        ({"telemetry": False}, {"telemetry"}, {"preprocess", "vision"}),
+        ({"image": False, "telemetry": False}, {"preprocess", "vision", "telemetry"}, set()),
+    ])
+    def test_a_branch_that_did_not_run_is_reported_as_skipped_not_left_out(live, kwargs, skipped, ran):
+>       sent = timing_of(infer(live, make_payload("t-skip", **kwargs)))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_server_timing.py:116: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = <Response [500 Internal Server Error]>
+
+    def timing_of(response):
+>       assert response.status_code == 201, response.text
+E       AssertionError: Internal Server Error
+E       assert 500 == 201
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+
+tests/test_server_timing.py:34: AssertionError
+_______ test_a_resend_answered_from_the_stored_record_reports_total_only _______
+
+live = namespace(client=<starlette.testclient.TestClient object at 0x1188d9710>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_a_resend_answered_from_th0/fault_events.log'))
+
+    def test_a_resend_answered_from_the_stored_record_reports_total_only(live):
+        body = make_payload("t-resend")
+>       assert infer(live, body).status_code == 201
+E       AssertionError: assert 500 == 201
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+E        +    where <Response [500 Internal Server Error]> = infer(namespace(client=<starlette.testclient.TestClient object at 0x1188d9710>, strict=<starlette.testclient.TestClient obje...530vd7h3fmr0000gn/T/dra-gate-pytest-rp1pghuk/pytest-of-liu/pytest-0/test_a_resend_answered_from_th0/fault_events.log')), {'captured_at': '2026-10-26T04:56:13.824495+00:00', 'image_base64': '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJC...esend', 'telemetry_features': {'accel_x': 0.7, 'accel_y': 0.2, 'brake_pressure': 20, 'headway_distance': 18, ...}, ...})
+
+tests/test_server_timing.py:151: AssertionError
+=============================== warnings summary ===============================
+../.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /Users/liu/Desktop/FYP2-Live-System/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+DRA_REQUIRE_MODELS=1: no model-dependent test was skipped.
+=========================== short test summary info ============================
+FAILED tests/test_backend_marker.py::test_success_answers_are_marked - Assert...
+FAILED tests/test_fault_events.py::test_st_fail_03_commit_failure_is_a_storage_fault_and_the_original_error_surfaces
+FAILED tests/test_fault_events.py::test_st_fail_03_fault_logger_failure_never_masks_the_original_error
+FAILED tests/test_fault_events.py::test_st_fail_03_a_broken_sink_never_masks_the_original_error
+FAILED tests/test_fault_events.py::test_st_fail_01_faults_outlive_the_session
+FAILED tests/test_fault_events.py::test_st_recover_01_failures_are_recovered_by_a_new_committed_record
+FAILED tests/test_fault_events.py::test_an_idempotent_replay_is_not_a_recovery
+FAILED tests/test_fault_events.py::test_recovery_is_scoped_to_the_session - A...
+FAILED tests/test_fault_events.py::test_it_fault_single_branch_failure_fails_the_whole_request[vision-vision_model]
+FAILED tests/test_fault_events.py::test_it_fault_single_branch_failure_fails_the_whole_request[telemetry-telemetry_model]
+FAILED tests/test_fault_events.py::test_it_fault_integrity_a_concurrent_twin_with_the_same_input_returns_the_stored_record
+FAILED tests/test_fault_events.py::test_it_fault_integrity_a_concurrent_twin_with_different_input_is_409
+FAILED tests/test_fault_events.py::test_it_outcome_01_every_attempt_has_exactly_one_persistent_outcome
+FAILED tests/test_fault_events.py::test_attempt_index_is_told_by_the_client_and_is_not_part_of_the_request_hash
+FAILED tests/test_fault_events.py::test_a_contradictory_producer_is_one_unknown_fault_and_still_a_500
+FAILED tests/test_fault_events.py::test_attempt_index_1000_is_the_last_accepted_value
+FAILED tests/test_fault_events.py::test_it_fault_integrity_the_concurrent_twin_path_does_not_recover_open_faults
+FAILED tests/test_fault_events.py::test_a_twin_found_by_the_check_under_the_writer_lock_is_a_replay_and_recovers_nothing
+FAILED tests/test_server_timing.py::test_a_full_request_reports_all_six_segments_in_order
+FAILED tests/test_server_timing.py::test_a_branch_that_did_not_run_is_reported_as_skipped_not_left_out[kwargs0-skipped0-ran0]
+FAILED tests/test_server_timing.py::test_a_branch_that_did_not_run_is_reported_as_skipped_not_left_out[kwargs1-skipped1-ran1]
+FAILED tests/test_server_timing.py::test_a_branch_that_did_not_run_is_reported_as_skipped_not_left_out[kwargs2-skipped2-ran2]
+FAILED tests/test_server_timing.py::test_a_resend_answered_from_the_stored_record_reports_total_only
+23 failed, 1039 passed, 4 deselected, 1 warning in 173.39s (0:02:53)
+----- END STDOUT -----
+----- STDERR -----
+
+----- END STDERR -----
