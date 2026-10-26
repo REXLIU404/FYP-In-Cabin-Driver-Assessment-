@@ -27,3 +27,6 @@ output/
 
 # Task 10A: candidate model packages are copied here, never committed
 ml/outputs/candidates/
+
+# Constructed scenario bundles: generated dataset images, never committed
+demo/bundles/
