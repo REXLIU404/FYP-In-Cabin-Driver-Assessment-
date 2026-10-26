@@ -47,11 +47,22 @@ step() {  # step NAME CMD... : run, time, log; stop the script on failure
   if [ $rc -ne 0 ]; then summary FAIL; exit 1; fi
 }
 summary() {
+  # The cleanup decision is known HERE, before the summary is written: the default PASS
+  # removes the scratch checkout right after, so the summary must say the path will no
+  # longer exist (review R1). A FAIL keeps it, and the plain path stays a valid pointer.
+  local disposition=""
+  if [ "$1" = PASS ]; then
+    if [ "${COLDSTART_KEEP:-0}" = 1 ]; then
+      disposition=" (kept: COLDSTART_KEEP=1)"
+    else
+      disposition=" (removed after PASS)"
+    fi
+  fi
   {
     echo "# ST-COLDSTART-01 - $1"
     echo
     echo "- Commit: \`$COMMIT\`"
-    echo "- Scratch checkout: \`$REPO\`"
+    echo "- Scratch checkout: \`$REPO\`$disposition"
     echo "- Python: \`$("$PYTHON" --version 2>&1)\` ($PYTHON); node \`$(node --version)\`; npm \`$(npm --version)\`"
     echo "- Models linked from: \`$MODELS\`"
     echo

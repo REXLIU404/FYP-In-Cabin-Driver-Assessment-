@@ -58,7 +58,10 @@ export function RiskTrends({
           <div>
             <p className="eyebrow">Window log</p>
             <h2>{history.length} windows, newest first</h2>
-            <p>Click a row to pin that window in every view.</p>
+            <p>
+              Click a row to pin that window in Signal Inspector, Risk Trends
+              and Explanation.
+            </p>
           </div>
         </div>
         <div className="table-wrap table-wrap--scroll">

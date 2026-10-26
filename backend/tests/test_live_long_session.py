@@ -46,6 +46,20 @@ HARVEST_S = 20  # 200 windows at 10 Hz: well inside the 500-entry buffer
 EDGE = 1000  # the plan's "first 1,000 vs last 1,000 windows"
 
 
+def minute_window(timings: dict[int, dict], minute_start_ms: float, minute_end_ms: float) -> list[dict]:
+    """The timing entries captured in [minute_start_ms, minute_end_ms). The upper bound keeps a
+    late sample from counting its boundary windows in two rows (review R18)."""
+    return [t for t in timings.values() if minute_start_ms <= t["capturedAtMs"] < minute_end_ms]
+
+
+def edge_sets(timed: list[dict], edge: int) -> tuple[list[dict], list[dict]] | None:
+    """The plan's first-vs-last comparison, or None when the run holds fewer than 2 * edge
+    timed windows: the two sets would overlap and compare a window with itself (review R17)."""
+    if len(timed) < 2 * edge:
+        return None
+    return timed[:edge], timed[-edge:]
+
+
 def all_windows(client, sid: str) -> list[dict]:
     out, after = [], 0
     while True:
@@ -98,7 +112,7 @@ def test_st_long_01_a_long_session_is_stored_and_exported_completely(pw, e2e_ser
             if time.time() >= next_sample:
                 harvest()
                 minute_start_ms = (next_sample - 60) * 1000
-                this_minute = [t for t in timings.values() if t["capturedAtMs"] >= minute_start_ms]
+                this_minute = minute_window(timings, minute_start_ms, next_sample * 1000)
                 samples.append({
                     "minute": round((time.time() - started) / 60, 2),
                     "windows": len(tap.answered(sid)),
@@ -149,8 +163,14 @@ def test_st_long_01_a_long_session_is_stored_and_exported_completely(pw, e2e_ser
         timed = [timings[i] for i in sorted(timings)]
         measurement = {"minutes": MINUTES, "windows": count, "rate_hz": round(count / (MINUTES * 60), 2),
                        "sampled_windows_reconciled": len(sample_ids), "per_minute": samples,
-                       "timing_coverage": round(len(timed) / count, 4),
-                       f"first_{EDGE}": stats(timed[:EDGE]), f"last_{EDGE}": stats(timed[-EDGE:])}
+                       "timing_coverage": round(len(timed) / count, 4)}
+        edges = edge_sets(timed, EDGE)
+        if edges is None:
+            measurement[f"first_{EDGE}"] = measurement[f"last_{EDGE}"] = None
+            measurement["edge_note"] = f"only {len(timed)} timed windows: the first and last {EDGE} would overlap"
+        else:
+            measurement[f"first_{EDGE}"] = stats(edges[0])
+            measurement[f"last_{EDGE}"] = stats(edges[1])
         print("ST-LONG-01 " + json.dumps({k: v for k, v in measurement.items() if k != "per_minute"}))
         out = evidence_dir()
         if out:

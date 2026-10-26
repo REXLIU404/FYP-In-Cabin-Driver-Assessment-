@@ -305,7 +305,9 @@ button {
 }
 
 .badge-field > span:first-child {
-  color: var(--muted);
+  /* #475569 (slate-600): >= 6:1 on every banner tint, unlike the muted grey
+     (#64748b) which fell below 4.5:1 AA on the pale tints (review R30). */
+  color: #475569;
   font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.02em;

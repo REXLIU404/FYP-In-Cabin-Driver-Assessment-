@@ -140,18 +140,30 @@ def pytest_configure(config):
         "markers",
         "long: a run of many minutes (ST-LONG-01); DESELECTED unless the run asks for it with -m long",
     )
+    config.addinivalue_line(
+        "markers",
+        "candidates: needs the P5 vision packages copied to ml/outputs/candidates/ (Task 10A, not in git); "
+        "DESELECTED unless the run asks for it with -m candidates",
+    )
+
+
+# Opt-in markers: their tests run only when the -m expression names the marker.
+OPT_IN_MARKERS = ("long", "candidates")
 
 
 def pytest_collection_modifyitems(config, items):
-    """``long`` tests run only when asked for (``-m long``): a gate run deselects them, so they are
-    neither started nor counted as skipped. The expression is asked for the marker NAME ``long`` as a
-    word, not as a substring: ``-m "not longer"`` must not let them through."""
-    if "long" in re.findall(r"[A-Za-z_][A-Za-z0-9_]*", config.option.markexpr or ""):
-        return
-    kept = [item for item in items if item.get_closest_marker("long") is None]
-    if len(kept) != len(items):
-        config.hook.pytest_deselected(items=[item for item in items if item.get_closest_marker("long") is not None])
-        items[:] = kept
+    """``long`` and ``candidates`` tests run only when asked for (``-m long`` / ``-m candidates``): a gate
+    run deselects them, so they are neither started nor counted as skipped. The expression is asked
+    for the marker NAME as a word, not as a substring: ``-m "not longer"`` must not let them through."""
+    # Split the expression exactly like pytest's mark-expression parser does
+    # (pytest._pytest.mark.expression.IdentsRegex: (\w|:|\+|-|\.|\[|\]|\\|/)+), so an
+    # identifier such as ``long-run`` stays one token instead of becoming ``long`` (review R15).
+    named = set(re.findall(r"(?:\w|:|\+|-|\.|\[|\]|\\|/)+", config.option.markexpr or ""))
+    held = [m for m in OPT_IN_MARKERS if m not in named]
+    dropped = [item for item in items if any(item.get_closest_marker(m) is not None for m in held)]
+    if dropped:
+        config.hook.pytest_deselected(items=dropped)
+        items[:] = [item for item in items if item not in dropped]
 
 
 @pytest.fixture(scope="session")

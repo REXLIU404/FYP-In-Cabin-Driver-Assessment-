@@ -64,6 +64,8 @@ def test_real_models_persist_latest_flag_export_and_idempotency(api):
     assert result["operation_mode"] == "LIVE_MODEL_RUNTIME"
     assert result["provenance"]["provider"] == "MobileNetV3ONNX+XGBoost"
     assert len(result["provenance"]["vision_model_sha256"]) == 64
+    # Task 10A: every window names the vision model that produced it (stable by default).
+    assert result["provenance"]["vision_model_id"] == get_provider().info["vision"]["model_id"] == "stable_mobilenet_v3_large"
     assert result["latency_ms"] >= 0
     retry = client.post(f"/api/sessions/{sid}/infer", json=data).json()
     assert retry == result
