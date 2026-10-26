@@ -24,7 +24,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import platform
+import re
 import subprocess
 import sys
 import tempfile
@@ -102,7 +104,15 @@ def collect(windows: int, warmup: int) -> dict:
 
 def _split_outside_quotes(text: str, sep: str) -> list[str]:
     parts, current, quoted = [], [], False
-    for ch in text:
+    i = 0
+    while i < len(text):
+        ch = text[i]
+        if ch == "\\" and quoted and i + 1 < len(text):
+            # A backslash-escaped quote stays inside the string, like
+            # splitOutsideQuotes in ai/src/liveTiming.ts (review R16).
+            current += ch + text[i + 1]
+            i += 2
+            continue
         if ch == '"':
             quoted = not quoted
         if ch == sep and not quoted:
@@ -110,13 +120,46 @@ def _split_outside_quotes(text: str, sep: str) -> list[str]:
             current = []
         else:
             current.append(ch)
+        i += 1
     parts.append("".join(current))
     return parts
 
 
+def _js_number(text: str) -> float | None:
+    """Number() semantics for one ``dur`` token, so the Python parser and
+    parseServerTiming in ai/src/liveTiming.ts read the same header the same way
+    (review R16): hex and the empty string are numbers, underscores are not, and
+    non-finite results are dropped."""
+    if text == "":
+        return 0.0
+    if "_" in text:  # Python float() reads 1_0 as 1000; JS Number() reads NaN
+        return None
+    if re.match(r"^[+-]?0[xX]", text):
+        try:
+            return float(int(text, 16))
+        except ValueError:
+            return None
+    try:
+        number = float(text)
+    except ValueError:
+        return None
+    return number if math.isfinite(number) else None
+
+
+def _strip_one_quote_per_side(text: str) -> str:
+    """``dur.replace(/^"|"$/g, "")``: at most one quote off each end, not every
+    quote that ``str.strip('"')`` would peel."""
+    if text.startswith('"'):
+        text = text[1:]
+    if text.endswith('"'):
+        text = text[:-1]
+    return text
+
+
 def parse_server_timing(header: str | None) -> dict[str, float]:
     """``{name: dur}`` in ms. A metric without a usable ``dur`` is left out; quoted values (``desc="a, b"``,
-    ``dur="1.5"``) are read as the header grammar allows. Mirrors ``parseServerTiming`` in ai/src/liveTiming.ts."""
+    ``dur="1.5"``) are read as the header grammar allows. Mirrors ``parseServerTiming`` in ai/src/liveTiming.ts,
+    including the sums over repeated names."""
     out: dict[str, float] = {}
     for metric in _split_outside_quotes(header or "", ","):
         name, *params = [part.strip() for part in _split_outside_quotes(metric, ";")]
@@ -125,10 +168,9 @@ def parse_server_timing(header: str | None) -> dict[str, float]:
         for param in params:
             key, _, value = param.partition("=")
             if key.strip().lower() == "dur":
-                try:
-                    out[name] = float(value.strip().strip('"'))
-                except ValueError:
-                    pass
+                number = _js_number(_strip_one_quote_per_side(value.strip()))
+                if number is not None:
+                    out[name] = out.get(name, 0.0) + number
                 break
     return out
 
