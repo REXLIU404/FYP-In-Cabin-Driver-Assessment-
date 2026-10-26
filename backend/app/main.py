@@ -16,7 +16,7 @@ from starlette.types import ASGIApp, Message, Receive, Scope, Send
 from . import models  # noqa: F401  (register ORM models on Base)
 from .db import initialize_database
 from .config import settings
-from .routers import export, faults, risk, sessions, status, windows
+from .routers import export, faults, risk, scenarios, sessions, status, windows
 
 
 @asynccontextmanager
@@ -86,6 +86,7 @@ for r in (
     status.router,
     export.router,
     faults.router,
+    scenarios.router,
 ):
     app.include_router(r)
 
