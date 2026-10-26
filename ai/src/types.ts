@@ -1,7 +1,10 @@
 export type RiskLevel = "Low" | "Medium" | "High";
 export type AlertSeverity = "NORMAL" | "CAUTION" | "HIGH_ALERT";
 export type SystemHealth = "FULL" | "DEGRADED" | "UNAVAILABLE";
-export type OperationMode = "PREPARED_SESSION_RUNTIME" | "LIVE_MODEL_RUNTIME";
+export type OperationMode =
+  | "PREPARED_SESSION_RUNTIME"
+  | "LIVE_MODEL_RUNTIME"
+  | "CONSTRUCTED_SCENARIO_RUNTIME";
 /**
  * `stale` is HISTORICAL. Ruling A (D13): the runtime never produces it - evidence
  * older than `freshness_tolerance_s` is EXPIRED and recorded as `missing`, with the

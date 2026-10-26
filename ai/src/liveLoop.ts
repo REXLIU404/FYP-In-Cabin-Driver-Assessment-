@@ -54,6 +54,7 @@ import type {
   AppConfig,
   RiskUpdate,
   SessionMeta,
+  TelemetryBehaviorLabel,
   TelemetryFeatures,
 } from "./types";
 
@@ -94,7 +95,11 @@ export interface RetryPolicy {
 }
 
 /** Where a frame's acquisition time came from. */
-export type CapturedAtSource = "capture_time" | "callback" | "client_clock";
+export type CapturedAtSource =
+  | "capture_time"
+  | "callback"
+  | "client_clock"
+  | "replay_clock";
 
 /**
  * The explicit identity of one camera frame: `epoch` is the number of the camera start
@@ -118,6 +123,33 @@ export interface LiveFrame {
   captured_at_source: CapturedAtSource;
   /** Absent in the fallback mode, where the server identifies the frame by its bytes. */
   vision_frame?: VisionFrameId;
+  /**
+   * The constructed scenario's ground truth for THIS frame (plan Task 5): the
+   * scenario id, the segment, the frame file and its true vision label. Present only
+   * on replayed frames; the server stores it in provenance, never in fusion.
+   */
+  replay?: {
+    scenario_id: string;
+    segment_index: number;
+    frame_file: string;
+    vision_label: string;
+  };
+}
+
+/**
+ * The constructed scenario's ground truth for one logical request (plan Task 5). It
+ * travels as ONE nested block in provenance - never flattened - and mixes, at most,
+ * one frame's identity with one telemetry row's. `scenario_id` and `segment_index`
+ * are the request's anchor, taken from the frame when there is one (both sources at
+ * the same position always land in the same segment).
+ */
+export interface ReplayBlock {
+  scenario_id: string;
+  segment_index: number;
+  frame_file?: string;
+  vision_label?: string;
+  telemetry_row?: number;
+  telemetry_label?: TelemetryBehaviorLabel;
 }
 
 /**
@@ -137,6 +169,8 @@ export interface LivePayload {
   telemetry_timestamp: string | null;
   telemetry_seq?: number;
   telemetry_source: "prepared_replay" | "missing";
+  /** Present only in a constructed scenario session (the server 422s it otherwise). */
+  replay?: ReplayBlock;
 }
 
 /** What the telemetry cursor yields for one tick. */
@@ -147,6 +181,17 @@ export interface TelemetryReading {
   seq: number;
   /** Epoch ms of the sample's logical event time (arithmetic, see `TelemetrySource`). */
   acquiredAtMs: number;
+  /**
+   * The constructed scenario's ground truth for THIS row: the scenario id, the
+   * segment, the source CSV row and its true behavior label. Present only on
+   * replayed telemetry; the server stores it in provenance, never in fusion.
+   */
+  replay?: {
+    scenario_id: string;
+    segment_index: number;
+    telemetry_row: number;
+    telemetry_label: TelemetryBehaviorLabel;
+  };
 }
 
 /**
@@ -200,6 +245,24 @@ export function buildLivePayload(
       };
   }
   if (telemetry.features) payload.telemetry_seq = telemetry.seq;
+  if (frame?.replay || telemetry.replay) {
+    // The anchor comes from the frame when there is one; the frame's own fields ride
+    // along only with a frame and the telemetry's only with telemetry (plan Task 5).
+    const anchor = frame?.replay ?? telemetry.replay!;
+    const replay: ReplayBlock = {
+      scenario_id: anchor.scenario_id,
+      segment_index: anchor.segment_index,
+    };
+    if (frame?.replay) {
+      replay.frame_file = frame.replay.frame_file;
+      replay.vision_label = frame.replay.vision_label;
+    }
+    if (telemetry.replay) {
+      replay.telemetry_row = telemetry.replay.telemetry_row;
+      replay.telemetry_label = telemetry.replay.telemetry_label;
+    }
+    payload.replay = replay;
+  }
   return payload;
 }
 

@@ -7,7 +7,7 @@ import { ScoreGauge } from "../components/ScoreGauge";
 import { VehicleDynamics } from "../components/VehicleDynamics";
 import { TrendChart } from "../components/TrendChart";
 import type { useCameraPreview } from "../hooks/useCameraPreview";
-import type { RiskUpdate } from "../types";
+import type { OperationMode, RiskUpdate } from "../types";
 import { alertHoldNote } from "../utils/display";
 import { formatTimestamp } from "../utils/format";
 import { buildLiveMonitorModel } from "./liveMonitorModel";
@@ -25,7 +25,7 @@ interface LiveMonitorProps {
   thresholdHigh: number;
   stale?: boolean;
   /** Which data mode the record came from: the latency row must not claim a server ran (review R26). */
-  mode?: "LIVE_MODEL_RUNTIME" | "PREPARED_SESSION_RUNTIME";
+  mode?: OperationMode;
 }
 
 export function LiveMonitor({

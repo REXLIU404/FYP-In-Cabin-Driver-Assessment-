@@ -342,7 +342,9 @@ def _infer(db, session_id: str, payload: LiveInput):
         provenance["vision_source"] = "dataset_replay" if payload.image_base64 is not None else "missing"
         provenance["telemetry_source"] = ("dataset_replay" if payload.telemetry_features is not None
                                           else "missing")
-        provenance["replay"] = payload.replay.model_dump() if payload.replay is not None else None
+        # Kept VERBATIM: only the fields the client sent (never Nones it did not send).
+        provenance["replay"] = (payload.replay.model_dump(exclude_none=True)
+                                if payload.replay is not None else None)
     return _persist_window(db, session_id, window, mode=mode, provenance=provenance,
                            request_id=payload.request_id, digest=digest, started=started,
                            evidence=evidence_of(payload))
