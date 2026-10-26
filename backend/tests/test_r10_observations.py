@@ -116,13 +116,14 @@ def body(rid, *, image=None, captured=0, frame=None, source=None, features=None,
 
 
 class Driver:
-    """One live session, one stub, the test clock. ``send`` moves the clock to ``ms`` and posts."""
+    """One Live-like session, one stub, the test clock. ``send`` moves the clock to ``ms`` and
+    posts. ``mode`` is one of the Live-like modes (the ``drive`` fixture parametrizes it)."""
 
-    def __init__(self, client, clock, monkeypatch, sid, **config):
+    def __init__(self, client, clock, monkeypatch, sid, mode, **config):
         from app.providers import trained
         self.client, self.clock, self.sid, self.stub = client, clock, sid, ProbStub()
         monkeypatch.setattr(trained, "get_provider", lambda: self.stub)
-        created = client.post("/api/sessions", json={"session_id": sid, "operation_mode": "LIVE_MODEL_RUNTIME",
+        created = client.post("/api/sessions", json={"session_id": sid, "operation_mode": mode,
                                                      "config": {"ema_alpha": 1, **config}})
         assert created.status_code == 201, created.text
 
@@ -137,13 +138,13 @@ class Driver:
         return response.json()
 
 
-@pytest.fixture
-def drive(api, fake_clock, monkeypatch):
+@pytest.fixture(params=["LIVE_MODEL_RUNTIME", "CONSTRUCTED_SCENARIO_RUNTIME"])
+def drive(api, fake_clock, monkeypatch, request):
     client, _ = api
     counter = iter(range(10_000))
 
     def make(sid=None, **config):
-        return Driver(client, fake_clock, monkeypatch, sid or f"live-{next(counter)}", **config)
+        return Driver(client, fake_clock, monkeypatch, sid or f"live-{next(counter)}", request.param, **config)
     make.client = client
     return make
 

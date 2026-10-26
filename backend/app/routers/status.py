@@ -9,7 +9,7 @@ from .. import cache, faults, models
 from ..config import settings
 from ..db import get_db
 from ..providers.mock_ai import mock_ai
-from ..schemas import SystemStatusOut
+from ..schemas import SystemStatusOut, is_live_like
 
 router = APIRouter(prefix="/api/sessions", tags=["system-status"])
 
@@ -34,7 +34,7 @@ def system_status(session_id: str, db: Session = Depends(get_db)):
             .first()
         )
 
-    live = bool(sess and sess.operation_mode == "LIVE_MODEL_RUNTIME")
+    live = bool(sess and is_live_like(sess.operation_mode))
     model_info = {}
     if live:
         from ..providers.trained import loaded_model_info
@@ -50,7 +50,7 @@ def system_status(session_id: str, db: Session = Depends(get_db)):
         latest_alert_severity=latest.alert_severity if latest else None,
         open_fault_events=faults.open_fault_count(db, session_id),
         # A hand-written legacy row may have no payload (or no provenance) at all.
-        ai_provider=(((latest.payload or {}).get("provenance") or {}).get("provider", mock_ai.name) if latest else ("MobileNetV3ONNX+XGBoost" if sess and sess.operation_mode == "LIVE_MODEL_RUNTIME" else mock_ai.name)),
+        ai_provider=(((latest.payload or {}).get("provenance") or {}).get("provider", mock_ai.name) if latest else ("MobileNetV3ONNX+XGBoost" if sess and is_live_like(sess.operation_mode) else mock_ai.name)),
         models_loaded=bool(model_info),
         cache_warm=cache.get_latest(session_id) is not None,
         database_scheme=settings.database_url.split(":", 1)[0],

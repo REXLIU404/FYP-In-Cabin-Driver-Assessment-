@@ -20,7 +20,21 @@ SystemHealth = Literal["FULL", "DEGRADED", "UNAVAILABLE"]
 # it and must still validate on every read path, and because a sender may still DECLARE a branch
 # stale on WindowInput, which the pipeline then treats as expired.
 FreshnessStatus = Literal["fresh", "stale", "missing"]
-OperationMode = Literal["PREPARED_SESSION_RUNTIME", "LIVE_MODEL_RUNTIME"]
+OperationMode = Literal["PREPARED_SESSION_RUNTIME", "LIVE_MODEL_RUNTIME", "CONSTRUCTED_SCENARIO_RUNTIME"]
+
+# The Live-like modes: LIVE_MODEL_RUNTIME runs the R10 observation pipeline on the real camera
+# and sensors; CONSTRUCTED_SCENARIO_RUNTIME replays a prepared scenario bundle through the SAME
+# pipeline. ``is_live_like`` is the ONE judgment of "runs the Live/R10 path" in the backend -
+# every site that used ``== "LIVE_MODEL_RUNTIME"`` calls it, so the two modes can never drift
+# apart. inference.py re-exports LIVE_MODE for the call sites that import it from there.
+LIVE_MODE = "LIVE_MODEL_RUNTIME"
+CONSTRUCTED_MODE = "CONSTRUCTED_SCENARIO_RUNTIME"
+
+
+def is_live_like(mode: str) -> bool:
+    return mode in (LIVE_MODE, CONSTRUCTED_MODE)
+
+
 DominantEvidence = Literal[
     "Vision-dominant",
     "Telemetry-dominant",

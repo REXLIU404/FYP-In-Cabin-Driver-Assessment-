@@ -16,7 +16,7 @@ from sqlalchemy.orm import Session
 from .. import cache, faults, inference, models, timing
 from ..db import get_db
 from ..faults import FaultHTTPException, FaultSink, get_fault_sink
-from ..schemas import LiveInput, RiskUpdate, RuntimeConfig, WindowInput
+from ..schemas import LiveInput, RiskUpdate, RuntimeConfig, WindowInput, is_live_like
 
 router = APIRouter(prefix="/api/sessions", tags=["windows"])
 
@@ -232,7 +232,7 @@ def _persist_window(db, sid, w, *, mode, provenance=None, request_id=None, diges
         return existing
     state = dict(sess.runtime_state or {})
     observations = None
-    if mode == inference.LIVE_MODE:
+    if is_live_like(mode):
         evidence = evidence or Evidence()
         observations = inference.Observations(vision=_classify_vision(state, evidence),
                                               telemetry=_classify_telemetry(state, evidence))
@@ -310,7 +310,10 @@ def _infer(db, session_id: str, payload: LiveInput):
     if not sess:
         raise FaultHTTPException(404, "session not found", error_category=faults.CATEGORY_NOT_FOUND,
                                  origin=faults.ORIGIN_SESSION)
-    if sess.operation_mode != "LIVE_MODEL_RUNTIME":
+    # Read before the rollback below expires the row; _persist_window also re-checks this mode
+    # against the session's, and writes it on the record.
+    mode = sess.operation_mode
+    if not is_live_like(mode):
         raise FaultHTTPException(409, "Create a live model session first",
                                  error_category=faults.CATEGORY_MODE_CONFLICT, origin=faults.ORIGIN_SESSION)
     # The attempt index is a header and is NOT part of the hash: a retry must be
@@ -324,7 +327,7 @@ def _infer(db, session_id: str, payload: LiveInput):
     window, provenance = _run_models(payload)
     timing.record_provider_timings(provenance.get("timing_ms"))
     provenance = {**provenance, "captured_at_source": payload.captured_at_source}
-    return _persist_window(db, session_id, window, mode=inference.LIVE_MODE, provenance=provenance,
+    return _persist_window(db, session_id, window, mode=mode, provenance=provenance,
                            request_id=payload.request_id, digest=digest, started=started,
                            evidence=evidence_of(payload))
 
