@@ -24,3 +24,6 @@ docs/chapter5_report_ready/
 
 # local run output (Playwright screenshots, ad-hoc exports) — not tracked
 output/
+
+# Task 10A: candidate model packages are copied here, never committed
+ml/outputs/candidates/

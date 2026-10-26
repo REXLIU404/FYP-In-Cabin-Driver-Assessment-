@@ -26,6 +26,11 @@ class Settings(BaseSettings):
     ema_alpha: float = 0.35
     freshness_tolerance_s: float = 3.0
     model_root: Path = Path(__file__).resolve().parents[2] / "ml" / "outputs"
+    # Task 10A: which vision model the provider loads at startup. "stable" is the existing
+    # MobileNetV3 path (unchanged behaviour); anything else is a model id from
+    # <vision_candidates_root>/index.json. Read once, when the provider is first built.
+    active_vision: str = "stable"
+    vision_candidates_root: Path = Path(__file__).resolve().parents[2] / "ml" / "outputs" / "candidates"
     inference_threads: int = 2
     cors_origins: list[str] = ["http://127.0.0.1:5173", "http://localhost:5173"]
 
