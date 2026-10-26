@@ -24,6 +24,34 @@ state and persistence. The five dashboard views consume those saved results.
   threshold, not a validated safety threshold. `RiskLevel` is a derived operating
   level, not an accident-severity label.
 
+## Constructed scenario (demo mode)
+
+A prepared-scenario playback for demonstrations: dataset images and telemetry rows, pinned
+by a scenario file, go through the **same trained models, backend fusion and dashboard as
+Live**. It is a demonstration vehicle only - nothing it shows is an evaluation result, and
+report numbers come from Live runs (design doc D06).
+
+- **Build a scenario bundle** (standard library only, never imports model code; only the
+  test split is used, and only drivers who never appear in train / val):
+
+  ```bash
+  python3 scripts/build_dataset_replay.py viva_v1 --out demo/bundles
+  ```
+
+  The scenario is `demo/scenarios/viva_v1.json` (7 segments, 136 s); the bundle lands in
+  `demo/bundles/viva_v1/` (git-ignored: images never enter git). The data root is resolved
+  exactly as `scripts/freeze_manifest.py` does (`FYP_DATA_ROOT`, then the repo root, then the
+  sibling State Farm directory).
+- **Play it**: run the system (see above; the backend serves `demo/bundles/` by default, or
+  the directory named by `DRA_SCENARIO_ROOT`), then on the page pick **Constructed scenario**
+  in the Data mode menu, choose the scenario, and click Start Monitoring. The player banner
+  says "not live"; the scenario plays and stops itself at the end, leaving Start Monitoring
+  enabled for the next run.
+- **Rehearse it headlessly**: `PYTHONPATH=backend .venv/bin/python -m pytest backend/tests/test_constructed_scenario_rehearsal.py -m long -q`
+  plays viva_v1 once in a real browser and writes a per-segment engineering report; with
+  `DRA_E2E_EVIDENCE_DIR` set the JSON lands there. It asserts structure only (the seven
+  segments appear, the run stops itself, no faults) - never hit rates or risk numbers.
+
 ## Run the complete system
 
 From the repository root, using the existing environment and local trained
