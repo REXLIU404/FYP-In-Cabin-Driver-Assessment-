@@ -138,17 +138,19 @@ def test_a_full_run(pw, scenario_server):
         calls = run.calls
         assert calls
         # The five homes of every window agree, over the windows the BROWSER received.
-        # Wait until the dashboard rendered the newest received window (the caption flips
-        # on its own 250 ms clock, so it can lead the panel), and read the panel FIRST:
-        # like a Live pause, the stopped session's last window goes stale three seconds
-        # after it was committed, and the stale panel replaces the latest-window panel.
-        # The automatic stop also aborts one in-flight delivery that the server may still
-        # commit - the same race a manual Pause has - so the server may hold exactly one
-        # window more than the browser saw.
+        # The loop's self-stop pauses at the finish: a response that crosses that pause
+        # boundary is discarded by the loop (the same race a manual Pause has), so the
+        # dashboard may show the window BEFORE the last answered one - it never shows a
+        # window it did not process. The strip's "Stored records" mirrors its own Window
+        # (the loop's total), and both stop one window earlier in that case. Like a Live
+        # pause, the stopped session's last window also goes stale three seconds after it
+        # was committed, and the stale panel replaces the latest-window panel; the strip
+        # itself stays, so it is still readable then.
         last = str(len(calls))
+        before_last = str(len(calls) - 1)
         chrome.wait_until(
-            lambda: read_latest_panel(page)["strip"].get("Window") == last,
-            f"the dashboard to show window {last}", 10)
+            lambda: read_latest_panel(page)["strip"].get("Window") in (last, before_last),
+            f"the dashboard to show window {last} (or {before_last})", 10)
         run.ui_latest = read_latest_panel(page)
         parties = Parties(run)
         received = {c.response["window_id"]: c.response for c in calls}
@@ -160,9 +162,13 @@ def test_a_full_run(pw, scenario_server):
         assert not diffs, f"{len(diffs)} differences, first {diffs[:12]}"
         assert parties.export_json_top == {"session_id": run.sid}
         assert parties.latest["window_id"] == (len(calls) + 1 if extra else len(calls))
-        # The dashboard shows the newest window the browser received.
-        assert run.ui_latest["strip"]["Window"] == str(len(calls))
-        assert run.ui_latest["strip"]["Stored records"] == str(len(calls))
+        # The dashboard shows the newest window the loop processed, which is the newest
+        # the browser received, or the one before it when the self-stop discarded the last
+        # response (the loop never shows a window it did not process). The strip's
+        # "Stored records" mirrors its Window.
+        shown = run.ui_latest["strip"]["Window"]
+        assert shown in (last, before_last)
+        assert run.ui_latest["strip"]["Stored records"] == shown
         chrome.wait(1500)
         assert len(run.calls) == len(calls), "the loop kept sending after the scenario finished"
         assert page.locator('.topbar-actions button.button--primary').is_enabled(), \
