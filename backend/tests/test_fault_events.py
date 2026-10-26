@@ -93,7 +93,9 @@ def build_provider(vision, booster):
     provider.vision = vision
     provider.telemetry = booster
     provider.iteration_end = 7
-    provider.info = {"provider": provider.name, "vision": {"sha256": "a" * 64}, "telemetry": {"sha256": "b" * 64}}
+    # The real provider's info shape (Task 10A added the vision model's identity, read by infer()).
+    provider.info = {"provider": provider.name, "vision": {"sha256": "a" * 64, "model_id": "stable_mobilenet_v3_large"},
+                     "telemetry": {"sha256": "b" * 64}}
     return provider
 
 
