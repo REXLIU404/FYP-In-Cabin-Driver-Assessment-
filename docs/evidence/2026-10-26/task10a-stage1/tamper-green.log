@@ -1,0 +1,9 @@
+$ /Users/liu/Desktop/FYP2-Live-System/.venv/bin/python -m pytest tests/test_vision_candidates.py -q -p no:cacheprovider -k tampered or refused
+(cwd /Users/liu/Desktop/FYP2-Live-System/backend)
+exit=0  2.5s
+----- stdout -----
+.......                                                                  [100%]
+DRA_REQUIRE_MODELS=1: no model-dependent test was skipped.
+7 passed, 10 deselected in 1.87s
+
+----- stderr -----

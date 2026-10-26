@@ -1,0 +1,73 @@
+diff --git a/backend/app/providers/trained.py b/backend/app/providers/trained.py
+index 28775ef..9f01931 100644
+--- a/backend/app/providers/trained.py
++++ b/backend/app/providers/trained.py
+@@ -44,6 +44,9 @@ CONTRIBUTION_METHOD = "xgboost_treeshap_neg_safe_margin"
+ 
+ class TrainedProvider:
+     name = "MobileNetV3ONNX+XGBoost"
++    # Task 10A: the name a provider running a vision CANDIDATE reports instead (it must not claim
++    # MobileNetV3); which candidate is in info["vision"] and in every window's provenance.
++    candidate_name = "VisionCandidateONNX+XGBoost"
+ 
+     def __init__(self):
+         from PIL import Image  # noqa: F401 - validate decoder dependency at readiness check
+@@ -67,11 +70,24 @@ class TrainedProvider:
+         opts = ort.SessionOptions()
+         opts.intra_op_num_threads = settings.inference_threads
+         opts.inter_op_num_threads = 1
+-        self.vision = ort.InferenceSession(str(vision_path), opts, providers=["CPUExecutionProvider"])
+-        inp = self.vision.get_inputs()[0]
+-        if inp.type != "tensor(float)" or inp.shape[1:] != [3, 224, 224]:
+-            raise ModelUnavailable("Expected float32 NCHW 224x224 image model")
+-        self.input_name = inp.name
++        candidate = None
++        if settings.active_vision == "stable":
++            self.vision = ort.InferenceSession(str(vision_path), opts, providers=["CPUExecutionProvider"])
++            inp = self.vision.get_inputs()[0]
++            if inp.type != "tensor(float)" or inp.shape[1:] != [3, 224, 224]:
++                raise ModelUnavailable("Expected float32 NCHW 224x224 image model")
++            self.input_name = inp.name
++        else:
++            # Task 10A: a manifest-driven candidate, or ModelUnavailable - never the stable model in
++            # its place. Its labels must be the runtime's (P_distraction = 1 - P(c0), UI names).
++            from ..vision_candidates import load_candidate
++            candidate = load_candidate(settings.active_vision, settings.vision_candidates_root,
++                                       threads=settings.inference_threads)
++            if candidate.labels != self.labels:
++                raise ModelUnavailable(f"vision candidate '{candidate.model_id}' labels {candidate.labels} do not "
++                                       f"match the runtime contract {self.labels}")
++            self.vision, self.input_name = candidate.session, candidate.input_name
++            self.name = self.candidate_name
+         self.telemetry = xgb.Booster()
+         self.telemetry.load_model(telemetry_path)
+         self.telemetry.set_param({"nthread": settings.inference_threads})
+@@ -81,11 +97,17 @@ class TrainedProvider:
+         output = self.vision.run(None, {self.input_name: np.zeros((1, 3, 224, 224), np.float32)})[0]
+         if output.shape != (1, 10) or not np.isfinite(output).all():
+             raise ModelUnavailable("Vision model warmup returned invalid logits")
++        if candidate is None:
++            vision_info = {"architecture": "mobilenet_v3_large", "model_id": "stable_mobilenet_v3_large",
++                           "run_id": None, "source": "stable",
++                           "sha256": hashlib.sha256(vision_path.read_bytes()).hexdigest(),
++                           "runtime": "onnxruntime_cpu", "classes": self.labels, "input": "RGB NCHW float32 224x224",
++                           "mean": [0.485, 0.456, 0.406], "std": [0.229, 0.224, 0.225]}
++        else:
++            vision_info = candidate.info
+         self.info = {
+             "provider": self.name,
+-            "vision": {"architecture": "mobilenet_v3_large", "sha256": hashlib.sha256(vision_path.read_bytes()).hexdigest(),
+-                       "runtime": "onnxruntime_cpu", "classes": self.labels, "input": "RGB NCHW float32 224x224",
+-                       "mean": [0.485, 0.456, 0.406], "std": [0.229, 0.224, 0.225]},
++            "vision": vision_info,
+             "telemetry": {"architecture": "xgboost", "sha256": hashlib.sha256(telemetry_path.read_bytes()).hexdigest(),
+                           "classes": telemetry["classes"], "features": self.features, "iteration_range": [0, self.iteration_end]},
+             "scope": "Frontal-camera inference is experimental; source dataset metrics do not validate frontal reliability",
+@@ -172,6 +194,7 @@ class TrainedProvider:
+         provenance = {"provider": self.name, "request_id": data.request_id,
+                       "vision_source": "camera_frame" if data.image_base64 is not None else "missing",
+                       "telemetry_source": data.telemetry_source,
++                      "vision_model_id": self.info["vision"]["model_id"],
+                       "vision_model_sha256": self.info["vision"]["sha256"],
+                       "telemetry_model_sha256": self.info["telemetry"]["sha256"],
+                       "captured_at": data.captured_at, "telemetry_timestamp": data.telemetry_timestamp,
