@@ -16,8 +16,13 @@ import {
   type TelemetrySource,
 } from "./liveLoop";
 import { DEFAULT_CONFIG } from "./riskLogic";
+import {
+  createScenarioPlayback,
+  type ScenarioManifest,
+} from "./scenarioTimeline";
 import type {
   AppConfig,
+  OperationMode,
   RiskUpdate,
   SessionMeta,
   TelemetryFeatures,
@@ -107,6 +112,12 @@ interface RigOptions {
   modelsError?: Error;
   /** `api.models` never answers (until aborted). */
   modelsHang?: boolean;
+  /** The config source the loop reads (Task 6 mode-switching tests). */
+  getConfig?: () => AppConfig;
+  /** Replace the telemetry source with the caller's own, built on the rig's clock. */
+  makeTelemetry?: (now: () => number) => TelemetrySource;
+  /** Replace the frame source with the caller's own, built on the rig's clock. */
+  makeCapture?: (now: () => number) => () => LiveFrame | null;
 }
 
 function rig(options: RigOptions = {}) {
@@ -186,29 +197,34 @@ function rig(options: RigOptions = {}) {
       },
     ),
   };
-  const captureFrame = vi.fn((): LiveFrame | null => {
-    if (options.frame === "none") return null;
-    if (options.frame === "throws") throw new Error("canvas is tainted");
-    frames += 1;
-    if (options.frame === "fallback")
-      return {
-        image_base64: `frame-${frames}`,
-        captured_at: new Date(time.now).toISOString(),
-        captured_at_source: "client_clock",
-      };
-    return {
-      image_base64: `frame-${frames}`,
-      captured_at: new Date(time.now).toISOString(),
-      captured_at_source: "callback",
-      vision_frame: { epoch: 1000, index: frames },
-    };
-  });
-  // The REAL cursor on a table the test chose, wrapped in spies so a test can count
-  // how often the loop resets, pauses, resumes and reads it.
-  const cursor = createPreparedTelemetryCursor(
-    options.telemetryRows ??
-      constantRows(options.telemetry === false ? null : TELEMETRY),
-  );
+  const captureFrame = options.makeCapture
+    ? vi.fn(options.makeCapture(() => time.now))
+    : vi.fn((): LiveFrame | null => {
+        if (options.frame === "none") return null;
+        if (options.frame === "throws") throw new Error("canvas is tainted");
+        frames += 1;
+        if (options.frame === "fallback")
+          return {
+            image_base64: `frame-${frames}`,
+            captured_at: new Date(time.now).toISOString(),
+            captured_at_source: "client_clock",
+          };
+        return {
+          image_base64: `frame-${frames}`,
+          captured_at: new Date(time.now).toISOString(),
+          captured_at_source: "callback",
+          vision_frame: { epoch: 1000, index: frames },
+        };
+      });
+  // The REAL cursor on a table the test chose (or the caller's own source, Task 6),
+  // wrapped in spies so a test can count how often the loop resets, pauses, resumes
+  // and reads it.
+  const cursor = options.makeTelemetry
+    ? options.makeTelemetry(() => time.now)
+    : createPreparedTelemetryCursor(
+        options.telemetryRows ??
+          constantRows(options.telemetry === false ? null : TELEMETRY),
+      );
   const telemetry = {
     reset: vi.fn((nowMs: number) => cursor.reset(nowMs)),
     pause: vi.fn((nowMs: number) => cursor.pause(nowMs)),
@@ -219,7 +235,7 @@ function rig(options: RigOptions = {}) {
   const loop = createLiveLoop<Models>({
     api: api as LiveLoopApi<Models>,
     policy: RETRY_POLICY,
-    getConfig: () => CONFIG,
+    getConfig: options.getConfig ?? (() => CONFIG),
     captureFrame,
     captureMissReason: () => options.missReason ?? "stopped_by_user",
     telemetry,
@@ -1756,5 +1772,187 @@ describe("wired to the real api client", () => {
     expect(requests.filter((q) => q.url === "/api/sessions/s-1")).toHaveLength(
       1,
     );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Task 6 (constructed scenario): the loop creates a session in the selected
+// mode, and a stopped loop freezes the scenario playback until Retry.
+// ---------------------------------------------------------------------------
+
+const SCENARIO_MANIFEST: ScenarioManifest = {
+  schema: "constructed-scenario/1",
+  scenario_id: "tiny",
+  scenario_sha256: "s".repeat(64),
+  generated_at: "2025-01-01T00:00:00Z",
+  frame_period_ms: 200,
+  telemetry_period_ms: 2000,
+  duration_ms: 8000,
+  sources: {
+    split: "test",
+    vision_metadata_sha256: "v".repeat(64),
+    telemetry_csv_sha256: "t".repeat(64),
+  },
+  segments: [
+    {
+      index: 0,
+      title: "Baseline",
+      start_ms: 0,
+      duration_ms: 4000,
+      driver_id: "p050",
+      vision_class: "c0",
+      vision_label: "safe_driving",
+      telemetry_label: "Safe",
+      first_frame: 0,
+      frame_count: 20,
+      frame_cycles: 0,
+      first_telemetry: 0,
+      telemetry_count: 2,
+    },
+    {
+      index: 1,
+      title: "Vision only",
+      start_ms: 4000,
+      duration_ms: 4000,
+      driver_id: "p026",
+      vision_class: "c1",
+      vision_label: "texting_right",
+      telemetry_label: "Safe",
+      first_frame: 20,
+      frame_count: 20,
+      frame_cycles: 0,
+      first_telemetry: 2,
+      telemetry_count: 2,
+    },
+  ],
+  frames: Array.from({ length: 40 }, (_, n) => ({
+    n,
+    file: `f${n}.jpg`,
+    source_file: `s${n}.jpg`,
+    driver_id: n < 20 ? "p050" : "p026",
+    class_id: n < 20 ? "c0" : "c1",
+    vision_label: n < 20 ? "safe_driving" : "texting_right",
+    segment_index: n < 20 ? 0 : 1,
+    sha256: "x".repeat(64),
+  })),
+  telemetry: Array.from({ length: 4 }, (_, k) => ({
+    n: k,
+    row: k,
+    label: "Safe" as const,
+    segment_index: k < 2 ? 0 : 1,
+    features: TELEMETRY,
+  })),
+};
+
+describe("Task 6: mode switching and the frozen scenario playback", () => {
+  it("switching the mode creates a session of the new mode on the wire", async () => {
+    const created: Array<{ operation_mode: string }> = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string, init: RequestInit = {}) => {
+        if (url === "/api/models")
+          return new Response(
+            JSON.stringify({ models_loaded: true, provider: "stub" }),
+            { status: 200, headers: { "Content-Type": "application/json" } },
+          );
+        if (url === "/api/sessions" && init.method === "POST") {
+          created.push(
+            JSON.parse(init.body as string) as { operation_mode: string },
+          );
+          return new Response(
+            JSON.stringify({
+              id: `s-${created.length}`,
+              created_at: "2026-01-01T12:00:00+00:00",
+              total_windows: 0,
+            }),
+            { status: 201, headers: { "Content-Type": "application/json" } },
+          );
+        }
+        if (url.startsWith("/api/sessions/s-") && url.endsWith("/infer"))
+          return new Response(JSON.stringify(makeRecord("fresh", "fresh", 1)), {
+            status: 201,
+            headers: { "Content-Type": "application/json" },
+          });
+        throw new Error(`unexpected request ${url}`);
+      }),
+    );
+    let mode: OperationMode = "LIVE_MODEL_RUNTIME";
+    const time = new FakeTime();
+    let ids = 0;
+    const loop = createLiveLoop({
+      api: realApi,
+      policy: RETRY_POLICY,
+      getConfig: () => ({ ...CONFIG, operationMode: mode }),
+      captureFrame: () => ({
+        image_base64: "data:image/jpeg;base64,AAAA",
+        captured_at: new Date(time.now).toISOString(),
+        captured_at_source: "capture_time",
+        vision_frame: { epoch: 1000, index: 1 },
+      }),
+      telemetry: createPreparedTelemetryCursor(constantRows(TELEMETRY)),
+      newRequestId: () => `wire-${++ids}`,
+      now: () => time.now,
+      timers: time,
+    });
+
+    await loop.start();
+    await time.advance(0);
+    loop.pause();
+    mode = "CONSTRUCTED_SCENARIO_RUNTIME";
+    await loop.start();
+    await time.advance(0);
+
+    expect(created.map((c) => c.operation_mode)).toEqual([
+      "LIVE_MODEL_RUNTIME",
+      "CONSTRUCTED_SCENARIO_RUNTIME",
+    ]);
+  });
+
+  it("a stopped loop freezes the playback and Retry continues it at the frozen position", async () => {
+    let playback: ReturnType<typeof createScenarioPlayback>;
+    const r = rig({
+      script: threeTransportErrors(),
+      getConfig: () => ({ ...CONFIG, inferenceFps: 30 }),
+      makeTelemetry: (now) => {
+        playback = createScenarioPlayback(
+          SCENARIO_MANIFEST,
+          (n) => `img-${n}`,
+          now,
+        );
+        return playback.telemetry;
+      },
+      makeCapture: () => () => playback.captureFrame(),
+    });
+    await r.begin();
+
+    // The three deliveries of the first request all failed (0 / 2000 / 6000 ms) and
+    // the loop stopped; the playback froze at the stop moment: pos = 6000 ms -> frame
+    // 30 (f30.jpg), telemetry row 3, segment 1.
+    await r.time.advance(6000);
+    expect(r.get().fault).toMatchObject({ stopped: true, retryCount: 3 });
+    expect(r.calls).toHaveLength(3);
+    expect(r.calls[0].body).toBe(r.calls[1].body);
+    expect(r.calls[1].body).toBe(r.calls[2].body);
+
+    // Ten seconds later the position has not moved: only Stop and Pause freeze the
+    // playback, and the loop is stopped.
+    await r.time.advance(10_000);
+
+    // Retry re-sends the frozen request byte for byte ...
+    await r.loop.retry();
+    await r.time.advance(0);
+    expect(r.calls).toHaveLength(4);
+    expect(r.calls[3].body).toBe(r.calls[2].body);
+    expect(r.get().fault).toBeNull();
+
+    // ... and the NEXT request (the tick after the manual delivery) keeps the frozen
+    // position: same segment, same frame, same telemetry row.
+    await r.time.advance(34);
+    expect(r.calls).toHaveLength(5);
+    const next = r.calls[4].payload;
+    expect(next.replay?.scenario_id).toBe("tiny");
+    expect(next.replay?.segment_index).toBe(1);
+    expect(next.replay?.frame_file).toBe("f30.jpg");
+    expect(next.replay?.telemetry_row).toBe(3);
   });
 });

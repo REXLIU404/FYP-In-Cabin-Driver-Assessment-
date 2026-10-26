@@ -9,7 +9,10 @@ export type CaptureMiss =
   | "device_disconnected"
   | "start_failed"
   | "not_ready"
-  | "track_muted";
+  | "track_muted"
+  // Not the camera at all: the constructed scenario has no picture for this tick
+  // (a preloaded image is missing). Display-only, like the camera reasons.
+  | "scenario_frame_unavailable";
 
 /** Why the stream is gone, when it is. */
 export type CameraStop = "user" | "device" | "start_failed";

@@ -408,6 +408,15 @@ describe("the camera: an unplugged device and a deliberate Stop Camera read diff
     expect(notice("no_frame")).toContain("(no_frame)");
   });
 
+  it("a missing scenario frame has its own sentence, not the camera's (Task 6)", () => {
+    expect(notice("scenario_frame_unavailable")).toContain(
+      "No scenario frame is available (a preloaded image is missing).",
+    );
+    expect(notice("scenario_frame_unavailable")).not.toContain(
+      "No camera image is being sent",
+    );
+  });
+
   it("the notice still says monitoring continues, with telemetry only (R5)", () => {
     expect(notice("stopped_by_user")).toContain(
       "Vision evidence is missing; monitoring continues with telemetry only.",

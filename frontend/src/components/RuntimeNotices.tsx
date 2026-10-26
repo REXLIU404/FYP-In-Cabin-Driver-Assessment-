@@ -81,6 +81,14 @@ export function FaultPanel({
 
 /** Why requests carry no image right now. Monitoring continues (R5). */
 export function CaptureMissNotice({ reason }: { reason: string }) {
+  // The constructed scenario's own words: there is no camera to speak of, so the
+  // camera sentence would be wrong (plan Task 6).
+  if (reason === "scenario_frame_unavailable")
+    return (
+      <p className="runtime-warning" role="status">
+        No scenario frame is available (a preloaded image is missing).
+      </p>
+    );
   return (
     <p className="runtime-warning" role="status">
       No camera image is being sent ({captureMissText(reason)}). Vision evidence

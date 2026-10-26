@@ -75,7 +75,8 @@ type Requirement =
   | "SINGLE_OPTION"
   | "ACCESSOR"
   | "CLEANUP"
-  | "RENDERED";
+  | "RENDERED"
+  | "MODE_FILTER";
 
 /** The requirements the hook's source fails; an empty list is a pass. */
 function violations(source: string): Requirement[] {
@@ -97,10 +98,12 @@ function violations(source: string): Requirement[] {
     ],
     // The import and exactly one call: no second, shared or module-level buffer.
     ["ONE_BUFFER", (code.match(/\bcreateTimingBuffer\b/g) ?? []).length === 2],
-    // The loop (and so its buffer) is made once per hook instance.
+    // The loop (and so its buffer) is made once per hook instance. Since Task 6
+    // the initializer first makes the prepared cursor, then returns the loop -
+    // so the guard accepts statements before the createLiveLoop call.
     [
       "PER_INSTANCE",
-      /useState\(\s*\(\)\s*=>\s*createLiveLoop\s*(?:<[^<>()]*>)?\s*\(/.test(
+      /useState\(\s*\(\)\s*=>\s*\{[\s\S]*?\bcreateLiveLoop\s*(?:<[^<>()]*>)?\s*\(/.test(
         code,
       ),
     ],
@@ -136,6 +139,17 @@ function violations(source: string): Requirement[] {
         /useEffect\(\s*\(\)\s*=>\s*\{\s*if\s*\(\s*newestWindowId\s*!==\s*null\s*\)\s*loop\.markRendered\(\s*newestWindowId\s*\)\s*;?\s*\}\s*,\s*\[\s*loop\s*,\s*newestWindowId\s*\]\s*,?\s*\)/.test(
           code,
         ),
+    ],
+    // The saved-session list is filtered by the ONE Live-like judgement (rule E
+    // of the plan), never by a hardcoded "LIVE_MODEL_RUNTIME" literal: a
+    // constructed scenario session belongs to the same list as a Live one.
+    [
+      "MODE_FILTER",
+      /import\s*\{\s*isLiveLike\s*\}\s*from\s*"\.\.\/\.\.\/\.\.\/ai\/src\/operationMode"\s*;/.test(
+        code,
+      ) &&
+        /\bisLiveLike\(\s*\w+\.operation_mode\s*\)/.test(code) &&
+        !/\boperation_mode\s*===\s*"LIVE_MODEL_RUNTIME"/.test(code),
     ],
   ];
   return checks.filter(([, ok]) => !ok).map(([name]) => name);
