@@ -105,7 +105,14 @@ async function request<T>(
 export interface ModelStatus {
   models_loaded: boolean;
   provider: string;
-  vision: { architecture: string; sha256: string };
+  /** Task 10A: `model_id` / `run_id` / `source` ("stable" or "candidate:<run_id>") name the loaded model. */
+  vision: {
+    architecture: string;
+    sha256: string;
+    model_id?: string;
+    run_id?: string | null;
+    source?: string;
+  };
   telemetry: { architecture: string; sha256: string };
   scope: string;
 }

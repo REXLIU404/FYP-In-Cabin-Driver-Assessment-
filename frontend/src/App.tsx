@@ -20,6 +20,7 @@ import { useSessionLog } from "./hooks/useSessionLog";
 import type { AppConfig } from "./types";
 import { DATA_MODE_NOTE, DATA_MODE_OPTIONS } from "./utils/dataMode";
 import { describeSelection, selectRecord } from "./utils/selection";
+import { describeVisionModel } from "./utils/modelInfo";
 import { exportSessionLogCSV, exportSessionLogJSON } from "./utils/export";
 import { retryHandler } from "./utils/runtimeNotices";
 import {
@@ -280,6 +281,11 @@ export default function App() {
                 Showing {history.length} of {live.total} saved windows · export
                 includes all
               </span>
+              {live.models && (
+                <span>
+                  Vision model: {describeVisionModel(live.models.vision)}
+                </span>
+              )}
               {live.droppedFrames > 0 && (
                 <span>Late frames dropped: {live.droppedFrames}</span>
               )}
@@ -289,7 +295,8 @@ export default function App() {
             <details>
               <summary>Loaded model versions</summary>
               <p>
-                MobileNetV3: <code>{live.models.vision.sha256}</code>
+                Vision ({describeVisionModel(live.models.vision)}):{" "}
+                <code>{live.models.vision.sha256}</code>
               </p>
               <p>
                 XGBoost: <code>{live.models.telemetry.sha256}</code>

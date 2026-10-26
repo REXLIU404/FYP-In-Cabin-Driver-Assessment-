@@ -190,3 +190,131 @@ def test_the_real_p5_packages_load_and_forward(model_id):
     assert candidate.labels == STABLE_LABELS
     logits = np.asarray(candidate.session.run(None, {candidate.input_name: np.zeros((1, 3, 224, 224), np.float32)})[0])
     assert logits.shape == (1, 10) and np.isfinite(logits).all()
+
+
+# ====================================================================== the provider (Task 1.3)
+import base64  # noqa: E402
+import io  # noqa: E402
+import os  # noqa: E402
+import shutil  # noqa: E402
+import subprocess  # noqa: E402
+import sys  # noqa: E402
+
+MODEL_ROOT = Path(__file__).resolve().parents[2] / "ml/outputs"
+# All three stable files (test_model_gate.py checks every ``requires_models`` for it).
+requires_models = pytest.mark.skipif(
+    not all((MODEL_ROOT / name).exists() for name in ("vision/mobilenetv3_large_vision.onnx",
+                                                      "vision/mobilenetv3_large_vision.pt",
+                                                      "telemetry/xgb_telemetry.json")),
+    reason="local trained artifacts not installed",
+)
+STABLE_NAME = "MobileNetV3ONNX+XGBoost"
+BACKEND = Path(__file__).resolve().parents[1]
+
+
+def _metadata_only_root(tmp_path: Path, *, with_xgb: bool) -> Path:
+    """A model root with the two (tracked) metrics.json files and, optionally, the real XGBoost model -
+    but NO stable vision ONNX: a provider that reaches for the stable model here fails loudly."""
+    root = tmp_path / "model_root"
+    for branch in ("vision", "telemetry"):
+        (root / branch).mkdir(parents=True)
+        shutil.copy(MODEL_ROOT / branch / "metrics.json", root / branch / "metrics.json")
+    if with_xgb:
+        (root / "telemetry" / "xgb_telemetry.json").symlink_to((MODEL_ROOT / "telemetry/xgb_telemetry.json").resolve())
+    return root
+
+
+def _jpeg() -> str:
+    from PIL import Image
+    buffer = io.BytesIO()
+    Image.new("RGB", (64, 48), (80, 130, 180)).save(buffer, format="JPEG")
+    return base64.b64encode(buffer.getvalue()).decode()
+
+
+def _live_input(**over):
+    from app.schemas import LiveInput
+    data = {"request_id": "r1", "image_base64": _jpeg(), "captured_at": "2026-10-26T00:00:00+00:00",
+            "telemetry_features": {"speed_kmph": 52, "accel_x": .7, "accel_y": .2, "brake_pressure": 20,
+                                   "steering_angle": 7.5, "throttle": 40, "lane_deviation": .21, "headway_distance": 18},
+            "telemetry_timestamp": "2026-10-26T00:00:00+00:00", "telemetry_source": "prepared_replay"}
+    return LiveInput(**{**data, **over})
+
+
+@requires_models
+def test_the_stable_default_is_unchanged_and_says_so():
+    from app.config import settings
+    from app.providers.trained import TrainedProvider
+    assert settings.active_vision == "stable"
+    provider = TrainedProvider()
+    assert provider.name == STABLE_NAME
+    vision = provider.info["vision"]
+    assert (vision["model_id"], vision["run_id"], vision["source"], vision["architecture"]) == \
+        ("stable_mobilenet_v3_large", None, "stable", "mobilenet_v3_large")
+    assert vision["sha256"] == hashlib.sha256((MODEL_ROOT / "vision/mobilenetv3_large_vision.onnx").read_bytes()).hexdigest()
+    assert vision["classes"] == STABLE_LABELS
+    _, provenance = provider.infer(_live_input())
+    assert (provenance["vision_model_id"], provenance["vision_model_sha256"]) == ("stable_mobilenet_v3_large", vision["sha256"])
+
+
+@requires_models
+def test_a_candidate_replaces_only_the_vision_model_and_never_touches_the_stable_one(tmp_path, monkeypatch):
+    from app.config import settings
+    from app.providers.trained import TrainedProvider
+    bias = [0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]  # c3 (texting_left) dominant, whatever the image
+    pkg = _package(tmp_path / "candidates", onnx_kwargs={"bias": bias})
+    monkeypatch.setattr(settings, "model_root", _metadata_only_root(tmp_path, with_xgb=True))
+    monkeypatch.setattr(settings, "vision_candidates_root", tmp_path / "candidates")
+    monkeypatch.setattr(settings, "active_vision", "synthetic")
+    provider = TrainedProvider()
+    sha = hashlib.sha256((pkg / "model.onnx").read_bytes()).hexdigest()
+    assert provider.info["vision"]["model_id"] == "synthetic"
+    assert provider.info["vision"]["source"] == "candidate:p5_synthetic_seed0_20260101"
+    assert provider.info["vision"]["sha256"] == sha
+    assert "MobileNet" not in provider.name and provider.info["provider"] == provider.name
+    # The telemetry side is the stable XGBoost, untouched.
+    assert provider.info["telemetry"]["sha256"] == hashlib.sha256((MODEL_ROOT / "telemetry/xgb_telemetry.json").read_bytes()).hexdigest()
+    window, provenance = provider.infer(_live_input())
+    expected = np.exp(np.array(bias)) / np.exp(np.array(bias)).sum()
+    assert window.P_distraction == pytest.approx(1 - expected[0], abs=1e-6)
+    assert [c.label for c in window.visual_top_classes] == STABLE_LABELS
+    assert max(window.visual_top_classes, key=lambda c: c.probability).label == "texting_left"
+    assert (provenance["vision_model_id"], provenance["vision_model_sha256"]) == ("synthetic", sha)
+    assert provenance["provider"] == provider.name
+
+
+def test_a_refused_candidate_raises_and_never_falls_back(tmp_path, monkeypatch):
+    """No model files at all are needed: the stable ONNX is absent from this model root, so a fallback
+    would fail differently; the candidate's own reason must surface."""
+    from app.config import settings
+    from app.providers.trained import TrainedProvider
+    _package(tmp_path / "candidates", manifest_edit=lambda m: m["model"].update(sha256="f" * 64))
+    monkeypatch.setattr(settings, "model_root", _metadata_only_root(tmp_path, with_xgb=False))
+    monkeypatch.setattr(settings, "vision_candidates_root", tmp_path / "candidates")
+    monkeypatch.setattr(settings, "active_vision", "synthetic")
+    with pytest.raises(ModelUnavailable, match="sha256 mismatch"):
+        TrainedProvider()
+
+
+@pytest.mark.candidates
+@requires_models
+def test_switching_to_a_candidate_and_back_in_fresh_processes():
+    """Task 1.3 Step 4 / Stage 5 rollback: the switch is read at process start (DRA_ACTIVE_VISION);
+    unsetting it brings back the stable model with its own hash. Each load in its own process."""
+    script = ("import json; from app.providers.trained import TrainedProvider; "
+              "p = TrainedProvider(); print(json.dumps({'name': p.name, **p.info['vision']}))")
+
+    def load(active):
+        env = {k: v for k, v in os.environ.items() if not k.startswith("DRA_ACTIVE_VISION")}
+        if active is not None:
+            env["DRA_ACTIVE_VISION"] = active
+        env.update(PYTHONPATH=".", PYTHONDONTWRITEBYTECODE="1")
+        done = subprocess.run([sys.executable, "-c", script], cwd=BACKEND, env=env, capture_output=True, text=True,
+                              timeout=180)
+        assert done.returncode == 0, done.stderr
+        return json.loads(done.stdout.strip().splitlines()[-1])
+
+    candidate = load("resnet18_search004_seed42")
+    assert (candidate["model_id"], candidate["sha256"]) == ("resnet18_search004_seed42", REAL["resnet18_search004_seed42"][1])
+    stable = load(None)
+    assert (stable["model_id"], stable["source"], stable["name"]) == ("stable_mobilenet_v3_large", "stable", STABLE_NAME)
+    assert stable["sha256"] == hashlib.sha256((MODEL_ROOT / "vision/mobilenetv3_large_vision.onnx").read_bytes()).hexdigest()

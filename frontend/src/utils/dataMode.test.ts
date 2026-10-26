@@ -39,8 +39,11 @@ describe("Data mode: the prepared replay is labelled legacy / test-only", () => 
     );
   });
 
-  it("the Live note names the trained models", () => {
-    expect(DATA_MODE_NOTE.LIVE_MODEL_RUNTIME).toMatch(/MobileNetV3/);
+  it("the Live note names the trained models without hard-coding the vision architecture", () => {
+    // Task 10A: the active vision model is chosen at backend start (stable or a candidate); the page
+    // names it from /api/models (describeVisionModel), so this static note must not.
+    expect(DATA_MODE_NOTE.LIVE_MODEL_RUNTIME).toMatch(/trained vision model/);
+    expect(DATA_MODE_NOTE.LIVE_MODEL_RUNTIME).not.toMatch(/MobileNet|ResNet/i);
     expect(DATA_MODE_NOTE.LIVE_MODEL_RUNTIME).toMatch(/XGBoost/);
   });
 });
