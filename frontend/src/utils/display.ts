@@ -150,10 +150,35 @@ export const alertBannerClass = (
 };
 
 /**
- * Why the alert on screen differs from the window's RiskLevel. The AlertSeverity FSM (ai/src/alertFsm.ts,
- * backend `_step_alert_fsm`) holds an alert until Low has lasted ALERT_RECOVER_MS and raises HIGH_ALERT
- * only after High has lasted ALERT_SUSTAIN_MS, so "Low + CAUTION" or "High + CAUTION" is correct but
- * looks like a contradiction without a word of explanation. Display text only: it decides nothing.
+ * Whether the runtime 'Latest result is stale' warning must show. The AlertBanner is rendered on
+ * live / inspector / trends, but it only takes over the stale wording when its OWN state is
+ * 'stale': `getDisplayState` lets an unassessed (unavailable) record win over staleness, and the
+ * unavailable banner says nothing about age (review R7/R10/R28). So the warning is suppressed only
+ * when the banner will actually render its stale variant.
+ */
+export const runtimeStaleNoticeShown = (
+  activeView: string,
+  latest: RiskUpdate | undefined,
+  stale: boolean,
+): boolean => {
+  if (!stale) return false;
+  const bannerShown =
+    latest !== undefined &&
+    ["live", "inspector", "trends"].includes(activeView);
+  if (!bannerShown || latest === undefined) return true;
+  return getDisplayState(latest, { stale: true }) !== "stale";
+};
+
+/**
+ * Why the alert on screen differs from the window's RiskLevel. Both alert FSMs hold an alert
+ * until Low has lasted ALERT_RECOVER_MS and raise HIGH_ALERT only after High has lasted
+ * ALERT_SUSTAIN_MS, so "Low + CAUTION" or "High + CAUTION" is correct but looks like a
+ * contradiction without a word of explanation:
+ * - the wall-clock FSM (ai/src/alertFsm.ts, backend `_step_alert_fsm`) times this on the server
+ *   clock alone;
+ * - the Live R10 FSM (backend `_step_alert_fsm_live`) additionally needs NEW supporting
+ *   observations whose source times span the threshold, so the wording must hold for both.
+ * Display text only: it decides nothing.
  */
 export const alertHoldNote = (
   level: RiskLevel | null,
@@ -166,16 +191,17 @@ export const alertHoldNote = (
     Medium: "CAUTION",
     High: "HIGH_ALERT",
   } as const;
+  if (level === "Medium" && severity === "HIGH_ALERT") return null; // neither FSM can emit it
   if (level === "High" && severity !== "HIGH_ALERT") {
     return (
       `Escalation pending: HIGH_ALERT follows only if RiskLevel stays High for ` +
-      `${ALERT_SUSTAIN_MS / 1000} s.`
+      `${ALERT_SUSTAIN_MS / 1000} s (Live: ${ALERT_SUSTAIN_MS / 1000} s of server time and of new observations).`
     );
   }
   if (rank[severity] > rank[instantaneous[level]]) {
     return (
       `Alert held at ${severity}: it returns to NORMAL only after RiskLevel has stayed Low for ` +
-      `${ALERT_RECOVER_MS / 1000} s.`
+      `${ALERT_RECOVER_MS / 1000} s (Live: ${ALERT_RECOVER_MS / 1000} s of server time and of new observations).`
     );
   }
   return null;

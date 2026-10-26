@@ -24,6 +24,8 @@ interface LiveMonitorProps {
   thresholdLow: number;
   thresholdHigh: number;
   stale?: boolean;
+  /** Which data mode the record came from: the latency row must not claim a server ran (review R26). */
+  mode?: "LIVE_MODEL_RUNTIME" | "PREPARED_SESSION_RUNTIME";
 }
 
 export function LiveMonitor({
@@ -37,6 +39,7 @@ export function LiveMonitor({
   thresholdLow,
   thresholdHigh,
   stale = false,
+  mode = "LIVE_MODEL_RUNTIME",
 }: LiveMonitorProps) {
   // Everything below is the record's OWN value (see liveMonitorModel.ts): `stale`
   // describes the record's age and must not rewrite what the record says.
@@ -213,10 +216,17 @@ export function LiveMonitor({
               expiry={telemetryExpiry}
             />
           </div>
-          <div title="Time the server spent on this window, measured before it was written to the database">
-            <span>Server processing time</span>
-            <strong>{latest.latency_ms} ms</strong>
-          </div>
+          {mode === "PREPARED_SESSION_RUNTIME" ? (
+            <div title="Synthetic latency of the prepared replay input; no server or database ran for this window">
+              <span>Prepared latency (synthetic)</span>
+              <strong>{latest.latency_ms} ms</strong>
+            </div>
+          ) : (
+            <div title="Time the server spent on this window, measured before it was written to the database">
+              <span>Server processing time</span>
+              <strong>{latest.latency_ms} ms</strong>
+            </div>
+          )}
         </div>
       </section>
 

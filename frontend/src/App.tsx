@@ -19,6 +19,7 @@ import { useLiveSession } from "./hooks/useLiveSession";
 import { useSessionLog } from "./hooks/useSessionLog";
 import type { AppConfig } from "./types";
 import { DATA_MODE_NOTE, DATA_MODE_OPTIONS } from "./utils/dataMode";
+import { runtimeStaleNoticeShown } from "./utils/display";
 import { describeSelection, selectRecord } from "./utils/selection";
 import { exportSessionLogCSV, exportSessionLogJSON } from "./utils/export";
 import { retryHandler } from "./utils/runtimeNotices";
@@ -69,7 +70,9 @@ export default function App() {
     const overlaid = applyAlertState(record, alertFsmRef.current, Date.now());
     alertFsmRef.current = overlaid.state;
     replayLog.append(overlaid.record);
-    setSelectedWindowId(record.window_id);
+    // The view follows the newest window by default (selectedWindowId stays null); a tick
+    // must not pin it, or the selection bar reads 'pinned' without a click and a real pin
+    // would be overwritten on the next tick (review R9/R20).
     setCursor((old) => (old + 1) % PREPARED_SESSION_WINDOWS.length);
   }, [config, cursor, replayId, replayLog]);
   const replay = useMonitoringSession({
@@ -81,8 +84,10 @@ export default function App() {
   const latest = history[history.length - 1];
   const selectedRecord = selectRecord(history, selectedWindowId);
   const selection = describeSelection(history, selectedWindowId);
-  // The banner already says "No current assessment" on these views; the runtime panel repeats it
-  // only where the banner is not shown (Explanation, Configuration).
+  // The banner is rendered on these views. It takes over the stale warning only in ITS OWN
+  // 'stale' state: for an unassessed latest window getDisplayState says 'unavailable', which
+  // says nothing about age, so the runtime panel still repeats the stale notice then
+  // (utils/display.ts runtimeStaleNoticeShown).
   const bannerShown =
     latest !== undefined &&
     ["live", "inspector", "trends"].includes(activeView);
@@ -311,7 +316,7 @@ export default function App() {
           {isLive && monitoring && live.lastCaptureMiss && (
             <CaptureMissNotice reason={live.lastCaptureMiss} />
           )}
-          {isLive && live.stale && !bannerShown && (
+          {isLive && runtimeStaleNoticeShown(activeView, latest, live.stale) && (
             <p className="runtime-warning" role="status">
               Latest result is stale. Historical values are retained; there is
               no current risk assessment.
@@ -351,6 +356,7 @@ export default function App() {
                 config.thresholdHigh
               }
               stale={isLive && live.stale}
+              mode={config.operationMode}
             />
           ) : (
             <section className="panel empty-state">

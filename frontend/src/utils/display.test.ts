@@ -9,6 +9,7 @@ import {
   resolveBranchPill,
   resolveDominantEvidence,
   resolvePill,
+  runtimeStaleNoticeShown,
   zeroWeightNotice,
 } from "./display";
 import { UNAVAILABLE_LABEL } from "./format";
@@ -177,22 +178,17 @@ describe("alertHoldNote: an alert that differs from the level is explained, with
     [
       "Low",
       "CAUTION",
-      "Alert held at CAUTION: it returns to NORMAL only after RiskLevel has stayed Low for 10 s.",
+      "Alert held at CAUTION: it returns to NORMAL only after RiskLevel has stayed Low for 10 s (Live: 10 s of server time and of new observations).",
     ],
     [
       "Low",
       "HIGH_ALERT",
-      "Alert held at HIGH_ALERT: it returns to NORMAL only after RiskLevel has stayed Low for 10 s.",
-    ],
-    [
-      "Medium",
-      "HIGH_ALERT",
-      "Alert held at HIGH_ALERT: it returns to NORMAL only after RiskLevel has stayed Low for 10 s.",
+      "Alert held at HIGH_ALERT: it returns to NORMAL only after RiskLevel has stayed Low for 10 s (Live: 10 s of server time and of new observations).",
     ],
     [
       "High",
       "CAUTION",
-      "Escalation pending: HIGH_ALERT follows only if RiskLevel stays High for 2 s.",
+      "Escalation pending: HIGH_ALERT follows only if RiskLevel stays High for 2 s (Live: 2 s of server time and of new observations).",
     ],
   ] as const)("%s level with %s", (level, severity, note) => {
     expect(alertHoldNote(level, severity)).toBe(note);
@@ -204,7 +200,36 @@ describe("alertHoldNote: an alert that differs from the level is explained, with
     ["Medium", "CAUTION"],
     ["High", "HIGH_ALERT"],
     [null, null],
+    // Neither FSM can emit this pair (review R8): Medium maps to CAUTION immediately in
+    // ai/src/alertFsm.ts and in both backend FSMs, so there is nothing held to explain.
+    ["Medium", "HIGH_ALERT"],
   ] as const)("%s with %s: nothing to explain", (level, severity) => {
     expect(alertHoldNote(level, severity)).toBeNull();
+  });
+});
+
+describe("runtimeStaleNoticeShown: the banner takes over only with its STALE variant (review R7/R10/R28)", () => {
+  const available = makeRecord("fresh", "fresh", 1);
+  const unavailable = makeRecord("missing", "missing", 2);
+
+  it("an unassessed latest window on Inspector/Trends still gets the stale notice", () => {
+    // getDisplayState lets 'unavailable' win over 'stale', so the banner says nothing about age.
+    expect(runtimeStaleNoticeShown("inspector", unavailable, true)).toBe(true);
+    expect(runtimeStaleNoticeShown("trends", unavailable, true)).toBe(true);
+    expect(runtimeStaleNoticeShown("live", unavailable, true)).toBe(true);
+  });
+
+  it("an assessed but old window on those views is covered by the banner's stale variant", () => {
+    expect(runtimeStaleNoticeShown("inspector", available, true)).toBe(false);
+  });
+
+  it("outside the banner views the notice always shows when stale", () => {
+    expect(runtimeStaleNoticeShown("explanation", available, true)).toBe(true);
+    expect(runtimeStaleNoticeShown("configuration", unavailable, true)).toBe(true);
+  });
+
+  it("a current window never triggers the notice", () => {
+    expect(runtimeStaleNoticeShown("inspector", available, false)).toBe(false);
+    expect(runtimeStaleNoticeShown("explanation", unavailable, false)).toBe(false);
   });
 });

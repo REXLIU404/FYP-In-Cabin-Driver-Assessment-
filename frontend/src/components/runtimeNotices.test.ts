@@ -483,4 +483,15 @@ describe("App wiring of the stop panel and the camera notices (source guard)", (
       /<CameraStatusLine[^>]*\bstatus=\{camera\.status\}[^>]*\bactualFps=\{camera\.actualFps\}[^>]*\bevent=\{camera\.event\}[^>]*\/>/s,
     );
   });
+
+  it("a prepared-replay tick never sets the selected window (null already follows the newest)", () => {
+    // Review R9/R20: appendReplay used to call setSelectedWindowId(record.window_id) on every
+    // tick, so the selection bar read 'pinned' without a click and a real pin was overwritten
+    // within one deltaT. A replay tick must append the record and nothing else.
+    const replay = code.match(
+      /const appendReplay = useCallback\(\(\) => \{([\s\S]*?)\n {2}\}, \[config, cursor, replayId, replayLog\]\);/,
+    );
+    expect(replay).toBeTruthy();
+    expect(replay![1]).not.toContain("setSelectedWindowId");
+  });
 });

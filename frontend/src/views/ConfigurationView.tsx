@@ -52,8 +52,10 @@ export function ConfigurationView({
         <section className="config-section">
           <h3>Runtime Configuration</h3>
           <p>
-            Changing settings pauses monitoring. The next Start Monitoring (top
-            of the page) creates a session with the new configuration.
+            Changing settings pauses monitoring. In Live mode the next Start
+            Monitoring (top of the page) creates a session with the new
+            configuration; in Prepared replay it continues the same replay with
+            the new settings (New Session starts over).
           </p>
           <label className="field">
             <span>Target inference FPS (camera preview requests 30 FPS)</span>
