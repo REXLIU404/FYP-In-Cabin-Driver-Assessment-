@@ -146,6 +146,12 @@ export function createScenarioPlayback(
       if (running) return; // a no-op while running
       base = t;
       posAtBase = pos;
+      // A resume is a new capture segment: the position is frozen, so the first frame
+      // after it is the same one as before the pause and would otherwise re-send the
+      // SAME (epoch, index) with a NEW acquisition time, which the server's R10
+      // protocol refuses as an observation conflict. A new epoch makes it a NEW
+      // observation (the camera start number only ever grows).
+      epoch = t;
       seq += 1; // a NEW observation begins at once
       running = true;
     },

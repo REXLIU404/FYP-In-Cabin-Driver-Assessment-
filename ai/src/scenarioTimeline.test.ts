@@ -210,7 +210,7 @@ describe("pause, resume and the wall clock", () => {
 });
 
 describe("frame identity, acquisition times and the finish", () => {
-  it("frame identity only grows and the epoch changes only on reset", () => {
+  it("frame identity only grows and the epoch advances on reset and on resume", () => {
     const p = playback();
     p.telemetry.reset(T0);
     let last = -1;
@@ -222,6 +222,17 @@ describe("frame identity, acquisition times and the finish", () => {
       expect(frame.vision_frame!.epoch).toBe(T0);
       expect(frame.captured_at_source).toBe("replay_clock");
     }
+    // A pause freezes the position, so a resume re-opens the capture ON THE SAME
+    // frame: its identity must be new - a bigger epoch - or the server's R10
+    // protocol would refuse the re-sent (epoch, index) with its new acquisition
+    // time as an observation conflict.
+    clock = T0 + 8000;
+    p.telemetry.pause(T0 + 8000);
+    clock = T0 + 9000;
+    p.telemetry.resume(T0 + 9000);
+    const resumed = p.captureFrame()!;
+    expect(resumed.vision_frame!.epoch).toBe(T0 + 9000);
+    expect(resumed.vision_frame!.index).toBe(last);
     p.telemetry.reset(T0 + 100);
     clock = T0 + 100;
     const fresh = p.captureFrame()!;

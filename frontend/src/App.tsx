@@ -93,10 +93,15 @@ export default function App() {
     return () => clearInterval(timer);
   }, [isScenario, scenario.playback]);
   // The scenario finishes at the end of the last segment: stop the session there
-  // (no loop), exactly as the plan requires.
+  // (no loop), exactly as the plan requires. `live.pause` is the loop's own stable
+  // function, and only the finished FLAG is watched: depending on the whole `live`
+  // object (or the whole snapshot) here would re-run this effect on every render,
+  // pause again and re-render forever (React "Maximum update depth").
+  const pauseLive = live.pause;
+  const scenarioFinished = scenarioSnapshot?.finished;
   useEffect(() => {
-    if (isScenario && scenarioSnapshot?.finished) live.pause();
-  }, [isScenario, scenarioSnapshot, live]);
+    if (isScenario && scenarioFinished) pauseLive();
+  }, [isScenario, scenarioFinished, pauseLive]);
 
   const appendReplay = useCallback(() => {
     const window =
