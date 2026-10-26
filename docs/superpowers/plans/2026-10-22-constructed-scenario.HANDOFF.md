@@ -18,12 +18,13 @@
 | Task 8 端到端（e2e_short） | 完成 | 9ead12b（产品修复）+ d4308c2（测试） |
 | Task 9 viva_v1 彩排、long 标记、报告与文档 | 完成 | 7f32371（Task 8 测试竞态修复）+ 5c0461a |
 | 合并点 2（RP-2） | 完成 | 无新 merge 提交（origin/fyp2/live-system 已在 00b0e5d 之内）+ 634107e（门禁证据） |
+| 模式名用户决定 | 完成 | 0066e01（Constructed demo scenario） |
 
 ## 下一步（Claude）
 
-1. 把 `fyp2/constructed-scenario` 合并进 `fyp2/live-system`（本分支未 push）。
-2. 用户决定模式名（见「待用户决定」）；改名只动 `frontend/src/utils/dataMode.ts` 的
-   `CONSTRUCTED_MODE_LABEL` 常量与测试期望字面量（`dataMode.test.ts`、`test_constructed_scenario_e2e.py`）。
+1. 把 `fyp2/constructed-scenario`（最新 tip **0066e01**，本分支未 push）合并进 `fyp2/live-system`。
+2. 模式名已由用户决定为 **Constructed demo scenario**，改名已在 0066e01 完成（常量 + 会话描述 +
+   两处测试字面量 + README），无需再做。
 
 ## 全部 Ruling（详情见账本；共 17 条）
 
@@ -57,10 +58,9 @@
 
 ## 待用户决定
 
-1. **界面模式名**：现名「Constructed scenario」；前任建议「Constructed demo scenario」（避免与报告 D06 的
-   "constructed evaluation scenarios" 混淆）。所有界面文字取自 `frontend/src/utils/dataMode.ts` 的
-   `CONSTRUCTED_MODE_LABEL` 常量；改名 = 改该常量一处 + `utils/dataMode.test.ts` 与
-   `backend/tests/test_constructed_scenario_e2e.py` 里的期望字面量。
+无。**界面模式名已决定（2026-10-26，用户）：`Constructed demo scenario`**，实现于 0066e01
+（`CONSTRUCTED_MODE_LABEL` 常量、会话描述前缀、`dataMode.test.ts` / `client.test.ts` /
+`test_constructed_scenario_e2e.py` 期望字面量、README 演示节）。
 
 ## 已知问题
 
