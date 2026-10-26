@@ -98,7 +98,7 @@ def test_the_mode_is_offered_and_the_scenario_loads(pw, scenario_server):
         chrome.open()
         page = chrome.page
         labels = page.locator('select[aria-label="Data mode"] option').all_text_contents()
-        assert labels == ["Live camera (trained models)", "Constructed scenario"]
+        assert labels == ["Live camera (trained models)", "Constructed demo scenario"]
         select_constructed_scenario(chrome)
         option = page.locator('select[aria-label="Scenario"] option[value="e2e_short"]')
         assert page.locator('select[aria-label="Scenario"]').input_value() == "e2e_short"

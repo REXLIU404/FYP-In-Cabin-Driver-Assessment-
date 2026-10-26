@@ -142,7 +142,7 @@ export const api = {
         operation_mode: config.operationMode,
         description:
           config.operationMode === "CONSTRUCTED_SCENARIO_RUNTIME"
-            ? "Constructed scenario: State Farm test frames + Driver_Behavior test rows through trained models"
+            ? "Constructed demo scenario: State Farm test frames + Driver_Behavior test rows through trained models"
             : "Live camera + prepared raw telemetry through trained models",
         config: {
           weight_vision: config.weightVision,

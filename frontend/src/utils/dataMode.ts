@@ -5,7 +5,7 @@ import type { OperationMode } from "../types";
  * from a constant, so a rename - e.g. "Constructed demo scenario" - changes one
  * line). Tests pin the literal separately.
  */
-export const CONSTRUCTED_MODE_LABEL = "Constructed scenario";
+export const CONSTRUCTED_MODE_LABEL = "Constructed demo scenario";
 
 /**
  * The "Data mode" choices. Live is the system and is listed first; the constructed

@@ -22,7 +22,7 @@ describe("Data mode: the choices and their labels", () => {
       "Live camera (trained models)",
     );
     expect(option("CONSTRUCTED_SCENARIO_RUNTIME")?.label).toBe(
-      "Constructed scenario",
+      "Constructed demo scenario",
     );
     expect(option("PREPARED_SESSION_RUNTIME")).toBeUndefined();
   });

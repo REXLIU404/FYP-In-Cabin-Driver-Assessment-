@@ -421,7 +421,7 @@ describe("the create body follows the selected mode and the scenario endpoints (
     expect(JSON.parse(sent.body())).toEqual({
       operation_mode: "CONSTRUCTED_SCENARIO_RUNTIME",
       description:
-        "Constructed scenario: State Farm test frames + Driver_Behavior test rows through trained models",
+        "Constructed demo scenario: State Farm test frames + Driver_Behavior test rows through trained models",
       config: {
         weight_vision: DEFAULT_CONFIG.weightVision,
         weight_telemetry: DEFAULT_CONFIG.weightTelemetry,
