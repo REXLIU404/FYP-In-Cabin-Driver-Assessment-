@@ -125,6 +125,29 @@ def _fresh(tmp_path, name):
     return path
 
 
+def _model_skipif_conditions(directory: Path) -> list[tuple[str, str, str]]:
+    """(file, reason, condition source text) for every ``pytest.mark.skipif`` in ``directory``
+    whose reason is the one the gate recognises - found by parsing the source. The condition
+    is the source segment of the skipif call, so the guards can check the condition itself
+    instead of the whole file (review R14)."""
+    found = []
+    for path in sorted(Path(directory).glob("test_*.py")):
+        source = path.read_text()
+        for node in ast.walk(ast.parse(source)):
+            if not (isinstance(node, ast.Call) and ast.unparse(node.func).endswith("mark.skipif")):
+                continue
+            segment = ast.get_source_segment(source, node) or ""
+            reason = next((kw.value.value for kw in node.keywords if kw.arg == "reason"), None)
+            if reason == REASON:
+                found.append((path.name, reason, segment))
+    return found
+
+
+def _names_all_three(condition: str, files: tuple[str, ...]) -> bool:
+    """Whether every stable model file is named in the skipif condition source."""
+    return all(name in condition for name in files)
+
+
 def _requires_models_markers():
     """(file, reason) for every `... = pytest.mark.skipif(` in this directory whose condition
     mentions the model files, found by parsing the source."""
@@ -143,19 +166,52 @@ def _requires_models_markers():
 
 def test_every_model_skipif_checks_all_three_stable_model_files():
     """Deferred minor M8: a marker that checks only one file lets a test run - and fail confusingly -
-    when another model is missing, instead of being reported as a model skip."""
+    when another model is missing, instead of being reported as a model skip. The check is on the
+    skipif condition itself, not the whole file: naming the other files somewhere else in the file
+    must not count (review R14)."""
     files = ("mobilenetv3_large_vision.onnx", "mobilenetv3_large_vision.pt", "xgb_telemetry.json")
-    for path in sorted(TESTS_DIR.glob("test_*.py")):
-        source = path.read_text()
-        for node in ast.walk(ast.parse(source)):
-            if not (isinstance(node, ast.Call) and ast.unparse(node.func).endswith("mark.skipif")):
-                continue
-            segment = ast.get_source_segment(source, node) or ""
-            if "MODEL_ROOT" in segment or "ml/outputs" in segment:
-                # The files are named in the condition itself or in a module constant it reads.
-                assert all(name in source for name in files), path.name
-                condition = ast.unparse(node.args[0]) if node.args else ""
-                assert "onnx').exists()" not in condition and 'onnx").exists()' not in condition, (path.name, condition)
+    found = _model_skipif_conditions(TESTS_DIR)
+    assert {name for name, _, _ in found} >= {"test_live_inference.py",
+                                              "test_unavailable_contract.py", "test_live_e2e.py"}
+    for name, reason, condition in found:
+        assert reason == REASON, (name, reason)
+        # The files are named in the condition itself or in a module constant it reads.
+        assert _names_all_three(condition, files), (name, condition)
+        assert "onnx').exists()" not in condition and 'onnx").exists()' not in condition, (name, condition)
+
+
+def test_the_guard_reads_the_condition_not_the_whole_file(tmp_path):
+    """Review R14: the old guard asserted the file names against the WHOLE file, so a marker whose
+    condition checks a single model file passed as long as the other two names appeared anywhere
+    else in the file. The condition-level guard must flag it."""
+    (tmp_path / "test_weak.py").write_text('''
+import pytest
+from pathlib import Path
+
+missing = pytest.mark.skipif(
+    not (Path("ml/outputs/vision/mobilenetv3_large_vision.onnx").exists()),
+    reason="local trained artifacts not installed",
+)
+
+
+@missing
+def test_needs_models():
+    pass
+
+
+# The other two stable files are named elsewhere in the file, not in the condition:
+OTHER = ("mobilenetv3_large_vision.pt", "xgb_telemetry.json")
+''')
+    found = _model_skipif_conditions(tmp_path)
+    assert [name for name, _, _ in found] == ["test_weak.py"]
+    condition = found[0][2]
+    # The whole file DOES name all three files, and the old guard would have let it through...
+    assert all(name in (tmp_path / "test_weak.py").read_text()
+               for name in ("mobilenetv3_large_vision.onnx",
+                            "mobilenetv3_large_vision.pt", "xgb_telemetry.json"))
+    # ...but the condition itself names only one.
+    assert not _names_all_three(condition, ("mobilenetv3_large_vision.onnx",
+                                            "mobilenetv3_large_vision.pt", "xgb_telemetry.json"))
 
 
 def test_every_model_skipif_uses_the_reason_the_gate_recognises():
