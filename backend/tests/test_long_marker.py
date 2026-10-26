@@ -25,11 +25,11 @@ def test_plain():
 '''
 
 
-def run(tmp_path, *args):
+def run(tmp_path, *args, synthetic: str = SYNTHETIC):
     project = tmp_path / "project"
     project.mkdir()
     shutil.copy(TESTS_DIR / "conftest.py", project / "conftest.py")
-    (project / "test_synthetic.py").write_text(SYNTHETIC)
+    (project / "test_synthetic.py").write_text(synthetic)
     env = {k: v for k, v in os.environ.items() if k != "DRA_REQUIRE_MODELS"}
     env.update(PYTHONPATH=str(BACKEND), PYTHONDONTWRITEBYTECODE="1")
     return subprocess.run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "--rootdir", str(project),
@@ -48,6 +48,33 @@ def test_a_marker_expression_that_merely_contains_the_letters_long_does_not_star
     every test without a ``longer`` marker - the long one included - so only the conftest stands
     between it and a 15-minute run."""
     done = run(tmp_path, "-m", "not longer")
+    assert done.returncode == 0, done.stdout
+    assert "1 passed, 1 deselected" in done.stdout, done.stdout
+
+
+CANDIDATES = '''
+import pytest
+
+@pytest.mark.candidates
+def test_needs_the_copied_packages():
+    pass
+
+def test_plain():
+    pass
+'''
+
+
+def test_a_candidates_test_is_deselected_not_skipped_in_a_normal_run(tmp_path):
+    """Task 10A (correction C-4): tests that need the copied P5 packages are opt-in like ``long``, so a
+    gate run or a fresh clone stays at 0 skipped."""
+    done = run(tmp_path, synthetic=CANDIDATES)
+    assert done.returncode == 0, done.stdout
+    assert "1 passed, 1 deselected" in done.stdout, done.stdout
+    assert "skipped" not in done.stdout
+
+
+def test_minus_m_candidates_runs_only_the_candidates_tests(tmp_path):
+    done = run(tmp_path, "-m", "candidates", synthetic=CANDIDATES)
     assert done.returncode == 0, done.stdout
     assert "1 passed, 1 deselected" in done.stdout, done.stdout
 
