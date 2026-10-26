@@ -227,6 +227,45 @@ def test_a_repeat_in_a_session_registered_before_the_contributions_existed_keeps
     assert again["provenance"]["telemetry_contribution_method"] == METHOD
 
 
+def test_a_repeat_with_contributions_but_no_meta_key_keeps_the_registered_method_and_baseline(drive, api_factory):
+    """Review R31: the M4 legacy state is ``obs_t_contribs`` present with ``obs_t_contrib_meta``
+    absent - exactly what every live session registered before the meta key wrote. The REPEAT
+    keeps the registered contributions AND a method/baseline: the stub is left unchanged here, so
+    the model's own answer for the same bytes IS the registered one (the real model is
+    deterministic, this is the state the M4 commit message promises)."""
+    d = stubbed(drive)
+    d.ok(0, "t0", features=tel(0.4, 1), stamp=0, seq=0)
+    with api_factory() as db:
+        sess = db.get(models.SessionMeta, d.sid)
+        legacy = dict(sess.runtime_state)
+        assert legacy["obs_t_contribs"] == listing(4.0)
+        assert legacy.pop("obs_t_contrib_meta") == {"method": METHOD, "baseline": -4.0}
+        sess.runtime_state = legacy
+        db.commit()
+    state = state_of(api_factory, d.sid)
+    assert "obs_t_contribs" in state and "obs_t_contrib_meta" not in state
+    again = d.ok(500, "t1", features=tel(0.4, 1), stamp=0, seq=0)
+    assert again["provenance"]["telemetry_obs"] == "repeat"
+    assert again["telemetry_feature_contributions"] == listing(4.0)
+    assert again["provenance"]["telemetry_contribution_method"] == METHOD
+    assert again["provenance"]["telemetry_contribution_baseline"] == -4.0
+
+
+def test_a_repeat_whose_registered_meta_is_none_leaves_the_provenance_clean(drive, api_factory):
+    """Review R31: a NEW registered by a provider that gave no contributions stores
+    ``obs_t_contrib_meta=None``. The REPEAT - now from a provider that DOES give them - must not
+    keep the fresh method/baseline in the provenance: they would explain nothing registered."""
+    d = drive()
+    d.ok(0, "t0", features=tel(0.4, 1), stamp=0, seq=0)  # ProbStub: no contributions, meta None
+    assert state_of(api_factory, d.sid)["obs_t_contrib_meta"] is None
+    d.stub = ContribStub()
+    again = d.ok(500, "t1", features=tel(0.4, 1), stamp=0, seq=0)
+    assert again["provenance"]["telemetry_obs"] == "repeat"
+    assert again["telemetry_feature_contributions"] == []
+    assert "telemetry_contribution_method" not in again["provenance"]
+    assert "telemetry_contribution_baseline" not in again["provenance"]
+
+
 def test_expired_and_telemetry_less_windows_follow_the_rule_the_class_breakdown_has(drive):
     """Today's rule for ``telemetry_behavior_classes`` (inference.run_inference passes the provider's
     value through): a window whose request carried telemetry keeps what the model said about it - an

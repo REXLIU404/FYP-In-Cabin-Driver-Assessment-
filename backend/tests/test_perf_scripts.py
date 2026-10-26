@@ -27,6 +27,16 @@ perf01, perf02 = load("perf01"), load("perf02")
     ("miss", {}),
     ("a;dur=abc, b;dur=4", {"b": 4.0}),
     ("", {}),
+    # Review R16: the Python parser must agree with parseServerTiming in
+    # ai/src/liveTiming.ts on the same header, token for token.
+    ("infer;dur=1, infer;dur=2.5", {"infer": 3.5}),  # repeated names sum, not last-wins
+    ('db;desc="a\\";b";dur=2', {"db": 2.0}),          # a backslash-escaped quote stays quoted
+    ("a;dur=inf", {}),                                # non-finite, like Number() + isFinite
+    ("a;dur=nan", {}),
+    ("a;dur=1_0", {}),                                # Python float() reads 1_0; JS Number() does not
+    ('a;dur=""', {"a": 0.0}),                         # Number("") is 0
+    ('a;dur="1.5""', {}),                             # one quote per side is stripped, not all of them
+    ("a;dur=0x10", {"a": 16.0}),                      # JS Number() reads hex
 ])
 def test_parse_server_timing(header, expected):
     assert perf01.parse_server_timing(header) == expected

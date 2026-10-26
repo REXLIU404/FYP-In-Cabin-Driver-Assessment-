@@ -79,6 +79,15 @@ def test_minus_m_candidates_runs_only_the_candidates_tests(tmp_path):
     assert "1 passed, 1 deselected" in done.stdout, done.stdout
 
 
+def test_a_hyphenated_expression_is_not_misread_as_asking_for_long(tmp_path):
+    """Review R15: pytest marker identifiers may contain '-' (``-m "not long-run"`` names the marker
+    ``long-run``, which nobody has). The conftest must split the expression the way pytest does, or
+    ``long-run`` is misread as asking for ``long`` and the 15-minute test starts."""
+    done = run(tmp_path, "-m", "not long-run")
+    assert done.returncode == 0, done.stdout
+    assert "1 passed, 1 deselected" in done.stdout, done.stdout
+
+
 def test_minus_m_long_runs_only_the_long_tests(tmp_path):
     done = run(tmp_path, "-m", "long")
     assert done.returncode == 0, done.stdout
