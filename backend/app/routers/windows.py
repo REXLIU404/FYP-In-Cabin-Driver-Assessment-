@@ -16,7 +16,7 @@ from sqlalchemy.orm import Session
 from .. import cache, faults, inference, models, timing
 from ..db import get_db
 from ..faults import FaultHTTPException, FaultSink, get_fault_sink
-from ..schemas import LiveInput, RiskUpdate, RuntimeConfig, WindowInput, is_live_like
+from ..schemas import CONSTRUCTED_MODE, LiveInput, RiskUpdate, RuntimeConfig, WindowInput, is_live_like
 
 router = APIRouter(prefix="/api/sessions", tags=["windows"])
 
@@ -316,6 +316,13 @@ def _infer(db, session_id: str, payload: LiveInput):
     if not is_live_like(mode):
         raise FaultHTTPException(409, "Create a live model session first",
                                  error_category=faults.CATEGORY_MODE_CONFLICT, origin=faults.ORIGIN_SESSION)
+    # The replay block and the replay_clock stamp are demo-only labels (spec 4.1): accepted in a
+    # constructed scenario session only. The schema cannot see the session's mode, so the check
+    # lives here; a 422 must carry the input_validation category like the schema ones do.
+    if mode != CONSTRUCTED_MODE and (payload.replay is not None or payload.captured_at_source == "replay_clock"):
+        raise FaultHTTPException(422, "replay data is accepted only in a constructed scenario session",
+                                 error_category=faults.CATEGORY_INPUT_VALIDATION,
+                                 origin=faults.ORIGIN_REQUEST_VALIDATION)
     # The attempt index is a header and is NOT part of the hash: a retry must be
     # byte-identical to the request it repeats, or it would collide with itself (409).
     digest = request_digest(payload)
@@ -327,6 +334,15 @@ def _infer(db, session_id: str, payload: LiveInput):
     window, provenance = _run_models(payload)
     timing.record_provider_timings(provenance.get("timing_ms"))
     provenance = {**provenance, "captured_at_source": payload.captured_at_source}
+    if mode == CONSTRUCTED_MODE:
+        # The dataset is the only source of this demo: the server's labels replace whatever the
+        # client declared and whatever the provider echoed (``trained.py`` is not touched; Live
+        # keeps its ``camera_frame``). A branch the request did not carry stays "missing". The
+        # ground-truth block is kept verbatim in the provenance and never reaches the fusion.
+        provenance["vision_source"] = "dataset_replay" if payload.image_base64 is not None else "missing"
+        provenance["telemetry_source"] = ("dataset_replay" if payload.telemetry_features is not None
+                                          else "missing")
+        provenance["replay"] = payload.replay.model_dump() if payload.replay is not None else None
     return _persist_window(db, session_id, window, mode=mode, provenance=provenance,
                            request_id=payload.request_id, digest=digest, started=started,
                            evidence=evidence_of(payload))

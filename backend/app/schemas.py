@@ -134,11 +134,28 @@ class VisionFrame(BaseModel):
     index: int = Field(ge=0)
 
 
-# The R10 additions to ``LiveInput``. All are optional, so a request built before they existed is
-# still valid, and a value of None is LEFT OUT of the request hash (``canonical_body``): the same
-# HTTP body must keep the hash it had before the upgrade, or a retry that crosses a deploy would
-# turn from an idempotent replay into a 409.
-R10_OPTIONAL_FIELDS = ("telemetry_seq", "vision_frame", "captured_at_source")
+# The optional additions to ``LiveInput``. All are optional, so a request built before they
+# existed is still valid, and a value of None is LEFT OUT of the request hash
+# (``canonical_body``): the same HTTP body must keep the hash it had before the upgrade, or a
+# retry that crosses a deploy would turn from an idempotent replay into a 409. The R10 trio
+# came first; ``replay`` (Task 2, constructed scenario) follows the same rule.
+HASH_OPTIONAL_FIELDS = ("telemetry_seq", "vision_frame", "captured_at_source", "replay")
+
+
+class ReplayInfo(BaseModel):
+    """The ground-truth block a constructed-scenario client attaches to one request: which
+    bundle segment this frame and telemetry row came from, and the dataset's own labels.
+    Stored VERBATIM in ``provenance.replay``; it never enters the fusion. Every field may be
+    absent (a request without an image carries no ``frame_file`` / ``vision_label``...); the
+    server does not cross-check them - a 422 must never stop the demo."""
+
+    model_config = ConfigDict(extra="forbid")
+    scenario_id: str = Field(min_length=1, max_length=100, pattern=r"^[A-Za-z0-9_-]+$")
+    segment_index: int = Field(ge=0)
+    frame_file: Optional[str] = Field(default=None, max_length=200, pattern=r"^[A-Za-z0-9._-]+$")
+    vision_label: Optional[str] = Field(default=None, max_length=64)
+    telemetry_label: Optional[Literal["Safe", "Aggressive", "Distracted"]] = None
+    telemetry_row: Optional[int] = Field(default=None, ge=0)
 
 
 class LiveInput(BaseModel):
@@ -158,7 +175,9 @@ class LiveInput(BaseModel):
     telemetry_seq: Optional[int] = Field(default=None, ge=0)
     vision_frame: Optional[VisionFrame] = None
     # Where ``captured_at`` came from. Recorded in the provenance only; it changes no verdict.
-    captured_at_source: Optional[Literal["capture_time", "callback", "client_clock"]] = None
+    captured_at_source: Optional[Literal["capture_time", "callback", "client_clock", "replay_clock"]] = None
+    # The ground-truth block of a constructed-scenario request (Task 2): provenance only.
+    replay: Optional[ReplayInfo] = None
 
     @field_validator("captured_at", "telemetry_timestamp")
     @classmethod
@@ -181,10 +200,10 @@ class LiveInput(BaseModel):
         return self
 
     def canonical_body(self) -> dict:
-        """The dict the request hash is computed over: every field, except an R10 field that
+        """The dict the request hash is computed over: every field, except an optional one that
         is None. Dropping the Nones is what keeps a pre-upgrade body's hash unchanged."""
         body = self.model_dump()
-        for name in R10_OPTIONAL_FIELDS:
+        for name in HASH_OPTIONAL_FIELDS:
             if body.get(name) is None:
                 body.pop(name, None)
         return body
