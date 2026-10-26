@@ -1,0 +1,58 @@
+{
+  "generated": "2026-10-26T19:30:43",
+  "head": "94c6d1431beb58f2bbc7afd2ec7b400ef17d7092",
+  "steps": [
+    {
+      "step": "startup-default",
+      "vision": {
+        "model_id": "stable_mobilenet_v3_large",
+        "source": "stable",
+        "architecture": "mobilenet_v3_large",
+        "sha256": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf"
+      },
+      "provider": "MobileNetV3ONNX+XGBoost",
+      "leftover": null
+    },
+    {
+      "step": "startup-resnet18",
+      "vision": {
+        "model_id": "resnet18_search004_seed42",
+        "source": "candidate:p5_resnet18_search004_seed42_20261023",
+        "architecture": "resnet18",
+        "sha256": "5e226722e0712824c78aa0976afa6fa5b8dc6100b147a7f523a09048171d8cf3"
+      },
+      "provider": "VisionCandidateONNX+XGBoost",
+      "leftover": null
+    },
+    {
+      "step": "trained_py_diff",
+      "changed_lines": 39,
+      "telemetry_or_xgb_lines": []
+    },
+    {
+      "step": "manifest-cli-p5_mobilenet_v3_large_search006_seed42_20261023",
+      "exit": 0,
+      "log": "manifest-cli-p5_mobilenet_v3_large_search006_seed42_20261023.log"
+    },
+    {
+      "step": "manifest-cli-p5_resnet18_search004_seed42_20261023",
+      "exit": 0,
+      "log": "manifest-cli-p5_resnet18_search004_seed42_20261023.log"
+    },
+    {
+      "step": "pytest-m-candidates",
+      "exit": 0,
+      "log": "pytest-m-candidates.log"
+    },
+    {
+      "step": "tamper-green",
+      "exit": 0,
+      "log": "tamper-green.log"
+    },
+    {
+      "step": "tamper-red-sha-check-removed",
+      "exit": 1,
+      "log": "tamper-red-sha-check-removed.log"
+    }
+  ]
+}
