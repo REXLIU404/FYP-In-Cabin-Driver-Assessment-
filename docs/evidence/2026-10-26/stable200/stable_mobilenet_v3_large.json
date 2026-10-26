@@ -1,0 +1,331 @@
+{
+  "environment": {
+    "PIL": "12.2.0",
+    "numpy": "2.4.6",
+    "onnxruntime": "1.26.0",
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "python": "3.13.3",
+    "xgboost": "3.2.0"
+  },
+  "model": {
+    "onnx_sha256_actual": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "onnx_sha256_expected": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "onnx_sha256_match": true,
+    "preprocess_identity": null
+  },
+  "model_id": "stable_mobilenet_v3_large",
+  "parity100_reference_comparison": {
+    "comparison": {
+      "argmax_agreement": 1.0,
+      "argmax_mismatches": [],
+      "max_abs_prob_delta": 1.778338120095313e-07,
+      "missing_fresh": [],
+      "missing_reference": [],
+      "n_compared": 100,
+      "pass_numeric": true,
+      "worst": {
+        "fresh_argmax": 3,
+        "fresh_image_sha256": "9472f4b26e6c904e4afaa7bf7758db6f3aad2bfb8c3c440f66805a072e7f0703",
+        "fresh_probs": [
+          0.00019151400192640722,
+          0.0008569681085646152,
+          0.0004364747437648475,
+          0.99285888671875,
+          0.0003903788747265935,
+          0.001294376328587532,
+          0.00012281761155463755,
+          0.003779361490160227,
+          6.683032552246004e-05,
+          2.2125748273538193e-06
+        ],
+        "max_delta": 1.778338120095313e-07,
+        "per_class_deltas": [
+          1.689210211053456e-11,
+          2.4746222746733354e-10,
+          1.8570687045429968e-10,
+          1.778338120095313e-07,
+          1.6656277648362944e-11,
+          2.809735389231599e-10,
+          1.5619569927825122e-11,
+          6.41821771077411e-10,
+          1.235223663804963e-11,
+          1.5578959148315383e-12
+        ],
+        "reference_argmax": 3,
+        "reference_probs": [
+          0.00019151401881850933,
+          0.0008569683560268427,
+          0.00043647492947171797,
+          0.992859064552562,
+          0.00039037889138287114,
+          0.001294376609561071,
+          0.00012281759593506762,
+          0.003779362131981998,
+          6.683033787469668e-05,
+          2.212576385249734e-06
+        ],
+        "source_id": "vision-v1:c3/img_101745.jpg",
+        "top1_top2_margin_fresh": 0.9890795252285898,
+        "top1_top2_margin_reference": 0.98907970242058
+      }
+    },
+    "reference": {
+      "expected_sha256": "bcecf7d0afcafa48213c0a4f9b85eb6f56ea05e5f463e24881cdf914888af0f8",
+      "kind": "p4a_ort_logits",
+      "n": 100,
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p4a_20261021/parity_MN-STABLE.json",
+      "sha256": "bcecf7d0afcafa48213c0a4f9b85eb6f56ea05e5f463e24881cdf914888af0f8",
+      "sha256_match": true
+    }
+  },
+  "preprocess_rejected": {},
+  "probability_sanity_problems": {},
+  "problems": [],
+  "provider": {
+    "name": "MobileNetV3ONNX+XGBoost",
+    "vision": {
+      "architecture": "mobilenet_v3_large",
+      "classes": [
+        "safe_driving",
+        "texting_right",
+        "talking_phone_right",
+        "texting_left",
+        "talking_phone_left",
+        "operating_radio",
+        "drinking",
+        "reaching_behind",
+        "hair_makeup",
+        "talking_to_passenger"
+      ],
+      "input": "RGB NCHW float32 224x224",
+      "mean": [
+        0.485,
+        0.456,
+        0.406
+      ],
+      "model_id": "stable_mobilenet_v3_large",
+      "run_id": null,
+      "runtime": "onnxruntime_cpu",
+      "sha256": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+      "source": "stable",
+      "std": [
+        0.229,
+        0.224,
+        0.225
+      ]
+    }
+  },
+  "stable200_behavior": {
+    "all_unique_modes_equal_label": true,
+    "missing_source_ids": [],
+    "n_behavior": 200,
+    "n_missing": 0,
+    "per_class": {
+      "c0": {
+        "counts": [
+          17,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        "n": 20,
+        "pass": true,
+        "winners": [
+          0
+        ]
+      },
+      "c1": {
+        "counts": [
+          0,
+          20,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "n": 20,
+        "pass": true,
+        "winners": [
+          1
+        ]
+      },
+      "c2": {
+        "counts": [
+          0,
+          0,
+          17,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0
+        ],
+        "n": 20,
+        "pass": true,
+        "winners": [
+          2
+        ]
+      },
+      "c3": {
+        "counts": [
+          0,
+          0,
+          0,
+          20,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "n": 20,
+        "pass": true,
+        "winners": [
+          3
+        ]
+      },
+      "c4": {
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          20,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "n": 20,
+        "pass": true,
+        "winners": [
+          4
+        ]
+      },
+      "c5": {
+        "counts": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          19,
+          0,
+          0,
+          0,
+          0
+        ],
+        "n": 20,
+        "pass": true,
+        "winners": [
+          5
+        ]
+      },
+      "c6": {
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          20,
+          0,
+          0,
+          0
+        ],
+        "n": 20,
+        "pass": true,
+        "winners": [
+          6
+        ]
+      },
+      "c7": {
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          16,
+          4,
+          0
+        ],
+        "n": 20,
+        "pass": true,
+        "winners": [
+          7
+        ]
+      },
+      "c8": {
+        "counts": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          19,
+          0
+        ],
+        "n": 20,
+        "pass": true,
+        "winners": [
+          8
+        ]
+      },
+      "c9": {
+        "counts": [
+          6,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          4,
+          0,
+          10
+        ],
+        "n": 20,
+        "pass": true,
+        "winners": [
+          9
+        ]
+      }
+    }
+  },
+  "stable200_pytorch_comparison": null,
+  "stable200_pytorch_comparison_reason": "NO_STABLE200_REFERENCE",
+  "status": "PASS",
+  "worker": {
+    "command": [
+      "/Users/liu/Desktop/FYP2-Live-System/.venv/bin/python",
+      "/Users/liu/Desktop/FYP2-DeepSeek/scripts/verify_stable200.py",
+      "--worker",
+      "/Users/liu/Desktop/FYP2-DeepSeek/docs/evidence/2026-10-26/stable200/worker_spec_stable_mobilenet_v3_large.json",
+      "/Users/liu/Desktop/FYP2-DeepSeek/docs/evidence/2026-10-26/stable200/worker_out_stable_mobilenet_v3_large.json"
+    ],
+    "duration_s": 7.58,
+    "exit_code": 0,
+    "stderr_tail": []
+  }
+}
