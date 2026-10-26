@@ -1,9 +1,17 @@
 import type { OperationMode } from "../types";
 
 /**
- * The "Data mode" choices. Live is the system and is listed first; the prepared
- * replay is a retained legacy path (regression tests, backward compatibility) and is
- * labelled as such, so choosing it is a deliberate act and not a quiet default
+ * The one source of the mode's user-facing name (rule: all interface copy reads
+ * from a constant, so a rename - e.g. "Constructed demo scenario" - changes one
+ * line). Tests pin the literal separately.
+ */
+export const CONSTRUCTED_MODE_LABEL = "Constructed scenario";
+
+/**
+ * The "Data mode" choices. Live is the system and is listed first; the constructed
+ * scenario replays pre-generated test frames and telemetry through the trained
+ * models (plan Task 7). The prepared replay is a retained legacy path (regression
+ * tests, backward compatibility) and is NO LONGER LISTED - its code and tests stay
  * (D03 / plan Task 9). Which mode a visit starts in is decided by `loadConfig`,
  * which always answers Live.
  */
@@ -11,11 +19,8 @@ export const DATA_MODE_OPTIONS: ReadonlyArray<{
   value: OperationMode;
   label: string;
 }> = [
-  { value: "LIVE_MODEL_RUNTIME", label: "Live trained models" },
-  {
-    value: "PREPARED_SESSION_RUNTIME",
-    label: "Prepared replay (legacy, test-only)",
-  },
+  { value: "LIVE_MODEL_RUNTIME", label: "Live camera (trained models)" },
+  { value: "CONSTRUCTED_SCENARIO_RUNTIME", label: CONSTRUCTED_MODE_LABEL },
 ];
 
 /** The sentence under the controls for each mode. */

@@ -141,6 +141,20 @@ export interface RiskUpdate {
      */
     telemetry_contribution_method?: string;
     telemetry_contribution_baseline?: number;
+    /**
+     * Constructed scenario only (plan Task 2): the dataset replay's ground-truth block,
+     * stored VERBATIM from the request and never used in any calculation. Fields are
+     * absent when the request omitted them (a frame-less or telemetry-less window).
+     */
+    replay?: {
+      scenario_id?: string;
+      /** 0-based in provenance; the UI shows it 1-based (spec 4.1). */
+      segment_index?: number;
+      frame_file?: string;
+      vision_label?: string;
+      telemetry_row?: number;
+      telemetry_label?: TelemetryBehaviorLabel;
+    };
     fusion_config?: {
       weight_vision: number;
       weight_telemetry: number;

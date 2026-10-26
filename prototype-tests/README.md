@@ -65,7 +65,7 @@ evidence: the command, the date, the model SHA-256 values shown under **Loaded m
 versions**, and the database path.
 
 1. **Backend ready.** `GET /api/models` answers `models_loaded: true` and names the
-   MobileNetV3 and XGBoost versions. The page is on **Live trained models**.
+   MobileNetV3 and XGBoost versions. The page is on **Live camera (trained models)**.
 2. **Start Monitoring.** Allow the camera. The status line shows the camera, the
    achieved inference rate and the request round trip.
 3. **Accepted requests.** At least **N** `POST /api/sessions/{id}/infer` calls answer

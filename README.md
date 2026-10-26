@@ -39,7 +39,7 @@ npm run build
 .venv/bin/python -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000
 ```
 
-Open http://127.0.0.1:8000, select **Live trained models**, click **Start
+Open http://127.0.0.1:8000, select **Live camera (trained models)**, click **Start
 Monitoring**, and allow camera access. For development, `npm run dev:all` starts the
 backend on 8000 (or reuses one that is already running) and the Vite dev server, which
 proxies `/api` to it; one Ctrl-C stops both. `npm run dev` alone starts only Vite: without

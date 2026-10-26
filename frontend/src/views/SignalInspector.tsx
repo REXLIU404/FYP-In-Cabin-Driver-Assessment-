@@ -192,6 +192,41 @@ export function SignalInspector({
           </div>
         </div>
       </section>
+
+      {selectedRecord.provenance?.replay && (
+        <section className="panel signal-panel">
+          <div className="section-header">
+            <div>
+              <p className="eyebrow">Ground Truth</p>
+              <h2>5. Dataset replay labels</h2>
+            </div>
+          </div>
+          <div className="stat-list stat-list--compact">
+            <div>
+              <span>Vision</span>
+              <strong>{selectedRecord.provenance.replay.vision_label ?? "—"}</strong>
+            </div>
+            <div>
+              <span>Telemetry</span>
+              <strong>
+                {selectedRecord.provenance.replay.telemetry_label ?? "—"}
+              </strong>
+            </div>
+            <div>
+              <span>Frame</span>
+              <strong>{selectedRecord.provenance.replay.frame_file ?? "—"}</strong>
+            </div>
+            <div>
+              <span>Segment</span>
+              <strong>
+                {selectedRecord.provenance.replay.segment_index !== undefined
+                  ? selectedRecord.provenance.replay.segment_index + 1
+                  : "—"}
+              </strong>
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

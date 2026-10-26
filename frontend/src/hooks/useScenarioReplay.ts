@@ -27,6 +27,9 @@ export function useScenarioReplay() {
   const [playback, setPlayback] = useState<ReturnType<
     typeof createScenarioPlayback
   > | null>(null);
+  // The manifest is kept alongside the playback so the UI can build the player
+  // model (plan Task 7) without fetching it again.
+  const [manifest, setManifest] = useState<ScenarioManifest | null>(null);
   const generation = useRef(0);
 
   useEffect(() => {
@@ -55,6 +58,7 @@ export function useScenarioReplay() {
     setProgress(null);
     setError(null);
     setPlayback(null);
+    setManifest(null);
     try {
       const manifest: ScenarioManifest = await api.scenarioManifest(id);
       if (g !== generation.current) return;
@@ -69,6 +73,7 @@ export function useScenarioReplay() {
         (done, total) => setProgress({ done, total }),
       );
       if (g !== generation.current) return;
+      setManifest(manifest);
       setPlayback(
         createScenarioPlayback(
           manifest,
@@ -94,6 +99,7 @@ export function useScenarioReplay() {
     progress,
     error,
     playback,
+    manifest,
   };
 }
 
