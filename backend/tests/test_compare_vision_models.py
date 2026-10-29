@@ -495,3 +495,61 @@ class TestExecutePlanWithStubProvider:
         assert result["validity"]["checks"]["all_observations_new"] is True
         assert result["validity"]["checks"]["identity_ok"] is True
         assert result["validity"]["checks"]["timestamps_match"] is True
+
+
+# ---------------------------------------------------------------------------------------------
+# A2 audit follow-up (2026-10-29): F-1 post-run protocol re-hash, F-2 per-model input check,
+# F-3 parent command recorded, F-4 the child does not inherit foreign DRA_* settings.
+# ---------------------------------------------------------------------------------------------
+import ast  # noqa: E402
+import os  # noqa: E402
+
+RUNNER_SOURCE = (SCRIPTS / "compare_vision_models.py").read_text()
+
+
+def _run_body() -> str:
+    tree = ast.parse(RUNNER_SOURCE)
+    node = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == "run")
+    return ast.get_source_segment(RUNNER_SOURCE, node)
+
+
+class TestA2Followup:
+    def test_f1_post_run_protocol_check_reports_an_unchanged_file(self, tmp_path):
+        protocol = tmp_path / "protocol.json"
+        protocol.write_text('{"status": "APPROVED"}')
+        expected = sha256_bytes(protocol.read_bytes())
+        assert verify.post_run_protocol_check(protocol, expected) == {
+            "sha256_after_run": expected, "unchanged": True}
+
+    def test_f1_post_run_protocol_check_catches_a_changed_file(self, tmp_path):
+        protocol = tmp_path / "protocol.json"
+        protocol.write_text('{"status": "APPROVED"}')
+        expected = sha256_bytes(protocol.read_bytes())
+        protocol.write_text('{"status": "APPROVED", "edited": true}')
+        result = verify.post_run_protocol_check(protocol, expected)
+        assert result["unchanged"] is False and result["sha256_after_run"] != expected
+
+    def test_f1_run_re_hashes_the_protocol_after_the_workers(self):
+        body = _run_body()
+        assert "post_run_protocol_check(" in body
+        assert body.index("post_run_protocol_check(") > body.index("spawn_worker(")
+        assert '"protocol_after_run"' in body or "'protocol_after_run'" in body
+
+    def test_f2_run_re_verifies_the_inputs_before_each_model(self):
+        body = _run_body()
+        loop = body[body.index("for spec in specs:"):]
+        assert loop.index("verify_protocol_inputs(") < loop.index("spawn_worker(")
+
+    def test_f3_run_records_the_parent_command(self):
+        assert '"parent_command"' in _run_body()
+
+    def test_f4_the_child_environment_drops_foreign_dra_settings(self, monkeypatch, tmp_path):
+        monkeypatch.setenv("DRA_THRESHOLD_LOW", "45")
+        monkeypatch.setenv("DRA_ACTIVE_VISION", "something_else")
+        env = verify.worker_env({"env_value": "resnet18_search004_seed42"},
+                                {"db_url": f"sqlite:///{tmp_path}/c.sqlite"}, tmp_path)
+        assert "DRA_THRESHOLD_LOW" not in env
+        assert env["DRA_ACTIVE_VISION"] == "resnet18_search004_seed42"
+        assert env["DRA_DATABASE_URL"] == f"sqlite:///{tmp_path}/c.sqlite"
+        assert {k for k in env if k.startswith("DRA_")} == {"DRA_ACTIVE_VISION", "DRA_DATABASE_URL"}
+        assert env["TMPDIR"] == str(tmp_path) and env["PYTHONDONTWRITEBYTECODE"] == "1"

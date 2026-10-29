@@ -736,6 +736,27 @@ def model_specs(protocol: dict) -> list[dict]:
     return specs
 
 
+def post_run_protocol_check(protocol_path, expected_sha256: str) -> dict:
+    """Protocol ``result_contract.protocol_first``: re-hash the approved protocol AFTER the run;
+    it must equal the hash checked before the run (A2 audit F-1)."""
+    after = sha256_file(protocol_path)
+    return {"sha256_after_run": after, "unchanged": after == expected_sha256}
+
+
+def worker_env(spec: dict, plan: dict, work_dir: Path) -> dict:
+    """The child's environment: the parent's, WITHOUT any DRA_* setting it may carry, then
+    exactly the two this run decides (A2 audit F-4) - a stray DRA_THRESHOLD_LOW in the shell
+    must not change the fused result."""
+    env = {k: v for k, v in os.environ.items() if not k.startswith("DRA_")}
+    existing = env.get("PYTHONPATH")
+    env["PYTHONPATH"] = str(BACKEND_DIR) + (os.pathsep + existing if existing else "")
+    env["PYTHONDONTWRITEBYTECODE"] = "1"
+    env["DRA_ACTIVE_VISION"] = spec["env_value"]
+    env["DRA_DATABASE_URL"] = plan["db_url"]
+    env["TMPDIR"] = str(work_dir)
+    return env
+
+
 def spawn_worker(spec: dict, plan: dict, out_dir: Path):
     model_id = spec["model_id"]
     work_dir = Path(tempfile.mkdtemp(prefix=f"task10a-cmp-{model_id}-"))
@@ -746,13 +767,7 @@ def spawn_worker(spec: dict, plan: dict, out_dir: Path):
     spec_path = out_dir / f"worker_spec_{model_id}.json"
     out_path = out_dir / f"worker_out_{model_id}.json"
     spec_path.write_text(json.dumps(plan, indent=2))
-    env = dict(os.environ)
-    existing = env.get("PYTHONPATH")
-    env["PYTHONPATH"] = str(BACKEND_DIR) + (os.pathsep + existing if existing else "")
-    env["PYTHONDONTWRITEBYTECODE"] = "1"
-    env["DRA_ACTIVE_VISION"] = spec["env_value"]
-    env["DRA_DATABASE_URL"] = plan["db_url"]
-    env["TMPDIR"] = str(work_dir)
+    env = worker_env(spec, plan, work_dir)
     command = [sys.executable, str(SCRIPTS_DIR / "compare_vision_models.py"),
                "--worker", str(spec_path), str(out_path)]
     began = time.time()
@@ -840,6 +855,7 @@ def run(args) -> int:
         "protocol_sha256": gate.get("protocol_sha256"),
         "protocol_mtime_ns": gate.get("protocol_mtime_ns"),
         "protocol_gate": gate,
+        "parent_command": [sys.executable, *sys.argv],
         "commands": {}, "exit_codes": {}, "models": {}, "paired_summaries": {},
         "environment": environment_versions(), **git_state(),
         "validity": {"status": "BLOCKED", "problems": list(gate["problems"])},
@@ -908,7 +924,20 @@ def run(args) -> int:
         return 2
 
     all_pass = True
+    pre_run_checks = {}
     for spec in specs:
+        # Protocol: inputs are re-verified before EACH model run, not only once (A2 audit F-2).
+        pre = verify_protocol_inputs(
+            protocol, data_root=protocol["input_set"]["data_root"],
+            annotations_paths=annotations_paths,
+            metadata_path=protocol["input_set"]["metadata_path"],
+            telemetry_csv_path=protocol["telemetry_pairing"]["source_file"])
+        pre_run_checks[spec["model_id"]] = {"ok": pre["ok"], "problems": pre["problems"]}
+        if not pre["ok"]:
+            official["validity"]["problems"].extend(
+                f"{spec['model_id']}: pre-run input check: {p}" for p in pre["problems"])
+            all_pass = False
+            continue
         worker_record, worker_result, plan = spawn_worker(spec, base, out_dir)
         if worker_result is None:
             worker_result = {"model_id": spec["model_id"], "status": "FAIL",
@@ -937,6 +966,8 @@ def run(args) -> int:
             "started_utc": worker_result.get("started_utc"),
             "finished_utc": worker_result.get("finished_utc"),
         }
+        official["models"][spec["model_id"]]["pre_run_input_verification"] = \
+            pre_run_checks[spec["model_id"]]
         if spec["model_id"] == STABLE_MODEL_ID:
             official["models"][spec["model_id"]]["manifest_sha256_reason"] = \
                 "stable provider has no candidate runtime manifest"
@@ -969,6 +1000,13 @@ def run(args) -> int:
     for model_id, entry in official["models"].items():
         for problem in (entry.get("validity") or {}).get("problems", []):
             official["validity"]["problems"].append(f"{model_id}: {problem}")
+    # Protocol result_contract.protocol_first: the approved protocol is unchanged after the run.
+    official["protocol_after_run"] = post_run_protocol_check(args.protocol, gate["protocol_sha256"])
+    if not official["protocol_after_run"]["unchanged"]:
+        official["validity"]["problems"].append(
+            "the approved protocol file changed during the run: sha256 "
+            f"{official['protocol_after_run']['sha256_after_run']} != {gate['protocol_sha256']}")
+        all_pass = False
     official["validity"]["status"] = "PASS" if all_pass and not official["validity"]["problems"] else "FAIL"
     official["run_end_utc"] = datetime.now(timezone.utc).isoformat()
     official["run_end_epoch_ns"] = time.time_ns()

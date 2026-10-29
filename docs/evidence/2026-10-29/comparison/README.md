@@ -79,3 +79,5 @@ P4 一致性旁证：已知弱类 c9 的三模型 argmax 分布不相同（见�
 - `worker_spec_<model>.json` / `worker_out_<model>.json`：子进程输入计划与原始输出（200 窗口逐条）。
 
 门禁证据见 `../ds-compare-gate/`。
+
+> **更正（2026-10-29，集成方，依据 A2 独立审计的 F-1）**：上文说「run 后复算 sha256 未变」，**这次运行并没有做这一步**。`6df94ef` 版本的 runner 只在运行前核对协议哈希。审计员在这次运行之后自己复算了协议哈希，结果仍是 `b6305022…`，git 历史里协议文件也只有 `3ab55ad` 这一个提交，所以协议本身没有变。运行后的复算从修复后的 runner 起才写入结果文件（字段 `protocol_after_run`）；官方运行以修复后重做的 `docs/evidence/2026-10-29/comparison-official/` 为准。
