@@ -36,7 +36,8 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "backend" / "tests"))
-from e2e_support import FAKE_CAMERA_ARGS, Chrome, build_dist, db_records, start_server, summarise  # noqa: E402
+from e2e_support import (FAKE_CAMERA_ARGS, Chrome, build_dist, db_records, loaded_vision,  # noqa: E402
+                         start_server, summarise, vision_env)
 
 TARGET_MS = 1000.0
 THRESHOLDS_S = (2.0, 3.0, 5.0)
@@ -53,11 +54,12 @@ def machine() -> dict:
             "python": platform.python_version()}
 
 
-def collect(windows: int, warmup: int) -> dict:
+def collect(windows: int, warmup: int, active_vision: str = "stable") -> dict:
     from playwright.sync_api import sync_playwright
 
     build_dist()
-    server = start_server(Path(tempfile.mkdtemp(prefix="perf01-")))
+    server = start_server(Path(tempfile.mkdtemp(prefix="perf01-")), extra_env=vision_env(active_vision))
+    vision_model = loaded_vision(server, active_vision)
     timings: dict[int, dict] = {}
     server_timing: dict[str, str] = {}  # request_id -> Server-Timing header, read off the network
 
@@ -99,7 +101,7 @@ def collect(windows: int, warmup: int) -> dict:
     finally:
         server.stop()
     return {"timings": timings, "records": records, "sid": sid, "browser": browser, "console_errors": console_errors,
-            "server_timing": server_timing}
+            "server_timing": server_timing, "vision_model": vision_model}
 
 
 def _split_outside_quotes(text: str, sep: str) -> list[str]:
@@ -228,10 +230,13 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--windows", type=int, default=600)
     parser.add_argument("--warmup", type=int, default=20)
+    parser.add_argument("--active-vision", default="stable",
+                        help="'stable' (default) or a candidate model id from ml/outputs/candidates/index.json")
     parser.add_argument("--out", type=Path, default=REPO / "docs" / "evidence" / datetime.now(timezone.utc).strftime("%Y-%m-%d") / "perf")
     args = parser.parse_args(argv)
-    raw = collect(args.windows, args.warmup)
+    raw = collect(args.windows, args.warmup, active_vision=args.active_vision)
     result = {"generated_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"), "machine": machine(),
+              "active_vision": args.active_vision, "vision_model": raw["vision_model"],
               "browser": raw["browser"], "camera": "Chromium --use-fake-device-for-media-stream (default 20 fps)",
               "loop": "app default: target 10 requests/s, one in flight", "console_errors": raw["console_errors"],
               **analyse(raw, args.windows, args.warmup)}

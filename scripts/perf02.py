@@ -33,7 +33,8 @@ from urllib.parse import urlparse
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "backend" / "tests"))
-from e2e_support import FAKE_CAMERA_ARGS, Chrome, build_dist, db_connection, db_records, start_server  # noqa: E402
+from e2e_support import (FAKE_CAMERA_ARGS, Chrome, build_dist, db_connection, db_records,  # noqa: E402
+                         loaded_vision, start_server, vision_env)
 
 TARGET = 0.99
 
@@ -47,12 +48,13 @@ def completeness(logged: int, denominator: int) -> dict:
             "meets_99_percent": ratio is not None and ratio >= TARGET}
 
 
-def run() -> dict:
+def run(active_vision: str = "stable") -> dict:
     from playwright.sync_api import sync_playwright
 
     build_dist()
     workdir = Path(tempfile.mkdtemp(prefix="perf02-"))
-    server = start_server(workdir)
+    server = start_server(workdir, extra_env=vision_env(active_vision))
+    vision_models = [loaded_vision(server, active_vision)]
     port = urlparse(server.base_url).port
     phases = {}
     try:
@@ -76,7 +78,9 @@ def run() -> dict:
                 server.stop()
                 chrome.wait_until(lambda: chrome.stop_panel().count() == 1, "phase 3: the stop panel", 60, tolerate_stop_panel=True)
                 stopped_text = chrome.stop_panel_text()
-                server = start_server(workdir, port=port, log_name="uvicorn-restart.log")
+                server = start_server(workdir, port=port, log_name="uvicorn-restart.log",
+                                      extra_env=vision_env(active_vision))
+                vision_models.append(loaded_vision(server, active_vision))  # the restart runs the same model
                 chrome.server = server
                 mark = len(tap.answered(sid))
                 chrome.stop_panel().get_by_role("button", name="Retry", exact=True).click()
@@ -115,6 +119,7 @@ def run() -> dict:
     unavailable = sum(1 for r in records if not r["payload"]["assessment_available"])
     return {
         "generated_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "active_vision": active_vision, "vision_models": vision_models,
         "session": sid, "phases_windows_after": phases,
         "stop_panel_after_backend_stop": stopped_text, "stop_panel_after_rejected_request": rejected_text,
         "client": {"logical_requests": len(logical), "deliveries": len(calls),
@@ -134,8 +139,10 @@ def run() -> dict:
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--out", type=Path, default=REPO / "docs" / "evidence" / datetime.now(timezone.utc).strftime("%Y-%m-%d") / "perf")
+    parser.add_argument("--active-vision", default="stable",
+                        help="'stable' (default) or a candidate model id from ml/outputs/candidates/index.json")
     args = parser.parse_args(argv)
-    result = run()
+    result = run(active_vision=args.active_vision)
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "perf02.json").write_text(json.dumps(result, indent=2, sort_keys=True))
     print(f"PERF-02: D1 {result['D1_server_seen']['logged']}/{result['D1_server_seen']['denominator']} = "

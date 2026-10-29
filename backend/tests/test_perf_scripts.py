@@ -64,7 +64,8 @@ def test_a_full_run_is_not_flagged():
 
 
 def test_main_exits_non_zero_on_a_short_run(tmp_path, monkeypatch):
-    monkeypatch.setattr(perf01, "collect", lambda windows, warmup: {**_raw(50), "browser": "x", "console_errors": [], "sid": "s"})
+    monkeypatch.setattr(perf01, "collect", lambda windows, warmup, active_vision="stable": {
+        **_raw(50), "browser": "x", "console_errors": [], "sid": "s", "vision_model": {}})
     assert perf01.main(["--windows", "600", "--warmup", "20", "--out", str(tmp_path)]) == 1
     assert (tmp_path / "perf01.json").exists()  # the partial measurement is still written, marked short
 
@@ -76,3 +77,61 @@ def test_main_exits_non_zero_on_a_short_run(tmp_path, monkeypatch):
 ])
 def test_completeness_with_and_without_a_denominator(logged, denominator, expected):
     assert perf02.completeness(logged, denominator) == expected
+
+
+# ---- Task 10A Stage 3: run the perf scripts with a chosen vision model, and prove which one ran ----
+from e2e_support import check_vision_identity, vision_env  # noqa: E402
+
+RN = "resnet18_search004_seed42"
+
+
+def test_vision_env_is_empty_for_stable_and_names_a_candidate():
+    assert vision_env("stable") is None
+    assert vision_env(RN) == {"DRA_ACTIVE_VISION": RN}
+
+
+@pytest.mark.parametrize("active,info", [
+    ("stable", {"model_id": "stable_mobilenet_v3_large", "source": "stable", "sha256": "b3a4"}),
+    (RN, {"model_id": RN, "source": "candidate:p5_resnet18_search004_seed42_20261023", "sha256": "5e22"}),
+])
+def test_check_vision_identity_accepts_the_model_that_was_asked_for(active, info):
+    assert check_vision_identity(active, info) == {"model_id": info["model_id"], "source": info["source"],
+                                                   "sha256": info["sha256"]}
+
+
+@pytest.mark.parametrize("active,info", [
+    (RN, {"model_id": "stable_mobilenet_v3_large", "source": "stable", "sha256": "b3a4"}),
+    ("stable", {"model_id": RN, "source": "candidate:x", "sha256": "5e22"}),
+    (RN, {}),
+])
+def test_check_vision_identity_refuses_a_different_model(active, info):
+    with pytest.raises(RuntimeError, match="vision model"):
+        check_vision_identity(active, info)
+
+
+def test_perf01_main_runs_the_chosen_model_and_records_it(tmp_path, monkeypatch):
+    seen = {}
+
+    def fake_collect(windows, warmup, active_vision="stable"):
+        seen["active"] = active_vision
+        return {**_raw(650), "browser": "x", "console_errors": [], "sid": "s",
+                "vision_model": {"model_id": RN, "source": "candidate:p", "sha256": "5e22"}}
+    monkeypatch.setattr(perf01, "collect", fake_collect)
+    assert perf01.main(["--active-vision", RN, "--out", str(tmp_path)]) == 0
+    import json
+    result = json.loads((tmp_path / "perf01.json").read_text())
+    assert seen["active"] == RN
+    assert result["active_vision"] == RN and result["vision_model"]["model_id"] == RN
+
+
+def test_perf02_main_runs_the_chosen_model(tmp_path, monkeypatch):
+    seen = {}
+
+    def fake_run(active_vision="stable"):
+        seen["active"] = active_vision
+        return {"D1_server_seen": {"logged": 1, "denominator": 1, "completeness": 1.0},
+                "D2_all_logical": {"logged": 1, "denominator": 1, "completeness": 1.0},
+                "server": {"faults_by_category": {}}, "active_vision": active_vision}
+    monkeypatch.setattr(perf02, "run", fake_run)
+    assert perf02.main(["--active-vision", RN, "--out", str(tmp_path)]) == 0
+    assert seen["active"] == RN

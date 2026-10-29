@@ -90,6 +90,29 @@ class Server:
                 self.process.wait(timeout=15)
 
 
+def vision_env(active: str) -> dict[str, str] | None:
+    """Task 10A: the extra server environment for a vision model - none for the stable default,
+    ``DRA_ACTIVE_VISION`` for a candidate model id."""
+    return None if active == "stable" else {"DRA_ACTIVE_VISION": active}
+
+
+def check_vision_identity(active: str, info: dict) -> dict:
+    """What /api/models says about the vision model, checked against the one asked for. A run
+    that measured a different model than its label says must stop, not be mislabelled."""
+    ok = (info.get("source") == "stable") if active == "stable" else (info.get("model_id") == active)
+    if not ok:
+        raise RuntimeError(f"vision model mismatch: asked for {active!r}, the server loaded "
+                           f"{info.get('model_id')!r} ({info.get('source')!r})")
+    return {"model_id": info["model_id"], "source": info["source"], "sha256": info["sha256"]}
+
+
+def loaded_vision(server, active: str) -> dict:
+    """GET /api/models (this loads the provider) and check the vision model is the one asked for."""
+    import urllib.request
+    with urllib.request.urlopen(f"{server.base_url}/api/models", timeout=120) as response:
+        return check_vision_identity(active, json.loads(response.read())["vision"])
+
+
 def start_server(workdir: Path, *, port: int | None = None, log_name: str = "uvicorn.log",
                  extra_env: dict[str, str] | None = None) -> Server:
     """Start one uvicorn on a throw-away database in ``workdir``.
