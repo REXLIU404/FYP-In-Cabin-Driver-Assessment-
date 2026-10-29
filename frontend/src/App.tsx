@@ -23,6 +23,7 @@ import type { AppConfig } from "./types";
 import {
   DATA_MODE_NOTE,
   DATA_MODE_OPTIONS,
+  emptyResultsHint,
   offersSavedLiveSessions,
 } from "./utils/dataMode";
 import { runtimeStaleNoticeShown } from "./utils/display";
@@ -293,13 +294,14 @@ export default function App() {
                 aria-label="Data mode"
                 value={config.operationMode}
                 disabled={monitoring || live.busy}
-                onChange={(event) =>
+                onChange={(event) => {
+                  live.clearError();
                   updateConfig({
                     ...config,
                     operationMode: event.target
                       .value as AppConfig["operationMode"],
-                  })
-                }
+                  });
+                }}
               >
                 {DATA_MODE_OPTIONS.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -519,10 +521,7 @@ export default function App() {
           !selectedRecord && (
             <section className="panel empty-state">
               <h2>No session results yet</h2>
-              <p>
-                Start monitoring or load a saved session to inspect its
-                evidence.
-              </p>
+              <p>{emptyResultsHint(config.operationMode)}</p>
             </section>
           )}
         {activeView === "inspector" && selectedRecord && (

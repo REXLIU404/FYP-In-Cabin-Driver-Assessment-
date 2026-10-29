@@ -76,3 +76,12 @@
 6. `demo/bundles/` 被 git 忽略，图片永不入库；生成脚本不导入模型代码。
 7. 合并时注意：origin/fyp2/live-system 目前停在 b58fcc6（CL-2 的 00b0e5d 尚未 push 到远程），本分支已包含
    00b0e5d（RP-1 时并入）。Claude 若在 live-system 上有新提交，先 merge 进本分支、跑门禁，再合回。
+
+## 补记（2026-10-29，用户要求的 UI 修正；只追加，不改上文）
+
+- **裁定 7 已被取代**：用户要求回放（Constructed demo scenario）模式下不出现「Saved live sessions」。现在：
+  - 该选择框与「Refresh saved sessions」按钮**只在 Live 模式显示**；
+  - Live 的列表**只列 Live 会话**，不再列构造场景的运行（否则载入后会以 Live 身份显示、没有 CONSTRUCTED SCENARIO 标识）。
+- 规则写在 `frontend/src/utils/dataMode.ts`：`offersSavedLiveSessions` / `isSavedLiveSession`。它回答的是「哪些会话能在 Live 列表里重开」，和 `isLiveLike`（哪些模式走 Live 循环，规则 E）是两个问题；规则 E 本身不变。
+- 计划第 437 行的合并规则（`dataMode.ts` 以 `isLiveLike` 为准）**不适用于**这两个函数。守卫：`dataMode.test.ts`、`useLiveSession.test.ts` 的 MODE_FILTER、`test_constructed_scenario_e2e.py`。
+- 代价（已告知用户）：仪表盘不再能重新打开以前的构造场景运行；需要时仍可通过导出 API 取得。

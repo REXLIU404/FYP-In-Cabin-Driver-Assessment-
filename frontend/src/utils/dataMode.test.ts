@@ -3,10 +3,10 @@ import { describe, expect, it } from "vitest";
 import type { SessionMeta } from "../types";
 
 import appSource from "../App.tsx?raw";
-import liveSessionSource from "../hooks/useLiveSession.ts?raw";
 import {
   DATA_MODE_NOTE,
   DATA_MODE_OPTIONS,
+  emptyResultsHint,
   isSavedLiveSession,
   offersSavedLiveSessions,
 } from "./dataMode";
@@ -82,21 +82,44 @@ describe("Data mode: saved sessions are Live-only", () => {
       operation_mode,
     });
     expect(isSavedLiveSession(meta("LIVE_MODEL_RUNTIME"))).toBe(true);
-    expect(isSavedLiveSession(meta("CONSTRUCTED_SCENARIO_RUNTIME"))).toBe(false);
+    expect(isSavedLiveSession(meta("CONSTRUCTED_SCENARIO_RUNTIME"))).toBe(
+      false,
+    );
     expect(isSavedLiveSession(meta("PREPARED_SESSION_RUNTIME"))).toBe(false);
     expect(isSavedLiveSession(meta(undefined))).toBe(false);
   });
 
-  // Source guards: the page and the hook use these two rules, not a private copy.
+  // The empty views must not point at a picker the mode does not show (review of afd8724).
+  it("the empty-results hint mentions saved sessions only where the picker exists", () => {
+    expect(emptyResultsHint("LIVE_MODEL_RUNTIME")).toBe(
+      "Start monitoring or load a saved session to inspect its evidence.",
+    );
+    expect(emptyResultsHint("CONSTRUCTED_SCENARIO_RUNTIME")).toBe(
+      "Start the scenario to inspect its evidence.",
+    );
+    expect(emptyResultsHint("PREPARED_SESSION_RUNTIME")).toBe(
+      "Start monitoring to inspect its evidence.",
+    );
+  });
+
+  // Source guards: the page uses these rules, not a private copy. The hook's list filter
+  // is pinned with its other wiring requirements (hooks/useLiveSession.test.ts, MODE_FILTER).
   it("App shows the picker and its refresh button under offersSavedLiveSessions", () => {
     expect(appSource).toMatch(
       /offersSavedLiveSessions\(config\.operationMode\) && \(\s*<>\s*<button[\s\S]*?Refresh saved sessions[\s\S]*?aria-label="Saved live sessions"/,
     );
   });
 
-  it("refreshSessions filters the server list with isSavedLiveSession", () => {
-    expect(liveSessionSource).toMatch(
-      /\(await api\.sessions\(\)\)\.filter\(isSavedLiveSession\)/,
+  it("App renders the empty-results hint for the current mode", () => {
+    expect(appSource).toMatch(/\{emptyResultsHint\(config\.operationMode\)\}/);
+    expect(appSource).not.toMatch(/load a saved session to inspect/);
+  });
+
+  // A saved-session error raised in Live (refresh or load failed) must not stay up in a
+  // mode that has no saved-session control to retry or clear it.
+  it("changing the Data mode clears the saved-session error", () => {
+    expect(appSource).toMatch(
+      /aria-label="Data mode"[\s\S]*?onChange=\{\(event\) => \{\s*live\.clearError\(\);\s*updateConfig\(/,
     );
   });
 });

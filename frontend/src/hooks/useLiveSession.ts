@@ -133,6 +133,10 @@ export function useLiveSession(
     }
   }, []);
 
+  // App clears it on a Data mode change: the scenario mode has no saved-session
+  // control that could retry or clear a Live list error.
+  const clearError = useCallback(() => setError(null), []);
+
   const loadSession = useCallback(
     async (sid: string) => {
       setError(null);
@@ -209,5 +213,6 @@ export function useLiveSession(
     sessions,
     loadSession,
     exportSession,
+    clearError,
   };
 }

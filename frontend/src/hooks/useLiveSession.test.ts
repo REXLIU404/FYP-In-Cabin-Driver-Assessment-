@@ -140,15 +140,19 @@ function violations(source: string): Requirement[] {
           code,
         ),
     ],
-    // The saved-session list is filtered by the ONE Live-like judgement (rule E
-    // of the plan), never by a hardcoded "LIVE_MODEL_RUNTIME" literal: a
-    // constructed scenario session belongs to the same list as a Live one.
+    // The "Saved live sessions" list holds Live sessions only, by the one rule in
+    // utils/dataMode.ts (isSavedLiveSession), never by a private literal or by
+    // isLiveLike: a constructed scenario run is a demo aid and is not offered
+    // there (the scenario mode shows no picker at all).
     [
       "MODE_FILTER",
-      /import\s*\{\s*isLiveLike\s*\}\s*from\s*"\.\.\/\.\.\/\.\.\/ai\/src\/operationMode"\s*;/.test(
+      /import\s*\{\s*isSavedLiveSession\s*\}\s*from\s*"\.\.\/utils\/dataMode"\s*;/.test(
         code,
       ) &&
-        /\bisLiveLike\(\s*\w+\.operation_mode\s*\)/.test(code) &&
+        /\(await\s+api\.sessions\(\)\)\.filter\(\s*isSavedLiveSession\s*\)/.test(
+          code,
+        ) &&
+        !/\bisLiveLike\b/.test(code) &&
         !/\boperation_mode\s*===\s*"LIVE_MODEL_RUNTIME"/.test(code),
     ],
   ];

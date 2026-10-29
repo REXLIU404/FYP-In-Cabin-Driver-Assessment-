@@ -38,6 +38,15 @@ export const isSavedLiveSession = (session: SessionMeta): boolean =>
   session.operation_mode != null &&
   offersSavedLiveSessions(session.operation_mode);
 
+/** What the empty views tell the reader to do; saved sessions only where the picker exists. */
+export const emptyResultsHint = (mode: OperationMode): string => {
+  if (offersSavedLiveSessions(mode))
+    return "Start monitoring or load a saved session to inspect its evidence.";
+  if (mode === "CONSTRUCTED_SCENARIO_RUNTIME")
+    return "Start the scenario to inspect its evidence.";
+  return "Start monitoring to inspect its evidence.";
+};
+
 /** The sentence under the controls for each mode. */
 export const DATA_MODE_NOTE: Record<OperationMode, string> = {
   LIVE_MODEL_RUNTIME:
