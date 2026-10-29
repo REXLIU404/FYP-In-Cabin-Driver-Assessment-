@@ -1,6 +1,7 @@
 # Task 10A Stage 2（Paired System Comparison）：实现方自审表
 
-- **实现方**：DeepSeek 写 runner（DS-2，`6df94ef`）；Claude 负责集成（合并 `dd7b9d5`，修复一条 e2e 测试 `fbc9593`）和官方运行。
+- **实现方**：DeepSeek 写 runner（DS-2，`6df94ef`）；Claude 负责集成（合并 `dd7b9d5`，修复一条 e2e 测试 `fbc9593`；按 A2 审计修 runner `bf76ddf`）和官方运行。
+- **现行官方运行**：`docs/evidence/2026-10-29/comparison-official-bf76ddf/`（`bf76ddf`）。`comparison-official/` 已被取代。
 - **日期**：2026-10-29。
 - **协议**：`docs/fyp2/task10a/comparison_protocol.json`，sha256 `b63050221c46…`。用户已批准（FUD-02 至 FUD-05，`approval_record.json`）。
 
@@ -8,7 +9,7 @@
 
 | 审计点 | 证据 | 结果 |
 |---|---|---|
-| 协议文件存在，且早于 runner 运行；内容含输入哈希 | `docs/evidence/2026-10-29/comparison-official/comparison_results.json` 中的 `protocol_gate.checks` 四项都为 true（approval_status、protocol_status、sha_match、mtime_before_run）；`protocol_mtime_ns < run_start_epoch_ns`；协议的 `input_set` 含成员哈希 | 满足 |
+| 协议文件存在，且早于 runner 运行；内容含输入哈希 | `comparison-official-bf76ddf/comparison_results.json` 中的 `protocol_gate.checks` 四项都为 true（approval_status、protocol_status、sha_match、mtime_before_run）；`protocol_mtime_ns < run_start_epoch_ns`；运行后协议哈希没有变（`protocol_after_run.unchanged = true`）；协议的 `input_set` 含成员哈希 | 满足 |
 | 输入集哈希可以复算 | `recomputed_membership_sha256 = 601dc3ed…`，与协议一致；另外复算了 `recomputed_source_ids_sha256` 与 `recomputed_image_bytes_manifest_sha256`（200 张原始 JPEG 逐张核对） | 满足 |
 | 两次运行之间状态隔离 | 每个模型一个独立子进程，各用新建的临时 SQLite（见 `worker_spec_*.json`），注入合成时钟。**确定性复核**：DeepSeek 在 `94c6d14` 上的运行（`docs/evidence/2026-10-29/comparison/`）与集成后在 `c0c6d43` 上的官方运行，3 个模型 × 200 个窗口逐字段比较，RiskScore、RiskLevel、DominantEvidence、AlertSeverity、argmax、概率等的**差异为 0** | 满足 |
 | 结果与 P4 的已知事实一致（c9 是弱类） | 同一组 stable200 的 c9 图片，三个模型的 argmax 分布各不相同：stable `{0:6, 7:4, 9:10}`、RN `{0:3, 9:17}`、MN 候选 `{0:3, 7:7, 9:10}`；`identical_results = false` | 满足 |
@@ -34,3 +35,18 @@
 
 - runner 由 DeepSeek 在 `94c6d14` 上开发并试跑；官方运行在集成后的 `c0c6d43` 上重做，两次结果完全一致。
 - 合并后的第一次门禁（`dd7b9d5`）有 1 条 e2e 测试失败，单独运行 3/3 通过。原因是测试统计的是「服务器已应答」的请求，暂停前已在途的请求可能在快照之后才得到应答。已改为在途请求落地之后，统计页面「发出」的请求（`fbc9593`）。修复后门禁全绿：pytest 1341 / 0 skipped，vitest 1022（`docs/evidence/2026-10-29/merge-ds2-gate/`）。红灯那次保留在 `merge-ds2-gate-RED-dd7b9d5-flaky/`。
+
+## 5. A2 独立审计（第一轮：PARTIAL）及处理
+
+审计员的结论是 PARTIAL：Stage 2 的四个审计点它都独立重跑并通过，自己的运行与已提交的运行逐字段相同；没过的原因是一条。
+
+| 发现 | 处理 |
+|---|---|
+| F-1：协议要求运行后重新计算协议哈希，runner 声称做了，实际没做 | 已修复（`bf76ddf`）：`post_run_protocol_check`，结果字段为 `protocol_after_run`；先写测试、看到它失败，再修复；重做官方运行。实现方 README 已加更正说明 |
+| F-2：输入只在父进程核验一次 | 已修复：每个模型运行前重新核验，结果记在 `pre_run_input_verification` |
+| F-3：没有记录父命令 | 已修复：`parent_command` |
+| F-4：子进程继承了其他 `DRA_*` 变量 | 已修复：`worker_env` 先清掉所有 `DRA_*` |
+| F-5：`mean_abs_prob_delta` 实际是「逐窗口最大绝对差」的均值 | 不改字段名，以免改动结果的格式；报告引用时按真实含义写 |
+| FUD-A：U-1 只有推断出的放行记录 | 交给用户确认 |
+| FUD-B：固定的 Safe 遥测行让场景到不了 High，也测不到 HIGH_ALERT | 交给用户：按现状接受并在报告中写明，或批准 v2 协议重跑 |
+| FUD-C：报告不能写成 RN 的 c9 弱点已经消失（P4 中 RN pooled c9 F1 为 0.6059） | 报告措辞规则 |
