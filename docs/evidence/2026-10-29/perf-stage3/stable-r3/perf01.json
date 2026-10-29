@@ -1,0 +1,149 @@
+{
+  "achieved_rate_hz": 9.67,
+  "active_vision": "stable",
+  "attempts_other_than_1": 0,
+  "browser": "148.0.7778.96",
+  "camera": "Chromium --use-fake-device-for-media-stream (default 20 fps)",
+  "console_errors": [],
+  "evidence_age_s": {
+    "telemetry": {
+      "max": 2.046,
+      "median": 1.007,
+      "min": 0.021,
+      "n": 562,
+      "p95": 1.92
+    },
+    "vision": {
+      "max": 0.753,
+      "median": 0.058,
+      "min": 0.028,
+      "n": 600,
+      "p95": 0.083
+    }
+  },
+  "freshness_at_default_3s": {
+    "telemetry": 562,
+    "vision": 600
+  },
+  "freshness_sensitivity": {
+    "2s": {
+      "both_older_than": 0.0,
+      "telemetry_older_than": 0.016,
+      "vision_older_than": 0.0
+    },
+    "3s": {
+      "both_older_than": 0.0,
+      "telemetry_older_than": 0.0,
+      "vision_older_than": 0.0
+    },
+    "5s": {
+      "both_older_than": 0.0,
+      "telemetry_older_than": 0.0,
+      "vision_older_than": 0.0
+    }
+  },
+  "generated_utc": "2026-10-29T09:33:08+00:00",
+  "loop": "app default: target 10 requests/s, one in flight",
+  "machine": {
+    "cpu": "Apple M2",
+    "logical_cpus": "8",
+    "memory_bytes": "25769803776",
+    "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+    "python": "3.13.3"
+  },
+  "notes": [
+    "telemetry age is 0-2 s BY CONSTRUCTION: the prepared replay's acquisition time is the start of its 2 s sample, so it is not a sensor age",
+    "one development machine, Chromium fake camera, frozen models: not target hardware or a real camera"
+  ],
+  "short_run": false,
+  "stages": {
+    "capture_to_render_ms": {
+      "max": 187,
+      "median": 28.0,
+      "min": 24,
+      "n": 600,
+      "p95": 46
+    },
+    "capture_to_send_ms": {
+      "max": 1,
+      "median": 0.0,
+      "min": 0,
+      "n": 600,
+      "p95": 1
+    },
+    "network_including_server_ms": {
+      "max": 182,
+      "median": 25.0,
+      "min": 20,
+      "n": 600,
+      "p95": 42
+    },
+    "render_ms": {
+      "max": 10,
+      "median": 4.0,
+      "min": 2,
+      "n": 600,
+      "p95": 6
+    },
+    "server_timing_ms": {
+      "commit": {
+        "max": 5.3,
+        "median": 0.8,
+        "min": 0.56,
+        "n": 600,
+        "p95": 1.61
+      },
+      "fusion": {
+        "max": 1.09,
+        "median": 0.12,
+        "min": 0.08,
+        "n": 600,
+        "p95": 0.27
+      },
+      "preprocess": {
+        "max": 15.49,
+        "median": 2.45,
+        "min": 2.13,
+        "n": 600,
+        "p95": 3.78
+      },
+      "telemetry": {
+        "max": 25.54,
+        "median": 1.19,
+        "min": 0.0,
+        "n": 600,
+        "p95": 2.47
+      },
+      "total": {
+        "max": 156.9,
+        "median": 16.565,
+        "min": 13.0,
+        "n": 600,
+        "p95": 24.89
+      },
+      "vision": {
+        "max": 140.81,
+        "median": 8.9,
+        "min": 6.88,
+        "n": 600,
+        "p95": 13.44
+      }
+    },
+    "server_timing_windows": 600
+  },
+  "target_1s": {
+    "max_ms_information_only": 187,
+    "met": true,
+    "p95_ms": 46,
+    "source": "docs/fyp2/03_EVALUATION_COVERAGE_MATRIX.md addendum 2026-10-22 (E4, D07)",
+    "statistic": "capture_to_render_p95"
+  },
+  "vision_model": {
+    "model_id": "stable_mobilenet_v3_large",
+    "sha256": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "source": "stable"
+  },
+  "warmup_windows_skipped": 20,
+  "windows_measured": 600,
+  "windows_requested": 600
+}

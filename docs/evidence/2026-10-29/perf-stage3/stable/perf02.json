@@ -1,0 +1,67 @@
+{
+  "D1_server_seen": {
+    "completeness": 1.0,
+    "denominator": 210,
+    "logged": 210,
+    "meets_99_percent": true,
+    "not_logged": []
+  },
+  "D2_all_logical": {
+    "client_side_only": [],
+    "completeness": 1.0,
+    "denominator": 210,
+    "logged": 210,
+    "meets_99_percent": true
+  },
+  "active_vision": "stable",
+  "client": {
+    "deliveries": 215,
+    "deliveries_by_attempt_index": {
+      "1": 210,
+      "2": 2,
+      "3": 2,
+      "4": 1
+    },
+    "delivery_outcomes": {
+      "aborted": 2,
+      "ok": 210,
+      "unreachable": 3
+    },
+    "http_status_of_answered": {
+      "201": 209,
+      "422": 1
+    },
+    "logical_requests": 210
+  },
+  "duplicate_request_ids_in_database": 0,
+  "generated_utc": "2026-10-29T09:20:01+00:00",
+  "phases_windows_after": {
+    "1_normal": 100,
+    "2_transport_burst": 150,
+    "3_backend_restart": 200
+  },
+  "server": {
+    "fault_rows": 1,
+    "faults_by_category": {
+      "input_validation": 1
+    },
+    "stored_windows": 209,
+    "unavailable_windows_counted_as_accepted": 2
+  },
+  "session": "S5ed1ad1f8a2d4252995b81958eb4e17d",
+  "stop_panel_after_backend_stop": "Monitoring stopped: The backend cannot be reached\n\nThe network request failed. Check that the backend is running and reachable, then use Retry.\n\nCategory: transport\nRequest id: 5917dd58-dd6c-4e10-8364-20ca72ea4b0f\nDeliveries: 3 of 3\n\nDetails: Failed to fetch\n\nRetry re-sends this same request to the same session.\n\nRetry",
+  "stop_panel_after_rejected_request": "Monitoring stopped: The server rejected the request as invalid\n\nThe same request would be rejected again. Check the camera frame and the telemetry input, then use Start Monitoring.\n\nCategory: input (HTTP 422)\nRequest id: bd6b8d51-cf69-424d-b662-73ea7966f902\nDeliveries: 1 of 3\n\nServer message: Value error, telemetry_seq requires telemetry feature values\n\nRetry re-sends this same request to the same session.\n\nRetry",
+  "stored_without_a_201_seen_by_the_page": [],
+  "vision_models": [
+    {
+      "model_id": "stable_mobilenet_v3_large",
+      "sha256": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+      "source": "stable"
+    },
+    {
+      "model_id": "stable_mobilenet_v3_large",
+      "sha256": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+      "source": "stable"
+    }
+  ]
+}

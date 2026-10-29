@@ -1,0 +1,12 @@
+stable-r2 perf01 before: 2026-10-29T09:29:21Z 17:29  up 1 day, 22:44, 1 user, load averages: 21.70 23.38 21.75
+stable-r2 perf01 after:  2026-10-29T09:30:32Z 17:30  up 1 day, 22:45, 1 user, load averages: 16.36 21.40 21.12 exit=0
+stable-r2 server dir: perf01-kiy1a8hv
+rn-r2 perf01 before: 2026-10-29T09:30:32Z 17:30  up 1 day, 22:45, 1 user, load averages: 16.36 21.40 21.12
+rn-r2 perf01 after:  2026-10-29T09:31:49Z 17:31  up 1 day, 22:47, 1 user, load averages: 26.77 23.87 22.12 exit=0
+rn-r2 server dir: perf01-hresawd9
+stable-r3 perf01 before: 2026-10-29T09:31:49Z 17:31  up 1 day, 22:47, 1 user, load averages: 26.77 23.87 22.12
+stable-r3 perf01 after:  2026-10-29T09:33:08Z 17:33  up 1 day, 22:48, 1 user, load averages: 45.94 30.43 24.78 exit=0
+stable-r3 server dir: perf01-4ptb1ov5
+rn-r3 perf01 before: 2026-10-29T09:33:08Z 17:33  up 1 day, 22:48, 1 user, load averages: 45.94 30.43 24.78
+rn-r3 perf01 after:  2026-10-29T09:34:25Z 17:34  up 1 day, 22:49, 1 user, load averages: 42.90 32.76 26.13 exit=0
+rn-r3 server dir: perf01-meml7115
