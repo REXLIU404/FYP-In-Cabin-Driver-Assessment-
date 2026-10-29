@@ -135,8 +135,8 @@ def test_task9_viva_v1_rehearsal(pw, viva_server):
         assert option.inner_text() == "viva_v1 · 136 s · 7 segments"
         chrome.top_button("Start Monitoring").click()
         chrome.wait_until(
-            lambda: "CONSTRUCTED SCENARIO · not live" in text_of(page, ".scenario-badge"),
-            "the not-live badge", 30)
+            lambda: text_of(page, ".scenario-badge") == "CONSTRUCTED SCENARIO",
+            "the CONSTRUCTED SCENARIO badge", 30)
         # The displayed Truth follows the manifest; the first segment is c0 = safe_driving.
         chrome.wait_until(
             lambda: "Truth: safe_driving" in text_of(page, ".scenario-truth"),

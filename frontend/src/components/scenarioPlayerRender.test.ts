@@ -10,7 +10,7 @@ import { ScenarioPlayer } from "./ScenarioPlayer";
 // The expected strings are literals.
 
 const model = (over: Partial<ScenarioPlayerModel> = {}): ScenarioPlayerModel => ({
-  badge: "CONSTRUCTED SCENARIO · not live",
+  badge: "CONSTRUCTED SCENARIO",
   caption:
     "Segment 2/7 · Vision only · texting_right · driver p026 · State Farm test split",
   truth: "texting_right",
@@ -43,8 +43,10 @@ const render = (
   );
 
 describe("ScenarioPlayer (static render)", () => {
-  it("the CONSTRUCTED SCENARIO · not live badge is always there", () => {
-    expect(render()).toContain("CONSTRUCTED SCENARIO · not live");
+  it("the CONSTRUCTED SCENARIO badge is always there", () => {
+    expect(render()).toContain(
+      '<span class="scenario-badge">CONSTRUCTED SCENARIO</span>',
+    );
   });
 
   it("there are no Start / Stop Camera buttons", () => {

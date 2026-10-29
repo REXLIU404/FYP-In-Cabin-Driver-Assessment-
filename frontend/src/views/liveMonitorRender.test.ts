@@ -21,7 +21,7 @@ const camera = {
 } as unknown as ReturnType<typeof useCameraPreview>;
 
 const playerModel: ScenarioPlayerModel = {
-  badge: "CONSTRUCTED SCENARIO · not live",
+  badge: "CONSTRUCTED SCENARIO",
   caption:
     "Segment 1/7 · Baseline · safe_driving · driver p050 · State Farm test split",
   truth: "safe_driving",
@@ -85,13 +85,13 @@ describe("LiveMonitor (static render)", () => {
     const html = render("LIVE_MODEL_RUNTIME", makeRecord("fresh", "fresh", 1));
     expect(html).toContain("<video");
     expect(html).toContain("Prepared telemetry replay");
-    expect(html).not.toContain("CONSTRUCTED SCENARIO · not live");
+    expect(html).not.toContain("CONSTRUCTED SCENARIO");
   });
 
   it("the constructed scenario renders the player instead of the camera: no <video>, badge present", () => {
     const html = render("CONSTRUCTED_SCENARIO_RUNTIME", scenarioRecord());
     expect(html).not.toContain("<video");
-    expect(html).toContain("CONSTRUCTED SCENARIO · not live");
+    expect(html).toContain("CONSTRUCTED SCENARIO");
     expect(html).not.toContain("Start Camera");
     expect(html).not.toContain("Stop Camera");
   });
@@ -100,5 +100,18 @@ describe("LiveMonitor (static render)", () => {
     const html = render("CONSTRUCTED_SCENARIO_RUNTIME", scenarioRecord());
     expect(html).toContain("Scenario telemetry");
     expect(html).toContain("Truth: Safe");
+  });
+
+  // User decision 2026-10-29: no "not live" disclaimers on the page; the panel heading
+  // ("Prepared telemetry replay" / "Scenario telemetry") already names the source.
+  it("neither mode carries a 'not live' disclaimer under Vehicle Signals", () => {
+    for (const html of [
+      render("LIVE_MODEL_RUNTIME", makeRecord("fresh", "fresh", 1)),
+      render("CONSTRUCTED_SCENARIO_RUNTIME", scenarioRecord()),
+    ]) {
+      expect(html).not.toMatch(/not live/i);
+      expect(html).not.toContain("Recorded scenario features");
+      expect(html).not.toContain("belong to the latest saved window");
+    }
   });
 });

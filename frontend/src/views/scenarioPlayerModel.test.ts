@@ -111,10 +111,11 @@ const snapshot = (over: Partial<PlaybackSnapshot> = {}): PlaybackSnapshot => ({
 });
 
 describe("buildScenarioPlayerModel", () => {
-  it("the badge is the constant not-live label", () => {
-    expect(buildScenarioPlayerModel(manifest, snapshot(), undefined).badge).toBe(
-      "CONSTRUCTED SCENARIO · not live",
-    );
+  // User decision 2026-10-29: the badge names the mode only; no "not live" wording.
+  it("the badge is the constant CONSTRUCTED SCENARIO label, without 'not live'", () => {
+    const { badge } = buildScenarioPlayerModel(manifest, snapshot(), undefined);
+    expect(badge).toBe("CONSTRUCTED SCENARIO");
+    expect(badge).not.toMatch(/not live/i);
   });
 
   it("the caption names the current segment: its theme, vision label, driver and the split", () => {

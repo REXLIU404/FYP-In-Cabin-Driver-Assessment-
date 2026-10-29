@@ -112,7 +112,7 @@ def test_the_mode_is_offered_and_the_scenario_loads(pw, scenario_server):
         option = page.locator('select[aria-label="Scenario"] option[value="e2e_short"]')
         assert page.locator('select[aria-label="Scenario"]').input_value() == "e2e_short"
         assert option.inner_text() == "e2e_short · 12 s · 3 segments"
-        # The constructed scenario shows no note sentence: the player's banner says "not live".
+        # The constructed scenario shows no note sentence: the CONSTRUCTED SCENARIO badges name it.
         assert page.locator(".runtime-panel > p").count() == 0
     finally:
         chrome.close()
@@ -128,8 +128,9 @@ def test_a_full_run(pw, scenario_server):
         assert text_of(page, ".topbar-mode") == "CONSTRUCTED SCENARIO"
         chrome.top_button("Start Monitoring").click()
         chrome.wait_until(
-            lambda: "CONSTRUCTED SCENARIO · not live" in text_of(page, ".scenario-badge"),
-            "the not-live badge", 30)
+            lambda: text_of(page, ".scenario-badge") == "CONSTRUCTED SCENARIO",
+            "the CONSTRUCTED SCENARIO badge", 30)
+        assert "not live" not in page.inner_text("body").lower()
         # The displayed Truth follows the manifest's segments (e2e_short: safe_driving ->
         # texting_right -> talking_phone_left), each for its 4 s.
         chrome.wait_until(
@@ -257,6 +258,54 @@ def test_the_live_saved_list_offers_no_scenario_session(pw, scenario_server):
             "the Live session in the saved list", 15)
         scenario_id = ids["CONSTRUCTED_SCENARIO_RUNTIME"]
         assert page.locator(f'{picker} option[value="{scenario_id}"]').count() == 0
+    finally:
+        chrome.close()
+
+
+def test_switching_the_data_mode_leaves_the_session(pw, scenario_server):
+    """A Data mode change must not show the previous mode's session under the new mode's
+    label: not a Live session under CONSTRUCTED SCENARIO, and not a scenario run as Live.
+    Both directions; each Start afterwards creates a new session in the mode selected."""
+    chrome = Chrome(pw, scenario_server, FAKE_CAMERA_ARGS)
+    try:
+        chrome.open()
+        page, tap = chrome.page, chrome.tap
+
+        def run_three_windows(mode: str) -> str:
+            posts = len(tap.session_posts)
+            chrome.top_button("Start Monitoring").click()
+            chrome.wait_until(
+                lambda: len(tap.session_posts) > posts and tap.session_posts[-1].response is not None,
+                f"a {mode} session to be created", 60)
+            created = tap.session_posts[-1].response
+            assert created["operation_mode"] == mode
+            sid = created["id"]
+            chrome.wait_until(lambda: len(tap.answered(sid)) >= 3, f"three {mode} windows", 60)
+            chrome.wait_until(lambda: sid in text_of(page, ".session-strip"),
+                              f"the {mode} session on screen", 15)
+            chrome.top_button("Pause").click()
+            chrome.wait(500)
+            return sid
+
+        def assert_no_session_shown(old_sid: str) -> None:
+            chrome.wait_until(lambda: page.locator(".session-strip").count() == 0,
+                              "the previous session to leave the screen", 10)
+            assert text_of(page, ".empty-state h2") == "Waiting for the first result"
+            assert old_sid not in page.inner_text("body")
+
+        live_sid = run_three_windows("LIVE_MODEL_RUNTIME")
+        select_constructed_scenario(chrome)
+        assert_no_session_shown(live_sid)
+
+        scenario_sid = run_three_windows("CONSTRUCTED_SCENARIO_RUNTIME")
+        assert scenario_sid != live_sid
+        page.select_option('select[aria-label="Data mode"]', value="LIVE_MODEL_RUNTIME")
+        assert_no_session_shown(scenario_sid)
+        assert page.locator(".topbar-mode").count() == 0
+
+        # The next Live start is a new Live session, not a resume of either.
+        new_live_sid = run_three_windows("LIVE_MODEL_RUNTIME")
+        assert new_live_sid not in (live_sid, scenario_sid)
     finally:
         chrome.close()
 

@@ -210,10 +210,6 @@ export function LiveMonitor({
                 {latest.provenance?.replay?.telemetry_label ?? "unknown"}
               </p>
             )}
-            <p>
-              Recorded scenario features, not live vehicle sensors. Values below
-              belong to the latest saved window.
-            </p>
           </div>
           <Database size={20} />
         </div>

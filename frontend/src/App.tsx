@@ -24,6 +24,7 @@ import {
   DATA_MODE_NOTE,
   DATA_MODE_OPTIONS,
   emptyResultsHint,
+  firstResultHint,
   offersSavedLiveSessions,
 } from "./utils/dataMode";
 import { runtimeStaleNoticeShown } from "./utils/display";
@@ -295,7 +296,7 @@ export default function App() {
                 value={config.operationMode}
                 disabled={monitoring || live.busy}
                 onChange={(event) => {
-                  live.clearError();
+                  live.clearSession();
                   updateConfig({
                     ...config,
                     operationMode: event.target
@@ -497,10 +498,7 @@ export default function App() {
                   ? "Preparing inference…"
                   : "Waiting for the first result"}
               </h2>
-              <p>
-                Start monitoring to create a session. Camera permissions and
-                model readiness are checked before results appear.
-              </p>
+              <p>{firstResultHint(config.operationMode)}</p>
               {scenarioPlayerProps ? (
                 <ScenarioPlayer
                   model={scenarioPlayerProps.model}

@@ -1617,6 +1617,56 @@ describe("saved sessions and the store contract", () => {
     expect(r.get().sessionId).toBe("sess-2");
   });
 
+  // A Data mode change leaves the session on screen behind: the next mode must not show
+  // it under its own label (a scenario run as Live, or a Live session as a scenario).
+  it("clear() leaves the session: nothing on screen, and Start creates a new one", async () => {
+    const r = rig();
+    await r.begin();
+    await r.time.advance(500);
+    expect(r.get().history.length).toBeGreaterThan(0);
+    r.loop.pause();
+    r.loop.clear();
+    expect(r.get()).toMatchObject({
+      sessionId: "",
+      history: [],
+      total: 0,
+      running: false,
+      busy: false,
+      retrying: false,
+      fault: null,
+      requestMs: null,
+      effectiveFps: null,
+    });
+    // Same config as before: still a NEW session, never a resume of sess-1.
+    await r.begin();
+    expect(r.api.create).toHaveBeenCalledTimes(2);
+    expect(r.get().sessionId).toBe("sess-2");
+  });
+
+  it("clear() drops a stopped fault's frozen request: Retry has nothing to resend", async () => {
+    const r = rig({ script: threeTransportErrors() });
+    await r.begin();
+    await r.time.advance(6000);
+    expect(r.get().fault).toMatchObject({ stopped: true });
+    const sent = r.api.infer.mock.calls.length;
+    r.loop.clear();
+    expect(r.get().fault).toBeNull();
+    await r.loop.retry();
+    await r.time.advance(0);
+    expect(r.api.infer).toHaveBeenCalledTimes(sent);
+  });
+
+  it("clear() discards an answer that was still in flight", async () => {
+    const r = rig({ script: ["deferred"] });
+    await r.begin();
+    expect(r.deferred).toHaveLength(1);
+    r.loop.clear();
+    r.deferred[0](makeRecord("fresh", "fresh", 1));
+    await r.time.advance(0);
+    expect(r.get().history).toEqual([]);
+    expect(r.get().sessionId).toBe("");
+  });
+
   it("loadSession reports a failure as a message and leaves the display alone", async () => {
     const r = rig();
     r.api.session.mockRejectedValueOnce(new Error("Cannot load session"));

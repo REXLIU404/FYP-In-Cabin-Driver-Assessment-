@@ -11,7 +11,7 @@ interface ScenarioPlayerProps {
 
 /**
  * The constructed scenario player (plan Task 7), in the exact spot and size of the
- * camera preview. It only displays: the not-live badge, the current frame, the
+ * camera preview. It only displays: the mode badge, the current frame, the
  * segment caption, the truth-vs-model line and the 7-block progress bar. Playback is
  * driven elsewhere (the live loop), so there are deliberately no Start / Stop Camera
  * controls here.

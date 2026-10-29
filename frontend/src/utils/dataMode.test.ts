@@ -3,10 +3,12 @@ import { describe, expect, it } from "vitest";
 import type { SessionMeta } from "../types";
 
 import appSource from "../App.tsx?raw";
+import liveSessionSource from "../hooks/useLiveSession.ts?raw";
 import {
   DATA_MODE_NOTE,
   DATA_MODE_OPTIONS,
   emptyResultsHint,
+  firstResultHint,
   isSavedLiveSession,
   offersSavedLiveSessions,
 } from "./dataMode";
@@ -35,7 +37,7 @@ describe("Data mode: the choices and their labels", () => {
     expect(option("PREPARED_SESSION_RUNTIME")).toBeUndefined();
   });
 
-  it("the constructed scenario shows no mode note (the player banner says 'not live')", () => {
+  it("the constructed scenario shows no mode note (the CONSTRUCTED SCENARIO badges name it)", () => {
     expect(DATA_MODE_NOTE.CONSTRUCTED_SCENARIO_RUNTIME).toBe("");
   });
 
@@ -102,6 +104,23 @@ describe("Data mode: saved sessions are Live-only", () => {
     );
   });
 
+  it("the waiting text mentions the camera only in Live", () => {
+    expect(firstResultHint("LIVE_MODEL_RUNTIME")).toBe(
+      "Start monitoring to create a session. Camera permissions and model readiness are checked before results appear.",
+    );
+    expect(firstResultHint("CONSTRUCTED_SCENARIO_RUNTIME")).toBe(
+      "Start monitoring to play the scenario. Model readiness is checked before results appear.",
+    );
+    expect(firstResultHint("CONSTRUCTED_SCENARIO_RUNTIME")).not.toMatch(
+      /camera/i,
+    );
+  });
+
+  it("App renders the waiting text for the current mode", () => {
+    expect(appSource).toMatch(/\{firstResultHint\(config\.operationMode\)\}/);
+    expect(appSource).not.toMatch(/Camera permissions and model readiness/);
+  });
+
   // Source guards: the page uses these rules, not a private copy. The hook's list filter
   // is pinned with its other wiring requirements (hooks/useLiveSession.test.ts, MODE_FILTER).
   it("App shows the picker and its refresh button under offersSavedLiveSessions", () => {
@@ -115,11 +134,18 @@ describe("Data mode: saved sessions are Live-only", () => {
     expect(appSource).not.toMatch(/load a saved session to inspect/);
   });
 
-  // A saved-session error raised in Live (refresh or load failed) must not stay up in a
-  // mode that has no saved-session control to retry or clear it.
-  it("changing the Data mode clears the saved-session error", () => {
+  // Changing the Data mode leaves the session: the next mode must not show the previous
+  // mode's windows under its own label, nor a saved-session error raised in Live (the
+  // scenario mode has no control to retry or clear it).
+  it("changing the Data mode clears the session and its error before the config changes", () => {
     expect(appSource).toMatch(
-      /aria-label="Data mode"[\s\S]*?onChange=\{\(event\) => \{\s*live\.clearError\(\);\s*updateConfig\(/,
+      /aria-label="Data mode"[\s\S]*?onChange=\{\(event\) => \{\s*live\.clearSession\(\);\s*updateConfig\(/,
+    );
+  });
+
+  it("the hook's clearSession clears the error and the loop's session", () => {
+    expect(liveSessionSource).toMatch(
+      /const clearSession = useCallback\(\(\) => \{\s*setError\(null\);\s*loop\.clear\(\);\s*\}, \[loop\]\);/,
     );
   });
 });

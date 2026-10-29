@@ -447,6 +447,12 @@ export interface LiveLoop<TModels> {
   retry(): Promise<void>;
   /** Show a saved session read-only. Resolves to an error message, or `null`. */
   loadSession(sid: string): Promise<string | null>;
+  /**
+   * Leave the current session (a Data mode change): stop, drop any frozen request and
+   * show no session, so the next mode never shows it under its own label. Nothing is
+   * sent; the next `start()` creates a new session.
+   */
+  clear(): void;
   /** Swap one history entry for a newer copy of the same window (a flag toggle). */
   replaceRecord(record: RiskUpdate): void;
   /**
@@ -912,6 +918,28 @@ export function createLiveLoop<TModels = unknown>(
     }
   }
 
+  function clear(): void {
+    cancel();
+    pending = null;
+    completions = [];
+    activeSid = "";
+    configKey = "";
+    patch({
+      sessionId: "",
+      history: [],
+      total: 0,
+      running: false,
+      busy: false,
+      retrying: false,
+      fault: null,
+      droppedFrames: 0,
+      imagelessRequests: 0,
+      lastCaptureMiss: null,
+      requestMs: null,
+      effectiveFps: null,
+    });
+  }
+
   function replaceRecord(record: RiskUpdate): void {
     if (!state.history.some((r) => r.window_id === record.window_id)) return;
     patch({
@@ -931,6 +959,7 @@ export function createLiveLoop<TModels = unknown>(
     pause,
     retry,
     loadSession,
+    clear,
     replaceRecord,
     getTimings: () => timings?.snapshot() ?? [],
     markRendered(windowId) {

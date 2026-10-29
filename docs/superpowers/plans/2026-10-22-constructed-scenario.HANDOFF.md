@@ -85,3 +85,11 @@
 - 规则写在 `frontend/src/utils/dataMode.ts`：`offersSavedLiveSessions` / `isSavedLiveSession`。它回答的是「哪些会话能在 Live 列表里重开」，和 `isLiveLike`（哪些模式走 Live 循环，规则 E）是两个问题；规则 E 本身不变。
 - 计划第 437 行的合并规则（`dataMode.ts` 以 `isLiveLike` 为准）**不适用于**这两个函数。守卫：`dataMode.test.ts`、`useLiveSession.test.ts` 的 MODE_FILTER、`test_constructed_scenario_e2e.py`。
 - 代价（已告知用户）：仪表盘不再能重新打开以前的构造场景运行；需要时仍可通过导出 API 取得。
+
+## 补记（2026-10-29 晚，用户要求；只追加，不改上文）
+
+- **去掉「not live」类文案**（用户原话：「Recorded scenario features, not live vehicle sensors. Values below belong to the latest saved window. 像这样不要出现，not live 也是」）：
+  - 播放器标识由 `CONSTRUCTED SCENARIO · not live` 改为 `CONSTRUCTED SCENARIO`；
+  - Vehicle Signals 下的那句说明在**所有模式**都删除（Live 下也有；标题「Prepared telemetry replay / Scenario telemetry」已说明来源）。
+  - 模式标识仍在三处：顶栏 `CONSTRUCTED SCENARIO`、播放器标识、Data mode 选项「Constructed demo scenario」。报告只引用 Live 结果的规则不变。
+- **切换 Data mode 离开当前会话**：`liveLoop.clear()`，由 `useLiveSession.clearSession()` 在切换时调用。上一模式的窗口不再以新模式的标识显示；冻结的重试请求丢弃；下一次 Start 新建会话。守卫：`liveLoop.test.ts`（clear 三条）、`dataMode.test.ts`、`test_constructed_scenario_e2e.py::test_switching_the_data_mode_leaves_the_session`。

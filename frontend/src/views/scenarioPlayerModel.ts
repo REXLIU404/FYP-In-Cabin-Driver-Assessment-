@@ -5,7 +5,7 @@ import type {
 import type { RiskUpdate } from "../types";
 
 export interface ScenarioPlayerModel {
-  /** The constant not-live label over the frame. */
+  /** The constant mode label over the frame. */
   badge: string;
   /** The current segment, e.g. "Segment 2/7 · Vision only · texting_right · driver p026 · State Farm test split". */
   caption: string;
@@ -22,7 +22,7 @@ export interface ScenarioPlayerModel {
   finished: boolean;
 }
 
-const NOT_LIVE_BADGE = "CONSTRUCTED SCENARIO · not live";
+const SCENARIO_BADGE = "CONSTRUCTED SCENARIO";
 
 /** "0:34" for 34000 ms: minutes are not padded, seconds are (m:ss). */
 const mmss = (ms: number): string =>
@@ -47,7 +47,7 @@ export const buildScenarioPlayerModel = (
     null,
   );
   return {
-    badge: NOT_LIVE_BADGE,
+    badge: SCENARIO_BADGE,
     caption: `Segment ${snapshot.segmentIndex + 1}/${manifest.segments.length} · ${current.title} · ${current.vision_label} · driver ${current.driver_id} · State Farm test split`,
     truth: current.vision_label,
     model: top ? `${top.label} ${top.probability.toFixed(2)}` : null,
