@@ -196,6 +196,21 @@ def test_a_full_run(pw, scenario_server):
         assert segment_path[0] == 0 and segment_path[-1] == 2
         assert segment_path.count(1) > 0
         assert all(a <= b for a, b in zip(segment_path, segment_path[1:]))
+
+        # Start after the finish plays the scenario again: a NEW session from segment 0, not a
+        # resume of the finished one (which would stay on the last frame and never stop again).
+        tap = chrome.tap
+        posts = len(tap.session_posts)
+        chrome.top_button("Start Monitoring").click()
+        chrome.wait_until(
+            lambda: len(tap.session_posts) > posts and tap.session_posts[-1].response is not None,
+            "a new scenario session after the finish", 30)
+        again = tap.session_posts[-1].response
+        assert again["operation_mode"] == "CONSTRUCTED_SCENARIO_RUNTIME"
+        assert again["id"] != run.sid
+        chrome.wait_until(lambda: len(tap.answered(again["id"])) >= 2, "the new run's first windows", 30)
+        assert tap.answered(again["id"])[0].response["provenance"]["replay"]["segment_index"] == 0
+        chrome.top_button("Pause").click()
     finally:
         chrome.close()
 
@@ -294,8 +309,13 @@ def test_switching_the_data_mode_leaves_the_session(pw, scenario_server):
             assert old_sid not in page.inner_text("body")
 
         live_sid = run_three_windows("LIVE_MODEL_RUNTIME")
-        select_constructed_scenario(chrome)
+        page.select_option('select[aria-label="Data mode"]', value="CONSTRUCTED_SCENARIO_RUNTIME")
         assert_no_session_shown(live_sid)
+        # Before a scenario is chosen: no camera feed and no camera controls under the badge.
+        assert page.locator("video").count() == 0
+        assert page.get_by_role("button", name="Stop Camera", exact=True).count() == 0
+        assert "Choose a scenario to load its frames." in page.inner_text("body")
+        select_constructed_scenario(chrome)
 
         scenario_sid = run_three_windows("CONSTRUCTED_SCENARIO_RUNTIME")
         assert scenario_sid != live_sid

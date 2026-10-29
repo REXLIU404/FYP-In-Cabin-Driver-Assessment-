@@ -139,7 +139,7 @@ describe("Data mode: saved sessions are Live-only", () => {
   // scenario mode has no control to retry or clear it).
   it("changing the Data mode clears the session and its error before the config changes", () => {
     expect(appSource).toMatch(
-      /aria-label="Data mode"[\s\S]*?onChange=\{\(event\) => \{\s*live\.clearSession\(\);\s*updateConfig\(/,
+      /aria-label="Data mode"[\s\S]*?onChange=\{\(event\) => \{\s*live\.clearSession\(\);[^}]*?updateConfig\(/,
     );
   });
 
@@ -152,6 +152,41 @@ describe("Data mode: saved sessions are Live-only", () => {
 
 // Source guard, not a behaviour test: the page must render the labels above and not a
 // private copy of the old wording.
+// Review of e26e32a: the other ways one mode's session or source could show under the
+// other mode's label. Source guards on App (the behaviour is in the browser tests).
+describe("Data mode: no path mixes the two modes (source guard)", () => {
+  it("the Data mode select is locked while the camera permission prompt is open", () => {
+    expect(appSource).toMatch(
+      /aria-label="Data mode"\s*value=\{config\.operationMode\}\s*disabled=\{\s*monitoring \|\| live\.busy \|\| camera\.status === "requesting"\s*\}/,
+    );
+  });
+
+  it("leaving Live stops the camera", () => {
+    expect(appSource).toMatch(
+      /aria-label="Data mode"[\s\S]*?onChange=\{\(event\) => \{\s*live\.clearSession\(\);\s*if \(event\.target\.value !== "LIVE_MODEL_RUNTIME"\)\s*camera\.stop\(\);/,
+    );
+  });
+
+  it("choosing another scenario leaves the session too", () => {
+    expect(appSource).toMatch(
+      /aria-label="Scenario"[\s\S]*?onChange=\{\(event\) => \{\s*if \(!event\.target\.value\) return;(?:\s*\/\/[^\n]*)*\s*live\.clearSession\(\);\s*void scenario\.select\(event\.target\.value\);/,
+    );
+  });
+
+  it("Start after a finished scenario plays it again in a new session", () => {
+    expect(appSource).toMatch(
+      /const fresh = restart \|\| \(isScenario && scenarioFinished === true\);/,
+    );
+    expect(appSource).toMatch(/await live\.start\(fresh\);/);
+  });
+
+  it("the scenario mode never shows the camera preview, even before a scenario is loaded", () => {
+    expect(appSource).toMatch(
+      /\) : isScenario \? \(\s*<div className="camera-placeholder scenario-placeholder">\s*<strong>Choose a scenario to load its frames\.<\/strong>\s*<\/div>\s*\) : \(\s*<CameraPreview/,
+    );
+  });
+});
+
 describe("Data mode: App renders these labels and notes (source guard)", () => {
   it("the select is built from DATA_MODE_OPTIONS and the note from DATA_MODE_NOTE", () => {
     expect(appSource).toMatch(/DATA_MODE_OPTIONS\.map\(/);

@@ -172,6 +172,16 @@ describe("classifyFailure: the three kinds of 409 (T1, T2)", () => {
     );
   });
 
+  // User decision 2026-10-29: no "not live" wording on the page, fault texts included.
+  it("no fault text says 'not live' or 'not a live'", () => {
+    for (const { title, advice } of Object.values(FAULT_TEXT)) {
+      expect(`${title} ${advice}`).not.toMatch(/not (a )?live/i);
+    }
+    expect(FAULT_TEXT.conflict_mode.title).toBe(
+      "This session belongs to another Data mode",
+    );
+  });
+
   it("an unrecognised 409 stops the loop: it is read as 'same id, different content'", () => {
     expect(http(409, "something the backend has never said")).toMatchObject({
       category: "conflict_hash",

@@ -45,8 +45,9 @@ report numbers come from Live runs (design doc D06).
 - **Play it**: run the system (see above; the backend serves `demo/bundles/` by default, or
   the directory named by `DRA_SCENARIO_ROOT`), then on the page pick **Constructed demo
   scenario** in the Data mode menu, choose the scenario, and click Start Monitoring. The
-  player banner says "not live"; the scenario plays and stops itself at the end, leaving
-  Start Monitoring enabled for the next run.
+  top bar and the player show "CONSTRUCTED SCENARIO"; the scenario plays and stops itself at
+  the end, and Start Monitoring plays it again in a new session. Changing the Data mode or
+  the scenario leaves the session on screen behind.
 - **Rehearse it headlessly**: `PYTHONPATH=backend .venv/bin/python -m pytest backend/tests/test_constructed_scenario_rehearsal.py -m long -q`
   plays viva_v1 once in a real browser and writes a per-segment engineering report; with
   `DRA_E2E_EVIDENCE_DIR` set the JSON lands there. It asserts structure only (the seven

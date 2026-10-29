@@ -194,7 +194,10 @@ export default function App() {
       // Only Live touches the camera; the constructed scenario feeds the loop its
       // own preloaded frames.
       if (isLive && camera.status !== "live") await camera.start();
-      await live.start(restart);
+      // A finished scenario is played again from the start, in a new session: a
+      // resume would stay on the last frame, and the auto-pause would not fire again.
+      const fresh = restart || (isScenario && scenarioFinished === true);
+      await live.start(fresh);
     } else {
       live.pause();
       if (restart) {
@@ -294,9 +297,13 @@ export default function App() {
               <select
                 aria-label="Data mode"
                 value={config.operationMode}
-                disabled={monitoring || live.busy}
+                disabled={
+                  monitoring || live.busy || camera.status === "requesting"
+                }
                 onChange={(event) => {
                   live.clearSession();
+                  if (event.target.value !== "LIVE_MODEL_RUNTIME")
+                    camera.stop();
                   updateConfig({
                     ...config,
                     operationMode: event.target
@@ -348,8 +355,11 @@ export default function App() {
                     value={scenario.selectedId ?? ""}
                     disabled={monitoring || live.busy}
                     onChange={(event) => {
-                      if (event.target.value)
-                        void scenario.select(event.target.value);
+                      if (!event.target.value) return;
+                      // Another scenario is another run: never resume this
+                      // session with a different bundle's frames.
+                      live.clearSession();
+                      void scenario.select(event.target.value);
                     }}
                   >
                     <option value="">Select a scenario…</option>
@@ -505,6 +515,10 @@ export default function App() {
                   frameSrc={scenarioPlayerProps.frameSrc}
                   finishedText={scenarioPlayerProps.finishedText}
                 />
+              ) : isScenario ? (
+                <div className="camera-placeholder scenario-placeholder">
+                  <strong>Choose a scenario to load its frames.</strong>
+                </div>
               ) : (
                 <CameraPreview
                   videoRef={camera.videoRef}

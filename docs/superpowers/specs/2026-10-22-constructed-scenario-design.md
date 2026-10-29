@@ -248,3 +248,6 @@
     - 模式限制在路由里检查，返回 422。
   - 第 4.3 节：完整性检查放在列表接口。
   - 第 7 节：共享测试辅助文件的协作约定，`start_server` 需要能传入 `DRA_SCENARIO_ROOT`。
+- 2026-10-29（用户要求；只追加，上文保留原样）：
+  - 标识：播放器标识由 `CONSTRUCTED SCENARIO · not live` 改为 `CONSTRUCTED SCENARIO`（第 5 节第 155 行、第 8 节第 210 行所写的标识文字由此取代）。用户原话：「Recorded scenario features, not live vehicle sensors. Values below belong to the latest saved window. 像这样不要出现，not live 也是」。模式仍在三处标明：顶栏 `CONSTRUCTED SCENARIO`（五个视图）、播放器标识、Data mode 选项「Constructed demo scenario」；报告只引用 Live 结果的规则不变。
+  - 会话与模式分离：切换 Data mode 或切换情景都会离开当前会话（`liveLoop.clear()`）；情景结束后再按 Start 会在新会话中从头播放；本模式在情景加载前不显示摄像头画面，离开 Live 时关闭摄像头；摄像头授权弹窗期间不能切换模式；「Saved live sessions」只在 Live 模式出现、只列 Live 会话（取代 HANDOFF 裁定 7）。实现与证据见 `fyp2/live-system` 的 afd8724、808a5d5、e26e32a 及其后的提交。

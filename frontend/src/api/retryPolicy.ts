@@ -171,9 +171,9 @@ export const FAULT_TEXT: Record<
       "This is a bug in the client, not a network problem. Start a new session and report it.",
   },
   conflict_mode: {
-    title: "This session is not a live model session",
+    title: "This session belongs to another Data mode",
     advice:
-      "The session was created in another mode. Use New Session to start a live one.",
+      "The session was created in another Data mode. Use New Session to start one in the mode selected now.",
   },
   conflict_stale_frame: {
     title: "A late frame was dropped",
