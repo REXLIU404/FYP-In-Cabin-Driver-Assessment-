@@ -203,9 +203,16 @@ def test_a_long_pause_does_not_expire_the_evidence(pw, scenario_server):
         chrome.wait_until(
             lambda: page.locator('.topbar-actions button.button--primary').is_enabled(),
             "Start Monitoring to be re-enabled after Pause", 20)
+        # A request already in flight when Pause was clicked may still be answered by the server
+        # (the page aborts its own fetch, the server finishes the request). Let it land first, then
+        # count what the page SENDS: a paused run must send nothing. Counting answers instead
+        # raced with that last answer under load (2026-10-29 gate on dd7b9d5: 3 == 2).
+        chrome.wait_until(lambda: all(c.outcome != "pending" for c in chrome.tap.infer if c.sid == sid),
+                          "the request in flight at Pause to settle", 20)
+        sent = len([c for c in chrome.tap.infer if c.sid == sid])
         before = len(chrome.tap.answered(sid))
         chrome.wait(4000)  # a REAL pause, longer than the 3 s freshness tolerance
-        assert len(chrome.tap.answered(sid)) == before, "a paused run must send nothing"
+        assert len([c for c in chrome.tap.infer if c.sid == sid]) == sent, "a paused run must send nothing"
         chrome.top_button("Start Monitoring").click()  # resume the same session
         chrome.wait_until(lambda: len(chrome.tap.answered(sid)) > before,
                           "the first window after resume", 60)
