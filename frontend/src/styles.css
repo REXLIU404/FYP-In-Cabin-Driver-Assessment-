@@ -1292,6 +1292,14 @@ tbody tr.is-unavailable {
     padding: 4px;
   }
 
+  /* Review R29: at 690-900 px the one-row nav could not fit all six buttons next to the
+     brand text; hiding the copy frees the row, and the thin scrollbar below stays visible
+     so a width that still overflows reads as scrollable instead of cut off. */
+  .sidebar .brand-copy,
+  .sidebar--collapsed .brand-copy {
+    display: none;
+  }
+
   .sidebar--collapsed .sidebar-header {
     flex-direction: row;
     justify-content: space-between;
@@ -1314,7 +1322,7 @@ tbody tr.is-unavailable {
     min-width: 0;
     gap: 4px;
     overflow-x: auto;
-    scrollbar-width: none;
+    scrollbar-width: thin;
   }
 
   .nav-list button,

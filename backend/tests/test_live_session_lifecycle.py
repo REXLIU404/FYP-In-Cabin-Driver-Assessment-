@@ -208,17 +208,18 @@ class TestStSession01:
         record = life.tap.answered(a)[newest - 1].response
         # Deferred minor M2: every field of the summary, for an assessed window AND for one with no
         # assessment (then the four risk fields read "Unavailable"; the branch values are as stored).
-        title = lambda token: " ".join(part.capitalize() for part in token.lower().split("_"))  # noqa: E731
+        # Review R23 (user decision): the summary uses the data-contract names and the recorded
+        # values verbatim - AlertSeverity "CAUTION", SystemHealth "FULL" - not title-cased copies.
         available = record["assessment_available"]
         assert life.obs["loaded_explanation"] == {
             "P_distraction": _branch(record, "vision", fixed(record["P_distraction"], 2)),
             "Telemetry Non-Safe Risk": _branch(record, "telemetry", fixed(record["P_telemetry_anomaly"], 2)),
             "RiskScore": f"{fixed(record['RiskScore'], 1)} / 100" if available else "Unavailable",
             "RiskLevel": record["RiskLevel"] if available else "Unavailable",
-            "AlertStatus": title(record["AlertSeverity"]) if available else "Unavailable",
-            "SystemHealth": title(record["SystemHealth"]),
+            "AlertSeverity": record["AlertSeverity"] if available else "Unavailable",
+            "SystemHealth": record["SystemHealth"],
         }
-        assert life.obs["loaded_evidence_type"] == (record["DominantEvidence"].upper() if available else "Unavailable")
+        assert life.obs["loaded_evidence_type"] == (record["DominantEvidence"] if available else "Unavailable")
         assert life.obs["loaded_selection_bar"] == f"Showing Window {newest} · following the newest window"
 
     def test_06_start_after_loading_creates_a_new_session(self, life):

@@ -16,7 +16,6 @@ import { evidenceDistribution } from "../utils/display";
 import { buildExplanationModel } from "./explanationModel";
 import {
   evidenceTypes,
-  formatEvidenceType,
   getActiveInputSummary,
   getMatchedEvidenceRule,
   getRelativeEvidence,
@@ -58,13 +57,6 @@ const telemetryFeatureLabelMap: Record<string, string> = {
   lane_deviation: "Lane Deviation",
   headway_distance: "Headway Distance",
 };
-
-const titleCaseToken = (value: string) =>
-  value
-    .toLowerCase()
-    .split("_")
-    .map((token) => token.charAt(0).toUpperCase() + token.slice(1))
-    .join(" ");
 
 const getTopVisualCue = (record: RiskUpdate) => {
   const visualCues = record.visual_top_classes.filter(
@@ -148,17 +140,18 @@ export function ExplanationView({
             <p className="runtime-warning" role="status">
               Window {selectedRecord.window_id} has no assessment: neither
               branch contributed usable evidence, so RiskScore, RiskLevel,
-              Evidence Type and Alert status are not reported for it. Branch
+              DominantEvidence and AlertSeverity are not reported for it. Branch
               values below are shown as recorded.
             </p>
           ) : null}
 
-          <div className="evidence-type-block">
-            <span>Evidence Type</span>
+          <div
+            className="evidence-type-block"
+            title="Which branch dominates the fused assessment."
+          >
+            <span>DominantEvidence</span>
             <strong>
-              {evidenceType === null
-                ? UNAVAILABLE_LABEL
-                : formatEvidenceType(evidenceType)}
+              {evidenceType === null ? UNAVAILABLE_LABEL : evidenceType}
             </strong>
             <small>Relative Evidence: {relativeEvidence}</small>
           </div>
@@ -188,28 +181,24 @@ export function ExplanationView({
               <span>RiskScore</span>
               <strong>{formatRiskScore(selectedRecord.RiskScore)}</strong>
             </div>
-            <div>
+            <div title="Fused risk level: Low, Medium or High.">
               <span>RiskLevel</span>
               <Pill
                 label={selectedRecord.RiskLevel}
                 tone={selectedRecord.RiskLevel}
               />
             </div>
-            <div>
-              <span>AlertStatus</span>
+            <div title="Alert state: NORMAL, CAUTION or HIGH_ALERT.">
+              <span>AlertSeverity</span>
               <Pill
-                label={
-                  selectedRecord.AlertSeverity === null
-                    ? null
-                    : titleCaseToken(selectedRecord.AlertSeverity)
-                }
+                label={selectedRecord.AlertSeverity}
                 tone={selectedRecord.AlertSeverity}
               />
             </div>
-            <div>
+            <div title="Runtime health: FULL, DEGRADED or UNAVAILABLE.">
               <span>SystemHealth</span>
               <Pill
-                label={titleCaseToken(selectedRecord.SystemHealth)}
+                label={selectedRecord.SystemHealth}
                 tone={selectedRecord.SystemHealth}
               />
             </div>

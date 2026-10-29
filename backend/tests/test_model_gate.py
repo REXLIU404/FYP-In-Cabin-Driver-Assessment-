@@ -125,21 +125,35 @@ def _fresh(tmp_path, name):
     return path
 
 
+def _literal_reason(node) -> str | None:
+    """The skipif's ``reason`` when it is a string literal; None for a missing or non-literal
+    reason (``reason=SOME_VARIABLE`` has no literal the parser can read - review R14)."""
+    for kw in node.keywords:
+        if kw.arg == "reason":
+            value = kw.value
+            if isinstance(value, ast.Constant) and isinstance(value.value, str):
+                return value.value
+            return None
+    return None
+
+
 def _model_skipif_conditions(directory: Path) -> list[tuple[str, str, str]]:
     """(file, reason, condition source text) for every ``pytest.mark.skipif`` in ``directory``
     whose reason is the one the gate recognises - found by parsing the source. The condition
     is the source segment of the skipif call, so the guards can check the condition itself
-    instead of the whole file (review R14)."""
+    instead of the whole file (review R14). A marker whose reason is not a string literal is
+    skipped: it can never be the gate's reason, and reaching into the expression used to crash
+    the guard with AttributeError (review R14)."""
     found = []
     for path in sorted(Path(directory).glob("test_*.py")):
         source = path.read_text()
         for node in ast.walk(ast.parse(source)):
             if not (isinstance(node, ast.Call) and ast.unparse(node.func).endswith("mark.skipif")):
                 continue
-            segment = ast.get_source_segment(source, node) or ""
-            reason = next((kw.value.value for kw in node.keywords if kw.arg == "reason"), None)
-            if reason == REASON:
-                found.append((path.name, reason, segment))
+            reason = _literal_reason(node)
+            if reason != REASON:
+                continue
+            found.append((path.name, reason, ast.get_source_segment(source, node) or ""))
     return found
 
 
@@ -178,6 +192,24 @@ def test_every_model_skipif_checks_all_three_stable_model_files():
         # The files are named in the condition itself or in a module constant it reads.
         assert _names_all_three(condition, files), (name, condition)
         assert "onnx').exists()" not in condition and 'onnx").exists()' not in condition, (name, condition)
+
+
+def test_a_non_literal_skipif_reason_is_skipped_instead_of_crashing(tmp_path):
+    """Review R14: a marker that passes ``reason=SOME_VARIABLE`` has no literal for the guard
+    to read. The old guard reached into ``kw.value.value`` and crashed with AttributeError;
+    a non-literal reason cannot be the gate's reason, so the marker is simply skipped."""
+    (tmp_path / "test_var_reason.py").write_text('''
+import pytest
+
+REASON = "local trained artifacts not installed"
+missing = pytest.mark.skipif(True, reason=REASON)
+
+
+@missing
+def test_needs_models():
+    pass
+''')
+    assert _model_skipif_conditions(tmp_path) == []
 
 
 def test_the_guard_reads_the_condition_not_the_whole_file(tmp_path):

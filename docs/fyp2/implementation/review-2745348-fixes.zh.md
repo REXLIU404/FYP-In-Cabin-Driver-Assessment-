@@ -39,14 +39,14 @@
 - 测试：守卫测试首跑即绿。
 
 ### R4. [minor] 无测试保证 stale/unavailable Live Monitor 面板不显示 hold note
-- 判定：**REAL**。`alertHoldNote` 对 stale/unavailable 应返回 null，但没有用例锁定。
-- 修复：`display.test.ts` / `usability.test.ts` 补测 stale 与 unavailable 两个面板不渲染 hold note。
-- 测试：守卫测试首跑即绿。
+- 判定：**REAL**。`alertHoldNote` 本身没有 stale 输入；守卫在 `LiveMonitor` 渲染 `alert-note` 的位置，但没有用例锁定。
+- 修复：只新增 1 个用例（`usability.test.ts`）：stale 面板不渲染 hold note（"the hold note stays off the stale panel"）。`display.test.ts` 没有 R4 改动；unavailable 面板没有新增用例。
+- 测试：守卫测试首跑即绿（锁现状）。
 
 ### R5. [minor] 'Monitoring paused' 从未被检查
-- 判定：**REAL**。`RuntimeNotices` 的措辞无测试锁定，paused 状态读成 stopped 不会红。
-- 修复：`runtimeNotices.test.ts` / `usability.test.ts` 补测：CaptureMissNotice 措辞「Vision evidence is missing; monitoring continues with telemetry only.」与 `role="status"`。
-- 测试：守卫测试首跑即绿（21 passed）。
+- 判定：**REAL**。`RuntimeNotices` 的 paused 措辞无测试锁定：把 'Monitoring paused' 改成 'Monitoring stopped' 没有用例会红。
+- 修复：`usability.test.ts` 新增「a plain Pause (no fault) reads 'paused', not 'stopped'」；该用例对措辞的变异会红。注意：CaptureMissNotice 的措辞与 `role="status"` 用例早于本分支（`runtimeNotices.test.ts` 既有），不是本次新增。
+- 测试：新增用例首跑即绿（锁现状）。App 的 `stopped={isLive && Boolean(live.fault?.stopped)}` 接线仍无测试：把它改成 `stopped={false}` 全部用例仍绿（已知缺口，本轮未修）。
 
 ### R6. [minor] 相机测试跳过 'denied' 与 'error' 状态
 - 判定：**REAL**。`usability.test.ts` 的相机测试只覆盖 requesting/停止路径；权限被拒后 Start Camera 错误地 disabled 没有测试能发现。
@@ -56,28 +56,28 @@
 ### R7 ≈ R10 ≈ R28. [minor×3] latest 窗口 unavailable 时 stale 提示被掩盖
 - 判定：**REAL（重复对）**。`App.tsx` 中 `!bannerShown` 的条件基于「live/inspector/trends 且有 latest」；当 latest 存在但无评估（unavailable）时，`getDisplayState` 优先显示 unavailable，stale 提示在 Inspector/Trends 上完全消失——与 App 内注释「banner already shows stale」的前提矛盾。
 - 修复：`display.ts` 新增 `runtimeStaleNoticeShown(activeView, latest, stale)` helper：stale 时，若当前视图无 banner（latest 不存在）→ 显示；若有 banner，则仅当 banner 状态不是 stale 时再显示（banner 已在显示 stale 就不重复）。`App.tsx` 用该 helper 替代 `!bannerShown`。
-- 测试（红→绿）：`display.test.ts` 新增 4 个用例（latest 有/无 × stale 真/假）。
+- 测试（红→绿）：`display.test.ts` 新增 4 个用例：unassessed latest 在 inspector/trends/live 仍显示；assessed 且 stale 时由 banner 的 stale 变体接管；banner 之外的视图 stale 恒显示；current 恒不显示。没有 latest=undefined 的用例。
   - 红：`TypeError: runtimeStaleNoticeShown is not a function`。
-  - 绿：`display.test.ts` 48 passed。
+  - 绿：`display.test.ts` 32 passed（修复提交 c7c60fe 的文件总数，见该 lane 门禁日志）。
 
 ### R8. [minor] display.test 钉住 Medium + HIGH_ALERT 的 hold 解释，与两个 FSM 都矛盾
 - 判定：**REAL**。Medium + HIGH_ALERT 组合在两个 FSM 下都不可达（HIGH_ALERT 只在 High 持续后出现），用例锁死了一个不可能状态的文案。
 - 修复：把 (Medium, HIGH_ALERT) 用例移入「返回 null」组，与 R12/R19 同一批。
-- 测试：与 R12 同一批红→绿（display.test 4 failed → 44 passed）。
+- 测试：与 R12 同一批红→绿（display.test 4 failed → 32 passed）。
 
 ### R9 ≈ R20. [important×2] Prepared replay 选择栏永远显示 'pinned'，用户 pin 每 tick 被覆盖
 - 判定：**REAL（重复对）**。`App.tsx` 的 `appendReplay` 对每条新纪录调 `setSelectedWindowId(record.window_id)`：`describeSelection` 里「null = 跟随最新」的语义被破坏——选择栏永远显示 pinned，Follow latest 按钮与行 pin 在下一个 tick 全部失效。
 - 修复：删掉 `App.tsx` 中 `appendReplay` 内的 `setSelectedWindowId(record.window_id)` 一行（null 本来就表示跟随最新）。
 - 测试（红→绿）：`runtimeNotices.test.ts` 按 `import appSource from "../App.tsx?raw"` 的既有模式加源码守卫测试「a prepared-replay tick never sets the selected window」。
   - 红：断言 appendReplay 块不含 `setSelectedWindowId` 失败（源码仍含该行）。
-  - 绿：`runtimeNotices.test.ts` 81 passed。（附带修复 eslint `no-regex-spaces`：正则中的两个空格写为 ` {2}`。）
+  - 绿：`runtimeNotices.test.ts` 37 passed（修复提交 c7c60fe 的文件总数）。（附带修复 eslint `no-regex-spaces` ：正则中的两个空格写为 ` {2}`。）
 
 ### R11 ≈ R27. [minor×2] Configuration 文案「creates a session」对 Prepared replay 不成立
 - 判定：**REAL（重复对）**。`ConfigurationView.tsx:55` 的说明只对 LIVE 模式成立；Prepared replay 的 Start Monitoring 继续同一 replay 会话。
-- 修复：说明改为按模式措辞：LIVE 模式「Start Monitoring creates a new session with these settings.」，Prepared replay「Start Monitoring resumes the prepared replay session with these settings; New Session restarts it from the top.」。
-- 测试（红→绿）：`usability.test.ts` 对两种模式渲染并断言字面量。
-  - 红：Prepared 模式断言失败（文案仍说 creates a session）。
-  - 绿：`usability.test.ts` 24 passed（同批含 R21）。
+- 修复：说明改成一句对两种模式都成立的话（不是按模式分支）："Changing settings pauses monitoring. In Live mode the next Start Monitoring (top of the page) creates a session with the new configuration; in Prepared replay it continues the same replay with the new settings (New Session starts over)."
+- 测试（红→绿）：`usability.test.ts` 用 DEFAULT_CONFIG 渲染一次，断言这句话的两半。
+  - 红：断言失败（文案仍只讲 creates a session）。
+  - 绿：`usability.test.ts` 25 passed（修复提交 c7c60fe 的文件总数；同批含 R21）。
 
 ### R12 ≈ R19. [minor/important] alertHoldNote 只描述墙钟 FSM；Live R10 FSM 下「2 s」错达 2 s
 - 判定：**REAL（重复对；R19 标 important）**。`display.ts` 的 `alertHoldNote` 只引用 `ai/src/alertFsm.ts` 与后端 `_step_alert_fsm`。LIVE_MODEL_RUNTIME 下后端跑 `_step_alert_fsm_live`：segment 只在 NEW 观测上打开，且要求「服务器时间 AND 新观测源时间跨度」都达到阈值；Prepared telemetry 每 2000 ms 才有一次 NEW，其余 tick 是 REPEAT。评审的仿真：High 从 500 ms 持续到 4000 ms（3.5 s）才 HIGH_ALERT，Low 持续 11.5 s 才 NORMAL——而提示文字仍说 2 s / 10 s。
@@ -87,14 +87,14 @@
   docstring 同时引用 `_step_alert_fsm_live`；`usability.test.ts` 中的字面量同步。
 - 测试（红→绿）：`display.test.ts` 期望改为新字面量（写死）。
   - 红：`display.test.ts` 4 failed（三个字面量断言 + R8 的不可达用例）。
-  - 绿：`display.test.ts` 44 passed。
+  - 绿：`display.test.ts` 32 passed（修复提交 c7c60fe 的文件总数）。
 
 ### R13 ≈ 相关 R6. [minor] 相机预览失去取消 pending 权限请求的唯一途径
-- 判定：**REAL**。`CameraPreview.tsx` 中 `canStop` 不含 `requesting`：请求权限期间 Start Camera 被 disabled，Stop 不显示，用户无法取消 pending 请求；权限被拒（denied/error）后同样卡住。
-- 修复：`canStop = isLive || status === "requesting"`；requesting 时按钮显示 Stop Camera（点击即取消），并补 denied/error 状态的守卫断言。
+- 判定：**REAL**。`CameraPreview.tsx` 中 `canStop` 不含 `requesting`：请求权限期间 Start Camera 被 disabled，Stop 不显示，用户无法取消 pending 请求。权限被拒（denied/error）在评审 HEAD 上并不卡住（Start Camera 已可重试，R6 的用例锁定这一点）——报告原先把这一情形也归入 R13，与代码不符。
+- 修复：`canStop = isLive || status === "requesting"`；requesting 时按钮显示 Stop Camera（点击即取消），并补 denied/error 状态的守卫断言（与 R6 同一批）。
 - 测试（红→绿）：`usability.test.ts` 相机测试改为 requesting → Stop。
   - 红：requesting 用例 1 failed（仍渲染 disabled Start）。
-  - 绿：`usability.test.ts` 18 passed。
+  - 绿：`usability.test.ts` 25 passed（修复提交 c7c60fe 的文件总数）。
 
 ### R14. [minor] M8 结构测试漏掉「只检查一个文件」的 marker
 - 判定：**REAL**。`test_model_gate.py` 的 `test_every_model_skipif_checks_all_three_stable_model_files` 把三个文件名对**整个文件**断言（`assert all(name in source for name in files)`）：只要文件名出现在文件任何位置就通过，即使 skipif 条件本身只检查一个文件；且定位靠 segment 里出现 `MODEL_ROOT`/`ml/outputs` 变量名而非 reason。
@@ -138,7 +138,7 @@
 - 修复：措辞改为 `Click a row to pin that window in Signal Inspector, Risk Trends and Explanation.`
 - 测试（红→绿）：`usability.test.ts` 断言新字面量、断言不含 "in every view"。
   - 红：旧措辞断言失败。
-  - 绿：`usability.test.ts` 24 passed（同批含 R11/R27）。
+  - 绿：`usability.test.ts` 25 passed（修复提交 c7c60fe 的文件总数；同批含 R11/R27）。
 
 ### R22. [minor] High/CAUTION hold note 每次 High/Medium 翻转时上下跳动约 69 px
 - 判定：**REAL**。评审在 1280 px 实测：note 高 55 px，模态网格位移 69 px；`alertHoldNote` 对 Medium+CAUTION 返回 null，窗口级翻转时 note 每 tick 出现/消失。
@@ -160,8 +160,8 @@
 - 判定：**REAL**。`LiveMonitor.tsx` 延迟行文案对两种模式共用；Prepared replay 的延迟是合成数据，没有服务器/数据库时间。
 - 修复：`LiveMonitor` 加 `mode?: "LIVE_MODEL_RUNTIME" | "PREPARED_SESSION_RUNTIME"` prop（默认 LIVE），延迟行按模式渲染「Prepared latency (synthetic)」或「Server processing time」；`App.tsx` 传入 `mode={config.operationMode}`。
 - 测试（红→绿）：`usability.test.ts` 断言两种模式的标签字面量。
-  - 红：TS 报 `"mode" 不在类型 "Partial<LiveMonitorProps>" 中`（预期内，prop 尚未添加）。
-  - 绿：`usability.test.ts` 22 passed。
+  - 红：TS 报 `"mode" 不在类型 "Partial<LiveMonitorProps>" 中`（预期内，prop 尚 未添加）。
+  - 绿：`usability.test.ts` 25 passed（修复提交 c7c60fe 的文件总数）。
 
 ### R27 → 见 R11（重复对，一起修复）。
 
@@ -191,13 +191,13 @@
 
 | 修复 | 红（修复前） | 绿（修复后） |
 |---|---|---|
-| R9/R20 | 源码守卫失败：`appendReplay` 块仍含 `setSelectedWindowId` | `runtimeNotices.test.ts` 81 passed |
-| R12/R19/R8 | `display.test.ts` 4 failed（新字面量 3 条 + 不可达用例 1 条） | `display.test.ts` 44 passed |
-| R7/R10/R28 | `TypeError: runtimeStaleNoticeShown is not a function` | `display.test.ts` 48 passed |
-| R13/R6 | requesting 用例失败（仍渲染 disabled Start） | `usability.test.ts` 18 passed |
-| R2/R3/R4/R5 | 首跑即绿（守卫测试，锁现状；对应 mutation 会红） | 21 passed |
-| R26 | TS 错误：`"mode" 不在类型 "Partial<LiveMonitorProps>" 中` | `usability.test.ts` 22 passed |
-| R11/R27 + R21 | Prepared 措辞与 "in every view" 断言失败 | `usability.test.ts` 24 passed |
+| R9/R20 | 源码守卫失败：`appendReplay` 块仍含 `setSelectedWindowId` | `runtimeNotices.test.ts` 37 passed |
+| R12/R19/R8 | `display.test.ts` 4 failed（新字面量 3 条 + 不可达用例 1 条） | `display.test.ts` 32 passed |
+| R7/R10/R28 | `TypeError: runtimeStaleNoticeShown is not a function` | `display.test.ts` 32 passed |
+| R13/R6 | requesting 用例失败（仍渲染 disabled Start） | `usability.test.ts` 25 passed |
+| R2/R3/R4/R5 | 首跑即绿（守卫测试，锁现状；对应 mutation 会红） | `usability.test.ts` 25 passed |
+| R26 | TS 错误：`"mode" 不在类型 "Partial<LiveMonitorProps>" 中` | `usability.test.ts` 25 passed |
+| R11/R27 + R21 | 措辞与 "in every view" 断言失败 | `usability.test.ts` 25 passed |
 | R30 | 第一次：`expected null to be truthy`（vitest 吞 CSS 导入）→ 修读取方式后红因正确：规则块无 `#475569` | `usability.test.ts` 25 passed |
 | R14 | `NameError: name '_model_skipif_conditions' is not defined`（2 failed, 8 passed） | `test_model_gate.py` 10 passed |
 | R15 | `assert '1 passed, 1 deselected' in '2 passed in 0.24s'`（long 真的启动了） | `test_long_marker.py` 4 passed |
@@ -205,6 +205,11 @@
 | R17/R18 | `ImportError: cannot import name 'edge_sets'` | `test_long_session_helpers.py` 4 passed |
 | R31 | 补测试首跑 `1 failed, 9 passed`（bias 0.25 暴露语义）→ 按评审写法收敛 | `test_telemetry_contributions.py` 10 passed；mutation A 下新测试红（守卫力验证） |
 | R1 | 2 failed（SUMMARY.md 无标注） | `test_coldstart_summary.py` 2 passed；`bash -n` 通过 |
+
+表中各文件计数是修复提交 c7c60fe 的文件总数：`display.test.ts` 32、`runtimeNotices.test.ts` 37、
+`usability.test.ts` 25（整库 968 passed / 32 files，见 `docs/evidence/2026-10-26/ds-review-fixes/03-vitest.log`）。
+本版更正前，旧稿的 48 / 44 / 81 / 18 / 21 / 22 / 24 是把多文件合计当成了单文件数（见
+`.superpowers/collab/review-ds0/findings.md` D11/D14/D15）。
 
 ## 4. 门禁结果
 
