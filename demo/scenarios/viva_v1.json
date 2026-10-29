@@ -1,0 +1,15 @@
+{
+  "scenario_id": "viva_v1",
+  "seed": 20261022,
+  "frame_period_ms": 200,
+  "telemetry_period_ms": 2000,
+  "segments": [
+    {"title": "Baseline", "duration_s": 20, "driver_id": "p050", "vision_class": "c0", "telemetry_label": "Safe"},
+    {"title": "Vision only", "duration_s": 16, "driver_id": "p026", "vision_class": "c1", "telemetry_label": "Safe"},
+    {"title": "Both", "duration_s": 16, "driver_id": "p035", "vision_class": "c4", "telemetry_label": "Distracted"},
+    {"title": "Recovery", "duration_s": 26, "driver_id": "p026", "vision_class": "c0", "telemetry_label": "Safe"},
+    {"title": "Telemetry only", "duration_s": 16, "driver_id": "p012", "vision_class": "c0", "telemetry_label": "Aggressive"},
+    {"title": "Both", "duration_s": 16, "driver_id": "p035", "vision_class": "c7", "telemetry_label": "Distracted"},
+    {"title": "Recovery", "duration_s": 26, "driver_id": "p050", "vision_class": "c0", "telemetry_label": "Safe"}
+  ]
+}

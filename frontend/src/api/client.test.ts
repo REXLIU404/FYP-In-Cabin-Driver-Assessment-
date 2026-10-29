@@ -388,3 +388,98 @@ describe("an error answer is the backend's only if it carries X-DRA-Backend", ()
     expect(new NotFromBackendError(502).status).toBe(502);
   });
 });
+
+// Task 6 (constructed scenario): the create body follows the selected mode, and the
+// read-only scenario endpoints exist with the shapes the backend serves.
+describe("the create body follows the selected mode and the scenario endpoints (Task 6)", () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  const captureBody = (body: string) => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (_url: string, init: RequestInit) => {
+        captured = init.body as string;
+        return new Response(JSON.stringify({ id: "s-1" }), {
+          status: 201,
+          headers: {
+            "Content-Type": "application/json",
+            "X-DRA-Backend": "1",
+          },
+        });
+      }),
+    );
+    let captured = body;
+    return { body: () => captured };
+  };
+
+  it("a constructed scenario session is created in the new mode, with its description", async () => {
+    const sent = captureBody("");
+    await api.create(
+      { ...DEFAULT_CONFIG, operationMode: "CONSTRUCTED_SCENARIO_RUNTIME" },
+      new AbortController().signal,
+    );
+    expect(JSON.parse(sent.body())).toEqual({
+      operation_mode: "CONSTRUCTED_SCENARIO_RUNTIME",
+      description:
+        "Constructed demo scenario: State Farm test frames + Driver_Behavior test rows through trained models",
+      config: {
+        weight_vision: DEFAULT_CONFIG.weightVision,
+        weight_telemetry: DEFAULT_CONFIG.weightTelemetry,
+        threshold_low: DEFAULT_CONFIG.thresholdLow,
+        threshold_high: DEFAULT_CONFIG.thresholdHigh,
+        ema_alpha: DEFAULT_CONFIG.emaAlpha,
+        freshness_tolerance_s: DEFAULT_CONFIG.freshnessTolerance,
+      },
+    });
+  });
+
+  it("the Live request body is byte-identical to the one before this task", async () => {
+    const sent = captureBody("");
+    await api.create(
+      { ...DEFAULT_CONFIG, operationMode: "LIVE_MODEL_RUNTIME" },
+      new AbortController().signal,
+    );
+    expect(sent.body()).toBe(
+      JSON.stringify({
+        operation_mode: "LIVE_MODEL_RUNTIME",
+        description:
+          "Live camera + prepared raw telemetry through trained models",
+        config: {
+          weight_vision: DEFAULT_CONFIG.weightVision,
+          weight_telemetry: DEFAULT_CONFIG.weightTelemetry,
+          threshold_low: DEFAULT_CONFIG.thresholdLow,
+          threshold_high: DEFAULT_CONFIG.thresholdHigh,
+          ema_alpha: DEFAULT_CONFIG.emaAlpha,
+          freshness_tolerance_s: DEFAULT_CONFIG.freshnessTolerance,
+        },
+      }),
+    );
+  });
+
+  it("scenarios() lists, scenarioManifest(id) fetches the manifest, scenarioFrameUrl builds the frame URL", async () => {
+    const urls: string[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string) => {
+        urls.push(String(url));
+        const body =
+          String(url).endsWith("/manifest") ? { schema: "constructed-scenario/1" } : [{ id: "a" }];
+        return new Response(JSON.stringify(body), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      }),
+    );
+    await expect(api.scenarios()).resolves.toEqual([{ id: "a" }]);
+    await expect(api.scenarioManifest("viva")).resolves.toEqual({
+      schema: "constructed-scenario/1",
+    });
+    expect(api.scenarioFrameUrl("viva", "f 3.jpg")).toBe(
+      "/api/scenarios/viva/frames/f%203.jpg",
+    );
+    expect(urls).toEqual([
+      "/api/scenarios",
+      "/api/scenarios/viva/manifest",
+    ]);
+  });
+});

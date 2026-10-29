@@ -90,13 +90,19 @@ class Server:
                 self.process.wait(timeout=15)
 
 
-def start_server(workdir: Path, *, port: int | None = None, log_name: str = "uvicorn.log") -> Server:
+def start_server(workdir: Path, *, port: int | None = None, log_name: str = "uvicorn.log",
+                 extra_env: dict[str, str] | None = None) -> Server:
     """Start one uvicorn on a throw-away database in ``workdir``.
 
     Called with just a directory it is what the shared ``e2e_server`` fixture always did: a free
     port, a new ``e2e.db``. A restart test (FIX-BACKEND-REACH) calls it a second time with the SAME
     ``workdir`` and ``port`` - and a different ``log_name``, so the first process's log survives -
-    to bring the backend back on the very same database and address."""
+    to bring the backend back on the very same database and address.
+
+    ``extra_env`` (plan Task 8; Task 10A Phase 3 uses the exact same signature) adds variables on
+    top of everything below. It is the CALLER's explicit choice - e.g. a scenario root the test
+    just generated - so the DRA_* rule does not apply to it. Default None: the existing behaviour
+    is unchanged."""
     import httpx
 
     port = _free_port() if port is None else port
@@ -115,6 +121,8 @@ def start_server(workdir: Path, *, port: int | None = None, log_name: str = "uvi
         "DRA_E2E_PORT": str(port),
         "PYTHONDONTWRITEBYTECODE": "1",
     }
+    if extra_env:
+        env.update(extra_env)
     # cwd = the throw-away directory: Settings reads ``.env`` relative to the working directory,
     # and a developer's backend/.env must not be able to redirect the database.
     with log_path.open("wb") as log:

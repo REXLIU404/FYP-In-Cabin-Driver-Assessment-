@@ -1,7 +1,10 @@
 export type RiskLevel = "Low" | "Medium" | "High";
 export type AlertSeverity = "NORMAL" | "CAUTION" | "HIGH_ALERT";
 export type SystemHealth = "FULL" | "DEGRADED" | "UNAVAILABLE";
-export type OperationMode = "PREPARED_SESSION_RUNTIME" | "LIVE_MODEL_RUNTIME";
+export type OperationMode =
+  | "PREPARED_SESSION_RUNTIME"
+  | "LIVE_MODEL_RUNTIME"
+  | "CONSTRUCTED_SCENARIO_RUNTIME";
 /**
  * `stale` is HISTORICAL. Ruling A (D13): the runtime never produces it - evidence
  * older than `freshness_tolerance_s` is EXPIRED and recorded as `missing`, with the
@@ -138,6 +141,20 @@ export interface RiskUpdate {
      */
     telemetry_contribution_method?: string;
     telemetry_contribution_baseline?: number;
+    /**
+     * Constructed scenario only (plan Task 2): the dataset replay's ground-truth block,
+     * stored VERBATIM from the request and never used in any calculation. Fields are
+     * absent when the request omitted them (a frame-less or telemetry-less window).
+     */
+    replay?: {
+      scenario_id?: string;
+      /** 0-based in provenance; the UI shows it 1-based (spec 4.1). */
+      segment_index?: number;
+      frame_file?: string;
+      vision_label?: string;
+      telemetry_row?: number;
+      telemetry_label?: TelemetryBehaviorLabel;
+    };
     fusion_config?: {
       weight_vision: number;
       weight_telemetry: number;

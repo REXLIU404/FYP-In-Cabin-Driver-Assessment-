@@ -5,11 +5,16 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
-import { createLiveLoop } from "../../../ai/src/liveLoop";
+import {
+  createLiveLoop,
+  type TelemetrySource,
+} from "../../../ai/src/liveLoop";
 import { createTimingBuffer } from "../../../ai/src/liveTiming";
+import { isLiveLike } from "../../../ai/src/operationMode";
 import { api, type ModelStatus } from "../api/client";
 import { RETRY_POLICY } from "../api/retryPolicy";
 import { createPreparedTelemetryCursor } from "../data/preparedSessionInput";
+import { createSwitchableTelemetry } from "../data/switchableTelemetry";
 import type { AppConfig, SessionMeta } from "../types";
 import type { CaptureResult } from "./useCameraPreview";
 
@@ -30,17 +35,25 @@ import type { CaptureResult } from "./useCameraPreview";
 export function useLiveSession(
   config: AppConfig,
   captureFrame: () => CaptureResult,
+  /** An optional getter for a mode-dependent telemetry source (plan Task 6). */
+  telemetry?: () => TelemetrySource,
 ) {
   const configRef = useRef(config);
   const captureRef = useRef(captureFrame);
+  const telemetryRef = useRef(telemetry);
   const lastMiss = useRef<string | null>(null);
   useEffect(() => {
     configRef.current = config;
     captureRef.current = captureFrame;
+    telemetryRef.current = telemetry;
   });
 
-  const [loop] = useState(() =>
-    createLiveLoop<ModelStatus>({
+  const [loop] = useState(() => {
+    // One cursor per hook, as before. Without the optional getter the loop reads
+    // this cursor directly through the switchable wrapper - a pure pass-through -
+    // so the behaviour is exactly the one of the two-argument hook.
+    const prepared = createPreparedTelemetryCursor();
+    return createLiveLoop<ModelStatus>({
       api,
       policy: RETRY_POLICY,
       getConfig: () => configRef.current,
@@ -55,7 +68,11 @@ export function useLiveSession(
       // independently of the camera's inference rate. The cursor numbers every
       // sample and stamps it with its logical event time; the loop resets, pauses
       // and resumes it with the session. One cursor per loop, hence per hook.
-      telemetry: createPreparedTelemetryCursor(),
+      // With the optional getter, every call resolves the source AT THAT MOMENT:
+      // switching the data mode swaps the source behind the running loop.
+      telemetry: createSwitchableTelemetry(
+        () => telemetryRef.current?.() ?? prepared,
+      ),
       newRequestId: () => crypto.randomUUID(),
       now: () => Date.now(),
       // Bounded (500 windows) per-window latency: capture -> send -> response -> render.
@@ -65,8 +82,8 @@ export function useLiveSession(
         clearTimeout: (handle) =>
           clearTimeout(handle as ReturnType<typeof setTimeout>),
       },
-    }),
-  );
+    });
+  });
   const live = useSyncExternalStore(loop.subscribe, loop.getState);
 
   // Close the newest window's `renderMs` once React has committed it. A window the
@@ -108,8 +125,10 @@ export function useLiveSession(
     setError(null);
     try {
       setSessions(
+        // The ONE Live-like judgement (rule E): a constructed scenario session
+        // belongs to the same saved list as a Live one.
         (await api.sessions()).filter(
-          (s) => s.operation_mode === "LIVE_MODEL_RUNTIME",
+          (s) => s.operation_mode != null && isLiveLike(s.operation_mode),
         ),
       );
     } catch (err) {

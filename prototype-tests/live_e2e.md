@@ -8,6 +8,17 @@ The automated tests use a **fake camera** (Chromium's `--use-fake-device-for-med
 moving test pattern), the **frozen trained models** and the prepared telemetry replay. They do not
 prove anything about a physical camera, real lighting, a real face or the target hardware.
 
+## Constructed scenario is a demonstration vehicle
+
+The **Constructed scenario** mode plays a prepared scenario (dataset images + telemetry rows
+pinned by `demo/scenarios/*.json`) through the same trained models and backend as Live. It is a
+**demonstration means**: the tests check the demo's engineering only (segments appear, the run
+stops itself, no faults) and record - never assert - hit rates or risk numbers. Report results
+come from Live runs only. The scenario rehearsals live in
+`backend/tests/test_constructed_scenario_e2e.py` (fast, `e2e_short`) and
+`backend/tests/test_constructed_scenario_rehearsal.py` (opt-in `-m long`, full viva_v1); their
+engineering records are in `docs/evidence/`.
+
 ## Running them
 
 ```bash

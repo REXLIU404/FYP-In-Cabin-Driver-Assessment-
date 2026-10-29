@@ -4,7 +4,7 @@ from typing import NamedTuple, Optional, Union
 
 from . import fusion
 from .config import settings
-from .schemas import ModalityFreshness, RiskUpdate, RuntimeConfig, WindowInput
+from .schemas import LIVE_MODE, ModalityFreshness, RiskUpdate, RuntimeConfig, WindowInput, is_live_like
 
 # Alert FSM timing, wall clock. Named constants, but the tests deliberately
 # hard-code 2000 / 10000 and never import these: a changed constant must not drag
@@ -12,7 +12,7 @@ from .schemas import ModalityFreshness, RiskUpdate, RuntimeConfig, WindowInput
 ALERT_SUSTAIN_MS = 2000   # High must persist this long before HIGH_ALERT
 ALERT_RECOVER_MS = 10000  # Low must persist this long before a latched alert clears
 
-# R10 (LIVE_MODEL_RUNTIME only): each of the High and the Low segment keeps four more values -
+# R10 (Live-like modes only): each of the High and the Low segment keeps four more values -
 # ``srv`` the server time of the segment's first supported window, ``src`` / ``end`` the first
 # and the newest ACQUISITION time of the NEW supporting observations, and ``contrib`` the
 # modality that supplied ``end`` - in integer microseconds, so no comparison is ever made on a
@@ -68,7 +68,6 @@ OBSERVATION_REGISTRY_KEYS = (
     "obs_t_contrib_meta", "obs_v_epoch", "obs_v_index", "obs_v_ts", "obs_v_hash", "obs_v_raw", "obs_v_p", "obs_v_classes",
 )
 
-LIVE_MODE = "LIVE_MODEL_RUNTIME"
 _EPOCH = datetime(1970, 1, 1, tzinfo=timezone.utc)
 _ONE_US = timedelta(microseconds=1)
 
@@ -277,7 +276,7 @@ def _advance_segment(state: dict, segment: str, level: str, threshold_ms: int, n
 
 def _step_alert_fsm_live(state: dict, level: Optional[str], now_ms: float, now_us: int,
                          signals: dict, config: RuntimeConfig) -> Optional[str]:
-    """The LIVE_MODEL_RUNTIME alert FSM (R10): what ``_step_alert_fsm`` does, except that a
+    """The Live-like alert FSM (R10): what ``_step_alert_fsm`` does, except that a
     High (Low) segment ends in HIGH_ALERT (NORMAL) only when BOTH the server clock and the
     SOURCE time of new supporting evidence have covered the threshold - see ``_advance_segment``.
     The 2000 / 10000 ms thresholds are unchanged. Everything else is the Task 5 contract:
@@ -321,9 +320,10 @@ def _stored_classes(state: dict, key: str) -> list:
 def run_inference(session_id: str, window_id: int, w: WindowInput, *, state=None,
                   config=None, provenance=None, operation_mode="PREPARED_SESSION_RUNTIME", now=None,
                   observations: Optional[Observations] = None) -> RiskUpdate:
-    """Fuse one window. ``operation_mode`` picks the alert FSM: ``LIVE_MODEL_RUNTIME`` runs the
-    R10 one (observation identity, canonical acquisition time, NEW-only EMA, wall clock AND
-    source span) and then REQUIRES ``observations``, the per-branch verdict that
+    """Fuse one window. ``operation_mode`` picks the alert FSM: a Live-like mode
+    (``LIVE_MODEL_RUNTIME`` or ``CONSTRUCTED_SCENARIO_RUNTIME``, see ``schemas.is_live_like``)
+    runs the R10 one (observation identity, canonical acquisition time, NEW-only EMA, wall clock
+    AND source span) and then REQUIRES ``observations``, the per-branch verdict that
     ``routers/windows.py`` reached under the write lock; any other mode keeps the wall-clock FSM
     unchanged, window for window, and ignores ``observations``."""
     state = state if state is not None else {}
@@ -331,9 +331,9 @@ def run_inference(session_id: str, window_id: int, w: WindowInput, *, state=None
     now = now or datetime.now(timezone.utc)
     now_ms = now.timestamp() * 1000
     provenance = dict(provenance or {"provider": "MockAIProvider", "vision_source": "prepared_replay", "telemetry_source": "prepared_replay"})
-    live = operation_mode == LIVE_MODE
+    live = is_live_like(operation_mode)
     if live and observations is None:
-        raise ValueError("LIVE_MODEL_RUNTIME needs the observation verdicts of the request")
+        raise ValueError("a Live-like mode needs the observation verdicts of the request")
     v_obs = observations.vision if live else None
     t_obs = observations.telemetry if live else None
     # All temporal bookkeeping happens on a scratch copy and is committed only after

@@ -3,14 +3,16 @@ import { BranchStatusPill } from "../components/BranchStatusPill";
 import { CameraPreview } from "../components/CameraPreview";
 import { ModalityCard } from "../components/ModalityCard";
 import { Pill } from "../components/Pill";
+import { ScenarioPlayer } from "../components/ScenarioPlayer";
 import { ScoreGauge } from "../components/ScoreGauge";
 import { VehicleDynamics } from "../components/VehicleDynamics";
 import { TrendChart } from "../components/TrendChart";
 import type { useCameraPreview } from "../hooks/useCameraPreview";
-import type { RiskUpdate } from "../types";
+import type { OperationMode, RiskUpdate } from "../types";
 import { alertHoldNote } from "../utils/display";
 import { formatTimestamp } from "../utils/format";
 import { buildLiveMonitorModel } from "./liveMonitorModel";
+import type { ScenarioPlayerModel } from "./scenarioPlayerModel";
 
 interface LiveMonitorProps {
   latest: RiskUpdate;
@@ -25,7 +27,13 @@ interface LiveMonitorProps {
   thresholdHigh: number;
   stale?: boolean;
   /** Which data mode the record came from: the latency row must not claim a server ran (review R26). */
-  mode?: "LIVE_MODEL_RUNTIME" | "PREPARED_SESSION_RUNTIME";
+  mode?: OperationMode;
+  /** Constructed scenario player data: renders instead of the camera preview. */
+  scenario?: {
+    model: ScenarioPlayerModel;
+    frameSrc: string | null;
+    finishedText: string | null;
+  };
 }
 
 export function LiveMonitor({
@@ -40,6 +48,7 @@ export function LiveMonitor({
   thresholdHigh,
   stale = false,
   mode = "LIVE_MODEL_RUNTIME",
+  scenario,
 }: LiveMonitorProps) {
   // Everything below is the record's OWN value (see liveMonitorModel.ts): `stale`
   // describes the record's age and must not rewrite what the record says.
@@ -95,12 +104,20 @@ export function LiveMonitor({
         </div>
 
         <div className="live-layout">
-          <CameraPreview
-            videoRef={camera.videoRef}
-            status={camera.status}
-            onStart={camera.start}
-            onStop={camera.stop}
-          />
+          {scenario ? (
+            <ScenarioPlayer
+              model={scenario.model}
+              frameSrc={scenario.frameSrc}
+              finishedText={scenario.finishedText}
+            />
+          ) : (
+            <CameraPreview
+              videoRef={camera.videoRef}
+              status={camera.status}
+              onStart={camera.start}
+              onStop={camera.stop}
+            />
+          )}
 
           <div className="risk-summary">
             {displayState === "unavailable" ? (
@@ -173,7 +190,17 @@ export function LiveMonitor({
         <div className="section-header">
           <div>
             <p className="eyebrow">Vehicle Signals</p>
-            <h2>Prepared telemetry replay</h2>
+            <h2>
+              {mode === "CONSTRUCTED_SCENARIO_RUNTIME"
+                ? "Scenario telemetry"
+                : "Prepared telemetry replay"}
+            </h2>
+            {mode === "CONSTRUCTED_SCENARIO_RUNTIME" && (
+              <p>
+                Truth:{" "}
+                {latest.provenance?.replay?.telemetry_label ?? "unknown"}
+              </p>
+            )}
             <p>
               Recorded scenario features, not live vehicle sensors. Values below
               belong to the latest saved window.

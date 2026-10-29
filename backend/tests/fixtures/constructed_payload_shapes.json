@@ -1,0 +1,70 @@
+{
+  "frame_and_telemetry": {
+    "request_id": "constructed-frame-telemetry",
+    "image_base64": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAwAEADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwCCiiivdPFCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA//2Q==",
+    "captured_at": "2025-01-01T11:59:59.970Z",
+    "captured_at_source": "replay_clock",
+    "vision_frame": { "epoch": 1735732800000, "index": 3 },
+    "telemetry_features": {
+      "speed_kmph": 34,
+      "accel_x": 0.3,
+      "accel_y": 0.1,
+      "brake_pressure": 12,
+      "steering_angle": -2,
+      "throttle": 30,
+      "lane_deviation": 0.3,
+      "headway_distance": 26
+    },
+    "telemetry_timestamp": "2025-01-01T12:00:00.000Z",
+    "telemetry_seq": 0,
+    "telemetry_source": "prepared_replay",
+    "replay": {
+      "scenario_id": "viva_v1",
+      "segment_index": 0,
+      "frame_file": "0003_img_3.jpg",
+      "vision_label": "safe_driving",
+      "telemetry_row": 0,
+      "telemetry_label": "Safe"
+    }
+  },
+  "no_frame": {
+    "request_id": "constructed-no-frame",
+    "image_base64": null,
+    "captured_at": null,
+    "telemetry_features": {
+      "speed_kmph": 34,
+      "accel_x": 0.3,
+      "accel_y": 0.1,
+      "brake_pressure": 12,
+      "steering_angle": -2,
+      "throttle": 30,
+      "lane_deviation": 0.3,
+      "headway_distance": 26
+    },
+    "telemetry_timestamp": "2025-01-01T12:00:02.000Z",
+    "telemetry_seq": 1,
+    "telemetry_source": "prepared_replay",
+    "replay": {
+      "scenario_id": "viva_v1",
+      "segment_index": 2,
+      "telemetry_row": 1,
+      "telemetry_label": "Aggressive"
+    }
+  },
+  "no_telemetry": {
+    "request_id": "constructed-no-telemetry",
+    "image_base64": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAwAEADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwB9FFFe6eKFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB//2Q==",
+    "captured_at": "2025-01-01T11:59:59.980Z",
+    "captured_at_source": "replay_clock",
+    "vision_frame": { "epoch": 1735732800000, "index": 4 },
+    "telemetry_features": null,
+    "telemetry_timestamp": null,
+    "telemetry_source": "missing",
+    "replay": {
+      "scenario_id": "viva_v1",
+      "segment_index": 1,
+      "frame_file": "0004_img_4.jpg",
+      "vision_label": "texting_right"
+    }
+  }
+}

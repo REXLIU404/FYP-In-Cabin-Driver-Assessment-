@@ -4,6 +4,7 @@ import {
   type StoredRiskUpdate,
 } from "../../../ai/src/availability";
 import type { LivePayload } from "../../../ai/src/liveLoop";
+import type { ScenarioManifest } from "../../../ai/src/scenarioTimeline";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "";
 export class ApiError extends Error {
@@ -117,6 +118,17 @@ export interface ModelStatus {
   scope: string;
 }
 export type { LivePayload };
+
+/** One entry of `GET /api/scenarios` (Task 4): provenance plus an integrity verdict. */
+export interface ScenarioListItem {
+  id: string;
+  segments: number;
+  duration_ms: number;
+  generated_at: string | null;
+  status: string;
+  error: string | null;
+}
+
 const asRecords = (raw: StoredRiskUpdate[]) =>
   raw.map((record) => normalizeRiskUpdate(record));
 
@@ -127,9 +139,11 @@ export const api = {
       method: "POST",
       signal,
       body: JSON.stringify({
-        operation_mode: "LIVE_MODEL_RUNTIME",
+        operation_mode: config.operationMode,
         description:
-          "Live camera + prepared raw telemetry through trained models",
+          config.operationMode === "CONSTRUCTED_SCENARIO_RUNTIME"
+            ? "Constructed demo scenario: State Farm test frames + Driver_Behavior test rows through trained models"
+            : "Live camera + prepared raw telemetry through trained models",
         config: {
           weight_vision: config.weightVision,
           weight_telemetry: config.weightTelemetry,
@@ -140,6 +154,16 @@ export const api = {
         },
       }),
     }),
+  /** The read-only scenario bundle API (Task 4). */
+  scenarios: (signal?: AbortSignal) =>
+    request<ScenarioListItem[]>("/scenarios", { signal }),
+  scenarioManifest: (id: string, signal?: AbortSignal) =>
+    request<ScenarioManifest>(
+      `/scenarios/${encodeURIComponent(id)}/manifest`,
+      { signal },
+    ),
+  scenarioFrameUrl: (id: string, file: string) =>
+    `${API_BASE}/api/scenarios/${encodeURIComponent(id)}/frames/${encodeURIComponent(file)}`,
   /**
    * `attemptIndex` is 1 for the first delivery of a logical request and counts up
    * with every redelivery, automatic or manual. It travels as a header, NOT in the

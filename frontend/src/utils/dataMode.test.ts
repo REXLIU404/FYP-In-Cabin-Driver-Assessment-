@@ -3,24 +3,32 @@ import { describe, expect, it } from "vitest";
 import appSource from "../App.tsx?raw";
 import { DATA_MODE_NOTE, DATA_MODE_OPTIONS } from "./dataMode";
 
-// Task 9 / K4: the replay is legacy and test-only, and the page says so where the
-// choice is made. These pin the words the reader sees.
-describe("Data mode: the prepared replay is labelled legacy / test-only", () => {
+// Task 9 / K4 + Task 7: the replay is legacy and test-only, and the page says so where
+// the choice is made; the constructed scenario (plan Task 7) REPLACES the replay in the
+// selector. These pin the words the reader sees.
+describe("Data mode: the choices and their labels", () => {
   const option = (value: string) =>
     DATA_MODE_OPTIONS.find((o) => o.value === value);
 
-  it("offers exactly Live and the replay, Live first", () => {
+  it("offers exactly Live and the constructed scenario, Live first", () => {
     expect(DATA_MODE_OPTIONS.map((o) => o.value)).toEqual([
       "LIVE_MODEL_RUNTIME",
-      "PREPARED_SESSION_RUNTIME",
+      "CONSTRUCTED_SCENARIO_RUNTIME",
     ]);
   });
 
-  it("the options carry the exact labels the reader sees: legacy and test-only on the replay only", () => {
-    expect(option("PREPARED_SESSION_RUNTIME")?.label).toBe(
-      "Prepared replay (legacy, test-only)",
+  it("the options carry the exact labels the reader sees; the legacy replay is no longer listed", () => {
+    expect(option("LIVE_MODEL_RUNTIME")?.label).toBe(
+      "Live camera (trained models)",
     );
-    expect(option("LIVE_MODEL_RUNTIME")?.label).toBe("Live trained models");
+    expect(option("CONSTRUCTED_SCENARIO_RUNTIME")?.label).toBe(
+      "Constructed demo scenario",
+    );
+    expect(option("PREPARED_SESSION_RUNTIME")).toBeUndefined();
+  });
+
+  it("the constructed scenario shows no mode note (the player banner says 'not live')", () => {
+    expect(DATA_MODE_NOTE.CONSTRUCTED_SCENARIO_RUNTIME).toBe("");
   });
 
   it("the replay note says it is not the Live system, and that a reload goes back to Live", () => {

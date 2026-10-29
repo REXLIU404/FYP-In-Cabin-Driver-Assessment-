@@ -369,9 +369,15 @@ describe("scope guard: the Live path does not use the prepared-probability repla
 
   it("the telemetry injection point (the hook) takes its rows from the raw source", () => {
     // Positive check, so the guard above cannot pass because the source was deleted
-    // or the telemetry was re-pointed at something else.
-    expect(strip(useLiveSessionSource)).toMatch(
-      /telemetry:\s*createPreparedTelemetryCursor\(\s*\)/,
+    // or the telemetry was re-pointed at something else. Since Task 6 the cursor is
+    // wrapped in a switchable source (plan Task 6), but the fallback the loop
+    // actually reads without an override is still that one raw cursor.
+    const code = strip(useLiveSessionSource);
+    expect(code).toMatch(
+      /const\s+prepared\s*=\s*createPreparedTelemetryCursor\(\s*\)/,
+    );
+    expect(code).toMatch(
+      /telemetry:\s*createSwitchableTelemetry\(\s*\(\)\s*=>\s*telemetryRef\.current\?\.\(\)\s*\?\?\s*prepared/,
     );
   });
 

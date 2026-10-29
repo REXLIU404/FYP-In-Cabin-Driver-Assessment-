@@ -116,13 +116,15 @@ def body(rid, *, image=None, captured=0, frame=None, source=None, features=None,
 
 
 class Driver:
-    """One live session, one stub, the test clock. ``send`` moves the clock to ``ms`` and posts."""
+    """One Live-like session, one stub, the test clock. ``send`` moves the clock to ``ms`` and
+    posts. ``mode`` is one of the Live-like modes (the ``drive`` fixture parametrizes it)."""
 
-    def __init__(self, client, clock, monkeypatch, sid, **config):
+    def __init__(self, client, clock, monkeypatch, sid, mode, **config):
         from app.providers import trained
         self.client, self.clock, self.sid, self.stub = client, clock, sid, ProbStub()
+        self.mode = mode  # the parametrized mode, for the one mode-dependent assertion (A6 CSV)
         monkeypatch.setattr(trained, "get_provider", lambda: self.stub)
-        created = client.post("/api/sessions", json={"session_id": sid, "operation_mode": "LIVE_MODEL_RUNTIME",
+        created = client.post("/api/sessions", json={"session_id": sid, "operation_mode": mode,
                                                      "config": {"ema_alpha": 1, **config}})
         assert created.status_code == 201, created.text
 
@@ -137,13 +139,13 @@ class Driver:
         return response.json()
 
 
-@pytest.fixture
-def drive(api, fake_clock, monkeypatch):
+@pytest.fixture(params=["LIVE_MODEL_RUNTIME", "CONSTRUCTED_SCENARIO_RUNTIME"])
+def drive(api, fake_clock, monkeypatch, request):
     client, _ = api
     counter = iter(range(10_000))
 
     def make(sid=None, **config):
-        return Driver(client, fake_clock, monkeypatch, sid or f"live-{next(counter)}", **config)
+        return Driver(client, fake_clock, monkeypatch, sid or f"live-{next(counter)}", request.param, **config)
     make.client = client
     return make
 
@@ -677,7 +679,11 @@ def test_a6_the_new_provenance_survives_the_stored_record_and_both_exports(drive
     in_csv = json.loads(row["provenance"])
     assert (in_csv["vision_obs"], in_csv["telemetry_seq"], in_csv["vision_frame_id"], in_csv["captured_at_source"]) == (
         "new", 3, "0:1", "callback")
-    assert row["telemetry_source"] == "prepared_replay"  # the existing column is not shadowed by a new key
+    # The existing column is not shadowed by a new key. In a constructed scenario session the
+    # SERVER overwrites the label with dataset_replay (spec 4.1); a live session keeps the
+    # client's prepared_replay.
+    assert row["telemetry_source"] == ("dataset_replay" if d.mode == "CONSTRUCTED_SCENARIO_RUNTIME"
+                                       else "prepared_replay")
 
 
 # ===================================================================== A7. the fault category
