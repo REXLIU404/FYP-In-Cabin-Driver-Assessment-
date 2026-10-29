@@ -20,7 +20,11 @@ import { useLiveSession } from "./hooks/useLiveSession";
 import { useSessionLog } from "./hooks/useSessionLog";
 import { scenarioCapture, useScenarioReplay } from "./hooks/useScenarioReplay";
 import type { AppConfig } from "./types";
-import { DATA_MODE_NOTE, DATA_MODE_OPTIONS } from "./utils/dataMode";
+import {
+  DATA_MODE_NOTE,
+  DATA_MODE_OPTIONS,
+  offersSavedLiveSessions,
+} from "./utils/dataMode";
 import { runtimeStaleNoticeShown } from "./utils/display";
 import { describeSelection, selectRecord } from "./utils/selection";
 import { describeVisionModel } from "./utils/modelInfo";
@@ -304,7 +308,7 @@ export default function App() {
                 ))}
               </select>
             </label>
-            {isLiveLikeMode && (
+            {offersSavedLiveSessions(config.operationMode) && (
               <>
                 <button
                   className="button"

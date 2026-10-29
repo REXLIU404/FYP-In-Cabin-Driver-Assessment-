@@ -92,6 +92,12 @@ def select_constructed_scenario(chrome: Chrome) -> None:
         "Start Monitoring to be enabled (frames preloaded)", 120)
 
 
+def saved_session_controls(page) -> tuple[int, int]:
+    """How many 'Refresh saved sessions' buttons and 'Saved live sessions' pickers are on the page."""
+    return (page.get_by_role("button", name="Refresh saved sessions", exact=True).count(),
+            page.locator('select[aria-label="Saved live sessions"]').count())
+
+
 def test_the_mode_is_offered_and_the_scenario_loads(pw, scenario_server):
     chrome = Chrome(pw, scenario_server, FAKE_CAMERA_ARGS)
     try:
@@ -99,7 +105,10 @@ def test_the_mode_is_offered_and_the_scenario_loads(pw, scenario_server):
         page = chrome.page
         labels = page.locator('select[aria-label="Data mode"] option').all_text_contents()
         assert labels == ["Live camera (trained models)", "Constructed demo scenario"]
+        # The saved-session picker belongs to Live: shown there, gone in the scenario.
+        assert saved_session_controls(page) == (1, 1)
         select_constructed_scenario(chrome)
+        assert saved_session_controls(page) == (0, 0)
         option = page.locator('select[aria-label="Scenario"] option[value="e2e_short"]')
         assert page.locator('select[aria-label="Scenario"]').input_value() == "e2e_short"
         assert option.inner_text() == "e2e_short · 12 s · 3 segments"
@@ -221,6 +230,33 @@ def test_a_long_pause_does_not_expire_the_evidence(pw, scenario_server):
         # first window after resume is fresh on both branches despite the 4 s gap.
         assert first.response["modality_freshness"] == {"vision": "fresh", "telemetry": "fresh"}
         chrome.top_button("Pause").click()
+    finally:
+        chrome.close()
+
+
+def test_the_live_saved_list_offers_no_scenario_session(pw, scenario_server):
+    """A scenario run loaded under Live would open without the CONSTRUCTED SCENARIO marker,
+    so the Live list holds Live sessions only. Both sessions are created through the API."""
+    from e2e_support import api_client
+
+    with api_client(scenario_server) as client:
+        ids = {}
+        for mode in ("LIVE_MODEL_RUNTIME", "CONSTRUCTED_SCENARIO_RUNTIME"):
+            response = client.post("/api/sessions", json={"operation_mode": mode})
+            assert response.status_code in (200, 201), response.text
+            ids[mode] = response.json()["id"]
+    chrome = Chrome(pw, scenario_server, FAKE_CAMERA_ARGS)
+    try:
+        chrome.open()
+        page = chrome.page
+        assert page.locator('select[aria-label="Data mode"]').input_value() == "LIVE_MODEL_RUNTIME"
+        page.get_by_role("button", name="Refresh saved sessions", exact=True).click()
+        picker = 'select[aria-label="Saved live sessions"]'
+        chrome.wait_until(
+            lambda: page.locator(f'{picker} option[value="{ids["LIVE_MODEL_RUNTIME"]}"]').count() == 1,
+            "the Live session in the saved list", 15)
+        scenario_id = ids["CONSTRUCTED_SCENARIO_RUNTIME"]
+        assert page.locator(f'{picker} option[value="{scenario_id}"]').count() == 0
     finally:
         chrome.close()
 

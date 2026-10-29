@@ -10,12 +10,12 @@ import {
   type TelemetrySource,
 } from "../../../ai/src/liveLoop";
 import { createTimingBuffer } from "../../../ai/src/liveTiming";
-import { isLiveLike } from "../../../ai/src/operationMode";
 import { api, type ModelStatus } from "../api/client";
 import { RETRY_POLICY } from "../api/retryPolicy";
 import { createPreparedTelemetryCursor } from "../data/preparedSessionInput";
 import { createSwitchableTelemetry } from "../data/switchableTelemetry";
 import type { AppConfig, SessionMeta } from "../types";
+import { isSavedLiveSession } from "../utils/dataMode";
 import type { CaptureResult } from "./useCameraPreview";
 
 /**
@@ -124,13 +124,8 @@ export function useLiveSession(
   const refreshSessions = useCallback(async () => {
     setError(null);
     try {
-      setSessions(
-        // The ONE Live-like judgement (rule E): a constructed scenario session
-        // belongs to the same saved list as a Live one.
-        (await api.sessions()).filter(
-          (s) => s.operation_mode != null && isLiveLike(s.operation_mode),
-        ),
-      );
+      // The "Saved live sessions" list holds Live sessions only (utils/dataMode.ts).
+      setSessions((await api.sessions()).filter(isSavedLiveSession));
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Cannot load saved sessions",

@@ -1,4 +1,4 @@
-import type { OperationMode } from "../types";
+import type { OperationMode, SessionMeta } from "../types";
 
 /**
  * The one source of the mode's user-facing name (rule: all interface copy reads
@@ -22,6 +22,21 @@ export const DATA_MODE_OPTIONS: ReadonlyArray<{
   { value: "LIVE_MODEL_RUNTIME", label: "Live camera (trained models)" },
   { value: "CONSTRUCTED_SCENARIO_RUNTIME", label: CONSTRUCTED_MODE_LABEL },
 ];
+
+/**
+ * The saved-session picker ("Saved live sessions") belongs to Live only. The constructed
+ * scenario is a demo aid, not a monitoring record: its controls offer no saved sessions,
+ * and its runs are not listed among the Live ones either, where a loaded run would open
+ * without the CONSTRUCTED SCENARIO marker. This is a different question from
+ * `isLiveLike` (which modes run the Live loop), so it does not use it.
+ */
+export const offersSavedLiveSessions = (mode: OperationMode): boolean =>
+  mode === "LIVE_MODEL_RUNTIME";
+
+/** Which server sessions the Live picker lists: Live ones, never an unlabelled one. */
+export const isSavedLiveSession = (session: SessionMeta): boolean =>
+  session.operation_mode != null &&
+  offersSavedLiveSessions(session.operation_mode);
 
 /** The sentence under the controls for each mode. */
 export const DATA_MODE_NOTE: Record<OperationMode, string> = {

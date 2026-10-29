@@ -1,7 +1,15 @@
 import { describe, expect, it } from "vitest";
 
+import type { SessionMeta } from "../types";
+
 import appSource from "../App.tsx?raw";
-import { DATA_MODE_NOTE, DATA_MODE_OPTIONS } from "./dataMode";
+import liveSessionSource from "../hooks/useLiveSession.ts?raw";
+import {
+  DATA_MODE_NOTE,
+  DATA_MODE_OPTIONS,
+  isSavedLiveSession,
+  offersSavedLiveSessions,
+} from "./dataMode";
 
 // Task 9 / K4 + Task 7: the replay is legacy and test-only, and the page says so where
 // the choice is made; the constructed scenario (plan Task 7) REPLACES the replay in the
@@ -53,6 +61,43 @@ describe("Data mode: the choices and their labels", () => {
     expect(DATA_MODE_NOTE.LIVE_MODEL_RUNTIME).toMatch(/trained vision model/);
     expect(DATA_MODE_NOTE.LIVE_MODEL_RUNTIME).not.toMatch(/MobileNet|ResNet/i);
     expect(DATA_MODE_NOTE.LIVE_MODEL_RUNTIME).toMatch(/XGBoost/);
+  });
+});
+
+// The saved-session picker belongs to Live: the constructed scenario is a demo aid, so its
+// controls offer no saved sessions, and its runs are not listed as Live sessions either
+// (one loaded under Live would open without the CONSTRUCTED SCENARIO marker).
+describe("Data mode: saved sessions are Live-only", () => {
+  it("only Live offers the saved-session picker", () => {
+    expect(offersSavedLiveSessions("LIVE_MODEL_RUNTIME")).toBe(true);
+    expect(offersSavedLiveSessions("CONSTRUCTED_SCENARIO_RUNTIME")).toBe(false);
+    expect(offersSavedLiveSessions("PREPARED_SESSION_RUNTIME")).toBe(false);
+  });
+
+  it("the saved list keeps Live sessions and drops scenario, replay and unlabelled ones", () => {
+    const meta = (operation_mode?: SessionMeta["operation_mode"]) => ({
+      id: "s",
+      created_at: "2026-10-29T00:00:00Z",
+      total_windows: 1,
+      operation_mode,
+    });
+    expect(isSavedLiveSession(meta("LIVE_MODEL_RUNTIME"))).toBe(true);
+    expect(isSavedLiveSession(meta("CONSTRUCTED_SCENARIO_RUNTIME"))).toBe(false);
+    expect(isSavedLiveSession(meta("PREPARED_SESSION_RUNTIME"))).toBe(false);
+    expect(isSavedLiveSession(meta(undefined))).toBe(false);
+  });
+
+  // Source guards: the page and the hook use these two rules, not a private copy.
+  it("App shows the picker and its refresh button under offersSavedLiveSessions", () => {
+    expect(appSource).toMatch(
+      /offersSavedLiveSessions\(config\.operationMode\) && \(\s*<>\s*<button[\s\S]*?Refresh saved sessions[\s\S]*?aria-label="Saved live sessions"/,
+    );
+  });
+
+  it("refreshSessions filters the server list with isSavedLiveSession", () => {
+    expect(liveSessionSource).toMatch(
+      /\(await api\.sessions\(\)\)\.filter\(isSavedLiveSession\)/,
+    );
   });
 });
 
