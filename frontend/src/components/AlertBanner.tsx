@@ -28,8 +28,11 @@ export function AlertBanner({ latest, stale = false }: AlertBannerProps) {
           </span>
         </div>
         <div className="banner-pills">
-          <span className="badge-field">
-            <span>System health</span>
+          <span
+            className="badge-field"
+            title="Runtime health: FULL, DEGRADED or UNAVAILABLE."
+          >
+            <span>SystemHealth</span>
             <Pill label={latest.SystemHealth} tone={latest.SystemHealth} />
           </span>
         </div>
@@ -75,12 +78,18 @@ export function AlertBanner({ latest, stale = false }: AlertBannerProps) {
         </span>
       </div>
       <div className="banner-pills">
-        <span className="badge-field">
-          <span>Alert</span>
+        <span
+          className="badge-field"
+          title="Alert state: NORMAL, CAUTION or HIGH_ALERT."
+        >
+          <span>AlertSeverity</span>
           <Pill label={severity} tone={severity} />
         </span>
-        <span className="badge-field">
-          <span>System health</span>
+        <span
+          className="badge-field"
+          title="Runtime health: FULL, DEGRADED or UNAVAILABLE."
+        >
+          <span>SystemHealth</span>
           <Pill label={latest.SystemHealth} tone={latest.SystemHealth} />
         </span>
       </div>

@@ -147,16 +147,25 @@ export function LiveMonitor({
                   thresholdHigh={thresholdHigh}
                 />
                 <div className="risk-badges">
-                  <span className="badge-field">
-                    <span>Risk level</span>
+                  <span
+                    className="badge-field"
+                    title="Fused risk level: Low, Medium or High."
+                  >
+                    <span>RiskLevel</span>
                     <Pill label={latest.RiskLevel} tone={latest.RiskLevel} />
                   </span>
-                  <span className="badge-field">
-                    <span>Evidence</span>
+                  <span
+                    className="badge-field"
+                    title="Which branch dominates the fused assessment."
+                  >
+                    <span>DominantEvidence</span>
                     <Pill label={evidenceType} />
                   </span>
-                  <span className="badge-field">
-                    <span>Alert</span>
+                  <span
+                    className="badge-field"
+                    title="Alert state: NORMAL, CAUTION or HIGH_ALERT."
+                  >
+                    <span>AlertSeverity</span>
                     <Pill
                       label={latest.AlertSeverity}
                       tone={latest.AlertSeverity}
@@ -220,8 +229,8 @@ export function LiveMonitor({
           <Timer size={20} />
         </div>
         <div className="stat-list stat-list--compact">
-          <div>
-            <span>System health</span>
+          <div title="Runtime health: FULL, DEGRADED or UNAVAILABLE.">
+            <span>SystemHealth</span>
             <Pill label={systemHealth} tone={systemHealth} />
           </div>
           <div>

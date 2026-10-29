@@ -457,6 +457,7 @@ export default function App() {
           <SelectionBar
             windowId={selection.windowId}
             pinned={selection.pinned}
+            isMonitoring={monitoring}
             onFollowLatest={() => setSelectedWindowId(null)}
           />
         ) : null}

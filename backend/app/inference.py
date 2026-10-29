@@ -358,6 +358,11 @@ def run_inference(session_id: str, window_id: int, w: WindowInput, *, state=None
             # The method and baseline that explain the registered contributions travel with them, so
             # contributions + baseline still sum to the registered margin. Absent (a session registered
             # before they were kept): the model's own answer for the same bytes stays, as above.
+            # R31: this comment only, no logic change (user decision). A legacy session keeps the
+            # registered method/baseline instead of losing them. The XGB telemetry model is
+            # deterministic for the same bytes and Task 10A only switches the vision model, so what
+            # the current model reports for those bytes equals the registered values; stripping
+            # them would only turn those windows' contribution cards into "unavailable".
             if stored is not None and "obs_t_contrib_meta" in scratch:
                 meta = scratch["obs_t_contrib_meta"]
                 provenance.pop("telemetry_contribution_method", None)

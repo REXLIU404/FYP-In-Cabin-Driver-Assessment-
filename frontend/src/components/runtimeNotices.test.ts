@@ -504,3 +504,24 @@ describe("App wiring of the stop panel and the camera notices (source guard)", (
     expect(replay![1]).not.toContain("setSelectedWindowId");
   });
 });
+
+// Review R7/R10/R28 and R26: the helper exists and the prop exists, but nothing pinned App's
+// own wiring of them, so deleting either line left every gate test green. These two source
+// guards fail when the wiring is removed (verified by mutation while writing them).
+describe("App wiring of the stale notice and the Live Monitor mode (source guard)", () => {
+  const code = appSource
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/(^|[^:])\/\/.*$/gm, "$1");
+
+  it("the stale notice is gated by runtimeStaleNoticeShown(activeView, latest, live.stale)", () => {
+    expect(code).toMatch(
+      /runtimeStaleNoticeShown\(\s*activeView,\s*latest,\s*live\.stale\s*\)/,
+    );
+  });
+
+  it("the Live Monitor is given the session's operation mode", () => {
+    expect(code).toMatch(
+      /<LiveMonitor[\s\S]*?\bmode=\{config\.operationMode\}/,
+    );
+  });
+});

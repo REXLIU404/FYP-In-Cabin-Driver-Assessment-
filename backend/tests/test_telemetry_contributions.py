@@ -24,6 +24,7 @@ implementation to build one.
 """
 import hashlib
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -264,6 +265,20 @@ def test_a_repeat_whose_registered_meta_is_none_leaves_the_provenance_clean(driv
     assert again["telemetry_feature_contributions"] == []
     assert "telemetry_contribution_method" not in again["provenance"]
     assert "telemetry_contribution_baseline" not in again["provenance"]
+
+
+def test_the_code_says_why_a_legacy_repeat_keeps_method_and_baseline():
+    """Review R31 (user decision: a comment, no logic change): the legacy state keeps the
+    registered method/baseline, and the reason must live next to the code. The XGB telemetry
+    model is deterministic for the same bytes, Task 10A only switches the vision model, so the
+    values shown equal the registered ones - stripping them would only turn those windows'
+    contribution cards into 'unavailable'."""
+    source = (Path(__file__).resolve().parents[1] / "app" / "inference.py").read_text()
+    comment = re.search(r"# R31:.*(?:\n\s*#[^\n]*){0,6}", source)
+    assert comment, "the R31 rationale comment is missing from app/inference.py"
+    text = comment.group(0)
+    for phrase in ("deterministic", "Task 10A", "vision"):
+        assert phrase in text, (phrase, text)
 
 
 def test_expired_and_telemetry_less_windows_follow_the_rule_the_class_breakdown_has(drive):

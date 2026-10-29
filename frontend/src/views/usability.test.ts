@@ -17,6 +17,7 @@ import { makeRecord } from "../testing/records";
 import type { AppConfig, RiskUpdate } from "../types";
 import { DEFAULT_CONFIG } from "../../../ai/src/riskLogic";
 import { ConfigurationView } from "./ConfigurationView";
+import { ExplanationView } from "./ExplanationView";
 import { LiveMonitor } from "./LiveMonitor";
 import { RiskTrends } from "./RiskTrends";
 import { SignalInspector } from "./SignalInspector";
@@ -70,9 +71,9 @@ describe("Live Monitor: every status chip says what it is", () => {
         DominantEvidence: "Combined evidence",
       }),
     );
-    expect(pillsAfter(html, "Risk level")).toEqual(["Medium:Medium"]);
-    expect(pillsAfter(html, "Evidence")).toEqual(["neutral:Combined evidence"]);
-    expect(pillsAfter(html, "Alert")).toEqual(["CAUTION:CAUTION"]);
+    expect(pillsAfter(html, "RiskLevel")).toEqual(["Medium:Medium"]);
+    expect(pillsAfter(html, "DominantEvidence")).toEqual(["neutral:Combined evidence"]);
+    expect(pillsAfter(html, "AlertSeverity")).toEqual(["CAUTION:CAUTION"]);
   });
 
   it("the banner labels its alert and system-health pills", () => {
@@ -84,18 +85,74 @@ describe("Live Monitor: every status chip says what it is", () => {
         }),
       }),
     );
-    expect(pillsAfter(html, "Alert")).toEqual(["HIGH_ALERT:HIGH_ALERT"]);
-    expect(pillsAfter(html, "System health")).toEqual(["DEGRADED:DEGRADED"]);
+    expect(pillsAfter(html, "AlertSeverity")).toEqual(["HIGH_ALERT:HIGH_ALERT"]);
+    expect(pillsAfter(html, "SystemHealth")).toEqual(["DEGRADED:DEGRADED"]);
   });
 
   it("the unavailable banner labels its system-health pill too (review R2)", () => {
     const html = markup(
       createElement(AlertBanner, { latest: expiryRecords.bothExpired() }),
     );
-    expect(pillsAfter(html, "System health")).toEqual([
+    expect(pillsAfter(html, "SystemHealth")).toEqual([
       "UNAVAILABLE:UNAVAILABLE",
     ]);
-    expect(pillsAfter(html, "Alert")).toEqual([]);
+    expect(pillsAfter(html, "AlertSeverity")).toEqual([]);
+  });
+});
+
+describe("contract names everywhere, values untouched, plain words in the tooltip (review R23)", () => {
+  it("the banner labels AlertSeverity / SystemHealth and shows the recorded values", () => {
+    const html = markup(
+      createElement(AlertBanner, {
+        latest: record({ AlertSeverity: "HIGH_ALERT", SystemHealth: "DEGRADED" }),
+      }),
+    );
+    expect(pillsAfter(html, "AlertSeverity")).toEqual([
+      "HIGH_ALERT:HIGH_ALERT",
+    ]);
+    expect(pillsAfter(html, "SystemHealth")).toEqual(["DEGRADED:DEGRADED"]);
+    expect(html).toContain(
+      'title="Alert state: NORMAL, CAUTION or HIGH_ALERT."',
+    );
+    expect(html).toContain(
+      'title="Runtime health: FULL, DEGRADED or UNAVAILABLE."',
+    );
+  });
+
+  it("Explanation uses the same four names and the contract values, not title-cased ones", () => {
+    const selected = record();
+    const html = markup(
+      createElement(ExplanationView, {
+        selectedRecord: selected,
+        history: [selected],
+        config: DEFAULT_CONFIG as AppConfig,
+      }),
+    );
+    expect(pillsAfter(html, "RiskLevel")).toEqual(["Medium:Medium"]);
+    // Was 'Caution' / 'Full' before review R23: the contract value stays as recorded.
+    expect(pillsAfter(html, "AlertSeverity")).toHaveLength(1);
+    expect(pillsAfter(html, "AlertSeverity")[0]).toMatch(/^(NORMAL|CAUTION|HIGH_ALERT):/);
+    expect(pillsAfter(html, "SystemHealth")).toEqual(["FULL:FULL"]);
+    expect(html).toContain("<span>DominantEvidence</span>");
+    expect(html).not.toContain("AlertStatus");
+    expect(html).not.toContain("Evidence Type");
+    // The evidence type is the contract string, not formatEvidenceType's upper-case copy.
+    expect(html).toContain("Vision-dominant");
+    expect(html).not.toContain("VISION-DOMINANT");
+  });
+
+  it("the Live Monitor explains each contract name in a tooltip", () => {
+    const html = renderLive(record());
+    expect(html).toContain('title="Fused risk level: Low, Medium or High."');
+    expect(html).toContain(
+      'title="Which branch dominates the fused assessment."',
+    );
+    expect(html).toContain(
+      'title="Alert state: NORMAL, CAUTION or HIGH_ALERT."',
+    );
+    expect(html).toContain(
+      'title="Runtime health: FULL, DEGRADED or UNAVAILABLE."',
+    );
   });
 });
 
@@ -109,8 +166,8 @@ describe("Live Monitor: an alert that does not match the level is explained (FSM
     );
     // The Alert chip shows the record's FSM severity, not a severity mapped from RiskLevel
     // (which would read NORMAL right beside the hold note - review R3).
-    expect(pillsAfter(html, "Alert")).toEqual(["CAUTION:CAUTION"]);
-    expect(pillsAfter(html, "Risk level")).toEqual(["Low:Low"]);
+    expect(pillsAfter(html, "AlertSeverity")).toEqual(["CAUTION:CAUTION"]);
+    expect(pillsAfter(html, "RiskLevel")).toEqual(["Low:Low"]);
   });
 
   it("High with CAUTION: HIGH_ALERT needs High for 2 s", () => {
@@ -120,8 +177,8 @@ describe("Live Monitor: an alert that does not match the level is explained (FSM
     expect(textOf(html)).toContain(
       "Escalation pending: HIGH_ALERT follows only if RiskLevel stays High for 2 s (Live: 2 s of server time and of new observations).",
     );
-    expect(pillsAfter(html, "Alert")).toEqual(["CAUTION:CAUTION"]);
-    expect(pillsAfter(html, "Risk level")).toEqual(["High:High"]);
+    expect(pillsAfter(html, "AlertSeverity")).toEqual(["CAUTION:CAUTION"]);
+    expect(pillsAfter(html, "RiskLevel")).toEqual(["High:High"]);
   });
 
   it("a level and alert that agree carry no note", () => {
@@ -229,22 +286,43 @@ describe("Camera preview: only the action that applies is offered", () => {
 describe("Selection bar: following the newest window vs a pinned one (deferred minor M1)", () => {
   it("following: says so and offers nothing to undo", () => {
     const onFollowLatest = vi.fn();
-    const tree = SelectionBar({ windowId: 12, pinned: false, onFollowLatest });
+    const tree = SelectionBar({
+      windowId: 12,
+      pinned: false,
+      isMonitoring: true,
+      onFollowLatest,
+    });
     expect(textOf(markup(tree))).toBe(
       "Showing Window 12 · following the newest window",
     );
     expect(findElements(tree, (el) => el.type === "button")).toHaveLength(0);
   });
 
-  it("pinned: says so, and Follow latest releases the pin", () => {
+  it("pinned while monitoring: says newer windows keep arriving, and Follow latest releases the pin", () => {
     const onFollowLatest = vi.fn();
-    const tree = SelectionBar({ windowId: 3, pinned: true, onFollowLatest });
+    const tree = SelectionBar({
+      windowId: 3,
+      pinned: true,
+      isMonitoring: true,
+      onFollowLatest,
+    });
     expect(textOf(markup(tree))).toBe(
       "Showing Window 3 · pinned; newer windows keep arriving Follow latest",
     );
     const [button] = findElements(tree, (el) => el.type === "button");
     (button.props as { onClick: () => void }).onClick();
     expect(onFollowLatest).toHaveBeenCalledTimes(1);
+  });
+
+  it("pinned after Pause: says 'pinned' only - no windows are arriving (review R9)", () => {
+    const onFollowLatest = vi.fn();
+    const tree = SelectionBar({
+      windowId: 3,
+      pinned: true,
+      isMonitoring: false,
+      onFollowLatest,
+    });
+    expect(textOf(markup(tree))).toBe("Showing Window 3 · pinned Follow latest");
   });
 });
 
@@ -334,5 +412,26 @@ describe("badge-field labels: AA contrast on every banner tint (review R30)", ()
     expect(rule).toBeTruthy();
     expect(rule![0]).toContain("color: #475569");
     expect(rule![0]).not.toContain("var(--muted)");
+  });
+});
+
+describe("narrow layout: brand text gives way, the nav scrollbar stays visible (review R29)", () => {
+  const stylesSource = readFileSync(
+    new URL("../styles.css", import.meta.url),
+    "utf8",
+  );
+  // The media query block itself, not the whole file: the rule must live at this width.
+  const block = (width: number) =>
+    stylesSource.match(
+      new RegExp(`@media \\(max-width: ${width}px\\) \\{([\\s\\S]*?)\\n\\}`),
+    )?.[1] ?? "";
+
+  it("at <=900 px the brand text is hidden, freeing the row for the view buttons", () => {
+    expect(block(900)).toMatch(/\.brand-copy[^{]*\{[^}]*display:\s*none/);
+  });
+
+  it("the one-row nav shows a thin scrollbar instead of hiding it", () => {
+    expect(block(900)).toContain("scrollbar-width: thin");
+    expect(block(900)).not.toContain("scrollbar-width: none");
   });
 });

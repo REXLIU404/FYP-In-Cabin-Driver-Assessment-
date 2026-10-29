@@ -96,7 +96,7 @@ describe("LiveMonitor: both modality cards and both freshness pills carry the ex
   it("both expired: no assessment, and each branch still says why", () => {
     const html = renderLive(expiryRecords.bothExpired());
     expect(html).toContain("Assessment unavailable");
-    expect(pillsAfter(html, "System health")).toEqual([
+    expect(pillsAfter(html, "SystemHealth")).toEqual([
       "UNAVAILABLE:UNAVAILABLE",
     ]);
     expect(modalityCard(html, "Visual Distraction")).toBe(
