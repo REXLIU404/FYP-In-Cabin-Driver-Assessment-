@@ -11,7 +11,7 @@
 |---|---|---|
 | 协议文件存在，且早于 runner 运行；内容含输入哈希 | `comparison-official-bf76ddf/comparison_results.json` 中的 `protocol_gate.checks` 四项都为 true（approval_status、protocol_status、sha_match、mtime_before_run）；`protocol_mtime_ns < run_start_epoch_ns`；运行后协议哈希没有变（`protocol_after_run.unchanged = true`）；协议的 `input_set` 含成员哈希 | 满足 |
 | 输入集哈希可以复算 | `recomputed_membership_sha256 = 601dc3ed…`，与协议一致；另外复算了 `recomputed_source_ids_sha256` 与 `recomputed_image_bytes_manifest_sha256`（200 张原始 JPEG 逐张核对） | 满足 |
-| 两次运行之间状态隔离 | 每个模型一个独立子进程，各用新建的临时 SQLite（见 `worker_spec_*.json`），注入合成时钟。**确定性复核**：DeepSeek 在 `94c6d14` 上的运行（`docs/evidence/2026-10-29/comparison/`）与集成后在 `c0c6d43` 上的官方运行，3 个模型 × 200 个窗口逐字段比较，RiskScore、RiskLevel、DominantEvidence、AlertSeverity、argmax、概率等的**差异为 0** | 满足 |
+| 两次运行之间状态隔离 | 每个模型一个独立子进程，各用新建的临时 SQLite（见 `worker_spec_*.json`），注入合成时钟。**确定性复核**：DeepSeek 在 `94c6d14` 上的运行（`docs/evidence/2026-10-29/comparison/`）与集成后在 `c0c6d43` 上的官方运行，3 个模型 × 200 个窗口逐字段比较，RiskScore、RiskLevel、DominantEvidence、AlertSeverity、argmax、概率等的**差异为 0**；修复后的 runner 在 `bf76ddf` 上的现行官方运行（`comparison-official-bf76ddf/`），以及复审员在带外来 `DRA_THRESHOLD_LOW=45` 的条件下的重跑，与前两次相比差异同样为 0 | 满足 |
 | 结果与 P4 的已知事实一致（c9 是弱类） | 同一组 stable200 的 c9 图片，三个模型的 argmax 分布各不相同：stable `{0:6, 7:4, 9:10}`、RN `{0:3, 9:17}`、MN 候选 `{0:3, 7:7, 9:10}`；`identical_results = false` | 满足 |
 
 ## 2. 描述性结果
@@ -50,3 +50,5 @@
 | FUD-A：U-1 只有推断出的放行记录 | 用户 2026-10-29 明确回复「通过」 |
 | FUD-B：固定的 Safe 遥测行让场景到不了 High，也测不到 HIGH_ALERT | 用户 2026-10-29 决定：按现状接受；报告只用几句话说明这个限制 |
 | FUD-C：报告不能写成 RN 的 c9 弱点已经消失（P4 中 RN pooled c9 F1 为 0.6059） | 报告措辞规则 |
+
+**A2 复审（2026-10-29）：VERIFIED_PASS。** F-1 至 F-4 均已验证；F-1 的检查用错误的期望值演示过会触发 FAIL / exit 1。审计员提出的 R-1、R-2（文档）已改正；R-3（将来若出现 `backend/.env`，其中的 `DRA_*` 会绕过 `worker_env`，目前不存在这个文件）记为已知限制。
