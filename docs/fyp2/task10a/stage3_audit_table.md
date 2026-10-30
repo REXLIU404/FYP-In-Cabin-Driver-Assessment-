@@ -31,3 +31,14 @@
 ## 4. 待用户决定
 
 - **FUD-S3-1**：如果 RN 成为在役模型，报告 Table 23 的端到端数字要不要换成 RN 的实测值（需要在安静的机器上重测），还是保留 stable 的数字并注明在役模型？
+
+## 5. R-1 关闭（2026-10-30，针对 CX-A3 的 PARTIAL）
+
+| 审计点 | 证据 | 结果 |
+|---|---|---|
+| 分位数可由原始样本独立复算（R-1） | `1cd5660`：perf01 另写 `perf01_timings.json`（预热后的被测窗口），并在 `perf01.json` 中记录其 sha256 与分位数规则；先红后绿的测试 `test_perf01_writes_the_measured_windows_raw_timings_and_they_reproduce_the_quantiles` | 待审计 |
+| 同日 MN 与 RN 实测（安静机器） | `docs/evidence/2026-10-30/stage3-raw/`：stable / RN 交替各 3 轮，每轮 600 窗口、约 9.78 Hz；capture→render p95：stable 31 / 31 / 31 ms，RN 45 / 44 / 43 ms；服务端视觉中位数 stable 约 9.6 ms，RN 约 26.6 ms；load 2.3–4.1；全部 exit 0、0 个控制台错误 | 待审计 |
+| 原始文件与汇总一致 | 实现者自查：六份 `perf01_timings.json` 的 sha256 都等于 `raw_timings.sha256`，复算结果与 `stages.capture_to_render_ms` 完全相同 | 待审计（审计者独立复算） |
+| 当日全量门禁 | `docs/evidence/2026-10-30/review-followups-coldstart-9255c83/`（全新克隆，pytest 1359 / 0 skipped / 8 deselected、vitest 1061）；`1cd5660` 只改了 `scripts/perf01.py` 与其测试（`test_perf_scripts.py` 29 passed） | 待审计 |
+
+说明：10-29 的六次运行保留原样（只有汇总，标为历史）；Stage 5 的决定引用 10-30 的这六次。FUD-S3-3（已删除的作废运行）不影响 10-30 的结果。

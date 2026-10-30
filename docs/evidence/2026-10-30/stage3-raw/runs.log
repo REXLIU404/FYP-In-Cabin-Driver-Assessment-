@@ -1,0 +1,20 @@
+commit 1cd56605a147abf4d065dee756bf1495730325cf
+== stable round 1 start 2026-10-30T05:37:16Z load: { 2.50 2.97 2.82 }
+PERF-01: 600 windows at 9.78 Hz; capture->render p50 27.0 ms, p95 31 ms, max 127 ms -> docs/evidence/2026-10-30/stage3-raw/stable-r1/perf01.json
+exit 0 end 2026-10-30T05:38:28Z load: { 4.06 3.30 2.96 }
+== resnet18_search004_seed42 round 1 start 2026-10-30T05:38:28Z load: { 4.06 3.30 2.96 }
+PERF-01: 600 windows at 9.78 Hz; capture->render p50 42.0 ms, p95 45 ms, max 125 ms -> docs/evidence/2026-10-30/stage3-raw/resnet18_search004_seed42-r1/perf01.json
+exit 0 end 2026-10-30T05:39:39Z load: { 2.74 3.05 2.89 }
+== stable round 2 start 2026-10-30T05:39:39Z load: { 2.74 3.05 2.89 }
+PERF-01: 600 windows at 9.79 Hz; capture->render p50 28.0 ms, p95 31 ms, max 63 ms -> docs/evidence/2026-10-30/stage3-raw/stable-r2/perf01.json
+exit 0 end 2026-10-30T05:40:49Z load: { 2.94 2.98 2.87 }
+== resnet18_search004_seed42 round 2 start 2026-10-30T05:40:49Z load: { 2.94 2.98 2.87 }
+PERF-01: 600 windows at 9.79 Hz; capture->render p50 41.0 ms, p95 44 ms, max 63 ms -> docs/evidence/2026-10-30/stage3-raw/resnet18_search004_seed42-r2/perf01.json
+exit 0 end 2026-10-30T05:42:01Z load: { 2.80 2.95 2.87 }
+== stable round 3 start 2026-10-30T05:42:01Z load: { 2.80 2.95 2.87 }
+PERF-01: 600 windows at 9.77 Hz; capture->render p50 28.0 ms, p95 31 ms, max 58 ms -> docs/evidence/2026-10-30/stage3-raw/stable-r3/perf01.json
+exit 0 end 2026-10-30T05:43:11Z load: { 2.30 2.77 2.81 }
+== resnet18_search004_seed42 round 3 start 2026-10-30T05:43:11Z load: { 2.30 2.77 2.81 }
+PERF-01: 600 windows at 9.79 Hz; capture->render p50 41.0 ms, p95 43 ms, max 75 ms -> docs/evidence/2026-10-30/stage3-raw/resnet18_search004_seed42-r3/perf01.json
+exit 0 end 2026-10-30T05:44:22Z load: { 2.33 2.72 2.78 }
+DONE

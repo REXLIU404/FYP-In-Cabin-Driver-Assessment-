@@ -1,0 +1,22 @@
+2026-10-30T05:45:44+00:00 rollback drill at 1cd56605a147abf4d065dee756bf1495730325cf; model root /Users/liu/Desktop/FYP2-Live-System/ml/outputs
+2026-10-30T05:45:44+00:00 on disk: stable ONNX sha256 b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf; candidate manifest sha256 5e226722e0712824c78aa0976afa6fa5b8dc6100b147a7f523a09048171d8cf3; 94 files under the model root
+2026-10-30T05:45:44+00:00 CHECK PASS: stable ONNX on disk has the frozen sha256
+2026-10-30T05:45:44+00:00 [1-candidate-active] start: DRA_ACTIVE_VISION=resnet18_search004_seed42 db=sqlite:////var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/rollback-1-candidate-active-kueyjlp8/drill.db cmd=-m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8001
+2026-10-30T05:45:46+00:00 [1-candidate-active] /api/health 200; models_loaded=True provider=VisionCandidateONNX+XGBoost vision=resnet18_search004_seed42 sha256=5e226722e0712824c78aa0976afa6fa5b8dc6100b147a7f523a09048171d8cf3 telemetry_sha256=9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07
+2026-10-30T05:45:46+00:00 [1-candidate-active] forward: session 201, /infer 201; RiskScore=85.0 P_distraction=0.7100527882575989 vision_model_id=resnet18_search004_seed42 vision_model_sha256=5e226722e0712824c78aa0976afa6fa5b8dc6100b147a7f523a09048171d8cf3
+2026-10-30T05:45:46+00:00 [1-candidate-active] stopped (exit -15); port 8001 free: True
+2026-10-30T05:45:46+00:00 CHECK PASS: candidate start: models loaded (hash + warm-up forward)
+2026-10-30T05:45:46+00:00 CHECK PASS: candidate start: vision is the ResNet18 candidate
+2026-10-30T05:45:46+00:00 CHECK PASS: candidate start: telemetry is the stable XGBoost
+2026-10-30T05:45:46+00:00 CHECK PASS: candidate start: one normal forward, assessed, by the candidate
+2026-10-30T05:45:46+00:00 [2-rollback-stable] start: DRA_ACTIVE_VISION=(unset) db=sqlite:////var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/rollback-2-rollback-stable-jd57jend/drill.db cmd=-m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8001
+2026-10-30T05:45:48+00:00 [2-rollback-stable] /api/health 200; models_loaded=True provider=MobileNetV3ONNX+XGBoost vision=stable_mobilenet_v3_large sha256=b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf telemetry_sha256=9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07
+2026-10-30T05:45:48+00:00 [2-rollback-stable] forward: session 201, /infer 201; RiskScore=99.5 P_distraction=0.9999986290931702 vision_model_id=stable_mobilenet_v3_large vision_model_sha256=b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf
+2026-10-30T05:45:48+00:00 [2-rollback-stable] stopped (exit -15); port 8001 free: True
+2026-10-30T05:45:48+00:00 CHECK PASS: rollback start: models loaded (hash + warm-up forward)
+2026-10-30T05:45:48+00:00 CHECK PASS: rollback start: vision is the stable MobileNetV3 with the frozen sha256
+2026-10-30T05:45:48+00:00 CHECK PASS: rollback start: telemetry is the stable XGBoost
+2026-10-30T05:45:48+00:00 CHECK PASS: rollback start: one normal forward, assessed, by the stable model
+2026-10-30T05:45:48+00:00 CHECK PASS: no file under the model root changed (nothing overwritten)
+2026-10-30T05:45:48+00:00 CHECK PASS: port 8001 is free at the end
+2026-10-30T05:45:48+00:00 RESULT: PASS (11/11 checks)
