@@ -14,11 +14,11 @@ state and persistence. The five dashboard views consume those saved results.
   `POST /api/sessions/{id}/infer`; the trained MobileNetV3 and XGBoost produce the
   probabilities, and the backend fuses, smooths, alerts and saves them. The Live
   code reads only the prepared _raw telemetry_ (`PREPARED_RAW_TELEMETRY`).
-- **The prepared-probability replay is kept, as legacy / test-only.** It is listed
-  in the Data mode menu as "Prepared replay (legacy, test-only)", uses no trained
-  model and no backend, and exists for regression tests and backward compatibility.
-  Nothing was removed. It is entered only by choosing it in the page; every reload
-  starts on Live again.
+- **The prepared-probability replay is kept, as legacy / test-only.** It uses no
+  trained model and no backend, and exists for regression tests and backward
+  compatibility; its code and tests were not removed. Since 2026-10-26 it is no longer
+  listed in the Data mode menu, which offers "Live camera (trained models)" and
+  "Constructed demo scenario"; every page load starts on Live.
 - **What is not claimed.** Frontal-camera accuracy, edge-hardware performance and
   field validation are not established. The 3 s evidence-age limit is a design
   threshold, not a validated safety threshold. `RiskLevel` is a derived operating

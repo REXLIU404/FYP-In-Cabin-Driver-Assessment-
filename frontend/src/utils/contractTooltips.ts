@@ -7,8 +7,8 @@
 export const CONTRACT_TOOLTIP = {
   RiskLevel: "Fused risk level: Low, Medium or High.",
   DominantEvidence:
-    "What the assessment rests on: Vision-dominant or Telemetry-dominant when one branch is clearly higher, Combined evidence when both are close, Partial evidence when only one branch is available, Low observed risk when RiskScore is below the low threshold.",
+    "What the assessment rests on, checked in this order: Partial evidence when an input is missing or expired; otherwise Low observed risk when RiskScore is below the low threshold; otherwise Combined evidence when both branches are close, or Vision-dominant / Telemetry-dominant when one branch is clearly higher.",
   AlertSeverity: "Alert state: NORMAL, CAUTION or HIGH_ALERT.",
   SystemHealth:
-    "Input availability: FULL means both inputs are fresh, DEGRADED means one input is missing or expired, UNAVAILABLE means there is no current assessment. It does not measure accuracy.",
+    "Input availability for this window: FULL means both inputs are fresh, DEGRADED means one input is missing or expired, UNAVAILABLE means the window has no assessment (no usable evidence). It does not measure accuracy.",
 } as const;

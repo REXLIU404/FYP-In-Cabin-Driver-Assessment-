@@ -58,6 +58,12 @@ export default function App() {
   );
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [config, setConfig] = useState<AppConfig>(() => loadConfig());
+  // The mode as last committed, for start(): it awaits the camera prompt, and the
+  // mode can change while the prompt is open.
+  const modeRef = useRef(config.operationMode);
+  useEffect(() => {
+    modeRef.current = config.operationMode;
+  }, [config.operationMode]);
   const [cursor, setCursor] = useState(0);
   // null follows the newest window; a number is a window the person pinned (utils/selection.ts).
   const [selectedWindowId, setSelectedWindowId] = useState<number | null>(null);
@@ -66,17 +72,14 @@ export default function App() {
   const scenario = useScenarioReplay();
   const isLive = config.operationMode === "LIVE_MODEL_RUNTIME";
   const isLiveLikeMode = isLiveLike(config.operationMode);
-  const isScenario =
-    config.operationMode === "CONSTRUCTED_SCENARIO_RUNTIME";
+  const isScenario = config.operationMode === "CONSTRUCTED_SCENARIO_RUNTIME";
   // The constructed scenario session feeds the SAME live loop with the playback's
   // frame source and telemetry source; Live keeps the camera and the default
   // prepared cursor. The scenario start never touches the camera.
   const scenarioPlayback = isScenario ? scenario.playback : null;
   const live = useLiveSession(
     config,
-    scenarioPlayback
-      ? scenarioCapture(scenarioPlayback)
-      : camera.captureFrame,
+    scenarioPlayback ? scenarioCapture(scenarioPlayback) : camera.captureFrame,
     scenarioPlayback ? () => scenarioPlayback.telemetry : undefined,
   );
   const alertFsmRef = useRef<AlertFsmState>(initAlertState());
@@ -86,13 +89,19 @@ export default function App() {
   const [scenarioFrameSrc, setScenarioFrameSrc] = useState<string | null>(null);
   const [scenarioSnapshot, setScenarioSnapshot] =
     useState<PlaybackSnapshot | null>(null);
+  // Which playback the snapshot came from: after another scenario loads, the old one's
+  // snapshot (its segment index, its finished flag) must not be read against the new
+  // manifest before the first tick of the new playback.
+  const [snapshotSource, setSnapshotSource] = useState<unknown>(null);
   useEffect(() => {
-    if (!isScenario || !scenario.playback) return;
-    const capture = scenarioCapture(scenario.playback);
+    const playback = scenario.playback;
+    if (!isScenario || !playback) return;
+    const capture = scenarioCapture(playback);
     const tick = () => {
       const sample = capture();
       setScenarioFrameSrc(sample.frame ? sample.frame.image_base64 : null);
-      setScenarioSnapshot(scenario.playback?.snapshot() ?? null);
+      setScenarioSnapshot(playback.snapshot());
+      setSnapshotSource(playback);
     };
     tick();
     const timer = setInterval(tick, 250);
@@ -100,14 +109,23 @@ export default function App() {
   }, [isScenario, scenario.playback]);
   // The scenario finishes at the end of the last segment: stop the session there
   // (no loop), exactly as the plan requires. `live.pause` is the loop's own stable
-  // function, and only the finished FLAG is watched: depending on the whole `live`
-  // object (or the whole snapshot) here would re-run this effect on every render,
-  // pause again and re-render forever (React "Maximum update depth").
+  // function, and only flags are watched (finished, running) plus the stable playback:
+  // depending on the whole `live` object (or the whole snapshot) here would re-run this
+  // effect on every render, pause again and re-render forever ("Maximum update depth").
   const pauseLive = live.pause;
-  const scenarioFinished = scenarioSnapshot?.finished;
+  const currentSnapshot =
+    snapshotSource === scenario.playback ? scenarioSnapshot : null;
+  const scenarioFinished = currentSnapshot?.finished;
+  // The finish is read from the playback itself, whenever the loop starts running or
+  // the display sees the finish: a Retry that resumes a finished run is paused at once
+  // (after its frozen request was delivered), while a fresh Start has already reset the
+  // playback by the time the loop runs. The 250 ms display snapshot would lag for both.
+  const liveRunning = live.running;
+  const loadedPlayback = scenario.playback;
   useEffect(() => {
-    if (isScenario && scenarioFinished) pauseLive();
-  }, [isScenario, scenarioFinished, pauseLive]);
+    if (isScenario && liveRunning && loadedPlayback?.snapshot().finished)
+      pauseLive();
+  }, [isScenario, scenarioFinished, liveRunning, loadedPlayback, pauseLive]);
 
   const appendReplay = useCallback(() => {
     const window =
@@ -168,11 +186,11 @@ export default function App() {
   // Everything the player displays, in one object (plan Task 7). The numbers in the
   // finished line come from the manifest, never hard-coded.
   const scenarioPlayerProps =
-    isScenario && scenario.manifest && scenarioSnapshot
+    isScenario && scenario.manifest && currentSnapshot
       ? {
           model: buildScenarioPlayerModel(
             scenario.manifest,
-            scenarioSnapshot,
+            currentSnapshot,
             latest,
           ),
           frameSrc: scenarioFrameSrc,
@@ -190,10 +208,16 @@ export default function App() {
   };
   const start = async (restart = false) => {
     if (isLiveLikeMode) {
+      const startedIn = config.operationMode;
       replay.pause();
       // Only Live touches the camera; the constructed scenario feeds the loop its
       // own preloaded frames.
-      if (isLive && camera.status !== "live") await camera.start();
+      if (isLive && camera.status !== "live") {
+        await camera.start();
+        // Stop Camera during the permission prompt re-enables the Data mode select: if
+        // the mode changed meanwhile, this Start belongs to the old mode - start nothing.
+        if (modeRef.current !== startedIn) return;
+      }
       // A finished scenario is played again from the start, in a new session: a
       // resume would stay on the last frame, and the auto-pause would not fire again.
       const fresh = restart || (isScenario && scenarioFinished === true);
@@ -281,7 +305,10 @@ export default function App() {
               className="button"
               onClick={() => void start(true)}
               disabled={
-                live.busy || live.retrying || camera.status === "requesting"
+                live.busy ||
+                live.retrying ||
+                camera.status === "requesting" ||
+                (isScenario && scenario.status !== "ready")
               }
             >
               <RotateCw size={16} />
@@ -463,10 +490,7 @@ export default function App() {
         </section>
 
         {bannerShown && latest ? (
-          <AlertBanner
-            latest={latest}
-            stale={isLiveLikeMode && live.stale}
-          />
+          <AlertBanner latest={latest} stale={isLiveLikeMode && live.stale} />
         ) : null}
 
         {selection &&

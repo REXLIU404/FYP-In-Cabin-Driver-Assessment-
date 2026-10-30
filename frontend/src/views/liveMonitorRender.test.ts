@@ -96,6 +96,25 @@ describe("LiveMonitor (static render)", () => {
     expect(html).not.toContain("Stop Camera");
   });
 
+  it("the constructed scenario without a loaded player shows a placeholder, never the camera", () => {
+    const html = markup(
+      createElement(LiveMonitor, {
+        latest: scenarioRecord(),
+        history: [scenarioRecord()],
+        sessionId: "s",
+        recordCount: 1,
+        isMonitoring: false,
+        camera,
+        thresholdLow: 30,
+        thresholdHigh: 60,
+        mode: "CONSTRUCTED_SCENARIO_RUNTIME",
+      }),
+    );
+    expect(html).not.toContain("<video");
+    expect(html).not.toContain("Start Camera");
+    expect(html).toContain("Choose a scenario to load its frames.");
+  });
+
   it("the constructed scenario renames Vehicle Signals to Scenario telemetry and shows the truth label", () => {
     const html = render("CONSTRUCTED_SCENARIO_RUNTIME", scenarioRecord());
     expect(html).toContain("Scenario telemetry");

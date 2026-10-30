@@ -326,6 +326,9 @@ def test_switching_the_data_mode_leaves_the_session(pw, scenario_server):
         # The next Live start is a new Live session, not a resume of either.
         new_live_sid = run_three_windows("LIVE_MODEL_RUNTIME")
         assert new_live_sid not in (live_sid, scenario_sid)
+        # Leaving Live stopped the camera; coming back must bring it back: every window
+        # of the new Live session carried a camera image (R5 would send imageless ones).
+        assert all(c.sent_body["image_base64"] is not None for c in tap.answered(new_live_sid))
     finally:
         chrome.close()
 

@@ -194,6 +194,36 @@ describe("Data mode: no path mixes the two modes (source guard)", () => {
   });
 });
 
+// Review of ead8895 / 37e7229: the remaining ways a session could start or resume in
+// the wrong mode or on a finished scenario.
+describe("Data mode: no session starts in the wrong mode (source guard)", () => {
+  it("New Session waits for a loaded scenario, like Start", () => {
+    expect(appSource).toMatch(
+      /onClick=\{\(\) => void start\(true\)\}\s*disabled=\{[^}]*\(isScenario && scenario\.status !== "ready"\)/,
+    );
+  });
+
+  it("a mode change while the camera prompt was open starts nothing", () => {
+    expect(appSource).toMatch(/const startedIn = config\.operationMode;/);
+    expect(appSource).toMatch(
+      /await camera\.start\(\);[^}]*if \(modeRef\.current !== startedIn\) return;/,
+    );
+  });
+
+  // Retry keeps its meaning (resend the frozen request: runtimeNotices.test.ts); a resume
+  // of a finished run is paused by the effect, which reads the playback, not the display.
+  it("a finished playback pauses any resumed run, read from the playback itself", () => {
+    expect(appSource).toMatch(
+      /if \(isScenario && liveRunning && loadedPlayback\?\.snapshot\(\)\.finished\)\s*pauseLive\(\);/,
+    );
+    expect(appSource).toMatch(/onRetry=\{retryHandler\(live\)\}/);
+  });
+
+  it("the player uses a snapshot only from the playback now loaded", () => {
+    expect(appSource).toMatch(/snapshotSource === scenario\.playback/);
+  });
+});
+
 describe("Data mode: App renders these labels and notes (source guard)", () => {
   it("the select is built from DATA_MODE_OPTIONS and the note from DATA_MODE_NOTE", () => {
     expect(appSource).toMatch(/DATA_MODE_OPTIONS\.map\(/);

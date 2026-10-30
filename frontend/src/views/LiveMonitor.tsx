@@ -111,6 +111,10 @@ export function LiveMonitor({
               frameSrc={scenario.frameSrc}
               finishedText={scenario.finishedText}
             />
+          ) : mode === "CONSTRUCTED_SCENARIO_RUNTIME" ? (
+            <div className="camera-placeholder scenario-placeholder">
+              <strong>Choose a scenario to load its frames.</strong>
+            </div>
           ) : (
             <CameraPreview
               videoRef={camera.videoRef}

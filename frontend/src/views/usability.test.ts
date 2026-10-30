@@ -122,7 +122,7 @@ describe("contract names everywhere, values untouched, plain words in the toolti
       'title="Alert state: NORMAL, CAUTION or HIGH_ALERT."',
     );
     expect(html).toContain(
-      'title="Input availability: FULL means both inputs are fresh, DEGRADED means one input is missing or expired, UNAVAILABLE means there is no current assessment. It does not measure accuracy."',
+      'title="Input availability for this window: FULL means both inputs are fresh, DEGRADED means one input is missing or expired, UNAVAILABLE means the window has no assessment (no usable evidence). It does not measure accuracy."',
     );
   });
 
@@ -155,13 +155,13 @@ describe("contract names everywhere, values untouched, plain words in the toolti
     const html = renderLive(record());
     expect(html).toContain('title="Fused risk level: Low, Medium or High."');
     expect(html).toContain(
-      'title="What the assessment rests on: Vision-dominant or Telemetry-dominant when one branch is clearly higher, Combined evidence when both are close, Partial evidence when only one branch is available, Low observed risk when RiskScore is below the low threshold."',
+      'title="What the assessment rests on, checked in this order: Partial evidence when an input is missing or expired; otherwise Low observed risk when RiskScore is below the low threshold; otherwise Combined evidence when both branches are close, or Vision-dominant / Telemetry-dominant when one branch is clearly higher."',
     );
     expect(html).toContain(
       'title="Alert state: NORMAL, CAUTION or HIGH_ALERT."',
     );
     expect(html).toContain(
-      'title="Input availability: FULL means both inputs are fresh, DEGRADED means one input is missing or expired, UNAVAILABLE means there is no current assessment. It does not measure accuracy."',
+      'title="Input availability for this window: FULL means both inputs are fresh, DEGRADED means one input is missing or expired, UNAVAILABLE means the window has no assessment (no usable evidence). It does not measure accuracy."',
     );
   });
 });
@@ -170,9 +170,9 @@ describe("contract names everywhere, values untouched, plain words in the toolti
 // tooltips only listed the values instead of saying what they mean.
 describe("contract names in Signal Inspector and Risk Trends too; tooltips say what the values mean", () => {
   const DOMINANT_TIP =
-    "What the assessment rests on: Vision-dominant or Telemetry-dominant when one branch is clearly higher, Combined evidence when both are close, Partial evidence when only one branch is available, Low observed risk when RiskScore is below the low threshold.";
+    "What the assessment rests on, checked in this order: Partial evidence when an input is missing or expired; otherwise Low observed risk when RiskScore is below the low threshold; otherwise Combined evidence when both branches are close, or Vision-dominant / Telemetry-dominant when one branch is clearly higher.";
   const HEALTH_TIP =
-    "Input availability: FULL means both inputs are fresh, DEGRADED means one input is missing or expired, UNAVAILABLE means there is no current assessment. It does not measure accuracy.";
+    "Input availability for this window: FULL means both inputs are fresh, DEGRADED means one input is missing or expired, UNAVAILABLE means the window has no assessment (no usable evidence). It does not measure accuracy.";
 
   it("Signal Inspector labels the field DominantEvidence, with the tooltip", () => {
     const selected = record();

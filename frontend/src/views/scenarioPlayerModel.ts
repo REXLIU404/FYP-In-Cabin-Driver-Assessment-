@@ -38,17 +38,23 @@ export const buildScenarioPlayerModel = (
   snapshot: PlaybackSnapshot,
   latest: RiskUpdate | undefined,
 ): ScenarioPlayerModel => {
-  const current = manifest.segments[snapshot.segmentIndex];
+  // Clamped: a snapshot from a longer scenario must never index past this one's end.
+  const index = Math.min(
+    Math.max(snapshot.segmentIndex, 0),
+    manifest.segments.length - 1,
+  );
+  const current = manifest.segments[index];
   const top = latest?.visual_top_classes.reduce<{
     label: string;
     probability: number;
   } | null>(
-    (best, item) => (best && best.probability >= item.probability ? best : item),
+    (best, item) =>
+      best && best.probability >= item.probability ? best : item,
     null,
   );
   return {
     badge: SCENARIO_BADGE,
-    caption: `Segment ${snapshot.segmentIndex + 1}/${manifest.segments.length} · ${current.title} · ${current.vision_label} · driver ${current.driver_id} · State Farm test split`,
+    caption: `Segment ${index + 1}/${manifest.segments.length} · ${current.title} · ${current.vision_label} · driver ${current.driver_id} · State Farm test split`,
     truth: current.vision_label,
     model: top ? `${top.label} ${top.probability.toFixed(2)}` : null,
     segments: manifest.segments.map((segment) => ({

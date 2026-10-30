@@ -118,6 +118,17 @@ describe("buildScenarioPlayerModel", () => {
     expect(badge).not.toMatch(/not live/i);
   });
 
+  // A snapshot from another, longer scenario must never crash the page (review of ead8895).
+  it("an out-of-range segment index is clamped to the last segment, not thrown", () => {
+    const last = manifest.segments.length - 1;
+    const model = buildScenarioPlayerModel(
+      manifest,
+      snapshot({ segmentIndex: last + 5 }),
+      undefined,
+    );
+    expect(model.truth).toBe(manifest.segments[last].vision_label);
+  });
+
   it("the caption names the current segment: its theme, vision label, driver and the split", () => {
     expect(
       buildScenarioPlayerModel(manifest, snapshot(), undefined).caption,
@@ -153,11 +164,8 @@ describe("buildScenarioPlayerModel", () => {
       ).elapsed,
     ).toBe("0:34 / 2:16");
     expect(
-      buildScenarioPlayerModel(
-        manifest,
-        snapshot({ positionMs: 0 }),
-        undefined,
-      ).elapsed,
+      buildScenarioPlayerModel(manifest, snapshot({ positionMs: 0 }), undefined)
+        .elapsed,
     ).toBe("0:00 / 2:16");
   });
 
