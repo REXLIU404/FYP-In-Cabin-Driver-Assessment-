@@ -57,3 +57,7 @@
 - **FUD-1：接受。** 10-29 历史六次的原始样本已不存在，R-1 以 10-30 的同日重测关闭（stable / RN 交替各 3 轮，原始时序与 sha256 绑定，审计者已独立复算一致）。10-29 的汇总文件保留为历史记录，不再作为 Stage 3 / Stage 5 的依据。
 - **FUD-5：确认。** 在 Stage 3 获得 VERIFIED_PASS 之前开始 Stage 5，是用户的指令（「start the stage 5, select the final model」）。
 - 实现方提出的默认处理，用户未提出异议：FUD-3（10-29 已删除的作废运行）按实现方说明处理，不影响 10-30 的数字；FUD-7 日志已补归档（不可恢复的 perf01 服务器日志已说明）；FUD-8 之后的 UI 提交已各自复审并通过全新克隆门禁，不另行审查。
+
+## 8. 复审结果（2026-10-30）
+
+新鲜只读子代理复审：**Stage 3 VERIFIED_PASS**。报告原文：`docs/fyp2/task10a/stage3_stage5_reaudit.md`。审计者独立复算六轮原始时序（6/6 sha256 绑定、汇总完全相等）、在全新克隆中复现 RED（`e07ef42` 上 exit 1）与 GREEN（29 passed）、确认加强后的测试能抓到恒定时长变异（旧测试抓不到），并在 `f5fb90f` 上跑非 e2e 回归 1310 passed（`DRA_REQUIRE_MODELS=1`）。R-1 按用户接受的方式（10-30 同日重测）关闭。
