@@ -51,3 +51,9 @@
 - O-5：日志归档缺口 → 已补：`stage3-raw/focused-test-GREEN.log`、`focused-test-RED-e07ef42.log`、`recompute_raw.py` + `recompute.log`；perf01 服务器日志无法恢复，已在 README 说明。
 - O-7：测试数据过于恒定 → 已加强（逐窗口时长不同、预热窗口时长在范围外），变异「原始文件写成恒定时长」使其变红。
 - O-6：提交曾落在 `fyp2/dmd-adaptation`（另一会话 10-29 19:29 切换了共用工作区）→ 用户选择快进：`fyp2/live-system` 已快进到 `637a0ff`，之后在独立工作区 `/Users/liu/Desktop/FYP2-Live-System-Integration` 提交。
+
+## 7. 用户决定（2026-10-30，对话中）
+
+- **FUD-1：接受。** 10-29 历史六次的原始样本已不存在，R-1 以 10-30 的同日重测关闭（stable / RN 交替各 3 轮，原始时序与 sha256 绑定，审计者已独立复算一致）。10-29 的汇总文件保留为历史记录，不再作为 Stage 3 / Stage 5 的依据。
+- **FUD-5：确认。** 在 Stage 3 获得 VERIFIED_PASS 之前开始 Stage 5，是用户的指令（「start the stage 5, select the final model」）。
+- 实现方提出的默认处理，用户未提出异议：FUD-3（10-29 已删除的作废运行）按实现方说明处理，不影响 10-30 的数字；FUD-7 日志已补归档（不可恢复的 perf01 服务器日志已说明）；FUD-8 之后的 UI 提交已各自复审并通过全新克隆门禁，不另行审查。

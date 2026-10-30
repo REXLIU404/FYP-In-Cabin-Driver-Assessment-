@@ -20,3 +20,9 @@ Stage 5 判 **PARTIAL**：回滚演练审计者重跑 11/11、exit 0；决策记
 - O-8（演练脚本的说明）→ 在演练 README 说明，脚本保持运行时原样。
 - 用户决定（2026-10-30，对话中）：**A，保留 stable MobileNetV3-Large**；Table 23 改用 10-30 同日数字。记录在 `release_decision.md` §3、§5；书面签字待用户补签。
 - 「报告措辞与决策一致」：§5 给出选 A 的 6.2.3 结论段与 Table 23 的具体数字，DOCX 由用户修改后核对。
+
+## 用户决定补充（2026-10-30）
+
+- FUD-5：确认 Stage 5 是用户授权开始的（对话中「start the stage 5, select the final model」）。
+- FUD-4：用户选择把 `fyp2/live-system` 快进到 `637a0ff`；之后的提交在独立工作区 `/Users/liu/Desktop/FYP2-Live-System-Integration`。
+- f15f539 的全新克隆门禁：`docs/evidence/2026-10-30/stage5-coldstart-f15f539/`，PASS（pytest 1360 / 0 skipped / 8 deselected，vitest 1061）。
