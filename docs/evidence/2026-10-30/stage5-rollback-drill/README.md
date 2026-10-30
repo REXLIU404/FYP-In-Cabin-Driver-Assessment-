@@ -15,3 +15,8 @@ per start, no DRA_* variable inherited from the shell.
 Result: PASS, 11/11 checks. The uvicorn logs show a graceful shutdown for both processes ("Application shutdown
 complete", "Finished server process"); their return code -15 is uvicorn 0.48 re-raising the SIGTERM it handled.
 Nothing was retrained or overwritten: rollback is the environment switch alone.
+
+Note (independent audit, O-8): `drill.py`'s docstring says the provider "refuses to load otherwise". That is true for the
+candidate (its manifest sha256 is checked on load) but not for the stable model: the provider only computes the stable
+sha256, and the comparison with the frozen value `b3a42e8d...` is made by the drill itself (check "rollback start: vision is
+the stable MobileNetV3 with the frozen sha256"). The script is kept exactly as it ran.

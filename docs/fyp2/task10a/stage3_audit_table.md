@@ -42,3 +42,12 @@
 | 当日全量门禁 | `docs/evidence/2026-10-30/review-followups-coldstart-9255c83/`（全新克隆，pytest 1359 / 0 skipped / 8 deselected、vitest 1061）；`1cd5660` 只改了 `scripts/perf01.py` 与其测试（`test_perf_scripts.py` 29 passed） | 待审计 |
 
 说明：10-29 的六次运行保留原样（只有汇总，标为历史）；Stage 5 的决定引用 10-30 的这六次。FUD-S3-3（已删除的作废运行）不影响 10-30 的结果。
+
+## 6. 独立审计结果与处理（2026-10-30）
+
+审计报告：`docs/fyp2/task10a/stage3_r1_stage5_audit.md`（新鲜只读子代理的原文）。Stage 3 判 **PARTIAL**：技术核查全部通过（6/6 复算一致、RED/GREEN 复现、非 e2e 回归 1310 passed），未给 VERIFIED_PASS 的原因只有两条：
+
+- O-1：R-1 原措辞（复算 10-29 历史六次）做不到，改为 10-30 重测是否算关闭，需用户接受（FUD-1）。
+- O-5：日志归档缺口 → 已补：`stage3-raw/focused-test-GREEN.log`、`focused-test-RED-e07ef42.log`、`recompute_raw.py` + `recompute.log`；perf01 服务器日志无法恢复，已在 README 说明。
+- O-7：测试数据过于恒定 → 已加强（逐窗口时长不同、预热窗口时长在范围外），变异「原始文件写成恒定时长」使其变红。
+- O-6：提交曾落在 `fyp2/dmd-adaptation`（另一会话 10-29 19:29 切换了共用工作区）→ 用户选择快进：`fyp2/live-system` 已快进到 `637a0ff`，之后在独立工作区 `/Users/liu/Desktop/FYP2-Live-System-Integration` 提交。

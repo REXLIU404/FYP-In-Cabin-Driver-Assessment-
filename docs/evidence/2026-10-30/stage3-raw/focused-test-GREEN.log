@@ -1,0 +1,37 @@
+# 2026-10-30T06:32:15Z HEAD 637a0ff + working tree (strengthened test, O-7)
+rootdir: /Users/liu/Desktop/FYP2-Live-System-Integration/backend
+plugins: anyio-4.13.0
+collecting ... collected 29 items
+
+tests/test_perf_scripts.py::test_parse_server_timing[infer;dur=8.2, commit;dur=3.1, total;dur=12.5-expected0] PASSED [  3%]
+tests/test_perf_scripts.py::test_parse_server_timing[db;desc="read, then write";dur=2-expected1] PASSED [  6%]
+tests/test_perf_scripts.py::test_parse_server_timing[cache;dur="1.5"-expected2] PASSED [ 10%]
+tests/test_perf_scripts.py::test_parse_server_timing[miss-expected3] PASSED [ 13%]
+tests/test_perf_scripts.py::test_parse_server_timing[a;dur=abc, b;dur=4-expected4] PASSED [ 17%]
+tests/test_perf_scripts.py::test_parse_server_timing[-expected5] PASSED  [ 20%]
+tests/test_perf_scripts.py::test_parse_server_timing[infer;dur=1, infer;dur=2.5-expected6] PASSED [ 24%]
+tests/test_perf_scripts.py::test_parse_server_timing[db;desc="a\\";b";dur=2-expected7] PASSED [ 27%]
+tests/test_perf_scripts.py::test_parse_server_timing[a;dur=inf-expected8] PASSED [ 31%]
+tests/test_perf_scripts.py::test_parse_server_timing[a;dur=nan-expected9] PASSED [ 34%]
+tests/test_perf_scripts.py::test_parse_server_timing[a;dur=1_0-expected10] PASSED [ 37%]
+tests/test_perf_scripts.py::test_parse_server_timing[a;dur=""-expected11] PASSED [ 41%]
+tests/test_perf_scripts.py::test_parse_server_timing[a;dur="1.5""-expected12] PASSED [ 44%]
+tests/test_perf_scripts.py::test_parse_server_timing[a;dur=0x10-expected13] PASSED [ 48%]
+tests/test_perf_scripts.py::test_a_short_run_is_flagged_not_reported_as_complete PASSED [ 51%]
+tests/test_perf_scripts.py::test_a_full_run_is_not_flagged PASSED        [ 55%]
+tests/test_perf_scripts.py::test_main_exits_non_zero_on_a_short_run PASSED [ 58%]
+tests/test_perf_scripts.py::test_completeness_with_and_without_a_denominator[211-211-expected0] PASSED [ 62%]
+tests/test_perf_scripts.py::test_completeness_with_and_without_a_denominator[98-100-expected1] PASSED [ 65%]
+tests/test_perf_scripts.py::test_completeness_with_and_without_a_denominator[0-0-expected2] PASSED [ 68%]
+tests/test_perf_scripts.py::test_vision_env_is_empty_for_stable_and_names_a_candidate PASSED [ 72%]
+tests/test_perf_scripts.py::test_check_vision_identity_accepts_the_model_that_was_asked_for[stable-info0] PASSED [ 75%]
+tests/test_perf_scripts.py::test_check_vision_identity_accepts_the_model_that_was_asked_for[resnet18_search004_seed42-info1] PASSED [ 79%]
+tests/test_perf_scripts.py::test_check_vision_identity_refuses_a_different_model[resnet18_search004_seed42-info0] PASSED [ 82%]
+tests/test_perf_scripts.py::test_check_vision_identity_refuses_a_different_model[stable-info1] PASSED [ 86%]
+tests/test_perf_scripts.py::test_check_vision_identity_refuses_a_different_model[resnet18_search004_seed42-info2] PASSED [ 89%]
+tests/test_perf_scripts.py::test_perf01_main_runs_the_chosen_model_and_records_it PASSED [ 93%]
+tests/test_perf_scripts.py::test_perf02_main_runs_the_chosen_model PASSED [ 96%]
+tests/test_perf_scripts.py::test_perf01_writes_the_measured_windows_raw_timings_and_they_reproduce_the_quantiles PASSED [100%]
+
+============================== 29 passed in 0.35s ==============================
+exit: 0

@@ -143,10 +143,19 @@ def test_perf01_writes_the_measured_windows_raw_timings_and_they_reproduce_the_q
     so that an auditor recomputes the quantiles from them."""
     import hashlib
     import json
+    # Durations that differ per window (review O-7): with a constant duration any 600 rows would
+    # reproduce the same statistics, so the equality below would prove nothing. Warm-up windows get
+    # durations far outside the measured range, so a file that kept them would change min/max.
+    timings = _timings(650)
+    for i, row in timings.items():
+        row["renderedAtMs"] = row["capturedAtMs"] + (500 + i if i <= 20 else 20 + (i * 37) % 61)
     monkeypatch.setattr(perf01, "collect", lambda windows, warmup, active_vision="stable": {
-        **_raw(650), "browser": "x", "console_errors": [], "sid": "s", "vision_model": {}})
+        "timings": timings, "records": [], "server_timing": {}, "browser": "x", "console_errors": [],
+        "sid": "s", "vision_model": {}})
     assert perf01.main(["--windows", "600", "--warmup", "20", "--out", str(tmp_path)]) == 0
     result = json.loads((tmp_path / "perf01.json").read_text())
+    assert result["stages"]["capture_to_render_ms"]["max"] < 500  # the warm-up was excluded
+    assert len({r["renderedAtMs"] - r["capturedAtMs"] for r in timings.values()}) > 50
     raw_file = tmp_path / result["raw_timings"]["file"]
     assert result["raw_timings"]["sha256"] == hashlib.sha256(raw_file.read_bytes()).hexdigest()
     rows = json.loads(raw_file.read_text())

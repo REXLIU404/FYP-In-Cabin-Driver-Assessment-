@@ -23,3 +23,15 @@ same day, alternating stable / RN to spread machine drift evenly. The machine wa
 - Scope: one development machine (Apple M2), Chromium fake camera, prepared telemetry, frozen models; not target
   hardware or a real camera. These runs supersede the 2026-10-29 Stage-3 numbers for the release decision; the
   10-29 files are kept as they were (historical, summary-only).
+
+## Archived logs (added after the independent audit, finding O-5)
+
+- `focused-test-GREEN.log`: `tests/test_perf_scripts.py`, 29 passed, with the strengthened raw-timings test (O-7: per-window
+  durations differ and the warm-up has out-of-range durations, so the recomputation check is not trivially true).
+- `focused-test-RED-e07ef42.log`: the same test file against `scripts/perf01.py` of `e07ef42` (before `1cd5660`):
+  `KeyError: 'raw_timings'`, 1 failed.
+- `recompute_raw.py` + `recompute.log`: the recomputation (own quantile rule, not the repository's code): 6/6 sha256 bound,
+  6/6 equal to the summary, exit 0.
+- Not recoverable: the perf01 server (uvicorn) logs of these six runs were written to throw-away directories that the run
+  removed. Health evidence: every run exit 0, 0 console errors, `attempts_other_than_1` 0; the auditor's own rerun (A1)
+  reproduced the recomputation.
