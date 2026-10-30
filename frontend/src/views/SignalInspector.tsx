@@ -12,6 +12,7 @@ import {
   formatProbability,
   formatRiskScore,
 } from "../utils/format";
+import { CONTRACT_TOOLTIP } from "../utils/contractTooltips";
 
 interface SignalInspectorProps {
   history: RiskUpdate[];
@@ -94,8 +95,8 @@ export function SignalInspector({
               tone={selectedRecord.RiskLevel}
             />
           </div>
-          <div>
-            <span>Evidence Type</span>
+          <div title={CONTRACT_TOOLTIP.DominantEvidence}>
+            <span>DominantEvidence</span>
             <strong>{evidenceType ?? UNAVAILABLE_LABEL}</strong>
           </div>
           <div>
@@ -204,7 +205,9 @@ export function SignalInspector({
           <div className="stat-list stat-list--compact">
             <div>
               <span>Vision</span>
-              <strong>{selectedRecord.provenance.replay.vision_label ?? "—"}</strong>
+              <strong>
+                {selectedRecord.provenance.replay.vision_label ?? "—"}
+              </strong>
             </div>
             <div>
               <span>Telemetry</span>
@@ -214,7 +217,9 @@ export function SignalInspector({
             </div>
             <div>
               <span>Frame</span>
-              <strong>{selectedRecord.provenance.replay.frame_file ?? "—"}</strong>
+              <strong>
+                {selectedRecord.provenance.replay.frame_file ?? "—"}
+              </strong>
             </div>
             <div>
               <span>Segment</span>

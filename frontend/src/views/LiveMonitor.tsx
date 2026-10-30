@@ -13,6 +13,7 @@ import { alertHoldNote } from "../utils/display";
 import { formatTimestamp } from "../utils/format";
 import { buildLiveMonitorModel } from "./liveMonitorModel";
 import type { ScenarioPlayerModel } from "./scenarioPlayerModel";
+import { CONTRACT_TOOLTIP } from "../utils/contractTooltips";
 
 interface LiveMonitorProps {
   latest: RiskUpdate;
@@ -149,21 +150,21 @@ export function LiveMonitor({
                 <div className="risk-badges">
                   <span
                     className="badge-field"
-                    title="Fused risk level: Low, Medium or High."
+                    title={CONTRACT_TOOLTIP.RiskLevel}
                   >
                     <span>RiskLevel</span>
                     <Pill label={latest.RiskLevel} tone={latest.RiskLevel} />
                   </span>
                   <span
                     className="badge-field"
-                    title="Which branch dominates the fused assessment."
+                    title={CONTRACT_TOOLTIP.DominantEvidence}
                   >
                     <span>DominantEvidence</span>
                     <Pill label={evidenceType} />
                   </span>
                   <span
                     className="badge-field"
-                    title="Alert state: NORMAL, CAUTION or HIGH_ALERT."
+                    title={CONTRACT_TOOLTIP.AlertSeverity}
                   >
                     <span>AlertSeverity</span>
                     <Pill
@@ -225,7 +226,7 @@ export function LiveMonitor({
           <Timer size={20} />
         </div>
         <div className="stat-list stat-list--compact">
-          <div title="Runtime health: FULL, DEGRADED or UNAVAILABLE.">
+          <div title={CONTRACT_TOOLTIP.SystemHealth}>
             <span>SystemHealth</span>
             <Pill label={systemHealth} tone={systemHealth} />
           </div>

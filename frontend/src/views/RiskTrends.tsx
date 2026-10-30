@@ -10,6 +10,7 @@ import {
   formatTimestamp,
 } from "../utils/format";
 import { distribution, riskRowClassName } from "./riskDistribution";
+import { CONTRACT_TOOLTIP } from "../utils/contractTooltips";
 
 interface RiskTrendsProps {
   history: RiskUpdate[];
@@ -72,8 +73,10 @@ export function RiskTrends({
                 <th>Time</th>
                 <th>RiskScore</th>
                 <th>RiskLevel</th>
-                <th>Alert</th>
-                <th>Evidence Type</th>
+                <th title={CONTRACT_TOOLTIP.AlertSeverity}>AlertSeverity</th>
+                <th title={CONTRACT_TOOLTIP.DominantEvidence}>
+                  DominantEvidence
+                </th>
                 <th>Flag</th>
               </tr>
             </thead>

@@ -20,6 +20,7 @@ import {
   getMatchedEvidenceRule,
   getRelativeEvidence,
 } from "../../../ai/src/evidence";
+import { CONTRACT_TOOLTIP } from "../utils/contractTooltips";
 
 interface ExplanationViewProps {
   selectedRecord: RiskUpdate;
@@ -147,7 +148,7 @@ export function ExplanationView({
 
           <div
             className="evidence-type-block"
-            title="Which branch dominates the fused assessment."
+            title={CONTRACT_TOOLTIP.DominantEvidence}
           >
             <span>DominantEvidence</span>
             <strong>
@@ -181,21 +182,21 @@ export function ExplanationView({
               <span>RiskScore</span>
               <strong>{formatRiskScore(selectedRecord.RiskScore)}</strong>
             </div>
-            <div title="Fused risk level: Low, Medium or High.">
+            <div title={CONTRACT_TOOLTIP.RiskLevel}>
               <span>RiskLevel</span>
               <Pill
                 label={selectedRecord.RiskLevel}
                 tone={selectedRecord.RiskLevel}
               />
             </div>
-            <div title="Alert state: NORMAL, CAUTION or HIGH_ALERT.">
+            <div title={CONTRACT_TOOLTIP.AlertSeverity}>
               <span>AlertSeverity</span>
               <Pill
                 label={selectedRecord.AlertSeverity}
                 tone={selectedRecord.AlertSeverity}
               />
             </div>
-            <div title="Runtime health: FULL, DEGRADED or UNAVAILABLE.">
+            <div title={CONTRACT_TOOLTIP.SystemHealth}>
               <span>SystemHealth</span>
               <Pill
                 label={selectedRecord.SystemHealth}

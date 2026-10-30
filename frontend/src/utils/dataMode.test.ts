@@ -64,6 +64,13 @@ describe("Data mode: the choices and their labels", () => {
     expect(DATA_MODE_NOTE.LIVE_MODEL_RUNTIME).not.toMatch(/MobileNet|ResNet/i);
     expect(DATA_MODE_NOTE.LIVE_MODEL_RUNTIME).toMatch(/XGBoost/);
   });
+
+  // User decision 2026-10-30: the Live note carries no accuracy disclaimer.
+  it("the Live note is exactly the pipeline sentence, without the 'experimental' remark", () => {
+    expect(DATA_MODE_NOTE.LIVE_MODEL_RUNTIME).toBe(
+      "Vision: camera → trained vision model (named on the line below) · Telemetry: prepared raw features → trained XGBoost.",
+    );
+  });
 });
 
 // The saved-session picker belongs to Live: the constructed scenario is a demo aid, so its

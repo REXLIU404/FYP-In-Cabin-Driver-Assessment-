@@ -4,6 +4,7 @@ import type { RiskUpdate } from "../types";
 import { alertBannerClass } from "../utils/display";
 import { formatBranchPercent, formatRiskScore } from "../utils/format";
 import { Pill } from "./Pill";
+import { CONTRACT_TOOLTIP } from "../utils/contractTooltips";
 
 interface AlertBannerProps {
   latest: RiskUpdate;
@@ -28,10 +29,7 @@ export function AlertBanner({ latest, stale = false }: AlertBannerProps) {
           </span>
         </div>
         <div className="banner-pills">
-          <span
-            className="badge-field"
-            title="Runtime health: FULL, DEGRADED or UNAVAILABLE."
-          >
+          <span className="badge-field" title={CONTRACT_TOOLTIP.SystemHealth}>
             <span>SystemHealth</span>
             <Pill label={latest.SystemHealth} tone={latest.SystemHealth} />
           </span>
@@ -78,17 +76,11 @@ export function AlertBanner({ latest, stale = false }: AlertBannerProps) {
         </span>
       </div>
       <div className="banner-pills">
-        <span
-          className="badge-field"
-          title="Alert state: NORMAL, CAUTION or HIGH_ALERT."
-        >
+        <span className="badge-field" title={CONTRACT_TOOLTIP.AlertSeverity}>
           <span>AlertSeverity</span>
           <Pill label={severity} tone={severity} />
         </span>
-        <span
-          className="badge-field"
-          title="Runtime health: FULL, DEGRADED or UNAVAILABLE."
-        >
+        <span className="badge-field" title={CONTRACT_TOOLTIP.SystemHealth}>
           <span>SystemHealth</span>
           <Pill label={latest.SystemHealth} tone={latest.SystemHealth} />
         </span>

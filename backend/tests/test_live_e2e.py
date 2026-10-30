@@ -320,7 +320,7 @@ class TestStLiveE2E01:
             .map((d) => [d.querySelector('span')?.textContent.trim(), d.lastElementChild?.textContent.trim()]))""")
         assert stats["RiskScore"] == f"{fixed(wanted['RiskScore'], 1)} / 100"
         assert stats["RiskLevel"] == wanted["RiskLevel"]
-        assert stats["Evidence Type"] == wanted["DominantEvidence"]
+        assert stats["DominantEvidence"] == wanted["DominantEvidence"]
         assert stats["P_distraction"] == percent(wanted["P_distraction"])
         assert stats["Telemetry non-safe risk"] == percent(wanted["P_telemetry_anomaly"])
         assert stats["Vision freshness"] == stats["Telemetry freshness"] == "fresh"

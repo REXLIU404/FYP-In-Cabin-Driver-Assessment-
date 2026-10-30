@@ -208,8 +208,12 @@
 
 表中各文件计数是修复提交 c7c60fe 的文件总数：`display.test.ts` 32、`runtimeNotices.test.ts` 37、
 `usability.test.ts` 25（整库 968 passed / 32 files，见 `docs/evidence/2026-10-26/ds-review-fixes/03-vitest.log`）。
-本版更正前，旧稿的 48 / 44 / 81 / 18 / 21 / 22 / 24 是把多文件合计当成了单文件数（见
-`.superpowers/collab/review-ds0/findings.md` D11/D14/D15）。
+本版更正前的旧稿数字分两类（2026-10-30 再次更正，依据是 DS-3 合并的独立复审）：
+- 48 / 44 / 81 是把多文件合计当成了单文件数（48 = 32 + 16，44 = 28 + 16，81 = 37 + 28 + 16；见
+  `.superpowers/collab/review-ds0/findings.md` D15）；
+- 18 / 21 / 22 / 24 **不是**合计，而是 `usability.test.ts` 在 TDD 各步之间的真实单文件数（7e64c4d 时 16 条，
+  依次加 R13 与 R6 的 2 条得 18、R2/R4/R5 得 21、R26 得 22、R11/R21 得 24、R30 得 25；上表 R30 一行的
+  `1 failed | 24 passed` 即 25 条之前的状态）。上一版把它们也归为「多文件合计」，是错的。
 
 ## 4. 门禁结果
 

@@ -56,7 +56,7 @@ export const firstResultHint = (mode: OperationMode): string =>
 /** The sentence under the controls for each mode. */
 export const DATA_MODE_NOTE: Record<OperationMode, string> = {
   LIVE_MODEL_RUNTIME:
-    "Vision: camera → trained vision model (named on the line below) · Telemetry: prepared raw features → trained XGBoost. Frontal-camera accuracy is experimental.",
+    "Vision: camera → trained vision model (named on the line below) · Telemetry: prepared raw features → trained XGBoost.",
   PREPARED_SESSION_RUNTIME:
     "Legacy / test-only replay, not the Live system: prepared probabilities and local risk logic, with no trained model and no backend. The camera preview does not drive it. It is kept for regression tests and backward compatibility, and the next page load starts on Live again. Evidence older than a fixed 3 s counts as expired here; the freshness setting applies to Live sessions only.",
   // The constructed scenario shows no note (plan Task 7): the CONSTRUCTED SCENARIO

@@ -72,7 +72,9 @@ describe("Live Monitor: every status chip says what it is", () => {
       }),
     );
     expect(pillsAfter(html, "RiskLevel")).toEqual(["Medium:Medium"]);
-    expect(pillsAfter(html, "DominantEvidence")).toEqual(["neutral:Combined evidence"]);
+    expect(pillsAfter(html, "DominantEvidence")).toEqual([
+      "neutral:Combined evidence",
+    ]);
     expect(pillsAfter(html, "AlertSeverity")).toEqual(["CAUTION:CAUTION"]);
   });
 
@@ -85,7 +87,9 @@ describe("Live Monitor: every status chip says what it is", () => {
         }),
       }),
     );
-    expect(pillsAfter(html, "AlertSeverity")).toEqual(["HIGH_ALERT:HIGH_ALERT"]);
+    expect(pillsAfter(html, "AlertSeverity")).toEqual([
+      "HIGH_ALERT:HIGH_ALERT",
+    ]);
     expect(pillsAfter(html, "SystemHealth")).toEqual(["DEGRADED:DEGRADED"]);
   });
 
@@ -104,7 +108,10 @@ describe("contract names everywhere, values untouched, plain words in the toolti
   it("the banner labels AlertSeverity / SystemHealth and shows the recorded values", () => {
     const html = markup(
       createElement(AlertBanner, {
-        latest: record({ AlertSeverity: "HIGH_ALERT", SystemHealth: "DEGRADED" }),
+        latest: record({
+          AlertSeverity: "HIGH_ALERT",
+          SystemHealth: "DEGRADED",
+        }),
       }),
     );
     expect(pillsAfter(html, "AlertSeverity")).toEqual([
@@ -115,7 +122,7 @@ describe("contract names everywhere, values untouched, plain words in the toolti
       'title="Alert state: NORMAL, CAUTION or HIGH_ALERT."',
     );
     expect(html).toContain(
-      'title="Runtime health: FULL, DEGRADED or UNAVAILABLE."',
+      'title="Input availability: FULL means both inputs are fresh, DEGRADED means one input is missing or expired, UNAVAILABLE means there is no current assessment. It does not measure accuracy."',
     );
   });
 
@@ -130,8 +137,11 @@ describe("contract names everywhere, values untouched, plain words in the toolti
     );
     expect(pillsAfter(html, "RiskLevel")).toEqual(["Medium:Medium"]);
     // Was 'Caution' / 'Full' before review R23: the contract value stays as recorded.
-    expect(pillsAfter(html, "AlertSeverity")).toHaveLength(1);
-    expect(pillsAfter(html, "AlertSeverity")[0]).toMatch(/^(NORMAL|CAUTION|HIGH_ALERT):/);
+    // The label itself must be the recorded value: a title-cased "Caution" fails here.
+    expect(selected.AlertSeverity).toMatch(/^(NORMAL|CAUTION|HIGH_ALERT)$/);
+    expect(pillsAfter(html, "AlertSeverity")).toEqual([
+      `${selected.AlertSeverity}:${selected.AlertSeverity}`,
+    ]);
     expect(pillsAfter(html, "SystemHealth")).toEqual(["FULL:FULL"]);
     expect(html).toContain("<span>DominantEvidence</span>");
     expect(html).not.toContain("AlertStatus");
@@ -145,14 +155,78 @@ describe("contract names everywhere, values untouched, plain words in the toolti
     const html = renderLive(record());
     expect(html).toContain('title="Fused risk level: Low, Medium or High."');
     expect(html).toContain(
-      'title="Which branch dominates the fused assessment."',
+      'title="What the assessment rests on: Vision-dominant or Telemetry-dominant when one branch is clearly higher, Combined evidence when both are close, Partial evidence when only one branch is available, Low observed risk when RiskScore is below the low threshold."',
     );
     expect(html).toContain(
       'title="Alert state: NORMAL, CAUTION or HIGH_ALERT."',
     );
     expect(html).toContain(
-      'title="Runtime health: FULL, DEGRADED or UNAVAILABLE."',
+      'title="Input availability: FULL means both inputs are fresh, DEGRADED means one input is missing or expired, UNAVAILABLE means there is no current assessment. It does not measure accuracy."',
     );
+  });
+});
+
+// Review of the DS-3 merge (75e1094): R23 left two views on the old names, and two
+// tooltips only listed the values instead of saying what they mean.
+describe("contract names in Signal Inspector and Risk Trends too; tooltips say what the values mean", () => {
+  const DOMINANT_TIP =
+    "What the assessment rests on: Vision-dominant or Telemetry-dominant when one branch is clearly higher, Combined evidence when both are close, Partial evidence when only one branch is available, Low observed risk when RiskScore is below the low threshold.";
+  const HEALTH_TIP =
+    "Input availability: FULL means both inputs are fresh, DEGRADED means one input is missing or expired, UNAVAILABLE means there is no current assessment. It does not measure accuracy.";
+
+  it("Signal Inspector labels the field DominantEvidence, with the tooltip", () => {
+    const selected = record();
+    const html = markup(
+      createElement(SignalInspector, {
+        history: [selected],
+        selectedRecord: selected,
+        thresholdLow: 30,
+        onSelectWindow: () => {},
+        onToggleFlag: () => {},
+      }),
+    );
+    expect(html).toContain(
+      `<div title="${DOMINANT_TIP}"><span>DominantEvidence</span>`,
+    );
+    expect(html).not.toContain("Evidence Type");
+  });
+
+  it("Risk Trends heads the columns AlertSeverity and DominantEvidence, with the tooltips", () => {
+    const selected = record();
+    const html = markup(
+      createElement(RiskTrends, {
+        history: [selected],
+        selectedWindowId: selected.window_id,
+        thresholdLow: 30,
+        thresholdHigh: 60,
+        onSelectWindow: () => {},
+      }),
+    );
+    expect(html).toContain(
+      '<th title="Alert state: NORMAL, CAUTION or HIGH_ALERT.">AlertSeverity</th>',
+    );
+    expect(html).toContain(`<th title="${DOMINANT_TIP}">DominantEvidence</th>`);
+    expect(html).not.toContain("<th>Alert</th>");
+    expect(html).not.toContain("Evidence Type");
+  });
+
+  it("the SystemHealth tooltip says FULL is about fresh inputs, not accuracy", () => {
+    const html = renderLive(record());
+    expect(html).toContain(`title="${HEALTH_TIP}"`);
+    expect(html).not.toContain("Which branch dominates");
+    expect(html).not.toContain("Runtime health:");
+  });
+
+  it("contract names are shown as written, not upper-cased by the stylesheet", () => {
+    const stylesSource = readFileSync(
+      new URL("../styles.css", import.meta.url),
+      "utf8",
+    );
+    const rule = stylesSource.match(
+      /\.badge-field > span:first-child \{[^}]*\}/,
+    );
+    expect(rule).toBeTruthy();
+    expect(rule![0]).not.toContain("text-transform: uppercase");
   });
 });
 
@@ -322,7 +396,9 @@ describe("Selection bar: following the newest window vs a pinned one (deferred m
       isMonitoring: false,
       onFollowLatest,
     });
-    expect(textOf(markup(tree))).toBe("Showing Window 3 · pinned Follow latest");
+    expect(textOf(markup(tree))).toBe(
+      "Showing Window 3 · pinned Follow latest",
+    );
   });
 });
 
@@ -362,9 +438,10 @@ describe("Configuration: no second set of run controls", () => {
     });
 
   it("Start / Pause / Restart live in the top bar only; export stays here", () => {
-    const buttons = findElements(renderConfig(), (el) => el.type === "button").map(
-      (el) => textOf(markup(el)),
-    );
+    const buttons = findElements(
+      renderConfig(),
+      (el) => el.type === "button",
+    ).map((el) => textOf(markup(el)));
     expect(buttons).toEqual(["Export JSON", "Export CSV"]);
   });
 
@@ -428,6 +505,14 @@ describe("narrow layout: brand text gives way, the nav scrollbar stays visible (
 
   it("at <=900 px the brand text is hidden, freeing the row for the view buttons", () => {
     expect(block(900)).toMatch(/\.brand-copy[^{]*\{[^}]*display:\s*none/);
+  });
+
+  // Review of the DS-3 merge: a later rule in the same block showed it again for a
+  // collapsed sidebar (681-900 px).
+  it("no rule in the <=900 px block shows the brand text again, collapsed or not", () => {
+    expect(block(900)).not.toMatch(
+      /\.brand-copy[^{]*\{[^}]*display:\s*(block|flex|inline|grid)/,
+    );
   });
 
   it("the one-row nav shows a thin scrollbar instead of hiding it", () => {
