@@ -23,6 +23,7 @@ not a sensor age.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import platform
@@ -177,8 +178,18 @@ def parse_server_timing(header: str | None) -> dict[str, float]:
     return out
 
 
+RAW_TIMINGS_FILE = "perf01_timings.json"
+RAW_TIMING_FIELDS = ("windowId", "capturedAtMs", "renderedAtMs", "captureToSendMs", "networkMs", "renderMs",
+                     "attemptIndex")
+
+
+def measured_ids(raw: dict, windows: int, warmup: int) -> list[int]:
+    """The windows the statistics are computed over: after the warm-up, at most ``windows`` of them."""
+    return sorted(raw["timings"])[warmup:warmup + windows]
+
+
 def analyse(raw: dict, windows: int, warmup: int) -> dict:
-    ids = sorted(raw["timings"])[warmup:warmup + windows]
+    ids = measured_ids(raw, windows, warmup)
     rows = [raw["timings"][i] for i in ids]
     total = [t["renderedAtMs"] - t["capturedAtMs"] for t in rows]
     stages = {
@@ -241,6 +252,18 @@ def main(argv=None) -> int:
               "loop": "app default: target 10 requests/s, one in flight", "console_errors": raw["console_errors"],
               **analyse(raw, args.windows, args.warmup)}
     args.out.mkdir(parents=True, exist_ok=True)
+    # CX-A3 R-1: the raw per-window timings of exactly the measured windows, bound by hash, so the
+    # quantiles can be recomputed from source data instead of read from the summary.
+    rows = [{k: raw["timings"][i].get(k) for k in RAW_TIMING_FIELDS}
+            for i in measured_ids(raw, args.windows, args.warmup)]
+    raw_bytes = json.dumps(rows, indent=1).encode()
+    (args.out / RAW_TIMINGS_FILE).write_bytes(raw_bytes)
+    result["raw_timings"] = {
+        "file": RAW_TIMINGS_FILE, "windows": len(rows), "sha256": hashlib.sha256(raw_bytes).hexdigest(),
+        "capture_to_render": "renderedAtMs - capturedAtMs per row",
+        "quantile_rule": "sorted values; median = statistics.median; p95 = value at index "
+                         "min(n - 1, round(0.95 * (n - 1))) (e2e_support.summarise)",
+    }
     (args.out / "perf01.json").write_text(json.dumps(result, indent=2, sort_keys=True))
     c2r = result["stages"]["capture_to_render_ms"]
     print(f"PERF-01: {result['windows_measured']} windows at {result['achieved_rate_hz']} Hz; capture->render p50 {c2r.get('median')} ms, "

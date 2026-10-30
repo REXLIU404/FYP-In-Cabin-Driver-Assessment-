@@ -135,3 +135,23 @@ def test_perf02_main_runs_the_chosen_model(tmp_path, monkeypatch):
     monkeypatch.setattr(perf02, "run", fake_run)
     assert perf02.main(["--active-vision", RN, "--out", str(tmp_path)]) == 0
     assert seen["active"] == RN
+
+
+def test_perf01_writes_the_measured_windows_raw_timings_and_they_reproduce_the_quantiles(tmp_path, monkeypatch):
+    """CX-A3 R-1: the summary alone cannot be re-derived. The run must keep, beside perf01.json,
+    the raw per-window timings of exactly the measured windows (after the warm-up), bound by hash,
+    so that an auditor recomputes the quantiles from them."""
+    import hashlib
+    import json
+    monkeypatch.setattr(perf01, "collect", lambda windows, warmup, active_vision="stable": {
+        **_raw(650), "browser": "x", "console_errors": [], "sid": "s", "vision_model": {}})
+    assert perf01.main(["--windows", "600", "--warmup", "20", "--out", str(tmp_path)]) == 0
+    result = json.loads((tmp_path / "perf01.json").read_text())
+    raw_file = tmp_path / result["raw_timings"]["file"]
+    assert result["raw_timings"]["sha256"] == hashlib.sha256(raw_file.read_bytes()).hexdigest()
+    rows = json.loads(raw_file.read_text())
+    assert [r["windowId"] for r in rows] == list(range(21, 621))  # the measured 600, warm-up excluded
+    recomputed = perf01.summarise([r["renderedAtMs"] - r["capturedAtMs"] for r in rows])
+    assert recomputed == result["stages"]["capture_to_render_ms"]
+    assert result["raw_timings"]["windows"] == 600
+    assert "p95" in result["raw_timings"]["quantile_rule"]
