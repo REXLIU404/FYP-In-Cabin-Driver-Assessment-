@@ -13,6 +13,22 @@ from pathlib import Path
 
 PREPROCESS = "rgb_resize_224_bilinear_no_crop_div255_imagenet"
 CLASSES = [f"c{i}" for i in range(10)]
+# ``trained.py`` compares a candidate's labels against its own runtime contract
+# (``safe_driving``, ``talking_phone_right``, ...), so class_metadata.json must use the
+# RUNTIME names here, not the DMD action names.
+TRAINING_LABELS = {
+    "c0": "safe_driving", "c1": "texting_right", "c2": "talking_phone_right",
+    "c3": "texting_left", "c4": "talking_phone_left", "c5": "operating_radio",
+    "c6": "drinking", "c7": "reaching_behind", "c8": "hair_makeup",
+    "c9": "talking_to_passenger",
+}
+# The DMD action each class was actually sampled from (provenance, not a label).
+DMD_ACTIONS = {
+    "c0": "safe_drive", "c1": "texting_right", "c2": "phonecall_right",
+    "c3": "texting_left", "c4": "phonecall_left", "c5": "radio",
+    "c6": "drinking", "c7": "reach_backseat", "c8": "hair_and_makeup",
+    "c9": "talking_to_passenger",
+}
 
 
 def _sha256(path: Path) -> str:
@@ -90,6 +106,8 @@ def export(checkpoint: Path, out_dir: Path, *, parent_sha256: str,
         "class_to_idx": {name: index for index, name in enumerate(CLASSES)},
         "safe_class": "c0",
         "runtime_aliases": {"c0": "safe_driving"},
+        "training_labels": TRAINING_LABELS,
+        "dmd_actions": DMD_ACTIONS,
         "meaning": "Runtime alias does not rename the DMD training action.",
     }, indent=2))
     (out_dir / "evaluation_metrics.json").write_text(json.dumps({}, indent=2))

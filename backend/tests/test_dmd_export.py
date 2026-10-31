@@ -89,6 +89,11 @@ def test_export_writes_a_package_that_validate_package_accepts(tmp_path):
     assert validate_package(manifest, out_dir) == []
     assert (out_dir / "model.onnx").is_file()
     assert (out_dir / "class_metadata.json").is_file()
+    metadata = json.loads((out_dir / "class_metadata.json").read_text())
+    # vision_candidates._labels refuses a package without a training label per class
+    assert sorted(metadata["training_labels"]) == [f"c{i}" for i in range(10)]
+    assert metadata["training_labels"]["c0"] == "safe_driving"
+    assert metadata["dmd_actions"]["c2"] == "phonecall_right"
 
 
 def test_export_refuses_a_zero_sized_smoke_set(tmp_path):
