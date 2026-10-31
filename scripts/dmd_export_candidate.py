@@ -50,16 +50,23 @@ def build_manifest(*, run_id: str, model_sha256: str, parent_sha256: str,
 
 def export(checkpoint: Path, out_dir: Path, *, parent_sha256: str,
            smoke_n: int = 1, sample_ids_sha256: str = "0" * 64,
-           smoke_selection: str = "gB_10 val frames grouped by class") -> dict:
-    """Write the package. ``smoke_n`` must be >= 1: the manifest schema rejects 0."""
+           smoke_selection: str = "gB_10 val frames grouped by class",
+           model_factory=None) -> dict:
+    """Write the package. ``smoke_n`` must be >= 1: the manifest schema rejects 0.
+
+    ``model_factory`` exists so tests can inject a small same-shaped network; production
+    always builds the real MobileNetV3. Building the real one a dozen times inside a
+    long pytest process crashes torch 2.12 on macOS during ONNX export.
+    """
     if smoke_n < 1:
         raise ValueError("smoke_n must be at least 1 (runtime manifest schema)")
     import torch
     from torchvision.models import mobilenet_v3_large
 
+    factory = model_factory or (lambda: mobilenet_v3_large(weights=None, num_classes=10))
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    model = mobilenet_v3_large(weights=None, num_classes=10)
+    model = factory()
     model.load_state_dict(torch.load(checkpoint, map_location="cpu"))
     model.eval()
 
