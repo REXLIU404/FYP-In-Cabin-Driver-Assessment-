@@ -182,6 +182,25 @@ export function createFrameCapture(deps: FrameCaptureDeps): FrameCapture {
   };
 }
 
+/** How often a camera start checks whether its first frame has arrived. */
+export const FIRST_FRAME_POLL_MS = 20;
+
+/**
+ * Resolves once a request can carry a picture: the first frame callback has cached a
+ * tuple, or the source is in fallback mode, or `FRAME_CALLBACK_DEADLINE_MS` has passed
+ * (the source then falls back at the next `take`). A camera start awaits this before it
+ * reports `live`, because monitoring starts right after and its first window would
+ * otherwise go out without an image.
+ */
+export async function awaitFirstFrame(
+  frames: FrameCapture,
+  deps: { now(): number; wait(ms: number): Promise<void> },
+): Promise<void> {
+  const until = deps.now() + FRAME_CALLBACK_DEADLINE_MS;
+  while (frames.mode() === "waiting" && deps.now() < until)
+    await deps.wait(FIRST_FRAME_POLL_MS);
+}
+
 /** The current picture as a 640-wide JPEG data URL, or `null` if there is none to draw. */
 const drawFrame = (
   video: HTMLVideoElement,
@@ -335,6 +354,13 @@ export function useCameraPreview() {
           setStatus("error");
         }
       });
+      // The caller starts monitoring as soon as this returns: wait until its first
+      // request can carry a picture (the device listener above is already armed).
+      await awaitFirstFrame(frames, {
+        now: () => Date.now(),
+        wait: (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
+      });
+      if (current !== generation.current) return;
       lastStop.current = null;
       setActualFps(track.getSettings().frameRate ?? null);
       setStatus("live");

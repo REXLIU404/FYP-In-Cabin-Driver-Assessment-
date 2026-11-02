@@ -2,8 +2,11 @@ import { describe, expect, it, vi } from "vitest";
 
 import hookSource from "./useCameraPreview.ts?raw";
 import {
+  awaitFirstFrame,
   createFrameCapture,
   diagnoseCapture,
+  FIRST_FRAME_POLL_MS,
+  FRAME_CALLBACK_DEADLINE_MS,
   nextCameraEpoch,
   type CaptureProbe,
   type FrameCaptureDeps,
@@ -113,6 +116,77 @@ describe("nextCameraEpoch: every camera start has a larger epoch than any before
     expect(nextCameraEpoch(1_800_000_000_124, 1_700_000_000_000)).toBe(
       1_800_000_000_125,
     );
+  });
+});
+
+describe("awaitFirstFrame: a camera start is not done until a request can carry a picture", () => {
+  // Without this wait, Start right after a camera (re)start sent its first windows while
+  // the frame source was still `waiting` for its first callback: no image, so a Live
+  // window without vision evidence although the camera was on.
+  const setup = (over: Partial<FrameCaptureDeps> = {}) => {
+    const clock = { now: 1_700_000_000_000 };
+    const capture = createFrameCapture({
+      epoch: 1_800_000_000_000,
+      callbacksSupported: true,
+      now: () => clock.now,
+      timeOrigin: 1_700_000_000_000,
+      draw: () => "jpeg",
+      ...over,
+    });
+    return { clock, capture };
+  };
+
+  it("returns at once when the browser has no frame callbacks (fallback draws at the tick)", async () => {
+    const { clock, capture } = setup({ callbacksSupported: false });
+    const wait = vi.fn(async () => undefined);
+    await awaitFirstFrame(capture, { now: () => clock.now, wait });
+    expect(wait).not.toHaveBeenCalled();
+    expect(capture.take()?.image_base64).toBe("jpeg");
+  });
+
+  it("waits for the first frame callback, then the next request carries that frame", async () => {
+    const { clock, capture } = setup();
+    let waits = 0;
+    const wait = vi.fn(async (ms: number) => {
+      clock.now += ms;
+      if (++waits === 3) capture.onFrame({ presentedFrames: 1 });
+    });
+    expect(capture.take()).toBeNull(); // the race: a tick before the first callback
+    await awaitFirstFrame(capture, { now: () => clock.now, wait });
+    expect(wait).toHaveBeenCalledTimes(3);
+    expect(wait).toHaveBeenCalledWith(FIRST_FRAME_POLL_MS);
+    expect(capture.mode()).toBe("explicit");
+    expect(capture.take()?.vision_frame).toEqual({
+      epoch: 1_800_000_000_000,
+      index: 1,
+    });
+  });
+
+  it("a callback whose picture cannot be drawn does not end the wait", async () => {
+    let draws = 0;
+    const { clock, capture } = setup({
+      draw: () => (++draws === 1 ? null : "jpeg"),
+    });
+    const wait = vi.fn(async (ms: number) => {
+      clock.now += ms;
+      capture.onFrame({ presentedFrames: draws + 1 });
+    });
+    await awaitFirstFrame(capture, { now: () => clock.now, wait });
+    expect(wait).toHaveBeenCalledTimes(2);
+    expect(capture.take()?.image_base64).toBe("jpeg");
+  });
+
+  it("gives up at the callback deadline, so a browser that never calls back still starts", async () => {
+    const { clock, capture } = setup();
+    const start = clock.now;
+    const wait = vi.fn(async (ms: number) => {
+      clock.now += ms;
+    });
+    await awaitFirstFrame(capture, { now: () => clock.now, wait });
+    expect(clock.now - start).toBe(FRAME_CALLBACK_DEADLINE_MS);
+    // Past the deadline the source falls back for good and draws at the tick.
+    expect(capture.take()?.captured_at_source).toBe("client_clock");
+    expect(capture.mode()).toBe("fallback");
   });
 });
 
@@ -354,7 +428,8 @@ type Wiring =
   | "TICK_DOES_NOT_DRAW"
   | "TICK_TAKES_THE_CACHE"
   | "SUPPORT_DETECTED"
-  | "CALLBACK_REGISTERED";
+  | "CALLBACK_REGISTERED"
+  | "FIRST_FRAME_AWAITED";
 
 /** The wiring requirements the hook's source fails; an empty list is a pass. */
 function wiringViolations(source: string): Wiring[] {
@@ -422,6 +497,14 @@ function wiringViolations(source: string): Wiring[] {
             "frameCallbackRef.current = capture.requestVideoFrameCallback(onFrame);",
           ),
     ],
+    // A start reports "live" only after the first frame (or the callback deadline):
+    // the caller starts monitoring straight after, and its first window must carry it.
+    [
+      "FIRST_FRAME_AWAITED",
+      /await awaitFirstFrame\(frames, \{/.test(code) &&
+        code.indexOf("await awaitFirstFrame(frames") <
+          code.indexOf('setStatus("live")'),
+    ],
   ];
   return checks.filter(([, ok]) => !ok).map(([name]) => name);
 }
@@ -482,6 +565,16 @@ describe("useCameraPreview: the hook is wired to the frame source the way the pu
       name: "the epoch computed but not remembered",
       edit: (s) => once(s, "lastEpoch.current = epoch;", "void epoch;"),
       breaks: "EPOCH_KEPT",
+    },
+    {
+      name: "the start reports live before the first frame exists",
+      edit: (s) =>
+        once(
+          s,
+          "await awaitFirstFrame(frames, {",
+          "void awaitFirstFrame(frames, {",
+        ),
+      breaks: "FIRST_FRAME_AWAITED",
     },
     {
       name: "the capture <video> left detached",
