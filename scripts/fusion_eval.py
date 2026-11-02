@@ -270,14 +270,6 @@ def e5_variant_scenarios(base: dict, variants: list[dict]) -> dict[str, dict]:
     return out
 
 
-def segment_at(manifest: dict, pos: int) -> int:
-    index = 0
-    for segment in manifest["segments"]:
-        if segment["start_ms"] <= pos:
-            index = segment["index"]
-    return index
-
-
 def e5_steps(manifest: dict, frames_dir: Path, interval_ms: int, policy: dict,
              variant_id: str) -> list[dict]:
     """The playback of ai/src/scenarioTimeline.ts at the product's default 10 windows/s:
@@ -371,6 +363,7 @@ def _window(body: dict) -> dict:
         "vision_freshness": fresh.get("vision"), "telemetry_freshness": fresh.get("telemetry"),
         "vision_model_id": prov.get("vision_model_id"),
         "vision_model_sha256": prov.get("vision_model_sha256"),
+        "telemetry_model_sha256": prov.get("telemetry_model_sha256"),
     }
 
 
@@ -427,8 +420,13 @@ def execute(plan: dict) -> dict:
                     window = _window(response.json())
                     window.update(request_id=step["request_id"], image_sha256=image_sha,
                                   meta=step.get("meta", {}))
-                    if window["vision_model_id"] != STABLE_MODEL_ID:
-                        problems.append(f"{step['request_id']}: window used {window['vision_model_id']!r}")
+                    used = (window["vision_model_id"], window["vision_model_sha256"],
+                            window["telemetry_model_sha256"])
+                    expected = (STABLE_MODEL_ID, identity["vision_model_sha256"],
+                                identity["telemetry_model_sha256"])
+                    if used != expected:
+                        problems.append(f"{step['request_id']}: window used models {used}, "
+                                        f"GET /api/models reported {expected}")
                     windows.append(window)
                 sessions_out.append({"session_id": session["session_id"],
                                      "meta": session.get("meta", {}), "windows": windows})
@@ -523,6 +521,32 @@ def e2_rows(pairs: list[dict], sessions: list[dict], protocol: dict) -> list[dic
     return rows
 
 
+def threshold_ties(rows: list[dict], protocol: dict) -> dict:
+    """NOT PRE-DECLARED (added after the 2026-11-02 review): how many windows take their
+    level from the product's 1-dp rounding at a threshold. Table 9's 0.3 and 0.6 times a
+    near-saturated branch land on 30 and 60, so the rounded and unrounded levels can differ.
+    Reported next to the declared numbers, never in place of them."""
+    weights = protocol["e2"]["weights"]
+    low, high = protocol["fixed_runtime"]["threshold_low"], protocol["fixed_runtime"]["threshold_high"]
+    base_index = protocol["e2"]["baseline_weight_index"]
+    ref_levels = {"REF_LOW": ["Low"], "REF_ELEVATED": ["Medium", "High"], "REF_HIGH": ["High"]}
+    unrounded = {(r["pair_id"], r["weight_index"]): level_of(r["exact_score"], low, high) for r in rows}
+    out = {}
+    for j, weight in enumerate(weights):
+        cell = [r for r in rows if r["weight_index"] == j]
+        decided = [r for r in cell if unrounded[(r["pair_id"], j)] != r["RiskLevel"]]
+        out[weight["name"]] = {
+            "within_0_1_of_a_threshold": sum(min(abs(r["exact_score"] - low), abs(r["exact_score"] - high)) <= 0.1
+                                             for r in cell),
+            "level_decided_by_rounding": len(decided),
+            "pairs_decided_by_rounding": sorted(r["pair_id"] for r in decided),
+            "agrees_unrounded": sum(unrounded[(r["pair_id"], j)] in ref_levels[r["reference"]] for r in cell),
+            "changed_vs_baseline_unrounded": None if j == base_index else sum(
+                unrounded[(r["pair_id"], j)] != unrounded[(r["pair_id"], base_index)] for r in cell),
+        }
+    return out
+
+
 def e2_summary(rows: list[dict], protocol: dict) -> dict:
     weights = protocol["e2"]["weights"]
     strata = [s["id"] for s in protocol["e2"]["strata"]]
@@ -596,6 +620,7 @@ def e2_summary(rows: list[dict], protocol: dict) -> dict:
             {k: r[k] for k in ("pair_id", "stratum", "P_distraction", "P_telemetry", "RiskScore",
                                "RiskLevel", "DominantEvidence", "reference")}
             for r in pair_level if r["attenuation_case"]],
+        "post_hoc_not_predeclared": {"threshold_ties": threshold_ties(rows, protocol)},
         "r14_examples": [
             {k: r[k] for k in ("pair_id", "w_v", "w_t", "P_distraction", "P_telemetry", "RiskScore",
                                "DominantEvidence")}

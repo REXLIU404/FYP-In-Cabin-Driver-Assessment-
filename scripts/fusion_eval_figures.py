@@ -58,12 +58,17 @@ def e2_figures(rows: list[dict], protocol: dict, out_dir: Path) -> list[str]:
             cell = sorted((r for r in rows if r["stratum"] == stratum["id"] and r["weight_index"] == j),
                           key=lambda r: r["pair_id"])
             xs = [j + (i - (len(cell) - 1) / 2) * 0.045 for i in range(len(cell))]
-            ax.scatter(xs, [r["RiskScore"] for r in cell], s=14, color=SERIES[0],
-                       edgecolors=SURFACE, linewidths=0.6, zorder=3)
             scores = sorted(r["RiskScore"] for r in cell)
             median = (scores[len(scores) // 2] + scores[(len(scores) - 1) // 2]) / 2
-            ax.plot([j - 0.3, j + 0.3], [median, median], color=INK, linewidth=1.6, zorder=4,
-                    solid_capstyle="round")
+            ax.plot([j - 0.3, j + 0.3], [median, median], color=INK_2, linewidth=0.9, zorder=3)
+            agree = [(x, r["RiskScore"]) for x, r in zip(xs, cell) if r["agrees"]]
+            miss = [(x, r["RiskScore"]) for x, r in zip(xs, cell) if not r["agrees"]]
+            if agree:
+                ax.scatter(*zip(*agree), s=14, color=SERIES[0], edgecolors=SURFACE, linewidths=0.6,
+                           zorder=4)
+            if miss:  # shape, not colour, marks disagreement with the reference
+                ax.scatter(*zip(*miss), s=30, facecolors=SURFACE, edgecolors=INK, linewidths=1.2,
+                           zorder=5)
         _thresholds(ax, low, high, right_labels=ax in axes[:, -1])
         ax.set_title(f"{stratum['id']}  V {stratum['vision']} / T {stratum['telemetry']}\n"
                      f"reference {ref_of[stratum['id']]}", loc="left")
@@ -74,9 +79,10 @@ def e2_figures(rows: list[dict], protocol: dict, out_dir: Path) -> list[str]:
         ax.set_ylabel("RiskScore (0-100)")
     for ax in axes[-1]:
         ax.set_xlabel("fusion weights w_v / w_t")
-    fig.suptitle("E2: RiskScore of 10 constructed pairs per stratum under the five Table 9 weights "
-                 "(dots = pairs, bar = median)", x=0.01, ha="left", fontsize=10)
-    fig.tight_layout(rect=(0, 0, 0.97, 0.96))
+    fig.suptitle("E2: RiskScore of 10 constructed pairs per stratum under the five Table 9 weights\n"
+                 "filled dot = pair agreeing with the reference, hollow ring = disagreeing, grey bar = median; "
+                 "a score of exactly 30.0 is Medium and 60.0 is High", x=0.01, ha="left", fontsize=9.5)
+    fig.tight_layout(rect=(0, 0, 0.97, 0.94))
     path = out_dir / "e2_scores_by_stratum.png"
     fig.savefig(path, dpi=DPI)
     plt.close(fig)

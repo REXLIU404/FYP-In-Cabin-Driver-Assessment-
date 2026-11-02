@@ -227,6 +227,28 @@ def test_e2_rows_and_summary_count_agreement_changes_attenuation_and_model_error
     assert summary["branch_model_disagreement"]["S4"] == {"vision": 1, "telemetry": 0}
     assert [e["pair_id"] for e in summary["attenuation_examples_baseline"]] == ["S4-01"]
     assert summary["checks"]["probabilities_identical_across_weights"]
+    drifted = [dict(r) for r in rows]
+    drifted[1]["P_distraction"] = 0.91  # the same pair, another weight, another probability
+    assert not fe.e2_summary(drifted, proto)["checks"]["probabilities_identical_across_weights"]
+
+
+def test_threshold_ties_count_levels_that_rounding_decides():
+    proto = json.loads(json.dumps(PROTOCOL))
+    proto["e2"]["weights"] = [PROTOCOL["e2"]["weights"][0], PROTOCOL["e2"]["weights"][3]]
+    base = {"stratum": "S2", "reference": "REF_ELEVATED"}
+    rows = [
+        # 0.9999 x 0.3 = 29.997 unrounded (Low), 30.0 rounded (Medium): decided by rounding.
+        base | {"pair_id": "S2-01", "weight_index": 1, "exact_score": 29.997, "RiskLevel": "Medium"},
+        base | {"pair_id": "S2-01", "weight_index": 0, "exact_score": 49.995, "RiskLevel": "Medium"},
+        base | {"pair_id": "S2-02", "weight_index": 1, "exact_score": 35.0, "RiskLevel": "Medium"},
+        base | {"pair_id": "S2-02", "weight_index": 0, "exact_score": 50.0, "RiskLevel": "Medium"},
+    ]
+    ties = fe.threshold_ties(rows, proto)
+    strong = ties["Strong vision-priority"]
+    assert strong["level_decided_by_rounding"] == 1 and strong["pairs_decided_by_rounding"] == ["S2-01"]
+    assert strong["within_0_1_of_a_threshold"] == 1
+    assert strong["agrees_unrounded"] == 1 and strong["changed_vs_baseline_unrounded"] == 1
+    assert ties["Balanced baseline"]["changed_vs_baseline_unrounded"] is None
 
 
 # ------------------------------------------------------------------------- E5 plan
