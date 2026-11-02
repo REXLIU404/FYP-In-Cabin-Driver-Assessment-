@@ -9,9 +9,11 @@ What it does
 1. Reads the frozen 3657-image State Farm test list saved by run p4b_20261022
    (``shared_inputs/vision_sources.json``) and checks the protocol's record, driver and
    class counts. It never re-splits the dataset.
-2. Runs BOTH models through the backend provider path (one child process per model, the
-   candidate selected by ``DRA_ACTIVE_VISION``): original JPEG bytes -> TrainedProvider
-   preprocess -> ONNX -> one float32 softmax. Metrics use those provider probabilities.
+2. Runs BOTH models through the provider preprocessing and its ONNX session (one child
+   process per model, the candidate selected by ``DRA_ACTIVE_VISION``): original JPEG bytes
+   -> provider preprocess -> provider session logits -> one float64 softmax. This is not a
+   full ``TrainedProvider.infer`` call; ``provider_probs`` is that float64 result and is
+   identical to ``float64_probs``.
 3. Runs BOTH models on the DMD test split (1354 frames, gC_13/gE_29) through
    ``scripts/dmd_infer_test.py``, the same code used for the 2026-10-29 DMD evidence.
 4. Reports accuracy, macro-F1, per-class P/R/F1, log loss, the 10x10 confusion matrix and
@@ -360,6 +362,8 @@ def run_worker(spec_path: Path, out_path: Path) -> int:
                 tensor = provider.preprocess(base64.b64encode(raw).decode("ascii"))
                 logits = provider.vision.run(None, {provider.input_name: tensor})[0][0]
                 logits = [float(x) for x in logits]
+                # The name is kept for the result schema; this is the provider session's
+                # logits through float64 softmax, not the provider's float32 probability.
                 provider_probs = softmax64(logits)
                 samples.append({"source_id": item["source_id"], "class_id": item["class_id"],
                                 "argmax": max(range(10), key=lambda i: provider_probs[i]),

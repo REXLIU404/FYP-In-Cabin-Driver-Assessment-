@@ -33,8 +33,10 @@
 | c8 `hair_makeup` 召回 | 0.8321 | 0.0679 | −0.7642 |
 | c9 `talking_to_passenger` 召回 | 0.2733 | 0.0643 | −0.2090 |
 
-- stable 重算与 p4b `MN-STABLE.clean`：accuracy、macro-F1、混淆矩阵一致；log loss 差 **5.815e-9**
-  （0.574453149292 vs 0.574453143476），超过协议写下的 1e-9，记为 `PASS_WITH_WARNINGS`，未隐藏。
+- stable 重算与 p4b `MN-STABLE.clean`：accuracy、macro-F1、混淆矩阵一致；p4b 缓存 float32 logits
+  与本轮 provider 路径的 logits 最多相差 **2.5e-5**（argmax 和混淆矩阵完全一致）；log loss 差
+  **5.815e-9**（0.574453149292 vs 0.574453143476），超过协议写下的 1e-9，记为
+  `PASS_WITH_WARNINGS`，未隐藏。
 - 在**这个数据集**上，DMD 候选的十分类整体指标低于 stable，c0 误报率也更低；c8/c9 召回大幅下降。
 - 逐类退化不只在 c8/c9：**c1 召回 0.9000 → 0.6943**；**c0、c2、c6 的精确率**分别为
   0.8102 → 0.6779、0.9890 → 0.7780、0.9102 → 0.6205。完整 10 类数字见

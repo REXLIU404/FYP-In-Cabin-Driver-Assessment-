@@ -49,8 +49,9 @@
    DMD 测试集上对应运行时的是 **0.5 列，FPR 0.2074**；0.0891 属于历史离线列。
 3. **c8/c9**：两个数据集上都大幅退化（State Farm c8 0.8321→0.0679、c9 0.2733→0.0643；
    DMD c8 0.8154→0.0154、c9 0.5167→0.0000）。macro-F1 的整体变化不能替代逐类报告。
-4. **State Farm 交叉核对**：stable 重算与 p4b 的 accuracy/macro-F1/混淆矩阵一致；log loss 差
-   5.815e-9，超过协议写下的 1e-9，因此 A 项记 `PASS_WITH_WARNINGS`，没有隐藏。
+4. **State Farm 交叉核对**：stable 重算与 p4b 的 accuracy/macro-F1/混淆矩阵一致；p4b 缓存
+   float32 logits 与本轮 provider 路径的 logits 最多差 2.5e-5，argmax/混淆矩阵完全一致；
+   log loss 差 5.815e-9，超过协议写下的 1e-9，因此 A 项记 `PASS_WITH_WARNINGS`，没有隐藏。
 5. **性能**：六轮交替；机器负载高于 2026-10-30 stage3，绝对毫秒数不要跨日比较；
    两模型没有稳定的方向性差异。
 6. **E2/E5**：构造场景，不是准确率测试；stable 的 2026-11-02 结果未重跑、未覆盖。

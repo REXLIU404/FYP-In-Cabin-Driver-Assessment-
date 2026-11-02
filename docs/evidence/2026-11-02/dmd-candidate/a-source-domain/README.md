@@ -21,7 +21,7 @@
 |---|---|
 | State Farm 输入 | p4b 冻结清单 `.../p4b_20261022/shared_inputs/vision_sources.json`，sha256 `098001f1…` |
 | State Farm 规模 | 3657 帧；测试司机 `p012/p026/p035/p050`；各类 support 与 p4b 一致 |
-| State Farm 推理 | 后端 `TrainedProvider`：原 JPEG 字节 → provider preprocess → ONNX → float32 softmax；两个模型各一个子进程 |
+| State Farm 推理 | provider preprocess → provider 的 ONNX session → logits → **float64 softmax**；两个模型各一个子进程。这不是完整的 `TrainedProvider.infer` 调用 |
 | DMD 输入 | `sampling_manifest.csv` 的 `split == test`：1354 帧；受试者 `gC_13`/`gE_29` |
 | DMD 推理 | `scripts/dmd_infer_test.py`，两个 ONNX 同一段 preprocess/infer/softmax |
 | stable | `stable_mobilenet_v3_large`，ONNX sha256 `b3a42e8d…` |
@@ -32,6 +32,10 @@
 ## 结果（State Farm 冻结测试集）
 
 来源：`results.json` → `state_farm.metrics.*.provider_path`；`summary.csv`；`state_farm/per_class.csv`。
+
+注意：`state_farm/predictions_*.json` 中的 `provider_probs` 是从 provider session 的 logits
+再做一次 **float64 softmax** 得到的，与 `float64_probs` 逐元素相同（最大差 0.0）。这个字段名
+不表示 provider 的 float32 softmax；`provider_path` 也只是沿用运行结果的键名。
 
 | 指标 | stable | DMD 候选 |
 |---|---|---|
@@ -89,13 +93,14 @@ macro-F1 的整体提升（0.3105 → 0.5065）不能掩盖这两类。
 
 | 对照 | 结果 |
 |---|---|
-| State Farm stable vs p4b `MN-STABLE.clean` | accuracy、macro-F1、混淆矩阵一致；log loss 差 **5.815e-9**（0.574453149292 vs 0.574453143476） |
+| State Farm stable vs p4b `MN-STABLE.clean` | accuracy、macro-F1、混淆矩阵一致；p4b 缓存 float32 logits 与本轮 provider session logits 最大差 **2.5e-5**；log loss 差 **5.815e-9**（0.574453149292 vs 0.574453143476） |
 | DMD stable vs 2026-10-29 `zero_shot_unexposed.json` | 输入文件/标签逐项一致；概率最大差 **0.0**；accuracy/macro-F1 一致 |
 | DMD 候选 vs 2026-10-29 `comparison_test.json` | accuracy/macro-F1 在存档四舍五入范围内一致；逐类差 < 1e-4；0.5 二分类各指标差 ≤ 4.9e-5（存档只保留有限位） |
 
 **status = PASS_WITH_WARNINGS**，唯一 warning 是 p4b 的 log loss 差 5.8e-9，超过协议写下的
-严格 1e-9。原因是我们走 provider 的浮点路径、p4b 用其缓存 bank 的算术；accuracy、macro-F1 和
-逐样本 argmax（混淆矩阵）完全一致。没有隐藏这个差异，也没有放宽协议。
+严格 1e-9。原因已核实：p4b 缓存的 float32 logits 与本轮 provider 路径的 logits 最多相差
+**2.47955322265625e-05（最差样本 `vision-v1:c4/img_67465.jpg`）**；逐样本 argmax 和混淆矩阵
+完全一致，softmax 后的 log loss 因此只差 5.8e-9。没有隐藏这个差异，也没有放宽协议。
 
 ## 能证明 / 不能证明
 
@@ -129,7 +134,7 @@ macro-F1 的整体提升（0.3105 → 0.5065）不能掩盖这两类。
 |---|---|
 | `results.json` | 身份、门禁、输入统计、全部指标、交叉核对、状态 |
 | `summary.csv` | 两数据集的并列摘要 |
-| `state_farm/predictions_<model>.json` | 3657 张图的 provider 概率、float64 softmax 概率、logits、argmax |
+| `state_farm/predictions_<model>.json` | 3657 张图的 provider session logits、float64 softmax 概率、argmax；`provider_probs` 与 `float64_probs` 相同 |
 | `state_farm/per_class.csv` / `confusion_<model>.csv` / `binary_diagnostics.csv` | 逐类与混淆矩阵、二分类诊断 |
 | `dmd_test/predictions_<model>.json` | 1354 帧的 logits、概率、P_distraction |
 | `dmd_test/per_class.csv` / `confusion_<model>.csv` / `binary_diagnostics.csv` | 逐类与混淆矩阵、0.5 与 0.7038 两列 |
