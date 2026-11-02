@@ -39,8 +39,21 @@ sha256 `01f1d6a3…`；telemetry 仍是 stable XGBoost。
   **这不是准确率**：E2 的 60 对是构造样本，不能从这 3 vs 2 推出模型优劣。
 - DMD 在 S1（视觉 safe、遥测 Safe）有 1 次视觉分支不一致，导致该层 1 个窗口的 level 从 Low 变为
   Medium；在 0.5/0.5 下总 level 分布变化为 Low 10→9、Medium 28→26、High 22→25。
-- 事后（非预声明）的阈值舍入检查：DMD 在 0.6/0.4 下有 2 对由 1 位小数舍入决定 level
-  （S4-01、S4-07）；runner 把它列在 `post_hoc_not_predeclared`，不作为预先声明指标。
+- 事后（非预声明）的阈值取整检查（`threshold_ties`）：下表列出全部 5 个权重。两列数字是
+  “取整后 level 由 1 位小数舍入决定的对数”与“不取整时与参考一致的对数 /60”：
+
+  | 权重 | stable 取整决定 | stable 不取整一致 | DMD 取整决定 | DMD 不取整一致 |
+  |---|---|---|---|---|
+  | 0.5 / 0.5 | 0 | 59 | 0 | 59 |
+  | 0.6 / 0.4 | 0 | 59 | 2（S4-01、S4-07） | 59 |
+  | 0.4 / 0.6 | 11 | 60 | 0 | 60 |
+  | 0.7 / 0.3 | 11 | 48 | 0 | 59 |
+  | 0.3 / 0.7 | 0 | 59 | 1（S4-07） | 57 |
+
+  stable 在 0.4/0.6 和 0.7/0.3 下各有 11 对由取整决定；0.7/0.3 不取整时只有 **48/60**。
+  DMD 在 0.6/0.4 有 2 对、0.3/0.7 有 1 对，0.3/0.7 不取整时为 **57/60**。因此表中
+  “0.7/0.3 两者都是 59”在 **stable 一侧是取整造成的**；DMD 的 59 不依赖取整。
+  runner 把这些列在 `post_hoc_not_predeclared`，不作为预先声明指标。
 
 ## E5-light：`viva_compact` 构造场景的分支反事实
 
@@ -58,9 +71,12 @@ sha256 `01f1d6a3…`；telemetry 仍是 stable XGBoost。
 | 6 Recovery (REF_LOW) | 1.087 / 31.5 | 3.794 / 32.5 | Low 178, Medium 2 | Low 178, Medium 2 | 178/180 | 178/180 | 200 | 200 | CAUTION / CAUTION |
 
 - **DMD 在纯 `c0` 段也有非零 P_distraction**：Baseline 0.0641、Telemetry-only 0.0833 / 0.0916、
-  Recovery 0.0752（stable 均约为 0.0）。这是 DMD 候选把部分 State Farm `c0` 帧判为分心的直接结果；
+  Recovery 0.0752。stable 对应为 Baseline 0.0、Telemetry-only 0.0 / 0.0、Recovery **0.0208**
+  （Recovery 不是“约 0”）。这是 DMD 候选把部分 State Farm `c0` 帧判为分心的直接结果；
   在 Telemetry-only 段，stable 的 fused score 恰好 50.0，而 DMD 的 score 被抬到 54–60.9，
   其中 2/40 个窗口进入 High。该段参考允许 Medium/High，所以 `agrees` 仍是 40/40。
+- **Recovery 段回到 NORMAL 的时间**（从该段起点计）：stable **10400 ms**，DMD **10800 ms**；
+  两边该段 Alert max 都是 CAUTION，最终回到 NORMAL。
 - Vision-only 段：DMD 的一致窗口 98/100、lag 200 ms；stable 为 96/100、lag 400 ms。
   两边的 Alert max 都是 CAUTION。
 - Both 段：两边都是 High 100/100、HIGH_ALERT；DMD 的 score 更高（mean 99.356 vs 93.076）。
