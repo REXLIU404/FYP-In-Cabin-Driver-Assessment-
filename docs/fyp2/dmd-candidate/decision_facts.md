@@ -137,25 +137,51 @@ DMD 的 E2/E5 均 `PASS`；stable 的 2026-11-02 E2/E5 结果保留原样（未�
 
 ## 9. 如果切换在役模型，需要一起改的东西
 
-以下只是清单，不代表建议切换：
+以下只是清单，不代表建议切换。DMD 目前补齐的是候选加载、推断、源域/目标域对比和
+perf01 延迟；Task 10A 的多项发布关卡没有在 DMD 上执行。
 
-1. **`docs/fyp2/task10a/release_decision.md` 和用户签字**：在役模型改为
-   `dmd_adapted_mobilenet_v3_20261029`；需要新的用户决定记录（date + 签字）。
-2. **报告 Table 23（延迟）**：当前 10-30 的 stable 数字不能沿用；需要换成 D 项同日
-   stable 与 DMD 的 p50/p95（并注明机器负载）。
-3. **报告里的 E2/E5 引用**：`docs/evidence/2026-11-02` 的 `e2-weight-sensitivity` 和
+1. **新的用户决定记录**：`docs/fyp2/task10a/release_decision.md` 与用户签字需要改为
+   `dmd_adapted_mobilenet_v3_20261029`，记录新的日期和签字；这不是代理可以代替的决定。
+2. **Task 10A 未在 DMD 上执行的关卡**：
+   - **Stage 2 系统对比**：2026-10-29 的 `comparison-official-bf76ddf` 是 stable/RN 的
+     配对比较，不是 DMD；DMD 没有 stable200 式的 Stage 2 逐窗口系统对比。E2 的 60 对
+     构造输入不能替代 Stage 2。
+   - **Stage 3 的 perf02 和日志完整性**：DMD 只有 perf01 延迟；没有 perf02 的故障注入、
+     后端重启、逐条日志完整性（stable 基线为 D1/D2 211/211）和长会话复测。
+   - **Stage 5 回滚演练**：stable 已有 2026-10-30 的 rollback drill；DMD 没有
+     “DMD 在役 → 切回 stable → hash 校验 → 正常 forward”的实测记录。
+   - **stable200 式验证**：B 项的 200 张图只验证 provider 数值一致性，不等于 DMD 的
+     `official_stable200_behavior` 或选型验证；DMD 没有产出这一项。
+3. **Table 20 与 Table 23 中只在 stable 上测过的行**：
+   - **Table 20**（纯模型推理，ORT CPU `session.run` p95）当前只含 stable/HPO MN/RN 的
+     数字，没有 DMD；切换需要加入 DMD 的同口径测量，不能沿用现有 stable/HPO MN 的数字
+     （其中 7.25 ms 是 HPO MobileNetV3 同架构参考）。
+   - **Table 23** 的 **Fault-injection 211/211**、**Persisted outcomes（210 + 1）**、
+     **Long session 8,867 windows** 都是 stable 的 10-22 结果；DMD 未复测。若切换，
+     要么补做 DMD 的同口径运行，要么在表中明确标为 stable-only，不能把数字归到 DMD。
+   - Table 23 的 capture→render 与 Server total 两行可以用 D 项的 2026-11-02 数字，
+     但 Server total/vision 的 p50/p95 只有 `perf01.json` 汇总，没有逐窗口原始数据
+     （见 §4 与 `d-perf/README.md`）。
+4. **报告正文与模型描述**：第 2 章的模型选型理由、6.2.3 的英文决定段落、第 4 章架构与
+   模型描述、第 7 章结论，以及任何引用 stable 延迟/模型大小/准确率的地方都需要改写。
+   release decision 里的英文段落目前写的是“stable MobileNetV3-Large was kept...”，
+   切换后必须替换，不能保留原句。Table 16/17 的上下文也要说明 DMD 在 State Farm 与
+   DMD 上的新数字来自本证据目录；`ml/outputs/runs/p4b_20261022` 是 stable 的历史证据，
+   不能改写成 DMD 的数字。
+5. **报告里的 E2/E5 引用**：`docs/evidence/2026-11-02` 的 `e2-weight-sensitivity` 和
    `e5-light-counterfactual` 是 **stable** 跑的，保留不动；DMD 的两份已在
    `dmd-candidate/e-system-level/e2-dmd` 与 `e5-dmd`（新协议 `4b8506f` 已提前提交，
    `fusion_eval.py --protocol` 入口已实现）。若切换，报告应改为引用 DMD 这两份，
    并把 stable 版本标为历史对照；**不要**修改 `docs/fyp2/e2e5/protocol.json`，
    也不要覆盖 stable 的旧证据。
-4. **报告正文与 PERF 数字**：6.2.3、第 4 章模型描述、第 7 章结论，以及任何引用
-   stable 延迟/模型大小/准确率的地方；Table 16/17 的上下文需要说明这是 DMD 候选在
-   State Farm 与 DMD 上的新数字。`ml/outputs/runs/p4b_20261022` 是 stable 的历史证据，
-   不能改写成 DMD 的数字。
-5. **候选包元数据**：`ml/outputs/candidates/dmd_adapted_mobilenet_v3_20261029/evaluation_metrics.json`
+6. **让切换长期生效**：当前默认值在 `backend/app/config.py` 的 `active_vision = "stable"`。
+   只在一个终端里设 `DRA_ACTIVE_VISION` 只管这一次启动；要长期生效，必须由用户决定并
+   修改配置默认值，或在 `scripts/dev.sh` / `scripts/coldstart_check.sh`（及实际部署的
+   启动入口）里显式设置环境变量。这个持久化改动需要新的用户决定，不能在候选评估中
+   顺带完成。
+7. **候选包元数据**：`ml/outputs/candidates/dmd_adapted_mobilenet_v3_20261029/evaluation_metrics.json`
    目前是 `{}`；若成为在役模型，需要一份正式指标文件（本次没有原地修改，指标在证据目录）。
-6. **许可与发布**：DMD 数据是 CC BY-NC-ND 4.0；模型权重不得发布到公开仓库。报告与演示中
+8. **许可与发布**：DMD 数据是 CC BY-NC-ND 4.0；模型权重不得发布到公开仓库。报告与演示中
    需要保留这一限制。
 
 ## 10. 仍然未知 / 不能声称
