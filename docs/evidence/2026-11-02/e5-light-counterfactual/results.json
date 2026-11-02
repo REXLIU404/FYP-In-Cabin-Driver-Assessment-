@@ -1,0 +1,1543 @@
+{
+  "run_start_utc": "2026-11-02T09:27:55.231949+00:00",
+  "protocol_gate": {
+    "path": "docs/fyp2/e2e5/protocol.json",
+    "sha256": "c2a2d7dc869a0a99b426b7c0253fc8fcd741919d3680b3fa35411867342237d8",
+    "commit": "66641a7cb808ccd0406b74a5ab992ee3ed10024d",
+    "commit_time": "2026-11-02T17:03:53+08:00",
+    "blob": "b2accea3bf6947120e71440687be15de9e728169",
+    "dirty": false,
+    "status": "PASS",
+    "problems": []
+  },
+  "data_root": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-",
+  "git": {
+    "implemented_head": "9d4ace8f2f1fe0e98107e4c5e1fe074088452131",
+    "dirty_state": [
+      "?? docs/evidence/2026-11-02/"
+    ]
+  },
+  "scenarios": {
+    "FUSED": {
+      "scenario_id": "viva_compact",
+      "scenario_sha256": "87e0007d91663cda417b70a3d542895202c3a675589f20e4291de0e56b95a9bc",
+      "segments": [
+        {
+          "index": 0,
+          "title": "Baseline",
+          "start_ms": 0,
+          "duration_ms": 10000,
+          "driver_id": "p050",
+          "vision_class": "c0",
+          "vision_label": "safe_driving",
+          "telemetry_label": "Safe",
+          "first_frame": 0,
+          "frame_count": 50,
+          "frame_cycles": 0,
+          "first_telemetry": 0,
+          "telemetry_count": 5
+        },
+        {
+          "index": 1,
+          "title": "Telemetry only",
+          "start_ms": 10000,
+          "duration_ms": 4000,
+          "driver_id": "p050",
+          "vision_class": "c0",
+          "vision_label": "safe_driving",
+          "telemetry_label": "Aggressive",
+          "first_frame": 50,
+          "frame_count": 20,
+          "frame_cycles": 0,
+          "first_telemetry": 5,
+          "telemetry_count": 2
+        },
+        {
+          "index": 2,
+          "title": "Telemetry wavers",
+          "start_ms": 14000,
+          "duration_ms": 4000,
+          "driver_id": "p050",
+          "vision_class": "c0",
+          "vision_label": "safe_driving",
+          "telemetry_label": "Safe",
+          "first_frame": 70,
+          "frame_count": 20,
+          "frame_cycles": 0,
+          "first_telemetry": 7,
+          "telemetry_count": 2
+        },
+        {
+          "index": 3,
+          "title": "Telemetry only",
+          "start_ms": 18000,
+          "duration_ms": 4000,
+          "driver_id": "p050",
+          "vision_class": "c0",
+          "vision_label": "safe_driving",
+          "telemetry_label": "Aggressive",
+          "first_frame": 90,
+          "frame_count": 20,
+          "frame_cycles": 0,
+          "first_telemetry": 9,
+          "telemetry_count": 2
+        },
+        {
+          "index": 4,
+          "title": "Vision only",
+          "start_ms": 22000,
+          "duration_ms": 10000,
+          "driver_id": "p050",
+          "vision_class": "c1",
+          "vision_label": "texting_right",
+          "telemetry_label": "Safe",
+          "first_frame": 110,
+          "frame_count": 50,
+          "frame_cycles": 5,
+          "first_telemetry": 11,
+          "telemetry_count": 5
+        },
+        {
+          "index": 5,
+          "title": "Both",
+          "start_ms": 32000,
+          "duration_ms": 10000,
+          "driver_id": "p050",
+          "vision_class": "c4",
+          "vision_label": "talking_phone_left",
+          "telemetry_label": "Distracted",
+          "first_frame": 160,
+          "frame_count": 50,
+          "frame_cycles": 0,
+          "first_telemetry": 16,
+          "telemetry_count": 5
+        },
+        {
+          "index": 6,
+          "title": "Recovery",
+          "start_ms": 42000,
+          "duration_ms": 18000,
+          "driver_id": "p050",
+          "vision_class": "c0",
+          "vision_label": "safe_driving",
+          "telemetry_label": "Safe",
+          "first_frame": 210,
+          "frame_count": 90,
+          "frame_cycles": 0,
+          "first_telemetry": 21,
+          "telemetry_count": 9
+        }
+      ]
+    },
+    "VISION_HELD_SAFE": {
+      "scenario_id": "viva_compact_vision_held",
+      "scenario_sha256": "c0ade813171493bc13ec4d7e8548e14720182582d05d78d4b0a6428d85ddc816",
+      "segments": [
+        {
+          "index": 0,
+          "title": "Baseline",
+          "start_ms": 0,
+          "duration_ms": 10000,
+          "driver_id": "p050",
+          "vision_class": "c0",
+          "vision_label": "safe_driving",
+          "telemetry_label": "Safe",
+          "first_frame": 0,
+          "frame_count": 50,
+          "frame_cycles": 0,
+          "first_telemetry": 0,
+          "telemetry_count": 5
+        },
+        {
+          "index": 1,
+          "title": "Telemetry only",
+          "start_ms": 10000,
+          "duration_ms": 4000,
+          "driver_id": "p050",
+          "vision_class": "c0",
+          "vision_label": "safe_driving",
+          "telemetry_label": "Aggressive",
+          "first_frame": 50,
+          "frame_count": 20,
+          "frame_cycles": 0,
+          "first_telemetry": 5,
+          "telemetry_count": 2
+        },
+        {
+          "index": 2,
+          "title": "Telemetry wavers",
+          "start_ms": 14000,
+          "duration_ms": 4000,
+          "driver_id": "p050",
+          "vision_class": "c0",
+          "vision_label": "safe_driving",
+          "telemetry_label": "Safe",
+          "first_frame": 70,
+          "frame_count": 20,
+          "frame_cycles": 0,
+          "first_telemetry": 7,
+          "telemetry_count": 2
+        },
+        {
+          "index": 3,
+          "title": "Telemetry only",
+          "start_ms": 18000,
+          "duration_ms": 4000,
+          "driver_id": "p050",
+          "vision_class": "c0",
+          "vision_label": "safe_driving",
+          "telemetry_label": "Aggressive",
+          "first_frame": 90,
+          "frame_count": 20,
+          "frame_cycles": 0,
+          "first_telemetry": 9,
+          "telemetry_count": 2
+        },
+        {
+          "index": 4,
+          "title": "Vision only",
+          "start_ms": 22000,
+          "duration_ms": 10000,
+          "driver_id": "p050",
+          "vision_class": "c0",
+          "vision_label": "safe_driving",
+          "telemetry_label": "Safe",
+          "first_frame": 110,
+          "frame_count": 50,
+          "frame_cycles": 0,
+          "first_telemetry": 11,
+          "telemetry_count": 5
+        },
+        {
+          "index": 5,
+          "title": "Both",
+          "start_ms": 32000,
+          "duration_ms": 10000,
+          "driver_id": "p050",
+          "vision_class": "c0",
+          "vision_label": "safe_driving",
+          "telemetry_label": "Distracted",
+          "first_frame": 160,
+          "frame_count": 50,
+          "frame_cycles": 0,
+          "first_telemetry": 16,
+          "telemetry_count": 5
+        },
+        {
+          "index": 6,
+          "title": "Recovery",
+          "start_ms": 42000,
+          "duration_ms": 18000,
+          "driver_id": "p050",
+          "vision_class": "c0",
+          "vision_label": "safe_driving",
+          "telemetry_label": "Safe",
+          "first_frame": 210,
+          "frame_count": 90,
+          "frame_cycles": 0,
+          "first_telemetry": 21,
+          "telemetry_count": 9
+        }
+      ]
+    },
+    "TELEMETRY_HELD_SAFE": {
+      "scenario_id": "viva_compact_telemetry_held",
+      "scenario_sha256": "dc783534eb49879fbb097dc49813eb2cd4c5a538e0e30694e5f64bfd752f70ec",
+      "segments": [
+        {
+          "index": 0,
+          "title": "Baseline",
+          "start_ms": 0,
+          "duration_ms": 10000,
+          "driver_id": "p050",
+          "vision_class": "c0",
+          "vision_label": "safe_driving",
+          "telemetry_label": "Safe",
+          "first_frame": 0,
+          "frame_count": 50,
+          "frame_cycles": 0,
+          "first_telemetry": 0,
+          "telemetry_count": 5
+        },
+        {
+          "index": 1,
+          "title": "Telemetry only",
+          "start_ms": 10000,
+          "duration_ms": 4000,
+          "driver_id": "p050",
+          "vision_class": "c0",
+          "vision_label": "safe_driving",
+          "telemetry_label": "Safe",
+          "first_frame": 50,
+          "frame_count": 20,
+          "frame_cycles": 0,
+          "first_telemetry": 5,
+          "telemetry_count": 2
+        },
+        {
+          "index": 2,
+          "title": "Telemetry wavers",
+          "start_ms": 14000,
+          "duration_ms": 4000,
+          "driver_id": "p050",
+          "vision_class": "c0",
+          "vision_label": "safe_driving",
+          "telemetry_label": "Safe",
+          "first_frame": 70,
+          "frame_count": 20,
+          "frame_cycles": 0,
+          "first_telemetry": 7,
+          "telemetry_count": 2
+        },
+        {
+          "index": 3,
+          "title": "Telemetry only",
+          "start_ms": 18000,
+          "duration_ms": 4000,
+          "driver_id": "p050",
+          "vision_class": "c0",
+          "vision_label": "safe_driving",
+          "telemetry_label": "Safe",
+          "first_frame": 90,
+          "frame_count": 20,
+          "frame_cycles": 0,
+          "first_telemetry": 9,
+          "telemetry_count": 2
+        },
+        {
+          "index": 4,
+          "title": "Vision only",
+          "start_ms": 22000,
+          "duration_ms": 10000,
+          "driver_id": "p050",
+          "vision_class": "c1",
+          "vision_label": "texting_right",
+          "telemetry_label": "Safe",
+          "first_frame": 110,
+          "frame_count": 50,
+          "frame_cycles": 5,
+          "first_telemetry": 11,
+          "telemetry_count": 5
+        },
+        {
+          "index": 5,
+          "title": "Both",
+          "start_ms": 32000,
+          "duration_ms": 10000,
+          "driver_id": "p050",
+          "vision_class": "c4",
+          "vision_label": "talking_phone_left",
+          "telemetry_label": "Safe",
+          "first_frame": 160,
+          "frame_count": 50,
+          "frame_cycles": 0,
+          "first_telemetry": 16,
+          "telemetry_count": 5
+        },
+        {
+          "index": 6,
+          "title": "Recovery",
+          "start_ms": 42000,
+          "duration_ms": 18000,
+          "driver_id": "p050",
+          "vision_class": "c0",
+          "vision_label": "safe_driving",
+          "telemetry_label": "Safe",
+          "first_frame": 210,
+          "frame_count": 90,
+          "frame_cycles": 0,
+          "first_telemetry": 21,
+          "telemetry_count": 9
+        }
+      ]
+    }
+  },
+  "unchanged_segment_identity": {
+    "VISION_HELD_SAFE": [
+      {
+        "segment_index": 0,
+        "labels_unchanged": true,
+        "vision_identical": true,
+        "telemetry_identical": true
+      },
+      {
+        "segment_index": 1,
+        "labels_unchanged": true,
+        "vision_identical": true,
+        "telemetry_identical": true
+      },
+      {
+        "segment_index": 2,
+        "labels_unchanged": true,
+        "vision_identical": true,
+        "telemetry_identical": true
+      },
+      {
+        "segment_index": 3,
+        "labels_unchanged": true,
+        "vision_identical": true,
+        "telemetry_identical": true
+      },
+      {
+        "segment_index": 4,
+        "labels_unchanged": false,
+        "vision_identical": false,
+        "telemetry_identical": true
+      },
+      {
+        "segment_index": 5,
+        "labels_unchanged": false,
+        "vision_identical": false,
+        "telemetry_identical": true
+      },
+      {
+        "segment_index": 6,
+        "labels_unchanged": true,
+        "vision_identical": true,
+        "telemetry_identical": true
+      }
+    ],
+    "TELEMETRY_HELD_SAFE": [
+      {
+        "segment_index": 0,
+        "labels_unchanged": true,
+        "vision_identical": true,
+        "telemetry_identical": true
+      },
+      {
+        "segment_index": 1,
+        "labels_unchanged": false,
+        "vision_identical": true,
+        "telemetry_identical": false
+      },
+      {
+        "segment_index": 2,
+        "labels_unchanged": true,
+        "vision_identical": true,
+        "telemetry_identical": true
+      },
+      {
+        "segment_index": 3,
+        "labels_unchanged": false,
+        "vision_identical": true,
+        "telemetry_identical": false
+      },
+      {
+        "segment_index": 4,
+        "labels_unchanged": true,
+        "vision_identical": true,
+        "telemetry_identical": true
+      },
+      {
+        "segment_index": 5,
+        "labels_unchanged": false,
+        "vision_identical": true,
+        "telemetry_identical": false
+      },
+      {
+        "segment_index": 6,
+        "labels_unchanged": true,
+        "vision_identical": true,
+        "telemetry_identical": true
+      }
+    ]
+  },
+  "worker": {
+    "command": [
+      "python",
+      "fusion_eval.py",
+      "--worker",
+      "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/e5-fusion-eval-wkowek8l/worker_spec.json",
+      "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/e5-fusion-eval-wkowek8l/worker_out.json"
+    ],
+    "exit_code": 0,
+    "duration_s": 28.4,
+    "stderr_tail": [
+      "/Users/liu/Desktop/FYP2-Live-System/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.",
+      "  from starlette.testclient import TestClient as TestClient  # noqa"
+    ]
+  },
+  "identity": {
+    "vision_model_id": "stable_mobilenet_v3_large",
+    "vision_model_sha256": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "telemetry_model_sha256": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+    "models_endpoint": {
+      "models_loaded": true,
+      "provider": "MobileNetV3ONNX+XGBoost",
+      "vision": {
+        "architecture": "mobilenet_v3_large",
+        "model_id": "stable_mobilenet_v3_large",
+        "run_id": null,
+        "source": "stable",
+        "sha256": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+        "runtime": "onnxruntime_cpu",
+        "classes": [
+          "safe_driving",
+          "texting_right",
+          "talking_phone_right",
+          "texting_left",
+          "talking_phone_left",
+          "operating_radio",
+          "drinking",
+          "reaching_behind",
+          "hair_makeup",
+          "talking_to_passenger"
+        ],
+        "input": "RGB NCHW float32 224x224",
+        "mean": [
+          0.485,
+          0.456,
+          0.406
+        ],
+        "std": [
+          0.229,
+          0.224,
+          0.225
+        ]
+      },
+      "telemetry": {
+        "architecture": "xgboost",
+        "sha256": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+        "classes": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "features": [
+          "speed_kmph",
+          "accel_x",
+          "accel_y",
+          "brake_pressure",
+          "steering_angle",
+          "throttle",
+          "lane_deviation",
+          "headway_distance"
+        ],
+        "iteration_range": [
+          0,
+          91
+        ]
+      },
+      "scope": "Frontal-camera inference is experimental; source dataset metrics do not validate frontal reliability"
+    }
+  },
+  "environment": {
+    "python": "3.13.3",
+    "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+    "numpy": "2.4.6",
+    "onnxruntime": "1.26.0",
+    "PIL": "12.2.0",
+    "xgboost": "3.2.0"
+  },
+  "problems": [],
+  "summary": {
+    "segments": [
+      {
+        "index": 0,
+        "title": "Baseline",
+        "start_ms": 0,
+        "duration_ms": 10000,
+        "variants": {
+          "FUSED": {
+            "labels": {
+              "vision_class": "c0",
+              "telemetry_label": "Safe"
+            },
+            "reference": "REF_LOW",
+            "windows": 100,
+            "score": {
+              "n": 100,
+              "min": 0.0,
+              "q1": 0.0,
+              "median": 0.0,
+              "q3": 0.0,
+              "max": 0.0,
+              "mean": 0.0
+            },
+            "score_last": 0.0,
+            "levels": {
+              "Low": 100,
+              "Medium": 0,
+              "High": 0
+            },
+            "agrees": 100,
+            "lag_ms_to_reference": 0,
+            "dominant": {
+              "Low observed risk": 100,
+              "Combined evidence": 0,
+              "Vision-dominant": 0,
+              "Telemetry-dominant": 0,
+              "Partial evidence": 0
+            },
+            "alert_max": "NORMAL",
+            "first_high_alert_ms": null,
+            "alert_first": "NORMAL",
+            "alert_last": "NORMAL",
+            "first_normal_ms": 0,
+            "P_distraction_mean": 0.0,
+            "P_telemetry_mean": 0.0003
+          },
+          "VISION_HELD_SAFE": {
+            "labels": {
+              "vision_class": "c0",
+              "telemetry_label": "Safe"
+            },
+            "reference": "REF_LOW",
+            "windows": 100,
+            "score": {
+              "n": 100,
+              "min": 0.0,
+              "q1": 0.0,
+              "median": 0.0,
+              "q3": 0.0,
+              "max": 0.0,
+              "mean": 0.0
+            },
+            "score_last": 0.0,
+            "levels": {
+              "Low": 100,
+              "Medium": 0,
+              "High": 0
+            },
+            "agrees": 100,
+            "lag_ms_to_reference": 0,
+            "dominant": {
+              "Low observed risk": 100,
+              "Combined evidence": 0,
+              "Vision-dominant": 0,
+              "Telemetry-dominant": 0,
+              "Partial evidence": 0
+            },
+            "alert_max": "NORMAL",
+            "first_high_alert_ms": null,
+            "alert_first": "NORMAL",
+            "alert_last": "NORMAL",
+            "first_normal_ms": 0,
+            "P_distraction_mean": 0.0,
+            "P_telemetry_mean": 0.0003
+          },
+          "TELEMETRY_HELD_SAFE": {
+            "labels": {
+              "vision_class": "c0",
+              "telemetry_label": "Safe"
+            },
+            "reference": "REF_LOW",
+            "windows": 100,
+            "score": {
+              "n": 100,
+              "min": 0.0,
+              "q1": 0.0,
+              "median": 0.0,
+              "q3": 0.0,
+              "max": 0.0,
+              "mean": 0.0
+            },
+            "score_last": 0.0,
+            "levels": {
+              "Low": 100,
+              "Medium": 0,
+              "High": 0
+            },
+            "agrees": 100,
+            "lag_ms_to_reference": 0,
+            "dominant": {
+              "Low observed risk": 100,
+              "Combined evidence": 0,
+              "Vision-dominant": 0,
+              "Telemetry-dominant": 0,
+              "Partial evidence": 0
+            },
+            "alert_max": "NORMAL",
+            "first_high_alert_ms": null,
+            "alert_first": "NORMAL",
+            "alert_last": "NORMAL",
+            "first_normal_ms": 0,
+            "P_distraction_mean": 0.0,
+            "P_telemetry_mean": 0.0003
+          }
+        },
+        "contribution_from_vision": {
+          "n": 100,
+          "min": 0.0,
+          "q1": 0.0,
+          "median": 0.0,
+          "q3": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "contribution_from_telemetry": {
+          "n": 100,
+          "min": 0.0,
+          "q1": 0.0,
+          "median": 0.0,
+          "q3": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        }
+      },
+      {
+        "index": 1,
+        "title": "Telemetry only",
+        "start_ms": 10000,
+        "duration_ms": 4000,
+        "variants": {
+          "FUSED": {
+            "labels": {
+              "vision_class": "c0",
+              "telemetry_label": "Aggressive"
+            },
+            "reference": "REF_ELEVATED",
+            "windows": 40,
+            "score": {
+              "n": 40,
+              "min": 50.0,
+              "q1": 50.0,
+              "median": 50.0,
+              "q3": 50.0,
+              "max": 50.0,
+              "mean": 50.0
+            },
+            "score_last": 50.0,
+            "levels": {
+              "Low": 0,
+              "Medium": 40,
+              "High": 0
+            },
+            "agrees": 40,
+            "lag_ms_to_reference": 0,
+            "dominant": {
+              "Low observed risk": 0,
+              "Combined evidence": 0,
+              "Vision-dominant": 0,
+              "Telemetry-dominant": 40,
+              "Partial evidence": 0
+            },
+            "alert_max": "CAUTION",
+            "first_high_alert_ms": null,
+            "alert_first": "CAUTION",
+            "alert_last": "CAUTION",
+            "first_normal_ms": null,
+            "P_distraction_mean": 0.0,
+            "P_telemetry_mean": 0.9999
+          },
+          "VISION_HELD_SAFE": {
+            "labels": {
+              "vision_class": "c0",
+              "telemetry_label": "Aggressive"
+            },
+            "reference": "REF_ELEVATED",
+            "windows": 40,
+            "score": {
+              "n": 40,
+              "min": 50.0,
+              "q1": 50.0,
+              "median": 50.0,
+              "q3": 50.0,
+              "max": 50.0,
+              "mean": 50.0
+            },
+            "score_last": 50.0,
+            "levels": {
+              "Low": 0,
+              "Medium": 40,
+              "High": 0
+            },
+            "agrees": 40,
+            "lag_ms_to_reference": 0,
+            "dominant": {
+              "Low observed risk": 0,
+              "Combined evidence": 0,
+              "Vision-dominant": 0,
+              "Telemetry-dominant": 40,
+              "Partial evidence": 0
+            },
+            "alert_max": "CAUTION",
+            "first_high_alert_ms": null,
+            "alert_first": "CAUTION",
+            "alert_last": "CAUTION",
+            "first_normal_ms": null,
+            "P_distraction_mean": 0.0,
+            "P_telemetry_mean": 0.9999
+          },
+          "TELEMETRY_HELD_SAFE": {
+            "labels": {
+              "vision_class": "c0",
+              "telemetry_label": "Safe"
+            },
+            "reference": "REF_LOW",
+            "windows": 40,
+            "score": {
+              "n": 40,
+              "min": 0.0,
+              "q1": 0.0,
+              "median": 0.0,
+              "q3": 0.0,
+              "max": 0.0,
+              "mean": 0.0
+            },
+            "score_last": 0.0,
+            "levels": {
+              "Low": 40,
+              "Medium": 0,
+              "High": 0
+            },
+            "agrees": 40,
+            "lag_ms_to_reference": 0,
+            "dominant": {
+              "Low observed risk": 40,
+              "Combined evidence": 0,
+              "Vision-dominant": 0,
+              "Telemetry-dominant": 0,
+              "Partial evidence": 0
+            },
+            "alert_max": "NORMAL",
+            "first_high_alert_ms": null,
+            "alert_first": "NORMAL",
+            "alert_last": "NORMAL",
+            "first_normal_ms": 0,
+            "P_distraction_mean": 0.0,
+            "P_telemetry_mean": 0.0002
+          }
+        },
+        "contribution_from_vision": {
+          "n": 40,
+          "min": 0.0,
+          "q1": 0.0,
+          "median": 0.0,
+          "q3": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "contribution_from_telemetry": {
+          "n": 40,
+          "min": 50.0,
+          "q1": 50.0,
+          "median": 50.0,
+          "q3": 50.0,
+          "max": 50.0,
+          "mean": 50.0
+        }
+      },
+      {
+        "index": 2,
+        "title": "Telemetry wavers",
+        "start_ms": 14000,
+        "duration_ms": 4000,
+        "variants": {
+          "FUSED": {
+            "labels": {
+              "vision_class": "c0",
+              "telemetry_label": "Safe"
+            },
+            "reference": "REF_LOW",
+            "windows": 40,
+            "score": {
+              "n": 40,
+              "min": 0.0,
+              "q1": 0.0,
+              "median": 0.0,
+              "q3": 0.0,
+              "max": 0.0,
+              "mean": 0.0
+            },
+            "score_last": 0.0,
+            "levels": {
+              "Low": 40,
+              "Medium": 0,
+              "High": 0
+            },
+            "agrees": 40,
+            "lag_ms_to_reference": 0,
+            "dominant": {
+              "Low observed risk": 40,
+              "Combined evidence": 0,
+              "Vision-dominant": 0,
+              "Telemetry-dominant": 0,
+              "Partial evidence": 0
+            },
+            "alert_max": "CAUTION",
+            "first_high_alert_ms": null,
+            "alert_first": "CAUTION",
+            "alert_last": "CAUTION",
+            "first_normal_ms": null,
+            "P_distraction_mean": 0.0,
+            "P_telemetry_mean": 0.0002
+          },
+          "VISION_HELD_SAFE": {
+            "labels": {
+              "vision_class": "c0",
+              "telemetry_label": "Safe"
+            },
+            "reference": "REF_LOW",
+            "windows": 40,
+            "score": {
+              "n": 40,
+              "min": 0.0,
+              "q1": 0.0,
+              "median": 0.0,
+              "q3": 0.0,
+              "max": 0.0,
+              "mean": 0.0
+            },
+            "score_last": 0.0,
+            "levels": {
+              "Low": 40,
+              "Medium": 0,
+              "High": 0
+            },
+            "agrees": 40,
+            "lag_ms_to_reference": 0,
+            "dominant": {
+              "Low observed risk": 40,
+              "Combined evidence": 0,
+              "Vision-dominant": 0,
+              "Telemetry-dominant": 0,
+              "Partial evidence": 0
+            },
+            "alert_max": "CAUTION",
+            "first_high_alert_ms": null,
+            "alert_first": "CAUTION",
+            "alert_last": "CAUTION",
+            "first_normal_ms": null,
+            "P_distraction_mean": 0.0,
+            "P_telemetry_mean": 0.0002
+          },
+          "TELEMETRY_HELD_SAFE": {
+            "labels": {
+              "vision_class": "c0",
+              "telemetry_label": "Safe"
+            },
+            "reference": "REF_LOW",
+            "windows": 40,
+            "score": {
+              "n": 40,
+              "min": 0.0,
+              "q1": 0.0,
+              "median": 0.0,
+              "q3": 0.0,
+              "max": 0.0,
+              "mean": 0.0
+            },
+            "score_last": 0.0,
+            "levels": {
+              "Low": 40,
+              "Medium": 0,
+              "High": 0
+            },
+            "agrees": 40,
+            "lag_ms_to_reference": 0,
+            "dominant": {
+              "Low observed risk": 40,
+              "Combined evidence": 0,
+              "Vision-dominant": 0,
+              "Telemetry-dominant": 0,
+              "Partial evidence": 0
+            },
+            "alert_max": "NORMAL",
+            "first_high_alert_ms": null,
+            "alert_first": "NORMAL",
+            "alert_last": "NORMAL",
+            "first_normal_ms": 0,
+            "P_distraction_mean": 0.0,
+            "P_telemetry_mean": 0.0002
+          }
+        },
+        "contribution_from_vision": {
+          "n": 40,
+          "min": 0.0,
+          "q1": 0.0,
+          "median": 0.0,
+          "q3": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "contribution_from_telemetry": {
+          "n": 40,
+          "min": 0.0,
+          "q1": 0.0,
+          "median": 0.0,
+          "q3": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        }
+      },
+      {
+        "index": 3,
+        "title": "Telemetry only",
+        "start_ms": 18000,
+        "duration_ms": 4000,
+        "variants": {
+          "FUSED": {
+            "labels": {
+              "vision_class": "c0",
+              "telemetry_label": "Aggressive"
+            },
+            "reference": "REF_ELEVATED",
+            "windows": 40,
+            "score": {
+              "n": 40,
+              "min": 50.0,
+              "q1": 50.0,
+              "median": 50.0,
+              "q3": 50.0,
+              "max": 50.0,
+              "mean": 50.0
+            },
+            "score_last": 50.0,
+            "levels": {
+              "Low": 0,
+              "Medium": 40,
+              "High": 0
+            },
+            "agrees": 40,
+            "lag_ms_to_reference": 0,
+            "dominant": {
+              "Low observed risk": 0,
+              "Combined evidence": 0,
+              "Vision-dominant": 0,
+              "Telemetry-dominant": 40,
+              "Partial evidence": 0
+            },
+            "alert_max": "CAUTION",
+            "first_high_alert_ms": null,
+            "alert_first": "CAUTION",
+            "alert_last": "CAUTION",
+            "first_normal_ms": null,
+            "P_distraction_mean": 0.0,
+            "P_telemetry_mean": 0.9999
+          },
+          "VISION_HELD_SAFE": {
+            "labels": {
+              "vision_class": "c0",
+              "telemetry_label": "Aggressive"
+            },
+            "reference": "REF_ELEVATED",
+            "windows": 40,
+            "score": {
+              "n": 40,
+              "min": 50.0,
+              "q1": 50.0,
+              "median": 50.0,
+              "q3": 50.0,
+              "max": 50.0,
+              "mean": 50.0
+            },
+            "score_last": 50.0,
+            "levels": {
+              "Low": 0,
+              "Medium": 40,
+              "High": 0
+            },
+            "agrees": 40,
+            "lag_ms_to_reference": 0,
+            "dominant": {
+              "Low observed risk": 0,
+              "Combined evidence": 0,
+              "Vision-dominant": 0,
+              "Telemetry-dominant": 40,
+              "Partial evidence": 0
+            },
+            "alert_max": "CAUTION",
+            "first_high_alert_ms": null,
+            "alert_first": "CAUTION",
+            "alert_last": "CAUTION",
+            "first_normal_ms": null,
+            "P_distraction_mean": 0.0,
+            "P_telemetry_mean": 0.9999
+          },
+          "TELEMETRY_HELD_SAFE": {
+            "labels": {
+              "vision_class": "c0",
+              "telemetry_label": "Safe"
+            },
+            "reference": "REF_LOW",
+            "windows": 40,
+            "score": {
+              "n": 40,
+              "min": 0.0,
+              "q1": 0.0,
+              "median": 0.2,
+              "q3": 0.4,
+              "max": 0.4,
+              "mean": 0.2
+            },
+            "score_last": 0.0,
+            "levels": {
+              "Low": 40,
+              "Medium": 0,
+              "High": 0
+            },
+            "agrees": 40,
+            "lag_ms_to_reference": 0,
+            "dominant": {
+              "Low observed risk": 40,
+              "Combined evidence": 0,
+              "Vision-dominant": 0,
+              "Telemetry-dominant": 0,
+              "Partial evidence": 0
+            },
+            "alert_max": "NORMAL",
+            "first_high_alert_ms": null,
+            "alert_first": "NORMAL",
+            "alert_last": "NORMAL",
+            "first_normal_ms": 0,
+            "P_distraction_mean": 0.0,
+            "P_telemetry_mean": 0.0046
+          }
+        },
+        "contribution_from_vision": {
+          "n": 40,
+          "min": 0.0,
+          "q1": 0.0,
+          "median": 0.0,
+          "q3": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "contribution_from_telemetry": {
+          "n": 40,
+          "min": 49.6,
+          "q1": 49.6,
+          "median": 49.8,
+          "q3": 50.0,
+          "max": 50.0,
+          "mean": 49.8
+        }
+      },
+      {
+        "index": 4,
+        "title": "Vision only",
+        "start_ms": 22000,
+        "duration_ms": 10000,
+        "variants": {
+          "FUSED": {
+            "labels": {
+              "vision_class": "c1",
+              "telemetry_label": "Safe"
+            },
+            "reference": "REF_ELEVATED",
+            "windows": 100,
+            "score": {
+              "n": 100,
+              "min": 17.5,
+              "q1": 48.4,
+              "median": 49.8,
+              "q3": 50.0,
+              "max": 50.0,
+              "mean": 47.496
+            },
+            "score_last": 49.8,
+            "levels": {
+              "Low": 4,
+              "Medium": 96,
+              "High": 0
+            },
+            "agrees": 96,
+            "lag_ms_to_reference": 400,
+            "dominant": {
+              "Low observed risk": 4,
+              "Combined evidence": 0,
+              "Vision-dominant": 96,
+              "Telemetry-dominant": 0,
+              "Partial evidence": 0
+            },
+            "alert_max": "CAUTION",
+            "first_high_alert_ms": null,
+            "alert_first": "CAUTION",
+            "alert_last": "CAUTION",
+            "first_normal_ms": null,
+            "P_distraction_mean": 0.9493,
+            "P_telemetry_mean": 0.0002
+          },
+          "VISION_HELD_SAFE": {
+            "labels": {
+              "vision_class": "c0",
+              "telemetry_label": "Safe"
+            },
+            "reference": "REF_LOW",
+            "windows": 100,
+            "score": {
+              "n": 100,
+              "min": 0.0,
+              "q1": 0.0,
+              "median": 0.0,
+              "q3": 0.0,
+              "max": 0.0,
+              "mean": 0.0
+            },
+            "score_last": 0.0,
+            "levels": {
+              "Low": 100,
+              "Medium": 0,
+              "High": 0
+            },
+            "agrees": 100,
+            "lag_ms_to_reference": 0,
+            "dominant": {
+              "Low observed risk": 100,
+              "Combined evidence": 0,
+              "Vision-dominant": 0,
+              "Telemetry-dominant": 0,
+              "Partial evidence": 0
+            },
+            "alert_max": "CAUTION",
+            "first_high_alert_ms": null,
+            "alert_first": "CAUTION",
+            "alert_last": "CAUTION",
+            "first_normal_ms": null,
+            "P_distraction_mean": 0.0,
+            "P_telemetry_mean": 0.0002
+          },
+          "TELEMETRY_HELD_SAFE": {
+            "labels": {
+              "vision_class": "c1",
+              "telemetry_label": "Safe"
+            },
+            "reference": "REF_ELEVATED",
+            "windows": 100,
+            "score": {
+              "n": 100,
+              "min": 17.5,
+              "q1": 48.4,
+              "median": 49.8,
+              "q3": 50.0,
+              "max": 50.0,
+              "mean": 47.496
+            },
+            "score_last": 49.8,
+            "levels": {
+              "Low": 4,
+              "Medium": 96,
+              "High": 0
+            },
+            "agrees": 96,
+            "lag_ms_to_reference": 400,
+            "dominant": {
+              "Low observed risk": 4,
+              "Combined evidence": 0,
+              "Vision-dominant": 96,
+              "Telemetry-dominant": 0,
+              "Partial evidence": 0
+            },
+            "alert_max": "CAUTION",
+            "first_high_alert_ms": null,
+            "alert_first": "NORMAL",
+            "alert_last": "CAUTION",
+            "first_normal_ms": 0,
+            "P_distraction_mean": 0.9493,
+            "P_telemetry_mean": 0.0002
+          }
+        },
+        "contribution_from_vision": {
+          "n": 100,
+          "min": 17.5,
+          "q1": 48.4,
+          "median": 49.8,
+          "q3": 50.0,
+          "max": 50.0,
+          "mean": 47.496
+        },
+        "contribution_from_telemetry": {
+          "n": 100,
+          "min": 0.0,
+          "q1": 0.0,
+          "median": 0.0,
+          "q3": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        }
+      },
+      {
+        "index": 5,
+        "title": "Both",
+        "start_ms": 32000,
+        "duration_ms": 10000,
+        "variants": {
+          "FUSED": {
+            "labels": {
+              "vision_class": "c4",
+              "telemetry_label": "Distracted"
+            },
+            "reference": "REF_HIGH",
+            "windows": 100,
+            "score": {
+              "n": 100,
+              "min": 81.6,
+              "q1": 90.8,
+              "median": 93.7,
+              "q3": 96.1,
+              "max": 99.0,
+              "mean": 93.076
+            },
+            "score_last": 98.4,
+            "levels": {
+              "Low": 0,
+              "Medium": 0,
+              "High": 100
+            },
+            "agrees": 100,
+            "lag_ms_to_reference": 0,
+            "dominant": {
+              "Low observed risk": 0,
+              "Combined evidence": 60,
+              "Vision-dominant": 0,
+              "Telemetry-dominant": 40,
+              "Partial evidence": 0
+            },
+            "alert_max": "HIGH_ALERT",
+            "first_high_alert_ms": 2000,
+            "alert_first": "CAUTION",
+            "alert_last": "HIGH_ALERT",
+            "first_normal_ms": null,
+            "P_distraction_mean": 0.8619,
+            "P_telemetry_mean": 0.9997
+          },
+          "VISION_HELD_SAFE": {
+            "labels": {
+              "vision_class": "c0",
+              "telemetry_label": "Distracted"
+            },
+            "reference": "REF_ELEVATED",
+            "windows": 100,
+            "score": {
+              "n": 100,
+              "min": 50.0,
+              "q1": 50.0,
+              "median": 50.0,
+              "q3": 50.0,
+              "max": 50.0,
+              "mean": 50.0
+            },
+            "score_last": 50.0,
+            "levels": {
+              "Low": 0,
+              "Medium": 100,
+              "High": 0
+            },
+            "agrees": 100,
+            "lag_ms_to_reference": 0,
+            "dominant": {
+              "Low observed risk": 0,
+              "Combined evidence": 0,
+              "Vision-dominant": 0,
+              "Telemetry-dominant": 100,
+              "Partial evidence": 0
+            },
+            "alert_max": "CAUTION",
+            "first_high_alert_ms": null,
+            "alert_first": "CAUTION",
+            "alert_last": "CAUTION",
+            "first_normal_ms": null,
+            "P_distraction_mean": 0.0,
+            "P_telemetry_mean": 0.9997
+          },
+          "TELEMETRY_HELD_SAFE": {
+            "labels": {
+              "vision_class": "c4",
+              "telemetry_label": "Safe"
+            },
+            "reference": "REF_ELEVATED",
+            "windows": 100,
+            "score": {
+              "n": 100,
+              "min": 31.7,
+              "q1": 40.8,
+              "median": 43.85,
+              "q3": 46.1,
+              "max": 49.1,
+              "mean": 43.178
+            },
+            "score_last": 48.5,
+            "levels": {
+              "Low": 0,
+              "Medium": 100,
+              "High": 0
+            },
+            "agrees": 100,
+            "lag_ms_to_reference": 0,
+            "dominant": {
+              "Low observed risk": 0,
+              "Combined evidence": 0,
+              "Vision-dominant": 100,
+              "Telemetry-dominant": 0,
+              "Partial evidence": 0
+            },
+            "alert_max": "CAUTION",
+            "first_high_alert_ms": null,
+            "alert_first": "CAUTION",
+            "alert_last": "CAUTION",
+            "first_normal_ms": null,
+            "P_distraction_mean": 0.8619,
+            "P_telemetry_mean": 0.0015
+          }
+        },
+        "contribution_from_vision": {
+          "n": 100,
+          "min": 31.6,
+          "q1": 40.8,
+          "median": 43.7,
+          "q3": 46.1,
+          "max": 49.0,
+          "mean": 43.076
+        },
+        "contribution_from_telemetry": {
+          "n": 100,
+          "min": 49.6,
+          "q1": 49.9,
+          "median": 49.9,
+          "q3": 50.0,
+          "max": 50.0,
+          "mean": 49.898
+        }
+      },
+      {
+        "index": 6,
+        "title": "Recovery",
+        "start_ms": 42000,
+        "duration_ms": 18000,
+        "variants": {
+          "FUSED": {
+            "labels": {
+              "vision_class": "c0",
+              "telemetry_label": "Safe"
+            },
+            "reference": "REF_LOW",
+            "windows": 180,
+            "score": {
+              "n": 180,
+              "min": 0.1,
+              "q1": 0.1,
+              "median": 0.1,
+              "q3": 0.1,
+              "max": 31.5,
+              "mean": 1.087
+            },
+            "score_last": 0.1,
+            "levels": {
+              "Low": 178,
+              "Medium": 2,
+              "High": 0
+            },
+            "agrees": 178,
+            "lag_ms_to_reference": 200,
+            "dominant": {
+              "Low observed risk": 178,
+              "Combined evidence": 0,
+              "Vision-dominant": 2,
+              "Telemetry-dominant": 0,
+              "Partial evidence": 0
+            },
+            "alert_max": "CAUTION",
+            "first_high_alert_ms": null,
+            "alert_first": "CAUTION",
+            "alert_last": "NORMAL",
+            "first_normal_ms": 10400,
+            "P_distraction_mean": 0.0208,
+            "P_telemetry_mean": 0.0004
+          },
+          "VISION_HELD_SAFE": {
+            "labels": {
+              "vision_class": "c0",
+              "telemetry_label": "Safe"
+            },
+            "reference": "REF_LOW",
+            "windows": 180,
+            "score": {
+              "n": 180,
+              "min": 0.0,
+              "q1": 0.0,
+              "median": 0.0,
+              "q3": 0.0,
+              "max": 0.1,
+              "mean": 0.011
+            },
+            "score_last": 0.1,
+            "levels": {
+              "Low": 180,
+              "Medium": 0,
+              "High": 0
+            },
+            "agrees": 180,
+            "lag_ms_to_reference": 0,
+            "dominant": {
+              "Low observed risk": 180,
+              "Combined evidence": 0,
+              "Vision-dominant": 0,
+              "Telemetry-dominant": 0,
+              "Partial evidence": 0
+            },
+            "alert_max": "CAUTION",
+            "first_high_alert_ms": null,
+            "alert_first": "CAUTION",
+            "alert_last": "NORMAL",
+            "first_normal_ms": 10000,
+            "P_distraction_mean": 0.0,
+            "P_telemetry_mean": 0.0004
+          },
+          "TELEMETRY_HELD_SAFE": {
+            "labels": {
+              "vision_class": "c0",
+              "telemetry_label": "Safe"
+            },
+            "reference": "REF_LOW",
+            "windows": 180,
+            "score": {
+              "n": 180,
+              "min": 0.1,
+              "q1": 0.1,
+              "median": 0.1,
+              "q3": 0.1,
+              "max": 31.5,
+              "mean": 1.087
+            },
+            "score_last": 0.1,
+            "levels": {
+              "Low": 178,
+              "Medium": 2,
+              "High": 0
+            },
+            "agrees": 178,
+            "lag_ms_to_reference": 200,
+            "dominant": {
+              "Low observed risk": 178,
+              "Combined evidence": 0,
+              "Vision-dominant": 2,
+              "Telemetry-dominant": 0,
+              "Partial evidence": 0
+            },
+            "alert_max": "CAUTION",
+            "first_high_alert_ms": null,
+            "alert_first": "CAUTION",
+            "alert_last": "NORMAL",
+            "first_normal_ms": 10400,
+            "P_distraction_mean": 0.0208,
+            "P_telemetry_mean": 0.0004
+          }
+        },
+        "contribution_from_vision": {
+          "n": 180,
+          "min": 0.0,
+          "q1": 0.1,
+          "median": 0.1,
+          "q3": 0.1,
+          "max": 31.5,
+          "mean": 1.076
+        },
+        "contribution_from_telemetry": {
+          "n": 180,
+          "min": 0.0,
+          "q1": 0.0,
+          "median": 0.0,
+          "q3": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        }
+      }
+    ]
+  },
+  "figures": [
+    "e5_timeline.png"
+  ],
+  "status": "PASS",
+  "output_written_utc": "2026-11-02T09:28:24.648683+00:00"
+}

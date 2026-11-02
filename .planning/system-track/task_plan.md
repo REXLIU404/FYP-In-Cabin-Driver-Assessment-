@@ -100,10 +100,10 @@
 - **状态：** pending
 
 ### 阶段 7：系统级评估与报告证据（待确认归属）
-- [ ] E2 权重 / 构造 strata（固定 pair manifest、独立 oracle）
+- [x] E2 权重 / 构造 strata（固定 pair manifest、独立 oracle）—— **2026-11-02 完成**：协议 `docs/fyp2/e2e5/protocol.json`（`66641a7`，先于任何结果提交）、runner `scripts/fusion_eval.py`（`9d4ace8`）、证据 `docs/evidence/2026-11-02/e2-weight-sensitivity/`；含事后（未预声明）阈值取整分析
 - [ ] E3 freshness 9 组合、Δ = .4 如实报告 target 未达
-- [ ] E4 EMA step lag（alpha 1 vs .35，1 s 与 0.1 s cadence）、FSM、性能与 logging 分母
-- [ ] E5 只改一路的配对反事实、稀释反例
+- [ ] E4 EMA step lag（alpha 1 vs .35，1 s 与 0.1 s cadence）、FSM、性能与 logging 分母（2026-11-02 用户决定先不做）
+- [x] E5（轻量版）只改一路的配对反事实、稀释反例 —— **2026-11-02 完成**：viva_compact 三变体（原样 / 视觉固定安全 / 遥测固定 Safe），证据 `docs/evidence/2026-11-02/e5-light-counterfactual/`；矩阵里的 E5-A（视觉损坏）/ E5-B（遥测压力）仍 PLANNED_ONLY
 - [ ] 目标摄像头的带标注可用性检查（394 帧全为 c8 暴露的问题；需用户本人录制，数据不入公开仓库）
 - **状态：** pending（**归属已定：系统轨道负责**，用户 2026-10-13 确认；理由见 findings.md）
 
