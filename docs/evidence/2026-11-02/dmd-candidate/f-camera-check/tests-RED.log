@@ -1,0 +1,118 @@
+FFFFFF                                                                   [100%]
+=================================== FAILURES ===================================
+__________ test_the_plan_has_the_three_declared_actions_of_60_seconds __________
+
+    def test_the_plan_has_the_three_declared_actions_of_60_seconds():
+>       runner = load_runner()
+                 ^^^^^^^^^^^^^
+
+tests/test_camera_ab_check.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def load_runner():
+        path = SCRIPTS / "camera_ab_check.py"
+>       assert path.is_file(), f"missing runner {path}"
+E       AssertionError: missing runner /Users/liu/Desktop/FYP2-Live-System/scripts/camera_ab_check.py
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/Users/liu/Desktop/FYP2-Live-System/scripts/camera_ab_check.py').is_file
+
+tests/test_camera_ab_check.py:21: AssertionError
+___________ test_the_payload_is_vision_only_and_keeps_frame_identity ___________
+
+    def test_the_payload_is_vision_only_and_keeps_frame_identity():
+>       runner = load_runner()
+                 ^^^^^^^^^^^^^
+
+tests/test_camera_ab_check.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def load_runner():
+        path = SCRIPTS / "camera_ab_check.py"
+>       assert path.is_file(), f"missing runner {path}"
+E       AssertionError: missing runner /Users/liu/Desktop/FYP2-Live-System/scripts/camera_ab_check.py
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/Users/liu/Desktop/FYP2-Live-System/scripts/camera_ab_check.py').is_file
+
+tests/test_camera_ab_check.py:21: AssertionError
+_____ test_mjpeg_splitter_returns_complete_frames_and_keeps_a_partial_tail _____
+
+    def test_mjpeg_splitter_returns_complete_frames_and_keeps_a_partial_tail():
+>       runner = load_runner()
+                 ^^^^^^^^^^^^^
+
+tests/test_camera_ab_check.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def load_runner():
+        path = SCRIPTS / "camera_ab_check.py"
+>       assert path.is_file(), f"missing runner {path}"
+E       AssertionError: missing runner /Users/liu/Desktop/FYP2-Live-System/scripts/camera_ab_check.py
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/Users/liu/Desktop/FYP2-Live-System/scripts/camera_ab_check.py').is_file
+
+tests/test_camera_ab_check.py:21: AssertionError
+___________ test_phase_summary_counts_safe_top1_and_distraction_rate ___________
+
+    def test_phase_summary_counts_safe_top1_and_distraction_rate():
+>       runner = load_runner()
+                 ^^^^^^^^^^^^^
+
+tests/test_camera_ab_check.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def load_runner():
+        path = SCRIPTS / "camera_ab_check.py"
+>       assert path.is_file(), f"missing runner {path}"
+E       AssertionError: missing runner /Users/liu/Desktop/FYP2-Live-System/scripts/camera_ab_check.py
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/Users/liu/Desktop/FYP2-Live-System/scripts/camera_ab_check.py').is_file
+
+tests/test_camera_ab_check.py:21: AssertionError
+_____________ test_comparison_is_side_by_side_and_chooses_nothing ______________
+
+    def test_comparison_is_side_by_side_and_chooses_nothing():
+>       runner = load_runner()
+                 ^^^^^^^^^^^^^
+
+tests/test_camera_ab_check.py:79: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def load_runner():
+        path = SCRIPTS / "camera_ab_check.py"
+>       assert path.is_file(), f"missing runner {path}"
+E       AssertionError: missing runner /Users/liu/Desktop/FYP2-Live-System/scripts/camera_ab_check.py
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/Users/liu/Desktop/FYP2-Live-System/scripts/camera_ab_check.py').is_file
+
+tests/test_camera_ab_check.py:21: AssertionError
+_____________ test_client_posts_the_session_then_one_vision_window _____________
+
+    def test_client_posts_the_session_then_one_vision_window():
+>       runner = load_runner()
+                 ^^^^^^^^^^^^^
+
+tests/test_camera_ab_check.py:124: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def load_runner():
+        path = SCRIPTS / "camera_ab_check.py"
+>       assert path.is_file(), f"missing runner {path}"
+E       AssertionError: missing runner /Users/liu/Desktop/FYP2-Live-System/scripts/camera_ab_check.py
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/Users/liu/Desktop/FYP2-Live-System/scripts/camera_ab_check.py').is_file
+
+tests/test_camera_ab_check.py:21: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_camera_ab_check.py::test_the_plan_has_the_three_declared_actions_of_60_seconds
+FAILED tests/test_camera_ab_check.py::test_the_payload_is_vision_only_and_keeps_frame_identity
+FAILED tests/test_camera_ab_check.py::test_mjpeg_splitter_returns_complete_frames_and_keeps_a_partial_tail
+FAILED tests/test_camera_ab_check.py::test_phase_summary_counts_safe_top1_and_distraction_rate
+FAILED tests/test_camera_ab_check.py::test_comparison_is_side_by_side_and_chooses_nothing
+FAILED tests/test_camera_ab_check.py::test_client_posts_the_session_then_one_vision_window
+6 failed in 0.31s

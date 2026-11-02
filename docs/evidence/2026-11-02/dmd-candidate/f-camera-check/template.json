@@ -1,0 +1,44 @@
+{
+  "schema": "camera_ab_check/1",
+  "status": "TEMPLATE_NOT_A_RESULT",
+  "note": "Empty schema example. The user's run writes stable.json and dmd.json; do not treat this file as data.",
+  "label": "stable|dmd",
+  "base_url": "http://127.0.0.1:8000",
+  "session_id": "cam-<label>-<UTC timestamp>",
+  "backend_vision": {
+    "model_id": "stable_mobilenet_v3_large | dmd_adapted_mobilenet_v3_20261029",
+    "sha256": "<recorded by the script>"
+  },
+  "camera": {"device": "0", "fps": 1, "seconds_per_phase": 60},
+  "phases": [
+    {
+      "id": "normal",
+      "instruction": "normal seated posture, 60 s",
+      "frames": [
+        {
+          "http_status": 201,
+          "request_id": "cam_stable_normal_00001",
+          "captured_at": "<ISO-8601>",
+          "top_class": "safe_driving",
+          "top_probability": 0.0,
+          "p_distraction": 0.0,
+          "visual_top_classes": [{"label": "safe_driving", "probability": 0.0}],
+          "vision_model_id": "<model id>",
+          "vision_model_sha256": "<sha256>",
+          "phase": "normal"
+        }
+      ],
+      "summary": {
+        "n": 0,
+        "top1_counts": {},
+        "safe_driving_top1_rate": null,
+        "p_distraction_mean": null,
+        "p_distraction_median": null,
+        "p_distraction_ge_0_5_rate": null,
+        "model_identity": {"vision_model_id": null, "vision_model_sha256": null}
+      }
+    },
+    {"id": "phone", "instruction": "holding and looking at a phone, 60 s", "frames": [], "summary": {}},
+    {"id": "drinking", "instruction": "drinking from a cup or bottle, 60 s", "frames": [], "summary": {}}
+  ]
+}
