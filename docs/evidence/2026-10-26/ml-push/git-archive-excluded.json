@@ -1,0 +1,1385 @@
+{
+  "date": "2026-10-26",
+  "scope": "Audited ml/outputs/runs files excluded from this Git archive; retained locally.",
+  "run_file_count": 195,
+  "run_bytes": 12033790324,
+  "files": [
+    {
+      "path": "ml/outputs/runs/p4b_20261022/budget_state.json",
+      "bytes": 5598591,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Worker, lock and resume state"
+    },
+    {
+      "path": "ml/outputs/runs/p5_candidates_20261023/p5_mobilenet_v3_large_search006_seed42_20261023.zip",
+      "bytes": 17202946,
+      "suffix": ".zip",
+      "ignored": false,
+      "reason": "Local candidate ZIP archives"
+    },
+    {
+      "path": "ml/outputs/runs/p5_candidates_20261023/p5_resnet18_search004_seed42_20261023.zip",
+      "bytes": 43100529,
+      "suffix": ".zip",
+      "ignored": false,
+      "reason": "Local candidate ZIP archives"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/.run.lock",
+      "bytes": 0,
+      "suffix": ".lock",
+      "ignored": true,
+      "reason": "Worker, lock and resume state"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_03/probabilities_validation.npy",
+      "bytes": 108128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_03/checkpoint.joblib",
+      "bytes": 3327738,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_04/probabilities_validation.npy",
+      "bytes": 108128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_04/checkpoint.joblib",
+      "bytes": 6578922,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_05/probabilities_validation.npy",
+      "bytes": 108128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_05/checkpoint.joblib",
+      "bytes": 6052154,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_02/probabilities_validation.npy",
+      "bytes": 108128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_02/checkpoint.joblib",
+      "bytes": 3029418,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_07/probabilities_validation.npy",
+      "bytes": 108128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_07/checkpoint.joblib",
+      "bytes": 6630842,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_08/probabilities_validation.npy",
+      "bytes": 108128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_08/checkpoint.joblib",
+      "bytes": 6643690,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_01/probabilities_validation.npy",
+      "bytes": 108128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_01/checkpoint.joblib",
+      "bytes": 3327738,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_06/probabilities_validation.npy",
+      "bytes": 108128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_06/checkpoint.joblib",
+      "bytes": 6578922,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_10/probabilities_validation.npy",
+      "bytes": 54128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_10/checkpoint.joblib",
+      "bytes": 1196455,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_04/probabilities_validation.npy",
+      "bytes": 54128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_04/checkpoint.joblib",
+      "bytes": 726892,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_03/probabilities_validation.npy",
+      "bytes": 54128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_03/checkpoint.joblib",
+      "bytes": 678434,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_02/probabilities_validation.npy",
+      "bytes": 54128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_02/checkpoint.joblib",
+      "bytes": 1194354,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_05/probabilities_validation.npy",
+      "bytes": 54128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_05/checkpoint.joblib",
+      "bytes": 1501105,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_07/probabilities_validation.npy",
+      "bytes": 54128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_07/checkpoint.joblib",
+      "bytes": 596650,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_09/probabilities_validation.npy",
+      "bytes": 54128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_09/checkpoint.joblib",
+      "bytes": 1195643,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_08/probabilities_validation.npy",
+      "bytes": 54128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_08/checkpoint.joblib",
+      "bytes": 591448,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_06/probabilities_validation.npy",
+      "bytes": 54128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_06/checkpoint.joblib",
+      "bytes": 1735844,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_01/probabilities_validation.npy",
+      "bytes": 54128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_01/checkpoint.joblib",
+      "bytes": 1215691,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_03/probabilities_validation.npy",
+      "bytes": 108128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_03/checkpoint.joblib",
+      "bytes": 2449,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_04/probabilities_validation.npy",
+      "bytes": 108128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_04/checkpoint.joblib",
+      "bytes": 2449,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_05/probabilities_validation.npy",
+      "bytes": 108128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_05/checkpoint.joblib",
+      "bytes": 2449,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_02/probabilities_validation.npy",
+      "bytes": 108128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_02/checkpoint.joblib",
+      "bytes": 2449,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_07/probabilities_validation.npy",
+      "bytes": 108128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_07/checkpoint.joblib",
+      "bytes": 2449,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_01/probabilities_validation.npy",
+      "bytes": 108128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_01/checkpoint.joblib",
+      "bytes": 2449,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_06/probabilities_validation.npy",
+      "bytes": 108128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_06/checkpoint.joblib",
+      "bytes": 2449,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/probe/resnet18/probe_001/attempt_01/probabilities_validation.npy",
+      "bytes": 114848,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/probe/resnet18/probe_001/attempt_01/checkpoint.pt",
+      "bytes": 44803787,
+      "suffix": ".pt",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/probe/resnet18/probe_001/attempt_01/process.json",
+      "bytes": 383,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Worker, lock and resume state"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/probe/mobilenet_v3_large/probe_001/attempt_01/process.json",
+      "bytes": 370,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Worker, lock and resume state"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/probe/mobilenet_v3_large/probe_001/attempt_03/probabilities_validation.npy",
+      "bytes": 114848,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/probe/mobilenet_v3_large/probe_001/attempt_03/checkpoint.pt",
+      "bytes": 17052801,
+      "suffix": ".pt",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/probe/mobilenet_v3_large/probe_001/attempt_03/process.json",
+      "bytes": 393,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Worker, lock and resume state"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/probe/mobilenet_v3_large/probe_001/attempt_02/process.json",
+      "bytes": 370,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Worker, lock and resume state"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_006/attempt_01/probabilities_validation.npy",
+      "bytes": 114848,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_006/attempt_01/checkpoint.pt",
+      "bytes": 44803787,
+      "suffix": ".pt",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_006/attempt_01/process.json",
+      "bytes": 385,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Worker, lock and resume state"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_001/attempt_01/probabilities_validation.npy",
+      "bytes": 114848,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_001/attempt_01/checkpoint.pt",
+      "bytes": 44803787,
+      "suffix": ".pt",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_001/attempt_01/process.json",
+      "bytes": 385,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Worker, lock and resume state"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_004/attempt_01/probabilities_validation.npy",
+      "bytes": 114848,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_004/attempt_01/checkpoint.pt",
+      "bytes": 44803787,
+      "suffix": ".pt",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_004/attempt_01/process.json",
+      "bytes": 385,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Worker, lock and resume state"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_003/attempt_01/probabilities_validation.npy",
+      "bytes": 114848,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_003/attempt_01/checkpoint.pt",
+      "bytes": 44803787,
+      "suffix": ".pt",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_003/attempt_01/process.json",
+      "bytes": 385,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Worker, lock and resume state"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_002/attempt_01/probabilities_validation.npy",
+      "bytes": 114848,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_002/attempt_01/checkpoint.pt",
+      "bytes": 44803787,
+      "suffix": ".pt",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_002/attempt_01/process.json",
+      "bytes": 385,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Worker, lock and resume state"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_005/attempt_01/probabilities_validation.npy",
+      "bytes": 114848,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_005/attempt_01/checkpoint.pt",
+      "bytes": 44803787,
+      "suffix": ".pt",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/search_005/attempt_01/process.json",
+      "bytes": 385,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Worker, lock and resume state"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/confirm_44/attempt_01/probabilities_validation.npy",
+      "bytes": 114848,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/confirm_44/attempt_01/checkpoint.pt",
+      "bytes": 44803787,
+      "suffix": ".pt",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/confirm_44/attempt_01/process.json",
+      "bytes": 385,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Worker, lock and resume state"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/confirm_43/attempt_01/probabilities_validation.npy",
+      "bytes": 114848,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/confirm_43/attempt_01/checkpoint.pt",
+      "bytes": 44803787,
+      "suffix": ".pt",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/resnet18/confirm_43/attempt_01/process.json",
+      "bytes": 385,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Worker, lock and resume state"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_006/attempt_01/probabilities_validation.npy",
+      "bytes": 114848,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_006/attempt_01/checkpoint.pt",
+      "bytes": 17052801,
+      "suffix": ".pt",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_006/attempt_01/process.json",
+      "bytes": 395,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Worker, lock and resume state"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_001/attempt_01/probabilities_validation.npy",
+      "bytes": 114848,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_001/attempt_01/checkpoint.pt",
+      "bytes": 17052801,
+      "suffix": ".pt",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_001/attempt_01/process.json",
+      "bytes": 395,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Worker, lock and resume state"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_004/attempt_01/probabilities_validation.npy",
+      "bytes": 114848,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_004/attempt_01/checkpoint.pt",
+      "bytes": 17052801,
+      "suffix": ".pt",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_004/attempt_01/process.json",
+      "bytes": 395,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Worker, lock and resume state"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_003/attempt_01/probabilities_validation.npy",
+      "bytes": 114848,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_003/attempt_01/checkpoint.pt",
+      "bytes": 17052801,
+      "suffix": ".pt",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_003/attempt_01/process.json",
+      "bytes": 395,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Worker, lock and resume state"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_002/attempt_01/probabilities_validation.npy",
+      "bytes": 114848,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_002/attempt_01/checkpoint.pt",
+      "bytes": 17052801,
+      "suffix": ".pt",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_002/attempt_01/process.json",
+      "bytes": 395,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Worker, lock and resume state"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_005/attempt_01/probabilities_validation.npy",
+      "bytes": 114848,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_005/attempt_01/checkpoint.pt",
+      "bytes": 17052801,
+      "suffix": ".pt",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_005/attempt_01/process.json",
+      "bytes": 395,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Worker, lock and resume state"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/confirm_44/attempt_01/probabilities_validation.npy",
+      "bytes": 114848,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/confirm_44/attempt_01/checkpoint.pt",
+      "bytes": 17052801,
+      "suffix": ".pt",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/confirm_44/attempt_01/process.json",
+      "bytes": 395,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Worker, lock and resume state"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/confirm_43/attempt_01/probabilities_validation.npy",
+      "bytes": 114848,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/confirm_43/attempt_01/checkpoint.pt",
+      "bytes": 17052801,
+      "suffix": ".pt",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/confirm_43/attempt_01/process.json",
+      "bytes": 395,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Worker, lock and resume state"
+    },
+    {
+      "path": "ml/outputs/runs/p5_candidates_20261023/p5_resnet18_search004_seed42_20261023/model.onnx",
+      "bytes": 44717068,
+      "suffix": ".onnx",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p5_candidates_20261023/p5_mobilenet_v3_large_search006_seed42_20261023/model.onnx",
+      "bytes": 16849370,
+      "suffix": ".onnx",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/vision_sources.json",
+      "bytes": 2610014,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/vision_brightness_up_0.npy",
+      "bytes": 550481024,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/vision_brightness_down_1.npy",
+      "bytes": 550481024,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/vision_brightness_down_0.npy",
+      "bytes": 550481024,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/vision_brightness_up_1.npy",
+      "bytes": 550481024,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/vision_brightness_down_2.npy",
+      "bytes": 550481024,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/vision_brightness_up_2.npy",
+      "bytes": 550481024,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/vision_grayscale_blend_2.npy",
+      "bytes": 550481024,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/vision_motion_blur_2.npy",
+      "bytes": 550481024,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/telemetry_variants.json",
+      "bytes": 372935077,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/vision_grayscale_blend_1.npy",
+      "bytes": 550481024,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/vision_motion_blur_1.npy",
+      "bytes": 550481024,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/vision_motion_blur_0.npy",
+      "bytes": 550481024,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/vision_grayscale_blend_0.npy",
+      "bytes": 550481024,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/telemetry_sources.json",
+      "bytes": 1861583,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/vision_variants.json",
+      "bytes": 77889344,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/vision_clean.npy",
+      "bytes": 550481024,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/telemetry_D3_1.npy",
+      "bytes": 288128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/vision_occlusion_2.npy",
+      "bytes": 550481024,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/vision_rotation_crop_2.npy",
+      "bytes": 550481024,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/telemetry_D1_2.npy",
+      "bytes": 288128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/telemetry_D3_0.npy",
+      "bytes": 288128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/telemetry_D3_2.npy",
+      "bytes": 288128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/vision_occlusion_1.npy",
+      "bytes": 550481024,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/telemetry_D1_0.npy",
+      "bytes": 288128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/vision_rotation_crop_1.npy",
+      "bytes": 550481024,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/vision_rotation_crop_0.npy",
+      "bytes": 550481024,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/telemetry_D1_1.npy",
+      "bytes": 288128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/vision_occlusion_0.npy",
+      "bytes": 550481024,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/telemetry_D0.npy",
+      "bytes": 288128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/telemetry_D2_2.npy",
+      "bytes": 288128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/telemetry_D2_1.npy",
+      "bytes": 288128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/shared_inputs/telemetry_D2_0.npy",
+      "bytes": 288128,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Shared sample inputs and NumPy banks"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/cache/binding.json",
+      "bytes": 781,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "SQLite prediction cache and sidecars"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/cache/predictions.sqlite3-shm",
+      "bytes": 32768,
+      "suffix": ".sqlite3-shm",
+      "ignored": false,
+      "reason": "SQLite prediction cache and sidecars"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/cache/predictions.sqlite3-wal",
+      "bytes": 0,
+      "suffix": ".sqlite3-wal",
+      "ignored": false,
+      "reason": "SQLite prediction cache and sidecars"
+    },
+    {
+      "path": "ml/outputs/runs/p4b_20261022/cache/predictions.sqlite3",
+      "bytes": 205598720,
+      "suffix": ".sqlite3",
+      "ignored": false,
+      "reason": "SQLite prediction cache and sidecars"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/validation/validation_bank.npy",
+      "bytes": 60211328,
+      "suffix": ".npy",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/budget/budget_state.json",
+      "bytes": 106565,
+      "suffix": ".json",
+      "ignored": true,
+      "reason": "Worker, lock and resume state"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/review.html",
+      "bytes": 7403,
+      "suffix": ".html",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/qab146d31d8617f733233558e.png",
+      "bytes": 80139,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/q9a7e1b2bc0ced7ee170dbb10.png",
+      "bytes": 76372,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/qbdd102406120a05029ef4740.png",
+      "bytes": 86617,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/qec6734bdc18bd18ca16e04c4.png",
+      "bytes": 67807,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/qb003ef73f8e1f4da48941009.png",
+      "bytes": 59735,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/q24f9854092092d83b9c0c2a1.png",
+      "bytes": 79461,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/q71be7bc8872ed98f305510f3.png",
+      "bytes": 83456,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/q8638c7fc8172dc48c2617f77.png",
+      "bytes": 82123,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/q7450de177a1e0ee16ef1f970.png",
+      "bytes": 74230,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/q8ecce4d61a478f11a11b9660.png",
+      "bytes": 80316,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/qdb4bfde803ff8518d7f4a260.png",
+      "bytes": 81332,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/qace47d71f35ea8b78e593ab2.png",
+      "bytes": 73799,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/qd4ae63b60b0d2b8b41005c16.png",
+      "bytes": 83508,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/q4298ae705bd1522d13eb9955.png",
+      "bytes": 83505,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/qd6eb0dd485182b8d07abc0c3.png",
+      "bytes": 70780,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/qcb2a40493325e9395bfe6e01.png",
+      "bytes": 76151,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/q6c9ecbd0e63822d11c3739d3.png",
+      "bytes": 48381,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/q45e5794abdbc85e90a656ab4.png",
+      "bytes": 75952,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/q428007ee197128eaff1d4a07.png",
+      "bytes": 71343,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/q764c03f86b4c8a660adf7d86.png",
+      "bytes": 80283,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/qcf4b03c2cbe8df8c61652a11.png",
+      "bytes": 83371,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/qa25553b13ae5270d5b0c912b.png",
+      "bytes": 81931,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/q5906b97e3bc4fa106d56bcfd.png",
+      "bytes": 61982,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/q3ca97e555e3ca504363c184c.png",
+      "bytes": 84801,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/q90d7a89512779bcaf894965f.png",
+      "bytes": 69565,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/qd9a6938e495b56a29ec19338.png",
+      "bytes": 58707,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/q0b102fec7ced68eda33498ec.png",
+      "bytes": 78794,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/q5bd0fda23e93d5a4cc8a9fa9.png",
+      "bytes": 67173,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/q5abeff5addfb4d64896bf6d1.png",
+      "bytes": 65318,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/qd60ca373cb8cfe142b1cc07f.png",
+      "bytes": 87360,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/qfa5e4b9c543ef282a05548bb.png",
+      "bytes": 85944,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/qb5584d09673751099275afe9.png",
+      "bytes": 84755,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/qd7b0c932211de51aafad1654.png",
+      "bytes": 78154,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/q33d78fb754e6de622adc0147.png",
+      "bytes": 49451,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/q70ff7b75b78f99b5c459d341.png",
+      "bytes": 71300,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/q87a0278c2c892693a967b9a1.png",
+      "bytes": 78508,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/qd64d398775bc8fe37bdb5579.png",
+      "bytes": 77466,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/qc/validation_pilot/images/qd8a3b6544fc905b9f21370f1.png",
+      "bytes": 77152,
+      "suffix": ".png",
+      "ignored": false,
+      "reason": "Local historical QC review inputs"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/runtime_benchmark/mobilenet_v3_large_search006_seed42/model.onnx",
+      "bytes": 16849370,
+      "suffix": ".onnx",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p4a_20261021/runtime_benchmark/resnet18_search004_seed42/model.onnx",
+      "bytes": 44717068,
+      "suffix": ".onnx",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p1_comparators_20261015/resnet18/attempt_01/resnet18_smoke.pt",
+      "bytes": 44803723,
+      "suffix": ".pt",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p1_comparators_20261015/random_forest/attempt_01/random_forest_smoke.joblib",
+      "bytes": 51274,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    },
+    {
+      "path": "ml/outputs/runs/p1_comparators_20261015/logistic_regression/attempt_01/logistic_regression_smoke.joblib",
+      "bytes": 2449,
+      "suffix": ".joblib",
+      "ignored": true,
+      "reason": "Weights, serialized estimators and array caches"
+    }
+  ],
+  "additional_exclusions": [
+    ".codex/",
+    ".claude/",
+    ".superpowers/",
+    ".local/",
+    ".venv/",
+    "node_modules/",
+    "dist/",
+    ".env and tool caches",
+    "driver_risk.db and sidecars",
+    "AGENTS.md (existing local untracked instructions)"
+  ]
+}

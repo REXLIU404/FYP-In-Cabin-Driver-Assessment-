@@ -1,0 +1,2 @@
+trial_id,model,role,seed,config,max_epochs,is_p2,status,counts_toward_hpo,best_epoch,macro_f1,log_loss
+search_004,resnet18,SEARCH,42,"{""learning_rate"": 0.0003, ""weight_decay"": 0.001}",8,False,COMPLETED,True,3,0.9406150484662007,0.18642373383045197

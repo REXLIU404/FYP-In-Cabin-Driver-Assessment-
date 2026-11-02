@@ -1,0 +1,146 @@
+FFFFFF                                                                   [100%]
+=================================== FAILURES ===================================
+______ test_partial_selection_excludes_timeout_even_with_high_saved_score ______
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-48/test_partial_selection_exclude0')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x112891e00>
+
+    def test_partial_selection_excludes_timeout_even_with_high_saved_score(vision,tmp_path,context,monkeypatch):
+        clock=[0.];monkeypatch.setattr(vision.time,'monotonic',lambda:clock[0])
+        plans=model_plans('mobilenet_v3_large')+model_plans('resnet18')
+        budget={'per_trial':1.,'per_model':10.,'total':20.}
+        def worker(command,log_path,timeout):
+            row=json.loads((Path(log_path).parent/'config.json').read_text())['plan']
+            result=synthetic_worker(command,log_path,timeout)
+            if row['model']=='mobilenet_v3_large' and row['trial_id']=='search_002':
+                metrics=Path(log_path).parent/'validation_metrics.json'
+                saved=json.loads(metrics.read_text());saved['macro_f1']=.999;metrics.write_text(json.dumps(saved))
+                clock[0]+=timeout
+                result.update(status='TIME_BUDGET_EXCEEDED',returncode=-15,wall_seconds=timeout)
+            else:clock[0]+=.02
+            return result
+        state=vision.run_plan(tmp_path,'search',plans,budget,context,runner=worker)
+>       vision.finalize_search(state,plans,{'selection':{'tie_macro_f1_absolute_tolerance':1e-4}})
+        ^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'ml.experiments.run_vision_hpo' has no attribute 'finalize_search'
+
+ml/tests/test_vision_hpo.py:488: AttributeError
+___________ test_partial_cli_writes_missing_model_and_budget_report ____________
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-48/test_partial_cli_writes_missin0')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10a4aa8b0>
+capsys = <_pytest.capture.CaptureFixture object at 0x11283f770>
+
+    def test_partial_cli_writes_missing_model_and_budget_report(vision,tmp_path,context,monkeypatch,capsys):
+        import copy
+        from ml.experiments import comparator_common as common
+        plans=vision._search_plans(vision.protocol.load_protocol())
+        budget={'per_trial':10.,'per_model':100.,'total':200.}
+        def stop(command,log_path,timeout):
+            return {'status':'TIME_BUDGET_EXCEEDED','returncode':-15,'wall_seconds':timeout}
+        state=vision.run_plan(tmp_path,'search',plans,budget,context,runner=stop)
+        monkeypatch.setattr(vision,'cached_weight_records',lambda:{})
+        monkeypatch.setattr(vision,'_run_plan',lambda *a,**kw:state)
+        args=SimpleNamespace(command='search',data_root=common.DEFAULT_DATA)
+        environment={'git':{'dirty_state':''}}
+        assert vision._execute_command(args,tmp_path,environment,vision.protocol.load_protocol(),budget)==1
+        output=capsys.readouterr().out
+>       assert 'SEARCH_PARTIAL' in output and 'SEARCH_COMPLETE' not in output
+E       AssertionError: assert ('SEARCH_PARTIAL' in 'VISION_STATUS search PARTIAL used_seconds 19.997645499999635\n')
+
+ml/tests/test_vision_hpo.py:509: AssertionError
+_ test_search_refuses_uncommitted_execution_state[ M ml/vision/train_hpo.py\x00] _
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-48/test_search_refuses_uncommitte0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x112bd43b0>
+dirty = ' M ml/vision/train_hpo.py\x00'
+
+    @pytest.mark.parametrize('dirty',[" M ml/vision/train_hpo.py\0", "A  ml/configs/approved_vision_budget.json\0", "?? unexpected.txt\0"])
+    def test_search_refuses_uncommitted_execution_state(vision,tmp_path,monkeypatch,dirty):
+        def read(command,**kwargs):
+            if 'status' in command:return dirty
+            return b'committed'
+        monkeypatch.setattr(vision.subprocess,'check_output',read)
+        with pytest.raises(ValueError,match='clean|committed|dirty|staged'):
+>           vision.require_clean_search_commit(tmp_path,{'head':'a'*40,'staged_paths':''})
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'ml.experiments.run_vision_hpo' has no attribute 'require_clean_search_commit'
+
+ml/tests/test_vision_hpo.py:522: AttributeError
+_ test_search_refuses_uncommitted_execution_state[A  ml/configs/approved_vision_budget.json\x00] _
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-48/test_search_refuses_uncommitte1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1128d9ae0>
+dirty = 'A  ml/configs/approved_vision_budget.json\x00'
+
+    @pytest.mark.parametrize('dirty',[" M ml/vision/train_hpo.py\0", "A  ml/configs/approved_vision_budget.json\0", "?? unexpected.txt\0"])
+    def test_search_refuses_uncommitted_execution_state(vision,tmp_path,monkeypatch,dirty):
+        def read(command,**kwargs):
+            if 'status' in command:return dirty
+            return b'committed'
+        monkeypatch.setattr(vision.subprocess,'check_output',read)
+        with pytest.raises(ValueError,match='clean|committed|dirty|staged'):
+>           vision.require_clean_search_commit(tmp_path,{'head':'a'*40,'staged_paths':''})
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'ml.experiments.run_vision_hpo' has no attribute 'require_clean_search_commit'
+
+ml/tests/test_vision_hpo.py:522: AttributeError
+____ test_search_refuses_uncommitted_execution_state[?? unexpected.txt\x00] ____
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-48/test_search_refuses_uncommitte2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1128da030>
+dirty = '?? unexpected.txt\x00'
+
+    @pytest.mark.parametrize('dirty',[" M ml/vision/train_hpo.py\0", "A  ml/configs/approved_vision_budget.json\0", "?? unexpected.txt\0"])
+    def test_search_refuses_uncommitted_execution_state(vision,tmp_path,monkeypatch,dirty):
+        def read(command,**kwargs):
+            if 'status' in command:return dirty
+            return b'committed'
+        monkeypatch.setattr(vision.subprocess,'check_output',read)
+        with pytest.raises(ValueError,match='clean|committed|dirty|staged'):
+>           vision.require_clean_search_commit(tmp_path,{'head':'a'*40,'staged_paths':''})
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'ml.experiments.run_vision_hpo' has no attribute 'require_clean_search_commit'
+
+ml/tests/test_vision_hpo.py:522: AttributeError
+_______ test_search_clean_commit_preserves_declared_untracked_exceptions _______
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-48/test_search_clean_commit_prese0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x112897350>
+
+    def test_search_clean_commit_preserves_declared_untracked_exceptions(vision,tmp_path,monkeypatch):
+        from ml.experiments import comparator_common as common
+        monkeypatch.setattr(common,'ROOT',tmp_path)
+        directory=tmp_path/'ml/outputs/runs/test_run';directory.mkdir(parents=True)
+        source_names=['ml/experiments/run_vision_hpo.py','ml/vision/train_hpo.py',
+                      'ml/experiments/hpo_protocol.py','ml/experiments/comparator_common.py',
+                      'ml/configs/bounded_hpo.json','ml/configs/approved_vision_budget.json']
+        for name in source_names:
+            p=tmp_path/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b'committed')
+        dirty='?? docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md\0?? ml/outputs/runs/test_run/search_state.json\0'
+        def read(command,**kwargs):
+            if 'status' in command:return dirty
+            return b'committed'
+        monkeypatch.setattr(vision.subprocess,'check_output',read)
+        git={'head':'a'*40,'staged_paths':'','dirty_state':'untracked audit and own output'}
+>       vision.require_clean_search_commit(directory,git)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'ml.experiments.run_vision_hpo' has no attribute 'require_clean_search_commit'
+
+ml/tests/test_vision_hpo.py:540: AttributeError
+=========================== short test summary info ============================
+FAILED ml/tests/test_vision_hpo.py::test_partial_selection_excludes_timeout_even_with_high_saved_score
+FAILED ml/tests/test_vision_hpo.py::test_partial_cli_writes_missing_model_and_budget_report
+FAILED ml/tests/test_vision_hpo.py::test_search_refuses_uncommitted_execution_state[ M ml/vision/train_hpo.py\x00]
+FAILED ml/tests/test_vision_hpo.py::test_search_refuses_uncommitted_execution_state[A  ml/configs/approved_vision_budget.json\x00]
+FAILED ml/tests/test_vision_hpo.py::test_search_refuses_uncommitted_execution_state[?? unexpected.txt\x00]
+FAILED ml/tests/test_vision_hpo.py::test_search_clean_commit_preserves_declared_untracked_exceptions
+6 failed, 35 deselected in 1.38s

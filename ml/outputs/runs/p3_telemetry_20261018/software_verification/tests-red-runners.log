@@ -1,0 +1,944 @@
+EEEEEEEEEEEEEEEEEEEEEFFFFFFFFFFFFFF                                      [100%]
+==================================== ERRORS ====================================
+______ ERROR at setup of test_schedule_counts_first_grid_entry_once_as_p2 ______
+
+    @pytest.fixture
+    def modules():
+>       return (importlib.import_module('ml.experiments.run_telemetry_hpo'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                importlib.import_module('ml.telemetry.train_hpo'))
+
+ml/tests/test_telemetry_hpo.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.run_telemetry_hpo'
+import_ = <function _gcd_import at 0x102c184a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.run_telemetry_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ ERROR at setup of test_estimators_use_preregistered_fit_parameters_without_fitting[xgboost-config0-expected0] _
+
+    @pytest.fixture
+    def modules():
+>       return (importlib.import_module('ml.experiments.run_telemetry_hpo'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                importlib.import_module('ml.telemetry.train_hpo'))
+
+ml/tests/test_telemetry_hpo.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.run_telemetry_hpo'
+import_ = <function _gcd_import at 0x102c184a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.run_telemetry_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ ERROR at setup of test_estimators_use_preregistered_fit_parameters_without_fitting[random_forest-config1-expected1] _
+
+    @pytest.fixture
+    def modules():
+>       return (importlib.import_module('ml.experiments.run_telemetry_hpo'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                importlib.import_module('ml.telemetry.train_hpo'))
+
+ml/tests/test_telemetry_hpo.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.run_telemetry_hpo'
+import_ = <function _gcd_import at 0x102c184a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.run_telemetry_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ ERROR at setup of test_estimators_use_preregistered_fit_parameters_without_fitting[logistic_regression-config2-expected2] _
+
+    @pytest.fixture
+    def modules():
+>       return (importlib.import_module('ml.experiments.run_telemetry_hpo'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                importlib.import_module('ml.telemetry.train_hpo'))
+
+ml/tests/test_telemetry_hpo.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.run_telemetry_hpo'
+import_ = <function _gcd_import at 0x102c184a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.run_telemetry_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ ERROR at setup of test_worker_rejects_unapproved_requests_before_loading_data[change0] _
+
+    @pytest.fixture
+    def modules():
+>       return (importlib.import_module('ml.experiments.run_telemetry_hpo'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                importlib.import_module('ml.telemetry.train_hpo'))
+
+ml/tests/test_telemetry_hpo.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.run_telemetry_hpo'
+import_ = <function _gcd_import at 0x102c184a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.run_telemetry_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ ERROR at setup of test_worker_rejects_unapproved_requests_before_loading_data[change1] _
+
+    @pytest.fixture
+    def modules():
+>       return (importlib.import_module('ml.experiments.run_telemetry_hpo'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                importlib.import_module('ml.telemetry.train_hpo'))
+
+ml/tests/test_telemetry_hpo.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.run_telemetry_hpo'
+import_ = <function _gcd_import at 0x102c184a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.run_telemetry_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ ERROR at setup of test_worker_rejects_unapproved_requests_before_loading_data[change2] _
+
+    @pytest.fixture
+    def modules():
+>       return (importlib.import_module('ml.experiments.run_telemetry_hpo'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                importlib.import_module('ml.telemetry.train_hpo'))
+
+ml/tests/test_telemetry_hpo.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.run_telemetry_hpo'
+import_ = <function _gcd_import at 0x102c184a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.run_telemetry_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ ERROR at setup of test_worker_rejects_unapproved_requests_before_loading_data[change3] _
+
+    @pytest.fixture
+    def modules():
+>       return (importlib.import_module('ml.experiments.run_telemetry_hpo'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                importlib.import_module('ml.telemetry.train_hpo'))
+
+ml/tests/test_telemetry_hpo.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.run_telemetry_hpo'
+import_ = <function _gcd_import at 0x102c184a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.run_telemetry_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ ERROR at setup of test_worker_rejects_unapproved_requests_before_loading_data[change4] _
+
+    @pytest.fixture
+    def modules():
+>       return (importlib.import_module('ml.experiments.run_telemetry_hpo'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                importlib.import_module('ml.telemetry.train_hpo'))
+
+ml/tests/test_telemetry_hpo.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.run_telemetry_hpo'
+import_ = <function _gcd_import at 0x102c184a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.run_telemetry_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ ERROR at setup of test_worker_rejects_unapproved_requests_before_loading_data[change5] _
+
+    @pytest.fixture
+    def modules():
+>       return (importlib.import_module('ml.experiments.run_telemetry_hpo'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                importlib.import_module('ml.telemetry.train_hpo'))
+
+ml/tests/test_telemetry_hpo.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.run_telemetry_hpo'
+import_ = <function _gcd_import at 0x102c184a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.run_telemetry_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ ERROR at setup of test_preprocessing_only_fits_train_and_records_all_statistics _
+
+    @pytest.fixture
+    def modules():
+>       return (importlib.import_module('ml.experiments.run_telemetry_hpo'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                importlib.import_module('ml.telemetry.train_hpo'))
+
+ml/tests/test_telemetry_hpo.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.run_telemetry_hpo'
+import_ = <function _gcd_import at 0x102c184a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.run_telemetry_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_____ ERROR at setup of test_parent_hard_deadline_includes_process_startup _____
+
+    @pytest.fixture
+    def modules():
+>       return (importlib.import_module('ml.experiments.run_telemetry_hpo'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                importlib.import_module('ml.telemetry.train_hpo'))
+
+ml/tests/test_telemetry_hpo.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.run_telemetry_hpo'
+import_ = <function _gcd_import at 0x102c184a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.run_telemetry_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_________ ERROR at setup of test_expired_budget_cannot_start_a_process _________
+
+    @pytest.fixture
+    def modules():
+>       return (importlib.import_module('ml.experiments.run_telemetry_hpo'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                importlib.import_module('ml.telemetry.train_hpo'))
+
+ml/tests/test_telemetry_hpo.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.run_telemetry_hpo'
+import_ = <function _gcd_import at 0x102c184a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.run_telemetry_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+___ ERROR at setup of test_timeout_stops_all_remaining_trials_without_refit ____
+
+    @pytest.fixture
+    def modules():
+>       return (importlib.import_module('ml.experiments.run_telemetry_hpo'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                importlib.import_module('ml.telemetry.train_hpo'))
+
+ml/tests/test_telemetry_hpo.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.run_telemetry_hpo'
+import_ = <function _gcd_import at 0x102c184a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.run_telemetry_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ ERROR at setup of test_lr_identical_seed43_is_labelled_duplicate_and_seed44_is_skipped _
+
+    @pytest.fixture
+    def modules():
+>       return (importlib.import_module('ml.experiments.run_telemetry_hpo'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                importlib.import_module('ml.telemetry.train_hpo'))
+
+ml/tests/test_telemetry_hpo.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.run_telemetry_hpo'
+import_ = <function _gcd_import at 0x102c184a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.run_telemetry_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ ERROR at setup of test_lr_changed_seed43_requires_seed44_and_never_reselects _
+
+    @pytest.fixture
+    def modules():
+>       return (importlib.import_module('ml.experiments.run_telemetry_hpo'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                importlib.import_module('ml.telemetry.train_hpo'))
+
+ml/tests/test_telemetry_hpo.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.run_telemetry_hpo'
+import_ = <function _gcd_import at 0x102c184a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.run_telemetry_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ ERROR at setup of test_budget_placeholder_declares_test_predictions_not_due __
+
+    @pytest.fixture
+    def modules():
+>       return (importlib.import_module('ml.experiments.run_telemetry_hpo'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                importlib.import_module('ml.telemetry.train_hpo'))
+
+ml/tests/test_telemetry_hpo.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.run_telemetry_hpo'
+import_ = <function _gcd_import at 0x102c184a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.run_telemetry_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ ERROR at setup of test_cli_rejects_unapproved_budget_resume_or_partial_grid[extra0] _
+
+    @pytest.fixture
+    def modules():
+>       return (importlib.import_module('ml.experiments.run_telemetry_hpo'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                importlib.import_module('ml.telemetry.train_hpo'))
+
+ml/tests/test_telemetry_hpo.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.run_telemetry_hpo'
+import_ = <function _gcd_import at 0x102c184a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.run_telemetry_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ ERROR at setup of test_cli_rejects_unapproved_budget_resume_or_partial_grid[extra1] _
+
+    @pytest.fixture
+    def modules():
+>       return (importlib.import_module('ml.experiments.run_telemetry_hpo'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                importlib.import_module('ml.telemetry.train_hpo'))
+
+ml/tests/test_telemetry_hpo.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.run_telemetry_hpo'
+import_ = <function _gcd_import at 0x102c184a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.run_telemetry_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ ERROR at setup of test_cli_rejects_unapproved_budget_resume_or_partial_grid[extra2] _
+
+    @pytest.fixture
+    def modules():
+>       return (importlib.import_module('ml.experiments.run_telemetry_hpo'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                importlib.import_module('ml.telemetry.train_hpo'))
+
+ml/tests/test_telemetry_hpo.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.run_telemetry_hpo'
+import_ = <function _gcd_import at 0x102c184a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.run_telemetry_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+____ ERROR at setup of test_worker_cli_rejects_direct_unsupervised_training ____
+
+    @pytest.fixture
+    def modules():
+>       return (importlib.import_module('ml.experiments.run_telemetry_hpo'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                importlib.import_module('ml.telemetry.train_hpo'))
+
+ml/tests/test_telemetry_hpo.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.run_telemetry_hpo'
+import_ = <function _gcd_import at 0x102c184a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.run_telemetry_hpo'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+=================================== FAILURES ===================================
+________ test_missing_numeric_budget_refuses_without_creating_approval _________
+
+vision = <test_vision_hpo.vision.<locals>.MissingVision object at 0x108f4c440>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-30/test_missing_numeric_budget_re0')
+
+    def test_missing_numeric_budget_refuses_without_creating_approval(vision, tmp_path):
+        path = tmp_path / 'approved_vision_budget.json'
+        with pytest.raises((ValueError, FileNotFoundError), match='budget|预算|approved'):
+>           vision.load_approved_budget(path)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_vision_hpo.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_vision_hpo.vision.<locals>.MissingVision object at 0x108f4c440>
+name = 'load_approved_budget'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing bounded vision HPO orchestration implementation')
+E       Failed: Missing bounded vision HPO orchestration implementation
+
+ml/tests/test_vision_hpo.py:22: Failed
+______ test_incomplete_or_nonfinite_budget_is_not_authorization[payload0] ______
+
+vision = <test_vision_hpo.vision.<locals>.MissingVision object at 0x108f4c590>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-30/test_incomplete_or_nonfinite_b0')
+payload = {'launch_authorized': False, 'per_model': 2, 'per_trial': 1, 'total': 3}
+
+    @pytest.mark.parametrize('payload', [
+        {'launch_authorized': False, 'per_trial': 1, 'per_model': 2, 'total': 3},
+        {'launch_authorized': True, 'per_trial': None, 'per_model': 2, 'total': 3},
+        {'launch_authorized': True, 'per_trial': True, 'per_model': 2, 'total': 3},
+        {'launch_authorized': True, 'per_trial': 1, 'per_model': 2, 'total': float('inf')},
+    ])
+    def test_incomplete_or_nonfinite_budget_is_not_authorization(vision, tmp_path, payload):
+        path = tmp_path / 'approval.json'
+        path.write_text(json.dumps(payload))
+        with pytest.raises(ValueError):
+>           vision.load_approved_budget(path)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_vision_hpo.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_vision_hpo.vision.<locals>.MissingVision object at 0x108f4c590>
+name = 'load_approved_budget'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing bounded vision HPO orchestration implementation')
+E       Failed: Missing bounded vision HPO orchestration implementation
+
+ml/tests/test_vision_hpo.py:22: Failed
+______ test_incomplete_or_nonfinite_budget_is_not_authorization[payload1] ______
+
+vision = <test_vision_hpo.vision.<locals>.MissingVision object at 0x1113dba10>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-30/test_incomplete_or_nonfinite_b1')
+payload = {'launch_authorized': True, 'per_model': 2, 'per_trial': None, 'total': 3}
+
+    @pytest.mark.parametrize('payload', [
+        {'launch_authorized': False, 'per_trial': 1, 'per_model': 2, 'total': 3},
+        {'launch_authorized': True, 'per_trial': None, 'per_model': 2, 'total': 3},
+        {'launch_authorized': True, 'per_trial': True, 'per_model': 2, 'total': 3},
+        {'launch_authorized': True, 'per_trial': 1, 'per_model': 2, 'total': float('inf')},
+    ])
+    def test_incomplete_or_nonfinite_budget_is_not_authorization(vision, tmp_path, payload):
+        path = tmp_path / 'approval.json'
+        path.write_text(json.dumps(payload))
+        with pytest.raises(ValueError):
+>           vision.load_approved_budget(path)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_vision_hpo.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_vision_hpo.vision.<locals>.MissingVision object at 0x1113dba10>
+name = 'load_approved_budget'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing bounded vision HPO orchestration implementation')
+E       Failed: Missing bounded vision HPO orchestration implementation
+
+ml/tests/test_vision_hpo.py:22: Failed
+______ test_incomplete_or_nonfinite_budget_is_not_authorization[payload2] ______
+
+vision = <test_vision_hpo.vision.<locals>.MissingVision object at 0x1113dbb60>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-30/test_incomplete_or_nonfinite_b2')
+payload = {'launch_authorized': True, 'per_model': 2, 'per_trial': True, 'total': 3}
+
+    @pytest.mark.parametrize('payload', [
+        {'launch_authorized': False, 'per_trial': 1, 'per_model': 2, 'total': 3},
+        {'launch_authorized': True, 'per_trial': None, 'per_model': 2, 'total': 3},
+        {'launch_authorized': True, 'per_trial': True, 'per_model': 2, 'total': 3},
+        {'launch_authorized': True, 'per_trial': 1, 'per_model': 2, 'total': float('inf')},
+    ])
+    def test_incomplete_or_nonfinite_budget_is_not_authorization(vision, tmp_path, payload):
+        path = tmp_path / 'approval.json'
+        path.write_text(json.dumps(payload))
+        with pytest.raises(ValueError):
+>           vision.load_approved_budget(path)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_vision_hpo.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_vision_hpo.vision.<locals>.MissingVision object at 0x1113dbb60>
+name = 'load_approved_budget'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing bounded vision HPO orchestration implementation')
+E       Failed: Missing bounded vision HPO orchestration implementation
+
+ml/tests/test_vision_hpo.py:22: Failed
+______ test_incomplete_or_nonfinite_budget_is_not_authorization[payload3] ______
+
+vision = <test_vision_hpo.vision.<locals>.MissingVision object at 0x1113dbcb0>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-30/test_incomplete_or_nonfinite_b3')
+payload = {'launch_authorized': True, 'per_model': 2, 'per_trial': 1, 'total': inf}
+
+    @pytest.mark.parametrize('payload', [
+        {'launch_authorized': False, 'per_trial': 1, 'per_model': 2, 'total': 3},
+        {'launch_authorized': True, 'per_trial': None, 'per_model': 2, 'total': 3},
+        {'launch_authorized': True, 'per_trial': True, 'per_model': 2, 'total': 3},
+        {'launch_authorized': True, 'per_trial': 1, 'per_model': 2, 'total': float('inf')},
+    ])
+    def test_incomplete_or_nonfinite_budget_is_not_authorization(vision, tmp_path, payload):
+        path = tmp_path / 'approval.json'
+        path.write_text(json.dumps(payload))
+        with pytest.raises(ValueError):
+>           vision.load_approved_budget(path)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_vision_hpo.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_vision_hpo.vision.<locals>.MissingVision object at 0x1113dbcb0>
+name = 'load_approved_budget'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing bounded vision HPO orchestration implementation')
+E       Failed: Missing bounded vision HPO orchestration implementation
+
+ml/tests/test_vision_hpo.py:22: Failed
+________________ test_no_mps_refuses_even_when_cpu_is_available ________________
+
+vision = <test_vision_hpo.vision.<locals>.MissingVision object at 0x1113dbe00>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1116e4e90>
+
+    def test_no_mps_refuses_even_when_cpu_is_available(vision, monkeypatch):
+        fake = SimpleNamespace(backends=SimpleNamespace(mps=SimpleNamespace(is_available=lambda: False)))
+        monkeypatch.setitem(sys.modules, 'torch', fake)
+        with pytest.raises(ValueError, match='MPS'):
+>           vision.require_mps()
+            ^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_vision_hpo.py:77: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_vision_hpo.vision.<locals>.MissingVision object at 0x1113dbe00>
+name = 'require_mps'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing bounded vision HPO orchestration implementation')
+E       Failed: Missing bounded vision HPO orchestration implementation
+
+ml/tests/test_vision_hpo.py:22: Failed
+_________ test_resume_skips_completed_attempt_and_preserves_directory __________
+
+vision = <test_vision_hpo.vision.<locals>.MissingVision object at 0x1113dbcb0>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-30/test_resume_skips_completed_at0')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+
+    def test_resume_skips_completed_attempt_and_preserves_directory(vision, tmp_path, context):
+        budget = {'per_trial': 10.0, 'per_model': 20.0, 'total': 30.0}
+>       first = vision.run_plan(tmp_path, 'search', [plan()], budget, context, runner=synthetic_worker)
+                ^^^^^^^^^^^^^^^
+
+ml/tests/test_vision_hpo.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_vision_hpo.vision.<locals>.MissingVision object at 0x1113dbcb0>
+name = 'run_plan'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing bounded vision HPO orchestration implementation')
+E       Failed: Missing bounded vision HPO orchestration implementation
+
+ml/tests/test_vision_hpo.py:22: Failed
+___________ test_ctrl_c_is_retained_as_interrupted_then_new_attempt ____________
+
+vision = <test_vision_hpo.vision.<locals>.MissingVision object at 0x1113dbb60>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-30/test_ctrl_c_is_retained_as_int0')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+
+    def test_ctrl_c_is_retained_as_interrupted_then_new_attempt(vision, tmp_path, context):
+        budget = {'per_trial': 5.0, 'per_model': 20.0, 'total': 30.0}
+    
+        def interrupt(*args, **kwargs):
+            time.sleep(0.02)
+            raise KeyboardInterrupt
+    
+        with pytest.raises(KeyboardInterrupt):
+>           vision.run_plan(tmp_path, 'search', [plan()], budget, context, runner=interrupt)
+            ^^^^^^^^^^^^^^^
+
+ml/tests/test_vision_hpo.py:106: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_vision_hpo.vision.<locals>.MissingVision object at 0x1113dbb60>
+name = 'run_plan'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing bounded vision HPO orchestration implementation')
+E       Failed: Missing bounded vision HPO orchestration implementation
+
+ml/tests/test_vision_hpo.py:22: Failed
+________ test_hard_wall_kills_blocked_child_including_pre_training_load ________
+
+vision = <test_vision_hpo.vision.<locals>.MissingVision object at 0x1113dba10>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-30/test_hard_wall_kills_blocked_c0')
+
+    def test_hard_wall_kills_blocked_child_including_pre_training_load(vision, tmp_path):
+        started = time.monotonic()
+>       result = vision.supervise([sys.executable, '-c', 'import time; time.sleep(30)'],
+                 ^^^^^^^^^^^^^^^^
+                                  tmp_path / 'child.log', 0.08)
+
+ml/tests/test_vision_hpo.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_vision_hpo.vision.<locals>.MissingVision object at 0x1113dba10>
+name = 'supervise'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing bounded vision HPO orchestration implementation')
+E       Failed: Missing bounded vision HPO orchestration implementation
+
+ml/tests/test_vision_hpo.py:22: Failed
+___________ test_wall_limit_stops_and_marks_remaining_without_reset ____________
+
+vision = <test_vision_hpo.vision.<locals>.MissingVision object at 0x108f4c440>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-30/test_wall_limit_stops_and_mark0')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+
+    def test_wall_limit_stops_and_marks_remaining_without_reset(vision, tmp_path, context):
+        budget = {'per_trial': 0.1, 'per_model': 1.0, 'total': 2.0}
+    
+        def timeout(command, log_path, seconds):
+            return {'status': 'TIME_BUDGET_EXCEEDED', 'returncode': -9,
+                    'wall_seconds': 0.1, 'timeout_seconds': seconds}
+    
+>       state = vision.run_plan(tmp_path, 'search', [plan(), plan('search_002')],
+                ^^^^^^^^^^^^^^^
+                                budget, context, runner=timeout)
+
+ml/tests/test_vision_hpo.py:140: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_vision_hpo.vision.<locals>.MissingVision object at 0x108f4c440>
+name = 'run_plan'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing bounded vision HPO orchestration implementation')
+E       Failed: Missing bounded vision HPO orchestration implementation
+
+ml/tests/test_vision_hpo.py:22: Failed
+_________ test_running_attempt_after_parent_crash_becomes_interrupted __________
+
+vision = <test_vision_hpo.vision.<locals>.MissingVision object at 0x1117e0050>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-30/test_running_attempt_after_par0')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+
+    def test_running_attempt_after_parent_crash_becomes_interrupted(vision, tmp_path, context):
+        budget = {'per_trial': 10.0, 'per_model': 20.0, 'total': 30.0}
+        # Simulate a parent dying between launching the worker and saving its result.
+        def crash(command, log_path, timeout):
+            raise SystemExit(9)
+    
+        with pytest.raises(SystemExit):
+>           vision.run_plan(tmp_path, 'search', [plan()], budget, context, runner=crash)
+            ^^^^^^^^^^^^^^^
+
+ml/tests/test_vision_hpo.py:159: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_vision_hpo.vision.<locals>.MissingVision object at 0x1117e0050>
+name = 'run_plan'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing bounded vision HPO orchestration implementation')
+E       Failed: Missing bounded vision HPO orchestration implementation
+
+ml/tests/test_vision_hpo.py:22: Failed
+________ test_changed_resume_config_refuses_instead_of_mixing_evidence _________
+
+vision = <test_vision_hpo.vision.<locals>.MissingVision object at 0x1117e02f0>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-30/test_changed_resume_config_ref0')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+
+    def test_changed_resume_config_refuses_instead_of_mixing_evidence(vision, tmp_path, context):
+        budget = {'per_trial': 10.0, 'per_model': 20.0, 'total': 30.0}
+>       vision.run_plan(tmp_path, 'search', [plan()], budget, context, runner=synthetic_worker)
+        ^^^^^^^^^^^^^^^
+
+ml/tests/test_vision_hpo.py:166: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_vision_hpo.vision.<locals>.MissingVision object at 0x1117e02f0>
+name = 'run_plan'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing bounded vision HPO orchestration implementation')
+E       Failed: Missing bounded vision HPO orchestration implementation
+
+ml/tests/test_vision_hpo.py:22: Failed
+_____________ test_probe_estimate_is_time_only_and_eight_by_eight ______________
+
+vision = <test_vision_hpo.vision.<locals>.MissingVision object at 0x1117e0440>
+
+    def test_probe_estimate_is_time_only_and_eight_by_eight(vision):
+>       proposal = vision.budget_proposal({'mobilenet_v3_large': {'epochs': [
+                   ^^^^^^^^^^^^^^^^^^^^^^
+            {'epoch': 1, 'train_seconds': 10.0, 'validation_seconds': 2.0}]},
+            'resnet18': {'epochs': [{'epoch': 1, 'train_seconds': 20.0, 'validation_seconds': 4.0}]}})
+
+ml/tests/test_vision_hpo.py:174: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_vision_hpo.vision.<locals>.MissingVision object at 0x1117e0440>
+name = 'budget_proposal'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing bounded vision HPO orchestration implementation')
+E       Failed: Missing bounded vision HPO orchestration implementation
+
+ml/tests/test_vision_hpo.py:22: Failed
+____________ test_weight_integrity_failure_never_rewrites_manifest _____________
+
+vision = <test_vision_hpo.vision.<locals>.MissingVision object at 0x1117e0590>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-30/test_weight_integrity_failure_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x111442520>
+
+    def test_weight_integrity_failure_never_rewrites_manifest(vision, tmp_path, monkeypatch):
+        cache = tmp_path / 'cache'
+        cache.mkdir()
+        (cache / 'mobilenet_v3_large-5c1a4163.pth').write_bytes(b'corrupt')
+>       monkeypatch.setattr(vision, 'weights_cache', lambda: cache)
+
+ml/tests/test_vision_hpo.py:188: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_vision_hpo.vision.<locals>.MissingVision object at 0x1117e0590>
+name = 'weights_cache'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing bounded vision HPO orchestration implementation')
+E       Failed: Missing bounded vision HPO orchestration implementation
+
+ml/tests/test_vision_hpo.py:22: Failed
+=========================== short test summary info ============================
+FAILED ml/tests/test_vision_hpo.py::test_missing_numeric_budget_refuses_without_creating_approval
+FAILED ml/tests/test_vision_hpo.py::test_incomplete_or_nonfinite_budget_is_not_authorization[payload0]
+FAILED ml/tests/test_vision_hpo.py::test_incomplete_or_nonfinite_budget_is_not_authorization[payload1]
+FAILED ml/tests/test_vision_hpo.py::test_incomplete_or_nonfinite_budget_is_not_authorization[payload2]
+FAILED ml/tests/test_vision_hpo.py::test_incomplete_or_nonfinite_budget_is_not_authorization[payload3]
+FAILED ml/tests/test_vision_hpo.py::test_no_mps_refuses_even_when_cpu_is_available
+FAILED ml/tests/test_vision_hpo.py::test_resume_skips_completed_attempt_and_preserves_directory
+FAILED ml/tests/test_vision_hpo.py::test_ctrl_c_is_retained_as_interrupted_then_new_attempt
+FAILED ml/tests/test_vision_hpo.py::test_hard_wall_kills_blocked_child_including_pre_training_load
+FAILED ml/tests/test_vision_hpo.py::test_wall_limit_stops_and_marks_remaining_without_reset
+FAILED ml/tests/test_vision_hpo.py::test_running_attempt_after_parent_crash_becomes_interrupted
+FAILED ml/tests/test_vision_hpo.py::test_changed_resume_config_refuses_instead_of_mixing_evidence
+FAILED ml/tests/test_vision_hpo.py::test_probe_estimate_is_time_only_and_eight_by_eight
+FAILED ml/tests/test_vision_hpo.py::test_weight_integrity_failure_never_rewrites_manifest
+ERROR ml/tests/test_telemetry_hpo.py::test_schedule_counts_first_grid_entry_once_as_p2
+ERROR ml/tests/test_telemetry_hpo.py::test_estimators_use_preregistered_fit_parameters_without_fitting[xgboost-config0-expected0]
+ERROR ml/tests/test_telemetry_hpo.py::test_estimators_use_preregistered_fit_parameters_without_fitting[random_forest-config1-expected1]
+ERROR ml/tests/test_telemetry_hpo.py::test_estimators_use_preregistered_fit_parameters_without_fitting[logistic_regression-config2-expected2]
+ERROR ml/tests/test_telemetry_hpo.py::test_worker_rejects_unapproved_requests_before_loading_data[change0]
+ERROR ml/tests/test_telemetry_hpo.py::test_worker_rejects_unapproved_requests_before_loading_data[change1]
+ERROR ml/tests/test_telemetry_hpo.py::test_worker_rejects_unapproved_requests_before_loading_data[change2]
+ERROR ml/tests/test_telemetry_hpo.py::test_worker_rejects_unapproved_requests_before_loading_data[change3]
+ERROR ml/tests/test_telemetry_hpo.py::test_worker_rejects_unapproved_requests_before_loading_data[change4]
+ERROR ml/tests/test_telemetry_hpo.py::test_worker_rejects_unapproved_requests_before_loading_data[change5]
+ERROR ml/tests/test_telemetry_hpo.py::test_preprocessing_only_fits_train_and_records_all_statistics
+ERROR ml/tests/test_telemetry_hpo.py::test_parent_hard_deadline_includes_process_startup
+ERROR ml/tests/test_telemetry_hpo.py::test_expired_budget_cannot_start_a_process
+ERROR ml/tests/test_telemetry_hpo.py::test_timeout_stops_all_remaining_trials_without_refit
+ERROR ml/tests/test_telemetry_hpo.py::test_lr_identical_seed43_is_labelled_duplicate_and_seed44_is_skipped
+ERROR ml/tests/test_telemetry_hpo.py::test_lr_changed_seed43_requires_seed44_and_never_reselects
+ERROR ml/tests/test_telemetry_hpo.py::test_budget_placeholder_declares_test_predictions_not_due
+ERROR ml/tests/test_telemetry_hpo.py::test_cli_rejects_unapproved_budget_resume_or_partial_grid[extra0]
+ERROR ml/tests/test_telemetry_hpo.py::test_cli_rejects_unapproved_budget_resume_or_partial_grid[extra1]
+ERROR ml/tests/test_telemetry_hpo.py::test_cli_rejects_unapproved_budget_resume_or_partial_grid[extra2]
+ERROR ml/tests/test_telemetry_hpo.py::test_worker_cli_rejects_direct_unsupervised_training
+14 failed, 21 errors in 1.62s

@@ -1,0 +1,21 @@
+F.                                                                       [100%]
+=================================== FAILURES ===================================
+____________ test_runtime_summary_preserves_rounds_and_sampled_rss _____________
+
+core = <module 'ml.experiments.p4_core' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_core.py'>
+
+    def test_runtime_summary_preserves_rounds_and_sampled_rss(core):
+        from ml.experiments import run_p4
+        rounds=[{'round':i,'latency_nanoseconds':[1000000,3000000], 'throughput_calls':100,
+            'throughput_loop_nanoseconds':1000000000,'rss_before_session_bytes':100,'rss_after_session_bytes':150,
+            'lifecycle_ru_maxrss':999} for i in range(6)]
+        workers=[{'stage':'runtime','model':'toy','samples':[{'elapsed_seconds':0.,'rss_bytes':100},
+            {'elapsed_seconds':.03,'rss_bytes':300}], 'sampled_peak_rss_bytes':300} for i in range(6)]
+>       report=run_p4.runtime_summary(rounds,workers,'toy')
+               ^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'ml.experiments.run_p4' has no attribute 'runtime_summary'
+
+ml/tests/test_p4_core.py:301: AttributeError
+=========================== short test summary info ============================
+FAILED ml/tests/test_p4_core.py::test_runtime_summary_preserves_rounds_and_sampled_rss
+1 failed, 1 passed, 30 deselected in 2.13s

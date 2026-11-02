@@ -1,0 +1,369 @@
+{
+  "status": "VERIFIED_PASS",
+  "scope": "SAVED_SMOKE_ARTIFACTS_ONLY",
+  "classifier_fits": 0,
+  "model_forwards": 0,
+  "heldout_data_reads": 0,
+  "checks": [
+    {
+      "check": "supervisor_pass",
+      "passed": true
+    },
+    {
+      "check": "combined_budget",
+      "passed": true
+    },
+    {
+      "check": "three_primary_attempts_no_rerun",
+      "passed": true
+    },
+    {
+      "check": "no_hpo_or_test_predictions",
+      "passed": true
+    },
+    {
+      "check": "source_hash:ml/experiments/comparator_common.py",
+      "passed": true
+    },
+    {
+      "check": "source_hash:ml/experiments/run_p1_smoke.py",
+      "passed": true
+    },
+    {
+      "check": "source_hash:ml/vision/train_resnet18.py",
+      "passed": true
+    },
+    {
+      "check": "source_hash:ml/telemetry/train_comparator.py",
+      "passed": true
+    },
+    {
+      "check": "protected_hash:ml/outputs/vision/mobilenetv3_large_vision.pt",
+      "passed": true
+    },
+    {
+      "check": "protected_hash:ml/outputs/vision/mobilenetv3_large_vision.onnx",
+      "passed": true
+    },
+    {
+      "check": "protected_hash:ml/outputs/telemetry/xgb_telemetry.json",
+      "passed": true
+    },
+    {
+      "check": "protected_hash:docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md",
+      "passed": true
+    },
+    {
+      "check": "resnet18:pass_non_comparative",
+      "passed": true
+    },
+    {
+      "check": "resnet18:no_test_or_hpo",
+      "passed": true
+    },
+    {
+      "check": "resnet18:seed",
+      "passed": true
+    },
+    {
+      "check": "resnet18:approved_counts",
+      "passed": true
+    },
+    {
+      "check": "resnet18:stratified_unique_sources",
+      "passed": true
+    },
+    {
+      "check": "resnet18:prediction_ids",
+      "passed": true
+    },
+    {
+      "check": "resnet18:shape_and_class_order",
+      "passed": true
+    },
+    {
+      "check": "resnet18:finite_probability_simplex",
+      "passed": true
+    },
+    {
+      "check": "resnet18:diagnostics_finite",
+      "passed": true
+    },
+    {
+      "check": "resnet18:hard_wall_limit",
+      "passed": true
+    },
+    {
+      "check": "resnet18:checkpoint_hash",
+      "passed": true
+    },
+    {
+      "check": "resnet18:epoch_steps_and_reload",
+      "passed": true
+    },
+    {
+      "check": "resnet18:loss_logits_and_reload_finite",
+      "passed": true
+    },
+    {
+      "check": "resnet18:cpu_resource_limit",
+      "passed": true
+    },
+    {
+      "check": "resnet18:artifact:class_report.json",
+      "passed": true
+    },
+    {
+      "check": "resnet18:artifact:config.json",
+      "passed": true
+    },
+    {
+      "check": "resnet18:artifact:execution.log",
+      "passed": true
+    },
+    {
+      "check": "resnet18:artifact:predictions_validation.csv",
+      "passed": true
+    },
+    {
+      "check": "resnet18:artifact:resnet18_smoke.pt",
+      "passed": true
+    },
+    {
+      "check": "resnet18:artifact:sample_manifest.csv",
+      "passed": true
+    },
+    {
+      "check": "resnet18:artifact:selection_log.json",
+      "passed": true
+    },
+    {
+      "check": "resnet18:artifact:timing_samples.csv",
+      "passed": true
+    },
+    {
+      "check": "resnet18:artifact:trials.csv",
+      "passed": true
+    },
+    {
+      "check": "resnet18:artifact:validation_metrics.json",
+      "passed": true
+    },
+    {
+      "check": "random_forest:pass_non_comparative",
+      "passed": true
+    },
+    {
+      "check": "random_forest:no_test_or_hpo",
+      "passed": true
+    },
+    {
+      "check": "random_forest:seed",
+      "passed": true
+    },
+    {
+      "check": "random_forest:approved_counts",
+      "passed": true
+    },
+    {
+      "check": "random_forest:stratified_unique_sources",
+      "passed": true
+    },
+    {
+      "check": "random_forest:prediction_ids",
+      "passed": true
+    },
+    {
+      "check": "random_forest:shape_and_class_order",
+      "passed": true
+    },
+    {
+      "check": "random_forest:finite_probability_simplex",
+      "passed": true
+    },
+    {
+      "check": "random_forest:diagnostics_finite",
+      "passed": true
+    },
+    {
+      "check": "random_forest:hard_wall_limit",
+      "passed": true
+    },
+    {
+      "check": "random_forest:checkpoint_hash",
+      "passed": true
+    },
+    {
+      "check": "random_forest:single_fit_train_only_reload",
+      "passed": true
+    },
+    {
+      "check": "random_forest:threadpools_bounded",
+      "passed": true
+    },
+    {
+      "check": "random_forest:artifact:class_report.json",
+      "passed": true
+    },
+    {
+      "check": "random_forest:artifact:config.json",
+      "passed": true
+    },
+    {
+      "check": "random_forest:artifact:execution.log",
+      "passed": true
+    },
+    {
+      "check": "random_forest:artifact:predictions_validation.csv",
+      "passed": true
+    },
+    {
+      "check": "random_forest:artifact:random_forest_smoke.joblib",
+      "passed": true
+    },
+    {
+      "check": "random_forest:artifact:sample_manifest.csv",
+      "passed": true
+    },
+    {
+      "check": "random_forest:artifact:selection_log.json",
+      "passed": true
+    },
+    {
+      "check": "random_forest:artifact:timing_samples.csv",
+      "passed": true
+    },
+    {
+      "check": "random_forest:artifact:train_statistics.json",
+      "passed": true
+    },
+    {
+      "check": "random_forest:artifact:trials.csv",
+      "passed": true
+    },
+    {
+      "check": "random_forest:artifact:validation_metrics.json",
+      "passed": true
+    },
+    {
+      "check": "logistic_regression:pass_non_comparative",
+      "passed": true
+    },
+    {
+      "check": "logistic_regression:no_test_or_hpo",
+      "passed": true
+    },
+    {
+      "check": "logistic_regression:seed",
+      "passed": true
+    },
+    {
+      "check": "logistic_regression:approved_counts",
+      "passed": true
+    },
+    {
+      "check": "logistic_regression:stratified_unique_sources",
+      "passed": true
+    },
+    {
+      "check": "logistic_regression:prediction_ids",
+      "passed": true
+    },
+    {
+      "check": "logistic_regression:shape_and_class_order",
+      "passed": true
+    },
+    {
+      "check": "logistic_regression:finite_probability_simplex",
+      "passed": true
+    },
+    {
+      "check": "logistic_regression:diagnostics_finite",
+      "passed": true
+    },
+    {
+      "check": "logistic_regression:hard_wall_limit",
+      "passed": true
+    },
+    {
+      "check": "logistic_regression:checkpoint_hash",
+      "passed": true
+    },
+    {
+      "check": "logistic_regression:single_fit_train_only_reload",
+      "passed": true
+    },
+    {
+      "check": "logistic_regression:threadpools_bounded",
+      "passed": true
+    },
+    {
+      "check": "logistic_regression:artifact:class_report.json",
+      "passed": true
+    },
+    {
+      "check": "logistic_regression:artifact:config.json",
+      "passed": true
+    },
+    {
+      "check": "logistic_regression:artifact:execution.log",
+      "passed": true
+    },
+    {
+      "check": "logistic_regression:artifact:logistic_regression_smoke.joblib",
+      "passed": true
+    },
+    {
+      "check": "logistic_regression:artifact:predictions_validation.csv",
+      "passed": true
+    },
+    {
+      "check": "logistic_regression:artifact:sample_manifest.csv",
+      "passed": true
+    },
+    {
+      "check": "logistic_regression:artifact:selection_log.json",
+      "passed": true
+    },
+    {
+      "check": "logistic_regression:artifact:timing_samples.csv",
+      "passed": true
+    },
+    {
+      "check": "logistic_regression:artifact:train_statistics.json",
+      "passed": true
+    },
+    {
+      "check": "logistic_regression:artifact:trials.csv",
+      "passed": true
+    },
+    {
+      "check": "logistic_regression:artifact:validation_metrics.json",
+      "passed": true
+    },
+    {
+      "check": "rf_lr_same_samples",
+      "passed": true
+    }
+  ],
+  "summary": {
+    "resnet18": {
+      "wall_seconds": 21.757676250010263,
+      "diagnostic_accuracy": 0.1,
+      "diagnostic_macro_f1": 0.01818181818181818,
+      "formal_comparison_valid": false
+    },
+    "random_forest": {
+      "wall_seconds": 1.5419308750424534,
+      "diagnostic_accuracy": 0.9666666666666667,
+      "diagnostic_macro_f1": 0.9666574048346762,
+      "formal_comparison_valid": false
+    },
+    "logistic_regression": {
+      "wall_seconds": 1.4643225420149975,
+      "diagnostic_accuracy": 0.9888888888888889,
+      "diagnostic_macro_f1": 0.9888858016115588,
+      "formal_comparison_valid": false
+    }
+  }
+}

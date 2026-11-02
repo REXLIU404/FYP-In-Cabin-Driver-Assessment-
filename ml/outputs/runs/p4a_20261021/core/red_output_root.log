@@ -1,0 +1,17 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________________ test_supervisor_monitors_entire_output_root __________________
+
+core = <module 'ml.experiments.p4_core' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_core.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-85/test_supervisor_monitors_entir0')
+
+    def test_supervisor_monitors_entire_output_root(core,tmp_path):
+        root=tmp_path/'all';root.mkdir();(root/'existing-output').write_bytes(b'x'*500)
+>       supervisor=core.BudgetSupervisor(root/'budget',output_root=root,total_seconds=2,stage_caps={'toy':2},
+            min_free_bytes=0,min_available_ram=0,disk_cap_bytes=100)
+E       TypeError: BudgetSupervisor.__init__() got an unexpected keyword argument 'output_root'
+
+ml/tests/test_p4_core.py:205: TypeError
+=========================== short test summary info ============================
+FAILED ml/tests/test_p4_core.py::test_supervisor_monitors_entire_output_root
+1 failed in 0.07s

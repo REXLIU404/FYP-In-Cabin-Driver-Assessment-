@@ -1,0 +1,62 @@
+{
+  "scope": "Unmodified system commit2745348 CLI in isolated snapshot; static schema/path/hash only; package verification adds static ONNX graph/inventory checks; no provider forward",
+  "pinned_source_files": {
+    "backend/app/runtime_manifest.py": {
+      "sha256": "f2e4b39ad6708d2feeb110b7308f6a924fe752b9a6e6a48df1927b7e058997ce",
+      "bytes": 4761
+    },
+    "backend/app/runtime_manifest.schema.json": {
+      "sha256": "db78678d7e00dbb7935e9c122e514957e0a5913857e5ef367353a925a1b59084",
+      "bytes": 2633
+    },
+    "scripts/validate_runtime_manifest.py": {
+      "sha256": "9b0ed4a0f7369f453768cfdac92e4a1b963eba971f9f5a36b1864becd1055d8a",
+      "bytes": 1519
+    }
+  },
+  "commands": [
+    {
+      "argv": [
+        "./.venv/bin/python",
+        "-B",
+        "ml/outputs/runs/p5_candidates_20261023/verification/validator_cli_snapshot/scripts/validate_runtime_manifest.py",
+        "ml/outputs/runs/p5_candidates_20261023/p5_resnet18_search004_seed42_20261023/runtime_manifest.json",
+        "--package-dir",
+        "ml/outputs/runs/p5_candidates_20261023/p5_resnet18_search004_seed42_20261023"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.8566644579987042,
+      "stdout": "valid\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "./.venv/bin/python",
+        "-B",
+        "ml/outputs/runs/p5_candidates_20261023/verification/validator_cli_snapshot/scripts/validate_runtime_manifest.py",
+        "ml/outputs/runs/p5_candidates_20261023/p5_mobilenet_v3_large_search006_seed42_20261023/runtime_manifest.json",
+        "--package-dir",
+        "ml/outputs/runs/p5_candidates_20261023/p5_mobilenet_v3_large_search006_seed42_20261023"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.4070245000038994,
+      "stdout": "valid\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "./.venv/bin/python",
+        "-B",
+        "-m",
+        "ml.experiments.package_candidates",
+        "verify",
+        "--run-dir",
+        "ml/outputs/runs/p5_candidates_20261023"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.152952042000834,
+      "stdout": "[\n  {\n    \"status\": \"PASS\",\n    \"package\": \"p5_resnet18_search004_seed42_20261023\",\n    \"schema_hash_path\": \"PASS\",\n    \"inventory_files\": 40,\n    \"graph\": {\n      \"status\": \"PASS\",\n      \"input_name\": \"input\",\n      \"input_shape\": [\n        \"N\",\n        3,\n        224,\n        224\n      ],\n      \"output_name\": \"logits\",\n      \"output_shape\": [\n        \"N\",\n        10\n      ],\n      \"dtype\": \"float32\",\n      \"softmax_nodes\": 0,\n      \"external_tensors\": 0,\n      \"forward_passes\": 0\n    },\n    \"provider_load_forward\": \"NOT_RUN\",\n    \"official_stable200_behavior\": \"NOT_RUN\",\n    \"system_integration\": \"BLOCKED_NOT_IMPLEMENTED\"\n  },\n  {\n    \"status\": \"PASS\",\n    \"package\": \"p5_mobilenet_v3_large_search006_seed42_20261023\",\n    \"schema_hash_path\": \"PASS\",\n    \"inventory_files\": 40,\n    \"graph\": {\n      \"status\": \"PASS\",\n      \"input_name\": \"input\",\n      \"input_shape\": [\n        \"N\",\n        3,\n        224,\n        224\n      ],\n      \"output_name\": \"logits\",\n      \"output_shape\": [\n        \"N\",\n        10\n      ],\n      \"dtype\": \"float32\",\n      \"softmax_nodes\": 0,\n      \"external_tensors\": 0,\n      \"forward_passes\": 0\n    },\n    \"provider_load_forward\": \"NOT_RUN\",\n    \"official_stable200_behavior\": \"NOT_RUN\",\n    \"system_integration\": \"BLOCKED_NOT_IMPLEMENTED\"\n  }\n]\n",
+      "stderr": ""
+    }
+  ]
+}

@@ -1,0 +1,371 @@
+FFFFFFFFFFFFFFFF                                                         [100%]
+=================================== FAILURES ===================================
+___________ test_authorization_is_required_before_reader_side_effect ___________
+
+core = <test_p4_core.core.<locals>.Missing object at 0x1066bea50>
+
+    def test_authorization_is_required_before_reader_side_effect(core):
+        touched=[]
+        with pytest.raises(ValueError,match='P4-B'):
+>           core.authorized_read(None, lambda: touched.append('read'), **binding())
+            ^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_core.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_p4_core.core.<locals>.Missing object at 0x1066bea50>
+name = 'authorized_read'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing P4 core implementation')
+E       Failed: Missing P4 core implementation
+
+ml/tests/test_p4_core.py:22: Failed
+___________ test_approval_cannot_be_rebound_or_inferred[phase-P4-A] ____________
+
+core = <test_p4_core.core.<locals>.Missing object at 0x106498440>
+field = 'phase', value = 'P4-A'
+
+    @pytest.mark.parametrize('field,value', [('phase','P4-A'),('authorized',False),('human_approval',''),
+        ('protocol_sha256','c'*64),('source_sha256','c'*64),('run_id','other')])
+    def test_approval_cannot_be_rebound_or_inferred(core,field,value):
+        token=approval();token[field]=value
+        with pytest.raises(ValueError):
+>           core.authorize_p4b(token,**binding())
+            ^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_core.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_p4_core.core.<locals>.Missing object at 0x106498440>
+name = 'authorize_p4b'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing P4 core implementation')
+E       Failed: Missing P4 core implementation
+
+ml/tests/test_p4_core.py:22: Failed
+________ test_approval_cannot_be_rebound_or_inferred[authorized-False] _________
+
+core = <test_p4_core.core.<locals>.Missing object at 0x1066becf0>
+field = 'authorized', value = False
+
+    @pytest.mark.parametrize('field,value', [('phase','P4-A'),('authorized',False),('human_approval',''),
+        ('protocol_sha256','c'*64),('source_sha256','c'*64),('run_id','other')])
+    def test_approval_cannot_be_rebound_or_inferred(core,field,value):
+        token=approval();token[field]=value
+        with pytest.raises(ValueError):
+>           core.authorize_p4b(token,**binding())
+            ^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_core.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_p4_core.core.<locals>.Missing object at 0x1066becf0>
+name = 'authorize_p4b'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing P4 core implementation')
+E       Failed: Missing P4 core implementation
+
+ml/tests/test_p4_core.py:22: Failed
+_________ test_approval_cannot_be_rebound_or_inferred[human_approval-] _________
+
+core = <test_p4_core.core.<locals>.Missing object at 0x1066bf380>
+field = 'human_approval', value = ''
+
+    @pytest.mark.parametrize('field,value', [('phase','P4-A'),('authorized',False),('human_approval',''),
+        ('protocol_sha256','c'*64),('source_sha256','c'*64),('run_id','other')])
+    def test_approval_cannot_be_rebound_or_inferred(core,field,value):
+        token=approval();token[field]=value
+        with pytest.raises(ValueError):
+>           core.authorize_p4b(token,**binding())
+            ^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_core.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_p4_core.core.<locals>.Missing object at 0x1066bf380>
+name = 'authorize_p4b'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing P4 core implementation')
+E       Failed: Missing P4 core implementation
+
+ml/tests/test_p4_core.py:22: Failed
+_ test_approval_cannot_be_rebound_or_inferred[protocol_sha256-cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc] _
+
+core = <test_p4_core.core.<locals>.Missing object at 0x106498440>
+field = 'protocol_sha256'
+value = 'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc'
+
+    @pytest.mark.parametrize('field,value', [('phase','P4-A'),('authorized',False),('human_approval',''),
+        ('protocol_sha256','c'*64),('source_sha256','c'*64),('run_id','other')])
+    def test_approval_cannot_be_rebound_or_inferred(core,field,value):
+        token=approval();token[field]=value
+        with pytest.raises(ValueError):
+>           core.authorize_p4b(token,**binding())
+            ^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_core.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_p4_core.core.<locals>.Missing object at 0x106498440>
+name = 'authorize_p4b'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing P4 core implementation')
+E       Failed: Missing P4 core implementation
+
+ml/tests/test_p4_core.py:22: Failed
+_ test_approval_cannot_be_rebound_or_inferred[source_sha256-cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc] _
+
+core = <test_p4_core.core.<locals>.Missing object at 0x1066becf0>
+field = 'source_sha256'
+value = 'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc'
+
+    @pytest.mark.parametrize('field,value', [('phase','P4-A'),('authorized',False),('human_approval',''),
+        ('protocol_sha256','c'*64),('source_sha256','c'*64),('run_id','other')])
+    def test_approval_cannot_be_rebound_or_inferred(core,field,value):
+        token=approval();token[field]=value
+        with pytest.raises(ValueError):
+>           core.authorize_p4b(token,**binding())
+            ^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_core.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_p4_core.core.<locals>.Missing object at 0x1066becf0>
+name = 'authorize_p4b'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing P4 core implementation')
+E       Failed: Missing P4 core implementation
+
+ml/tests/test_p4_core.py:22: Failed
+__________ test_approval_cannot_be_rebound_or_inferred[run_id-other] ___________
+
+core = <test_p4_core.core.<locals>.Missing object at 0x1066bea50>
+field = 'run_id', value = 'other'
+
+    @pytest.mark.parametrize('field,value', [('phase','P4-A'),('authorized',False),('human_approval',''),
+        ('protocol_sha256','c'*64),('source_sha256','c'*64),('run_id','other')])
+    def test_approval_cannot_be_rebound_or_inferred(core,field,value):
+        token=approval();token[field]=value
+        with pytest.raises(ValueError):
+>           core.authorize_p4b(token,**binding())
+            ^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_core.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_p4_core.core.<locals>.Missing object at 0x1066bea50>
+name = 'authorize_p4b'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing P4 core implementation')
+E       Failed: Missing P4 core implementation
+
+ml/tests/test_p4_core.py:22: Failed
+__________ test_cache_reuses_clean_without_forward_and_detects_tamper __________
+
+core = <test_p4_core.core.<locals>.Missing object at 0x1066bf4d0>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-70/test_cache_reuses_clean_withou0')
+
+    def test_cache_reuses_clean_without_forward_and_detects_tamper(core,tmp_path):
+>       cache=core.PredictionCache.create(tmp_path/'cache', binding(), {'toy':'1'*64})
+              ^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_core.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_p4_core.core.<locals>.Missing object at 0x1066bf4d0>
+name = 'PredictionCache'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing P4 core implementation')
+E       Failed: Missing P4 core implementation
+
+ml/tests/test_p4_core.py:22: Failed
+___________ test_cache_restart_and_interrupted_claim_never_recompute ___________
+
+core = <test_p4_core.core.<locals>.Missing object at 0x1066bf770>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-70/test_cache_restart_and_interru0')
+
+    def test_cache_restart_and_interrupted_claim_never_recompute(core,tmp_path):
+        directory=tmp_path/'cache'
+>       cache=core.PredictionCache.create(directory,binding(),{'toy':'1'*64})
+              ^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_core.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_p4_core.core.<locals>.Missing object at 0x1066bf770>
+name = 'PredictionCache'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing P4 core implementation')
+E       Failed: Missing P4 core implementation
+
+ml/tests/test_p4_core.py:22: Failed
+______ test_shared_batch32_keeps_per_condition_tail9_and_detects_mutation ______
+
+core = <test_p4_core.core.<locals>.Missing object at 0x1066bf8c0>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-70/test_shared_batch32_keeps_per_0')
+
+    def test_shared_batch32_keeps_per_condition_tail9_and_detects_mutation(core,tmp_path):
+>       cache=core.PredictionCache.create(tmp_path/'cache',binding(),{'a':'1'*64,'b':'2'*64})
+              ^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_core.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_p4_core.core.<locals>.Missing object at 0x1066bf8c0>
+name = 'PredictionCache'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing P4 core implementation')
+E       Failed: Missing P4 core implementation
+
+ml/tests/test_p4_core.py:22: Failed
+______________ test_mutating_model_stops_shared_input_corruption _______________
+
+core = <test_p4_core.core.<locals>.Missing object at 0x1066bfa10>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-70/test_mutating_model_stops_shar0')
+
+    def test_mutating_model_stops_shared_input_corruption(core,tmp_path):
+>       cache=core.PredictionCache.create(tmp_path/'cache',binding(),{'a':'1'*64})
+              ^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_core.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_p4_core.core.<locals>.Missing object at 0x1066bfa10>
+name = 'PredictionCache'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing P4 core implementation')
+E       Failed: Missing P4 core implementation
+
+ml/tests/test_p4_core.py:22: Failed
+___________ test_metrics_fixed_classes_logloss_and_unverified_no_f1 ____________
+
+core = <test_p4_core.core.<locals>.Missing object at 0x1066bfb60>
+
+    def test_metrics_fixed_classes_logloss_and_unverified_no_f1(core):
+>       report=core.classification_metrics([0,1],np.array([[2.,0.],[0.,2.]],dtype=np.float32),2,logits=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_core.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_p4_core.core.<locals>.Missing object at 0x1066bfb60>
+name = 'classification_metrics'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing P4 core implementation')
+E       Failed: Missing P4 core implementation
+
+ml/tests/test_p4_core.py:22: Failed
+_________ test_probabilities_reject_nan_wrong_row_sum_and_class_count __________
+
+core = <test_p4_core.core.<locals>.Missing object at 0x1066bfcb0>
+
+    def test_probabilities_reject_nan_wrong_row_sum_and_class_count(core):
+        for outputs in ([[float('nan'),0]], [[.3,.3]], [[1.,0.,0.]]):
+            with pytest.raises(ValueError):
+>               core.classification_metrics([0],outputs,2,logits=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_core.py:123: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_p4_core.core.<locals>.Missing object at 0x1066bfcb0>
+name = 'classification_metrics'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing P4 core implementation')
+E       Failed: Missing P4 core implementation
+
+ml/tests/test_p4_core.py:22: Failed
+_________ test_budget_kills_timed_out_process_group_and_forbids_resume _________
+
+core = <test_p4_core.core.<locals>.Missing object at 0x1066bfe00>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-70/test_budget_kills_timed_out_pr0')
+
+    def test_budget_kills_timed_out_process_group_and_forbids_resume(core,tmp_path):
+>       supervisor=core.BudgetSupervisor(tmp_path/'run', total_seconds=2, stage_caps={'toy':.15},
+                   ^^^^^^^^^^^^^^^^^^^^^
+            min_free_bytes=0,min_available_ram=0, disk_cap_bytes=1024**2)
+
+ml/tests/test_p4_core.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_p4_core.core.<locals>.Missing object at 0x1066bfe00>
+name = 'BudgetSupervisor'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing P4 core implementation')
+E       Failed: Missing P4 core implementation
+
+ml/tests/test_p4_core.py:22: Failed
+___________________ test_budget_observed_disk_and_rss_guards ___________________
+
+core = <test_p4_core.core.<locals>.Missing object at 0x1068ac050>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-70/test_budget_observed_disk_and_0')
+
+    def test_budget_observed_disk_and_rss_guards(core,tmp_path):
+>       supervisor=core.BudgetSupervisor(tmp_path/'run',total_seconds=5,stage_caps={'toy':5},
+                   ^^^^^^^^^^^^^^^^^^^^^
+            min_free_bytes=0,min_available_ram=0,disk_cap_bytes=100)
+
+ml/tests/test_p4_core.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_p4_core.core.<locals>.Missing object at 0x1068ac050>
+name = 'BudgetSupervisor'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing P4 core implementation')
+E       Failed: Missing P4 core implementation
+
+ml/tests/test_p4_core.py:22: Failed
+_______________ test_worker_failure_is_final_and_raw_logs_saved ________________
+
+core = <test_p4_core.core.<locals>.Missing object at 0x1068ac1a0>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-70/test_worker_failure_is_final_a0')
+
+    def test_worker_failure_is_final_and_raw_logs_saved(core,tmp_path):
+>       supervisor=core.BudgetSupervisor(tmp_path/'run',total_seconds=5,stage_caps={'toy':5},
+                   ^^^^^^^^^^^^^^^^^^^^^
+            min_free_bytes=0,min_available_ram=0,disk_cap_bytes=1024**2)
+
+ml/tests/test_p4_core.py:155: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_p4_core.core.<locals>.Missing object at 0x1068ac1a0>
+name = 'BudgetSupervisor'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing P4 core implementation')
+E       Failed: Missing P4 core implementation
+
+ml/tests/test_p4_core.py:22: Failed
+=========================== short test summary info ============================
+FAILED ml/tests/test_p4_core.py::test_authorization_is_required_before_reader_side_effect
+FAILED ml/tests/test_p4_core.py::test_approval_cannot_be_rebound_or_inferred[phase-P4-A]
+FAILED ml/tests/test_p4_core.py::test_approval_cannot_be_rebound_or_inferred[authorized-False]
+FAILED ml/tests/test_p4_core.py::test_approval_cannot_be_rebound_or_inferred[human_approval-]
+FAILED ml/tests/test_p4_core.py::test_approval_cannot_be_rebound_or_inferred[protocol_sha256-cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc]
+FAILED ml/tests/test_p4_core.py::test_approval_cannot_be_rebound_or_inferred[source_sha256-cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc]
+FAILED ml/tests/test_p4_core.py::test_approval_cannot_be_rebound_or_inferred[run_id-other]
+FAILED ml/tests/test_p4_core.py::test_cache_reuses_clean_without_forward_and_detects_tamper
+FAILED ml/tests/test_p4_core.py::test_cache_restart_and_interrupted_claim_never_recompute
+FAILED ml/tests/test_p4_core.py::test_shared_batch32_keeps_per_condition_tail9_and_detects_mutation
+FAILED ml/tests/test_p4_core.py::test_mutating_model_stops_shared_input_corruption
+FAILED ml/tests/test_p4_core.py::test_metrics_fixed_classes_logloss_and_unverified_no_f1
+FAILED ml/tests/test_p4_core.py::test_probabilities_reject_nan_wrong_row_sum_and_class_count
+FAILED ml/tests/test_p4_core.py::test_budget_kills_timed_out_process_group_and_forbids_resume
+FAILED ml/tests/test_p4_core.py::test_budget_observed_disk_and_rss_guards - F...
+FAILED ml/tests/test_p4_core.py::test_worker_failure_is_final_and_raw_logs_saved
+16 failed in 0.51s

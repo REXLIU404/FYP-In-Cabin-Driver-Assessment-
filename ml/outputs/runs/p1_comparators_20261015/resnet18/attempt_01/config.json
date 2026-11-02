@@ -1,0 +1,121 @@
+{
+  "phase": "P1",
+  "model": "resnet18",
+  "smoke": true,
+  "formal_comparison_valid": false,
+  "counts_toward_hpo": false,
+  "budget": {
+    "train_samples": 200,
+    "validation_samples": 100,
+    "seed": 42,
+    "epochs": 1,
+    "batch_size": 16,
+    "training_steps": 16,
+    "validation_steps": 8,
+    "threads": 2,
+    "wall_seconds": 600
+  },
+  "data_root": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-",
+  "sources": {
+    "metadata": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/vision/vision_metadata_with_split.csv",
+      "sha256": "b4f8e90dec769bb419eaa490aea869668bed6484089cebe4d545c7667baa8ea4"
+    }
+  },
+  "class_to_idx": {
+    "c0": 0,
+    "c1": 1,
+    "c2": 2,
+    "c3": 3,
+    "c4": 4,
+    "c5": 5,
+    "c6": 6,
+    "c7": 7,
+    "c8": 8,
+    "c9": 9
+  },
+  "training_label_names": {
+    "c0": "normal_driving",
+    "c1": "texting_right",
+    "c2": "talking_phone_right",
+    "c3": "texting_left",
+    "c4": "talking_phone_left",
+    "c5": "operating_radio",
+    "c6": "drinking",
+    "c7": "reaching_behind",
+    "c8": "hair_makeup",
+    "c9": "talking_to_passenger"
+  },
+  "runtime_label_names": [
+    "safe_driving",
+    "texting_right",
+    "talking_phone_right",
+    "texting_left",
+    "talking_phone_left",
+    "operating_radio",
+    "drinking",
+    "reaching_behind",
+    "hair_makeup",
+    "talking_to_passenger"
+  ],
+  "initialization": {
+    "weights": null,
+    "status": "RANDOM_INITIALIZATION_SMOKE_ONLY",
+    "comparison_validity": "NOT_VALID_FOR_FORMAL_MODEL_COMPARISON"
+  },
+  "device": "cpu",
+  "torch_threads": 2,
+  "torch_interop_threads": 1,
+  "workers": 0,
+  "preprocessing": {
+    "rgb": true,
+    "resize": [
+      224,
+      224
+    ],
+    "interpolation": "PIL bilinear",
+    "crop": false,
+    "mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "std": [
+      0.229,
+      0.224,
+      0.225
+    ],
+    "layout": "NCHW",
+    "dtype": "float32"
+  },
+  "train_augmentation": {
+    "rotation_degrees": 8,
+    "brightness": 0.2,
+    "contrast": 0.2,
+    "horizontal_flip": false
+  },
+  "optimizer": {
+    "name": "AdamW",
+    "lr": 0.0008,
+    "weight_decay": 0.0001
+  },
+  "git": {
+    "branch": "fyp2/ml-training",
+    "head": "efb3ea604d584d2c5d1b1684742996e95125a8ec",
+    "dirty_state": "D FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_CROSS_REVIEW_PROMPT.md\n D FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_DEVELOPMENT_AND_REPORT_MAP.md\n D FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_Development_and_Report_Map.docx\n D FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_EVALUATION_AND_TESTCASE_SPEC.md\n D FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_Evaluation_and_Testcase_Spec.docx\n D FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_MASTER_REPOSITORY_AUDIT_PROMPT.md\n D \"FYP2_Codex_ClaudeCode_Audit_Package_v2/README_\\344\\275\\277\\347\\224\\250\\350\\257\\264\\346\\230\\216.md\"\n M ml/.gitignore\n?? docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md\n?? docs/fyp2/ml/\n?? ml/configs/\n?? ml/experiments/comparator_common.py\n?? ml/experiments/run_p1_smoke.py\n?? ml/outputs/runs/\n?? ml/telemetry/train_comparator.py\n?? ml/tests/\n?? ml/vision/train_resnet18.py",
+    "staged_paths": ""
+  },
+  "versions": {
+    "python": "3.13.3",
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "torch": "2.12.0",
+    "torchvision": "0.27.0",
+    "scikit-learn": "1.9.0",
+    "numpy": "2.4.6",
+    "pandas": "3.0.3",
+    "Pillow": "12.2.0",
+    "joblib": "1.5.3",
+    "threadpoolctl": "3.6.0"
+  },
+  "test_images_opened": 0
+}

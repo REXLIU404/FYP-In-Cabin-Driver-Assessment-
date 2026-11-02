@@ -1,0 +1,5 @@
+phase,seconds,samples,warmup,device,threads,provider,batch
+train_preprocessing,0.022830458008684218,21000,False,cpu,2,logistic_regression,full_split
+fit,0.018993084086105227,21000,False,cpu,2,logistic_regression,full_split
+validation,0.0012162079801782966,4500,False,cpu,2,logistic_regression,full_split
+reload_validation,0.0015451660146936774,4500,False,cpu,2,logistic_regression,full_split

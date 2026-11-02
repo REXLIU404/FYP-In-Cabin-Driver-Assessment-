@@ -1,0 +1,50 @@
+{
+  "identity": "RN-HPO42",
+  "candidate_package": false,
+  "deployment_eligible": false,
+  "source_checkpoint_path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/search/resnet18/search_004/attempt_01/checkpoint.pt",
+  "source_checkpoint_sha256": "008d831c98ea5e4b6c5c821787b3dc9a1dcbc6ca47a74dd1d8f7110eb4ac7d20",
+  "onnx_path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p4a_20261021/runtime_benchmark/resnet18_search004_seed42/model.onnx",
+  "onnx_sha256": "5e226722e0712824c78aa0976afa6fa5b8dc6100b147a7f523a09048171d8cf3",
+  "onnx_bytes": 44717068,
+  "input": {
+    "name": "input",
+    "dtype": "float32",
+    "shape": [
+      "N",
+      3,
+      224,
+      224
+    ]
+  },
+  "output": {
+    "name": "logits",
+    "dtype": "float32",
+    "shape": [
+      "N",
+      10
+    ],
+    "semantics": "raw_logits"
+  },
+  "class_to_idx": {
+    "c0": 0,
+    "c1": 1,
+    "c2": 2,
+    "c3": 3,
+    "c4": 4,
+    "c5": 5,
+    "c6": 6,
+    "c7": 7,
+    "c8": 8,
+    "c9": 9
+  },
+  "export_nanoseconds": 119680375,
+  "export": {
+    "dynamo": false,
+    "opset": 17,
+    "external_data": false,
+    "export_params": true,
+    "keep_initializers_as_inputs": false
+  },
+  "scope": "benchmark/evaluation-only"
+}

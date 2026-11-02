@@ -1,0 +1,129 @@
+{
+  "status": "COMPLETED",
+  "artifacts": {
+    "sample_manifest.csv": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/probe/resnet18/probe_001/attempt_01/sample_manifest.csv",
+      "sha256": "b3af5aaa2d1aeb450cb5c3dcb28f9edc28bda918cab22d00571f568b112534a3",
+      "bytes": 865423
+    },
+    "timing_samples.csv": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/probe/resnet18/probe_001/attempt_01/timing_samples.csv",
+      "sha256": "12cba02eea5be288cb8e3e9ee50f988fcae3e01d05276e9558dd46eca59986af",
+      "bytes": 16381
+    },
+    "trials.csv": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/probe/resnet18/probe_001/attempt_01/trials.csv",
+      "sha256": "39d6b51ba5a5f22d7ebe71f68347877c427a4ce7d339e03b31bc3f6c9f19426d",
+      "bytes": 251
+    },
+    "predictions_validation.csv": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/probe/resnet18/probe_001/attempt_01/predictions_validation.csv",
+      "sha256": "e94cd207be403931c97c5a3bb663f1d74be8b84aa3b7f855f727091c1dee627f",
+      "bytes": 768865
+    },
+    "validation_metrics.json": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/probe/resnet18/probe_001/attempt_01/validation_metrics.json",
+      "sha256": "72413bb7bd3f9527c0ba8c71edb6c365bacb495e5ef62c3d7c78884ab9c70918",
+      "bytes": 2587
+    },
+    "config.json": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/probe/resnet18/probe_001/attempt_01/config.json",
+      "sha256": "05e9e98bf29231625c98137191a7a801c31bec150fe11d0613707d8f7078d5d6",
+      "bytes": 2971
+    },
+    "probabilities_validation.npy": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/probe/resnet18/probe_001/attempt_01/probabilities_validation.npy",
+      "sha256": "386acde34d5f3958e34c5c1e6160275197914064e88f968ce31e4be80d3c2fa9",
+      "bytes": 114848
+    },
+    "checkpoint.pt": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/probe/resnet18/probe_001/attempt_01/checkpoint.pt",
+      "sha256": "378db8d695023333ddbc24f17b99c40771ece6ad83058aadb3035161f485d633",
+      "bytes": 44803787
+    },
+    "process.json": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/probe/resnet18/probe_001/attempt_01/process.json",
+      "sha256": "bc8a832f9dfcbdc56f0a80e624df4b8834461c4762b4e026686f465a0f235e75",
+      "bytes": 383
+    },
+    "selection_log.json": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/probe/resnet18/probe_001/attempt_01/selection_log.json",
+      "sha256": "fce5ced9ca5b34d2f64d41d07b156df059591ca609033cc8bad9c7453648349b",
+      "bytes": 198
+    },
+    "class_report.json": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/probe/resnet18/probe_001/attempt_01/class_report.json",
+      "sha256": "1ffbb78bb302d9c4eda5ffad099c82f49847322e125fff21279374668650cf9b",
+      "bytes": 1735
+    },
+    "predictions_test.csv": {
+      "status": "NOT_YET_DUE",
+      "created": false,
+      "phase": "P4"
+    }
+  },
+  "sources": {
+    "metadata": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/vision/vision_metadata_with_split.csv",
+      "sha256": "b4f8e90dec769bb419eaa490aea869668bed6484089cebe4d545c7667baa8ea4"
+    }
+  },
+  "class_to_idx": {
+    "c0": 0,
+    "c1": 1,
+    "c2": 2,
+    "c3": 3,
+    "c4": 4,
+    "c5": 5,
+    "c6": 6,
+    "c7": 7,
+    "c8": 8,
+    "c9": 9
+  },
+  "training_label_names": {
+    "c0": "normal_driving",
+    "c1": "texting_right",
+    "c2": "talking_phone_right",
+    "c3": "texting_left",
+    "c4": "talking_phone_left",
+    "c5": "operating_radio",
+    "c6": "drinking",
+    "c7": "reaching_behind",
+    "c8": "hair_makeup",
+    "c9": "talking_to_passenger"
+  },
+  "runtime_c0_name": "safe_driving",
+  "versions": {
+    "python": "3.13.3",
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "torch": "2.12.0",
+    "torchvision": "0.27.0",
+    "scikit-learn": "1.9.0",
+    "numpy": "2.4.6",
+    "pandas": "3.0.3",
+    "Pillow": "12.2.0",
+    "joblib": "1.5.3",
+    "threadpoolctl": "3.6.0"
+  },
+  "git": {
+    "branch": "fyp2/ml-training",
+    "head": "c6d1f659b64ffd65a5baac31728a1fccbd19ac3a",
+    "staged_paths": "",
+    "dirty_state_at_first_start": "?? docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md\n?? ml/outputs/runs/p3_vision_20261018/"
+  },
+  "source_hashes": {
+    "ml/experiments/run_vision_hpo.py": "cc711202c31a5e23dc57108bccfcf0ff3c555af1b0ab8bdb583bcb7e8587590f",
+    "ml/vision/train_hpo.py": "06c465cb3115dad5f3e5e6a63ab0b308c50e4edca41b538d5b33361d4667b4d9",
+    "ml/experiments/hpo_protocol.py": "dd047b7ca57654a47637e2268266014ba67bf878252ae8839dfbd1f39c8b09e5",
+    "ml/experiments/comparator_common.py": "8ede7aa5a0604232ff5b3c54735bd9f2e5479b18a2e80e5091bfa2b07644805d"
+  },
+  "pretraining": {
+    "path": "/Users/liu/.cache/torch/hub/checkpoints/resnet18-f37072fd.pth",
+    "sha256": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec",
+    "bytes": 46830571,
+    "recipe": "IMAGENET1K_V1"
+  },
+  "test_images_opened": 0,
+  "candidate_package": false,
+  "mps_nondeterminism_disclosed": true
+}

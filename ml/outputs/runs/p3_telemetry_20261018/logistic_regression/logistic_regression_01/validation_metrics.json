@@ -1,0 +1,64 @@
+{
+  "interpretation": "FORMAL_VALIDATION_ONLY",
+  "formal_comparison_valid": true,
+  "samples": 4500,
+  "accuracy": 0.9955555555555555,
+  "macro_f1": 0.9955547149556033,
+  "log_loss": 0.042229241376396304,
+  "confusion_matrix": [
+    [
+      1500,
+      0,
+      0
+    ],
+    [
+      0,
+      1492,
+      8
+    ],
+    [
+      11,
+      1,
+      1488
+    ]
+  ],
+  "status": "COMPLETED",
+  "train_samples": 21000,
+  "validation_samples": 4500,
+  "fits_completed": 1,
+  "seed": 42,
+  "class_order": [
+    "Safe",
+    "Aggressive",
+    "Distracted"
+  ],
+  "output_shape": [
+    4500,
+    3
+  ],
+  "reload_max_abs_difference": 0.0,
+  "all_probabilities_finite": true,
+  "resource_usage": {
+    "max_rss_bytes": 192970752,
+    "user_cpu_seconds": 1.177043,
+    "system_cpu_seconds": 0.20224399999999998
+  },
+  "thread_pools": [
+    {
+      "user_api": "openmp",
+      "internal_api": "openmp",
+      "num_threads": 2,
+      "prefix": "libomp",
+      "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/sklearn/.dylibs/libomp.dylib",
+      "version": null
+    }
+  ],
+  "warnings": [],
+  "test_predictions": 0,
+  "test_csv_opened": false,
+  "synthetic_telemetry": true,
+  "benchmark_only": true,
+  "n_iter": [
+    16
+  ]
+}

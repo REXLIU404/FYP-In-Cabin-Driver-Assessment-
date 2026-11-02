@@ -1,0 +1,18 @@
+{
+  "models": {
+    "mobilenet_v3_large": {
+      "measured_epoch_seconds": 206.2596638330724,
+      "estimated_seconds": 15180.711258114128
+    },
+    "resnet18": {
+      "measured_epoch_seconds": 187.05952058406547,
+      "estimated_seconds": 13767.580714987218
+    }
+  },
+  "estimated_total_seconds": 28948.291973101346,
+  "formula": "(train + full val seconds) * 8 epochs * 8 logical trials * 1.15",
+  "launch_authorized": false,
+  "probe_used_for_selection": false,
+  "probe_counts_toward_hpo": false,
+  "interpretation": "Time estimate, not a guarantee or approved budget; startup/reload/resource variation remain"
+}

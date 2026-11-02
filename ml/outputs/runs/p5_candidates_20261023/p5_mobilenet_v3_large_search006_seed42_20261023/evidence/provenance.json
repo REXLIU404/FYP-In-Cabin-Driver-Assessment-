@@ -1,0 +1,55 @@
+{
+  "candidate_package": true,
+  "deployment_eligible": false,
+  "git_at_packaging": {
+    "branch": "fyp2/ml-training",
+    "head": "335da4e3de203836c045452f84cc291bcd352a26",
+    "staged": "",
+    "status": "M docs/fyp2/ml/ML_TRACK_PROGRESS.md\n?? .codex/\n?? AGENTS.md\n?? docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md\n?? docs/fyp2/ml/ML_RESULTS_REVIEW_CONTEXT.md\n?? docs/fyp2/ml/research_notes/\n?? ml/configs/e1_preparation.json\n?? ml/configs/p4_protocol.json\n?? ml/experiments/e1_generators.py\n?? ml/experiments/p4_core.py\n?? ml/experiments/p4_data.py\n?? ml/experiments/p4_preflight.py\n?? ml/experiments/p4_qc.py\n?? ml/experiments/package_candidates.py\n?? ml/experiments/run_e1_preparation.py\n?? ml/experiments/run_p4.py\n?? ml/outputs/runs/e1_preparation_20261019/\n?? ml/outputs/runs/e1_preparation_20261019_record_missingness/\n?? ml/outputs/runs/p3_vision_20261018/search/\n?? ml/outputs/runs/p3_vision_20261018/search_config.json\n?? ml/outputs/runs/p3_vision_20261018/search_state.json\n?? ml/outputs/runs/p3_vision_20261018/selection_log.json\n?? ml/outputs/runs/p3_vision_20261018/verification/\n?? ml/outputs/runs/p4a_20261021/\n?? ml/outputs/runs/p4b_20261022/\n?? ml/outputs/runs/p5_candidates_20261023/\n?? ml/tests/test_candidate_package.py\n?? ml/tests/test_e1_generators.py\n?? ml/tests/test_e1_preparation.py\n?? ml/tests/test_p4_core.py\n?? ml/tests/test_p4_data.py\n?? ml/tests/test_p4_preflight.py\n?? ml/tests/test_p4_qc.py\n?? scripts/"
+  },
+  "historical_paths": "Informational source identifiers; no runtime access outside this package is required.",
+  "identity": "MN-HPO42",
+  "original_export_flags_preserved": {
+    "candidate_package": false,
+    "deployment_eligible": false
+  },
+  "p4_binding": {
+    "protocol_sha256": "08cbbc25685a4c6a68781ebff2b174f747c68090bb0f24176f8277ee47a9e9de",
+    "run_id": "p4b_20261022",
+    "source_sha256": "8a41c99e1fd47e91e1e4f75522cb9e6eb3948eca9fd6d7f771278bdf32a80d5f"
+  },
+  "p4a100_parity": "REUSED_AND_HASH_VERIFIED; 100 val IDs,211 repeated appearances, distinct from stable200.",
+  "package_loading_dependencies": [
+    "model.onnx",
+    "runtime_manifest.json"
+  ],
+  "packaging_action": "COPY_EXISTING_P4A_ONNX_NO_REEXPORT",
+  "reproducibility": "Dirty source snapshot/hash traceability; no independent retraining or full numerical rerun.",
+  "source_checkpoint": {
+    "modality": "vision",
+    "path": "ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_006/attempt_01/checkpoint.pt",
+    "sha256": "bc96e7a230de6391820b1e04e7480087841680ae6cc1b6e73cba42b25eb67295"
+  },
+  "stable200": "SAVED_VALIDATION_PREDICTION_DIAGNOSTIC only; official provider behavior NOT_RUN.",
+  "system_contract": {
+    "blobs": {
+      "backend/app/runtime_manifest.py": {
+        "git_blob_sha1": "cb888fb3c4a4a46b6644334a2cdbcfa32a4743d0",
+        "sha256": "f2e4b39ad6708d2feeb110b7308f6a924fe752b9a6e6a48df1927b7e058997ce"
+      },
+      "backend/app/runtime_manifest.schema.json": {
+        "git_blob_sha1": "49b9b8654dc1cf55208a2c98d869a71866f4aa2a",
+        "sha256": "db78678d7e00dbb7935e9c122e514957e0a5913857e5ef367353a925a1b59084"
+      },
+      "docs/fyp2/handoff/task-10a-runtime-manifest.md": {
+        "git_blob_sha1": "cfa549ec1cfd1f3082c1b9bc84c8ce8eb6dd645b",
+        "sha256": "419deed3d25ab93af062442f280f026fd854f33f8f212731c4588900129e8d53"
+      },
+      "scripts/validate_runtime_manifest.py": {
+        "git_blob_sha1": "dd4b069deba04cfa57ab8eecbaea3cee90f467c8",
+        "sha256": "9b0ed4a0f7369f453768cfdac92e4a1b963eba971f9f5a36b1864becd1055d8a"
+      }
+    },
+    "system_contract_commit": "2745348"
+  }
+}

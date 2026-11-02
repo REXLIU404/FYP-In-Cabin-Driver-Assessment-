@@ -1,0 +1,283 @@
+FFFFFFFFFFFF                                                             [100%]
+=================================== FAILURES ===================================
+____________ test_second_launcher_cannot_mutate_or_kill_active_run _____________
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-40/test_second_launcher_cannot_mu0')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+
+    def test_second_launcher_cannot_mutate_or_kill_active_run(vision,tmp_path,context):
+        budget={'per_trial':10.,'per_model':20.,'total':30.}
+        def active_worker(command,log_path,timeout):
+            before=(tmp_path/'search_state.json').read_bytes()
+            with pytest.raises(ValueError,match='ALREADY_RUNNING'):
+                vision.run_plan(tmp_path,'search',[plan()],budget,context,
+                                runner=lambda *a:pytest.fail('Second launcher started a worker'))
+            assert (tmp_path/'search_state.json').read_bytes()==before
+            return synthetic_worker(command,log_path,timeout)
+>       result=vision.run_plan(tmp_path,'search',[plan()],budget,context,runner=active_worker)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_vision_hpo.py:232: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/experiments/run_vision_hpo.py:184: in run_plan
+    execution=runner(command,target/'execution.log',remaining) if remaining>0 else {
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ml/tests/test_vision_hpo.py:228: in active_worker
+    vision.run_plan(tmp_path,'search',[plan()],budget,context,
+ml/experiments/run_vision_hpo.py:184: in run_plan
+    execution=runner(command,target/'execution.log',remaining) if remaining>0 else {
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = (['/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python', '-B', '/Users/liu/Desktop/FYP-In-Cabin-Driv...liu/pytest-40/test_second_launcher_cannot_mu0/search/resnet18/search_001/attempt_02/execution.log'), 9.997753968695179)
+
+>   runner=lambda *a:pytest.fail('Second launcher started a worker'))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: Second launcher started a worker
+
+ml/tests/test_vision_hpo.py:229: Failed
+____ test_external_sigterm_is_an_interruption_not_an_implementation_failure ____
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-40/test_external_sigterm_is_an_in0')
+
+    def test_external_sigterm_is_an_interruption_not_an_implementation_failure(vision,tmp_path):
+        import os
+        import signal
+        result=vision.supervise([sys.executable,'-c','import os,signal;os.kill(os.getpid(),signal.SIGTERM)'],
+                                tmp_path/'signal.log',5.)
+        assert result['returncode']==-signal.SIGTERM
+>       assert result['status']=='INTERRUPTED'
+E       AssertionError: assert 'IMPLEMENTATION_FAILED' == 'INTERRUPTED'
+E         
+E         - INTERRUPTED
+E         + IMPLEMENTATION_FAILED
+
+ml/tests/test_vision_hpo.py:242: AssertionError
+___ test_signal_interruption_can_resume_without_discarding_attempt_or_budget ___
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-40/test_signal_interruption_can_r0')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+
+    def test_signal_interruption_can_resume_without_discarding_attempt_or_budget(vision,tmp_path,context):
+        budget={'per_trial':10.,'per_model':20.,'total':30.}
+        first=vision.run_plan(tmp_path,'probe',[plan()],budget,context,
+            runner=lambda *a:{'status':'INTERRUPTED','returncode':-15,'wall_seconds':.03,'timeout_seconds':10.})
+>       assert first['status']=='INTERRUPTED'
+E       AssertionError: assert 'IMPLEMENTATION_FAILED' == 'INTERRUPTED'
+E         
+E         - INTERRUPTED
+E         + IMPLEMENTATION_FAILED
+
+ml/tests/test_vision_hpo.py:249: AssertionError
+_________ test_recovery_refuses_to_signal_worker_with_live_controller __________
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-40/test_recovery_refuses_to_signa0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x111342060>
+
+    def test_recovery_refuses_to_signal_worker_with_live_controller(vision,tmp_path,monkeypatch):
+        import os
+        import signal
+        target=tmp_path/'attempt';target.mkdir()
+        (target/'process.json').write_text(json.dumps({'pid':12345,'command':[]}))
+        state={'used_wall_seconds':2.,'attempts':[{'status':'RUNNING','directory':'attempt',
+               'timeout_seconds':10.,'started_wall_time':time.time(),'wall_seconds':0.}]}
+        def inspect(command,*args,**kwargs):
+            fields=command[command.index('-o')+1]
+            text=' 42 /repo/ml/vision/train_hpo.py --attempt-dir '+str(target) if fields=='ppid=,command=' else 'python /repo/ml/experiments/run_vision_hpo.py probe --run-id '+tmp_path.name
+            return SimpleNamespace(stdout=text,returncode=0)
+        monkeypatch.setattr(vision.subprocess,'run',inspect)
+        monkeypatch.setattr(vision.os,'killpg',lambda *a:pytest.fail('Live worker was signalled'))
+>       with pytest.raises(ValueError,match='ALREADY_RUNNING'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+ml/tests/test_vision_hpo.py:269: Failed
+___ test_failed_run_retry_does_not_consume_budget_without_starting_a_worker ____
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-40/test_failed_run_retry_does_not0')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+
+    def test_failed_run_retry_does_not_consume_budget_without_starting_a_worker(vision,tmp_path,context):
+        budget={'per_trial':10.,'per_model':20.,'total':30.}
+        first=vision.run_plan(tmp_path,'probe',[plan()],budget,context,
+            runner=lambda *a:{'status':'IMPLEMENTATION_FAILED','returncode':1,'wall_seconds':.03})
+        original=(tmp_path/'probe_state.json').read_bytes()
+        again=vision.run_plan(tmp_path,'probe',[plan()],budget,context,
+            runner=lambda *a:pytest.fail('An implementation failure cannot automatically rerun'))
+>       assert again['used_wall_seconds']==first['used_wall_seconds']
+E       assert 0.030104291015304624 == 0.03
+
+ml/tests/test_vision_hpo.py:281: AssertionError
+__ test_legacy_sigterm_recovery_preserves_evidence_budget_and_source_versions __
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-40/test_legacy_sigterm_recovery_p0')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+
+    def test_legacy_sigterm_recovery_preserves_evidence_budget_and_source_versions(vision,tmp_path,context):
+        old,current,state=legacy_probe_fixture(vision,tmp_path,context)
+        old_state=(tmp_path/'probe_state.json').read_bytes()
+        old_context=(tmp_path/'probe_config.json').read_bytes()
+        logs={str(p):p.read_bytes() for p in tmp_path.rglob('execution.log')}
+>       recovered=vision.recover_probe_interruption(tmp_path,old,current)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'ml.experiments.run_vision_hpo' has no attribute 'recover_probe_interruption'
+
+ml/tests/test_vision_hpo.py:325: AttributeError
+____ test_legacy_recovery_refuses_recipe_drift_or_genuine_failure[trainer] _____
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-40/test_legacy_recovery_refuses_r0')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+change = 'trainer'
+
+    @pytest.mark.parametrize('change',['trainer','weights','data_root','protocol','ordinary_failure','budget'])
+    def test_legacy_recovery_refuses_recipe_drift_or_genuine_failure(vision,tmp_path,context,change):
+        old,current,state=legacy_probe_fixture(vision,tmp_path,context)
+        if change=='trainer':current['source_hashes']['ml/vision/train_hpo.py']='changed'
+        elif change=='weights':current['weights_manifest']={'changed':True}
+        elif change=='data_root':current['data_root']='/changed'
+        elif change=='protocol':current['protocol_sha256']='changed'
+        elif change=='ordinary_failure':state['attempts'][-1]['execution']['returncode']=1
+        elif change=='budget':state['used_wall_seconds']=2400
+        (tmp_path/'probe_state.json').write_text(json.dumps(state))
+        before=(tmp_path/'probe_state.json').read_bytes()
+>       with pytest.raises(ValueError):vision.recover_probe_interruption(tmp_path,old,current)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'ml.experiments.run_vision_hpo' has no attribute 'recover_probe_interruption'
+
+ml/tests/test_vision_hpo.py:351: AttributeError
+____ test_legacy_recovery_refuses_recipe_drift_or_genuine_failure[weights] _____
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-40/test_legacy_recovery_refuses_r1')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+change = 'weights'
+
+    @pytest.mark.parametrize('change',['trainer','weights','data_root','protocol','ordinary_failure','budget'])
+    def test_legacy_recovery_refuses_recipe_drift_or_genuine_failure(vision,tmp_path,context,change):
+        old,current,state=legacy_probe_fixture(vision,tmp_path,context)
+        if change=='trainer':current['source_hashes']['ml/vision/train_hpo.py']='changed'
+        elif change=='weights':current['weights_manifest']={'changed':True}
+        elif change=='data_root':current['data_root']='/changed'
+        elif change=='protocol':current['protocol_sha256']='changed'
+        elif change=='ordinary_failure':state['attempts'][-1]['execution']['returncode']=1
+        elif change=='budget':state['used_wall_seconds']=2400
+        (tmp_path/'probe_state.json').write_text(json.dumps(state))
+        before=(tmp_path/'probe_state.json').read_bytes()
+>       with pytest.raises(ValueError):vision.recover_probe_interruption(tmp_path,old,current)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'ml.experiments.run_vision_hpo' has no attribute 'recover_probe_interruption'
+
+ml/tests/test_vision_hpo.py:351: AttributeError
+___ test_legacy_recovery_refuses_recipe_drift_or_genuine_failure[data_root] ____
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-40/test_legacy_recovery_refuses_r2')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+change = 'data_root'
+
+    @pytest.mark.parametrize('change',['trainer','weights','data_root','protocol','ordinary_failure','budget'])
+    def test_legacy_recovery_refuses_recipe_drift_or_genuine_failure(vision,tmp_path,context,change):
+        old,current,state=legacy_probe_fixture(vision,tmp_path,context)
+        if change=='trainer':current['source_hashes']['ml/vision/train_hpo.py']='changed'
+        elif change=='weights':current['weights_manifest']={'changed':True}
+        elif change=='data_root':current['data_root']='/changed'
+        elif change=='protocol':current['protocol_sha256']='changed'
+        elif change=='ordinary_failure':state['attempts'][-1]['execution']['returncode']=1
+        elif change=='budget':state['used_wall_seconds']=2400
+        (tmp_path/'probe_state.json').write_text(json.dumps(state))
+        before=(tmp_path/'probe_state.json').read_bytes()
+>       with pytest.raises(ValueError):vision.recover_probe_interruption(tmp_path,old,current)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'ml.experiments.run_vision_hpo' has no attribute 'recover_probe_interruption'
+
+ml/tests/test_vision_hpo.py:351: AttributeError
+____ test_legacy_recovery_refuses_recipe_drift_or_genuine_failure[protocol] ____
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-40/test_legacy_recovery_refuses_r3')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+change = 'protocol'
+
+    @pytest.mark.parametrize('change',['trainer','weights','data_root','protocol','ordinary_failure','budget'])
+    def test_legacy_recovery_refuses_recipe_drift_or_genuine_failure(vision,tmp_path,context,change):
+        old,current,state=legacy_probe_fixture(vision,tmp_path,context)
+        if change=='trainer':current['source_hashes']['ml/vision/train_hpo.py']='changed'
+        elif change=='weights':current['weights_manifest']={'changed':True}
+        elif change=='data_root':current['data_root']='/changed'
+        elif change=='protocol':current['protocol_sha256']='changed'
+        elif change=='ordinary_failure':state['attempts'][-1]['execution']['returncode']=1
+        elif change=='budget':state['used_wall_seconds']=2400
+        (tmp_path/'probe_state.json').write_text(json.dumps(state))
+        before=(tmp_path/'probe_state.json').read_bytes()
+>       with pytest.raises(ValueError):vision.recover_probe_interruption(tmp_path,old,current)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'ml.experiments.run_vision_hpo' has no attribute 'recover_probe_interruption'
+
+ml/tests/test_vision_hpo.py:351: AttributeError
+_ test_legacy_recovery_refuses_recipe_drift_or_genuine_failure[ordinary_failure] _
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-40/test_legacy_recovery_refuses_r4')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+change = 'ordinary_failure'
+
+    @pytest.mark.parametrize('change',['trainer','weights','data_root','protocol','ordinary_failure','budget'])
+    def test_legacy_recovery_refuses_recipe_drift_or_genuine_failure(vision,tmp_path,context,change):
+        old,current,state=legacy_probe_fixture(vision,tmp_path,context)
+        if change=='trainer':current['source_hashes']['ml/vision/train_hpo.py']='changed'
+        elif change=='weights':current['weights_manifest']={'changed':True}
+        elif change=='data_root':current['data_root']='/changed'
+        elif change=='protocol':current['protocol_sha256']='changed'
+        elif change=='ordinary_failure':state['attempts'][-1]['execution']['returncode']=1
+        elif change=='budget':state['used_wall_seconds']=2400
+        (tmp_path/'probe_state.json').write_text(json.dumps(state))
+        before=(tmp_path/'probe_state.json').read_bytes()
+>       with pytest.raises(ValueError):vision.recover_probe_interruption(tmp_path,old,current)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'ml.experiments.run_vision_hpo' has no attribute 'recover_probe_interruption'
+
+ml/tests/test_vision_hpo.py:351: AttributeError
+_____ test_legacy_recovery_refuses_recipe_drift_or_genuine_failure[budget] _____
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-40/test_legacy_recovery_refuses_r5')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+change = 'budget'
+
+    @pytest.mark.parametrize('change',['trainer','weights','data_root','protocol','ordinary_failure','budget'])
+    def test_legacy_recovery_refuses_recipe_drift_or_genuine_failure(vision,tmp_path,context,change):
+        old,current,state=legacy_probe_fixture(vision,tmp_path,context)
+        if change=='trainer':current['source_hashes']['ml/vision/train_hpo.py']='changed'
+        elif change=='weights':current['weights_manifest']={'changed':True}
+        elif change=='data_root':current['data_root']='/changed'
+        elif change=='protocol':current['protocol_sha256']='changed'
+        elif change=='ordinary_failure':state['attempts'][-1]['execution']['returncode']=1
+        elif change=='budget':state['used_wall_seconds']=2400
+        (tmp_path/'probe_state.json').write_text(json.dumps(state))
+        before=(tmp_path/'probe_state.json').read_bytes()
+>       with pytest.raises(ValueError):vision.recover_probe_interruption(tmp_path,old,current)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'ml.experiments.run_vision_hpo' has no attribute 'recover_probe_interruption'
+
+ml/tests/test_vision_hpo.py:351: AttributeError
+=========================== short test summary info ============================
+FAILED ml/tests/test_vision_hpo.py::test_second_launcher_cannot_mutate_or_kill_active_run
+FAILED ml/tests/test_vision_hpo.py::test_external_sigterm_is_an_interruption_not_an_implementation_failure
+FAILED ml/tests/test_vision_hpo.py::test_signal_interruption_can_resume_without_discarding_attempt_or_budget
+FAILED ml/tests/test_vision_hpo.py::test_recovery_refuses_to_signal_worker_with_live_controller
+FAILED ml/tests/test_vision_hpo.py::test_failed_run_retry_does_not_consume_budget_without_starting_a_worker
+FAILED ml/tests/test_vision_hpo.py::test_legacy_sigterm_recovery_preserves_evidence_budget_and_source_versions
+FAILED ml/tests/test_vision_hpo.py::test_legacy_recovery_refuses_recipe_drift_or_genuine_failure[trainer]
+FAILED ml/tests/test_vision_hpo.py::test_legacy_recovery_refuses_recipe_drift_or_genuine_failure[weights]
+FAILED ml/tests/test_vision_hpo.py::test_legacy_recovery_refuses_recipe_drift_or_genuine_failure[data_root]
+FAILED ml/tests/test_vision_hpo.py::test_legacy_recovery_refuses_recipe_drift_or_genuine_failure[protocol]
+FAILED ml/tests/test_vision_hpo.py::test_legacy_recovery_refuses_recipe_drift_or_genuine_failure[ordinary_failure]
+FAILED ml/tests/test_vision_hpo.py::test_legacy_recovery_refuses_recipe_drift_or_genuine_failure[budget]
+12 failed, 17 deselected in 1.95s

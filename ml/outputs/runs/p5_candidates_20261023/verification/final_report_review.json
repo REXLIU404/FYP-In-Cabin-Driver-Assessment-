@@ -1,0 +1,233 @@
+{
+  "checks": [
+    {
+      "check": "canonical_latest_P5_complete_overrides_history",
+      "status": "PASS"
+    },
+    {
+      "check": "actual_execution24_document_closure25_not_new_experiment",
+      "status": "PASS"
+    },
+    {
+      "check": "four_dimensions_specific_and_bounded",
+      "status": "PASS"
+    },
+    {
+      "check": "P5_research_report_final_VERIFIED_PASS_copy_only",
+      "status": "PASS"
+    },
+    {
+      "check": "provider_forward_and_official_stable200_NOT_RUN",
+      "status": "PASS"
+    },
+    {
+      "check": "system_blocked_by_existing_Task10A_not_new_gate",
+      "status": "PASS"
+    },
+    {
+      "check": "candidate_Live_camera_deployment_unvalidated",
+      "status": "PASS"
+    },
+    {
+      "check": "RN_preferred_MN_retained_frozen_trial_seed",
+      "status": "PASS"
+    },
+    {
+      "check": "XGB_research_only_RF_LR_benchmark_no_runtime_claim",
+      "status": "PASS"
+    },
+    {
+      "check": "stable_not_replaced_and_no_new_HPO_authority",
+      "status": "PASS"
+    },
+    {
+      "check": "P4A100_vs_stable200_and_behavior_distinguished",
+      "status": "PASS"
+    },
+    {
+      "check": "preprocess_logits_classorder_graph_static_scope",
+      "status": "PASS"
+    },
+    {
+      "check": "manual_QC_removed_not_PASS_and_no_new_gate",
+      "status": "PASS"
+    },
+    {
+      "check": "source_test_exposure_fourdrivers_synthetic_DMD_limits",
+      "status": "PASS"
+    },
+    {
+      "check": "stability_not_correctness_safety_label_preservation",
+      "status": "PASS"
+    },
+    {
+      "check": "fine_tuning_not_unsupported_P5_prerequisite",
+      "status": "PASS"
+    },
+    {
+      "check": "seven_identity_clean_numeric_table_matches_frozen_JSON",
+      "evidence": {
+        "rounding": "6 decimals",
+        "rows": 7
+      },
+      "status": "PASS"
+    },
+    {
+      "check": "E1_percentages_and_class_distribution_numbers_match",
+      "evidence": {
+        "metrics_read_only": true
+      },
+      "status": "PASS"
+    },
+    {
+      "check": "runtime_p95_bytes_and_camera_exclusions_match",
+      "status": "PASS"
+    },
+    {
+      "check": "independent59_reused_not_rerun",
+      "status": "PASS"
+    },
+    {
+      "check": "302_suite_and_original_CLI_supported_by_saved_logs",
+      "status": "PASS"
+    },
+    {
+      "check": "protection_source_environment_counts_match_closure",
+      "status": "PASS"
+    },
+    {
+      "check": "source_snapshot_and_environment_metadata_scope_supported",
+      "status": "PASS"
+    },
+    {
+      "check": "dirty_snapshot_reproducibility_not_clean_or_bitwise",
+      "status": "PASS"
+    },
+    {
+      "check": "historical_export_flags_not_overwritten",
+      "status": "PASS"
+    },
+    {
+      "check": "documented_archive_identity:p5_mobilenet_v3_large_search006_seed42_20261023.zip",
+      "status": "PASS"
+    },
+    {
+      "check": "documented_archive_identity:p5_resnet18_search004_seed42_20261023.zip",
+      "status": "PASS"
+    },
+    {
+      "check": "closure_saved_verification_artifact_hashes_exact",
+      "status": "PASS"
+    },
+    {
+      "check": "gitignore_only_backend_log_rule_and_unknown_actor_disclosed",
+      "status": "PASS"
+    },
+    {
+      "check": "git_branch_HEAD_staging_current",
+      "evidence": {
+        "branch": "fyp2/ml-training",
+        "head": "335da4e3de203836c045452f84cc291bcd352a26",
+        "staged": ""
+      },
+      "status": "PASS"
+    },
+    {
+      "check": "reviewed_document_absolute_local_links_exist",
+      "evidence": {
+        "checked": 46,
+        "missing": []
+      },
+      "status": "PASS"
+    },
+    {
+      "check": "document_git_diff_check",
+      "evidence": {
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "status": "PASS"
+    },
+    {
+      "check": "old_independent_review_and_documents_unmodified_by_reviewer",
+      "status": "PASS"
+    }
+  ],
+  "checks_passed": 33,
+  "checks_total": 33,
+  "claim_verdicts": {
+    "P5": "VERIFIED_PASS_COPY_ONLY_DELIVERY_SOFTWARE_STATIC_AND_TRACEABILITY",
+    "candidate_live_camera_deployment": "NOT_RUN_OR_NOT_VALIDATED",
+    "manual_QC": "REMOVED_FROM_SCOPE_NOT_PASS",
+    "new_phase_hard_gates": "NONE_ADDED",
+    "official_stable200_behavior": "NOT_RUN",
+    "provider_load_forward": "NOT_RUN",
+    "stable_replacement": "NOT_PERFORMED",
+    "system_integration": "BLOCKED_BY_TASK10A_IMPLEMENTATION"
+  },
+  "failures": [],
+  "git": {
+    "backend_actor": "UNKNOWN_NOT_ATTRIBUTED",
+    "backend_log_rule_added": "backend.dev.log",
+    "branch": "fyp2/ml-training",
+    "dirty": true,
+    "extra_paths_preserved": [
+      ".gitignore",
+      "driver_risk.db-wal",
+      "driver_risk.db-shm"
+    ],
+    "head": "335da4e3de203836c045452f84cc291bcd352a26",
+    "staged": ""
+  },
+  "line_evidence": {
+    "canonical": {
+      "2026-10-25 P5": 3,
+      "manual QC\u4ecd": 50,
+      "\u542f\u52a8\u8005\u672a\u786e\u8ba4": 37,
+      "\u56db\u7ef4\u9a8c\u6536\u4e0e\u540e\u7eed\u7cfb\u7edf\u8fb9\u754c": 39
+    },
+    "research_report": {
+      "Git \u6765\u6e90\u8bf4\u660e": 7,
+      "P5 \u4e24\u89c6\u89c9\u5305": 41,
+      "P5 \u7684\u56db\u7ef4\u9a8c\u6536": 48,
+      "\u5ba1\u67e5\u6536\u5c3e\u65e5\u671f": 5,
+      "\u7528\u6237\u79fb\u9664\u7684\u4eba\u5de5 QC": 31
+    }
+  },
+  "prior_independent_review": {
+    "package_result": "PASS 59/59; no rerun in this supplement",
+    "path": "ml/outputs/runs/p5_candidates_20261023/verification/independent_review.json",
+    "sha256": "005f31c1cd7321ffca97f1e589d54838a279f7b95f418cb059caaa59dc1ce132",
+    "supplement": "This final report review closes the earlier PENDING_FINAL_WRITER_UPDATE field without altering that historical JSON."
+  },
+  "review_actions": {
+    "code_changes": 0,
+    "created_only": "ml/outputs/runs/p5_candidates_20261023/verification/final_report_review.json",
+    "model_forwards": 0,
+    "model_loads": 0,
+    "new_exports": 0,
+    "new_heldout_inference": 0,
+    "new_training": 0,
+    "old_evidence_changes": 0,
+    "package_changes": 0,
+    "tests_rerun": 0
+  },
+  "review_date_local": "2026-10-25",
+  "reviewed_at_utc": "2026-10-25T10:09:38.765581+00:00",
+  "reviewed_documents": {
+    "docs/fyp2/ml/ML_TRACK_PROGRESS.md": {
+      "latest_scope": "P5 section only; older historical sections retained",
+      "lines": 1248,
+      "sha256": "a18e87817b1a94cee45f91ca8ac723208f485a65cb1c442628573221646dd0b6"
+    },
+    "docs/fyp2/ml/reports/FYP2 \u6a21\u578b \u7cfb\u7edf\u51c6\u5165 \u5ba1\u67e5.md": {
+      "latest_scope": "entire final report",
+      "lines": 70,
+      "sha256": "0fa608a5f77c501bebdc3c10ed427a08f59bc9078a733d5df194a03388251f7f"
+    }
+  },
+  "schema": 1,
+  "scope": "FINAL_P5_CANONICAL_AND_RESEARCH_REPORT_CLAIM_FOUR_DIMENSION_REVIEW",
+  "status": "PASS"
+}

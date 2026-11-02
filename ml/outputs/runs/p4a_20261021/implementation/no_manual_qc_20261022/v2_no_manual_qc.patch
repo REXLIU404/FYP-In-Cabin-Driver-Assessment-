@@ -1,0 +1,548 @@
+--- before/ml/experiments/p4_core.py
++++ ml/experiments/p4_core.py
+@@ -23,7 +23,7 @@
+ import numpy as np
+ import psutil
+ 
+-PROTOCOL = 'P4-PROTOCOL-v1'
++PROTOCOL = 'P4-PROTOCOL-v2'
+ GIB = 1024**3
+ STAGE_CAPS = {'preflight':600, 'shared_inputs':1200, 'vision_clean':1200,
+               'vision_stress':7200, 'telemetry':1200, 'runtime':1800, 'aggregation':1200}
+@@ -258,11 +258,18 @@
+     if clean.shape!=stress.shape:raise ValueError('Unpaired stability inputs')
+     clean=probabilities(clean,clean.shape[1],logits=False);stress=probabilities(stress,stress.shape[1],logits=False)
+     delta=stress-clean
+-    return {'label_validity':'LABEL_VALIDITY_UNVERIFIED','f1_eligible':False,
++    clean_counts=np.bincount(clean.argmax(axis=1),minlength=clean.shape[1])
++    stress_counts=np.bincount(stress.argmax(axis=1),minlength=clean.shape[1])
++    distribution_delta=stress_counts-clean_counts
++    return {'label_validity':'LABEL_VALIDITY_UNVERIFIED','f1_eligible':False,'human_validated':False,
+         'flip_rate':float(np.mean(clean.argmax(axis=1)!=stress.argmax(axis=1))),
+         'mean_l1':float(np.abs(delta).sum(axis=1).mean()),'mean_delta_probability':delta.mean(axis=0).tolist(),
+-        'clean_prediction_distribution':np.bincount(clean.argmax(axis=1),minlength=clean.shape[1]).tolist(),
+-        'stress_prediction_distribution':np.bincount(stress.argmax(axis=1),minlength=clean.shape[1]).tolist(),'support':len(clean)}
++        'clean_prediction_distribution':clean_counts.tolist(),
++        'stress_prediction_distribution':stress_counts.tolist(),
++        'clean_prediction_distribution_rate':(clean_counts/len(clean)).tolist(),
++        'stress_prediction_distribution_rate':(stress_counts/len(clean)).tolist(),
++        'prediction_distribution_delta_count':distribution_delta.tolist(),
++        'prediction_distribution_delta_rate':(distribution_delta/len(clean)).tolist(),'support':len(clean)}
+ 
+ 
+ class BudgetExceeded(RuntimeError):pass
+--- before/ml/experiments/run_p4.py
++++ ml/experiments/run_p4.py
+@@ -25,7 +25,11 @@
+     classification_metrics, stability_metrics, driver_metrics, conditioned_metrics)
+ 
+ ROOT=Path(__file__).resolve().parents[2]
+-SOURCES=[ROOT/'ml/experiments'/name for name in ('p4_core.py','run_p4.py','p4_data.py','p4_qc.py','p4_preflight.py','e1_generators.py','comparator_common.py')]
++SOURCES=[ROOT/'ml/experiments'/name for name in ('p4_core.py','run_p4.py','p4_data.py','p4_preflight.py','e1_generators.py','comparator_common.py')]
++NO_MANUAL_QC={'status':'REMOVED_FROM_SCOPE','pilot':'REMOVED_FROM_SCOPE',
++    'formal':'REMOVED_FROM_SCOPE','conditioned_f1':'REMOVED_FROM_SCOPE',
++    'human_label_validity':'REMOVED_FROM_SCOPE','inter_rater_agreement':'REMOVED_FROM_SCOPE',
++    'automatic_human_validation':False}
+ DATA_HASHES={'vision':'b4f8e90dec769bb419eaa490aea869668bed6484089cebe4d545c7667baa8ea4',
+     'telemetry_test':'3bc3d47680a87359e1470fd8ffaf5ff330dc4419b37cc645e5736d51a91c96de',
+     'telemetry_train':'97dd20ee9c0832ba33455e5c31088f9b4abb65c198bf988699a959d545d1e5b5',
+@@ -74,8 +78,11 @@
+         'execution_mode':'ORT_SEQUENTIAL','graph_optimization':'ORT_ENABLE_ALL','allow_spinning':False,
+         'active_workers':1,'evaluation_batch_size':32,'vision_per_condition_tail':9,'runtime_batch_size':1,'paired_rounds':6,
+         'warmups_per_worker':50,'latency_requests_per_worker':100,'throughput_requests_per_worker':100,'percentile_method':'linear'}
+-    if protocol.get('protocol')!='P4-PROTOCOL-v1' or protocol.get('seed')!=42:
++    if (protocol.get('protocol')!='P4-PROTOCOL-v2' or protocol.get('seed')!=42
++            or protocol.get('amendment')!='USER_APPROVED_MANUAL_QC_REMOVAL'):
+         raise ValueError('Frozen protocol identifier/seed mismatch')
++    if protocol.get('formal_execution_authorized') is not False:
++        raise ValueError('Frozen protocol cannot create its own P4-B authorization')
+     if canonical_json(protocol.get('frozen_identities'))!=canonical_json(FROZEN_IDENTITIES):raise ValueError('Frozen protocol identities mismatch')
+     if protocol.get('source_sha256')!=DATA_HASHES:raise ValueError('Frozen protocol data hash mismatch')
+     if any(protocol.get('runtime',{}).get(k)!=v for k,v in expected_runtime.items()):raise ValueError('Frozen protocol runtime mismatch')
+@@ -95,10 +102,13 @@
+         raise ValueError('Frozen protocol telemetry label/bounds mismatch')
+     if budgets.get('per_identity_seconds')!={'vision_clean':400,'vision_stress':2400,'telemetry':300,'runtime':900}:
+         raise ValueError('Frozen protocol model budget mismatch')
+-    if protocol.get('qc',{}).get('reviewers')!=['R1'] or protocol['qc'].get('formal_policy')!='SINGLE_REVIEWER_R1':
+-        raise ValueError('Frozen protocol QC amendment mismatch')
++    if protocol.get('qc')!=NO_MANUAL_QC:raise ValueError('Frozen protocol manual QC removal mismatch')
+     if protocol.get('preflight',{}).get('frozen_onnx_sha256')!=FROZEN_ONNX or protocol['preflight'].get('executed_source_sha256')!=FROZEN_PREFLIGHT_SOURCE:
+         raise ValueError('Frozen protocol preflight identities mismatch')
++    if (protocol['preflight'].get('export_execution_authorized') is not False
++            or protocol['preflight'].get('existing_exports_status')!='REUSED_AND_VERIFIED'
++            or protocol['preflight'].get('historical_export_count')!=2):
++        raise ValueError('Frozen protocol reuses two historical exports without authorizing new exports')
+     return protocol
+ 
+ 
+@@ -230,42 +240,50 @@
+     return cache
+ 
+ 
++def validate_vision_sources(vision):
++    if len(vision)!=3657 or {r['driver_id'] for r in vision}!={'p012','p026','p035','p050'} or {r['class_id'] for r in vision}!={f'c{i}' for i in range(10)}:
++        raise ValueError('Frozen vision test membership mismatch')
++
++
++def validate_telemetry_sources(train,val,test):
++    from ml.experiments.comparator_common import LABELS
++    if len(train)!=21000 or len(val)!=4500 or len(test)!=4500 or [sum(r['source_label']==label for r in test) for label in LABELS]!=[1500]*3:
++        raise ValueError('Frozen telemetry membership mismatch')
++
++
+ def prepare_inputs(spec,authorization):
+     from PIL import Image
+-    from ml.experiments import p4_data,p4_qc
++    from ml.experiments import p4_data
+     from ml.experiments.comparator_common import FEATURES,LABELS
+     run=Path(spec['run_dir']);out=run/'shared_inputs';out.mkdir(exist_ok=False)
+     data=Path(spec['data_root'])/'eda_outputs/processed'
+     vision=p4_data.read_vision_metadata(data/'vision/vision_metadata_with_split.csv',split='test',authorization=authorization,expected_sha256=DATA_HASHES['vision'])
+-    if len(vision)!=3657 or {r['driver_id'] for r in vision}!={'p012','p026','p035','p050'} or {r['class_id'] for r in vision}!={f'c{i}' for i in range(10)}:raise ValueError('Frozen vision test membership mismatch')
++    validate_vision_sources(vision)
+     vision.sort(key=lambda r:r['source_id'])
+-    selected=p4_qc.select_sources(vision)
+-    selected_ids={r['source_id'] for r in selected}
+     # uint8 bank: 19 * 3657 * 224 * 224 * 3 = 10.46 GB. No 69k PNGs
+     # or whole FP32 bank is written. Hashes bind each source/parameter/tensor.
+-    maps={};manifest=[];qc_cases=[]
++    maps={};manifest=[]
+     for index,record in enumerate(vision):
+         authorization.require_heldout();record['source_sha256']=sha256_file(record['image_path'])
+         with Image.open(record['image_path']) as original:
+             for image,row in p4_data.vision_bank(original,record,authorization=authorization):
+                 name=condition_name(row)
+                 if name not in maps:
+-                    maps[name]=StreamingNpyWriter(out/f'vision_{name.replace(":","_")}.npy',(3657,224,224,3),np.uint8)
++                    maps[name]=StreamingNpyWriter(out/f'vision_{name.replace(":","_")}.npy',(len(vision),224,224,3),np.uint8)
+                 pixels=np.asarray(image,dtype=np.uint8);maps[name].write_row(index,pixels)
+                 row['input_sha256']=array_sha256(normalize_rgb(pixels[None])[0]);row['bank_row']=index
+-                row['source_sha256']=record['source_sha256'];row['source_path']=record['image_path'];manifest.append(row)
+-                if record['source_id'] in selected_ids:qc_cases.append((image.copy(),dict(row)))
++                row['source_sha256']=record['source_sha256'];row['source_path']=record['image_path']
++                row['qc_status']='REMOVED_FROM_SCOPE';row['human_validated']=False
++                row['label_validity']='SOURCE_LABEL' if name=='clean' else 'LABEL_VALIDITY_UNVERIFIED'
++                row['f1_eligible']=name=='clean';manifest.append(row)
+     for bank in maps.values():bank.finish()
+     del maps
+-    # Same deterministic subset for formal single-reviewer policy; no machine
+-    # judgment is recorded as a human result. Caller must supply actual ratings.
+-    if hasattr(p4_qc,'build_review_kit'):
+-        p4_qc.build_review_kit(qc_cases,run/'qc_review_kit',reviewer='R1',authorization=authorization)
++    if len(manifest)!=len(vision)*19:raise ValueError('Incomplete 19-condition shared vision inputs')
+     atomic_json(out/'vision_sources.json',vision);atomic_json(out/'vision_variants.json',manifest)
+     train=p4_data.read_telemetry_csv(data/'telemetry/telemetry_train.csv',split='train',expected_sha256=DATA_HASHES['telemetry_train'])
+     val=p4_data.read_telemetry_csv(data/'telemetry/telemetry_val.csv',split='val',expected_sha256=DATA_HASHES['telemetry_val'])
+     test=p4_data.read_telemetry_csv(data/'telemetry/telemetry_test.csv',split='test',authorization=authorization,expected_sha256=DATA_HASHES['telemetry_test'])
+-    if len(train)!=21000 or len(val)!=4500 or len(test)!=4500 or [sum(r['source_label']==label for r in test) for label in LABELS]!=[1500]*3:raise ValueError('Frozen telemetry membership mismatch')
++    validate_telemetry_sources(train,val,test)
+     test.sort(key=lambda r:r['source_id'])
+     statistics=read_json(ROOT/'ml/outputs/runs/w2_preparation_20261015/preparation_evidence.json')['train_only_statistics']
+     p4_data.verify_train_statistics(statistics,expected_train_sha256=DATA_HASHES['telemetry_train'])
+@@ -281,7 +299,9 @@
+         p4_data.verify_train_statistics(statistics,expected_train_sha256=DATA_HASHES['telemetry_train'],pipeline_medians=[saved['median']])
+     rows=list(p4_data.telemetry_bank([r['features'] for r in test],[r['source_label'] for r in test],
+         [r['source_id'] for r in test],statistics,source_split='test',authorization=authorization,empirical_bounds=EMPIRICAL))
+-    if len(rows)!=45000:raise ValueError('Telemetry 45k shared rows required')
++    if len(rows)!=len(test)*10:raise ValueError('Telemetry ten shared conditions per source required')
++    for row in rows:
++        row['qc_status']='REMOVED_FROM_SCOPE';row['human_validated']=False
+     grouped={}
+     for row in rows:grouped.setdefault(condition_name(row),[]).append(row)
+     for condition,group in grouped.items():
+@@ -291,7 +311,8 @@
+     cache=PredictionCache.create(run/'cache',spec['binding'],{k:v['sha256'] for k,v in FROZEN_IDENTITIES.items()});cache.close()
+     bank_files=sorted(out.glob('*.npy'))
+     atomic_json(out/'bank_manifest.json',{'banks':{p.name:sha256_file(p) for p in bank_files},
+-        'metadata':{p.name:sha256_file(p) for p in out.glob('*.json')},'vision_sources':3657,'vision_inputs':69483,'telemetry_sources':4500,'telemetry_inputs':45000})
++        'metadata':{p.name:sha256_file(p) for p in out.glob('*.json')},'vision_sources':len(vision),'vision_inputs':len(manifest),
++        'telemetry_sources':len(test),'telemetry_inputs':len(rows)})
+ 
+ 
+ def load_telemetry_model(identity):
+@@ -398,7 +419,7 @@
+ 
+ 
+ def qc_conditioned_report(predictions,qc_rows,*,identities=None):
+-    """Common-valid four-condition QC scoring under the amended single-R1 rule."""
++    """Historical v1 software helper; inactive in all P4-PROTOCOL-v2 paths."""
+     from ml.experiments.p4_qc import common_valid_sources
+     identities=identities or [i for i,v in FROZEN_IDENTITIES.items() if v['modality']=='vision']
+     families=sorted({r['condition'] for r in qc_rows if r['condition']!='clean'})
+@@ -536,14 +557,20 @@
+     return telemetry_metadata_summary(read_json(path))
+ 
+ 
++def require_complete_predictions(records):
++    if len(records)!=388449:raise ValueError('Incomplete full paired prediction coverage')
++
++
+ def aggregate(spec):
+     run=Path(spec['run_dir']);cache=PredictionCache.open_readonly(run/'cache',spec['binding'],{k:v['sha256'] for k,v in FROZEN_IDENTITIES.items()})
+     try:records=cache.records()
+     finally:cache.close()
+-    if len(records)!=388449:raise ValueError('Incomplete full paired prediction coverage')
++    require_complete_predictions(records)
+     report={'protocol':spec['binding'],'formal_prediction_count':len(records),'models':{},
+         'telemetry_input_metadata':load_telemetry_metadata_summary(run/'shared_inputs'),
+         'limitations':['Only four State Farm test drivers; descriptive comparisons, no frame bootstrap or p-values.',
++        'Manual Recognizability QC is removed. Corruption label validity is unverified; stress outputs describe model stability, not preserved actions or human-validated robustness.',
++        'Source-label corruption F1 is not computed. Any such descriptive sensitivity analysis would depend on explicit label-preservation assumptions.',
+         'Telemetry sources are synthetic; driver/trip/generator independence unknown.',
+         'Historical test split has been repeatedly evaluated; no directly test-driven parameter selection code was found.',
+         'ResNet and XGB validation priorities remain frozen; no new selection or tuning.',
+@@ -563,23 +590,7 @@
+             if ids!=ordered:raise ValueError('Incomplete paired condition coverage')
+             entry['stress'][condition]=stability_metrics(probabilities(output,n,logits=vision),probabilities([r['output'] for r in rows],n,logits=vision))
+         report['models'][identity]=entry
+-    # QC remains conditional on actual blinded R1 judgments. No fabricated
+-    # human labels, inter-rater statistic, or automatic VALID defaults.
+-    report['qc']={'policy':'SINGLE_REVIEWER_R1','status':'AWAITING_ACTUAL_REVIEW','full_10_class_macro_f1':'NOT_ESTIMABLE',
+-        'reason':'QC metrics require locked blinded R1 judgments and source-cue checks for this run.'}
+-    if spec.get('qc_lock') and spec.get('qc_cue_checks'):
+-        from ml.experiments.p4_qc import finalize_qc,load_byte_attestation
+-        authorization=authorize_p4b(read_json(spec['approval_path']),**spec['binding'])
+-        attestation=load_byte_attestation(run/'qc_review_kit',authorization=authorization)
+-        manifest=read_json(run/'qc_review_kit/restricted/source_key.json')
+-        completed=finalize_qc(manifest,read_json(spec['qc_lock']),read_json(spec['qc_cue_checks']),attestation=attestation,authorization=authorization)
+-        qc_rows=completed['records'] if 'records' in completed else completed['cases']
+-        cache_inputs={(r['source_id'],r['condition']):r['input_sha256'] for r in records if FROZEN_IDENTITIES[r['identity']]['modality']=='vision'}
+-        for row in qc_rows:
+-            expected=cache_inputs.get((row['source_id'],condition_name(row)))
+-            if not expected or row.get('input_sha256')!=expected:raise ValueError('QC pixels/tensor differ from shared prediction inputs')
+-        report['qc']=qc_conditioned_report(records,qc_rows)
+-        report['qc']['human_review_evidence']=completed
++    report['qc']=NO_MANUAL_QC.copy()
+     report['paired_model_differences']={}
+     for a,b in [('RN-HPO42','MN-HPO42'),('MN-HPO42','MN-STABLE'),('XGB-HPO42','XGB-STABLE'),('XGB-HPO42','RF-HPO42'),('XGB-HPO42','LR-HPO42')]:
+         report['paired_model_differences'][f'{a} - {b}']={metric:report['models'][a]['clean'][metric]-report['models'][b]['clean'][metric] for metric in ('accuracy','macro_f1','log_loss')}
+@@ -626,8 +637,7 @@
+     spec=read_json(args.execution_spec)
+     run=ROOT/'ml/outputs/runs'/args.run_id;reject_symlink(run)
+     spec.update(binding=binding,run_dir=str(run),protocol_path=str(protocol_path),approval_path=str(Path(args.approval).resolve()))
+-    if spec.get('reviewers')!=['R1']:raise ValueError('Single-reviewer R1 policy requires explicit formal P4-B amendment approval')
+-    if read_json(args.approval).get('single_reviewer_amendment_approved') is not True:raise ValueError('P4-B single-reviewer protocol amendment approval required')
++    for obsolete in ('reviewers','qc_lock','qc_cue_checks'):spec.pop(obsolete,None)
+     supervisor=BudgetSupervisor(run) # Resource gate precedes model loading/export/forward.
+     atomic_json(run/'provenance_before.json',provenance)
+     atomic_json(run/'execution_spec.json',spec);atomic_json(run/'source_manifest.json',source_manifest(SOURCES))
+@@ -658,13 +668,13 @@
+     final_provenance=formal_provenance()
+     if final_provenance['protected_hashes']!=provenance['protected_hashes']:raise ValueError('Protected hashes changed during formal run')
+     atomic_json(run/'provenance_after.json',final_provenance)
+-    atomic_json(run/'completion.json',{'status':'MACHINE_EVALUATION_COMPLETED','qc_status':'AWAITING_ACTUAL_REVIEW',
++    atomic_json(run/'completion.json',{'status':'MACHINE_EVALUATION_COMPLETED','qc_status':'REMOVED_FROM_SCOPE',
+         'formal_prediction_count':388449,'binding':binding,'candidate_package':False,'deployment_eligible':False})
+     return 0
+ 
+ 
+ def aggregate_cached(args):
+-    """Explicit post-review aggregation; readonly predictions, no forward path."""
++    """Explicit cached aggregation; readonly predictions, no forward path."""
+     original=read_json(args.execution_spec);binding=binding_for(original['protocol_path'],original['binding']['run_id'])
+     if binding!=original['binding']:raise ValueError('Cached aggregation source/protocol mismatch')
+     validate_protocol(read_json(original['protocol_path']));authorize_p4b(read_json(args.approval),**binding)
+@@ -674,10 +684,11 @@
+     remaining_total=14400-prior['total_used_seconds']
+     remaining_stage=1200-prior['stage_used_seconds'].get('aggregation',0)
+     if min(remaining_total,remaining_stage)<=0:raise ValueError('No frozen aggregation budget remains; separate budget approval required')
+-    directory=run/'qc_aggregation'
++    directory=run/'cached_aggregation'
+     supervisor=BudgetSupervisor(directory,total_seconds=remaining_total,stage_caps={'aggregation':remaining_stage},output_root=run)
+-    spec=dict(original,approval_path=str(Path(args.approval).resolve()),qc_lock=str(Path(args.qc_lock).resolve()),qc_cue_checks=str(Path(args.qc_cue_checks).resolve()),
++    spec=dict(original,approval_path=str(Path(args.approval).resolve()),
+         aggregation_output=str(directory/'evaluation_metrics.json'))
++    for obsolete in ('reviewers','qc_lock','qc_cue_checks'):spec.pop(obsolete,None)
+     atomic_json(directory/'execution_spec.json',spec);atomic_json(directory/'provenance_before.json',provenance)
+     command=[sys.executable,'-B','-m','ml.experiments.run_p4','_worker','--execution-spec',str(directory/'execution_spec.json'),'--stage','aggregation']
+     supervisor.run(command,stage='aggregation',model='all',model_cap_seconds=remaining_stage,
+@@ -694,7 +705,7 @@
+     parser=argparse.ArgumentParser(description=__doc__);sub=parser.add_subparsers(dest='mode',required=True)
+     form=sub.add_parser('formal');form.add_argument('--protocol',required=True);form.add_argument('--run-id',required=True)
+     form.add_argument('--approval');form.add_argument('--execution-spec')
+-    cached=sub.add_parser('aggregate-cached');cached.add_argument('--execution-spec',required=True);cached.add_argument('--approval',required=True);cached.add_argument('--qc-lock',required=True);cached.add_argument('--qc-cue-checks',required=True)
++    cached=sub.add_parser('aggregate-cached');cached.add_argument('--execution-spec',required=True);cached.add_argument('--approval',required=True)
+     bind=sub.add_parser('bindings');bind.add_argument('--protocol',required=True);bind.add_argument('--run-id',required=True)
+     private=sub.add_parser('_worker');private.add_argument('--execution-spec',required=True);private.add_argument('--stage',required=True)
+     private.add_argument('--identity');private.add_argument('--round-index',type=int)
+@@ -707,7 +718,8 @@
+     if args.mode=='bindings':print(json.dumps(binding_for(args.protocol,args.run_id),sort_keys=True));return 0
+     if args.mode=='_verify-preflight':
+         if os.environ.get('P4_BUDGET_WORKER')!='1':raise PermissionError('Private worker requires budget supervisor')
+-        spec=read_json(args.execution_spec);authorize_p4b(read_json(spec['approval_path']),**binding_for(spec['protocol_path'],spec['binding']['run_id']));verify_preflight(spec);return 0
++        spec=read_json(args.execution_spec);validate_protocol(read_json(spec['protocol_path']))
++        authorize_p4b(read_json(spec['approval_path']),**binding_for(spec['protocol_path'],spec['binding']['run_id']));verify_preflight(spec);return 0
+     worker(args.execution_spec,args.stage,args.identity,args.round_index);return 0
+ 
+ 
+--- before/ml/configs/p4_protocol.json
++++ ml/configs/p4_protocol.json
+@@ -1,6 +1,6 @@
+ {
+-  "protocol": "P4-PROTOCOL-v1",
+-  "amendment": "P4A-user-singleReviewer-amendment",
++  "protocol": "P4-PROTOCOL-v2",
++  "amendment": "USER_APPROVED_MANUAL_QC_REMOVAL",
+   "phase": "P4-A",
+   "formal_execution_authorized": false,
+   "frozen_identities": {
+@@ -151,7 +151,9 @@
+     "export_external_data": false,
+     "candidate_package": false,
+     "deployment_eligible": false,
+-    "export_execution_authorized": true,
++    "export_execution_authorized": false,
++    "existing_exports_status": "REUSED_AND_VERIFIED",
++    "historical_export_count": 2,
+     "frozen_onnx_sha256": {
+       "MN-HPO42": "9ee60abb78007773cc625af80c313049c1970f63c1f041bed9f5b2539a384828",
+       "RN-HPO42": "5e226722e0712824c78aa0976afa6fa5b8dc6100b147a7f523a09048171d8cf3",
+@@ -162,23 +164,22 @@
+     "attestation_sha256": "dc8f7cc36126aa994ae7ffebf9fb06cb92596246484f645f85956e052ddddaa3"
+   },
+   "qc": {
+-    "reviewers": [
+-      "R1"
+-    ],
+-    "pilot_source_count": 2,
+-    "pilot_case_count": 38,
+-    "pilot_source_split": "val",
+-    "pilot_full10class_macro_f1": "NOT_ESTIMABLE",
+-    "inter_rater_agreement": "NOT_APPLICABLE",
+-    "formal_policy": "SINGLE_REVIEWER_R1",
+-    "formal_amendment_approval": "PENDING_SEPARATE_P4_B",
+-    "formal_sources_per_driver_class": 5,
+-    "formal_max_sources": 200,
+-    "formal_max_cases": 3800,
+-    "human_ratings_status": "NOT_RECORDED",
+-    "automatic_valid_default": false,
+-    "reviewer_count": 1,
+-    "independent_external_reviewers": 0
++    "status": "REMOVED_FROM_SCOPE",
++    "pilot": "REMOVED_FROM_SCOPE",
++    "formal": "REMOVED_FROM_SCOPE",
++    "conditioned_f1": "REMOVED_FROM_SCOPE",
++    "human_label_validity": "REMOVED_FROM_SCOPE",
++    "inter_rater_agreement": "REMOVED_FROM_SCOPE",
++    "automatic_human_validation": false
++  },
++  "vision": {
++    "primary_clean_metrics": ["accuracy", "macro_f1", "class_precision", "class_recall", "class_f1", "confusion", "log_loss"],
++    "stress_metrics": ["flip_rate", "mean_l1", "mean_delta_probability", "prediction_distribution_delta_count", "prediction_distribution_delta_rate"],
++    "stress_label_validity": "LABEL_VALIDITY_UNVERIFIED",
++    "corruption_source_label_f1": "NOT_COMPUTED",
++    "human_validated": false,
++    "interpretation": "DESCRIPTIVE_MODEL_STABILITY_NOT_LABEL_PRESERVATION_OR_SAFETY",
++    "source_label_sensitivity_interpretation": "ASSUMPTION_BASED_SENSITIVITY_NOT_HUMAN_VALIDATED"
+   },
+   "telemetry": {
+     "train_only_statistics": true,
+--- before/ml/tests/test_p4_core.py
++++ ml/tests/test_p4_core.py
+@@ -439,17 +439,200 @@
+         run_p4.load_telemetry_metadata_summary(tmp_path)
+ 
+ 
+-@pytest.mark.parametrize('value',['false','true',1,False,None])
+-def test_formal_single_reviewer_approval_requires_literal_true(core,tmp_path,monkeypatch,value):
++@pytest.mark.parametrize('field,value',[('authorized',False),('phase','P4-A'),
++    ('human_approval',''),('protocol_sha256','0'*64),('source_sha256','0'*64)])
++def test_formal_malformed_external_approval_stops_before_data_or_worker(core,tmp_path,monkeypatch,field,value):
+     from ml.experiments import run_p4
+     protocol=Path(run_p4.ROOT)/'ml/configs/p4_protocol.json'
+     frozen=run_p4.binding_for(protocol,'synthetic_boolean_gate')
+     approval_path=tmp_path/'synthetic_approval.json'
+-    approval_path.write_text(json.dumps(dict(frozen,phase='P4-B',authorized=True,
+-        human_approval='SYNTHETIC_TEST_FIXTURE_ONLY',single_reviewer_amendment_approved=value)))
+-    execution=tmp_path/'execution_spec.json';execution.write_text(json.dumps({'reviewers':['R1']}))
++    approved=dict(frozen,phase='P4-B',authorized=True,human_approval='SYNTHETIC_TEST_FIXTURE_ONLY')
++    approved[field]=value;approval_path.write_text(json.dumps(approved))
++    execution=tmp_path/'must_not_open.json'
+     monkeypatch.setattr(run_p4,'formal_provenance',lambda:{})
+     monkeypatch.setattr(run_p4,'BudgetSupervisor',lambda *args,**kwargs:pytest.fail('resource/worker started without literal approval'))
+-    with pytest.raises(ValueError,match='amendment approval'):
++    with pytest.raises(ValueError):
+         run_p4.main(['formal','--protocol',str(protocol),'--run-id',frozen['run_id'],
+             '--approval',str(approval_path),'--execution-spec',str(execution)])
++
++
++def test_v2_removes_manual_qc_preserving_full_frozen_scope_and_rejects_v1(core):
++    from ml.experiments import run_p4
++    protocol=json.loads((run_p4.ROOT/'ml/configs/p4_protocol.json').read_text())
++    assert protocol['protocol']=='P4-PROTOCOL-v2'
++    assert protocol['amendment']=='USER_APPROVED_MANUAL_QC_REMOVAL'
++    assert protocol['formal_execution_authorized'] is False
++    for key in ('pilot','formal','conditioned_f1','human_label_validity','inter_rater_agreement'):
++        assert protocol['qc'][key]=='REMOVED_FROM_SCOPE'
++    assert protocol['qc']['automatic_human_validation'] is False
++    assert protocol['scope']=={'vision_sources':3657,'vision_conditions':19,'vision_shared_inputs':69483,
++        'vision_identities':3,'vision_predictions':208449,'telemetry_sources':4500,'telemetry_conditions':10,
++        'telemetry_shared_inputs':45000,'telemetry_identities':4,'telemetry_predictions':180000,'total_predictions':388449}
++    assert 'p4_qc.py' not in {path.name for path in run_p4.SOURCES}
++    assert run_p4.validate_protocol(protocol)==protocol
++    old=dict(protocol,protocol='P4-PROTOCOL-v1')
++    with pytest.raises(ValueError,match='protocol'):run_p4.validate_protocol(old)
++
++
++def test_stability_distribution_changes_are_paired_descriptive_not_label_f1(core):
++    report=core.stability_metrics([[.8,.1,.1],[.7,.2,.1],[.2,.7,.1],[.1,.2,.7]],
++        [[.1,.8,.1],[.7,.2,.1],[.1,.2,.7],[.1,.2,.7]])
++    assert report['clean_prediction_distribution']==[2,1,1]
++    assert report['stress_prediction_distribution']==[1,1,2]
++    assert report['prediction_distribution_delta_count']==[-1,0,1]
++    assert report['prediction_distribution_delta_rate']==[-.25,0.,.25]
++    assert sum(report['prediction_distribution_delta_count'])==0
++    assert sum(report['prediction_distribution_delta_rate'])==0.
++    assert report['clean_prediction_distribution_rate']==[.5,.25,.25]
++    assert report['stress_prediction_distribution_rate']==[.25,.25,.5]
++    assert report['flip_rate']==.5 and report['mean_l1']==pytest.approx(.65)
++    assert report['human_validated'] is False and report['f1_eligible'] is False
++    assert report['label_validity']=='LABEL_VALIDITY_UNVERIFIED' and 'macro_f1' not in report
++
++
++def test_v2_formal_dispatch_has_no_reviewers_or_manual_wait(core,tmp_path,monkeypatch):
++    from ml.experiments import run_p4
++    protocol=run_p4.ROOT/'ml/configs/p4_protocol.json';frozen=run_p4.binding_for(protocol,'synthetic_v2_dispatch')
++    approval_path=tmp_path/'synthetic_approval.json'
++    approval_path.write_text(json.dumps(dict(frozen,phase='P4-B',authorized=True,human_approval='SYNTHETIC_ONLY')))
++    spec=tmp_path/'execution_spec.json';spec.write_text('{}')
++    calls=[]
++    class Supervisor:
++        def __init__(self,path,**kwargs):Path(path).mkdir(parents=True);self.path=path
++        def run(self,command,**limits):calls.append((command,limits));return {'returncode':0}
++    monkeypatch.setattr(run_p4,'ROOT',tmp_path)
++    monkeypatch.setattr(run_p4,'formal_provenance',lambda:{'protected_hashes':{'synthetic':'stable'}})
++    monkeypatch.setattr(run_p4,'BudgetSupervisor',Supervisor)
++    assert run_p4.main(['formal','--protocol',str(protocol),'--run-id',frozen['run_id'],
++        '--approval',str(approval_path),'--execution-spec',str(spec)])==0
++    from collections import Counter
++    assert Counter(limits['stage'] for _,limits in calls)=={'preflight':1,'shared_inputs':1,
++        'vision_clean':3,'vision_stress':3,'telemetry':4,'runtime':12,'aggregation':1}
++    out=tmp_path/'ml/outputs/runs'/frozen['run_id']
++    completion=json.loads((out/'completion.json').read_text())
++    assert completion['status']=='MACHINE_EVALUATION_COMPLETED'
++    assert completion['qc_status']=='REMOVED_FROM_SCOPE'
++    assert completion['formal_prediction_count']==388449
++    assert 'reviewers' not in json.loads((out/'execution_spec.json').read_text())
++
++
++def test_v2_prepare_inputs_writes_only_shared_banks_without_qc_subset(core,tmp_path,monkeypatch):
++    from ml.experiments import run_p4,p4_data,p4_qc,e1_generators,comparator_common as common
++    from PIL import Image
++    run=tmp_path/'run';run.mkdir()
++    vision=[]
++    for i in range(2):
++        source=tmp_path/f'synthetic_{i}.png';Image.new('RGB',(16,16),(i,2,3)).save(source)
++        vision.append(dict(source_id=f'synthetic:c{i}',class_id=f'c{i}',driver_id=f'p{i}',
++            image_path=str(source),source_split='synthetic'))
++    sets={split:[dict(source_id=f'synthetic:{split}:{i}',source_label=label,
++        features=[float(i+j) for j in range(8)]) for i,label in enumerate(common.LABELS)]
++        for split in ('train','val','test')}
++    statistics=e1_generators.fit_train_statistics([r['features'] for r in sets['train']],common.LABELS,
++        split='train',source_sha256=run_p4.DATA_HASHES['telemetry_train'])
++    monkeypatch.setattr(p4_data,'read_vision_metadata',lambda *args,**kwargs:vision)
++    monkeypatch.setattr(p4_data,'read_telemetry_csv',lambda *args,**kwargs:sets[kwargs['split']])
++    monkeypatch.setattr(run_p4,'validate_vision_sources',lambda records:None,raising=False)
++    monkeypatch.setattr(run_p4,'validate_telemetry_sources',lambda *args:None,raising=False)
++    saved={'feature_order':common.FEATURES,'train_csv_sha256':run_p4.DATA_HASHES['telemetry_train'],'median':statistics['median']}
++    monkeypatch.setattr(run_p4,'read_json',lambda path:{'train_only_statistics':statistics}
++        if Path(path).name=='preparation_evidence.json' else saved)
++    monkeypatch.setattr(p4_qc,'select_sources',lambda *args,**kwargs:pytest.fail('manual QC selection called'))
++    monkeypatch.setattr(p4_qc,'build_review_kit',lambda *args,**kwargs:pytest.fail('manual QC kit copied'))
++    token=core.authorize_p4b(approval(),**binding())
++    run_p4.prepare_inputs({'run_dir':str(run),'data_root':str(tmp_path/'synthetic'),'binding':binding()},token)
++    shared=run/'shared_inputs'
++    manifest=json.loads((shared/'bank_manifest.json').read_text())
++    assert len(manifest['banks'])==29
++    assert manifest['vision_sources']==2 and manifest['vision_inputs']==38
++    assert manifest['telemetry_sources']==3 and manifest['telemetry_inputs']==30
++    rows=json.loads((shared/'vision_variants.json').read_text())
++    assert len(rows)==38 and all(row['qc_status']=='REMOVED_FROM_SCOPE' for row in rows)
++    assert all(row['label_validity']=='LABEL_VALIDITY_UNVERIFIED' and row['f1_eligible'] is False
++        for row in rows if row['condition']!='clean')
++    telemetry=json.loads((shared/'telemetry_variants.json').read_text())
++    assert all(row['qc_status']=='REMOVED_FROM_SCOPE' and row['human_validated'] is False for row in telemetry)
++    assert not (run/'qc_review_kit').exists() and not (run/'qc_images').exists()
++
++
++def test_v2_aggregate_keeps_clean_metrics_without_manual_qc_or_corrupt_f1(core,tmp_path,monkeypatch):
++    from ml.experiments import run_p4
++    shared=tmp_path/'shared_inputs';shared.mkdir()
++    ids=['s0','s1'];identity_hashes={k:v['sha256'] for k,v in core.FROZEN_IDENTITIES.items()}
++    cache=core.PredictionCache.create(tmp_path/'cache',binding(),identity_hashes)
++    for identity,spec in core.FROZEN_IDENTITIES.items():
++        vision=spec['modality']=='vision';n=10 if vision else 3
++        for condition,flip in [(('clean' if vision else 'D0'),False),(('brightness_up:0' if vision else 'D3:0'),True)]:
++            output=np.zeros((2,n),dtype=np.float32);output[0,int(flip)]=1.;output[1,int(not flip)]=1.
++            cache.predict_once(identity,[dict(source_id=s,condition=condition,label=i,input_sha256='2'*64)
++                for i,s in enumerate(ids)],lambda output=output:output)
++    cache.close()
++    monkeypatch.setattr(run_p4,'require_complete_predictions',lambda records:None,raising=False)
++    monkeypatch.setattr(run_p4,'qc_conditioned_report',lambda *args,**kwargs:pytest.fail('inactive manual helper called'))
++    metadata=telemetry_metadata_fixture()
++    (shared/'telemetry_variants.json').write_text(json.dumps(metadata))
++    (shared/'bank_manifest.json').write_text(json.dumps({'metadata':{'telemetry_variants.json':core.sha256_file(shared/'telemetry_variants.json')}}))
++    (shared/'vision_sources.json').write_text(json.dumps([dict(source_id=s,driver_id=f'p{i}') for i,s in enumerate(ids)]))
++    runtime=tmp_path/'runtime_benchmark';runtime.mkdir();workers=[]
++    for identity in ('MN-HPO42','RN-HPO42'):
++        checkpoint=tmp_path/core.FROZEN_IDENTITIES[identity]['path'];checkpoint.parent.mkdir(parents=True,exist_ok=True);checkpoint.write_bytes(b'synthetic')
++        for i in range(6):
++            (runtime/f'{identity}_round{i}.json').write_text(json.dumps(dict(round=i,
++                latency_nanoseconds=[1,2],throughput_calls=100,throughput_loop_nanoseconds=1000000,
++                rss_before_session_bytes=10,rss_after_session_bytes=20,lifecycle_ru_maxrss=30)))
++            workers.append(dict(stage='runtime',model=identity,sampled_peak_rss_bytes=30,samples=[]))
++    (tmp_path/'budget_state.json').write_text(json.dumps({'workers':workers}))
++    monkeypatch.setattr(run_p4,'ROOT',tmp_path)
++    monkeypatch.setattr(run_p4,'verify_preflight',lambda spec:{'models':{identity:{'onnx_path':str(tmp_path/core.FROZEN_IDENTITIES[identity]['path'])}
++        for identity in ('MN-HPO42','RN-HPO42')}})
++    run_p4.aggregate(dict(run_dir=str(tmp_path),binding=binding(),qc_lock='must_not_open',qc_cue_checks='must_not_open'))
++    report=json.loads((tmp_path/'evaluation_metrics.json').read_text())
++    assert report['qc']['status']=='REMOVED_FROM_SCOPE' and report['qc']['automatic_human_validation'] is False
++    assert len(report['models'])==7
++    for model in report['models'].values():
++        assert model['clean']['accuracy']==1. and model['clean']['macro_f1']>0
++        assert model['clean']['classes'] and model['clean']['confusion']
++        assert all('macro_f1' not in stress and stress['f1_eligible'] is False
++            and stress['label_validity']=='LABEL_VALIDITY_UNVERIFIED' for stress in model['stress'].values())
++    assert 'human_review_evidence' not in report['qc'] and 'valid_retention' not in report['qc']
++
++
++def test_v2_cached_aggregation_cli_needs_only_external_approval_and_remaining_budget(core,tmp_path,monkeypatch):
++    from ml.experiments import run_p4
++    protocol=run_p4.ROOT/'ml/configs/p4_protocol.json';frozen=run_p4.binding_for(protocol,'synthetic_cached_v2')
++    run=tmp_path/frozen['run_id'];run.mkdir()
++    approval_path=tmp_path/'synthetic_approval.json'
++    approval_path.write_text(json.dumps(dict(frozen,phase='P4-B',authorized=True,human_approval='SYNTHETIC_ONLY')))
++    spec=run/'execution_spec.json'
++    spec.write_text(json.dumps(dict(binding=frozen,protocol_path=str(protocol),run_dir=str(run),approval_path=str(approval_path))))
++    (run/'completion.json').write_text(json.dumps({'status':'MACHINE_EVALUATION_COMPLETED'}))
++    (run/'budget_state.json').write_text(json.dumps({'total_used_seconds':100.,'stage_used_seconds':{'aggregation':20.}}))
++    calls=[]
++    class Supervisor:
++        def __init__(self,path,**settings):
++            Path(path).mkdir();self.total_used=1.;self.stage_used={'aggregation':1.}
++            assert settings['total_seconds']==14300.
++            assert settings['stage_caps']=={'aggregation':1180.}
++        def run(self,command,**limits):calls.append((command,limits))
++    monkeypatch.setattr(run_p4,'BudgetSupervisor',Supervisor)
++    monkeypatch.setattr(run_p4,'formal_provenance',lambda:{'protected_hashes':{}})
++    assert run_p4.main(['aggregate-cached','--execution-spec',str(spec),'--approval',str(approval_path)])==0
++    assert len(calls)==1 and calls[0][1]['stage']=='aggregation'
++    saved=json.loads((run/'cached_aggregation/execution_spec.json').read_text())
++    assert 'qc_lock' not in saved and 'qc_cue_checks' not in saved and 'reviewers' not in saved
++    cumulative=json.loads((run/'cached_aggregation/cumulative_budget.json').read_text())
++    assert cumulative['combined_machine_seconds']==101. and cumulative['prediction_forward_count']==0
++
++
++def test_v2_private_preflight_rejects_old_protocol_before_any_evidence_read(core,tmp_path,monkeypatch):
++    from ml.experiments import run_p4
++    protocol=json.loads((run_p4.ROOT/'ml/configs/p4_protocol.json').read_text());protocol['protocol']='P4-PROTOCOL-v1'
++    old=tmp_path/'old_protocol.json';old.write_text(json.dumps(protocol))
++    frozen=run_p4.binding_for(old,'synthetic_old_protocol')
++    approval_path=tmp_path/'synthetic_approval.json'
++    approval_path.write_text(json.dumps(dict(frozen,phase='P4-B',authorized=True,human_approval='SYNTHETIC_ONLY')))
++    spec=tmp_path/'spec.json';spec.write_text(json.dumps(dict(binding=frozen,protocol_path=str(old),approval_path=str(approval_path))))
++    monkeypatch.setenv('P4_BUDGET_WORKER','1')
++    monkeypatch.setattr(run_p4,'verify_preflight',lambda *args:pytest.fail('old protocol accessed evidence'))
++    with pytest.raises(ValueError,match='protocol'):
++        run_p4.main(['_verify-preflight','--execution-spec',str(spec)])

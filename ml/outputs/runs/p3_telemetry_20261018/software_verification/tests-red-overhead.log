@@ -1,0 +1,35 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________ test_attempt_preparation_cannot_add_time_outside_trial_budget _________
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-34/test_attempt_preparation_canno0')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x112839480>
+
+    def test_attempt_preparation_cannot_add_time_outside_trial_budget(vision,tmp_path,context,monkeypatch):
+        original=vision.atomic_json
+        def slow(path,value):
+            time.sleep(.02)
+            return original(path,value)
+        monkeypatch.setattr(vision,'atomic_json',slow)
+>       state=vision.run_plan(tmp_path,'probe',[plan()],{'per_trial':.01,'per_model':1.,'total':2.},context,
+                              runner=lambda *a:pytest.fail('Expired preparation budget must not start a worker'))
+
+ml/tests/test_vision_hpo.py:200: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/experiments/run_vision_hpo.py:154: in run_plan
+    try:execution=runner(command,target/'execution.log',timeout)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = (['/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python', '-B', '/Users/liu/Desktop/FYP-In-Cabin-Driv...n/T/pytest-of-liu/pytest-34/test_attempt_preparation_canno0/probe/resnet18/search_001/attempt_01/execution.log'), 0.01)
+
+>   runner=lambda *a:pytest.fail('Expired preparation budget must not start a worker'))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: Expired preparation budget must not start a worker
+
+ml/tests/test_vision_hpo.py:201: Failed
+=========================== short test summary info ============================
+FAILED ml/tests/test_vision_hpo.py::test_attempt_preparation_cannot_add_time_outside_trial_budget
+1 failed, 14 deselected in 1.47s

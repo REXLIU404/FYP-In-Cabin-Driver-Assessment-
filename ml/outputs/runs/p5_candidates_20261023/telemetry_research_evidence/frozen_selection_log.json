@@ -1,0 +1,76 @@
+{
+  "xgboost": {
+    "status": "FROZEN_VALIDATION_SELECTION",
+    "selected_trial_id": "xgboost_02",
+    "config": {
+      "max_depth": 3,
+      "learning_rate": 0.03,
+      "subsample": 1.0
+    },
+    "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/xgboost/xgboost_02/checkpoint.joblib",
+    "frozen_seed": 42,
+    "validation_macro_f1": 0.9988888883953083,
+    "validation_log_loss": 0.0049257162027060986,
+    "confirmation_seeds_completed": [
+      43,
+      44
+    ],
+    "test_used": false,
+    "confirmation_macro_f1_mean": 0.9988888883953083,
+    "confirmation_macro_f1_std": 0.0,
+    "confirmation_std_ddof": 0,
+    "confirmation_seed_values": [
+      42,
+      43,
+      44
+    ]
+  },
+  "random_forest": {
+    "status": "FROZEN_VALIDATION_SELECTION",
+    "selected_trial_id": "random_forest_06",
+    "config": {
+      "n_estimators": 400,
+      "max_depth": 24
+    },
+    "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/random_forest/random_forest_06/checkpoint.joblib",
+    "frozen_seed": 42,
+    "validation_macro_f1": 0.9988888883948145,
+    "validation_log_loss": 0.008043999630180704,
+    "confirmation_seeds_completed": [
+      43,
+      44
+    ],
+    "test_used": false,
+    "confirmation_macro_f1_mean": 0.9988888883948145,
+    "confirmation_macro_f1_std": 0.0,
+    "confirmation_std_ddof": 0,
+    "confirmation_seed_values": [
+      42,
+      43,
+      44
+    ]
+  },
+  "logistic_regression": {
+    "status": "FROZEN_VALIDATION_SELECTION",
+    "selected_trial_id": "logistic_regression_06",
+    "config": {
+      "C": 1000
+    },
+    "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/logistic_regression/logistic_regression_06/checkpoint.joblib",
+    "frozen_seed": 42,
+    "validation_macro_f1": 0.9968885811194106,
+    "validation_log_loss": 0.008746305335608752,
+    "confirmation_seeds_completed": [
+      43
+    ],
+    "test_used": false,
+    "deterministic_duplicate": true,
+    "confirmation_macro_f1_mean": 0.9968885811194106,
+    "confirmation_macro_f1_std": 0.0,
+    "confirmation_std_ddof": 0,
+    "confirmation_seed_values": [
+      42,
+      43
+    ]
+  }
+}

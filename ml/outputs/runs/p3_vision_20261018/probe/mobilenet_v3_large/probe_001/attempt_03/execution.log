@@ -1,0 +1,2 @@
+{"epoch": 1, "train_seconds": 193.12472445808817, "validation_seconds": 13.134939374984242, "train_images_per_second": 82.32503655144576, "validation_images_per_second": 218.34893318671604, "train_loss": 0.23317027430135773, "validation_loss": 0.7371436357498169, "macro_f1": 0.8255301943171037, "log_loss": 0.736698567867279, "learning_rate": 0.0008}
+TRIAL_COMPLETE mobilenet_v3_large probe_001 1 0.8255301943171037

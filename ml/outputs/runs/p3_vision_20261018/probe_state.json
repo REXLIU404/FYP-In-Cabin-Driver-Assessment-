@@ -1,0 +1,462 @@
+{
+  "signature": "1de825963ec3550922ff5d6c2301d306b2ad9e853c6f0f37c396bd5093e8e695",
+  "phase": "probe",
+  "status": "COMPLETED",
+  "attempts": [
+    {
+      "key": "mobilenet_v3_large/probe_001",
+      "plan": {
+        "trial_id": "probe_001",
+        "model": "mobilenet_v3_large",
+        "role": "PROBE",
+        "seed": 42,
+        "config": {
+          "learning_rate": 0.0008,
+          "weight_decay": 0.0001
+        },
+        "max_epochs": 1,
+        "is_p2": false
+      },
+      "directory": "probe/mobilenet_v3_large/probe_001/attempt_01",
+      "status": "INTERRUPTED",
+      "wall_seconds": 30.797756583080627,
+      "timeout_seconds": 1200,
+      "started_wall_time": 1792320228.4701738
+    },
+    {
+      "key": "mobilenet_v3_large/probe_001",
+      "plan": {
+        "trial_id": "probe_001",
+        "model": "mobilenet_v3_large",
+        "role": "PROBE",
+        "seed": 42,
+        "config": {
+          "learning_rate": 0.0008,
+          "weight_decay": 0.0001
+        },
+        "max_epochs": 1,
+        "is_p2": false
+      },
+      "directory": "probe/mobilenet_v3_large/probe_001/attempt_02",
+      "status": "INTERRUPTED",
+      "wall_seconds": 27.519550209050067,
+      "timeout_seconds": 1169.2022434169194,
+      "started_wall_time": 1792320349.090271,
+      "execution": {
+        "status": "IMPLEMENTATION_FAILED",
+        "returncode": -15,
+        "wall_seconds": 27.51805025001522,
+        "timeout_seconds": 1169.2013827079209
+      },
+      "original_status": "IMPLEMENTATION_FAILED",
+      "recovery": "recovery_001"
+    },
+    {
+      "key": "mobilenet_v3_large/probe_001",
+      "plan": {
+        "trial_id": "probe_001",
+        "model": "mobilenet_v3_large",
+        "role": "PROBE",
+        "seed": 42,
+        "config": {
+          "learning_rate": 0.0008,
+          "weight_decay": 0.0001
+        },
+        "max_epochs": 1,
+        "is_p2": false
+      },
+      "directory": "probe/mobilenet_v3_large/probe_001/attempt_03",
+      "status": "COMPLETED",
+      "wall_seconds": 210.76151987502817,
+      "timeout_seconds": 1141.6826932078693,
+      "started_wall_time": 1792386658.273095,
+      "execution": {
+        "status": "COMPLETED",
+        "returncode": 0,
+        "wall_seconds": 210.75951083295513,
+        "timeout_seconds": 1141.6809794158908
+      },
+      "metrics": {
+        "interpretation": "NON_COMPARATIVE_PROBE",
+        "formal_comparison_valid": false,
+        "samples": 2868,
+        "accuracy": 0.8274058577405857,
+        "macro_f1": 0.8255301943171037,
+        "log_loss": 0.736698567867279,
+        "confusion_matrix": [
+          [
+            177,
+            1,
+            3,
+            0,
+            0,
+            2,
+            0,
+            0,
+            18,
+            91
+          ],
+          [
+            0,
+            291,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            2
+          ],
+          [
+            0,
+            0,
+            221,
+            0,
+            0,
+            0,
+            0,
+            0,
+            86,
+            0
+          ],
+          [
+            13,
+            2,
+            1,
+            273,
+            0,
+            2,
+            0,
+            0,
+            1,
+            1
+          ],
+          [
+            8,
+            0,
+            0,
+            4,
+            287,
+            0,
+            0,
+            0,
+            8,
+            1
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0,
+            278,
+            0,
+            0,
+            1,
+            11
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            241,
+            0,
+            56,
+            0
+          ],
+          [
+            33,
+            1,
+            18,
+            0,
+            0,
+            24,
+            0,
+            144,
+            46,
+            16
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            245,
+            2
+          ],
+          [
+            32,
+            0,
+            1,
+            0,
+            0,
+            6,
+            0,
+            0,
+            0,
+            216
+          ]
+        ],
+        "status": "COMPLETED",
+        "counts_toward_hpo": false,
+        "best_epoch": 1,
+        "epochs": [
+          {
+            "epoch": 1,
+            "train_seconds": 193.12472445808817,
+            "validation_seconds": 13.134939374984242,
+            "train_images_per_second": 82.32503655144576,
+            "validation_images_per_second": 218.34893318671604,
+            "train_loss": 0.23317027430135773,
+            "validation_loss": 0.7371436357498169,
+            "macro_f1": 0.8255301943171037,
+            "log_loss": 0.736698567867279,
+            "learning_rate": 0.0008
+          }
+        ],
+        "epochs_completed": 1,
+        "train_samples": 15899,
+        "validation_samples": 2868,
+        "batch_size": 64,
+        "device": "mps",
+        "threads": 2,
+        "workers": 0,
+        "cosine_T_max": 8,
+        "early_stopping_patience": 2,
+        "reload_verified": true,
+        "reload_samples": 16,
+        "reload_max_abs_logit_difference": 0.0,
+        "all_losses_and_probabilities_finite": true,
+        "test_predictions": 0,
+        "test_images_opened": 0,
+        "mps_bitwise_reproducibility_guaranteed": false,
+        "resource_usage": {
+          "max_rss_bytes": 706838528,
+          "user_cpu_seconds": 63.569724,
+          "system_cpu_seconds": 8.684987
+        },
+        "mps_max_observed_allocated_bytes": 117974272,
+        "mps_max_observed_driver_bytes": 4686479360,
+        "memory_measurement": "OS peak RSS plus MPS memory sampled after synchronized batches; device transients may be missed"
+      }
+    },
+    {
+      "key": "resnet18/probe_001",
+      "plan": {
+        "trial_id": "probe_001",
+        "model": "resnet18",
+        "role": "PROBE",
+        "seed": 42,
+        "config": {
+          "learning_rate": 0.0008,
+          "weight_decay": 0.0001
+        },
+        "max_epochs": 1,
+        "is_p2": false
+      },
+      "directory": "probe/resnet18/probe_001/attempt_01",
+      "status": "COMPLETED",
+      "wall_seconds": 191.67700974992476,
+      "timeout_seconds": 1200,
+      "started_wall_time": 1792386869.03308,
+      "execution": {
+        "status": "COMPLETED",
+        "returncode": 0,
+        "wall_seconds": 191.67467833403498,
+        "timeout_seconds": 1199.997715333011
+      },
+      "metrics": {
+        "interpretation": "NON_COMPARATIVE_PROBE",
+        "formal_comparison_valid": false,
+        "samples": 2868,
+        "accuracy": 0.9096931659693166,
+        "macro_f1": 0.9085165501797136,
+        "log_loss": 0.3509314954280853,
+        "confusion_matrix": [
+          [
+            253,
+            12,
+            1,
+            0,
+            3,
+            0,
+            9,
+            0,
+            0,
+            14
+          ],
+          [
+            0,
+            290,
+            0,
+            0,
+            0,
+            0,
+            4,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            279,
+            0,
+            0,
+            0,
+            28,
+            0,
+            0,
+            0
+          ],
+          [
+            16,
+            9,
+            0,
+            267,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            0,
+            1,
+            300,
+            0,
+            0,
+            3,
+            0,
+            1
+          ],
+          [
+            10,
+            2,
+            0,
+            0,
+            0,
+            276,
+            1,
+            0,
+            0,
+            3
+          ],
+          [
+            0,
+            2,
+            1,
+            0,
+            0,
+            0,
+            243,
+            7,
+            44,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            282,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            9,
+            1,
+            236,
+            0
+          ],
+          [
+            70,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            183
+          ]
+        ],
+        "status": "COMPLETED",
+        "counts_toward_hpo": false,
+        "best_epoch": 1,
+        "epochs": [
+          {
+            "epoch": 1,
+            "train_seconds": 174.8701369590126,
+            "validation_seconds": 12.18938362505287,
+            "train_images_per_second": 90.9188971683972,
+            "validation_images_per_second": 235.28671245569734,
+            "train_loss": 0.16070547624668,
+            "validation_loss": 0.35093146562576294,
+            "macro_f1": 0.9085165501797136,
+            "log_loss": 0.3509314954280853,
+            "learning_rate": 0.0008
+          }
+        ],
+        "epochs_completed": 1,
+        "train_samples": 15899,
+        "validation_samples": 2868,
+        "batch_size": 64,
+        "device": "mps",
+        "threads": 2,
+        "workers": 0,
+        "cosine_T_max": 8,
+        "early_stopping_patience": 2,
+        "reload_verified": true,
+        "reload_samples": 16,
+        "reload_max_abs_logit_difference": 0.0,
+        "all_losses_and_probabilities_finite": true,
+        "test_predictions": 0,
+        "test_images_opened": 0,
+        "mps_bitwise_reproducibility_guaranteed": false,
+        "resource_usage": {
+          "max_rss_bytes": 959397888,
+          "user_cpu_seconds": 49.142106,
+          "system_cpu_seconds": 4.172451
+        },
+        "mps_max_observed_allocated_bytes": 367521792,
+        "mps_max_observed_driver_bytes": 2619490304,
+        "memory_measurement": "OS peak RSS plus MPS memory sampled after synchronized batches; device transients may be missed"
+      }
+    }
+  ],
+  "trials": {
+    "mobilenet_v3_large/probe_001": {
+      "status": "COMPLETED",
+      "attempt": "probe/mobilenet_v3_large/probe_001/attempt_03"
+    },
+    "resnet18/probe_001": {
+      "status": "COMPLETED",
+      "attempt": "probe/resnet18/probe_001/attempt_01"
+    }
+  },
+  "selection": {},
+  "used_wall_seconds": 482.47383658390027,
+  "context_file": "recovery_001/config.json"
+}

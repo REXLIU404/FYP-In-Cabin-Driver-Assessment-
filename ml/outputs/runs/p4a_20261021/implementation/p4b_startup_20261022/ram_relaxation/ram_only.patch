@@ -1,0 +1,98 @@
+--- before/ml/experiments/run_p4.py
++++ ml/experiments/run_p4.py
+@@ -90,7 +90,7 @@
+     if budgets.get('formal_total_machine_seconds')!=14400 or budgets.get('stage_caps_seconds')!=STAGE_CAPS:
+         raise ValueError('Frozen protocol budget mismatch')
+     expected_resources={'runtime_worker_seconds':90,'export_worker_seconds':120,'parity_worker_seconds':120,
+-        'minimum_free_disk_bytes':20*GIB,'minimum_available_ram_bytes':8*GIB,'run_output_cap_bytes':20*GIB,
++        'minimum_free_disk_bytes':20*GIB,'minimum_available_ram_bytes':4*GIB,'run_output_cap_bytes':20*GIB,
+         'evaluation_rss_cap_bytes':8*GIB,'runtime_rss_cap_bytes':4*GIB,'rss_sampling_seconds':.02,
+         'automatic_resume':False,'automatic_retry':False}
+     if any(budgets.get(k)!=v for k,v in expected_resources.items()):raise ValueError('Frozen protocol resource caps mismatch')
+@@ -638,7 +638,7 @@
+     run=ROOT/'ml/outputs/runs'/args.run_id;reject_symlink(run)
+     spec.update(binding=binding,run_dir=str(run),protocol_path=str(protocol_path),approval_path=str(Path(args.approval).resolve()))
+     for obsolete in ('reviewers','qc_lock','qc_cue_checks'):spec.pop(obsolete,None)
+-    supervisor=BudgetSupervisor(run) # Resource gate precedes model loading/export/forward.
++    supervisor=BudgetSupervisor(run,min_available_ram=protocol['budgets']['minimum_available_ram_bytes']) # Resource gate precedes model loading/export/forward.
+     atomic_json(run/'provenance_before.json',provenance)
+     atomic_json(run/'execution_spec.json',spec);atomic_json(run/'source_manifest.json',source_manifest(SOURCES))
+     atomic_json(run/'protocol.json',protocol)
+@@ -677,7 +677,7 @@
+     """Explicit cached aggregation; readonly predictions, no forward path."""
+     original=read_json(args.execution_spec);binding=binding_for(original['protocol_path'],original['binding']['run_id'])
+     if binding!=original['binding']:raise ValueError('Cached aggregation source/protocol mismatch')
+-    validate_protocol(read_json(original['protocol_path']));authorize_p4b(read_json(args.approval),**binding)
++    protocol=validate_protocol(read_json(original['protocol_path']));authorize_p4b(read_json(args.approval),**binding)
+     provenance=formal_provenance();run=Path(original['run_dir'])
+     if read_json(run/'completion.json').get('status')!='MACHINE_EVALUATION_COMPLETED':raise ValueError('Machine evaluation must be complete; aggregation cannot resume prediction')
+     prior=read_json(run/'budget_state.json')
+@@ -685,7 +685,8 @@
+     remaining_stage=1200-prior['stage_used_seconds'].get('aggregation',0)
+     if min(remaining_total,remaining_stage)<=0:raise ValueError('No frozen aggregation budget remains; separate budget approval required')
+     directory=run/'cached_aggregation'
+-    supervisor=BudgetSupervisor(directory,total_seconds=remaining_total,stage_caps={'aggregation':remaining_stage},output_root=run)
++    supervisor=BudgetSupervisor(directory,total_seconds=remaining_total,stage_caps={'aggregation':remaining_stage},output_root=run,
++        min_available_ram=protocol['budgets']['minimum_available_ram_bytes'])
+     spec=dict(original,approval_path=str(Path(args.approval).resolve()),
+         aggregation_output=str(directory/'evaluation_metrics.json'))
+     for obsolete in ('reviewers','qc_lock','qc_cue_checks'):spec.pop(obsolete,None)
+--- before/ml/configs/p4_protocol.json
++++ ml/configs/p4_protocol.json
+@@ -1,6 +1,7 @@
+ {
+   "protocol": "P4-PROTOCOL-v2",
+   "amendment": "USER_APPROVED_MANUAL_QC_REMOVAL",
++  "resource_amendment": "USER_APPROVED_RAM_GATE_RELAXATION_20261022",
+   "phase": "P4-A",
+   "formal_execution_authorized": false,
+   "frozen_identities": {
+@@ -87,7 +88,7 @@
+     "export_worker_seconds": 120,
+     "parity_worker_seconds": 120,
+     "minimum_free_disk_bytes": 21474836480,
+-    "minimum_available_ram_bytes": 8589934592,
++    "minimum_available_ram_bytes": 4294967296,
+     "run_output_cap_bytes": 21474836480,
+     "evaluation_rss_cap_bytes": 8589934592,
+     "runtime_rss_cap_bytes": 4294967296,
+--- before/ml/tests/test_p4_core.py
++++ ml/tests/test_p4_core.py
+@@ -498,7 +498,9 @@
+     spec=tmp_path/'execution_spec.json';spec.write_text('{}')
+     calls=[]
+     class Supervisor:
+-        def __init__(self,path,**kwargs):Path(path).mkdir(parents=True);self.path=path
++        def __init__(self,path,**kwargs):
++            assert kwargs['min_available_ram']==4*1024**3
++            Path(path).mkdir(parents=True);self.path=path
+         def run(self,command,**limits):calls.append((command,limits));return {'returncode':0}
+     monkeypatch.setattr(run_p4,'ROOT',tmp_path)
+     monkeypatch.setattr(run_p4,'formal_provenance',lambda:{'protected_hashes':{'synthetic':'stable'}})
+@@ -610,6 +612,7 @@
+     calls=[]
+     class Supervisor:
+         def __init__(self,path,**settings):
++            assert settings['min_available_ram']==4*1024**3
+             Path(path).mkdir();self.total_used=1.;self.stage_used={'aggregation':1.}
+             assert settings['total_seconds']==14300.
+             assert settings['stage_caps']=={'aggregation':1180.}
+@@ -636,3 +639,18 @@
+     monkeypatch.setattr(run_p4,'verify_preflight',lambda *args:pytest.fail('old protocol accessed evidence'))
+     with pytest.raises(ValueError,match='protocol'):
+         run_p4.main(['_verify-preflight','--execution-spec',str(spec)])
++
++
++@pytest.mark.parametrize('available_gib,allowed',[(6,True),(3,False)])
++def test_user_relaxed_ram_policy_allows_six_gib_but_keeps_lower_guard(core,tmp_path,monkeypatch,available_gib,allowed):
++    from types import SimpleNamespace
++    from ml.experiments import run_p4
++    protocol=json.loads((run_p4.ROOT/'ml/configs/p4_protocol.json').read_text())
++    monkeypatch.setattr(core.psutil,'virtual_memory',lambda:SimpleNamespace(available=available_gib*1024**3))
++    def startup():
++        return core.BudgetSupervisor(tmp_path/'budget',min_available_ram=protocol['budgets']['minimum_available_ram_bytes'])
++    if allowed:
++        supervisor=startup()
++        assert supervisor.minimum_ram==4*1024**3 and not supervisor.stopped
++    else:
++        with pytest.raises(core.BudgetExceeded,match='INSUFFICIENT_STARTUP_RESOURCES'):startup()

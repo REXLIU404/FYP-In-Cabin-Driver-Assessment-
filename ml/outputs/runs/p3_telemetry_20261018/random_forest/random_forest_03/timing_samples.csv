@@ -1,0 +1,5 @@
+phase,seconds,samples,warmup,device,threads,provider,batch
+train_preprocessing,0.02208679204341024,21000,False,cpu,2,random_forest,full_split
+fit,1.6026957499561831,21000,False,cpu,2,random_forest,full_split
+validation,0.025619291933253407,4500,False,cpu,2,random_forest,full_split
+reload_validation,0.04543141706380993,4500,False,cpu,2,random_forest,full_split

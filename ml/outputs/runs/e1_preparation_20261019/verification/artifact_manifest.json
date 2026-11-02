@@ -1,0 +1,49 @@
+{
+  "files": [
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019/verification/config.json",
+      "sha256": "447a688c36ca1f4ced47fdc72047d3a1a9fe116b5714173dc102a4f1f01dd0e2",
+      "bytes": 901
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019/verification/e1-green.log",
+      "sha256": "01b9ecb647cd7fa3f2b2a8ca6d2363abe30fad9c65a4304e756d53d7457ae897",
+      "bytes": 99
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019/verification/execution.log",
+      "sha256": "1f0ebf5f0c7062dd1541fdca4d79aebfbedf190695748967e6d3fc6a549f5299",
+      "bytes": 117
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019/verification/generators-red.log",
+      "sha256": "2d0707f59c88954654c935e7f81c39fce593d7411af1e359ada371c9d82d1f53",
+      "bytes": 28596
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019/verification/preparation-red.log",
+      "sha256": "16904f9d2a03d6a7560373b9f257e91ffa449a2556a9a1165b2a327518bbce0b",
+      "bytes": 17387
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019/verification/suite-green.log",
+      "sha256": "3954f0b2fa9e7e002185970739a9f32b90558ba6ff6ed609f4c3ee2ad1f13b3e",
+      "bytes": 261
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019/verification/verification.log",
+      "sha256": "f2480eae352354df0d3354cbbf3e2221317525d643821385ba37df42a3ddbd81",
+      "bytes": 67
+    },
+    {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019/verification/verify_preparation.py",
+      "sha256": "d2c0e9c1710eec4f583ca85b0847a139298f0ae79b394ec706dbe42be2f30a2d",
+      "bytes": 4403
+    }
+  ],
+  "preparation_root_manifest": {
+    "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019/artifact_manifest.json",
+    "sha256": "b9d4fffa9d6a2ddde6b961511cee6d3fe89dd8c9396b316f04ab4f6fe7e3e5d9",
+    "bytes": 3785
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "fit_split": "train_smoke_subset",
+  "fit_rows": 300,
+  "feature_order": [
+    "speed_kmph",
+    "accel_x",
+    "accel_y",
+    "brake_pressure",
+    "steering_angle",
+    "throttle",
+    "lane_deviation",
+    "headway_distance"
+  ],
+  "median": [
+    58.25546019976966,
+    0.8608175682734633,
+    0.31768030374978606,
+    40.75831780664362,
+    -0.12264542989934385,
+    52.14883757580962,
+    0.436596392239949,
+    20.026394933951416
+  ],
+  "train_csv_sha256": "97dd20ee9c0832ba33455e5c31088f9b4abb65c198bf988699a959d545d1e5b5"
+}

@@ -1,0 +1,30 @@
+{
+  "phase": "P1",
+  "role": "software_contract_verification",
+  "pytest_command": "./.venv/bin/python -B -m pytest ml/tests -q -p no:cacheprovider",
+  "tests_passed": 36,
+  "tests_failed_final": 0,
+  "classifier_fits_in_unit_tests": 0,
+  "source_hashes": {
+    "ml/experiments/comparator_common.py": "8ede7aa5a0604232ff5b3c54735bd9f2e5479b18a2e80e5091bfa2b07644805d",
+    "ml/experiments/run_p1_smoke.py": "2b7a2d2608ba0f59b2823fa8e8250508d70f517791c7fcc41fbcc08ee6dc5c79",
+    "ml/vision/train_resnet18.py": "78fcc7be98e05bca4ff861e99ebc91ac1ca0f0e770061a9f0488d104af2d1731",
+    "ml/telemetry/train_comparator.py": "dee70f78a76e3b8e8fb9a7cc3988190730537406fe15d46580efca899c53b634",
+    "ml/tests/test_comparator_pipeline.py": "c7dea226141a7a91e8ab104c69c36d68e82e5379ae4edcc788c2e9c891978edf"
+  },
+  "independent_review": {
+    "important_findings": 1,
+    "fixed_before_smoke": true,
+    "finding": "startup overhead could exceed deadline but be labelled pass",
+    "regression_red": "tests-red-deadline.log",
+    "regression_green": "tests-green.log",
+    "other_important_findings": 0
+  },
+  "logs": {
+    "tests-red.log": "1a9017af11a7e75cd8e8e49b4889224b4acc4c09da034ae247072efff2fa4e75",
+    "tests-green.log": "067c912444c0ca33a3cf6b2db0cb2910e427febf6ac4cbe3e4f5bdf56697cac7",
+    "tests-red-supervisor.log": "ad772788424e92b3ced8aa43870a8845708d649c5f9b92e09dbf580918ca8574",
+    "tests-red-cli.log": "28b7b5ceba3521aef4434bfb718929d3df196be9aeab4573fc3fdd192ff5c4c9",
+    "tests-red-deadline.log": "899fba0aed4bcf4c5a69cf5192030d8299ee134f9452993360a580b905d540ea"
+  }
+}

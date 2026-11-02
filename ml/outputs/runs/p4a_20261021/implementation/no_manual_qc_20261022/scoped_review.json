@@ -1,0 +1,66 @@
+{
+  "checks": {
+    "active_formal_manual_qc_selection_copy_requirement_consumption_removed": true,
+    "aggregation_conditioned_f1_human_validity_rates_and_irr_not_produced": true,
+    "clean_accuracy_macro_f1_per_class_confusion_and_frozen_identities_preserved": true,
+    "distribution_delta_counts_equal_stress_minus_clean_and_rates_use_paired_N": true,
+    "full_3657_by_19_by_3_vision_and_4500_by_10_by_4_telemetry_scope_preserved": true,
+    "historical_qc_conditioned_helper_has_no_active_v2_call": true,
+    "paired_source_order_and_stability_denominators_preserved": true,
+    "removed_qc_status_is_removed_from_scope_not_pass": true,
+    "stress_flip_l1_distribution_are_descriptive_no_source_label_corruption_f1": true,
+    "v1_rejected_and_external_protocol_source_run_bound_p4b_authorization_preserved": true,
+    "v2_reuses_existing_export_parity_artifacts_and_authorizes_no_new_exports": true
+  },
+  "findings": [],
+  "limits": [
+    "This is static scoped review; current software suite execution belongs to root.",
+    "Historical numerical preflight is reused with its existing hashes and scope; no numerical rerun claimed.",
+    "Manual QC removal explicitly overrides original R4 independent recognizability QC requirement; conclusions are prediction stability rather than established action preservation or safety.",
+    "Initial BudgetSupervisor complete executed source was not snapshotted; retain the historical reproducibility limitation and dirty-branch disclosure.",
+    "P4-B, formal Test/E1/runtime, P5 and deployment remain unexecuted and separately gated."
+  ],
+  "patch": {
+    "path": "implementation/no_manual_qc_20261022/v2_no_manual_qc.patch",
+    "sha256": "d2d444a53fa60744d4f0f4e3fb4bcef5dcd8cf328503828e1e8b600e6794c935"
+  },
+  "preservation_recheck": {
+    "frozen_qc_and_preflight_source_checks": {
+      "ml/experiments/p4_preflight.py": true,
+      "ml/experiments/p4_qc.py": true
+    },
+    "mismatches": [],
+    "original_artifacts_checked": 169,
+    "unchanged": true
+  },
+  "review_execution": {
+    "derived_images_decoded": 0,
+    "exports": 0,
+    "heldout_observations_read": 0,
+    "model_forward_calls": 0,
+    "source_images_read": 0,
+    "source_telemetry_csv_read": 0,
+    "tests_run": 0
+  },
+  "reviewed_at_utc": "2026-10-22T10:19:39.193512+00:00",
+  "scope": "One bounded review of v2 manual-QC removal patch against revised user scope; no expanded audit",
+  "source_hash_checks": {
+    "ml/configs/p4_protocol.json": {
+      "actual": "89185f6c56b8af00b2883e27df72c0713141d92b3396a5609462a5ed053cdd41",
+      "expected": "89185f6c56b8af00b2883e27df72c0713141d92b3396a5609462a5ed053cdd41"
+    },
+    "ml/experiments/p4_core.py": {
+      "actual": "87c7daee65d6e763f5ce80f7a82bdd90d541c74970f7ac89d02221b97911ac68",
+      "expected": "87c7daee65d6e763f5ce80f7a82bdd90d541c74970f7ac89d02221b97911ac68"
+    },
+    "ml/experiments/run_p4.py": {
+      "actual": "3542e14e318a3d2cbff8cd3a0decaf2c88ec592e6229bd8b6573c620da1fe3ba",
+      "expected": "3542e14e318a3d2cbff8cd3a0decaf2c88ec592e6229bd8b6573c620da1fe3ba"
+    },
+    "ml/tests/test_p4_core.py": {
+      "actual": "a56bb69e44f35dc1bd9efc7a56a8d6c51b751353ccd6d48687ad514fb7ece016",
+      "expected": "a56bb69e44f35dc1bd9efc7a56a8d6c51b751353ccd6d48687ad514fb7ece016"
+    }
+  },
+  "status": "PASS_SCOPED_STATIC_REVIEW"
+}

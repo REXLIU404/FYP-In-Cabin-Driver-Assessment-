@@ -1,0 +1,66 @@
+{
+  "scope": "controller software regression and non-training recovery; no fit/forward/download",
+  "test_results": {
+    "regression_red": {
+      "failed": 12,
+      "deselected": 17,
+      "seconds": 1.95
+    },
+    "vision_green_before_cli_integration": {
+      "passed": 29,
+      "seconds": 1.8
+    },
+    "full_ml_suite": {
+      "passed": 116,
+      "seconds": 18.62
+    },
+    "real_recovery_checks": 33
+  },
+  "source_hashes": {
+    "ml/experiments/run_vision_hpo.py": "cc711202c31a5e23dc57108bccfcf0ff3c555af1b0ab8bdb583bcb7e8587590f",
+    "ml/tests/test_vision_hpo.py": "27a8d8d378ea7551c92520c096cf1c9c98ca8d12b72a495cc8126d965b43f984",
+    "ml/.gitignore": "d7e0089cc0374284230ded564b350dde44d15f30fdaf62dd11b2839e5317663d"
+  },
+  "artifacts": {
+    "vision-green.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/software_verification/vision-green.log",
+      "sha256": "073b61e93ffa9c4da98ca48175df94b13058a2abffedccab6ab8a838ae3a08a0",
+      "bytes": 99
+    },
+    "config.json": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/software_verification/config.json",
+      "sha256": "ad62c6a7cda8e67ba46eed8fe73f762d8d48af30f0877a33a4e386279e687140",
+      "bytes": 6435
+    },
+    "status.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/software_verification/status.log",
+      "sha256": "4baf2e4a6af508ad1a6623259ecb4d35fc858bf1e2ccd0a7943d6e1ec2c4ab5a",
+      "bytes": 1853
+    },
+    "suite-green.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/software_verification/suite-green.log",
+      "sha256": "5fa3e1d05bf07822d6eb16f3b3dc81a4142685e1aae0beec6f5a434e48d014b1",
+      "bytes": 181
+    },
+    "regression-red.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/software_verification/regression-red.log",
+      "sha256": "e7bc2a9a592bb4da69ae51a8b62a884b75f7d607965d1ec86959dc31391b422d",
+      "bytes": 20741
+    },
+    "recovery.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/software_verification/recovery.log",
+      "sha256": "b89cdc5bb4041fe410b3ba71ee3f4524bdce135c99e35465b88ad1f705cc509a",
+      "bytes": 162
+    },
+    "recovery-verification.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/software_verification/recovery-verification.log",
+      "sha256": "d3dcf0d84e513f5323ddafb2a30a09a998f09cf9bcc4e779a501c7600f8fc553",
+      "bytes": 1887
+    },
+    "verify_recovery.py": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/software_verification/verify_recovery.py",
+      "sha256": "89607b65ea5a3c9acc472db3af7a15d8c09197d1dfbeeba2a32456c65479ac46",
+      "bytes": 3186
+    }
+  }
+}

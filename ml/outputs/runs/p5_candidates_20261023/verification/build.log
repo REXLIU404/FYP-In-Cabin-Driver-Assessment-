@@ -1,0 +1,83 @@
+{
+  "status": "PASS",
+  "scope": "P5_COPY_ONLY_PACKAGING",
+  "packages": [
+    {
+      "status": "PASS",
+      "package": "p5_resnet18_search004_seed42_20261023",
+      "schema_hash_path": "PASS",
+      "inventory_files": 40,
+      "graph": {
+        "status": "PASS",
+        "input_name": "input",
+        "input_shape": [
+          "N",
+          3,
+          224,
+          224
+        ],
+        "output_name": "logits",
+        "output_shape": [
+          "N",
+          10
+        ],
+        "dtype": "float32",
+        "softmax_nodes": 0,
+        "external_tensors": 0,
+        "forward_passes": 0
+      },
+      "provider_load_forward": "NOT_RUN",
+      "official_stable200_behavior": "NOT_RUN",
+      "system_integration": "BLOCKED_NOT_IMPLEMENTED"
+    },
+    {
+      "status": "PASS",
+      "package": "p5_mobilenet_v3_large_search006_seed42_20261023",
+      "schema_hash_path": "PASS",
+      "inventory_files": 40,
+      "graph": {
+        "status": "PASS",
+        "input_name": "input",
+        "input_shape": [
+          "N",
+          3,
+          224,
+          224
+        ],
+        "output_name": "logits",
+        "output_shape": [
+          "N",
+          10
+        ],
+        "dtype": "float32",
+        "softmax_nodes": 0,
+        "external_tensors": 0,
+        "forward_passes": 0
+      },
+      "provider_load_forward": "NOT_RUN",
+      "official_stable200_behavior": "NOT_RUN",
+      "system_integration": "BLOCKED_NOT_IMPLEMENTED"
+    }
+  ],
+  "archives": [
+    {
+      "file": "p5_mobilenet_v3_large_search006_seed42_20261023.zip",
+      "sha256": "ae887dabe3588969576ecfb54fead41d0f03bd02267028a8a80f73311811ae13",
+      "bytes": 17202946
+    },
+    {
+      "file": "p5_resnet18_search004_seed42_20261023.zip",
+      "sha256": "9fb9551f49aeb3582dfc7cb76c9050b7690a8856621944eb363fecd73ea35029",
+      "bytes": 43100529
+    }
+  ],
+  "telemetry": "RESEARCH_EVIDENCE_ONLY_NO_RUNTIME_CANDIDATE",
+  "protected_files_unchanged": 369,
+  "model_forwards": 0,
+  "new_heldout_inference": 0,
+  "new_exports": 0,
+  "new_training": 0,
+  "new_benchmarks": 0,
+  "system_integration": "BLOCKED_NOT_IMPLEMENTED",
+  "provider_load_forward": "NOT_RUN"
+}

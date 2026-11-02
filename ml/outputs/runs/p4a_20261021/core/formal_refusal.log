@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_p4.py", line 625, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+                                             ~~~~^^
+  File "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_p4.py", line 615, in main
+    if args.mode=='formal':return formal(args)
+                                  ~~~~~~^^^^^^
+  File "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_p4.py", line 530, in formal
+    if args.approval is None:raise ValueError('Separate explicit P4-B approval required')
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Separate explicit P4-B approval required

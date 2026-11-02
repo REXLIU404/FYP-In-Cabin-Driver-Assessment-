@@ -1,0 +1,20 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______ test_boolean_is_not_a_measured_duration_and_numeric_is_not_a_cue _______
+
+qc = <module 'ml.experiments.p4_qc' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_qc.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-92/test_boolean_is_not_a_measured0')
+
+    def test_boolean_is_not_a_measured_duration_and_numeric_is_not_a_cue(qc,tmp_path):
+        manifest=qc.build_review_kit(cases(),tmp_path/'kit')
+        ids=[r['case_id'] for r in manifest['restricted_cases']]
+        ratings=[judgement(i) for i in ids]
+        ratings[0]['duration_seconds']=True
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+ml/tests/test_p4_qc.py:120: Failed
+=========================== short test summary info ============================
+FAILED ml/tests/test_p4_qc.py::test_boolean_is_not_a_measured_duration_and_numeric_is_not_a_cue
+1 failed in 1.94s
