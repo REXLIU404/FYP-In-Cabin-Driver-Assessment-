@@ -91,7 +91,8 @@
 - [x] **R10 已批准**（2026-10-16，v3 + estp5 + 3 个细节，见计划 R9 修订记录）
 - [x] **R10-A 后端**（`44b7c62` + 修复轮 `6c95db4` + 跟进 `ef341fa` + 控制者 `cc477d6`，验收 PASS；pytest 775 → 907）：观测身份与规范采集时间（年龄用未舍入值、REPEAT 不刷新）、事务内分类、409 `observation_conflict`、request hash 兼容、NEW-only EMA 与断链、双条件 FSM + 完成守卫（仅 LIVE）、UT-TIME-05 翻转为需求断言；Codex 测试组 1–11 + 定向变异
 - [x] **R10-B 前端**（`8e9319a` + 修复轮 `daa08ad` + 控制者修正，验收 PASS；pytest 907 → 922，vitest 771 → 870）：rVFC 帧元组缓存与 epoch、遥测 seq 与算术采集时间（接手 Task 9 的 `preparedTelemetryAt`，暂停 / 恢复分段基线）、payload、`observation_conflict` 文案、「对账失败仍显示自动重发」的标志
-- [ ] **R14**：`DominantEvidence` 的语义 —— raw strength 还是 weighted contribution。现算法不接收权重，w=.3/.7 时可能标「Vision-dominant」而 telemetry 贡献更大。改语义要动三份实现 + 夹具
+- [x] **R14**：`DominantEvidence` 的语义 —— raw strength 还是 weighted contribution。现算法不接收权重，w=.3/.7 时可能标「Vision-dominant」而 telemetry 贡献更大。改语义要动三份实现 + 夹具
+  - **2026-11-02 用户裁定**：不改代码，保持 raw strength。报告须写明 DominantEvidence 按两路原始概率强弱判断、不含融合权重；默认 0.5/0.5 时两种含义一致，非对称权重下可能与加权贡献不同（作为已知限制写进报告）。
 - **状态：** pending（等待裁定）
 
 ### 阶段 6：Task 10A（模型替换与集成验证，计划 R3）
