@@ -1,6 +1,6 @@
 # Task 10A Stage 5：Release Decision（在役视觉模型）
 
-- **状态：已决定（U-5）——A，保留 stable MobileNetV3-Large。** 用户于 2026-10-30 在对话中选择（见 §3）；书面签字待用户补签。在役模型不变：代码默认值 `active_vision = "stable"` 本来就是 stable，不需要改任何配置（计划 §8 Step 3：没有自动启用 ResNet18）。
+- **状态：已决定（U-5）——A，保留 stable MobileNetV3-Large。** 用户于 2026-10-30 在对话中选择（见 §3）；书面签字已补（§3）。在役模型不变：代码默认值 `active_vision = "stable"` 本来就是 stable，不需要改任何配置（计划 §8 Step 3：没有自动启用 ResNet18）。
 - 准备人：Claude（集成会话），2026-10-30。决定人：用户。
 - 候选范围：stable MobileNetV3-Large（`stable_mobilenet_v3_large`）、ResNet18 候选（`resnet18_search004_seed42`，validation 选出的首选候选）。HPO MobileNetV3（`mobilenet_v3_large_search006_seed42`）只作对照：它的 clean test 结果不如 stable（Accuracy 0.8731、Macro-F1 0.8677，见报告 Table 16）。遥测模型不在本次决定范围，固定为 stable XGBoost（`9802cb06…`）。
 
@@ -49,7 +49,7 @@
 - 日期：2026-10-30
 - 记录方式：用户在 Claude 会话（Tasks1-10A）的问答中选择「A：保留 stable MobileNetV3」，同时选择 Table 23 改用 10-30 同日数字（§5）。
 - ResNet18 候选保留为已接入、可一键切换的候选（§4），不删除。
-- 用户签字：____________________
+- 用户签字：__Yerong__
 
 ## 4. 版本化配置与回滚
 
