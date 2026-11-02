@@ -336,3 +336,36 @@ def test_e5_summary_lag_alert_and_branch_contribution():
     assert summary["segments"][0]["variants"]["FUSED"]["agrees"] == 40
     assert summary["segments"][1]["contribution_from_vision"]["max"] == 60.0
     assert summary["segments"][0]["contribution_from_telemetry"]["max"] == 0.0
+
+
+# ------------------------------------------------- DMD candidate: protocol + worker env
+DMD_PROTOCOL_PATH = REPO / "docs" / "fyp2" / "dmd-candidate" / "e2e5_dmd_protocol.json"
+
+
+def test_expected_vision_model_defaults_to_stable_and_reads_the_candidate_protocol():
+    assert fe.expected_vision_model({}) == fe.STABLE_MODEL_ID
+    assert fe.expected_vision_model({"fixed_runtime": {}}) == fe.STABLE_MODEL_ID
+    dmd = json.loads(DMD_PROTOCOL_PATH.read_text(encoding="utf-8"))
+    assert dmd["decision_rule"] == "DESCRIPTIVE_ONLY"
+    assert dmd["fixed_runtime"]["vision_model_id"] == "dmd_adapted_mobilenet_v3_20261029"
+    assert dmd["fixed_runtime"]["vision_model_sha256"] == \
+        "01f1d6a3a57936590d29f1a86856fd6e67c8c9fd382f48bd601f9c66ed2b4d55"
+    assert fe.expected_vision_model(dmd) == "dmd_adapted_mobilenet_v3_20261029"
+
+
+def test_worker_environment_selects_the_candidate_and_keeps_the_temp_database(tmp_path):
+    stable = fe.worker_environment({"PATH": "/bin", "DRA_ACTIVE_VISION": "old"}, fe.STABLE_MODEL_ID,
+                                   Path("/backend"), tmp_path)
+    assert "DRA_ACTIVE_VISION" not in stable
+    assert stable["PYTHONPATH"] == "/backend"
+    assert stable["PYTHONDONTWRITEBYTECODE"] == "1"
+    assert stable["DRA_DATABASE_URL"] == f"sqlite:///{tmp_path / 'eval.sqlite'}"
+    dmd = fe.worker_environment({"PATH": "/bin"}, "dmd_adapted_mobilenet_v3_20261029",
+                                Path("/backend"), tmp_path)
+    assert dmd["DRA_ACTIVE_VISION"] == "dmd_adapted_mobilenet_v3_20261029"
+
+
+def test_the_dmd_protocol_is_committed_and_its_gate_passes():
+    gate = fe.protocol_gate(datetime.now(timezone.utc), path=DMD_PROTOCOL_PATH)
+    assert gate["status"] == "PASS", gate
+    assert gate["path"] == "docs/fyp2/dmd-candidate/e2e5_dmd_protocol.json"
