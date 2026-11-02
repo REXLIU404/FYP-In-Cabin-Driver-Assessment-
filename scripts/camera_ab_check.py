@@ -4,8 +4,9 @@
 The agent never runs the camera. The user starts one backend, checks the model identity,
 then runs this script; it prompts before each of three 60 s actions, captures one JPEG per
 second with ffmpeg, sends every frame through the real ``POST /infer`` and saves the raw
-per-frame answers. A second run uses the other model. A compare mode prints the two runs
-side by side.
+per-frame answers. Each action uses a new session, so EMA and fusion state do not carry
+across the transition between actions. A second run uses the other model. A compare mode
+prints the two runs side by side.
 
     # terminal 1 (stable)
     .venv/bin/python -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000
@@ -17,8 +18,10 @@ side by side.
     .venv/bin/python scripts/camera_ab_check.py --compare stable.json dmd.json --out comparison.json
 
 Measures, per phase: top-1 class counts, the fraction whose top-1 is ``safe_driving``,
-P_distraction mean/median and the fraction at or above 0.5. DESCRIPTIVE ONLY: one 60 s
-clip per action cannot establish real-world accuracy or a safety benefit.
+raw P_distraction mean/median and the fraction at or above 0.5. Raw means
+``provenance.P_distraction_raw``, before the product's EMA smoothing; the smoothed mean is
+stored beside it for reference. DESCRIPTIVE ONLY: one 60 s clip per action cannot establish
+real-world accuracy or a safety benefit.
 
 Camera capture needs ffmpeg with avfoundation (macOS). List devices with:
     ffmpeg -f avfoundation -list_devices true -i ""
@@ -82,7 +85,8 @@ def compute_summary(frames: list[dict]) -> dict:
     valid = [f for f in frames if f.get("http_status") == 201 and f.get("top_class")]
     n = len(valid)
     counts = Counter(f["top_class"] for f in valid)
-    distractions = [float(f["p_distraction"]) for f in valid]
+    distractions = [float(f["p_distraction_raw"]) for f in valid]
+    smoothed = [float(f["p_distraction_smoothed"]) for f in valid]
     identities = {(f.get("vision_model_id"), f.get("vision_model_sha256")) for f in valid}
     identity = ({"vision_model_id": next(iter(identities))[0], "vision_model_sha256": next(iter(identities))[1]}
                 if len(identities) == 1 else
@@ -97,6 +101,8 @@ def compute_summary(frames: list[dict]) -> dict:
         "p_distraction_mean": round(sum(distractions) / n, 4) if n else None,
         "p_distraction_median": round(statistics.median(distractions), 4) if n else None,
         "p_distraction_ge_0_5_rate": round(sum(p >= 0.5 for p in distractions) / n, 4) if n else None,
+        "p_distraction_basis": "provenance.P_distraction_raw",
+        "p_distraction_smoothed_mean": round(sum(smoothed) / n, 4) if n else None,
         "model_identity": identity,
     }
 
@@ -165,7 +171,8 @@ class BackendClient:
         return {"http_status": status, "request_id": request_id, "captured_at": captured_at,
                 "top_class": top["label"] if top else None,
                 "top_probability": top["probability"] if top else None,
-                "p_distraction": body.get("P_distraction"),
+                "p_distraction_raw": provenance.get("P_distraction_raw"),
+                "p_distraction_smoothed": body.get("P_distraction"),
                 "visual_top_classes": classes,
                 "vision_model_id": model_id,
                 "vision_model_sha256": provenance.get("vision_model_sha256")}
@@ -223,10 +230,8 @@ def run_capture(args) -> int:
               file=sys.stderr)
         print("Start the backend with the matching DRA_ACTIVE_VISION and try again.", file=sys.stderr)
         return 2
-    session_id = f"cam-{args.label}-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}"
-    client.create_session(session_id)
     result = {"schema": "camera_ab_check/1", "label": args.label, "base_url": args.base_url,
-              "session_id": session_id, "started_utc": datetime.now(timezone.utc).isoformat(),
+              "session_ids": {}, "started_utc": datetime.now(timezone.utc).isoformat(),
               "camera": {"device": args.device, "fps": args.fps, "seconds_per_phase": args.seconds},
               "backend_vision": vision, "phases": [], "status": "IN_PROGRESS"}
     print(f"Backend: {vision.get('model_id')} sha256 {vision.get('sha256')}")
@@ -236,6 +241,9 @@ def run_capture(args) -> int:
         for phase in phase_plan(args.seconds):
             print(f"\n=== {phase['id']}: {phase['instruction']} ({phase['seconds']} s) ===")
             input("Press Enter when ready, then perform the action continuously... ")
+            session_id = f"cam-{args.label}-{phase['id']}-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}"
+            client.create_session(session_id)
+            result["session_ids"][phase["id"]] = session_id
             started = datetime.now(timezone.utc)
             frames = []
             for frame in ffmpeg_frames(args.device, args.fps, args.seconds):
@@ -248,7 +256,7 @@ def run_capture(args) -> int:
                 frames.append(record)
                 if len(frames) % 10 == 0:
                     print(f"  {len(frames)}/{phase['seconds']} frames; last top-1 {record['top_class']} "
-                          f"P_distraction {record['p_distraction']:.3f}")
+                          f"raw P_distraction {record['p_distraction_raw']:.3f}")
             summary = compute_summary(frames)
             result["phases"].append({"id": phase["id"], "instruction": phase["instruction"],
                                      "started_utc": started.isoformat(),
@@ -257,7 +265,7 @@ def run_capture(args) -> int:
             _write(out, result)
             print(f"  {phase['id']}: n={summary['n']} top1={summary['top1_counts']} "
                   f"safe_top1={summary['safe_driving_top1_rate']} "
-                  f"P_distraction median={summary['p_distraction_median']} "
+                  f"raw P_distraction median={summary['p_distraction_median']} "
                   f">=0.5={summary['p_distraction_ge_0_5_rate']}")
         result["status"] = "COMPLETE" if all(p["summary"]["n"] == args.seconds for p in result["phases"]) else "PARTIAL"
     except KeyboardInterrupt:

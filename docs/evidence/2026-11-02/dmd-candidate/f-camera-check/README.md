@@ -31,17 +31,19 @@
 
 ## 准备工作已验证的部分
 
-- `scripts/camera_ab_check.py` 的纯函数有测试：三段计划、视野-only payload、MJPEG 切分、
-  summary 计算、并列比较、以及用本地 stub HTTP server 检查 `POST /api/sessions` 与
-  `POST /infer` 的 URL/载荷。
-- `tests-RED.log`：脚本文件不存在时 6 个测试失败；`tests-GREEN.log`：实现后 6 个通过。
+- `scripts/camera_ab_check.py` 的纯函数有测试：三段计划、每段独立 session、视野-only payload、
+  MJPEG 切分、从 `provenance.P_distraction_raw` 计算 raw 指标、并列比较，以及用本地 stub
+  HTTP server 检查 `POST /api/sessions` 与 `POST /infer` 的 URL/载荷。
+- `tests-RED.log`：脚本文件不存在时 6 个测试失败；`tests-GREEN.log`：最初实现后 6 个通过。
+  2026-11-02 复核新增 raw 字段与每段 session 测试后，7 个全部通过。
 - **没有**打开摄像头、没有连接真实后端、没有产生 `stable.json` / `dmd.json`。
 
 ## 指标
 
 - 正常坐姿段：`safe_driving` 为 top-1 的比例；
-- 拿手机 / 喝水段：top-1 类别分布、P_distraction 均值/中位数、`P_distraction >= 0.5` 的比例；
-- 全部：每帧 top-1 与十类概率的原始记录。
+- 拿手机 / 喝水段：top-1 类别分布、**raw** `P_distraction` 均值/中位数、`P_distraction >= 0.5` 的比例；
+- `p_distraction_smoothed_mean` 另存 EMA 平滑值，只作参考；
+- 全部：每帧 top-1 与十类概率的原始记录；每个动作段是独立 session。
 
 ## 能证明 / 不能证明
 

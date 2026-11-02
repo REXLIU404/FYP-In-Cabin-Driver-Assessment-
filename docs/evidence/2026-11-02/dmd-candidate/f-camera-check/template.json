@@ -4,7 +4,11 @@
   "note": "Empty schema example. The user's run writes stable.json and dmd.json; do not treat this file as data.",
   "label": "stable|dmd",
   "base_url": "http://127.0.0.1:8000",
-  "session_id": "cam-<label>-<UTC timestamp>",
+  "session_ids": {
+    "normal": "cam-<label>-normal-<UTC timestamp>",
+    "phone": "cam-<label>-phone-<UTC timestamp>",
+    "drinking": "cam-<label>-drinking-<UTC timestamp>"
+  },
   "backend_vision": {
     "model_id": "stable_mobilenet_v3_large | dmd_adapted_mobilenet_v3_20261029",
     "sha256": "<recorded by the script>"
@@ -21,7 +25,8 @@
           "captured_at": "<ISO-8601>",
           "top_class": "safe_driving",
           "top_probability": 0.0,
-          "p_distraction": 0.0,
+          "p_distraction_raw": 0.0,
+          "p_distraction_smoothed": 0.0,
           "visual_top_classes": [{"label": "safe_driving", "probability": 0.0}],
           "vision_model_id": "<model id>",
           "vision_model_sha256": "<sha256>",
@@ -35,6 +40,8 @@
         "p_distraction_mean": null,
         "p_distraction_median": null,
         "p_distraction_ge_0_5_rate": null,
+        "p_distraction_basis": "provenance.P_distraction_raw",
+        "p_distraction_smoothed_mean": null,
         "model_identity": {"vision_model_id": null, "vision_model_sha256": null}
       }
     },

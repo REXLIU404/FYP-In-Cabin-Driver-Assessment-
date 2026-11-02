@@ -11,6 +11,7 @@ import sys
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from types import SimpleNamespace
 
 REPO = Path(__file__).resolve().parents[2]
 SCRIPTS = REPO / "scripts"
@@ -55,15 +56,15 @@ def test_mjpeg_splitter_returns_complete_frames_and_keeps_a_partial_tail():
     assert rest == b"\xff\xd8PARTIAL"
 
 
-def test_phase_summary_counts_safe_top1_and_distraction_rate():
+def test_phase_summary_counts_safe_top1_and_raw_distraction_rate():
     runner = load_runner()
     frames = [
-        {"top_class": "safe_driving", "p_distraction": 0.1, "vision_model_id": "m", "vision_model_sha256": "h",
-         "http_status": 201},
-        {"top_class": "safe_driving", "p_distraction": 0.2, "vision_model_id": "m", "vision_model_sha256": "h",
-         "http_status": 201},
-        {"top_class": "talking_phone_right", "p_distraction": 0.8, "vision_model_id": "m", "vision_model_sha256": "h",
-         "http_status": 201},
+        {"top_class": "safe_driving", "p_distraction_raw": 0.1, "p_distraction_smoothed": 0.7,
+         "vision_model_id": "m", "vision_model_sha256": "h", "http_status": 201},
+        {"top_class": "safe_driving", "p_distraction_raw": 0.2, "p_distraction_smoothed": 0.8,
+         "vision_model_id": "m", "vision_model_sha256": "h", "http_status": 201},
+        {"top_class": "talking_phone_right", "p_distraction_raw": 0.8, "p_distraction_smoothed": 0.9,
+         "vision_model_id": "m", "vision_model_sha256": "h", "http_status": 201},
     ]
     summary = runner.compute_summary(frames)
     assert summary["n"] == 3
@@ -72,7 +73,42 @@ def test_phase_summary_counts_safe_top1_and_distraction_rate():
     assert summary["p_distraction_mean"] == 0.3667
     assert summary["p_distraction_median"] == 0.2
     assert summary["p_distraction_ge_0_5_rate"] == 0.3333
+    assert summary["p_distraction_smoothed_mean"] == 0.8
+    assert summary["p_distraction_basis"] == "provenance.P_distraction_raw"
     assert summary["model_identity"] == {"vision_model_id": "m", "vision_model_sha256": "h"}
+
+
+def test_each_action_phase_runs_in_a_fresh_session(monkeypatch, tmp_path):
+    runner = load_runner()
+    created = []
+
+    class FakeClient:
+        def __init__(self, base_url, timeout=30):
+            self.base_url = base_url
+
+        def models(self):
+            return {"vision": {"model_id": runner.STABLE_MODEL_ID, "sha256": "abc"}}
+
+        def create_session(self, session_id):
+            created.append(session_id)
+            return {"id": session_id}
+
+        def infer(self, session_id, frame, request_id, captured_at, frame_index, *, model_label):
+            return {"top_class": "safe_driving", "top_probability": 0.9,
+                    "p_distraction_raw": 0.1, "p_distraction_smoothed": 0.7,
+                    "vision_model_id": runner.STABLE_MODEL_ID, "vision_model_sha256": "abc",
+                    "http_status": 201}
+
+    monkeypatch.setattr(runner, "BackendClient", FakeClient)
+    monkeypatch.setattr(runner, "ffmpeg_frames", lambda device, fps, seconds: iter([b"\xff\xd8x\xff\xd9"]))
+    monkeypatch.setattr("builtins.input", lambda *_: "")
+    args = SimpleNamespace(out=tmp_path / "stable.json", base_url="http://stub", label="stable",
+                           device="0", fps=1, seconds=1)
+    assert runner.run_capture(args) == 0
+    assert len(created) == len(set(created)) == 3
+    result = json.loads(Path(args.out).read_text())
+    assert [phase["summary"]["p_distraction_mean"] for phase in result["phases"]] == [0.1, 0.1, 0.1]
+    assert result["session_ids"] == dict(zip(("normal", "phone", "drinking"), created))
 
 
 def test_comparison_is_side_by_side_and_chooses_nothing():
@@ -104,7 +140,9 @@ class _Stub(BaseHTTPRequestHandler):
         elif self.path.endswith("/infer"):
             self._json(201, {"window_id": 1, "visual_top_classes": [
                 {"label": "safe_driving", "probability": 0.9}, {"label": "texting_right", "probability": 0.05}],
-                "P_distraction": 0.1, "provenance": {"vision_model_id": "stub_model", "vision_model_sha256": "abc"}})
+                "P_distraction": 0.1,
+                "provenance": {"vision_model_id": "stub_model", "vision_model_sha256": "abc",
+                               "P_distraction_raw": 0.2}})
         else:
             self._json(404, {"detail": "no"})
 
@@ -135,7 +173,8 @@ def test_client_posts_the_session_then_one_vision_window():
         server.shutdown()
         thread.join(timeout=5)
     assert result["top_class"] == "safe_driving"
-    assert result["p_distraction"] == 0.1
+    assert result["p_distraction_raw"] == 0.2
+    assert result["p_distraction_smoothed"] == 0.1
     assert _Stub.calls[0][0] == "/api/sessions"
     assert _Stub.calls[0][1]["operation_mode"] == "LIVE_MODEL_RUNTIME"
     assert _Stub.calls[1][0] == "/api/sessions/cam-stub-normal/infer"

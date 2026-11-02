@@ -51,8 +51,10 @@ curl -s http://127.0.0.1:8000/api/models
 2. **拿手机**：拿起手机并低头看屏幕，保持这个动作；不要遮挡整张脸。
 3. **喝水**：拿起杯子/水瓶做出喝水动作，保持这个动作。
 
-每个动作尽量连续，不要在 60 秒内切换动作。结束后终端会打印每段的 `safe_driving` top-1 比例、
-P_distraction 中位数和 `>=0.5` 比例。
+脚本会为**每个动作新建一个 session**（记录在结果的 `session_ids`）；动作之间的 EMA 和融合状态
+不会延续，因此每段都从该段第一帧开始统计，不采用“丢弃开头过渡窗口”的做法。每个动作仍要尽量
+连续，不要在 60 秒内切换动作。结束后终端会打印每段的 `safe_driving` top-1 比例、
+**raw P_distraction** 中位数和 `>=0.5` 比例。
 
 ## 2. 运行 DMD 候选
 
@@ -107,8 +109,12 @@ curl -s http://127.0.0.1:8000/api/models
 对一段的 N 个成功窗口（HTTP 201）：
 
 - `safe_driving_top1_rate = count(top-1 == safe_driving) / N`（主要看正常坐姿段）；
-- `p_distraction_mean = mean(P_distraction)`，`p_distraction_median = median(P_distraction)`；
-- `p_distraction_ge_0_5_rate = count(P_distraction >= 0.5) / N`；
+- `p_distraction_mean = mean(provenance.P_distraction_raw)`，
+  `p_distraction_median = median(provenance.P_distraction_raw)`；
+- `p_distraction_ge_0_5_rate = count(provenance.P_distraction_raw >= 0.5) / N`；
+- `p_distraction_smoothed_mean`：顶层 `P_distraction` 的均值（经过 EMA α=0.35 并保留 3 位小数），
+  只作参考，不用于上面三项；
+- `p_distraction_basis`：固定为 `provenance.P_distraction_raw`，说明指标来自模型原始输出；
 - `top1_counts`：该段 top-1 类别计数。
 
 比较时只看同一段、同一动作的并列数字。**不设胜者**，不根据这三个 60 秒片段挑模型或阈值。
