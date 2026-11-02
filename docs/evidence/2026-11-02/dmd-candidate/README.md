@@ -28,11 +28,13 @@
 | State Farm test accuracy | 0.8988 | 0.8091 |
 | State Farm test macro-F1 | 0.8746 | 0.7266 |
 | State Farm c0→分心（0.5） | 0.0905 | 0.0487 |
+| State Farm 分心召回 @0.5（漏报 / 3226） | 0.9721（90） | 0.9510（158） |
 | State Farm c8 recall | 0.8321 | 0.0679 |
 | State Farm c9 recall | 0.2733 | 0.0643 |
 | DMD test accuracy | 0.2777 | 0.7171 |
 | DMD test macro-F1 | 0.3105 | 0.5065 |
 | DMD test FPR @0.5（运行时等价列） | 0.8157 | 0.2074 |
+| DMD test 分心召回 @0.5（漏报 / 703） | 0.9531（33） | 0.7881（149） |
 | DMD test c0 recall | 0.1951 | 0.8863 |
 | DMD test c8 recall | 0.8154 | 0.0154 |
 | DMD test c9 recall | 0.5167 | 0.0000 |
