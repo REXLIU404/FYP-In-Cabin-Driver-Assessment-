@@ -81,6 +81,31 @@ def test_the_gate_blocks_a_protocol_that_was_not_declared_first(kwargs, needle):
     assert any(needle in p for p in fe.gate_verdict(**args))
 
 
+def test_a_nondefault_protocol_requires_an_explicit_output(monkeypatch):
+    calls = []
+    monkeypatch.setattr(fe, "run_e2", lambda out, protocol: calls.append((out, protocol)) or 0)
+    with pytest.raises(SystemExit) as stopped:
+        fe.main(["e2", "--protocol", "docs/fyp2/dmd-candidate/e2e5_dmd_protocol.json"])
+    assert stopped.value.code == 2
+    assert calls == []
+
+
+def test_the_default_protocol_may_use_the_dated_default_output(monkeypatch):
+    calls = []
+    monkeypatch.setattr(fe, "run_e2", lambda out, protocol: calls.append((out, protocol)) or 0)
+    assert fe.main(["e2"]) == 0
+    assert calls == [(None, fe.PROTOCOL)]
+
+
+def test_a_nondefault_protocol_runs_with_an_explicit_output(monkeypatch, tmp_path):
+    calls = []
+    monkeypatch.setattr(fe, "run_e5", lambda out, protocol: calls.append((out, protocol)) or 0)
+    protocol = REPO / "docs" / "fyp2" / "dmd-candidate" / "e2e5_dmd_protocol.json"
+    out = tmp_path / "e5-dmd"
+    assert fe.main(["e5", "--protocol", str(protocol), "--out", str(out)]) == 0
+    assert calls == [(out, protocol)]
+
+
 # ------------------------------------------------------------------------- E2 pairs
 def _pools():
     vision = [{"filename": f"img_{c}_{i:03d}.jpg", "class_id": c, "driver_id": f"p{i % 4}",

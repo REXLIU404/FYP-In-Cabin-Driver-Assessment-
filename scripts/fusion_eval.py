@@ -6,6 +6,9 @@ Usage (from the repo root, with the backend venv):
     .venv/bin/python scripts/fusion_eval.py e2 [--out DIR]
     .venv/bin/python scripts/fusion_eval.py e5 [--out DIR]
 
+A non-default ``--protocol`` requires an explicit ``--out``: the dated default directory
+belongs to ``docs/fyp2/e2e5/protocol.json`` and must not be overwritten by another protocol.
+
 E2 sends 60 constructed (image, telemetry row) pairs, in 6 label strata, through the REAL
 ``/infer`` once per fusion-weight setting of report Table 9. That is 300 one-window
 sessions, so no EMA history is involved. E5 (light) replays the ``viva_compact``
@@ -869,6 +872,11 @@ def main(argv=None) -> int:
         return 0
     if args.kind is None:
         parser.error("choose e2 or e5")
+    protocol_path = args.protocol if args.protocol.is_absolute() else REPO / args.protocol
+    if args.out is None and protocol_path.resolve() != PROTOCOL.resolve():
+        parser.error("--out is required when --protocol is not the default "
+                     "docs/fyp2/e2e5/protocol.json (the dated default directory is reserved "
+                     "for that protocol)")
     return run_e2(args.out, args.protocol) if args.kind == "e2" else run_e5(args.out, args.protocol)
 
 
