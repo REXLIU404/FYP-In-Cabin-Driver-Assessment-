@@ -1,0 +1,1481 @@
+{
+  "run_start_utc": "2026-11-02T10:44:14.043958+00:00",
+  "protocol_gate": {
+    "path": "docs/fyp2/dmd-candidate/e2e5_dmd_protocol.json",
+    "sha256": "ca35cc80d6de4fc6a0b23536513373c5f385440dd3b49c1d41ecffb3f8aed410",
+    "commit": "4b8506f49acc9b34e1e386a785770fd702109284",
+    "commit_time": "2026-11-02T18:43:22+08:00",
+    "blob": "bd542b2932afd7c7074b04004afa3a1c9ec69ae6",
+    "dirty": false,
+    "status": "PASS",
+    "problems": []
+  },
+  "data_root": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-",
+  "git": {
+    "implemented_head": "694819f05ee2e073d1c4cd254d9e9462769c1b81",
+    "dirty_state": [
+      "?? AGENTS.md",
+      "?? backend/tests/test_camera_ab_check.py",
+      "?? docs/evidence/2026-11-02/dmd-candidate/f-camera-check/",
+      "?? docs/fyp2/dmd-candidate/camera_check_checklist.md",
+      "?? docs/fyp2/dmd-candidate/decision_facts.md",
+      "?? docs/fyp2/figures/",
+      "?? docs/fyp2/report_update_plan.zh.md",
+      "?? docs/fyp2/section_6.8_dmd_external_evaluation.en.md",
+      "?? scripts/camera_ab_check.py"
+    ]
+  },
+  "inputs": {
+    "vision_csv_sha256": "b4f8e90dec769bb419eaa490aea869668bed6484089cebe4d545c7667baa8ea4",
+    "telemetry_csv_sha256": "3bc3d47680a87359e1470fd8ffaf5ff330dc4419b37cc645e5736d51a91c96de"
+  },
+  "worker": {
+    "command": [
+      "python",
+      "fusion_eval.py",
+      "--worker",
+      "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/e2-fusion-eval-77k4fc7o/worker_spec.json",
+      "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/e2-fusion-eval-77k4fc7o/worker_out.json"
+    ],
+    "exit_code": 0,
+    "duration_s": 7.0,
+    "stderr_tail": [
+      "/Users/liu/Desktop/FYP2-Live-System/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.",
+      "  from starlette.testclient import TestClient as TestClient  # noqa"
+    ]
+  },
+  "identity": {
+    "vision_model_id": "dmd_adapted_mobilenet_v3_20261029",
+    "vision_model_sha256": "01f1d6a3a57936590d29f1a86856fd6e67c8c9fd382f48bd601f9c66ed2b4d55",
+    "telemetry_model_sha256": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+    "models_endpoint": {
+      "models_loaded": true,
+      "provider": "VisionCandidateONNX+XGBoost",
+      "vision": {
+        "architecture": "mobilenet_v3_large",
+        "model_id": "dmd_adapted_mobilenet_v3_20261029",
+        "run_id": "dmd_adapted_mobilenet_v3_20261029",
+        "source": "candidate:dmd_adapted_mobilenet_v3_20261029",
+        "sha256": "01f1d6a3a57936590d29f1a86856fd6e67c8c9fd382f48bd601f9c66ed2b4d55",
+        "runtime": "onnxruntime_cpu",
+        "classes": [
+          "safe_driving",
+          "texting_right",
+          "talking_phone_right",
+          "texting_left",
+          "talking_phone_left",
+          "operating_radio",
+          "drinking",
+          "reaching_behind",
+          "hair_makeup",
+          "talking_to_passenger"
+        ],
+        "input": "RGB NCHW float32 224x224",
+        "mean": [
+          0.485,
+          0.456,
+          0.406
+        ],
+        "std": [
+          0.229,
+          0.224,
+          0.225
+        ]
+      },
+      "telemetry": {
+        "architecture": "xgboost",
+        "sha256": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+        "classes": [
+          "Safe",
+          "Aggressive",
+          "Distracted"
+        ],
+        "features": [
+          "speed_kmph",
+          "accel_x",
+          "accel_y",
+          "brake_pressure",
+          "steering_angle",
+          "throttle",
+          "lane_deviation",
+          "headway_distance"
+        ],
+        "iteration_range": [
+          0,
+          91
+        ]
+      },
+      "scope": "Frontal-camera inference is experimental; source dataset metrics do not validate frontal reliability"
+    }
+  },
+  "environment": {
+    "python": "3.13.3",
+    "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+    "numpy": "2.4.6",
+    "onnxruntime": "1.26.0",
+    "PIL": "12.2.0",
+    "xgboost": "3.2.0"
+  },
+  "problems": [],
+  "summary": {
+    "checks": {
+      "windows": 300,
+      "max_abs_formula_error": 0.049992,
+      "formula_error_within_half_step": true,
+      "rounded_mismatches": 0,
+      "rounded_mismatches_off_tie": 0,
+      "level_oracle_mismatches": 0,
+      "dominant_oracle_mismatches": 0,
+      "probabilities_identical_across_weights": true,
+      "all_fresh": true,
+      "all_observations_new": true,
+      "all_health_full": true
+    },
+    "inputs": {
+      "pairs": 60,
+      "unique_images": 60,
+      "unique_telemetry_rows": 60,
+      "drivers": {
+        "p012": 10,
+        "p026": 20,
+        "p035": 14,
+        "p050": 16
+      },
+      "vision_classes": {
+        "c0": 30,
+        "c1": 2,
+        "c2": 4,
+        "c3": 3,
+        "c4": 3,
+        "c5": 8,
+        "c6": 3,
+        "c7": 3,
+        "c8": 4
+      }
+    },
+    "cells": {
+      "S1": {
+        "Balanced baseline": {
+          "score": {
+            "n": 10,
+            "min": 1.0,
+            "q1": 1.45,
+            "median": 2.0,
+            "q3": 8.075,
+            "max": 33.8,
+            "mean": 6.72
+          },
+          "levels": {
+            "Low": 9,
+            "Medium": 1,
+            "High": 0
+          },
+          "agrees": 9,
+          "dominant": {
+            "Low observed risk": 9,
+            "Combined evidence": 0,
+            "Vision-dominant": 1,
+            "Telemetry-dominant": 0,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 0
+        },
+        "Mild vision-dominant": {
+          "score": {
+            "n": 10,
+            "min": 1.2,
+            "q1": 1.75,
+            "median": 2.4,
+            "q3": 9.7,
+            "max": 40.5,
+            "mean": 8.07
+          },
+          "levels": {
+            "Low": 9,
+            "Medium": 1,
+            "High": 0
+          },
+          "agrees": 9,
+          "dominant": {
+            "Low observed risk": 9,
+            "Combined evidence": 0,
+            "Vision-dominant": 1,
+            "Telemetry-dominant": 0,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 0
+        },
+        "Mild telemetry-dominant": {
+          "score": {
+            "n": 10,
+            "min": 0.8,
+            "q1": 1.225,
+            "median": 1.65,
+            "q3": 6.525,
+            "max": 27.0,
+            "mean": 5.4
+          },
+          "levels": {
+            "Low": 10,
+            "Medium": 0,
+            "High": 0
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 10,
+            "Combined evidence": 0,
+            "Vision-dominant": 0,
+            "Telemetry-dominant": 0,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 0
+        },
+        "Strong vision-priority": {
+          "score": {
+            "n": 10,
+            "min": 1.4,
+            "q1": 2.05,
+            "median": 2.7,
+            "q3": 11.325,
+            "max": 47.2,
+            "mean": 9.38
+          },
+          "levels": {
+            "Low": 9,
+            "Medium": 1,
+            "High": 0
+          },
+          "agrees": 9,
+          "dominant": {
+            "Low observed risk": 9,
+            "Combined evidence": 0,
+            "Vision-dominant": 1,
+            "Telemetry-dominant": 0,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 0
+        },
+        "Strong telemetry-priority": {
+          "score": {
+            "n": 10,
+            "min": 0.6,
+            "q1": 0.925,
+            "median": 1.25,
+            "q3": 4.9,
+            "max": 20.3,
+            "mean": 4.07
+          },
+          "levels": {
+            "Low": 10,
+            "Medium": 0,
+            "High": 0
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 10,
+            "Combined evidence": 0,
+            "Vision-dominant": 0,
+            "Telemetry-dominant": 0,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 0
+        }
+      },
+      "S2": {
+        "Balanced baseline": {
+          "score": {
+            "n": 10,
+            "min": 50.4,
+            "q1": 52.025,
+            "median": 52.45,
+            "q3": 62.6,
+            "max": 85.5,
+            "mean": 58.21
+          },
+          "levels": {
+            "Low": 0,
+            "Medium": 7,
+            "High": 3
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 0,
+            "Combined evidence": 0,
+            "Vision-dominant": 0,
+            "Telemetry-dominant": 10,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 7
+        },
+        "Mild vision-dominant": {
+          "score": {
+            "n": 10,
+            "min": 40.5,
+            "q1": 42.425,
+            "median": 42.95,
+            "q3": 55.125,
+            "max": 82.6,
+            "mean": 49.86
+          },
+          "levels": {
+            "Low": 0,
+            "Medium": 8,
+            "High": 2
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 0,
+            "Combined evidence": 0,
+            "Vision-dominant": 0,
+            "Telemetry-dominant": 10,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 1,
+          "attenuation_cases": 7
+        },
+        "Mild telemetry-dominant": {
+          "score": {
+            "n": 10,
+            "min": 60.3,
+            "q1": 61.625,
+            "median": 61.95,
+            "q3": 70.075,
+            "max": 88.4,
+            "mean": 66.57
+          },
+          "levels": {
+            "Low": 0,
+            "Medium": 0,
+            "High": 10
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 0,
+            "Combined evidence": 0,
+            "Vision-dominant": 0,
+            "Telemetry-dominant": 10,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 0
+        },
+        "Strong vision-priority": {
+          "score": {
+            "n": 10,
+            "min": 30.6,
+            "q1": 32.9,
+            "median": 33.45,
+            "q3": 47.675,
+            "max": 79.7,
+            "mean": 41.52
+          },
+          "levels": {
+            "Low": 0,
+            "Medium": 9,
+            "High": 1
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 0,
+            "Combined evidence": 0,
+            "Vision-dominant": 0,
+            "Telemetry-dominant": 10,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 1,
+          "attenuation_cases": 7
+        },
+        "Strong telemetry-priority": {
+          "score": {
+            "n": 10,
+            "min": 70.2,
+            "q1": 71.225,
+            "median": 71.5,
+            "q3": 77.525,
+            "max": 91.3,
+            "mean": 74.93
+          },
+          "levels": {
+            "Low": 0,
+            "Medium": 0,
+            "High": 10
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 0,
+            "Combined evidence": 0,
+            "Vision-dominant": 0,
+            "Telemetry-dominant": 10,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 0
+        }
+      },
+      "S3": {
+        "Balanced baseline": {
+          "score": {
+            "n": 10,
+            "min": 50.2,
+            "q1": 52.025,
+            "median": 52.2,
+            "q3": 57.95,
+            "max": 67.9,
+            "mean": 55.32
+          },
+          "levels": {
+            "Low": 0,
+            "Medium": 8,
+            "High": 2
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 0,
+            "Combined evidence": 0,
+            "Vision-dominant": 0,
+            "Telemetry-dominant": 10,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 8
+        },
+        "Mild vision-dominant": {
+          "score": {
+            "n": 10,
+            "min": 40.2,
+            "q1": 42.5,
+            "median": 42.6,
+            "q3": 49.575,
+            "max": 61.4,
+            "mean": 46.38
+          },
+          "levels": {
+            "Low": 0,
+            "Medium": 9,
+            "High": 1
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 0,
+            "Combined evidence": 0,
+            "Vision-dominant": 0,
+            "Telemetry-dominant": 10,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 8
+        },
+        "Mild telemetry-dominant": {
+          "score": {
+            "n": 10,
+            "min": 60.1,
+            "q1": 61.625,
+            "median": 61.7,
+            "q3": 66.325,
+            "max": 74.3,
+            "mean": 64.23
+          },
+          "levels": {
+            "Low": 0,
+            "Medium": 0,
+            "High": 10
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 0,
+            "Combined evidence": 0,
+            "Vision-dominant": 0,
+            "Telemetry-dominant": 10,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 0
+        },
+        "Strong vision-priority": {
+          "score": {
+            "n": 10,
+            "min": 30.2,
+            "q1": 32.925,
+            "median": 33.05,
+            "q3": 41.1,
+            "max": 55.0,
+            "mean": 37.44
+          },
+          "levels": {
+            "Low": 0,
+            "Medium": 10,
+            "High": 0
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 0,
+            "Combined evidence": 0,
+            "Vision-dominant": 0,
+            "Telemetry-dominant": 10,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 8
+        },
+        "Strong telemetry-priority": {
+          "score": {
+            "n": 10,
+            "min": 70.1,
+            "q1": 71.225,
+            "median": 71.3,
+            "q3": 74.775,
+            "max": 80.7,
+            "mean": 73.18
+          },
+          "levels": {
+            "Low": 0,
+            "Medium": 0,
+            "High": 10
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 0,
+            "Combined evidence": 0,
+            "Vision-dominant": 0,
+            "Telemetry-dominant": 10,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 0
+        }
+      },
+      "S4": {
+        "Balanced baseline": {
+          "score": {
+            "n": 10,
+            "min": 46.2,
+            "q1": 50.0,
+            "median": 50.0,
+            "q3": 50.0,
+            "max": 50.1,
+            "mean": 49.62
+          },
+          "levels": {
+            "Low": 0,
+            "Medium": 10,
+            "High": 0
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 0,
+            "Combined evidence": 0,
+            "Vision-dominant": 10,
+            "Telemetry-dominant": 0,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 10
+        },
+        "Mild vision-dominant": {
+          "score": {
+            "n": 10,
+            "min": 55.4,
+            "q1": 60.0,
+            "median": 60.0,
+            "q3": 60.0,
+            "max": 60.1,
+            "mean": 59.54
+          },
+          "levels": {
+            "Low": 0,
+            "Medium": 2,
+            "High": 8
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 0,
+            "Combined evidence": 0,
+            "Vision-dominant": 10,
+            "Telemetry-dominant": 0,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 2
+        },
+        "Mild telemetry-dominant": {
+          "score": {
+            "n": 10,
+            "min": 36.9,
+            "q1": 40.0,
+            "median": 40.0,
+            "q3": 40.0,
+            "max": 40.1,
+            "mean": 39.69
+          },
+          "levels": {
+            "Low": 0,
+            "Medium": 10,
+            "High": 0
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 0,
+            "Combined evidence": 0,
+            "Vision-dominant": 10,
+            "Telemetry-dominant": 0,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 10
+        },
+        "Strong vision-priority": {
+          "score": {
+            "n": 10,
+            "min": 64.6,
+            "q1": 69.925,
+            "median": 70.0,
+            "q3": 70.0,
+            "max": 70.0,
+            "mean": 69.43
+          },
+          "levels": {
+            "Low": 0,
+            "Medium": 0,
+            "High": 10
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 0,
+            "Combined evidence": 0,
+            "Vision-dominant": 10,
+            "Telemetry-dominant": 0,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 0
+        },
+        "Strong telemetry-priority": {
+          "score": {
+            "n": 10,
+            "min": 27.7,
+            "q1": 30.0,
+            "median": 30.0,
+            "q3": 30.0,
+            "max": 30.2,
+            "mean": 29.78
+          },
+          "levels": {
+            "Low": 2,
+            "Medium": 8,
+            "High": 0
+          },
+          "agrees": 8,
+          "dominant": {
+            "Low observed risk": 2,
+            "Combined evidence": 0,
+            "Vision-dominant": 8,
+            "Telemetry-dominant": 0,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 10
+        }
+      },
+      "S5": {
+        "Balanced baseline": {
+          "score": {
+            "n": 10,
+            "min": 95.0,
+            "q1": 99.85,
+            "median": 100.0,
+            "q3": 100.0,
+            "max": 100.0,
+            "mean": 99.42
+          },
+          "levels": {
+            "Low": 0,
+            "Medium": 0,
+            "High": 10
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 0,
+            "Combined evidence": 10,
+            "Vision-dominant": 0,
+            "Telemetry-dominant": 0,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 0
+        },
+        "Mild vision-dominant": {
+          "score": {
+            "n": 10,
+            "min": 94.0,
+            "q1": 99.825,
+            "median": 100.0,
+            "q3": 100.0,
+            "max": 100.0,
+            "mean": 99.29
+          },
+          "levels": {
+            "Low": 0,
+            "Medium": 0,
+            "High": 10
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 0,
+            "Combined evidence": 10,
+            "Vision-dominant": 0,
+            "Telemetry-dominant": 0,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 0
+        },
+        "Mild telemetry-dominant": {
+          "score": {
+            "n": 10,
+            "min": 96.0,
+            "q1": 99.85,
+            "median": 100.0,
+            "q3": 100.0,
+            "max": 100.0,
+            "mean": 99.53
+          },
+          "levels": {
+            "Low": 0,
+            "Medium": 0,
+            "High": 10
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 0,
+            "Combined evidence": 10,
+            "Vision-dominant": 0,
+            "Telemetry-dominant": 0,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 0
+        },
+        "Strong vision-priority": {
+          "score": {
+            "n": 10,
+            "min": 93.0,
+            "q1": 99.75,
+            "median": 100.0,
+            "q3": 100.0,
+            "max": 100.0,
+            "mean": 99.17
+          },
+          "levels": {
+            "Low": 0,
+            "Medium": 0,
+            "High": 10
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 0,
+            "Combined evidence": 10,
+            "Vision-dominant": 0,
+            "Telemetry-dominant": 0,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 0
+        },
+        "Strong telemetry-priority": {
+          "score": {
+            "n": 10,
+            "min": 97.0,
+            "q1": 99.925,
+            "median": 100.0,
+            "q3": 100.0,
+            "max": 100.0,
+            "mean": 99.65
+          },
+          "levels": {
+            "Low": 0,
+            "Medium": 0,
+            "High": 10
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 0,
+            "Combined evidence": 10,
+            "Vision-dominant": 0,
+            "Telemetry-dominant": 0,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 0
+        }
+      },
+      "S6": {
+        "Balanced baseline": {
+          "score": {
+            "n": 10,
+            "min": 99.9,
+            "q1": 100.0,
+            "median": 100.0,
+            "q3": 100.0,
+            "max": 100.0,
+            "mean": 99.98
+          },
+          "levels": {
+            "Low": 0,
+            "Medium": 0,
+            "High": 10
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 0,
+            "Combined evidence": 10,
+            "Vision-dominant": 0,
+            "Telemetry-dominant": 0,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 0
+        },
+        "Mild vision-dominant": {
+          "score": {
+            "n": 10,
+            "min": 99.9,
+            "q1": 100.0,
+            "median": 100.0,
+            "q3": 100.0,
+            "max": 100.0,
+            "mean": 99.99
+          },
+          "levels": {
+            "Low": 0,
+            "Medium": 0,
+            "High": 10
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 0,
+            "Combined evidence": 10,
+            "Vision-dominant": 0,
+            "Telemetry-dominant": 0,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 0
+        },
+        "Mild telemetry-dominant": {
+          "score": {
+            "n": 10,
+            "min": 99.9,
+            "q1": 100.0,
+            "median": 100.0,
+            "q3": 100.0,
+            "max": 100.0,
+            "mean": 99.98
+          },
+          "levels": {
+            "Low": 0,
+            "Medium": 0,
+            "High": 10
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 0,
+            "Combined evidence": 10,
+            "Vision-dominant": 0,
+            "Telemetry-dominant": 0,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 0
+        },
+        "Strong vision-priority": {
+          "score": {
+            "n": 10,
+            "min": 99.9,
+            "q1": 100.0,
+            "median": 100.0,
+            "q3": 100.0,
+            "max": 100.0,
+            "mean": 99.99
+          },
+          "levels": {
+            "Low": 0,
+            "Medium": 0,
+            "High": 10
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 0,
+            "Combined evidence": 10,
+            "Vision-dominant": 0,
+            "Telemetry-dominant": 0,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 0
+        },
+        "Strong telemetry-priority": {
+          "score": {
+            "n": 10,
+            "min": 99.9,
+            "q1": 100.0,
+            "median": 100.0,
+            "q3": 100.0,
+            "max": 100.0,
+            "mean": 99.98
+          },
+          "levels": {
+            "Low": 0,
+            "Medium": 0,
+            "High": 10
+          },
+          "agrees": 10,
+          "dominant": {
+            "Low observed risk": 0,
+            "Combined evidence": 10,
+            "Vision-dominant": 0,
+            "Telemetry-dominant": 0,
+            "Partial evidence": 0
+          },
+          "r14_disagrees": 0,
+          "attenuation_cases": 0
+        }
+      }
+    },
+    "by_weight": {
+      "Balanced baseline": {
+        "agrees": 59,
+        "agrees_model_consistent_pairs": 58,
+        "levels": {
+          "Low": 9,
+          "Medium": 26,
+          "High": 25
+        },
+        "r14_disagrees": 0,
+        "attenuation_cases": 25
+      },
+      "Mild vision-dominant": {
+        "agrees": 59,
+        "agrees_model_consistent_pairs": 58,
+        "levels": {
+          "Low": 9,
+          "Medium": 20,
+          "High": 31
+        },
+        "r14_disagrees": 1,
+        "attenuation_cases": 17
+      },
+      "Mild telemetry-dominant": {
+        "agrees": 60,
+        "agrees_model_consistent_pairs": 58,
+        "levels": {
+          "Low": 10,
+          "Medium": 10,
+          "High": 40
+        },
+        "r14_disagrees": 0,
+        "attenuation_cases": 10
+      },
+      "Strong vision-priority": {
+        "agrees": 59,
+        "agrees_model_consistent_pairs": 58,
+        "levels": {
+          "Low": 9,
+          "Medium": 20,
+          "High": 31
+        },
+        "r14_disagrees": 1,
+        "attenuation_cases": 15
+      },
+      "Strong telemetry-priority": {
+        "agrees": 58,
+        "agrees_model_consistent_pairs": 56,
+        "levels": {
+          "Low": 12,
+          "Medium": 8,
+          "High": 40
+        },
+        "r14_disagrees": 0,
+        "attenuation_cases": 10
+      }
+    },
+    "level_change_vs_baseline": {
+      "Mild vision-dominant": {
+        "pairs": 60,
+        "changed": 10,
+        "up": 8,
+        "down": 2,
+        "by_stratum": {
+          "S1": 0,
+          "S2": 1,
+          "S3": 1,
+          "S4": 8,
+          "S5": 0,
+          "S6": 0
+        },
+        "pairs_changed": [
+          "S2-07",
+          "S3-07",
+          "S4-01",
+          "S4-02",
+          "S4-03",
+          "S4-04",
+          "S4-05",
+          "S4-06",
+          "S4-07",
+          "S4-10"
+        ]
+      },
+      "Mild telemetry-dominant": {
+        "pairs": 60,
+        "changed": 16,
+        "up": 15,
+        "down": 1,
+        "by_stratum": {
+          "S1": 1,
+          "S2": 7,
+          "S3": 8,
+          "S4": 0,
+          "S5": 0,
+          "S6": 0
+        },
+        "pairs_changed": [
+          "S1-10",
+          "S2-02",
+          "S2-03",
+          "S2-04",
+          "S2-06",
+          "S2-08",
+          "S2-09",
+          "S2-10",
+          "S3-02",
+          "S3-03",
+          "S3-04",
+          "S3-05",
+          "S3-06",
+          "S3-08",
+          "S3-09",
+          "S3-10"
+        ]
+      },
+      "Strong vision-priority": {
+        "pairs": 60,
+        "changed": 14,
+        "up": 10,
+        "down": 4,
+        "by_stratum": {
+          "S1": 0,
+          "S2": 2,
+          "S3": 2,
+          "S4": 10,
+          "S5": 0,
+          "S6": 0
+        },
+        "pairs_changed": [
+          "S2-05",
+          "S2-07",
+          "S3-01",
+          "S3-07",
+          "S4-01",
+          "S4-02",
+          "S4-03",
+          "S4-04",
+          "S4-05",
+          "S4-06",
+          "S4-07",
+          "S4-08",
+          "S4-09",
+          "S4-10"
+        ]
+      },
+      "Strong telemetry-priority": {
+        "pairs": 60,
+        "changed": 18,
+        "up": 15,
+        "down": 3,
+        "by_stratum": {
+          "S1": 1,
+          "S2": 7,
+          "S3": 8,
+          "S4": 2,
+          "S5": 0,
+          "S6": 0
+        },
+        "pairs_changed": [
+          "S1-10",
+          "S2-02",
+          "S2-03",
+          "S2-04",
+          "S2-06",
+          "S2-08",
+          "S2-09",
+          "S2-10",
+          "S3-02",
+          "S3-03",
+          "S3-04",
+          "S3-05",
+          "S3-06",
+          "S3-08",
+          "S3-09",
+          "S3-10",
+          "S4-08",
+          "S4-09"
+        ]
+      }
+    },
+    "branch_model_disagreement": {
+      "S1": {
+        "vision": 1,
+        "telemetry": 0
+      },
+      "S2": {
+        "vision": 1,
+        "telemetry": 0
+      },
+      "S3": {
+        "vision": 0,
+        "telemetry": 0
+      },
+      "S4": {
+        "vision": 0,
+        "telemetry": 0
+      },
+      "S5": {
+        "vision": 0,
+        "telemetry": 0
+      },
+      "S6": {
+        "vision": 0,
+        "telemetry": 0
+      }
+    },
+    "model_consistent_pairs": 58,
+    "attenuation_examples_baseline": [
+      {
+        "pair_id": "S2-02",
+        "stratum": "S2",
+        "P_distraction": 0.040813148021698,
+        "P_telemetry": 0.9998839497566223,
+        "RiskScore": 52.0,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Telemetry-dominant",
+        "reference": "REF_ELEVATED"
+      },
+      {
+        "pair_id": "S2-03",
+        "stratum": "S2",
+        "P_distraction": 0.046260952949523926,
+        "P_telemetry": 0.999933660030365,
+        "RiskScore": 52.3,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Telemetry-dominant",
+        "reference": "REF_ELEVATED"
+      },
+      {
+        "pair_id": "S2-04",
+        "stratum": "S2",
+        "P_distraction": 0.008050680160522461,
+        "P_telemetry": 0.999933660030365,
+        "RiskScore": 50.4,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Telemetry-dominant",
+        "reference": "REF_ELEVATED"
+      },
+      {
+        "pair_id": "S2-06",
+        "stratum": "S2",
+        "P_distraction": 0.052368879318237305,
+        "P_telemetry": 0.9999290704727173,
+        "RiskScore": 52.6,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Telemetry-dominant",
+        "reference": "REF_ELEVATED"
+      },
+      {
+        "pair_id": "S2-08",
+        "stratum": "S2",
+        "P_distraction": 0.012620329856872559,
+        "P_telemetry": 0.999933660030365,
+        "RiskScore": 50.6,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Telemetry-dominant",
+        "reference": "REF_ELEVATED"
+      },
+      {
+        "pair_id": "S2-09",
+        "stratum": "S2",
+        "P_distraction": 0.05399876832962036,
+        "P_telemetry": 0.9999203085899353,
+        "RiskScore": 52.7,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Telemetry-dominant",
+        "reference": "REF_ELEVATED"
+      },
+      {
+        "pair_id": "S2-10",
+        "stratum": "S2",
+        "P_distraction": 0.041906118392944336,
+        "P_telemetry": 0.9999127388000488,
+        "RiskScore": 52.1,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Telemetry-dominant",
+        "reference": "REF_ELEVATED"
+      },
+      {
+        "pair_id": "S3-02",
+        "stratum": "S3",
+        "P_distraction": 0.0035863518714904785,
+        "P_telemetry": 0.9999108910560608,
+        "RiskScore": 50.2,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Telemetry-dominant",
+        "reference": "REF_ELEVATED"
+      },
+      {
+        "pair_id": "S3-03",
+        "stratum": "S3",
+        "P_distraction": 0.18637317419052124,
+        "P_telemetry": 0.9998055696487427,
+        "RiskScore": 59.3,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Telemetry-dominant",
+        "reference": "REF_ELEVATED"
+      },
+      {
+        "pair_id": "S3-04",
+        "stratum": "S3",
+        "P_distraction": 0.04229182004928589,
+        "P_telemetry": 0.9999176859855652,
+        "RiskScore": 52.1,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Telemetry-dominant",
+        "reference": "REF_ELEVATED"
+      },
+      {
+        "pair_id": "S3-05",
+        "stratum": "S3",
+        "P_distraction": 0.043914854526519775,
+        "P_telemetry": 0.9998899698257446,
+        "RiskScore": 52.2,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Telemetry-dominant",
+        "reference": "REF_ELEVATED"
+      },
+      {
+        "pair_id": "S3-06",
+        "stratum": "S3",
+        "P_distraction": 0.040358006954193115,
+        "P_telemetry": 0.9998955726623535,
+        "RiskScore": 52.0,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Telemetry-dominant",
+        "reference": "REF_ELEVATED"
+      },
+      {
+        "pair_id": "S3-08",
+        "stratum": "S3",
+        "P_distraction": 0.04111814498901367,
+        "P_telemetry": 0.9998804330825806,
+        "RiskScore": 52.0,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Telemetry-dominant",
+        "reference": "REF_ELEVATED"
+      },
+      {
+        "pair_id": "S3-09",
+        "stratum": "S3",
+        "P_distraction": 0.07788372039794922,
+        "P_telemetry": 0.9999062418937683,
+        "RiskScore": 53.9,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Telemetry-dominant",
+        "reference": "REF_ELEVATED"
+      },
+      {
+        "pair_id": "S3-10",
+        "stratum": "S3",
+        "P_distraction": 0.04325348138809204,
+        "P_telemetry": 0.9998257756233215,
+        "RiskScore": 52.2,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Telemetry-dominant",
+        "reference": "REF_ELEVATED"
+      },
+      {
+        "pair_id": "S4-01",
+        "stratum": "S4",
+        "P_distraction": 0.9996293187141418,
+        "P_telemetry": 0.00016987323760986328,
+        "RiskScore": 50.0,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Vision-dominant",
+        "reference": "REF_ELEVATED"
+      },
+      {
+        "pair_id": "S4-02",
+        "stratum": "S4",
+        "P_distraction": 1.0,
+        "P_telemetry": 0.000276029109954834,
+        "RiskScore": 50.0,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Vision-dominant",
+        "reference": "REF_ELEVATED"
+      },
+      {
+        "pair_id": "S4-03",
+        "stratum": "S4",
+        "P_distraction": 0.9992418885231018,
+        "P_telemetry": 0.0026252269744873047,
+        "RiskScore": 50.1,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Vision-dominant",
+        "reference": "REF_ELEVATED"
+      },
+      {
+        "pair_id": "S4-04",
+        "stratum": "S4",
+        "P_distraction": 0.9999406933784485,
+        "P_telemetry": 0.0002658963203430176,
+        "RiskScore": 50.0,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Vision-dominant",
+        "reference": "REF_ELEVATED"
+      },
+      {
+        "pair_id": "S4-05",
+        "stratum": "S4",
+        "P_distraction": 0.9999911785125732,
+        "P_telemetry": 0.00021642446517944336,
+        "RiskScore": 50.0,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Vision-dominant",
+        "reference": "REF_ELEVATED"
+      },
+      {
+        "pair_id": "S4-06",
+        "stratum": "S4",
+        "P_distraction": 1.0,
+        "P_telemetry": 0.0002689957618713379,
+        "RiskScore": 50.0,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Vision-dominant",
+        "reference": "REF_ELEVATED"
+      },
+      {
+        "pair_id": "S4-07",
+        "stratum": "S4",
+        "P_distraction": 0.9992133975028992,
+        "P_telemetry": 0.00015413761138916016,
+        "RiskScore": 50.0,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Vision-dominant",
+        "reference": "REF_ELEVATED"
+      },
+      {
+        "pair_id": "S4-08",
+        "stratum": "S4",
+        "P_distraction": 0.9977439045906067,
+        "P_telemetry": 0.00020879507064819336,
+        "RiskScore": 49.9,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Vision-dominant",
+        "reference": "REF_ELEVATED"
+      },
+      {
+        "pair_id": "S4-09",
+        "stratum": "S4",
+        "P_distraction": 0.9233407974243164,
+        "P_telemetry": 0.0001958012580871582,
+        "RiskScore": 46.2,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Vision-dominant",
+        "reference": "REF_ELEVATED"
+      },
+      {
+        "pair_id": "S4-10",
+        "stratum": "S4",
+        "P_distraction": 0.999994695186615,
+        "P_telemetry": 0.00020879507064819336,
+        "RiskScore": 50.0,
+        "RiskLevel": "Medium",
+        "DominantEvidence": "Vision-dominant",
+        "reference": "REF_ELEVATED"
+      }
+    ],
+    "post_hoc_not_predeclared": {
+      "threshold_ties": {
+        "Balanced baseline": {
+          "within_0_1_of_a_threshold": 0,
+          "level_decided_by_rounding": 0,
+          "pairs_decided_by_rounding": [],
+          "agrees_unrounded": 59,
+          "changed_vs_baseline_unrounded": null
+        },
+        "Mild vision-dominant": {
+          "within_0_1_of_a_threshold": 8,
+          "level_decided_by_rounding": 2,
+          "pairs_decided_by_rounding": [
+            "S4-01",
+            "S4-07"
+          ],
+          "agrees_unrounded": 59,
+          "changed_vs_baseline_unrounded": 8
+        },
+        "Mild telemetry-dominant": {
+          "within_0_1_of_a_threshold": 0,
+          "level_decided_by_rounding": 0,
+          "pairs_decided_by_rounding": [],
+          "agrees_unrounded": 60,
+          "changed_vs_baseline_unrounded": 16
+        },
+        "Strong vision-priority": {
+          "within_0_1_of_a_threshold": 0,
+          "level_decided_by_rounding": 0,
+          "pairs_decided_by_rounding": [],
+          "agrees_unrounded": 59,
+          "changed_vs_baseline_unrounded": 14
+        },
+        "Strong telemetry-priority": {
+          "within_0_1_of_a_threshold": 8,
+          "level_decided_by_rounding": 1,
+          "pairs_decided_by_rounding": [
+            "S4-07"
+          ],
+          "agrees_unrounded": 57,
+          "changed_vs_baseline_unrounded": 19
+        }
+      }
+    },
+    "r14_examples": [
+      {
+        "pair_id": "S2-01",
+        "w_v": 0.6,
+        "w_t": 0.4,
+        "P_distraction": 0.7096414566040039,
+        "P_telemetry": 0.9999207258224487,
+        "RiskScore": 82.6,
+        "DominantEvidence": "Telemetry-dominant"
+      },
+      {
+        "pair_id": "S2-01",
+        "w_v": 0.7,
+        "w_t": 0.3,
+        "P_distraction": 0.7096414566040039,
+        "P_telemetry": 0.9999207258224487,
+        "RiskScore": 79.7,
+        "DominantEvidence": "Telemetry-dominant"
+      }
+    ]
+  },
+  "figures": [
+    "e2_scores_by_stratum.png",
+    "e2_reference_agreement.png"
+  ],
+  "status": "PASS",
+  "output_written_utc": "2026-11-02T10:44:21.821895+00:00"
+}
