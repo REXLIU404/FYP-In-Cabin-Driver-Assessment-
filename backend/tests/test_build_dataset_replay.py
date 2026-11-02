@@ -297,6 +297,46 @@ def test_viva_v1_is_the_table_of_the_spec():
     assert sum(s["duration_s"] for s in viva["segments"]) == 136
 
 
+def test_viva_compact_is_the_single_driver_sixty_second_table():
+    """The short demo script: one test-split driver, 60 s, every risk situation once.
+
+    ``viva_v1`` stays the 136 s spec table; this one is the viva shorthand. Pinning the
+    segments here is what stops a later edit from silently changing what the demo shows.
+    """
+    compact = json.loads((REPO / "demo" / "scenarios" / "viva_compact.json").read_text(encoding="utf-8"))
+    assert compact["scenario_id"] == "viva_compact"
+    assert compact["frame_period_ms"] == 200
+    assert compact["telemetry_period_ms"] == 2000
+    assert [(s["duration_s"], s["driver_id"], s["vision_class"], s["telemetry_label"])
+            for s in compact["segments"]] == [
+        (10, "p050", "c0", "Safe"),
+        (4, "p050", "c0", "Aggressive"),
+        (4, "p050", "c0", "Safe"),
+        (4, "p050", "c0", "Aggressive"),
+        (10, "p050", "c1", "Safe"),
+        (10, "p050", "c4", "Distracted"),
+        (18, "p050", "c0", "Safe"),
+    ]
+    assert [s["title"] for s in compact["segments"]] == [
+        "Baseline", "Telemetry only", "Telemetry wavers", "Telemetry only",
+        "Vision only", "Both", "Recovery",
+    ]
+    assert sum(s["duration_s"] for s in compact["segments"]) == 60
+    # ONE driver for the whole run: the viva story is a single trip of one test subject.
+    assert {s["driver_id"] for s in compact["segments"]} == {"p050"}
+    # The telemetry-only stretch alternates labels, so that branch is not one single step
+    # from Safe to not-Safe: the EMA has to show the intermediate readings.
+    labels = [s["telemetry_label"] for s in compact["segments"]]
+    assert labels.count("Safe") == 4
+    assert labels.count("Aggressive") == 2 and labels.count("Distracted") == 1
+    # Recovery is long enough for the 10 s NORMAL latch, with room left to show it settled.
+    assert compact["segments"][-1]["duration_s"] >= 10 + 2
+    # Every duration must stay a whole number of both periods (the builder refuses otherwise).
+    for segment in compact["segments"]:
+        assert segment["duration_s"] * 1000 % compact["frame_period_ms"] == 0
+        assert segment["duration_s"] * 1000 % compact["telemetry_period_ms"] == 0
+
+
 def test_bundles_are_git_ignored():
     done = subprocess.run(
         ["git", "check-ignore", "-q", "demo/bundles/x/manifest.json"],
