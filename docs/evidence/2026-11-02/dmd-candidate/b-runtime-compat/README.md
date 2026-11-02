@@ -44,14 +44,16 @@ exit code 0
 
 身份检查：`identity_ok = true`。如果 `DRA_ACTIVE_VISION` 未生效，worker 会报错而不是回退到 stable。
 
-## 3. Provider vs 直接 ONNX（200 张 State Farm 图）
+## 3. Provider 预处理 + provider ONNX session vs 独立 ONNX（200 张 State Farm 图）
 
 样本规则（协议预先声明）：从 p4b 冻结测试清单按类排序，每类取前 20 个文件名，共 200 张；
 `source_ids_sha256 = 082a8108591bb0c5a21f7ccfe360b191e7d53705e4a17e4b4b70f3931de1752d`。
 
 方法：provider 的 `preprocess` 张量同时送入
 (1) provider 持有的 ONNX session 与 (2) 另一个独立加载的 ONNX session；
-两侧都做一次相同的 float32 softmax，再转 float64 比较。
+两侧都做一次相同的 float32 softmax，再转 float64 比较。这不是完整的
+`TrainedProvider.infer` 调用：本检查不经过 fusion/EMA/HTTP，也不比较
+`visual_top_classes` / `P_distraction_raw` 的整条响应路径；完整 `/infer` 路径由其他测试覆盖。
 
 **判定规则（不事后放宽）**：`max_abs_prob_delta <= 1e-4` 且 `argmax_agreement == 1.0`，
 即 `docs/fyp2/task10a/tolerance_predeclaration.md` 的 FUD-01（2026-10-26 批准）。
@@ -76,7 +78,8 @@ argmax 一致率 1.0。
 **能证明**
 
 - 该候选包按现有 manifest 校验通过，并能由 `DRA_ACTIVE_VISION` 经真实 provider 加载。
-- 在 200 张 State Farm 原图上，provider 的 ONNX 前向与独立 ONNX 前向在 1e-4 / argmax 1.0 内一致。
+- 在 200 张 State Farm 原图上，provider 预处理 + provider 的 ONNX session 前向与独立 ONNX
+  前向在 1e-4 / argmax 1.0 内一致。
 
 **不能证明**
 

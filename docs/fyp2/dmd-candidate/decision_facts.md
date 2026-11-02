@@ -15,7 +15,7 @@
 | ONNX sha256 | `b3a42e8d…` | `01f1d6a3…` |
 | 加载方式 | 不设 `DRA_ACTIVE_VISION` | `DRA_ACTIVE_VISION=dmd_adapted_mobilenet_v3_20261029` |
 | manifest 校验 | 无候选式 manifest（stable 路径） | `valid`（`b-runtime-compat/manifest_validation.json`） |
-| provider 一致性 | 历史 stable200/parity100 证据 | 200 张：max Δp **1.192e-06**，argmax **1.0**，PASS |
+| provider 数值一致性 | 历史 stable200/parity100 证据 | 200 张：provider 预处理 + provider ONNX session vs 独立 ONNX session，max Δp **1.192e-06**，argmax **1.0**，PASS |
 
 ## 2. State Farm 冻结测试集（3657 帧，4 名测试司机）
 
@@ -131,8 +131,11 @@ DMD 的 E2/E5 均 `PASS`；stable 的 2026-11-02 E2/E5 结果保留原样（未�
 - manifest：`valid`。
 - `DRA_ACTIVE_VISION` 经真实 provider 加载成功：model id/sha256/classes 与协议一致，
   provider name `VisionCandidateONNX+XGBoost`，c0 别名为 `safe_driving`。
-- 200 张 State Farm 原图：provider 路径 vs 独立 ONNX session，max Δp 1.192e-06（≤ 1e-4），
-  argmax 一致率 1.0（= 1.0），PASS。独立预处理张量与 provider 预处理张量最大差 0.0。
+- 200 张 State Farm 原图：**provider 预处理 + provider 的 ONNX session** vs 独立加载的
+  ONNX session，max Δp 1.192e-06（≤ 1e-4），argmax 一致率 1.0（= 1.0），PASS。
+  这不是完整的 `TrainedProvider.infer` 调用：该检查不经过 fusion/EMA/HTTP，也不比较
+  `visual_top_classes` / `P_distraction_raw` 的整条响应路径。独立预处理张量与 provider
+  预处理张量最大差 0.0。
 - 不证明相机路径（浏览器重编码）或目标硬件性能。
 
 ## 8. 实时摄像头检查
