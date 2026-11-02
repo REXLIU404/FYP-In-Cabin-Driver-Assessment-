@@ -1,0 +1,12 @@
+{
+  "command": [
+    "python",
+    "/Users/liu/Desktop/FYP2-Live-System/scripts/validate_runtime_manifest.py",
+    "/Users/liu/Desktop/FYP2-Live-System/ml/outputs/candidates/dmd_adapted_mobilenet_v3_20261029/runtime_manifest.json",
+    "--package-dir",
+    "/Users/liu/Desktop/FYP2-Live-System/ml/outputs/candidates/dmd_adapted_mobilenet_v3_20261029"
+  ],
+  "exit_code": 0,
+  "stdout": "valid",
+  "stderr": ""
+}

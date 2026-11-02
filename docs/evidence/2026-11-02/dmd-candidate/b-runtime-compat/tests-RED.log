@@ -1,0 +1,104 @@
+EEEEE                                                                    [100%]
+==================================== ERRORS ====================================
+_ ERROR at setup of test_parity_sample_is_20_per_class_sorted_and_deterministic _
+
+    @pytest.fixture(scope="module")
+    def runner():
+>       return load_runner()
+               ^^^^^^^^^^^^^
+
+tests/test_dmd_candidate_runtime.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def load_runner():
+        path = SCRIPTS / "dmd_candidate_runtime_check.py"
+>       assert path.is_file(), f"missing runner {path}"
+E       AssertionError: missing runner /Users/liu/Desktop/FYP2-Live-System/scripts/dmd_candidate_runtime_check.py
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/Users/liu/Desktop/FYP2-Live-System/scripts/dmd_candidate_runtime_check.py').is_file
+
+tests/test_dmd_candidate_runtime.py:24: AssertionError
+_ ERROR at setup of test_parity_requires_both_the_probability_and_argmax_conditions _
+
+    @pytest.fixture(scope="module")
+    def runner():
+>       return load_runner()
+               ^^^^^^^^^^^^^
+
+tests/test_dmd_candidate_runtime.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def load_runner():
+        path = SCRIPTS / "dmd_candidate_runtime_check.py"
+>       assert path.is_file(), f"missing runner {path}"
+E       AssertionError: missing runner /Users/liu/Desktop/FYP2-Live-System/scripts/dmd_candidate_runtime_check.py
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/Users/liu/Desktop/FYP2-Live-System/scripts/dmd_candidate_runtime_check.py').is_file
+
+tests/test_dmd_candidate_runtime.py:24: AssertionError
+_ ERROR at setup of test_independent_preprocessing_matches_the_provider_on_a_synthetic_jpeg _
+
+    @pytest.fixture(scope="module")
+    def runner():
+>       return load_runner()
+               ^^^^^^^^^^^^^
+
+tests/test_dmd_candidate_runtime.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def load_runner():
+        path = SCRIPTS / "dmd_candidate_runtime_check.py"
+>       assert path.is_file(), f"missing runner {path}"
+E       AssertionError: missing runner /Users/liu/Desktop/FYP2-Live-System/scripts/dmd_candidate_runtime_check.py
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/Users/liu/Desktop/FYP2-Live-System/scripts/dmd_candidate_runtime_check.py').is_file
+
+tests/test_dmd_candidate_runtime.py:24: AssertionError
+_________ ERROR at setup of test_the_real_candidate_manifest_is_valid __________
+
+    @pytest.fixture(scope="module")
+    def runner():
+>       return load_runner()
+               ^^^^^^^^^^^^^
+
+tests/test_dmd_candidate_runtime.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def load_runner():
+        path = SCRIPTS / "dmd_candidate_runtime_check.py"
+>       assert path.is_file(), f"missing runner {path}"
+E       AssertionError: missing runner /Users/liu/Desktop/FYP2-Live-System/scripts/dmd_candidate_runtime_check.py
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/Users/liu/Desktop/FYP2-Live-System/scripts/dmd_candidate_runtime_check.py').is_file
+
+tests/test_dmd_candidate_runtime.py:24: AssertionError
+__________ ERROR at setup of test_model_identity_matches_the_protocol __________
+
+    @pytest.fixture(scope="module")
+    def runner():
+>       return load_runner()
+               ^^^^^^^^^^^^^
+
+tests/test_dmd_candidate_runtime.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def load_runner():
+        path = SCRIPTS / "dmd_candidate_runtime_check.py"
+>       assert path.is_file(), f"missing runner {path}"
+E       AssertionError: missing runner /Users/liu/Desktop/FYP2-Live-System/scripts/dmd_candidate_runtime_check.py
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/Users/liu/Desktop/FYP2-Live-System/scripts/dmd_candidate_runtime_check.py').is_file
+
+tests/test_dmd_candidate_runtime.py:24: AssertionError
+=========================== short test summary info ============================
+ERROR tests/test_dmd_candidate_runtime.py::test_parity_sample_is_20_per_class_sorted_and_deterministic
+ERROR tests/test_dmd_candidate_runtime.py::test_parity_requires_both_the_probability_and_argmax_conditions
+ERROR tests/test_dmd_candidate_runtime.py::test_independent_preprocessing_matches_the_provider_on_a_synthetic_jpeg
+ERROR tests/test_dmd_candidate_runtime.py::test_the_real_candidate_manifest_is_valid
+ERROR tests/test_dmd_candidate_runtime.py::test_model_identity_matches_the_protocol
+1 deselected, 5 errors in 0.07s

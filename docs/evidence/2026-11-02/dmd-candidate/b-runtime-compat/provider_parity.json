@@ -1,0 +1,145 @@
+{
+  "model_id": "dmd_adapted_mobilenet_v3_20261029",
+  "sample": {
+    "source_list": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p4b_20261022/shared_inputs/vision_sources.json",
+    "source_list_sha256": "098001f1816dd2aea40d5efcdd50ee349e1b1b7af6f20abf9dc6bbfb15bb08bb",
+    "rule": "first 20 filenames per class after sorting, class order c0..c9",
+    "n": 200,
+    "source_ids_sha256": "082a8108591bb0c5a21f7ccfe360b191e7d53705e4a17e4b4b70f3931de1752d"
+  },
+  "tolerance": {
+    "max_abs_prob_delta": 0.0001,
+    "argmax_agreement": 1.0,
+    "source": "docs/fyp2/task10a/tolerance_predeclaration.md (FUD-01, APPROVED 2026-10-26)"
+  },
+  "direct_session": {
+    "input_name": "input",
+    "input_shape": [
+      "batch",
+      3,
+      224,
+      224
+    ],
+    "input_type": "tensor(float)",
+    "output_name": "logits",
+    "output_shape": [
+      "batch",
+      10
+    ]
+  },
+  "provider_vs_direct": {
+    "argmax_agreement": 1.0,
+    "argmax_mismatches": [],
+    "max_abs_prob_delta": 1.1920928955078125e-06,
+    "missing_fresh": [],
+    "missing_reference": [],
+    "n_compared": 200,
+    "pass_numeric": true,
+    "worst": {
+      "fresh_argmax": 1,
+      "fresh_probs": [
+        0.002261171117424965,
+        0.6912776231765747,
+        0.046001456677913666,
+        0.04160183668136597,
+        0.000849088653922081,
+        0.0005780212231911719,
+        0.20806162059307098,
+        0.00036102134617976844,
+        0.008335043676197529,
+        0.0006731801549904048
+      ],
+      "max_delta": 1.1920928955078125e-06,
+      "per_class_deltas": [
+        3.725290298461914e-09,
+        1.1920928955078125e-06,
+        5.587935447692871e-08,
+        1.1175870895385742e-07,
+        2.2118911147117615e-09,
+        1.280568540096283e-09,
+        8.940696716308594e-07,
+        1.8335413187742233e-09,
+        1.4901161193847656e-08,
+        1.1641532182693481e-09
+      ],
+      "reference_argmax": 1,
+      "reference_probs": [
+        0.0022611748427152634,
+        0.6912764310836792,
+        0.04600151255726814,
+        0.04160194844007492,
+        0.0008490908658131957,
+        0.000578022503759712,
+        0.20806251466274261,
+        0.0003610231797210872,
+        0.008335058577358723,
+        0.0006731813191436231
+      ],
+      "source_id": "vision-v1:c1/img_11187.jpg",
+      "top1_top2_margin_fresh": 0.4832160025835037,
+      "top1_top2_margin_reference": 0.4832139164209366
+    }
+  },
+  "provider_vs_independent_preprocess": {
+    "argmax_agreement": 1.0,
+    "argmax_mismatches": [],
+    "max_abs_prob_delta": 1.1920928955078125e-06,
+    "missing_fresh": [],
+    "missing_reference": [],
+    "n_compared": 200,
+    "pass_numeric": true,
+    "worst": {
+      "fresh_argmax": 1,
+      "fresh_probs": [
+        0.002261171117424965,
+        0.6912776231765747,
+        0.046001456677913666,
+        0.04160183668136597,
+        0.000849088653922081,
+        0.0005780212231911719,
+        0.20806162059307098,
+        0.00036102134617976844,
+        0.008335043676197529,
+        0.0006731801549904048
+      ],
+      "max_delta": 1.1920928955078125e-06,
+      "per_class_deltas": [
+        3.725290298461914e-09,
+        1.1920928955078125e-06,
+        5.587935447692871e-08,
+        1.1175870895385742e-07,
+        2.2118911147117615e-09,
+        1.280568540096283e-09,
+        8.940696716308594e-07,
+        1.8335413187742233e-09,
+        1.4901161193847656e-08,
+        1.1641532182693481e-09
+      ],
+      "reference_argmax": 1,
+      "reference_probs": [
+        0.0022611748427152634,
+        0.6912764310836792,
+        0.04600151255726814,
+        0.04160194844007492,
+        0.0008490908658131957,
+        0.000578022503759712,
+        0.20806251466274261,
+        0.0003610231797210872,
+        0.008335058577358723,
+        0.0006731813191436231
+      ],
+      "source_id": "vision-v1:c1/img_11187.jpg",
+      "top1_top2_margin_fresh": 0.4832160025835037,
+      "top1_top2_margin_reference": 0.4832139164209366
+    }
+  },
+  "preprocess_tensor": {
+    "max_abs_tensor_delta": {
+      "max_abs_tensor_delta": 0.0,
+      "source_id": "vision-v1:c0/img_100191.jpg"
+    },
+    "n": 200,
+    "note": "information only, not part of the FUD-01 pass rule"
+  },
+  "rejected": []
+}
