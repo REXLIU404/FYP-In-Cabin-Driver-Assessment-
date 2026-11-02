@@ -19,7 +19,7 @@
 | D. 性能 | `PASS`（归档校验 6/6） | `d-perf/` | p95 30–45 ms 交替，Server vision 中位数约 8.6–9.4 ms |
 | E. 系统级 E2/E5（DMD） | `PASS`（E2、E5） | `e-system-level/` | E2 59/60 vs 59/60；E5 纯 c0 段 DMD Pd 0.0641，score 略高 |
 | F. 实时摄像头 | `NOT_RUN`（用户执行） | `f-camera-check/` | 脚本与清单已准备；没有打开摄像头 |
-| 门禁 | `GREEN` | `docs/evidence/2026-11-02/dmd-candidate-gates/` | 5/5 PASS；pytest 1438 passed, 12 skipped（DMD torch，单独 12 passed）, 11 deselected；ml/tests 302 passed |
+| 门禁 | `GREEN` | `docs/evidence/2026-11-02/dmd-candidate-gates-r2/` | 5/5 PASS；pytest 1442 passed, 12 skipped（DMD torch，单独 12 passed）, 11 deselected；ml/tests 302 passed |
 
 ## 核心数字（本数据集上）
 
@@ -95,20 +95,22 @@ done
 .venv/bin/python scripts/camera_ab_check.py --label stable --out docs/evidence/2026-11-02/dmd-candidate/f-camera-check/stable.json
 ```
 
-## 门禁结果（2026-11-02）
+## 门禁结果（2026-11-02 复核轮次）
 
-`DRA_REQUIRE_MODELS=1 python3 scripts/run_gates.py --out docs/evidence/2026-11-02/dmd-candidate-gates`
+`DRA_REQUIRE_MODELS=1 python3 scripts/run_gates.py --out docs/evidence/2026-11-02/dmd-candidate-gates-r2`
 
-- build / pytest / vitest / tsc / eslint **全部 PASS**（`dmd-candidate-gates/SUMMARY.md`）；
-- pytest：**1438 passed, 12 skipped, 11 deselected**；没有模型缺失导致的 skip
+- build / pytest / vitest / tsc / eslint **全部 PASS**（`dmd-candidate-gates-r2/SUMMARY.md`）；
+  vitest 为 41 files / 1070 tests 全部通过；
+- pytest：**1442 passed, 12 skipped, 11 deselected**；没有模型缺失导致的 skip
   （`DRA_REQUIRE_MODELS=1: no model-dependent test was skipped.`）；
 - 12 skipped 是 `DRA_DMD_TORCH=1` 门控的 DMD torch 测试，单独跑 **12 passed**
-  （`dmd-candidate-gates/dmd-torch-tests.log`）；
-- `ml/tests`：**302 passed**（`dmd-candidate-gates/ml-tests.log`）；
+  （`dmd-candidate-gates-r2/dmd-torch-tests.log`）；
+- `ml/tests`：**302 passed**（`dmd-candidate-gates-r2/ml-tests.log`）；
 - 11 deselected 是 `long` / `candidates` 标记；真实候选包的 runtime 检查在 B 项用
   `-m candidates` 单独跑过（`b-runtime-compat/tests-candidates-GREEN.log`）；
-- 门禁运行时的 dirty entries 是未跟踪的报告/计划/证据文档，不是代码改动；详见
-  `dmd-candidate-gates/GATES_NOTE.md`。
+- 门禁运行时的 dirty entries 包括两个与本轮修改无关的既有前端改动，未纳入本次提交；
+  其余是未跟踪的报告/计划/证据文件。详见 `dmd-candidate-gates-r2/GATES_NOTE.md`；
+- 第一次门禁 `dmd-candidate-gates/` 保留为历史，不覆盖。
 
 ## 约束核对
 
