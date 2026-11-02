@@ -18,7 +18,8 @@ for round in 1 2 3; do
 done
 ```
 
-原始命令、时间、负载与退出码在 `runs.log`；独立复算在 `recompute.log` / `recompute.json`。
+原始命令、时间、负载与退出码在 `runs.log`；capture→render 的独立复算在
+`recompute.log` / `recompute.json`。
 
 ## 结果
 
@@ -36,13 +37,16 @@ done
 - `windows_measured = 600`，`short_run = false`，`console_errors = []`，`attempts_other_than_1 = 0`；
 - `target_1s`（capture→render p95 ≤ 1000 ms）全部 `met = true`，余量很大；
 - 每轮 `perf01_timings.json` 的 sha256 与 `perf01.json.raw_timings.sha256` 一致，
-  独立复算的 p50/p95/max 与摘要逐项相等（6/6，见 `recompute.log`）。
+  独立复算的 **capture→render** p50/p95/max 与摘要逐项相等（6/6，见 `recompute.log`）。
+- **Server total / Server vision 的 p50/p95 只有 `perf01.json` 里的汇总值**；证据包没有
+  逐窗口的 Server-Timing 原始数据，因此 6/6 复算不覆盖这两列，不能像 capture→render
+  那样从原始行重算。
 
 ### 读数注意
 
-- 运行期间 `load average` 约 3.9–5.1（8 核），高于 2026-10-30 stage3-raw 的 2.3–4.1。
-  因此这些**绝对毫秒数不要与 stage3 的 31 ms 直接比较**；本轮 stable 与 DMD 交替运行，
-  比较应在同一天的这六轮内部进行。
+- 运行前后的 **1 分钟负载为 3.11–5.11**（8 核）；2026-10-30 stage3-raw 为 2.3–4.1，
+  两者**有重叠**，不能据此认定本轮负载更高。**绝对毫秒数不要与 stage3 的 31 ms 直接比较**；
+  本轮 stable 与 DMD 交替运行，比较应在同一天的这六轮内部进行。
 - 两模型的 capture→render p95 在 30–45 ms 之间交替，没有稳定的方向性差异；
   Server vision 中位数 stable 8.645–9.41 ms，DMD 9.095–9.345 ms，差距在轮间波动范围内。
 - 范围：一台开发机（Apple M2）、Chromium 假摄像头、冻结模型；不是目标硬件或真实摄像头。

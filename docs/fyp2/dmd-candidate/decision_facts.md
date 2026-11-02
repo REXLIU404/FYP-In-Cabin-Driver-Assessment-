@@ -87,8 +87,11 @@
 
 - 六轮全部 `short_run = false`、0 console errors、`attempts_other_than_1 = 0`，
   `target_1s`（capture→render p95 ≤ 1000 ms）全部 met。
-- 六轮原始计时的 sha256 与复算 p50/p95 全部一致（`d-perf/recompute.log`，6/6）。
-- 运行期间机器负载（load average）高于 2026-10-30 stage3 的 2.3–4.1；绝对毫秒数不应与 stage3 直接比较。
+- 六轮原始计时的 sha256 与 **capture→render** 的 p50/p95 复算全部一致
+  （`d-perf/recompute.log`，6/6）。**Server total / Server vision 的 p50/p95 只有
+  `perf01.json` 汇总值**；证据中没有逐窗口 Server-Timing 原始数据，未做独立复算。
+- 运行前后的 1 分钟负载为 **3.11–5.11**（8 核），与 2026-10-30 stage3 的 2.3–4.1
+  **有重叠**；不能据此说本轮更高，绝对毫秒数也不应与 stage3 直接比较。
 - 两模型的 p95 在 30–45 ms 之间交替，Server vision 中位数 stable 8.645–9.41 ms、DMD 9.095–9.345 ms，
   差异在轮间波动范围内；这是描述性结果，不是“哪个更快”的结论。
 
