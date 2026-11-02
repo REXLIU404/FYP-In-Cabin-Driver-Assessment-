@@ -81,31 +81,6 @@ def test_the_gate_blocks_a_protocol_that_was_not_declared_first(kwargs, needle):
     assert any(needle in p for p in fe.gate_verdict(**args))
 
 
-def test_a_nondefault_protocol_requires_an_explicit_output(monkeypatch):
-    calls = []
-    monkeypatch.setattr(fe, "run_e2", lambda out, protocol: calls.append((out, protocol)) or 0)
-    with pytest.raises(SystemExit) as stopped:
-        fe.main(["e2", "--protocol", "docs/fyp2/dmd-candidate/e2e5_dmd_protocol.json"])
-    assert stopped.value.code == 2
-    assert calls == []
-
-
-def test_the_default_protocol_may_use_the_dated_default_output(monkeypatch):
-    calls = []
-    monkeypatch.setattr(fe, "run_e2", lambda out, protocol: calls.append((out, protocol)) or 0)
-    assert fe.main(["e2"]) == 0
-    assert calls == [(None, fe.PROTOCOL)]
-
-
-def test_a_nondefault_protocol_runs_with_an_explicit_output(monkeypatch, tmp_path):
-    calls = []
-    monkeypatch.setattr(fe, "run_e5", lambda out, protocol: calls.append((out, protocol)) or 0)
-    protocol = REPO / "docs" / "fyp2" / "dmd-candidate" / "e2e5_dmd_protocol.json"
-    out = tmp_path / "e5-dmd"
-    assert fe.main(["e5", "--protocol", str(protocol), "--out", str(out)]) == 0
-    assert calls == [(out, protocol)]
-
-
 # ------------------------------------------------------------------------- E2 pairs
 def _pools():
     vision = [{"filename": f"img_{c}_{i:03d}.jpg", "class_id": c, "driver_id": f"p{i % 4}",
@@ -361,43 +336,3 @@ def test_e5_summary_lag_alert_and_branch_contribution():
     assert summary["segments"][0]["variants"]["FUSED"]["agrees"] == 40
     assert summary["segments"][1]["contribution_from_vision"]["max"] == 60.0
     assert summary["segments"][0]["contribution_from_telemetry"]["max"] == 0.0
-
-
-# ------------------------------------------------- DMD candidate: protocol + worker env
-DMD_PROTOCOL_PATH = REPO / "docs" / "fyp2" / "dmd-candidate" / "e2e5_dmd_protocol.json"
-
-
-def test_expected_vision_model_defaults_to_stable_and_reads_the_candidate_protocol():
-    assert fe.expected_vision_model({}) == fe.STABLE_MODEL_ID
-    assert fe.expected_vision_model({"fixed_runtime": {}}) == fe.STABLE_MODEL_ID
-    dmd = json.loads(DMD_PROTOCOL_PATH.read_text(encoding="utf-8"))
-    assert dmd["decision_rule"] == "DESCRIPTIVE_ONLY"
-    assert dmd["fixed_runtime"]["vision_model_id"] == "dmd_adapted_mobilenet_v3_20261029"
-    assert dmd["fixed_runtime"]["vision_model_sha256"] == \
-        "01f1d6a3a57936590d29f1a86856fd6e67c8c9fd382f48bd601f9c66ed2b4d55"
-    assert fe.expected_vision_model(dmd) == "dmd_adapted_mobilenet_v3_20261029"
-
-
-def test_worker_environment_selects_the_candidate_and_keeps_the_temp_database(tmp_path):
-    stable = fe.worker_environment({"PATH": "/bin", "DRA_ACTIVE_VISION": "old"}, fe.STABLE_MODEL_ID,
-                                   Path("/backend"), tmp_path)
-    assert "DRA_ACTIVE_VISION" not in stable
-    assert stable["PYTHONPATH"] == "/backend"
-    assert stable["PYTHONDONTWRITEBYTECODE"] == "1"
-    assert stable["DRA_DATABASE_URL"] == f"sqlite:///{tmp_path / 'eval.sqlite'}"
-    dmd = fe.worker_environment({"PATH": "/bin"}, "dmd_adapted_mobilenet_v3_20261029",
-                                Path("/backend"), tmp_path)
-    assert dmd["DRA_ACTIVE_VISION"] == "dmd_adapted_mobilenet_v3_20261029"
-
-
-def test_the_dmd_protocol_is_committed_and_its_gate_passes():
-    gate = fe.protocol_gate(datetime.now(timezone.utc), path=DMD_PROTOCOL_PATH)
-    assert gate["status"] == "PASS", gate
-    assert gate["path"] == "docs/fyp2/dmd-candidate/e2e5_dmd_protocol.json"
-
-
-def test_the_gate_accepts_a_repo_relative_protocol_path():
-    gate = fe.protocol_gate(datetime.now(timezone.utc),
-                            path=Path("docs/fyp2/dmd-candidate/e2e5_dmd_protocol.json"))
-    assert gate["status"] == "PASS", gate
-    assert gate["path"] == "docs/fyp2/dmd-candidate/e2e5_dmd_protocol.json"

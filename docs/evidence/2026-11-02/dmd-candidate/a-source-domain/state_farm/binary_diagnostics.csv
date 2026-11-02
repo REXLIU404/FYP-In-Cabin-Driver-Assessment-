@@ -1,3 +1,0 @@
-dataset,model,threshold,c0_support,non_c0_support,c0_false_positive_proxy,distraction_recall,precision,binary_accuracy,counts
-state_farm_test,stable_mobilenet_v3_large,0.5,431,3226,0.09048723897911833,0.972101673899566,0.9877165354330709,0.9647251845775225,"{'tp': 3136, 'fp': 39, 'fn': 90, 'tn': 392}"
-state_farm_test,dmd_adapted_mobilenet_v3_20261029,0.5,431,3226,0.048723897911832945,0.9510229386236826,0.9932016833926837,0.9510527754990429,"{'tp': 3068, 'fp': 21, 'fn': 158, 'tn': 410}"

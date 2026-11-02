@@ -137,3 +137,9 @@
 |---|---|---|
 | 曾宣称「Live 不会出现 stale」 | 1 | Codex R08 判 INCORRECT，已核实；阶段 1 更正 |
 | A–G 防范清单审查的合并步骤因会话额度失败 | 1 | 三个视角的原始结果保存在 workflow journal（`wf_fbb31b26-162`），未复核，未写入计划 |
+
+## 2026-11-02 用户决定：main 不含 DMD
+- DMD 领域适配和 DMD 候选评估都已完成并核实（State Farm acc 0.899→0.809；用户在现场摄像头上实测，两个模型都不准）。在役模型维持 stable MobileNetV3-Large。
+- 用户决定最终的 main 不保留 DMD：已在 fyp2/live-system 上一次性删除 DMD 的脚本、测试、证据、计划和候选评估。删除前的完整记录保留在提交 22b01c3 及 fyp2/dmd-adaptation 分支。
+- scripts/fusion_eval.py 及其测试恢复到 9d4ace8：DMD 专用的"由协议选择视觉模型"入口一并移除。stable 的 E2 已用恢复后的代码复跑，逐窗口结果一致。
+- 报告中 DMD 只在 6.7 Limitations 里保留定性的一段，由报告和 Codex 那条线处理。

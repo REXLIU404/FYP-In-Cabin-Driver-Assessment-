@@ -1,7 +1,0 @@
-dmd-r1                                               dmd_adapted_mobilenet_v3_20261029        rows  600  c2r p50    27.0 p95      30  server vision median 9.23 p95 9.99  sha True recompute True
-dmd-r2                                               dmd_adapted_mobilenet_v3_20261029        rows  600  c2r p50    28.0 p95      36  server vision median 9.345 p95 10.83  sha True recompute True
-dmd-r3                                               dmd_adapted_mobilenet_v3_20261029        rows  600  c2r p50    28.0 p95      39  server vision median 9.095 p95 11.85  sha True recompute True
-stable-r1                                            stable_mobilenet_v3_large                rows  600  c2r p50    27.0 p95      45  server vision median 8.645 p95 12.56  sha True recompute True
-stable-r2                                            stable_mobilenet_v3_large                rows  600  c2r p50    27.0 p95      36  server vision median 8.88 p95 10.87  sha True recompute True
-stable-r3                                            stable_mobilenet_v3_large                rows  600  c2r p50    28.0 p95      35  server vision median 9.41 p95 11.0  sha True recompute True
-6 run(s): integrity OK, quality OK

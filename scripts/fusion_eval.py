@@ -6,9 +6,6 @@ Usage (from the repo root, with the backend venv):
     .venv/bin/python scripts/fusion_eval.py e2 [--out DIR]
     .venv/bin/python scripts/fusion_eval.py e5 [--out DIR]
 
-A non-default ``--protocol`` requires an explicit ``--out``: the dated default directory
-belongs to ``docs/fyp2/e2e5/protocol.json`` and must not be overwritten by another protocol.
-
 E2 sends 60 constructed (image, telemetry row) pairs, in 6 label strata, through the REAL
 ``/infer`` once per fusion-weight setting of report Table 9. That is 300 one-window
 sessions, so no EMA history is involved. E5 (light) replays the ``viva_compact``
@@ -90,22 +87,6 @@ def iso_at(offset_ms: int, t0: str = T0) -> str:
 
 
 # ---------------------------------------------------------------------- protocol gate
-def expected_vision_model(protocol: dict) -> str:
-    """The machine-readable vision model of a protocol; absent means the stable model."""
-    return (protocol.get("fixed_runtime") or {}).get("vision_model_id", STABLE_MODEL_ID)
-
-
-def worker_environment(base_env: dict, vision_model_id: str, backend_dir: Path,
-                       work_dir: Path) -> dict:
-    """The child environment: no inherited DRA_*; the candidate id when one is declared."""
-    env = {k: v for k, v in base_env.items() if not k.startswith("DRA_")}
-    env.update(PYTHONPATH=str(backend_dir), PYTHONDONTWRITEBYTECODE="1", TMPDIR=str(work_dir),
-               DRA_DATABASE_URL=f"sqlite:///{work_dir / 'eval.sqlite'}")
-    if vision_model_id != STABLE_MODEL_ID:
-        env["DRA_ACTIVE_VISION"] = vision_model_id
-    return env
-
-
 def _git(*args: str) -> str | None:
     done = subprocess.run(["git", *args], cwd=REPO, capture_output=True, text=True, timeout=30)
     return done.stdout.strip() if done.returncode == 0 else None
@@ -130,9 +111,6 @@ def gate_verdict(*, dirty: bool, commit: str | None, commit_time: str | None,
 
 
 def protocol_gate(run_start: datetime, path: Path = PROTOCOL) -> dict:
-    path = Path(path)
-    if not path.is_absolute():
-        path = REPO / path
     rel = str(path.relative_to(REPO))
     log = _git("log", "-1", "--format=%H %cI", "--", rel)
     commit, commit_time = (log.split(" ", 1) if log else (None, None))
@@ -395,8 +373,6 @@ def execute(plan: dict) -> dict:
     problems: list[str] = []
     identity: dict = {}
     sessions_out = []
-    expected_vision = plan.get("vision_model_id", STABLE_MODEL_ID)
-    expected_vision_sha = plan.get("vision_model_sha256")
 
     from fastapi.testclient import TestClient
 
@@ -420,12 +396,9 @@ def execute(plan: dict) -> dict:
                         "vision_model_sha256": (models.get("vision") or {}).get("sha256"),
                         "telemetry_model_sha256": (models.get("telemetry") or {}).get("sha256"),
                         "models_endpoint": models}
-            if identity["vision_model_id"] != expected_vision:
+            if identity["vision_model_id"] != STABLE_MODEL_ID:
                 problems.append(f"active vision model is {identity['vision_model_id']!r}, "
-                                f"the protocol requires {expected_vision!r}")
-            if expected_vision_sha and identity["vision_model_sha256"] != expected_vision_sha:
-                problems.append(f"vision model sha256 is {identity['vision_model_sha256']!r}, "
-                                f"the protocol requires {expected_vision_sha!r}")
+                                f"the protocol requires {STABLE_MODEL_ID!r}")
             for session in plan["sessions"] if not problems else []:
                 created = client.post("/api/sessions", json={
                     "session_id": session["session_id"], "operation_mode": session["mode"],
@@ -449,7 +422,7 @@ def execute(plan: dict) -> dict:
                                   meta=step.get("meta", {}))
                     used = (window["vision_model_id"], window["vision_model_sha256"],
                             window["telemetry_model_sha256"])
-                    expected = (expected_vision, identity["vision_model_sha256"],
+                    expected = (STABLE_MODEL_ID, identity["vision_model_sha256"],
                                 identity["telemetry_model_sha256"])
                     if used != expected:
                         problems.append(f"{step['request_id']}: window used models {used}, "
@@ -473,8 +446,9 @@ def run_worker(plan: dict, out_dir: Path) -> tuple[dict, dict]:
     work_dir = Path(plan["work_dir"])
     spec, result = work_dir / "worker_spec.json", work_dir / "worker_out.json"
     spec.write_text(json.dumps(plan))
-    env = worker_environment(os.environ, plan.get("vision_model_id", STABLE_MODEL_ID),
-                             BACKEND_DIR, work_dir)
+    env = {k: v for k, v in os.environ.items() if not k.startswith("DRA_")}
+    env.update(PYTHONPATH=str(BACKEND_DIR), PYTHONDONTWRITEBYTECODE="1", TMPDIR=str(work_dir),
+               DRA_DATABASE_URL=f"sqlite:///{work_dir / 'eval.sqlite'}")
     command = [sys.executable, str(Path(__file__).resolve()), "--worker", str(spec), str(result)]
     began = time.time()
     done = subprocess.run(command, cwd=BACKEND_DIR, env=env, capture_output=True, text=True,
@@ -715,13 +689,10 @@ def dump(path: Path, data) -> None:
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
-def _start(kind: str, out: Path | None, protocol_path: Path = PROTOCOL) -> tuple[datetime, dict, dict, Path, Path]:
+def _start(kind: str, out: Path | None) -> tuple[datetime, dict, dict, Path, Path]:
     run_start = datetime.now(timezone.utc)
-    protocol_path = Path(protocol_path)
-    if not protocol_path.is_absolute():
-        protocol_path = REPO / protocol_path
-    protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
-    gate = protocol_gate(run_start, protocol_path)
+    protocol = json.loads(PROTOCOL.read_text(encoding="utf-8"))
+    gate = protocol_gate(run_start)
     try:
         data_root, _ = resolve_data_root()
     except DataRootError as exc:
@@ -740,8 +711,8 @@ def _header(run_start: datetime, gate: dict, data_root: Path | None) -> dict:
             "data_root": str(data_root) if data_root else None, "git": git_state()}
 
 
-def run_e2(out: Path | None, protocol_path: Path = PROTOCOL) -> int:
-    run_start, protocol, gate, out_dir, data_root = _start("e2", out, protocol_path)
+def run_e2(out: Path | None) -> int:
+    run_start, protocol, gate, out_dir, data_root = _start("e2", out)
     header = _header(run_start, gate, data_root)
     if gate["status"] != "PASS":
         dump(out_dir / "results.json", {**header, "status": "BLOCKED"})
@@ -755,10 +726,7 @@ def run_e2(out: Path | None, protocol_path: Path = PROTOCOL) -> int:
     for pair in pairs:
         pair["vision"]["sha256"] = sha256_file(pair["vision"]["image_path"])
     work_dir = Path(tempfile.mkdtemp(prefix="e2-fusion-eval-"))
-    record, output = run_worker({"work_dir": str(work_dir), "sessions": e2_sessions(pairs, protocol),
-                                 "vision_model_id": expected_vision_model(protocol),
-                                 "vision_model_sha256": (protocol.get("fixed_runtime") or {}).get("vision_model_sha256")},
-                                out_dir)
+    record, output = run_worker({"work_dir": str(work_dir), "sessions": e2_sessions(pairs, protocol)}, out_dir)
     status = output["status"]
     result = {**header, "inputs": {"vision_csv_sha256": sha256_file(vision_csv),
                                    "telemetry_csv_sha256": sha256_file(telemetry_csv)},
@@ -788,8 +756,8 @@ def run_e2(out: Path | None, protocol_path: Path = PROTOCOL) -> int:
     return 0 if status == "PASS" else 1
 
 
-def run_e5(out: Path | None, protocol_path: Path = PROTOCOL) -> int:
-    run_start, protocol, gate, out_dir, data_root = _start("e5", out, protocol_path)
+def run_e5(out: Path | None) -> int:
+    run_start, protocol, gate, out_dir, data_root = _start("e5", out)
     header = _header(run_start, gate, data_root)
     if gate["status"] != "PASS":
         dump(out_dir / "results.json", {**header, "status": "BLOCKED"})
@@ -816,10 +784,7 @@ def run_e5(out: Path | None, protocol_path: Path = PROTOCOL) -> int:
                          "config": runtime_config(protocol, 0.5, 0.5),
                          "meta": {"variant": variant}, "steps": steps})
     identity_check = unchanged_segment_identity(manifests)
-    record, output = run_worker({"work_dir": str(work_dir), "sessions": sessions,
-                                 "vision_model_id": expected_vision_model(protocol),
-                                 "vision_model_sha256": (protocol.get("fixed_runtime") or {}).get("vision_model_sha256")},
-                                out_dir)
+    record, output = run_worker({"work_dir": str(work_dir), "sessions": sessions}, out_dir)
     status = output["status"]
     result = {**header, "scenarios": {v: {"scenario_id": m["scenario_id"],
                                           "scenario_sha256": m["scenario_sha256"],
@@ -862,8 +827,6 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("kind", nargs="?", choices=("e2", "e5"))
     parser.add_argument("--out", type=Path, default=None, help="evidence directory (default: dated)")
-    parser.add_argument("--protocol", type=Path, default=PROTOCOL,
-                        help="committed protocol JSON (default: docs/fyp2/e2e5/protocol.json)")
     parser.add_argument("--worker", nargs=2, metavar=("SPEC", "OUT"), help=argparse.SUPPRESS)
     args = parser.parse_args(argv)
     if args.worker:
@@ -872,12 +835,7 @@ def main(argv=None) -> int:
         return 0
     if args.kind is None:
         parser.error("choose e2 or e5")
-    protocol_path = args.protocol if args.protocol.is_absolute() else REPO / args.protocol
-    if args.out is None and protocol_path.resolve() != PROTOCOL.resolve():
-        parser.error("--out is required when --protocol is not the default "
-                     "docs/fyp2/e2e5/protocol.json (the dated default directory is reserved "
-                     "for that protocol)")
-    return run_e2(args.out, args.protocol) if args.kind == "e2" else run_e5(args.out, args.protocol)
+    return run_e2(args.out) if args.kind == "e2" else run_e5(args.out)
 
 
 if __name__ == "__main__":
