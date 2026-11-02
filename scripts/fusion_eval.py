@@ -127,6 +127,9 @@ def gate_verdict(*, dirty: bool, commit: str | None, commit_time: str | None,
 
 
 def protocol_gate(run_start: datetime, path: Path = PROTOCOL) -> dict:
+    path = Path(path)
+    if not path.is_absolute():
+        path = REPO / path
     rel = str(path.relative_to(REPO))
     log = _git("log", "-1", "--format=%H %cI", "--", rel)
     commit, commit_time = (log.split(" ", 1) if log else (None, None))
@@ -712,6 +715,8 @@ def dump(path: Path, data) -> None:
 def _start(kind: str, out: Path | None, protocol_path: Path = PROTOCOL) -> tuple[datetime, dict, dict, Path, Path]:
     run_start = datetime.now(timezone.utc)
     protocol_path = Path(protocol_path)
+    if not protocol_path.is_absolute():
+        protocol_path = REPO / protocol_path
     protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
     gate = protocol_gate(run_start, protocol_path)
     try:

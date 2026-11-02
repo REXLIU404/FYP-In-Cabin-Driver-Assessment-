@@ -369,3 +369,10 @@ def test_the_dmd_protocol_is_committed_and_its_gate_passes():
     gate = fe.protocol_gate(datetime.now(timezone.utc), path=DMD_PROTOCOL_PATH)
     assert gate["status"] == "PASS", gate
     assert gate["path"] == "docs/fyp2/dmd-candidate/e2e5_dmd_protocol.json"
+
+
+def test_the_gate_accepts_a_repo_relative_protocol_path():
+    gate = fe.protocol_gate(datetime.now(timezone.utc),
+                            path=Path("docs/fyp2/dmd-candidate/e2e5_dmd_protocol.json"))
+    assert gate["status"] == "PASS", gate
+    assert gate["path"] == "docs/fyp2/dmd-candidate/e2e5_dmd_protocol.json"
