@@ -1,0 +1,353 @@
+{
+  "data_root": "/Users/liu/Desktop/DMD",
+  "step": 30,
+  "fps": 30.0,
+  "sessions": 19,
+  "frames": 4141,
+  "sync_status_counts": {
+    "OFFICIAL": 14,
+    "OVERRIDDEN": 1,
+    "MISMATCH": 4
+  },
+  "by_split": {
+    "train": 2005,
+    "val": 782,
+    "test": 1354
+  },
+  "by_class": {
+    "c0": 1902,
+    "c5": 158,
+    "c6": 150,
+    "c9": 159,
+    "c8": 180,
+    "c2": 487,
+    "c1": 214,
+    "c4": 595,
+    "c3": 213,
+    "c7": 83
+  },
+  "sessions_detail": [
+    {
+      "subject": "gA_1",
+      "session": "gA_1_s1_2019-03-08T09;31;15+01;00",
+      "video": "gA_1_s1_2019-03-08T09;31;15+01;00_rgb_body.mp4",
+      "effective_shift": 15,
+      "sync_status": "OFFICIAL",
+      "sampled": 254,
+      "conflicts": 0,
+      "written": 208,
+      "skipped": 46,
+      "by_class": {
+        "c0": 130,
+        "c5": 31,
+        "c6": 28,
+        "c9": 19
+      }
+    },
+    {
+      "subject": "gA_1",
+      "session": "gA_1_s2_2019-03-08T09;21;03+01;00",
+      "video": "gA_1_s2_2019-03-08T09;21;03+01;00_rgb_body.mp4",
+      "effective_shift": 5,
+      "sync_status": "OFFICIAL",
+      "sampled": 475,
+      "conflicts": 0,
+      "written": 395,
+      "skipped": 80,
+      "by_class": {
+        "c0": 120,
+        "c8": 37,
+        "c2": 80,
+        "c1": 29,
+        "c4": 94,
+        "c3": 35
+      }
+    },
+    {
+      "subject": "gA_1",
+      "session": "gA_1_s3_2019-03-14T14;31;08+01;00",
+      "video": "gA_1_s3_2019-03-14T14;31;08+01;00_rgb_body.mp4",
+      "effective_shift": 7,
+      "sync_status": "OFFICIAL",
+      "sampled": 65,
+      "conflicts": 0,
+      "written": 63,
+      "skipped": 2,
+      "by_class": {
+        "c0": 46,
+        "c7": 17
+      }
+    },
+    {
+      "subject": "gB_10",
+      "session": "gB_10_s1_2019-03-11T15;24;54+01;00",
+      "video": "gB_10_s1_2019-03-11T15;24;54+01;00_rgb_body.mp4",
+      "effective_shift": 11,
+      "sync_status": "OFFICIAL",
+      "sampled": 241,
+      "conflicts": 0,
+      "written": 211,
+      "skipped": 30,
+      "by_class": {
+        "c0": 106,
+        "c5": 28,
+        "c6": 31,
+        "c9": 46
+      }
+    },
+    {
+      "subject": "gB_10",
+      "session": "gB_10_s2_2019-03-11T15;15;21+01;00",
+      "video": "gB_10_s2_2019-03-11T15;15;21+01;00_rgb_body.mp4",
+      "effective_shift": 22,
+      "sync_status": "OFFICIAL",
+      "sampled": 547,
+      "conflicts": 0,
+      "written": 455,
+      "skipped": 92,
+      "by_class": {
+        "c0": 107,
+        "c8": 31,
+        "c1": 37,
+        "c2": 100,
+        "c4": 156,
+        "c3": 24
+      }
+    },
+    {
+      "subject": "gB_10",
+      "session": "gB_10_s3_2019-03-12T10;40;46+01;00",
+      "video": "gB_10_s3_2019-03-12T10;40;46+01;00_rgb_body.mp4",
+      "effective_shift": 5,
+      "sync_status": "OFFICIAL",
+      "sampled": 67,
+      "conflicts": 0,
+      "written": 59,
+      "skipped": 8,
+      "by_class": {
+        "c0": 45,
+        "c7": 14
+      }
+    },
+    {
+      "subject": "gB_10",
+      "session": "gB_10_s3_2019-03-13T14;22;40+01;00",
+      "video": "gB_10_s3_2019-03-13T14;22;40+01;00_rgb_body.mp4",
+      "effective_shift": 20,
+      "sync_status": "OVERRIDDEN",
+      "sampled": 65,
+      "conflicts": 0,
+      "written": 57,
+      "skipped": 8,
+      "by_class": {
+        "c0": 48,
+        "c7": 9
+      }
+    },
+    {
+      "subject": "gC_13",
+      "session": "gC_13_s1_2019-03-04T10;26;12+01;00",
+      "video": "gC_13_s1_2019-03-04T10;26;12+01;00_rgb_body.mp4",
+      "effective_shift": 4,
+      "sync_status": "MISMATCH",
+      "sampled": 269,
+      "conflicts": 0,
+      "written": 225,
+      "skipped": 44,
+      "by_class": {
+        "c0": 163,
+        "c5": 30,
+        "c6": 14,
+        "c9": 18
+      }
+    },
+    {
+      "subject": "gC_13",
+      "session": "gC_13_s2_2019-03-04T10;11;37+01;00",
+      "video": "gC_13_s2_2019-03-04T10;11;37+01;00_rgb_body.mp4",
+      "effective_shift": 2,
+      "sync_status": "MISMATCH",
+      "sampled": 434,
+      "conflicts": 0,
+      "written": 370,
+      "skipped": 64,
+      "by_class": {
+        "c0": 142,
+        "c8": 32,
+        "c1": 33,
+        "c2": 53,
+        "c4": 72,
+        "c3": 38
+      }
+    },
+    {
+      "subject": "gC_13",
+      "session": "gC_13_s3_2019-03-12T10;06;34+01;00",
+      "video": "gC_13_s3_2019-03-12T10;06;34+01;00_rgb_body.mp4",
+      "effective_shift": 1,
+      "sync_status": "OFFICIAL",
+      "sampled": 66,
+      "conflicts": 0,
+      "written": 58,
+      "skipped": 8,
+      "by_class": {
+        "c0": 48,
+        "c7": 10
+      }
+    },
+    {
+      "subject": "gA_5",
+      "session": "gA_5_s1_2019-03-08T10;57;00+01;00",
+      "video": "gA_5_s1_2019-03-08T10;57;00+01;00_rgb_body.mp4",
+      "effective_shift": 16,
+      "sync_status": "OFFICIAL",
+      "sampled": 259,
+      "conflicts": 0,
+      "written": 217,
+      "skipped": 42,
+      "by_class": {
+        "c0": 167,
+        "c5": 18,
+        "c6": 24,
+        "c9": 8
+      }
+    },
+    {
+      "subject": "gA_5",
+      "session": "gA_5_s2_2019-03-08T10;46;46+01;00",
+      "video": "gA_5_s2_2019-03-08T10;46;46+01;00_rgb_body.mp4",
+      "effective_shift": 19,
+      "sync_status": "OFFICIAL",
+      "sampled": 437,
+      "conflicts": 0,
+      "written": 359,
+      "skipped": 78,
+      "by_class": {
+        "c0": 126,
+        "c8": 14,
+        "c1": 45,
+        "c2": 59,
+        "c3": 42,
+        "c4": 73
+      }
+    },
+    {
+      "subject": "gA_5",
+      "session": "gA_5_s3_2019-03-13T09;10;35+01;00",
+      "video": "gA_5_s3_2019-03-13T09;10;35+01;00_rgb_body.mp4",
+      "effective_shift": 11,
+      "sync_status": "OFFICIAL",
+      "sampled": 66,
+      "conflicts": 0,
+      "written": 58,
+      "skipped": 8,
+      "by_class": {
+        "c0": 50,
+        "c7": 8
+      }
+    },
+    {
+      "subject": "gE_29",
+      "session": "gE_29_s1_2019-03-15T13;58;00+01;00",
+      "video": "gE_29_s1_2019-03-15T13;58;00+01;00_rgb_body.mp4",
+      "effective_shift": 3,
+      "sync_status": "OFFICIAL",
+      "sampled": 274,
+      "conflicts": 0,
+      "written": 234,
+      "skipped": 40,
+      "by_class": {
+        "c0": 140,
+        "c5": 26,
+        "c6": 26,
+        "c9": 42
+      }
+    },
+    {
+      "subject": "gE_29",
+      "session": "gE_29_s2_2019-03-15T13;42;24+01;00",
+      "video": "gE_29_s2_2019-03-15T13;42;24+01;00_rgb_body.mp4",
+      "effective_shift": 1,
+      "sync_status": "OFFICIAL",
+      "sampled": 496,
+      "conflicts": 0,
+      "written": 412,
+      "skipped": 84,
+      "by_class": {
+        "c0": 116,
+        "c8": 33,
+        "c2": 91,
+        "c1": 36,
+        "c4": 96,
+        "c3": 40
+      }
+    },
+    {
+      "subject": "gE_29",
+      "session": "gE_29_s3_2019-03-15T13;54;40+01;00",
+      "video": "gE_29_s3_2019-03-15T13;54;40+01;00_rgb_body.mp4",
+      "effective_shift": 3,
+      "sync_status": "OFFICIAL",
+      "sampled": 62,
+      "conflicts": 0,
+      "written": 55,
+      "skipped": 7,
+      "by_class": {
+        "c0": 42,
+        "c7": 13
+      }
+    },
+    {
+      "subject": "gB_6",
+      "session": "gB_6_s1_2019-03-11T13;55;14+01;00",
+      "video": "gB_6_s1_2019-03-11T13;55;14+01;00_rgb_body.mp4",
+      "effective_shift": 24,
+      "sync_status": "MISMATCH",
+      "sampled": 255,
+      "conflicts": 0,
+      "written": 213,
+      "skipped": 42,
+      "by_class": {
+        "c0": 137,
+        "c5": 25,
+        "c6": 27,
+        "c9": 24
+      }
+    },
+    {
+      "subject": "gB_6",
+      "session": "gB_6_s2_2019-03-11T13;46;14+01;00",
+      "video": "gB_6_s2_2019-03-11T13;46;14+01;00_rgb_body.mp4",
+      "effective_shift": 14,
+      "sync_status": "MISMATCH",
+      "sampled": 524,
+      "conflicts": 0,
+      "written": 428,
+      "skipped": 96,
+      "by_class": {
+        "c0": 119,
+        "c8": 33,
+        "c2": 104,
+        "c1": 34,
+        "c4": 104,
+        "c3": 34
+      }
+    },
+    {
+      "subject": "gB_6",
+      "session": "gB_6_s3_2019-03-13T13;41;02+01;00",
+      "video": "gB_6_s3_2019-03-13T13;41;02+01;00_rgb_body.mp4",
+      "effective_shift": 21,
+      "sync_status": "OFFICIAL",
+      "sampled": 70,
+      "conflicts": 0,
+      "written": 64,
+      "skipped": 6,
+      "by_class": {
+        "c0": 50,
+        "c9": 2,
+        "c7": 12
+      }
+    }
+  ]
+}
