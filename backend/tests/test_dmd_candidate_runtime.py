@@ -95,6 +95,7 @@ def test_independent_preprocessing_matches_the_provider_on_a_synthetic_jpeg(runn
     assert float(np.max(np.abs(provider - independent))) <= 1e-6
 
 
+@pytest.mark.candidates
 def test_the_real_candidate_manifest_is_valid(runner):
     result = runner.validate_manifest(package_dir=PACKAGE, manifest_path=MANIFEST,
                                       validator=SCRIPTS / "validate_runtime_manifest.py")
@@ -102,6 +103,7 @@ def test_the_real_candidate_manifest_is_valid(runner):
     assert "valid" in result["stdout"]
 
 
+@pytest.mark.candidates
 def test_model_identity_matches_the_protocol(runner):
     assert runner.DMD_MODEL_ID == "dmd_adapted_mobilenet_v3_20261029"
     assert runner.DMD_SHA256 == "01f1d6a3a57936590d29f1a86856fd6e67c8c9fd382f48bd601f9c66ed2b4d55"
