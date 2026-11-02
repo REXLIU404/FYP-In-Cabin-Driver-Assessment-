@@ -1,0 +1,30 @@
+{
+  "checked_utc": "2026-11-02T10:52:37.494501+00:00",
+  "state_farm_input_list": {
+    "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p4b_20261022/shared_inputs/vision_sources.json",
+    "expected_sha256": "098001f1816dd2aea40d5efcdd50ee349e1b1b7af6f20abf9dc6bbfb15bb08bb",
+    "actual_sha256": "098001f1816dd2aea40d5efcdd50ee349e1b1b7af6f20abf9dc6bbfb15bb08bb",
+    "match": true
+  },
+  "dmd_manifest": {
+    "path": "/Users/liu/Desktop/fyp2/ml-training/FYP2-DMD-body-v1/sampling_manifest.csv",
+    "expected_sha256": "527f714b867960bdda703a8847f91ba3f377810fb4cde155e47b40a649a28ce2",
+    "actual_sha256": "527f714b867960bdda703a8847f91ba3f377810fb4cde155e47b40a649a28ce2",
+    "match": true
+  },
+  "models": {
+    "stable_mobilenet_v3_large": {
+      "onnx_path": "/Users/liu/Desktop/FYP2-Live-System/ml/outputs/vision/mobilenetv3_large_vision.onnx",
+      "expected_sha256": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+      "actual_sha256": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+      "match": true
+    },
+    "dmd_adapted_mobilenet_v3_20261029": {
+      "onnx_path": "/Users/liu/Desktop/FYP2-Live-System/ml/outputs/candidates/dmd_adapted_mobilenet_v3_20261029/model.onnx",
+      "expected_sha256": "01f1d6a3a57936590d29f1a86856fd6e67c8c9fd382f48bd601f9c66ed2b4d55",
+      "actual_sha256": "01f1d6a3a57936590d29f1a86856fd6e67c8c9fd382f48bd601f9c66ed2b4d55",
+      "match": true
+    }
+  },
+  "note": "Post-run identity check of the recorded inputs/models against the pre-declared protocol values; no measurement changed."
+}
