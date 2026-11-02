@@ -1,0 +1,31 @@
+=== 2026-11-02T10:34:42Z stable-r1 active_vision=stable ===
+load_before: { 3.11 5.72 7.34 }
+PERF-01: 600 windows at 9.84 Hz; capture->render p50 27.0 ms, p95 45 ms, max 127 ms -> docs/evidence/2026-11-02/dmd-candidate/d-perf/stable-r1/perf01.json
+exit_code: 0
+load_after: { 5.11 5.95 7.31 }
+=== 2026-11-02T10:35:55Z dmd-r1 active_vision=dmd_adapted_mobilenet_v3_20261029 ===
+load_before: { 5.11 5.95 7.31 }
+PERF-01: 600 windows at 9.83 Hz; capture->render p50 27.0 ms, p95 30 ms, max 186 ms -> docs/evidence/2026-11-02/dmd-candidate/d-perf/dmd-r1/perf01.json
+exit_code: 0
+load_after: { 4.31 5.62 7.08 }
+=== 2026-11-02T10:37:07Z stable-r2 active_vision=stable ===
+load_before: { 4.31 5.62 7.08 }
+PERF-01: 600 windows at 9.82 Hz; capture->render p50 27.0 ms, p95 36 ms, max 136 ms -> docs/evidence/2026-11-02/dmd-candidate/d-perf/stable-r2/perf01.json
+exit_code: 0
+load_after: { 4.04 5.17 6.78 }
+=== 2026-11-02T10:38:18Z dmd-r2 active_vision=dmd_adapted_mobilenet_v3_20261029 ===
+load_before: { 4.04 5.17 6.78 }
+PERF-01: 600 windows at 9.83 Hz; capture->render p50 28.0 ms, p95 36 ms, max 104 ms -> docs/evidence/2026-11-02/dmd-candidate/d-perf/dmd-r2/perf01.json
+exit_code: 0
+load_after: { 4.30 5.07 6.61 }
+=== 2026-11-02T10:39:29Z stable-r3 active_vision=stable ===
+load_before: { 4.30 5.07 6.61 }
+PERF-01: 600 windows at 9.83 Hz; capture->render p50 28.0 ms, p95 35 ms, max 149 ms -> docs/evidence/2026-11-02/dmd-candidate/d-perf/stable-r3/perf01.json
+exit_code: 0
+load_after: { 3.89 4.75 6.36 }
+=== 2026-11-02T10:40:40Z dmd-r3 active_vision=dmd_adapted_mobilenet_v3_20261029 ===
+load_before: { 3.89 4.75 6.36 }
+PERF-01: 600 windows at 9.83 Hz; capture->render p50 28.0 ms, p95 39 ms, max 124 ms -> docs/evidence/2026-11-02/dmd-candidate/d-perf/dmd-r3/perf01.json
+exit_code: 0
+load_after: { 3.85 4.56 6.16 }
+DONE
