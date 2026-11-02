@@ -1,0 +1,2 @@
+trial_id,model,phase,role,seed,status,counts_toward_hpo,macro_f1,log_loss,fits
+logistic_regression_04,logistic_regression,P3,SEARCH,42,COMPLETED,True,0.9966662851682916,0.008843562009452651,1

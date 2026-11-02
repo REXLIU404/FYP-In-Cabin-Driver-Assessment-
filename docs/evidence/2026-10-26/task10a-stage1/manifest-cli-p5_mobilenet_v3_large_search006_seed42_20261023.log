@@ -1,0 +1,7 @@
+$ /Users/liu/Desktop/FYP2-Live-System/.venv/bin/python scripts/validate_runtime_manifest.py /Users/liu/Desktop/FYP2-Live-System/ml/outputs/candidates/p5_mobilenet_v3_large_search006_seed42_20261023/runtime_manifest.json --package-dir /Users/liu/Desktop/FYP2-Live-System/ml/outputs/candidates/p5_mobilenet_v3_large_search006_seed42_20261023
+(cwd /Users/liu/Desktop/FYP2-Live-System)
+exit=0  0.6s
+----- stdout -----
+valid
+
+----- stderr -----

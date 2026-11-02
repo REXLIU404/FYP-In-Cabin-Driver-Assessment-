@@ -1,0 +1,67 @@
+{
+  "stage": "P4-A_ONLY",
+  "formal_execution_authorized": false,
+  "export_authorized_identities": [
+    "MN-HPO42",
+    "RN-HPO42"
+  ],
+  "heldout_observation_access_authorized": false,
+  "git_head": "335da4e3de203836c045452f84cc291bcd352a26",
+  "git_status": " M docs/fyp2/ml/ML_TRACK_PROGRESS.md\n?? docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md\n?? docs/fyp2/ml/ML_RESULTS_REVIEW_CONTEXT.md\n?? ml/configs/e1_preparation.json\n?? ml/experiments/e1_generators.py\n?? ml/experiments/run_e1_preparation.py\n?? ml/outputs/runs/e1_preparation_20261019/\n?? ml/outputs/runs/e1_preparation_20261019_record_missingness/\n?? ml/outputs/runs/p3_vision_20261018/search/\n?? ml/outputs/runs/p3_vision_20261018/search_config.json\n?? ml/outputs/runs/p3_vision_20261018/search_state.json\n?? ml/outputs/runs/p3_vision_20261018/selection_log.json\n?? ml/outputs/runs/p3_vision_20261018/verification/\n?? ml/tests/test_e1_generators.py\n?? ml/tests/test_e1_preparation.py\n",
+  "protected": [
+    {
+      "path": "ml/outputs/vision/mobilenetv3_large_vision.pt",
+      "bytes": 17066477,
+      "sha256": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7"
+    },
+    {
+      "path": "ml/outputs/vision/mobilenetv3_large_vision.onnx",
+      "bytes": 16849378,
+      "sha256": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf"
+    },
+    {
+      "path": "ml/outputs/telemetry/xgb_telemetry.json",
+      "bytes": 629723,
+      "sha256": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07"
+    },
+    {
+      "path": "docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md",
+      "bytes": 56952,
+      "sha256": "0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0"
+    }
+  ],
+  "hpo_records": [
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/search_state.json",
+      "bytes": 106866,
+      "sha256": "3cb4f71842b6b7da5f4fe5ad421d3f4c7f4b746d394bd5ca64fc08cc6ddd91e8"
+    },
+    {
+      "path": "ml/outputs/runs/p3_vision_20261018/selection_log.json",
+      "bytes": 1555,
+      "sha256": "4a329762e21425e773493eebb347739abdc917c6d04ec09b8426795310ce8f85"
+    },
+    {
+      "path": "ml/outputs/runs/p3_telemetry_20261018/selection_log.json",
+      "bytes": 2260,
+      "sha256": "591aadf2b32d8252551c943dbbf7c9f094cad1d8bab43952759f0edc86ccbebd"
+    }
+  ],
+  "p3_source_records": [
+    {
+      "path": "ml/experiments/e1_generators.py",
+      "bytes": 13129,
+      "sha256": "b0b92519ef093ba0370b6e258a7cfaba9434f2e2de8ed113d333ffd6d1b10ce3"
+    },
+    {
+      "path": "ml/experiments/run_e1_preparation.py",
+      "bytes": 10324,
+      "sha256": "507c4cfa2105256648f427a322d7cf40c283d67a086c9d0c9e8920860499793a"
+    },
+    {
+      "path": "ml/configs/e1_preparation.json",
+      "bytes": 2585,
+      "sha256": "d53f1de9c2327d7d2796fb5050cf1d6d9cfabb5d5758152739833bb754a1c783"
+    }
+  ]
+}

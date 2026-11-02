@@ -1,0 +1,50 @@
+{
+  "identity": "MN-HPO42",
+  "candidate_package": false,
+  "deployment_eligible": false,
+  "source_checkpoint_path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/search/mobilenet_v3_large/search_006/attempt_01/checkpoint.pt",
+  "source_checkpoint_sha256": "bc96e7a230de6391820b1e04e7480087841680ae6cc1b6e73cba42b25eb67295",
+  "onnx_path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p4a_20261021/runtime_benchmark/mobilenet_v3_large_search006_seed42/model.onnx",
+  "onnx_sha256": "9ee60abb78007773cc625af80c313049c1970f63c1f041bed9f5b2539a384828",
+  "onnx_bytes": 16849370,
+  "input": {
+    "name": "input",
+    "dtype": "float32",
+    "shape": [
+      "N",
+      3,
+      224,
+      224
+    ]
+  },
+  "output": {
+    "name": "logits",
+    "dtype": "float32",
+    "shape": [
+      "N",
+      10
+    ],
+    "semantics": "raw_logits"
+  },
+  "class_to_idx": {
+    "c0": 0,
+    "c1": 1,
+    "c2": 2,
+    "c3": 3,
+    "c4": 4,
+    "c5": 5,
+    "c6": 6,
+    "c7": 7,
+    "c8": 8,
+    "c9": 9
+  },
+  "export_nanoseconds": 272311292,
+  "export": {
+    "dynamo": false,
+    "opset": 17,
+    "external_data": false,
+    "export_params": true,
+    "keep_initializers_as_inputs": false
+  },
+  "scope": "benchmark/evaluation-only"
+}

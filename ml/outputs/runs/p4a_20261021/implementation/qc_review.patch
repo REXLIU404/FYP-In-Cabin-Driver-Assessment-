@@ -1,0 +1,847 @@
+--- /dev/null
++++ ml/experiments/p4_data.py
+@@ -0,0 +1,230 @@
++"""Gated P4 data adapters. No models, fitting, or implicit held-out reads.
++
++The P3 generator source stays immutable. A function-local globals mapping adapts
++only its split guard, retaining the actual split in every output record. This is
++not a global monkeypatch and never passes a test observation as validation.
++"""
++import csv
++import hashlib
++import json
++import math
++from pathlib import Path
++from types import FunctionType
++
++import numpy as np
++from PIL import Image
++
++from ml.experiments import e1_generators as e1
++from ml.experiments.comparator_common import FEATURES, LABELS
++
++VERSION = 'p4-protocol-v1-adapter-1'
++DOMAIN_BOUNDS = [(0., None)] + [(None, None)] * 6 + [(0., None)]
++TELEMETRY_SHA256 = {
++    'train':'97dd20ee9c0832ba33455e5c31088f9b4abb65c198bf988699a959d545d1e5b5',
++    'val':'1b02792df846b5af138bae59e4f4ccfa8fa421fbb4fd6d42fad88d57722774f1',
++    'test':'3bc3d47680a87359e1470fd8ffaf5ff330dc4419b37cc645e5736d51a91c96de'}
++METADATA_SHA256 = 'b4f8e90dec769bb419eaa490aea869668bed6484089cebe4d545c7667baa8ea4'
++
++
++def _gate(split, authorization):
++    if split == 'test':
++        from ml.experiments.p4_core import P4Authorization
++        if not isinstance(authorization, P4Authorization):
++            raise PermissionError('Held-out access requires explicit P4-B authorization')
++        authorization.require_heldout()
++    elif split not in ('val', 'train', 'synthetic'):
++        raise ValueError('Unknown source split')
++
++
++def _verified_bytes(path, expected_sha256):
++    if not expected_sha256:
++        raise ValueError('Expected source SHA256 is mandatory')
++    blob = Path(path).read_bytes()
++    actual = hashlib.sha256(blob).hexdigest()
++    if actual != expected_sha256:
++        raise ValueError('Source SHA256 mismatch')
++    return blob, actual
++
++
++def read_vision_metadata(path, *, split, authorization=None, expected_sha256=None):
++    _gate(split, authorization)  # Must precede even existence/hash reads.
++    if Path(path).name == 'vision_metadata_with_split.csv' and expected_sha256 != METADATA_SHA256:
++        raise ValueError('Frozen production metadata hash binding mismatch')
++    if split not in ('val', 'test'):
++        raise ValueError('Vision metadata reader supports val/test only')
++    blob, sha = _verified_bytes(path, expected_sha256)
++    rows = list(csv.DictReader(blob.decode('utf-8-sig').splitlines()))
++    required = {'split', 'class_id', 'filename', 'driver_id', 'image_path'}
++    if not rows or not required.issubset(rows[0]):
++        raise ValueError('Vision metadata schema mismatch')
++    drivers = {s: {r['driver_id'] for r in rows if r['split'] == s} for s in ('train','val','test')}
++    if any(drivers[a] & drivers[b] for a,b in [('train','val'),('train','test'),('val','test')]):
++        raise ValueError('Vision driver split overlap')
++    output = []
++    for index, row in enumerate(rows):
++        if row['split'] != split:
++            continue
++        if row['class_id'] not in [f'c{i}' for i in range(10)] or not row['driver_id']:
++            raise ValueError('Vision label/driver contract mismatch')
++        filename = row['filename']
++        if Path(filename).name != filename:
++            raise ValueError('Vision filename must not contain a directory')
++        output.append(dict(row, source_id=f"vision-v1:{row['class_id']}/{filename}",
++                           source_row=index, source_split=split, metadata_sha256=sha,
++                           metadata_path=str(Path(path).resolve())))
++    if len({r['source_id'] for r in output}) != len(output):
++        raise ValueError('Duplicate vision source ID')
++    return output
++
++
++def load_validation_image(record):
++    if record.get('source_split') != 'val' or record.get('split') != 'val':
++        raise PermissionError('Validation image requires proven val membership')
++    # Re-read the small membership source rather than trusting a caller's dict.
++    verified = read_vision_metadata(record['metadata_path'], split='val',
++                                   expected_sha256=record['metadata_sha256'])
++    if record not in verified:
++        raise PermissionError('Validation image membership differs from frozen metadata')
++    with Image.open(record['image_path']) as image:
++        return image.convert('RGB').copy()
++
++
++def read_telemetry_csv(path, *, split, authorization=None, expected_sha256=None):
++    _gate(split, authorization)
++    # Bind the frozen source identity as well as the caller's split string.
++    # No source bytes (even a hash read) are allowed through a mislabeled path.
++    for actual_split, sha in TELEMETRY_SHA256.items():
++        if Path(path).name == f'telemetry_{actual_split}.csv' or expected_sha256 == sha:
++            if actual_split != split:
++                raise PermissionError('Telemetry path/hash split binding mismatch')
++            if expected_sha256 != sha:
++                raise ValueError('Frozen telemetry source SHA256 binding mismatch')
++    if split not in ('train','val','test'):
++        raise ValueError('CSV requires a real split')
++    blob, sha = _verified_bytes(path, expected_sha256)
++    reader = csv.DictReader(blob.decode('utf-8-sig').splitlines())
++    if reader.fieldnames != FEATURES + ['behavior_label']:
++        raise ValueError('Telemetry feature order mismatch')
++    output = []
++    for index, row in enumerate(reader):
++        values = [float(row[key]) for key in FEATURES]
++        if not np.isfinite(values).all() or row['behavior_label'] not in LABELS:
++            raise ValueError('Telemetry clean source must be finite with canonical label')
++        output.append({'source_id':f'telemetry-v1:{sha}:{split}:{index}', 'source_row':index,
++                       'source_split':split, 'source_sha256':sha, 'features':values,
++                       'source_label':row['behavior_label']})
++    return output
++
++
++def _adapt(function, split, authorization):
++    _gate(split, authorization)
++    if split == 'train':
++        raise ValueError('Evaluation generation cannot use training observations')
++    environment = dict(function.__globals__)
++    environment['_preparation_split'] = lambda actual: _gate(actual, authorization)
++    return FunctionType(function.__code__, environment, function.__name__,
++                        function.__defaults__, function.__closure__)
++
++
++def vision_bank(image, record, *, authorization=None, seed=42):
++    split = record['source_split']
++    generate = _adapt(e1.vision_variants, split, authorization)
++    for output, row in generate(image, record['source_id'], record['driver_id'], source_split=split, seed=seed):
++        row['adapter_version'] = VERSION
++        for key in ('class_id','source_row','metadata_sha256','source_sha256'):
++            if key in record:
++                row[key] = record[key]
++        if row['condition'] == 'rotation_crop':
++            row['params']['geometry_protocol'] = 'P4-PROTOCOL-v1'
++            row['params'].pop('formal_geometry_approval', None)
++        yield output, row
++
++
++def rotation_geometry_check():
++    results = []
++    for angle in (-12,-7,-3,3,7,12):
++        radians = math.radians(abs(angle))
++        side = math.floor(224/(math.cos(radians)+math.sin(radians)))
++        left = (224-side)//2
++        mask = Image.new('L',(224,224),255).rotate(angle, resample=Image.Resampling.BILINEAR,
++            expand=False, fillcolor=0).crop((left,left,left+side,left+side)).resize((224,224),Image.Resampling.BILINEAR)
++        fill = int(np.count_nonzero(np.asarray(mask) != 255))
++        results.append({'angle':angle,'side':side,'crop_box':[left,left,left+side,left+side],
++                        'fill_pixels':fill,'minimum_coverage':int(np.asarray(mask).min()),
++                        'status':'PASS' if fill == 0 else 'FAILED_STOP_PROTOCOL_REVIEW'})
++    if any(r['fill_pixels'] for r in results):
++        raise ValueError('Frozen rotation geometry contains fill; stop for protocol review: '+json.dumps(results))
++    return results
++
++
++def verify_train_statistics(statistics, *, expected_train_sha256, pipeline_medians=(), computed_statistics=None):
++    if (statistics.get('fit_split') != 'train' or statistics.get('train_split_sha256') != expected_train_sha256
++            or statistics.get('feature_order') != FEATURES or statistics.get('fit_rows',0) <= 0
++            or set(statistics.get('mean_by_class',{})) != set(LABELS)):
++        raise ValueError('Frozen train-only statistics provenance mismatch')
++    arrays = [statistics[k] for k in ('median','mean_global','sd_ddof0')]
++    arrays += list(statistics['mean_by_class'].values())
++    if any(np.asarray(a).shape != (8,) or not np.isfinite(a).all() for a in arrays):
++        raise ValueError('Invalid frozen train statistic arrays')
++    if any(x < 0 for x in statistics['sd_ddof0']):
++        raise ValueError('Negative train SD')
++    if any(np.asarray(a).shape != (8,) or not np.allclose(a, statistics['median'],atol=1e-12,rtol=1e-12)
++           for a in pipeline_medians):
++        raise ValueError('HPO pipeline median differs from frozen train median')
++    if computed_statistics is not None:
++        verify_train_statistics(computed_statistics,expected_train_sha256=expected_train_sha256)
++        if computed_statistics['fit_rows'] != statistics['fit_rows']:
++            raise ValueError('Train statistic row count mismatch')
++        for key in ('median','mean_global','sd_ddof0'):
++            if not np.allclose(statistics[key],computed_statistics[key],atol=1e-12,rtol=1e-12):
++                raise ValueError(f'Frozen train statistic mismatch: {key}')
++        for label in LABELS:
++            if not np.allclose(statistics['mean_by_class'][label],computed_statistics['mean_by_class'][label],atol=1e-12,rtol=1e-12):
++                raise ValueError(f'Frozen train class mean mismatch: {label}')
++    return 'REUSED_AND_VERIFIED'
++
++
++def _bound(value, lower, upper):
++    if value is None or not np.isfinite(value):
++        return {'status':'MISSING','lower_excess':None,'upper_excess':None}
++    low = None if lower is None else max(float(lower)-value,0.)
++    high = None if upper is None else max(value-float(upper),0.)
++    status = ('OUT_OF_BOUNDS' if (low or high) else
++              'UNKNOWN' if lower is None and upper is None else
++              'WITHIN_KNOWN_BOUNDS_UPPER_UNKNOWN' if upper is None else
++              'WITHIN_KNOWN_BOUNDS_LOWER_UNKNOWN' if lower is None else 'WITHIN_BOUNDS')
++    return {'status':status,'lower_excess':low,'upper_excess':high}
++
++
++def telemetry_bank(values, labels, source_ids, statistics, *, source_split,
++                   authorization=None, empirical_bounds=None, seed=42):
++    generate = _adapt(e1.telemetry_variants, source_split, authorization)
++    x = np.asarray(values,dtype=np.float64)
++    if x.ndim != 2 or x.shape[1] != 8 or not np.isfinite(x).all():
++        raise ValueError('Clean source features must be finite; stop protocol check')
++    verify_train_statistics(statistics, expected_train_sha256=statistics.get('train_split_sha256'))
++    if empirical_bounds is not None:
++        bounds = np.asarray(empirical_bounds,dtype=float)
++        if bounds.shape != (8,2) or not np.isfinite(bounds).all() or (bounds[:,0] > bounds[:,1]).any():
++            raise ValueError('Invalid train empirical bounds')
++    else:
++        bounds = [(None,None)]*8
++    ranks = {sid:i for i,sid in enumerate(sorted(source_ids,key=lambda sid:(
++        hashlib.sha256(f'{seed}\0{sid}\0D3_record_selection'.encode()).digest(),sid)))}
++    for row in generate(x,labels,source_ids,statistics,missing_rates=[.05,.1,.2],
++                        drift_direction=[1]*8,bounds=None,source_split=source_split,seed=seed):
++        row['adapter_version'] = VERSION
++        row['bounds_policy'] = 'REPORT_ONLY_NO_CLIP'
++        row['record_selection_rank'] = ranks[row['source_id']]
++        pre = (np.asarray(row['raw_source_features'])+np.asarray(row['perturbation_delta'])).tolist()
++        stages = {'source':row['raw_source_features'],'pre_mask':pre,
++                  'observed':row['observed_features'],'imputed':row['features']}
++        row['pre_mask_features'] = pre
++        row['bounds'] = {stage:[{'feature':FEATURES[i],
++            'domain':_bound(v,*DOMAIN_BOUNDS[i]),'empirical':_bound(v,*bounds[i])}
++            for i,v in enumerate(array)] for stage,array in stages.items()}
++        row['label_validity'] = 'SOURCE_SYNTHETIC_LABEL' if row['domain']=='D0' else 'LABEL_VALIDITY_UNVERIFIED'
++        row['f1_eligible'] = row['domain']=='D0'
++        if row['domain']=='D3':
++            row['interpretation'] = 'COMBINED_POSITIVE_BIAS_AND_RECORD_MISSINGNESS'
++        yield row
+--- /dev/null
++++ ml/experiments/p4_qc.py
+@@ -0,0 +1,330 @@
++"""Single-reviewer R1 QC preparation and lock-before-reveal workflow.
++
++R1 is the project developer. This supports a small validation pilot and records
++single-reviewer bias; it provides no inter-rater agreement or invented ratings.
++"""
++import argparse
++import csv
++import hashlib
++import html
++import json
++from pathlib import Path
++import time
++
++import numpy as np
++
++from ml.experiments import p4_data
++
++CHOICES = [f'c{i}' for i in range(10)] + ['UNRECOGNIZABLE','AMBIGUOUS']
++CLASS_GUIDE = {'c0':'normal driving','c1':'texting right','c2':'talking on phone right',
++ 'c3':'texting left','c4':'talking on phone left','c5':'operating radio',
++ 'c6':'drinking','c7':'reaching behind','c8':'hair and makeup','c9':'talking to passenger'}
++LIMITATIONS = ['Single reviewer R1 is the project developer; developer/reviewer bias.',
++ 'Small validation pilot: 2 source images and 38 related cases, not 38 independent people.',
++ 'No second reviewer and no inter-rater agreement.',
++ 'No validity retention or human timing result exists before actual R1 judgments.']
++
++
++def _digest(value):
++    return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest()
++
++
++def _json(path, value):
++    with Path(path).open('x') as stream:
++        json.dump(value,stream,indent=2,sort_keys=True,allow_nan=False)
++
++
++def select_sources(records, cap_per_stratum=5, seed=42):
++    if not 0 < cap_per_stratum <= 5:
++        raise ValueError('QC per driver/class cap must be at most 5')
++    groups = {}
++    if len({r['source_id'] for r in records}) != len(records):
++        raise ValueError('Duplicate QC source IDs')
++    for row in records:
++        groups.setdefault((row['driver_id'],row['class_id']),[]).append(row)
++    selected = []
++    for key in sorted(groups):
++        selected.extend(sorted(groups[key],key=lambda r:(hashlib.sha256(
++            f"{seed}|qc-source|{r['source_id']}".encode()).digest(),r['source_id']))[:cap_per_stratum])
++    return selected
++
++
++def build_review_kit(cases, out_dir, *, reviewer='R1', seed=42):
++    if reviewer != 'R1':
++        raise ValueError('Approved QC reviewer is R1, the project developer')
++    directory = Path(out_dir)
++    if any(p.is_symlink() for p in [directory,*directory.parents]):
++        raise ValueError('QC output must not use symlinks')
++    directory.mkdir(parents=True,exist_ok=False)
++    (directory/'images').mkdir()
++    (directory/'restricted').mkdir(mode=0o700)
++    restricted, blind = [], []
++    seen = set()
++    for image,row in cases:
++        if row['variant_id'] in seen:
++            raise ValueError('Duplicate QC variant')
++        seen.add(row['variant_id'])
++        case_id = 'q'+hashlib.sha256(f"{seed}|qc-case|{row['variant_id']}".encode()).hexdigest()[:24]
++        filename = f'images/{case_id}.png'
++        image.convert('RGB').save(directory/filename)
++        blind.append({'case_id':case_id,'image':filename})
++        source = {k:row[k] for k in ('source_id','driver_id','class_id','source_split',
++                   'condition','severity','source_path','source_sha256','metadata_sha256') if k in row}
++        restricted.append(dict(source,case_id=case_id,status='UNREVIEWED',variant_id=row['variant_id']))
++    blind.sort(key=lambda r:hashlib.sha256(f"{seed}|qc-shuffle|{r['case_id']}".encode()).digest())
++    manifest = {'reviewer':reviewer,'reviewer_role':'project developer','reviewer_count':1,
++        'inter_rater_agreement':None,'seed':seed,'human_ratings_count':0,
++        'limitations':LIMITATIONS,'restricted_cases':restricted,
++        'case_set_sha256':_digest(sorted(r['case_id'] for r in restricted)),
++        'class_guide':CLASS_GUIDE,'status':'PREPARED_HUMAN_REVIEW_PENDING'}
++    manifest['source_key_sha256']=_digest(manifest)
++    _json(directory/'blind_cases.json',blind)
++    _json(directory/'restricted/source_key.json',manifest)
++    with (directory/'R1.csv').open('x',newline='') as stream:
++        writer=csv.writer(stream)
++        writer.writerow(['case_id','reviewer','selected_class','status','reason','duration_seconds','timestamp'])
++        writer.writerows([[r['case_id'],'R1','','','','',''] for r in blind])
++    payload=json.dumps(blind).replace('<','\\u003c')
++    guide='; '.join(f'{k}: {v}' for k,v in CLASS_GUIDE.items())
++    page='''<!doctype html><html lang="en"><meta charset="utf-8"><title>R1 blind QC</title>
++<style>body{font:18px system-ui;max-width:820px;margin:35px auto;background:#f4f5f7;color:#18222c}img{width:448px;max-width:100%;image-rendering:auto}label{display:block;margin:12px 0}textarea{width:95%;height:75px}button,select{font:inherit;padding:10px}small{display:block;color:#566}</style>
++<h1>R1 blind recognizability review</h1><p>Review the visible action independently. Source references, labels and model outputs remain hidden until all judgments are exported and locked. Clean variants are anonymous cases within the shuffle.</p>
++<small>Single reviewer: project developer. No inter-rater agreement. Validation pilot cases share only two sources; results do not establish population validity. Per-case duration is elapsed wall time while displayed, including interruptions. Drafts save in this browser on this device.</small>
++<details><summary>Frozen class action guide</summary><p>GUIDE</p></details>
++<p id="progress"></p><img id="picture" alt="anonymous action case"><p id="case"></p>
++<label>Visible action <select id="choice"><option value="">Choose</option>OPTIONS</select></label>
++<label>Recognizability <select id="status"><option value="">Choose</option><option>VALID</option><option>INVALID</option><option>UNCERTAIN</option></select></label>
++<small>VALID here means visually recognizable, pending the later source cue check. Use UNCERTAIN for ambiguity and INVALID when action evidence is clearly absent.</small>
++<label>Visible action evidence / reason <textarea id="reason"></textarea></label><button id="next">Save and next</button><p id="message"></p>
++<script>const cases=PAYLOAD,key='p4-qc-'+cases.map(c=>c.case_id).join('-');let ratings=JSON.parse(localStorage.getItem(key)||'[]'),index=ratings.length,started=performance.now();
++function show(){const c=cases[index];document.getElementById('picture').src=c.image;document.getElementById('case').textContent=c.case_id;document.getElementById('progress').textContent=(index+1)+' / '+cases.length;started=performance.now()}
++function download(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(ratings,null,2)],{type:'application/json'}));a.download='R1_blind_judgments.json';a.click();document.getElementById('next').textContent='Download completed judgments again';document.getElementById('message').textContent='Blind judgments exported. Lock them with the preparation tool before source reveal.'}
++document.getElementById('next').onclick=()=>{if(index===cases.length){download();return}const choice=document.getElementById('choice').value,status=document.getElementById('status').value,reason=document.getElementById('reason').value.trim();if(!choice||!status||!reason){document.getElementById('message').textContent='Choose an action and status, and describe the visible evidence.';return}ratings.push({case_id:cases[index].case_id,reviewer:'R1',selected_class:choice,status,reason,duration_seconds:(performance.now()-started)/1000,timestamp:new Date().toISOString()});localStorage.setItem(key,JSON.stringify(ratings));index++;if(index===cases.length){download();return}['choice','status','reason'].forEach(x=>document.getElementById(x).value='');document.getElementById('message').textContent='';show()};if(index<cases.length)show();else{document.getElementById('progress').textContent='Completed draft restored';document.getElementById('next').textContent='Download completed judgments again'}</script></html>'''
++    page=page.replace('GUIDE',html.escape(guide)).replace('OPTIONS',''.join(
++        f'<option>{x}</option>' for x in CHOICES)).replace('PAYLOAD',payload)
++    (directory/'review.html').write_text(page)
++    return manifest
++
++
++def lock_blind_judgments(judgments, *, reviewer, case_ids, source_key_sha256):
++    if reviewer != 'R1' or not judgments or len(judgments)!=len(case_ids):
++        raise ValueError('All approved R1 blind judgments must be complete before reveal')
++    rows=[]
++    for entry in judgments:
++        choice=entry.get('selected_class',entry.get('choice'))
++        duration=entry.get('duration_seconds')
++        if (entry.get('reviewer')!=reviewer or choice not in CHOICES
++                or entry.get('status') not in ('VALID','INVALID','UNCERTAIN')
++                or not isinstance(entry.get('reason'),str) or not entry['reason'].strip()
++                or not entry.get('timestamp') or type(duration) not in (int,float)
++                or not 0 < duration < float('inf')):
++            raise ValueError('Incomplete blind judgment, reason or measured duration')
++        rows.append({k:entry[k] for k in ('case_id','reviewer','status','reason','duration_seconds','timestamp')}
++                    | {'selected_class':choice})
++    if sorted(x['case_id'] for x in rows)!=sorted(case_ids) or len(set(case_ids))!=len(case_ids):
++        raise ValueError('Blind judgment case coverage differs from locked kit')
++    if not isinstance(source_key_sha256,str) or len(source_key_sha256)!=64:
++        raise ValueError('Frozen source key SHA256 binding is required')
++    payload={'reviewer':reviewer,'judgments':rows,'phase':'BLIND_LOCKED',
++             'source_key_sha256':source_key_sha256,
++             'case_set_sha256':_digest(sorted(case_ids))}
++    return payload | {'lock_sha256':_digest(payload)}
++
++
++def reveal_sources(manifest, lock):
++    if not isinstance(lock,dict) or lock.get('phase')!='BLIND_LOCKED':
++        raise ValueError('Blind judgments must be locked before source reveal')
++    payload={k:v for k,v in lock.items() if k!='lock_sha256'}
++    key_payload={k:v for k,v in manifest.items() if k!='source_key_sha256'}
++    if (lock.get('lock_sha256')!=_digest(payload) or lock.get('reviewer')!=manifest['reviewer']
++            or lock.get('case_set_sha256')!=manifest['case_set_sha256']
++            or lock.get('source_key_sha256')!=manifest.get('source_key_sha256')
++            or manifest.get('source_key_sha256')!=_digest(key_payload)):
++        raise ValueError('Blind lock or case set was changed')
++    by_id={r['case_id']:r for r in lock['judgments']}
++    return [dict(row,blind_judgment=by_id[row['case_id']],preserved_cue=None,
++                 final_status='UNCERTAIN') for row in manifest['restricted_cases']]
++
++
++def finalize_qc(manifest, lock, cue_checks):
++    revealed=reveal_sources(manifest,lock)
++    ids=[r['case_id'] for r in revealed]
++    if len(cue_checks)!=len(ids) or sorted(r['case_id'] for r in cue_checks)!=sorted(ids):
++        raise ValueError('Post-lock source checks must cover every case exactly once')
++    by_id={r['case_id']:r for r in cue_checks}
++    output=[]
++    for row in revealed:
++        cue=by_id[row['case_id']]
++        if (type(cue.get('preserved_cue')) is not bool or not cue.get('reason')
++                or not cue.get('timestamp') or type(cue.get('duration_seconds')) not in (int,float)
++                or not 0 < cue['duration_seconds'] < float('inf')):
++            raise ValueError('Post-lock cue checks require boolean cue, reason and measured duration')
++        blind=row['blind_judgment'];status=resolve_qc(blind,row['class_id'],preserved_cue=cue['preserved_cue'])
++        output.append({k:v for k,v in row.items() if k not in ('status','final_status','preserved_cue')}
++            | {'status':status,'selected_class':blind['selected_class'],
++               'blind_reason':blind['reason'],'source_cue_check':cue,'f1_eligible':status=='VALID'})
++    def timing(values):
++        return {'count':len(values),'sum_seconds':float(np.sum(values)),
++                'mean_seconds':float(np.mean(values)),'median_seconds':float(np.median(values)),
++                'p95_seconds':float(np.percentile(values,95))}
++    by_class={c:{s:sum(r['class_id']==c and r['status']==s for r in output)
++                  for s in ('VALID','INVALID','UNCERTAIN')} for c in CLASS_GUIDE}
++    families=sorted({r['condition'] for r in output if r['condition']!='clean'})
++    common={f:common_valid_sources(output,f) for f in families}
++    source_classes={r['source_id']:r['class_id'] for r in output}
++    common_coverage={f:{'sources':len(ids),'class_source_support':{
++        c:sum(source_classes[sid]==c for sid in ids) for c in CLASS_GUIDE},
++        'ten_class_macro_f1_status':'SUPPORTED_CLASSES_ONLY_NO_PREDICTIONS'
++        if {source_classes[sid] for sid in ids}==set(CLASS_GUIDE) else 'NOT_ESTIMABLE'}
++        for f,ids in common.items()}
++    supported={r['class_id'] for r in output if r['status']=='VALID'}
++    summary={'reviewer':'R1','reviewer_count':1,'inter_rater_agreement':None,
++        'case_count':len(output),'source_count':len({r['source_id'] for r in output}),
++        'counts':{s:sum(r['status']==s for r in output) for s in ('VALID','INVALID','UNCERTAIN')},
++        'valid_retention':sum(r['status']=='VALID' for r in output)/len(output),
++        'blind_timing':timing([r['blind_judgment']['duration_seconds'] for r in output]),
++        'source_check_timing':timing([r['source_cue_check']['duration_seconds'] for r in output]),
++        'class_support':by_class,'common_valid_sources':common,
++        'common_set_coverage':common_coverage,
++        'driver_class_support':{f'{driver}/{c}':{status:sum(r['driver_id']==driver
++            and r['class_id']==c and r['status']==status for r in output)
++            for status in ('VALID','INVALID','UNCERTAIN')}
++            for driver,c in sorted({(r['driver_id'],r['class_id']) for r in output})},
++        'family_severity_support':{f:{str(s):{status:sum(r['condition']==f and r['severity']==s
++            and r['status']==status for r in output) for status in ('VALID','INVALID','UNCERTAIN')}
++            for s in range(3)} for f in families},
++        'ten_class_macro_f1_status':'SUPPORTED_CLASSES_ONLY_NO_PREDICTIONS' if len(supported)==10 else 'NOT_ESTIMABLE',
++        'class_coverage':sorted(supported),'limitations':LIMITATIONS,
++        'blind_lock_sha256':lock['lock_sha256'],'source_key_sha256':manifest['source_key_sha256'],
++        'cases':output,'status':'QC_LOCKED_SINGLE_REVIEWER'}
++    summary['qc_lock_sha256']=_digest(summary)
++    return summary
++
++
++def resolve_qc(judgment, source_label, *, preserved_cue):
++    if judgment is None:
++        return 'UNREVIEWED'
++    if preserved_cue is False or judgment.get('status')=='INVALID':
++        return 'INVALID'
++    choice=judgment.get('selected_class',judgment.get('choice'))
++    if judgment.get('status')=='VALID' and choice==source_label and preserved_cue is True:
++        return 'VALID'
++    return 'UNCERTAIN'
++
++
++def _source_review_page(rows):
++    """Called only after the locked blind-phase source reveal succeeds."""
++    payload=[]
++    for row in rows:
++        source=row.get('source_path')
++        payload.append({'case_id':row['case_id'],'source_label':row['class_id'],
++                        'source_image':Path(source).absolute().as_uri() if source else '',
++                        'variant_image':f"../images/{row['case_id']}.png",
++                        'selected_class':row['blind_judgment']['selected_class']})
++    page='''<!doctype html><html lang="en"><meta charset="utf-8"><title>R1 source cue check</title>
++<style>body{font:18px system-ui;max-width:1000px;margin:32px auto;background:#f4f5f7;color:#18222c}.pair{display:flex;gap:16px}figure{margin:8px;flex:1}img{width:100%}textarea{width:95%;height:70px}button,select{font:inherit;padding:10px}</style>
++<h1>R1 post-lock source cue check</h1><p>The blind choices are locked. Confirm whether the original action evidence remains in each variant. Model predictions remain hidden. Elapsed wall time includes interruptions; drafts save locally.</p>
++<p id="progress"></p><p id="label"></p><div class="pair"><figure><img id="source"><figcaption>Source reference</figcaption></figure><figure><img id="variant"><figcaption>Reviewed variant</figcaption></figure></div>
++<label>Original action cue preserved? <select id="preserved_cue"><option value="">Choose</option><option value="true">Yes</option><option value="false">No</option></select></label>
++<p><textarea id="reason" placeholder="Describe the preserved or removed action evidence"></textarea></p><button id="next">Save and next</button><p id="message"></p>
++<script>const cases=PAYLOAD,key='p4-source-'+cases.map(c=>c.case_id).join('-');let ratings=JSON.parse(localStorage.getItem(key)||'[]'),index=ratings.length,started=performance.now();
++function show(){const c=cases[index];document.getElementById('source').src=c.source_image;document.getElementById('variant').src=c.variant_image;document.getElementById('progress').textContent=(index+1)+' / '+cases.length+' '+c.case_id;document.getElementById('label').textContent='Source label: '+c.source_label+'; locked blind choice: '+c.selected_class;started=performance.now()}
++function download(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(ratings,null,2)],{type:'application/json'}));a.download='R1_source_cue_checks.json';a.click();document.getElementById('next').textContent='Download cue checks again';document.getElementById('message').textContent='Exported. Use finalize to lock the QC results.'}
++document.getElementById('next').onclick=()=>{if(index===cases.length){download();return}const cue=document.getElementById('preserved_cue').value,reason=document.getElementById('reason').value.trim();if(!cue||!reason){document.getElementById('message').textContent='Choose yes/no and record the action evidence.';return}ratings.push({case_id:cases[index].case_id,preserved_cue:cue==='true',reason,duration_seconds:(performance.now()-started)/1000,timestamp:new Date().toISOString()});localStorage.setItem(key,JSON.stringify(ratings));index++;if(index===cases.length){download();return}document.getElementById('reason').value='';document.getElementById('preserved_cue').value='';document.getElementById('message').textContent='';show()};if(index<cases.length)show();else{document.getElementById('progress').textContent='Completed draft restored';document.getElementById('next').textContent='Download cue checks again'}</script></html>'''
++    return page.replace('PAYLOAD',json.dumps(payload).replace('<','\\u003c'))
++
++
++def common_valid_sources(records, family):
++    groups={}
++    for row in records:
++        if row['condition'] in ('clean',family):
++            groups.setdefault(row['source_id'],{}).setdefault((row['condition'],row['severity']),[]).append(row)
++    required=[('clean',0)]+[(family,s) for s in range(3)]
++    return sorted(sid for sid,rows in groups.items() if all(
++        len(rows.get(key,[]))==1 and rows[key][0]['status']=='VALID' for key in required))
++
++
++def prepare_validation_pilot(metadata_path, expected_sha256, out_dir):
++    started=time.monotonic()
++    p4_data.rotation_geometry_check()  # Failure precedes any image read.
++    records=p4_data.read_vision_metadata(metadata_path,split='val',expected_sha256=expected_sha256)
++    # Small pilot selects two deterministic validation sources before opening images.
++    selected=sorted(records,key=lambda r:(hashlib.sha256(
++        f"42|qc-pilot|{r['source_id']}".encode()).digest(),r['source_id']))[:2]
++    if len(selected)!=2:
++        raise ValueError('QC pilot requires exactly two verified validation sources')
++    cases=[]; image_seconds=[]; sources=[]
++    for record in selected:
++        before=time.monotonic()
++        image=p4_data.load_validation_image(record)
++        sha=hashlib.sha256(Path(record['image_path']).read_bytes()).hexdigest()
++        source=dict(record,source_sha256=sha)
++        sources.append(source)
++        for variant,row in p4_data.vision_bank(image,source):
++            cases.append((variant,dict(row,source_path=record['image_path'])))
++        image_seconds.append(time.monotonic()-before)
++    manifest=build_review_kit(cases,out_dir)
++    measurements={'sources':2,'cases':38,'reviewers':['R1'],'reviewer_role':'project developer',
++        'model_predictions':0,'heldout_images_opened':0,'human_ratings_count':0,
++        'preparation_seconds':time.monotonic()-started,'source_generation_seconds':image_seconds,
++        'human_review_seconds':None,'valid_retention':None,'status':'HUMAN_PILOT_PENDING',
++        'scenario_estimates':[{'assumed_seconds_per_case':s,'pilot_seconds':38*s,
++                              'maximum_formal_3800_cases_hours':3800*s/3600,
++                              'measured':False} for s in (5,10,20)],
++        'limitations':LIMITATIONS,'sources':sources}
++    _json(Path(out_dir)/'restricted/preparation_measurements.json',measurements)
++    return measurements
++
++
++def main(argv=None):
++    parser=argparse.ArgumentParser(description=__doc__)
++    sub=parser.add_subparsers(dest='command',required=True)
++    pilot=sub.add_parser('pilot');pilot.add_argument('--metadata',required=True)
++    pilot.add_argument('--metadata-sha256',required=True);pilot.add_argument('--output',required=True)
++    lock=sub.add_parser('lock');lock.add_argument('--kit',required=True);lock.add_argument('--ratings',required=True)
++    reveal=sub.add_parser('reveal');reveal.add_argument('--kit',required=True)
++    final=sub.add_parser('finalize');final.add_argument('--kit',required=True)
++    final.add_argument('--cue-checks',required=True)
++    args=parser.parse_args(argv)
++    if args.command=='pilot':
++        print(json.dumps(prepare_validation_pilot(args.metadata,args.metadata_sha256,args.output),indent=2))
++    else:
++        kit=Path(args.kit);manifest=json.loads((kit/'restricted/source_key.json').read_text())
++        if args.command=='lock':
++            ratings=json.loads(Path(args.ratings).read_text())
++            locked=lock_blind_judgments(ratings,reviewer='R1',case_ids=[r['case_id'] for r in manifest['restricted_cases']],
++                                       source_key_sha256=manifest['source_key_sha256'])
++            _json(kit/'restricted/R1_blind_locked.json',locked)
++            print('R1_BLIND_LOCKED',locked['lock_sha256'])
++        elif args.command=='reveal':
++            locked=json.loads((kit/'restricted/R1_blind_locked.json').read_text())
++            rows=reveal_sources(manifest,locked)
++            _json(kit/'restricted/R1_source_reveal.json',rows)
++            with (kit/'restricted/source_review.html').open('x') as stream:
++                stream.write(_source_review_page(rows))
++            with (kit/'restricted/R1_source_cue_check.csv').open('x',newline='') as stream:
++                writer=csv.writer(stream);writer.writerow(['case_id','preserved_cue','source_check_reason','duration_seconds','timestamp'])
++                writer.writerows([[r['case_id'],'','','',''] for r in rows])
++            print('R1_SOURCE_REVEALED; complete post-lock cue checks; no automatic VALID ratings')
++        else:
++            locked=json.loads((kit/'restricted/R1_blind_locked.json').read_text())
++            source=Path(args.cue_checks)
++            if source.suffix.lower()=='.csv':
++                with source.open(newline='') as stream:raw=list(csv.DictReader(stream))
++                cues=[]
++                for row in raw:
++                    value=row['preserved_cue'].lower().strip()
++                    if value not in ('true','false'):
++                        raise ValueError('CSV preserved_cue must be true/false')
++                    cues.append(dict(row,preserved_cue=value=='true',reason=row['source_check_reason'],
++                                     duration_seconds=float(row['duration_seconds'])))
++            else:
++                cues=json.loads(source.read_text())
++            result=finalize_qc(manifest,locked,cues)
++            _json(kit/'restricted/R1_qc_final_locked.json',result)
++            print('R1_QC_LOCKED',result['qc_lock_sha256'])
++    return 0
++
++
++if __name__=='__main__':
++    raise SystemExit(main())
+--- /dev/null
++++ ml/tests/test_p4_data.py
+@@ -0,0 +1,144 @@
++"""P4 data contracts; all observations in this file are synthetic."""
++import csv
++import hashlib
++import importlib
++import json
++
++import numpy as np
++import pytest
++from PIL import Image
++
++
++@pytest.fixture
++def data():
++    try:
++        return importlib.import_module('ml.experiments.p4_data')
++    except ModuleNotFoundError as error:
++        if error.name != 'ml.experiments.p4_data':
++            raise
++        pytest.fail('Missing gated P4 data adapters')
++
++
++def stats():
++    return {'fit_split':'train','fit_rows':3,'train_split_sha256':'train-sha',
++            'feature_order':['speed_kmph','accel_x','accel_y','brake_pressure',
++              'steering_angle','throttle','lane_deviation','headway_distance'],
++            'median':[2.]*8,'mean_global':[2.]*8,'sd_ddof0':[1.]*8,
++            'mean_by_class':{x:[2.]*8 for x in ['Safe','Aggressive','Distracted']}}
++
++
++def test_test_metadata_and_telemetry_are_denied_before_open(data,tmp_path):
++    for fn in [data.read_vision_metadata,data.read_telemetry_csv]:
++        with pytest.raises(PermissionError):
++            fn(tmp_path/'does-not-exist',split='test',expected_sha256='anything')
++
++
++def test_metadata_proves_validation_before_images_and_preserves_row_identity(data,tmp_path):
++    p=tmp_path/'metadata.csv'; image=tmp_path/'val.png'
++    Image.new('RGB',(4,4),'white').save(image)
++    p.write_text('split,class_id,filename,driver_id,image_path,class_name\n'
++                 'test,c1,hidden.jpg,p012,/do/not/open,action\n'
++                 f'val,c0,val.png,p002,{image},normal_driving\n')
++    records=data.read_vision_metadata(p,split='val',expected_sha256=hashlib.sha256(p.read_bytes()).hexdigest())
++    assert len(records)==1 and records[0]['source_id']=='vision-v1:c0/val.png'
++    assert records[0]['source_row']==1 and records[0]['source_split']=='val'
++    loaded=data.load_validation_image(records[0]); assert loaded.size==(4,4)
++    forged=dict(records[0],source_split='test')
++    with pytest.raises(PermissionError): data.load_validation_image(forged)
++
++
++def test_telemetry_ids_assigned_before_any_order_changes(data,tmp_path):
++    p=tmp_path/'val.csv'
++    with p.open('w') as f:
++        w=csv.writer(f);w.writerow(stats()['feature_order']+['behavior_label'])
++        w.writerow([3]*8+['Safe']);w.writerow([1]*8+['Distracted'])
++    sha=hashlib.sha256(p.read_bytes()).hexdigest()
++    rows=data.read_telemetry_csv(p,split='val',expected_sha256=sha)
++    assert [r['source_id'] for r in rows]==[f'telemetry-v1:{sha}:val:0',f'telemetry-v1:{sha}:val:1']
++    assert rows[0]['features']==[3.]*8
++
++
++def test_shared_vision_bank_retains_pixels_provenance_and_p3_guard(data):
++    from ml.experiments import e1_generators as old
++    record={'source_id':'vision-v1:c0/toy','driver_id':'toy','source_split':'synthetic'}
++    image=Image.new('RGB',(224,224),(90,80,70));before=image.tobytes()
++    bank=list(data.vision_bank(image,record))
++    assert len(bank)==19 and image.tobytes()==before
++    assert all(r['source_split']=='synthetic' and not r['f1_eligible'] for _,r in bank)
++    assert bank[0][0].getpixel((112,112))==(90,80,70)
++    with pytest.raises(ValueError):list(old.vision_variants(image,'x','p',source_split='test'))
++
++
++def test_rotation_six_signed_angles_have_no_fill_after_frozen_crop(data):
++    checks=data.rotation_geometry_check()
++    assert [x['angle'] for x in checks]==[-12,-7,-3,3,7,12]
++    assert [x['side'] for x in checks]==[188,201,213,213,201,188]
++    assert all(x['fill_pixels']==0 and x['status']=='PASS' for x in checks)
++
++
++def test_train_stats_reuse_verifies_full_arrays_and_hpo_medians(data):
++    original=stats();before=json.dumps(original,sort_keys=True)
++    assert data.verify_train_statistics(original,expected_train_sha256='train-sha',
++        pipeline_medians=[[2.]*8]*3)=='REUSED_AND_VERIFIED'
++    with pytest.raises(ValueError):data.verify_train_statistics(original,expected_train_sha256='other')
++    with pytest.raises(ValueError):data.verify_train_statistics(original,expected_train_sha256='train-sha',pipeline_medians=[[3.]*8])
++    assert json.dumps(original,sort_keys=True)==before
++
++
++def test_telemetry_nested_record_masks_and_multistage_bounds(data):
++    values=np.tile([[-1.,3.,3.,3.,3.,3.,3.,-1.]],(100,1))
++    rows=list(data.telemetry_bank(values,['Safe']*100,[f'id{i}' for i in range(100)],stats(),
++        source_split='synthetic',empirical_bounds=[[0.,2.]]*8))
++    assert len(rows)==1000
++    sets=[]
++    for s,n in enumerate([5,10,20]):
++        group=[r for r in rows if r['domain']=='D3' and r['severity']==s]
++        affected={r['source_id'] for r in group if r['record_affected']};sets.append(affected)
++        assert len(affected)==n
++        assert all(sum(r['injected_missing_mask'])==int(r['record_affected']) for r in group)
++        assert all(r['interpretation']=='COMBINED_POSITIVE_BIAS_AND_RECORD_MISSINGNESS' for r in group)
++    assert sets[0]<=sets[1]<=sets[2]
++    masked=next(r for r in rows if r['domain']=='D3' and r['record_affected'])
++    feature=masked['masked_feature_index'];b=masked['bounds']
++    assert b['observed'][feature]['domain']['status']=='MISSING'
++    assert b['pre_mask'][feature]['empirical']['status']=='OUT_OF_BOUNDS'
++    assert b['imputed'][feature]['empirical']['status']=='WITHIN_BOUNDS'
++    assert b['source'][1]['domain']['status']=='UNKNOWN'
++    assert b['source'][0]['domain']['lower_excess']==1.
++    assert b['source'][0]['domain']['upper_excess'] is None
++    assert all(r['label_validity']=='LABEL_VALIDITY_UNVERIFIED' and not r['f1_eligible'] for r in rows if r['domain']!='D0')
++
++
++def test_source_nan_fails_without_imputing_or_refitting(data):
++    x=np.ones((1,8));x[0,1]=np.nan
++    with pytest.raises(ValueError,match='finite'):
++        list(data.telemetry_bank(x,['Safe'],['x'],stats(),source_split='synthetic'))
++
++
++def test_mislabelled_heldout_path_and_frozen_sha_cannot_bypass_gate(data,tmp_path):
++    with pytest.raises(PermissionError):
++        data.read_telemetry_csv(tmp_path/'telemetry_test.csv',split='val',expected_sha256='irrelevant')
++    with pytest.raises(PermissionError):
++        data.read_telemetry_csv(tmp_path/'renamed.csv',split='val',
++            expected_sha256='3bc3d47680a87359e1470fd8ffaf5ff330dc4419b37cc645e5736d51a91c96de')
++
++
++def test_statistics_reuse_detects_changed_global_or_class_statistics(data):
++    computed=stats();computed['mean_global'][0]=99.
++    with pytest.raises(ValueError):
++        data.verify_train_statistics(stats(),expected_train_sha256='train-sha',computed_statistics=computed)
++    computed=stats();computed['mean_by_class']['Safe'][0]=99.
++    with pytest.raises(ValueError):
++        data.verify_train_statistics(stats(),expected_train_sha256='train-sha',computed_statistics=computed)
++
++
++def test_authorized_synthetic_test_split_adapter_retains_split_without_global_change(data):
++    from ml.experiments import e1_generators as old
++    from ml.experiments.p4_core import authorize_p4b
++    binding={'protocol_sha256':'a'*64,'source_sha256':'b'*64,'run_id':'synthetic_unit_only'}
++    token=authorize_p4b(dict(binding,phase='P4-B',authorized=True,human_approval='synthetic fixture only'),**binding)
++    image=Image.new('RGB',(4,4),'white')
++    record={'source_id':'synthetic-test','driver_id':'toy','source_split':'test'}
++    bank=list(data.vision_bank(image,record,authorization=token))
++    assert len(bank)==19 and all(r['source_split']=='test' for _,r in bank)
++    with pytest.raises(ValueError):list(old.vision_variants(image,'x','p',source_split='test'))
+--- /dev/null
++++ ml/tests/test_p4_qc.py
+@@ -0,0 +1,131 @@
++"""Independent human QC workflow, never synthetic ratings as evidence."""
++import importlib
++import json
++
++import pytest
++from PIL import Image
++
++
++@pytest.fixture
++def qc():
++    try:return importlib.import_module('ml.experiments.p4_qc')
++    except ModuleNotFoundError as error:
++        if error.name!='ml.experiments.p4_qc':raise
++        pytest.fail('Missing blinded P4 QC workflow')
++
++
++def cases():
++    return [(Image.new('RGB',(4,4),'white'),{'variant_id':f's:{family}:{s}',
++        'source_id':'s','driver_id':'p','class_id':'c0','source_split':'synthetic',
++        'condition':family,'severity':s,'source_path':'/secret/c0/a.jpg','prediction':'c9'})
++        for family,sevs in [('clean',[0]),('occlusion',[0,1,2])] for s in sevs]
++
++
++def test_selection_is_hash_ranked_capped_and_order_independent(qc):
++    rows=[{'source_id':f'x{i}','driver_id':'p','class_id':'c0'} for i in range(8)]
++    selected=qc.select_sources(rows)
++    assert len(selected)==5
++    assert selected==qc.select_sources(list(reversed(rows)))
++    assert len(qc.select_sources(rows+[{'source_id':'y','driver_id':'q','class_id':'c1'}]))==6
++
++
++def test_blind_kit_has_no_source_label_driver_condition_or_prediction(qc,tmp_path):
++    out=tmp_path/'kit';manifest=qc.build_review_kit(cases(),out,reviewer='R1')
++    blind=json.loads((out/'blind_cases.json').read_text())
++    assert len(blind)==4 and all(set(x)=={'case_id','image'} for x in blind)
++    assert len({x['case_id'] for x in blind})==4
++    assert all(x['source_id']=='s' for x in manifest['restricted_cases'])
++    assert (out/'review.html').exists() and (out/'R1.csv').exists()
++    assert all(x['status']=='UNREVIEWED' for x in manifest['restricted_cases'])
++    assert manifest['human_ratings_count']==0
++
++
++def judgement(case_id, reviewer='R1', choice='c0',evidence_retained=True):
++    return {'case_id':case_id,'reviewer':reviewer,'choice':choice,'reason':'visible hand/action',
++            'timestamp':'2026-10-21T10:00:00+08:00','evidence_retained':evidence_retained,
++            'duration_seconds':3.2,'status':'VALID'}
++
++
++def test_reveal_requires_single_reviewer_locked_judgments_and_tamper_check(qc,tmp_path):
++    manifest=qc.build_review_kit(cases(),tmp_path/'kit',reviewer='R1')
++    ids=[r['case_id'] for r in manifest['restricted_cases']]
++    a=qc.lock_blind_judgments([judgement(i) for i in ids],reviewer='R1',case_ids=ids,
++        source_key_sha256=manifest['source_key_sha256'])
++    with pytest.raises(ValueError):qc.reveal_sources(manifest,None)
++    reveal=qc.reveal_sources(manifest,a);assert len(reveal)==4
++    a['judgments'][0]['choice']='c1'
++    with pytest.raises(ValueError):qc.reveal_sources(manifest,a)
++
++
++def test_consensus_and_common_family_support_never_invent_validity(qc):
++    assert qc.resolve_qc(None,'c0',preserved_cue=None)=='UNREVIEWED'
++    assert qc.resolve_qc(judgement('i'),'c0',preserved_cue=True)=='VALID'
++    assert qc.resolve_qc(judgement('i',choice='c1'),'c0',preserved_cue=True)=='UNCERTAIN'
++    assert qc.resolve_qc(judgement('i'),'c0',preserved_cue=False)=='INVALID'
++    assert qc.resolve_qc(judgement('i'),'c0',preserved_cue=None)=='UNCERTAIN'
++    rows=[dict(r,status='VALID') for _,r in cases()]
++    assert qc.common_valid_sources(rows,'occlusion')==['s']
++    rows[-1]['status']='UNREVIEWED'
++    assert qc.common_valid_sources(rows,'occlusion')==[]
++
++
++def test_finalization_requires_locked_choice_and_measured_postlock_cue_check(qc,tmp_path):
++    manifest=qc.build_review_kit(cases(),tmp_path/'kit',reviewer='R1')
++    ids=[r['case_id'] for r in manifest['restricted_cases']]
++    locked=qc.lock_blind_judgments([judgement(i) for i in ids],reviewer='R1',case_ids=ids,
++        source_key_sha256=manifest['source_key_sha256'])
++    cue_checks=[{'case_id':i,'preserved_cue':True,'reason':'source action cue remains',
++                 'duration_seconds':1.,'timestamp':'2026-10-21T11:00:00+08:00'} for i in ids]
++    finalized=qc.finalize_qc(manifest,locked,cue_checks)
++    assert all(r['status']=='VALID' and r['selected_class']=='c0' for r in finalized['cases'])
++    assert finalized['reviewer_count']==1 and finalized['inter_rater_agreement'] is None
++    assert finalized['ten_class_macro_f1_status']=='NOT_ESTIMABLE'
++    cue_checks.pop()
++    with pytest.raises(ValueError):qc.finalize_qc(manifest,locked,cue_checks)
++
++
++def test_source_key_binding_prevents_reveal_under_another_case_mapping(qc,tmp_path):
++    first=qc.build_review_kit(cases(),tmp_path/'one')
++    second=qc.build_review_kit([(image,dict(row,class_id='c1')) for image,row in cases()],tmp_path/'two')
++    ids=[r['case_id'] for r in first['restricted_cases']]
++    locked=qc.lock_blind_judgments([judgement(i) for i in ids],reviewer='R1',case_ids=ids,
++        source_key_sha256=first['source_key_sha256'])
++    with pytest.raises(ValueError):qc.reveal_sources(second,locked)
++
++
++def test_local_cli_reveals_only_after_lock_and_finalizes_real_input_files(qc,tmp_path):
++    kit=tmp_path/'kit';manifest=qc.build_review_kit(cases(),kit)
++    with pytest.raises(FileNotFoundError):qc.main(['reveal','--kit',str(kit)])
++    ids=[r['case_id'] for r in manifest['restricted_cases']]
++    ratings=tmp_path/'synthetic_ratings.json';ratings.write_text(json.dumps([judgement(i) for i in ids]))
++    assert qc.main(['lock','--kit',str(kit),'--ratings',str(ratings)])==0
++    assert qc.main(['reveal','--kit',str(kit)])==0
++    source_page=(kit/'restricted/source_review.html').read_text()
++    assert 'preserved_cue' in source_page and '/secret/c0/a.jpg' in source_page
++    cues=tmp_path/'synthetic_cues.json';cues.write_text(json.dumps([
++        {'case_id':i,'preserved_cue':True,'reason':'cue still visible',
++         'duration_seconds':2.,'timestamp':'2026-10-21T12:00:00+08:00'} for i in ids]))
++    assert qc.main(['finalize','--kit',str(kit),'--cue-checks',str(cues)])==0
++    final=json.loads((kit/'restricted/R1_qc_final_locked.json').read_text())
++    assert final['counts']=={'VALID':4,'INVALID':0,'UNCERTAIN':0}
++    assert final['blind_timing']['mean_seconds']==3.2
++    assert final['source_check_timing']['mean_seconds']==2.
++
++
++def test_boolean_is_not_a_measured_duration_and_numeric_is_not_a_cue(qc,tmp_path):
++    manifest=qc.build_review_kit(cases(),tmp_path/'kit')
++    ids=[r['case_id'] for r in manifest['restricted_cases']]
++    ratings=[judgement(i) for i in ids]
++    ratings[0]['duration_seconds']=True
++    with pytest.raises(ValueError):
++        qc.lock_blind_judgments(ratings,reviewer='R1',case_ids=ids,
++            source_key_sha256=manifest['source_key_sha256'])
++    ratings=[judgement(i) for i in ids]
++    locked=qc.lock_blind_judgments(ratings,reviewer='R1',case_ids=ids,
++        source_key_sha256=manifest['source_key_sha256'])
++    cues=[{'case_id':i,'preserved_cue':True,'reason':'visible cue',
++           'duration_seconds':1.,'timestamp':'2026-10-21T11:00:00+08:00'} for i in ids]
++    cues[0]['duration_seconds']=True
++    with pytest.raises(ValueError):qc.finalize_qc(manifest,locked,cues)
++    cues[0]['duration_seconds']=1.;cues[0]['preserved_cue']=1
++    with pytest.raises(ValueError):qc.finalize_qc(manifest,locked,cues)

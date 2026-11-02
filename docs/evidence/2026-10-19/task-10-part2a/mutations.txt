@@ -1,0 +1,119 @@
+Task 10 part 2a - mutation evidence
+
+Every mutation was made in an isolated copy of HEAD e010a6a (git archive, .venv and node_modules linked, the
+three model files linked read-only, the four new/changed test files copied in and byte-compared with the worktree),
+the whole backend/tests/test_live_e2e.py file was run there (npm run build included, so frontend mutations are built),
+and the mutated files were restored from `git show HEAD:<path>` and byte-compared afterwards.
+The real worktree was never mutated. The FAILED lines and the first assertion text of each run are quoted below.
+
+====================================================================================================
+M0: baseline: no mutation, same isolated copy
+  result: 12 passed in 36.79s
+
+====================================================================================================
+M1: E2E-M1  the JSON export drops one identity field (provenance.vision_frame_id)
+  file: backend/app/routers/export.py
+  - else {**payload, "flagged": flagged})
+  + else {**payload, "provenance": {k: v for k, v in payload["provenance"].items() if k != "vision_frame_id"}, "flagged": flagged})
+  result: 2 failed, 10 passed in 35.49s
+  red: tests/test_live_e2e.py::TestStLiveE2E01::test_04_five_homes_agree_on_every_field_of_every_window
+  red: tests/test_live_e2e.py::TestStLiveE2E01::test_07_a_flag_set_in_the_ui_reaches_the_database_the_api_and_both_exports
+  first assertion: AssertionError: 61 differences, first ["window 1 export JSON: provenance.vision_frame_id: left has '1792407342206:9', absent on the right", "window 2 export JSON: provenance.vision_frame_id: left has '1792407342206:9', absent on the right", "window 3 export JSON: provenance.vision_frame_id: left has '1792407342206:10', absent on the right", "window 4 export JSON: provenance.vision_frame_id: left has '1792407342206:10
+
+====================================================================================================
+M2: E2E-M2  GET /risk/latest returns the second-last window
+  file: backend/app/routers/risk.py
+  - .order_by(models.InferenceRecord.window_id.desc())
+            .first()
+  + .order_by(models.InferenceRecord.window_id.desc())
+            .offset(1)
+            .first()
+  result: 3 failed, 9 passed in 35.10s
+  red: tests/test_live_e2e.py::TestStLiveE2E01::test_04_five_homes_agree_on_every_field_of_every_window
+  red: tests/test_live_e2e.py::TestStLiveE2E01::test_05_the_latest_panel_shows_risk_latest
+  red: tests/test_live_e2e.py::TestStLiveE2E01::test_07_a_flag_set_in_the_ui_reaches_the_database_the_api_and_both_exports
+  first assertion: AssertionError: assert (59 == 60)
+
+====================================================================================================
+M3: E2E-M3  the Live Monitor's RiskScore text is 0.1 too high
+  file: frontend/src/utils/format.ts
+  - value === null ? UNAVAILABLE_LABEL : `${formatFixed(value, 1)} / 100`;
+  + value === null ? UNAVAILABLE_LABEL : `${formatFixed(value + 0.1, 1)} / 100`;
+  result: 2 failed, 10 passed in 34.01s
+  red: tests/test_live_e2e.py::TestStLiveE2E01::test_05_the_latest_panel_shows_risk_latest
+  red: tests/test_live_e2e.py::TestStLiveE2E01::test_06_the_five_views_open_and_show_what_the_backend_recorded
+  first assertion: AssertionError: the Live Monitor does not show GET /risk/latest: ["bannerText: 'RiskScore: 10.5 / 100 | Visual distraction: 21% | Telemetry non-safe: 0%' != 'RiskScore: 10.4 / 100 | Visual distraction: 21% | Telemetry non-safe: 0%'", "gaugeLabel: 'RiskScore: 10.5 / 100' != 'RiskScore: 10.4 / 100'"]
+
+====================================================================================================
+M4: E2E-M4  Retry is start(true), i.e. a new session
+  file: ai/src/liveLoop.ts
+  - if (!fault?.stopped || state.busy || state.retrying) return;
+  + if (!fault?.stopped || state.busy || state.retrying) return;
+        if (fault.stopped) {
+          await start(true);
+          return;
+        }
+  result: 1 failed, 11 passed in 35.05s
+  red: tests/test_live_e2e.py::test_e2_transport_faults_stop_the_loop_and_retry_resumes_the_same_session
+  first assertion: AssertionError: Retry created a new session instead of resuming this one
+
+====================================================================================================
+M5: E2E-M5  the Retry delivery's attempt number restarts at 1
+  file: ai/src/liveLoop.ts
+  - await deliver(g, true);
+      }
+    
+      async function loadSession
+  + if (pending) pending.deliveries = 0;
+        await deliver(g, true);
+      }
+    
+      async function loadSession
+  result: 1 failed, 11 passed in 37.98s
+  red: tests/test_live_e2e.py::test_e2_transport_faults_stop_the_loop_and_retry_resumes_the_same_session
+  first assertion: AssertionError: a manual retry continues the delivery count (1, 2, 3 automatic; 4 manual)
+
+====================================================================================================
+M6: E2E-M6  a lost camera and Stop Camera show the same words
+  file: frontend/src/utils/runtimeNotices.ts
+  - device: "disconnected",
+  + device: "stopped by you",
+  file: frontend/src/utils/runtimeNotices.ts
+  - device_disconnected: "the camera was disconnected",
+  + device_disconnected: "the camera was stopped",
+  result: 1 failed, 11 passed in 35.97s
+  red: tests/test_live_e2e.py::test_e2_an_unexpected_camera_loss_and_stop_camera_read_differently_and_neither_stops_the_loop
+  first assertion: AssertionError: Camera: error · stopped by you at 6:59:13 PM
+
+====================================================================================================
+M7: E2E-M7  telemetry acquisition time is the send time again
+  file: frontend/src/data/preparedSessionInput.ts
+  - acquiredAtMs: baseMs + step * PREPARED_TELEMETRY_PERIOD_MS,
+  + acquiredAtMs: nowMs,
+  result: 12 failed in 76.90s (0:01:16)
+  red: tests/test_live_e2e.py::TestStLiveE2E01::test_01_the_run_completed_and_every_request_was_a_distinct_stored_window
+  red: tests/test_live_e2e.py::TestStLiveE2E01::test_02_contract
+  red: tests/test_live_e2e.py::TestStLiveE2E01::test_03_r10_on_the_wire
+  red: tests/test_live_e2e.py::TestStLiveE2E01::test_04_five_homes_agree_on_every_field_of_every_window
+  red: tests/test_live_e2e.py::TestStLiveE2E01::test_05_the_latest_panel_shows_risk_latest
+  red: tests/test_live_e2e.py::TestStLiveE2E01::test_06_the_five_views_open_and_show_what_the_backend_recorded
+  red: tests/test_live_e2e.py::TestStLiveE2E01::test_07_a_flag_set_in_the_ui_reaches_the_database_the_api_and_both_exports
+  red: tests/test_live_e2e.py::TestStLiveE2E01::test_08_no_console_errors_and_nothing_failed_on_the_server
+  red: tests/test_live_e2e.py::test_e2_transport_faults_stop_the_loop_and_retry_resumes_the_same_session
+  red: tests/test_live_e2e.py::test_e2_a_failed_new_session_makes_retry_create_a_new_session
+  red: tests/test_live_e2e.py::test_e2_an_unexpected_camera_loss_and_stop_camera_read_differently_and_neither_stops_the_loop
+  red: tests/test_live_e2e.py::test_e3_rvfc_behaviour_on_the_fake_camera_is_recorded
+  first assertion: AssertionError: while waiting for 10 windows spanning 4 telemetry samples (seq 0..3): the app stopped monitoring:
+
+====================================================================================================
+M8: E2E-M8  a flag is not written into either export
+  file: backend/app/routers/export.py
+  - else {**payload, "flagged": flagged})
+  + else {**payload, "flagged": False})
+  file: backend/app/routers/export.py
+  - row = {**payload, "flagged": flagged, **
+  + row = {**payload, "flagged": False, **
+  result: 1 failed, 11 passed in 35.51s
+  red: tests/test_live_e2e.py::TestStLiveE2E01::test_07_a_flag_set_in_the_ui_reaches_the_database_the_api_and_both_exports
+  first assertion: AssertionError: 2 differences, first ['window 3 export JSON: flagged: True != False', "window 3: csv flagged: cell 'false' for value True"]
+

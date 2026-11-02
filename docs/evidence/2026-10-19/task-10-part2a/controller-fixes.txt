@@ -1,0 +1,44 @@
+Task 10 part 2a - controller fixes (on top of 47484d3), proof that each one is guarded
+Isolated copies: git archive 47484d3 (pre-fix), .venv / node_modules / model files symlinked; the worktree was never mutated.
+
+F1 order independence: test_07 now unflags window 3 through the UI and re-checks all five homes.
+  A  pre-fix, order 07,06,05,04 : 2 failed, 2 passed  (test_06: 'Flagged' == 'None'; test_04: window 3 flagged False != True)
+  A' post-fix, order 07,06,05,04,03,02,01 with DRA_FRESHNESS_TOLERANCE_S=1 : 7 passed in 19.93s
+
+F2 the e2e uvicorn no longer inherits the developer's DRA_* variables.
+  Note: the reviewer's example (DRA_FRESHNESS_TOLERANCE_S=1) does NOT break the pre-fix code - the tolerance comes from
+  the session config the frontend posts, not from the server default:
+    ..                                                                       [100%]
+    2 passed in 16.02s
+  B  pre-fix, DRA_MODEL_ROOT=/nonexistent : test_01 FAILED ('the app stopped monitoring' - models unavailable)
+  B' post-fix, DRA_MODEL_ROOT=/nonexistent : test_01 1 passed in 15.07s
+
+F3 requires_models in test_live_e2e.py checks all three frozen files (test_model_gate now also requires the marker in test_live_e2e.py).
+  C  pre-fix, .pt absent :
+    /Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_local.py:537: FileNotFoundError
+    =========================== short test summary info ============================
+    FAILED tests/test_live_e2e.py::TestStLiveE2E01::test_02_contract - FileNotFou...
+    1 failed in 15.66s
+  D  post-fix, .pt absent (test_live_e2e.py + test_model_gate.py) :
+      SKIPPED  tests/test_live_e2e.py::test_e2_transport_faults_stop_the_loop_and_retry_resumes_the_same_session
+      SKIPPED  tests/test_live_e2e.py::test_e2_a_failed_new_session_makes_retry_create_a_new_session
+      SKIPPED  tests/test_live_e2e.py::test_e2_an_unexpected_camera_loss_and_stop_camera_read_differently_and_neither_stops_the_loop
+      SKIPPED  tests/test_live_e2e.py::test_e3_rvfc_behaviour_on_the_fake_camera_is_recorded
+    Set DRA_REQUIRE_MODELS=1 (pre-release gate) to make a missing model fail the run.
+    8 passed, 12 skipped in 5.73s
+  E  post-fix, .pt absent, DRA_REQUIRE_MODELS=1 :
+    ERROR tests/test_live_e2e.py::test_e2_an_unexpected_camera_loss_and_stop_camera_read_differently_and_neither_stops_the_loop
+    ERROR tests/test_live_e2e.py::test_e3_rvfc_behaviour_on_the_fake_camera_is_recorded
+    12 errors in 0.08s
+
+Controller gate run (scripts/run_gates.py, DRA_REQUIRE_MODELS=1, tree = the fix commit's content):
+| # | Gate | Status | Exit | Duration (s) | Skipped | Log |
+|---|------|--------|------|--------------|---------|-----|
+| 01 | build | PASS | 0 | 4.11 | - | 01-build.log (controller scratch, not archived) |
+| 02 | pytest | PASS | 0 | 62.51 | 0 | 02-pytest.log (controller scratch, not archived) |
+| 03 | vitest | PASS | 0 | 2.62 | - | 03-vitest.log (controller scratch, not archived) |
+| 04 | tsc | PASS | 0 | 1.62 | - | 04-tsc.log (controller scratch, not archived) |
+| 05 | eslint | PASS | 0 | 1.4 | - | 05-eslint.log (controller scratch, not archived) |
+ Test Files  29 passed (29)
+      Tests  870 passed (870)
+934 passed, 1 warning in 61.10s (0:01:01)

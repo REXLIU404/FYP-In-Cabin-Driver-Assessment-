@@ -1,23 +1,13 @@
-import type {
-  AlertSeverity,
-  FreshnessStatus,
-  RiskLevel,
-  SystemHealth,
-} from "../types";
-
-type BadgeTone =
-  | AlertSeverity
-  | RiskLevel
-  | SystemHealth
-  | FreshnessStatus
-  | "flagged"
-  | "neutral";
+import { resolvePill, type PillTone } from "../utils/display";
 
 interface StatusBadgeProps {
-  label: string;
-  tone?: BadgeTone;
+  label: string | null;
+  tone?: PillTone | null;
 }
 
-export function StatusBadge({ label, tone = "neutral" }: StatusBadgeProps) {
-  return <span className={`pill pill--${tone}`}>{label}</span>;
+export function StatusBadge({ label, tone }: StatusBadgeProps) {
+  const resolved = resolvePill(label, tone);
+  return (
+    <span className={`pill pill--${resolved.tone}`}>{resolved.label}</span>
+  );
 }

@@ -1,0 +1,38 @@
+[
+  {
+    "navScrollWidth": 684,
+    "navClientWidth": 326,
+    "navScrollbarWidth": "thin",
+    "brandDisplay": "none",
+    "docScrollWidth": 390,
+    "innerWidth": 390,
+    "width": 390
+  },
+  {
+    "navScrollWidth": 684,
+    "navClientWidth": 636,
+    "navScrollbarWidth": "thin",
+    "brandDisplay": "none",
+    "docScrollWidth": 700,
+    "innerWidth": 700,
+    "width": 700
+  },
+  {
+    "navScrollWidth": 736,
+    "navClientWidth": 736,
+    "navScrollbarWidth": "thin",
+    "brandDisplay": "none",
+    "docScrollWidth": 800,
+    "innerWidth": 800,
+    "width": 800
+  },
+  {
+    "navScrollWidth": 203,
+    "navClientWidth": 203,
+    "navScrollbarWidth": "auto",
+    "brandDisplay": "block",
+    "docScrollWidth": 1280,
+    "innerWidth": 1280,
+    "width": 1280
+  }
+]

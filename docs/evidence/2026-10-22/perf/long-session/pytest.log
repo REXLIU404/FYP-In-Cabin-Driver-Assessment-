@@ -1,0 +1,10 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.3, pytest-9.0.3, pluggy-1.6.0 -- /Users/liu/Desktop/FYP2-Live-System/.venv/bin/python
+rootdir: /Users/liu/Desktop/FYP2-Live-System/backend
+plugins: anyio-4.13.0
+collecting ... collected 1 item
+
+tests/test_live_long_session.py::test_st_long_01_a_long_session_is_stored_and_exported_completely ST-LONG-01 {"minutes": 15.0, "windows": 8867, "rate_hz": 9.85, "sampled_windows_reconciled": 112}
+PASSED
+
+======================== 1 passed in 917.61s (0:15:17) =========================

@@ -1,0 +1,64 @@
+{
+  "plan": {
+    "trial_id": "search_003",
+    "model": "mobilenet_v3_large",
+    "role": "SEARCH",
+    "seed": 42,
+    "config": {
+      "learning_rate": 0.0003,
+      "weight_decay": 0.0001
+    },
+    "max_epochs": 8,
+    "is_p2": false
+  },
+  "phase": "search",
+  "context": {
+    "environment": {
+      "git": {
+        "branch": "fyp2/ml-training",
+        "head": "335da4e3de203836c045452f84cc291bcd352a26",
+        "staged_paths": "",
+        "tracked_worktree_clean": true,
+        "execution_commit": "335da4e3de203836c045452f84cc291bcd352a26",
+        "allowed_untracked_evidence": [
+          "docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md",
+          "ml/outputs/runs/p3_vision_20261018/"
+        ],
+        "dirty_state_at_first_start": "?? docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md"
+      },
+      "protected_hashes": {
+        "ml/outputs/vision/mobilenetv3_large_vision.pt": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+        "ml/outputs/vision/mobilenetv3_large_vision.onnx": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+        "ml/outputs/telemetry/xgb_telemetry.json": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+        "docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md": "0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0",
+        "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/vision/vision_metadata_with_split.csv": "b4f8e90dec769bb419eaa490aea869668bed6484089cebe4d545c7667baa8ea4",
+        "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_train.csv": "97dd20ee9c0832ba33455e5c31088f9b4abb65c198bf988699a959d545d1e5b5",
+        "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_val.csv": "1b02792df846b5af138bae59e4f4ccfa8fa421fbb4fd6d42fad88d57722774f1"
+      },
+      "test_split_integrity": "P0 reference; startup byte hash checked separately; not reopened here"
+    },
+    "weights_manifest": {
+      "mobilenet_v3_large": {
+        "path": "/Users/liu/.cache/torch/hub/checkpoints/mobilenet_v3_large-5c1a4163.pth",
+        "sha256": "5c1a416349c4cf298f2a6a5e2600ed0ee55e604713578f5e74e6bc8bcaef7997",
+        "bytes": 22132113,
+        "recipe": "IMAGENET1K_V2"
+      },
+      "resnet18": {
+        "path": "/Users/liu/.cache/torch/hub/checkpoints/resnet18-f37072fd.pth",
+        "sha256": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec",
+        "bytes": 46830571,
+        "recipe": "IMAGENET1K_V1"
+      }
+    },
+    "source_hashes": {
+      "ml/experiments/run_vision_hpo.py": "c669bb30fc79c7493f86c738fd66d430e465efcbf367c17e4753f19b2713279d",
+      "ml/vision/train_hpo.py": "06c465cb3115dad5f3e5e6a63ab0b308c50e4edca41b538d5b33361d4667b4d9",
+      "ml/experiments/hpo_protocol.py": "dd047b7ca57654a47637e2268266014ba67bf878252ae8839dfbd1f39c8b09e5",
+      "ml/experiments/comparator_common.py": "8ede7aa5a0604232ff5b3c54735bd9f2e5479b18a2e80e5091bfa2b07644805d"
+    },
+    "protocol_sha256": "913e4852c0b00588e4372951807650282e46b8dbf1cc6de4675f63dca0976e5d",
+    "data_root": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-"
+  },
+  "timeout_seconds": 2400
+}

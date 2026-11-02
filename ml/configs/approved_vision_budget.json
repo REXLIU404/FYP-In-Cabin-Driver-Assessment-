@@ -1,0 +1,22 @@
+{
+  "launch_authorized": true,
+  "approval_date": "2026-10-19",
+  "approval_source": "Explicit user S2 approval in this conversation",
+  "phase": "search",
+  "per_trial": 2400,
+  "per_model": {
+    "mobilenet_v3_large": 17100,
+    "resnet18": 15300
+  },
+  "total": 32400,
+  "resource_constraints": {
+    "device": "mps",
+    "batch_size": 64,
+    "cpu_threads": 2,
+    "workers": 0
+  },
+  "automatic_budget_extension": false,
+  "grid_changes_authorized": false,
+  "training_operator": "user terminal",
+  "p4_p5_authorized": false
+}

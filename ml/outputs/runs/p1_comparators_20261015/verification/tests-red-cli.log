@@ -1,0 +1,22 @@
+...............................FFF                                       [100%]
+=================================== FAILURES ===================================
+________________ test_worker_directory_rejects_parent_traversal ________________
+ml/tests/test_comparator_pipeline.py:190: in test_worker_directory_rejects_parent_traversal
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+_ test_p1_cli_rejects_full_training_before_opening_data[ml/vision/train_resnet18.py-extra0] _
+ml/tests/test_comparator_pipeline.py:203: in test_p1_cli_rejects_full_training_before_opening_data
+    assert 'unrecognized arguments: --full-dataset' in result.stderr
+E   assert 'unrecognized arguments: --full-dataset' in "/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/vision/train_resnet18.py': [Errno 2] No such file or directory\n"
+E    +  where "/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/vision/train_resnet18.py': [Errno 2] No such file or directory\n" = CompletedProcess(args=['/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python', '-B', '/Users/liu/Desk...ers/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/vision/train_resnet18.py': [Errno 2] No such file or directory\n").stderr
+_ test_p1_cli_rejects_full_training_before_opening_data[ml/telemetry/train_comparator.py-extra1] _
+ml/tests/test_comparator_pipeline.py:203: in test_p1_cli_rejects_full_training_before_opening_data
+    assert 'unrecognized arguments: --full-dataset' in result.stderr
+E   assert 'unrecognized arguments: --full-dataset' in "/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_comparator.py': [Errno 2] No such file or directory\n"
+E    +  where "/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_comparator.py': [Errno 2] No such file or directory\n" = CompletedProcess(args=['/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python', '-B', '/Users/liu/Desk...iu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_comparator.py': [Errno 2] No such file or directory\n").stderr
+=========================== short test summary info ============================
+FAILED ml/tests/test_comparator_pipeline.py::test_worker_directory_rejects_parent_traversal
+FAILED ml/tests/test_comparator_pipeline.py::test_p1_cli_rejects_full_training_before_opening_data[ml/vision/train_resnet18.py-extra0]
+FAILED ml/tests/test_comparator_pipeline.py::test_p1_cli_rejects_full_training_before_opening_data[ml/telemetry/train_comparator.py-extra1]
+3 failed, 31 passed in 3.58s

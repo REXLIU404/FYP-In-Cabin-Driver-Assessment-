@@ -1,0 +1,92 @@
+GATE: pytest
+STATUS: FAIL
+EXIT CODE: 1
+STARTED (UTC): 2026-10-29T04:35:21Z
+FINISHED (UTC): 2026-10-29T04:38:44Z
+DURATION (s): 202.3
+ARGV: ["../.venv/bin/python", "-m", "pytest", "tests", "-q", "-p", "no:cacheprovider"]
+CWD: /Users/liu/Desktop/FYP2-Live-System/backend
+ENV (selected):
+  PYTHONDONTWRITEBYTECODE=1
+  PYTHONPATH=.
+  TMPDIR=/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/dra-gate-pytest-5miyl945
+  DRA_REQUIRE_MODELS=1
+  DRA_DATABASE_URL=(unset)
+  FYP_DATA_ROOT=(unset)
+  NODE_ENV=(unset)
+  CI=(unset)
+  VIRTUAL_ENV=(unset)
+TOOL VERSIONS:
+  python (this script): 3.13.3
+  python (.venv): Python 3.13.3
+  pytest: pytest 9.0.3
+  node: v24.1.0
+  npm: 11.4.2
+  vitest: vitest/2.1.9 darwin-arm64 node-v24.1.0
+  tsc: Version 5.9.3
+  eslint: v9.39.4
+PYTEST SKIPPED: 0
+----- STDOUT -----
+........................................................................ [  5%]
+...........................F............................................ [ 10%]
+........................................................................ [ 16%]
+........................................................................ [ 21%]
+........................................................................ [ 26%]
+........................................................................ [ 32%]
+........................................................................ [ 37%]
+........................................................................ [ 42%]
+........................................................................ [ 48%]
+........................................................................ [ 53%]
+........................................................................ [ 59%]
+........................................................................ [ 64%]
+........................................................................ [ 69%]
+........................................................................ [ 75%]
+........................................................................ [ 80%]
+........................................................................ [ 85%]
+........................................................................ [ 91%]
+........................................................................ [ 96%]
+.............................................                            [100%]
+=================================== FAILURES ===================================
+________________ test_a_long_pause_does_not_expire_the_evidence ________________
+
+pw = <playwright._impl._playwright.Playwright object at 0x11775e510>
+scenario_server = <e2e_support.Server object at 0x11775ea50>
+
+    def test_a_long_pause_does_not_expire_the_evidence(pw, scenario_server):
+        chrome = Chrome(pw, scenario_server, FAKE_CAMERA_ARGS)
+        try:
+            chrome.open()
+            select_constructed_scenario(chrome)
+            page = chrome.page
+            chrome.top_button("Start Monitoring").click()
+            chrome.wait_until(lambda: len(chrome.tap.answered()) >= 2, "two windows", 60)
+            sid = chrome.tap.session_posts[0].response["id"]
+            chrome.top_button("Pause").click()
+            chrome.wait_until(
+                lambda: page.locator('.topbar-actions button.button--primary').is_enabled(),
+                "Start Monitoring to be re-enabled after Pause", 20)
+            before = len(chrome.tap.answered(sid))
+            chrome.wait(4000)  # a REAL pause, longer than the 3 s freshness tolerance
+>           assert len(chrome.tap.answered(sid)) == before, "a paused run must send nothing"
+E           AssertionError: a paused run must send nothing
+E           assert 3 == 2
+E            +  where 3 = len([InferCall(number=1, at=1793248550.7756648, sid='Sc6e2a31e4f0043c29cef37ae7eac03d8', raw='{"request_id":"9128abea-2eee...lse, 'vision_age_s': 0.047, 'telemetry_expired': False, 'telemetry_age_s': 0.247}}, response_text=None, sent_raw=None)])
+E            +    where [InferCall(number=1, at=1793248550.7756648, sid='Sc6e2a31e4f0043c29cef37ae7eac03d8', raw='{"request_id":"9128abea-2eee...lse, 'vision_age_s': 0.047, 'telemetry_expired': False, 'telemetry_age_s': 0.247}}, response_text=None, sent_raw=None)] = answered('Sc6e2a31e4f0043c29cef37ae7eac03d8')
+E            +      where answered = <e2e_support.ApiTap object at 0x11cc57890>.answered
+E            +        where <e2e_support.ApiTap object at 0x11cc57890> = <e2e_support.Chrome object at 0x11d21a350>.tap
+
+tests/test_constructed_scenario_e2e.py:208: AssertionError
+=============================== warnings summary ===============================
+../.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /Users/liu/Desktop/FYP2-Live-System/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+DRA_REQUIRE_MODELS=1: no model-dependent test was skipped.
+=========================== short test summary info ============================
+FAILED tests/test_constructed_scenario_e2e.py::test_a_long_pause_does_not_expire_the_evidence
+1 failed, 1340 passed, 8 deselected, 1 warning in 200.68s (0:03:20)
+----- END STDOUT -----
+----- STDERR -----
+
+----- END STDERR -----

@@ -1,0 +1,18 @@
+
+> fyp-in-cabin-driver-assessment@0.1.0 build
+> tsc -b && vite build
+
+vite v6.4.2 building for production...
+transforming...
+✓ 2223 modules transformed.
+rendering chunks...
+computing gzip size...
+../dist/index.html                   0.82 kB │ gzip:   0.52 kB
+../dist/assets/index-aa4jj2So.css   14.46 kB │ gzip:   3.68 kB
+../dist/assets/index-DKp31fyC.js   598.15 kB │ gzip: 170.34 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1.58s

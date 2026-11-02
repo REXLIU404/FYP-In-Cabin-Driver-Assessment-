@@ -1,0 +1,141 @@
+FFFFF                                                                    [100%]
+=================================== FAILURES ===================================
+_________ test_mobilenet_budget_stop_does_not_cancel_resnet[per_trial] _________
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-46/test_mobilenet_budget_stop_doe0')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e999cd0>
+scope = 'per_trial'
+
+    @pytest.mark.parametrize('scope',['per_trial','per_model'])
+    def test_mobilenet_budget_stop_does_not_cancel_resnet(vision,tmp_path,context,monkeypatch,scope):
+        clock=[0.]
+        monkeypatch.setattr(vision.time,'monotonic',lambda:clock[0])
+        plans=model_plans('mobilenet_v3_large')+model_plans('resnet18')
+        budget={'per_trial':.5 if scope=='per_trial' else 10.,
+                'per_model':{'mobilenet_v3_large':.5 if scope=='per_model' else 10.,'resnet18':10.},'total':20.}
+        called=[]
+        def worker(command,log_path,timeout):
+            row=json.loads((Path(log_path).parent/'config.json').read_text())['plan'];called.append(row['model'])
+            if row['model']=='mobilenet_v3_large':
+                clock[0]+=timeout
+                return {'status':'TIME_BUDGET_EXCEEDED','returncode':-15,'wall_seconds':timeout}
+            result=synthetic_worker(command,log_path,timeout);clock[0]+=.1;result['wall_seconds']=.1
+            return result
+        state=vision.run_plan(tmp_path,'search',plans,budget,context,runner=worker)
+>       assert called==['mobilenet_v3_large','resnet18','resnet18']
+E       AssertionError: assert ['mobilenet_v3_large'] == ['mobilenet_v...', 'resnet18']
+E         
+E         Right contains 2 more items, first extra item: 'resnet18'
+E         Use -v to get more diff
+
+ml/tests/test_vision_hpo.py:407: AssertionError
+_________ test_mobilenet_budget_stop_does_not_cancel_resnet[per_model] _________
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-46/test_mobilenet_budget_stop_doe1')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1065868b0>
+scope = 'per_model'
+
+    @pytest.mark.parametrize('scope',['per_trial','per_model'])
+    def test_mobilenet_budget_stop_does_not_cancel_resnet(vision,tmp_path,context,monkeypatch,scope):
+        clock=[0.]
+        monkeypatch.setattr(vision.time,'monotonic',lambda:clock[0])
+        plans=model_plans('mobilenet_v3_large')+model_plans('resnet18')
+        budget={'per_trial':.5 if scope=='per_trial' else 10.,
+                'per_model':{'mobilenet_v3_large':.5 if scope=='per_model' else 10.,'resnet18':10.},'total':20.}
+        called=[]
+        def worker(command,log_path,timeout):
+            row=json.loads((Path(log_path).parent/'config.json').read_text())['plan'];called.append(row['model'])
+            if row['model']=='mobilenet_v3_large':
+                clock[0]+=timeout
+                return {'status':'TIME_BUDGET_EXCEEDED','returncode':-15,'wall_seconds':timeout}
+            result=synthetic_worker(command,log_path,timeout);clock[0]+=.1;result['wall_seconds']=.1
+            return result
+        state=vision.run_plan(tmp_path,'search',plans,budget,context,runner=worker)
+>       assert called==['mobilenet_v3_large','resnet18','resnet18']
+E       AssertionError: assert ['mobilenet_v3_large'] == ['mobilenet_v...', 'resnet18']
+E         
+E         Right contains 2 more items, first extra item: 'resnet18'
+E         Use -v to get more diff
+
+ml/tests/test_vision_hpo.py:407: AssertionError
+_____________ test_total_budget_stops_both_models_and_cannot_reset _____________
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-46/test_total_budget_stops_both_m0')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e973890>
+
+    def test_total_budget_stops_both_models_and_cannot_reset(vision,tmp_path,context,monkeypatch):
+        clock=[0.];monkeypatch.setattr(vision.time,'monotonic',lambda:clock[0])
+        plans=model_plans('mobilenet_v3_large')+model_plans('resnet18')
+        budget={'per_trial':10.,'per_model':10.,'total':.5};called=[]
+        def worker(command,log_path,timeout):
+            called.append(str(log_path));clock[0]+=timeout
+            return {'status':'TIME_BUDGET_EXCEEDED','returncode':-15,'wall_seconds':timeout}
+        state=vision.run_plan(tmp_path,'search',plans,budget,context,runner=worker)
+>       assert len(called)==1 and state['status']=='NOT_RUN_BUDGET' and state['budget_stop_scope']=='total'
+                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'budget_stop_scope'
+
+ml/tests/test_vision_hpo.py:426: KeyError
+___ test_other_model_resumes_after_interrupt_without_reopening_stopped_model ___
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-46/test_other_model_resumes_after0')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e9fd590>
+
+    def test_other_model_resumes_after_interrupt_without_reopening_stopped_model(vision,tmp_path,context,monkeypatch):
+        clock=[0.];monkeypatch.setattr(vision.time,'monotonic',lambda:clock[0])
+        plans=model_plans('mobilenet_v3_large')+model_plans('resnet18')
+        budget={'per_trial':.5,'per_model':10.,'total':20.}
+        def worker(command,log_path,timeout):
+            row=json.loads((Path(log_path).parent/'config.json').read_text())['plan']
+            clock[0]+=.1
+            if row['model']=='mobilenet_v3_large':
+                return {'status':'TIME_BUDGET_EXCEEDED','returncode':-15,'wall_seconds':timeout}
+            raise KeyboardInterrupt
+>       with pytest.raises(KeyboardInterrupt):vision.run_plan(tmp_path,'search',plans,budget,context,runner=worker)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'KeyboardInterrupt'>
+
+ml/tests/test_vision_hpo.py:443: Failed
+________________ test_model_cap_preflight_skips_only_that_model ________________
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-46/test_model_cap_preflight_skips0')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e9fdae0>
+
+    def test_model_cap_preflight_skips_only_that_model(vision,tmp_path,context,monkeypatch):
+        clock=[0.];monkeypatch.setattr(vision.time,'monotonic',lambda:clock[0])
+        plans=model_plans('mobilenet_v3_large')+model_plans('resnet18')
+        budget={'per_trial':10.,'per_model':{'mobilenet_v3_large':.5,'resnet18':10.},'total':20.}
+        state={'signature':vision.plan_signature(plans,budget,context),'phase':'search','status':'INTERRUPTED',
+               'attempts':[{'key':'mobilenet_v3_large/search_001','plan':plans[0],
+                            'directory':'unused','status':'INTERRUPTED','wall_seconds':.5}],
+               'trials':{},'selection':{},'used_wall_seconds':.5}
+        (tmp_path/'search_state.json').write_text(json.dumps(state))
+        called=[]
+        def worker(command,log_path,timeout):
+            row=json.loads((Path(log_path).parent/'config.json').read_text())['plan'];called.append(row['model'])
+            return synthetic_worker(command,log_path,timeout)
+        state=vision.run_plan(tmp_path,'search',plans,budget,context,runner=worker)
+>       assert called==['resnet18','resnet18'] and state['status']=='PARTIAL'
+E       AssertionError: assert ([] == ['resnet18', 'resnet18']
+E         
+E         Right contains 2 more items, first extra item: 'resnet18'
+E         Use -v to get more diff)
+
+ml/tests/test_vision_hpo.py:469: AssertionError
+=========================== short test summary info ============================
+FAILED ml/tests/test_vision_hpo.py::test_mobilenet_budget_stop_does_not_cancel_resnet[per_trial]
+FAILED ml/tests/test_vision_hpo.py::test_mobilenet_budget_stop_does_not_cancel_resnet[per_model]
+FAILED ml/tests/test_vision_hpo.py::test_total_budget_stops_both_models_and_cannot_reset
+FAILED ml/tests/test_vision_hpo.py::test_other_model_resumes_after_interrupt_without_reopening_stopped_model
+FAILED ml/tests/test_vision_hpo.py::test_model_cap_preflight_skips_only_that_model
+5 failed, 30 deselected in 1.76s

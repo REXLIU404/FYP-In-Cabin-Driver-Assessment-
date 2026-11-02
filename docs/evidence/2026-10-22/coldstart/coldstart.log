@@ -1,0 +1,191 @@
+ST-COLDSTART-01 commit fd2a8a5d231d99e6c7e29d4a69a1b76bdac7a06c -> /var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T//coldstart.8FeGcw/repo
+
+== clone: bash -c git clone --quiet --no-checkout '/Users/liu/Desktop/FYP2-Live-System' '/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T//coldstart.8FeGcw/repo' && git -C '/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T//coldstart.8FeGcw/repo' checkout --quiet 'fd2a8a5d231d99e6c7e29d4a69a1b76bdac7a06c' && git -C '/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T//coldstart.8FeGcw/repo' log --oneline -1
+fd2a8a5 feat(dev): ST-COLDSTART-01 script - fresh clone, venv from the lock file, npm ci, models linked, full gates, serve check; README clean-start section (S3, part 1)
+-> exit 0 in 0 s
+
+== python venv: /Library/Frameworks/Python.framework/Versions/3.13/bin/python3 -m venv /var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T//coldstart.8FeGcw/repo/.venv
+-> exit 0 in 3 s
+
+== pip install (requirements.lock.txt): /var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T//coldstart.8FeGcw/repo/.venv/bin/python -m pip install --disable-pip-version-check -q -r /var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T//coldstart.8FeGcw/repo/backend/requirements.lock.txt
+-> exit 0 in 82 s
+
+== pip freeze: /var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T//coldstart.8FeGcw/repo/.venv/bin/python -m pip freeze
+annotated-doc==0.0.4
+annotated-types==0.7.0
+anyio==4.13.0
+appnope==0.1.4
+argon2-cffi==25.1.0
+argon2-cffi-bindings==25.1.0
+arrow==1.4.0
+asttokens==3.0.1
+async-lru==2.3.0
+attrs==26.1.0
+babel==2.18.0
+beautifulsoup4==4.14.3
+bleach==6.3.0
+certifi==2026.5.20
+cffi==2.0.0
+charset-normalizer==3.4.7
+click==8.4.1
+comm==0.2.3
+contourpy==1.3.3
+cycler==0.12.1
+debugpy==1.8.21
+decorator==5.3.1
+defusedxml==0.7.1
+executing==2.2.1
+fastapi==0.136.3
+fastjsonschema==2.21.2
+filelock==3.29.1
+flatbuffers==25.12.19
+fonttools==4.63.0
+fqdn==1.5.1
+fsspec==2026.4.0
+greenlet==3.5.1
+h11==0.16.0
+httpcore==1.0.9
+httptools==0.8.0
+httpx==0.28.1
+idna==3.17
+iniconfig==2.3.0
+ipykernel==7.2.0
+ipython==9.14.1
+ipython_pygments_lexers==1.1.1
+isoduration==20.11.0
+jedi==0.20.0
+Jinja2==3.1.6
+joblib==1.5.3
+json5==0.14.0
+jsonpointer==3.1.1
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
+jupyter-events==0.12.1
+jupyter-lsp==2.3.1
+jupyter_client==8.8.0
+jupyter_core==5.9.1
+jupyter_server==2.19.0
+jupyter_server_terminals==0.5.4
+jupyterlab==4.5.8
+jupyterlab_pygments==0.3.0
+jupyterlab_server==2.28.0
+kiwisolver==1.5.0
+lark==1.3.1
+lxml==6.1.1
+MarkupSafe==3.0.3
+matplotlib==3.10.9
+matplotlib-inline==0.2.2
+mistune==3.2.1
+ml_dtypes==0.5.4
+mpmath==1.3.0
+narwhals==2.22.0
+nbclient==0.11.0
+nbconvert==7.17.1
+nbformat==5.10.4
+nest-asyncio==1.6.0
+networkx==3.6.1
+notebook_shim==0.2.4
+numpy==2.4.6
+onnx==1.21.0
+onnxruntime==1.26.0
+packaging==26.2
+pandas==3.0.3
+pandocfilters==1.5.1
+parso==0.8.7
+pexpect==4.9.0
+pillow==12.2.0
+platformdirs==4.10.0
+playwright==1.60.0
+pluggy==1.6.0
+prometheus_client==0.25.0
+prompt_toolkit==3.0.52
+protobuf==7.35.0
+psutil==7.2.2
+ptyprocess==0.7.0
+pure_eval==0.2.3
+pycparser==3.0
+pydantic==2.13.4
+pydantic-settings==2.14.1
+pydantic_core==2.46.4
+pyee==13.0.1
+Pygments==2.20.0
+pyparsing==3.3.2
+pytest==9.0.3
+python-dateutil==2.9.0.post0
+python-docx==1.2.0
+python-dotenv==1.2.2
+python-json-logger==4.1.0
+PyYAML==6.0.3
+pyzmq==27.1.0
+referencing==0.37.0
+requests==2.34.2
+rfc3339-validator==0.1.4
+rfc3986-validator==0.1.1
+rfc3987-syntax==1.1.0
+rpds-py==2026.5.1
+scikit-learn==1.9.0
+scipy==1.17.1
+Send2Trash==2.1.0
+setuptools==81.0.0
+six==1.17.0
+soupsieve==2.8.4
+SQLAlchemy==2.0.50
+stack-data==0.6.3
+starlette==1.2.1
+sympy==1.14.0
+terminado==0.18.1
+threadpoolctl==3.6.0
+tinycss2==1.4.0
+torch==2.12.0
+torchvision==0.27.0
+tornado==6.5.6
+traitlets==5.15.1
+typing-inspection==0.4.2
+typing_extensions==4.15.0
+tzdata==2026.2
+uri-template==1.3.0
+urllib3==2.7.0
+uvicorn==0.48.0
+uvloop==0.22.1
+watchfiles==1.2.0
+wcwidth==0.7.0
+webcolors==25.10.0
+webencodings==0.5.1
+websocket-client==1.9.0
+websockets==16.0
+xgboost==3.2.0
+-> exit 0 in 1 s
+
+== npm ci: bash -c cd '/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T//coldstart.8FeGcw/repo' && npm ci --prefer-offline --no-audit --no-fund
+
+added 344 packages in 3s
+-> exit 0 in 3 s
+
+== link models (read-only): link_models
+b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf  /var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T//coldstart.8FeGcw/repo/ml/outputs/vision/mobilenetv3_large_vision.onnx
+196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7  /var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T//coldstart.8FeGcw/repo/ml/outputs/vision/mobilenetv3_large_vision.pt
+9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07  /var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T//coldstart.8FeGcw/repo/ml/outputs/telemetry/xgb_telemetry.json
+-> exit 0 in 0 s
+
+== gates (run_gates.py, DRA_REQUIRE_MODELS=1): env DRA_REQUIRE_MODELS=1 PYTHONDONTWRITEBYTECODE=1 /var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T//coldstart.8FeGcw/repo/.venv/bin/python /var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T//coldstart.8FeGcw/repo/scripts/run_gates.py --out /Users/liu/Desktop/FYP2-Live-System/docs/evidence/2026-10-22/coldstart/gates
+[01] build: npm run build
+     -> PASS (exit 0)
+[02] pytest: ../.venv/bin/python -m pytest tests -q -p no:cacheprovider
+     -> PASS (exit 0)
+[03] vitest: ./node_modules/.bin/vitest run --no-cache
+     -> PASS (exit 0)
+[04] tsc: ./node_modules/.bin/tsc --noEmit
+     -> PASS (exit 0)
+[05] eslint: ./node_modules/.bin/eslint .
+     -> PASS (exit 0)
+Logs and SUMMARY.md: /Users/liu/Desktop/FYP2-Live-System/docs/evidence/2026-10-22/coldstart/gates
+GREEN: all gates passed.
+-> exit 0 in 268 s
+
+== serve from the clean checkout: serve_check
+health: 200
+models: {"models_loaded":true,"provider":"MobileNetV3ONNX+XGBoost","vision":{"architecture":"mobilenet_v3_large","sha256":"b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf","runtime":"onnxruntime_cpu","classes":["safe_driving","texting_right","talking_phone_right","texting_left","talking_phone_left","operating_radio","drinking","reaching_behind","hair_makeup","talking_to_passenger"],"input":"RGB NCHW float32 224x224","mean":[0.485,0.456,0.406],"std":[0.229,0.224,0.225]},"telemetry":{"architecture":"xgboost","sha256":"9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07","classes":["Safe","Aggressive","Distracted"],"features":["speed_kmph","accel_x","accel_y","brake_pressure","steering_angle","throttle","lane_deviation","headway_distance"],"iteration_range":[0,91]},"scope":"Frontal-camera inference is experimental; source dataset metrics do not validate frontal reliability"}
+dashboard: 200
+-> exit 0 in 3 s
+
+ST-COLDSTART-01: PASS (summary in /Users/liu/Desktop/FYP2-Live-System/docs/evidence/2026-10-22/coldstart/SUMMARY.md)

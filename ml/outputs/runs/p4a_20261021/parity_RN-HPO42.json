@@ -1,0 +1,2611 @@
+{
+  "status": "COMPLETED",
+  "error": null,
+  "result": {
+    "status": "PASS",
+    "atol": 0.0001,
+    "rtol": 0.0001,
+    "argmax_equal": true,
+    "samples_compared": 211,
+    "max_absolute_error": 1.9073486328125e-05,
+    "max_relative_error": 0.0010744780693894122,
+    "max_probability_error": 2.302238954254854e-06,
+    "batches": [
+      {
+        "batch": 0,
+        "N": 1,
+        "max_absolute_error": 2.6971101760864258e-06,
+        "max_relative_error": 8.626605141337512e-05,
+        "max_probability_error": 1.3424117390609114e-07
+      },
+      {
+        "batch": 1,
+        "N": 1,
+        "max_absolute_error": 2.1457672119140625e-06,
+        "max_relative_error": 1.2570086086234561e-06,
+        "max_probability_error": 8.618959939643567e-07
+      },
+      {
+        "batch": 2,
+        "N": 1,
+        "max_absolute_error": 2.1457672119140625e-06,
+        "max_relative_error": 7.30432326662322e-06,
+        "max_probability_error": 5.07992542808644e-07
+      },
+      {
+        "batch": 3,
+        "N": 1,
+        "max_absolute_error": 3.933906555175781e-06,
+        "max_relative_error": 1.0678958471472134e-05,
+        "max_probability_error": 1.1397005461599719e-07
+      },
+      {
+        "batch": 4,
+        "N": 1,
+        "max_absolute_error": 2.0265579223632812e-06,
+        "max_relative_error": 1.453177882051364e-06,
+        "max_probability_error": 2.5051043668275486e-08
+      },
+      {
+        "batch": 5,
+        "N": 1,
+        "max_absolute_error": 1.430511474609375e-06,
+        "max_relative_error": 2.164321165585326e-06,
+        "max_probability_error": 3.6457662111466504e-08
+      },
+      {
+        "batch": 6,
+        "N": 1,
+        "max_absolute_error": 2.384185791015625e-06,
+        "max_relative_error": 3.70620785138504e-05,
+        "max_probability_error": 1.869334853576987e-08
+      },
+      {
+        "batch": 7,
+        "N": 1,
+        "max_absolute_error": 2.1457672119140625e-06,
+        "max_relative_error": 1.1846284975415996e-06,
+        "max_probability_error": 1.997186725999356e-07
+      },
+      {
+        "batch": 8,
+        "N": 1,
+        "max_absolute_error": 2.2649765014648438e-06,
+        "max_relative_error": 3.7961436480811533e-06,
+        "max_probability_error": 2.6676780218171103e-07
+      },
+      {
+        "batch": 9,
+        "N": 1,
+        "max_absolute_error": 5.7220458984375e-06,
+        "max_relative_error": 1.2767433398329027e-06,
+        "max_probability_error": 1.624838155134256e-07
+      },
+      {
+        "batch": 10,
+        "N": 1,
+        "max_absolute_error": 2.86102294921875e-06,
+        "max_relative_error": 1.5692708548538196e-05,
+        "max_probability_error": 1.3907829332637789e-09
+      },
+      {
+        "batch": 11,
+        "N": 1,
+        "max_absolute_error": 4.291534423828125e-06,
+        "max_relative_error": 1.940832068034986e-05,
+        "max_probability_error": 5.6858781127822056e-08
+      },
+      {
+        "batch": 12,
+        "N": 1,
+        "max_absolute_error": 2.7120113372802734e-06,
+        "max_relative_error": 1.4215432078665527e-05,
+        "max_probability_error": 4.810951859113288e-09
+      },
+      {
+        "batch": 13,
+        "N": 1,
+        "max_absolute_error": 2.905726432800293e-06,
+        "max_relative_error": 1.6262263101567172e-05,
+        "max_probability_error": 1.8250988498280662e-09
+      },
+      {
+        "batch": 14,
+        "N": 1,
+        "max_absolute_error": 6.67572021484375e-06,
+        "max_relative_error": 3.4812027857766988e-06,
+        "max_probability_error": 1.0054821419913651e-08
+      },
+      {
+        "batch": 15,
+        "N": 1,
+        "max_absolute_error": 2.86102294921875e-06,
+        "max_relative_error": 2.914855918038307e-06,
+        "max_probability_error": 2.4670503417922873e-09
+      },
+      {
+        "batch": 16,
+        "N": 1,
+        "max_absolute_error": 1.9073486328125e-06,
+        "max_relative_error": 3.6713941985963925e-06,
+        "max_probability_error": 1.3513421492916677e-08
+      },
+      {
+        "batch": 17,
+        "N": 1,
+        "max_absolute_error": 4.291534423828125e-06,
+        "max_relative_error": 5.8938496869556855e-05,
+        "max_probability_error": 3.4470223564397884e-08
+      },
+      {
+        "batch": 18,
+        "N": 1,
+        "max_absolute_error": 2.6337802410125732e-06,
+        "max_relative_error": 7.753812611077204e-05,
+        "max_probability_error": 3.1045066517521036e-09
+      },
+      {
+        "batch": 19,
+        "N": 1,
+        "max_absolute_error": 1.7881393432617188e-06,
+        "max_relative_error": 3.881324098994108e-06,
+        "max_probability_error": 3.842661411290749e-09
+      },
+      {
+        "batch": 20,
+        "N": 1,
+        "max_absolute_error": 6.67572021484375e-06,
+        "max_relative_error": 2.6770976969126817e-06,
+        "max_probability_error": 2.302238954254854e-06
+      },
+      {
+        "batch": 21,
+        "N": 1,
+        "max_absolute_error": 1.6838312149047852e-06,
+        "max_relative_error": 4.2710595837379974e-05,
+        "max_probability_error": 1.247794873503183e-09
+      },
+      {
+        "batch": 22,
+        "N": 1,
+        "max_absolute_error": 1.9073486328125e-06,
+        "max_relative_error": 5.094464260792292e-06,
+        "max_probability_error": 9.63379409579801e-09
+      },
+      {
+        "batch": 23,
+        "N": 1,
+        "max_absolute_error": 1.1920928955078125e-06,
+        "max_relative_error": 2.4676386812938886e-06,
+        "max_probability_error": 5.145905070114143e-09
+      },
+      {
+        "batch": 24,
+        "N": 1,
+        "max_absolute_error": 3.546476364135742e-06,
+        "max_relative_error": 0.00027105401289012415,
+        "max_probability_error": 2.1127797289466343e-09
+      },
+      {
+        "batch": 25,
+        "N": 1,
+        "max_absolute_error": 3.427267074584961e-06,
+        "max_relative_error": 9.166712367377599e-06,
+        "max_probability_error": 1.886641659847206e-09
+      },
+      {
+        "batch": 26,
+        "N": 1,
+        "max_absolute_error": 5.7220458984375e-06,
+        "max_relative_error": 3.513719537541803e-06,
+        "max_probability_error": 2.2643914132647325e-06
+      },
+      {
+        "batch": 27,
+        "N": 1,
+        "max_absolute_error": 2.384185791015625e-06,
+        "max_relative_error": 0.0001841285717533132,
+        "max_probability_error": 2.440080759669172e-08
+      },
+      {
+        "batch": 28,
+        "N": 1,
+        "max_absolute_error": 4.76837158203125e-06,
+        "max_relative_error": 1.1019341533272338e-05,
+        "max_probability_error": 2.573437051234251e-07
+      },
+      {
+        "batch": 29,
+        "N": 1,
+        "max_absolute_error": 3.337860107421875e-06,
+        "max_relative_error": 6.570482024475278e-06,
+        "max_probability_error": 8.351512101878455e-07
+      },
+      {
+        "batch": 30,
+        "N": 1,
+        "max_absolute_error": 5.7220458984375e-06,
+        "max_relative_error": 5.642485356810085e-06,
+        "max_probability_error": 1.5332569658355055e-09
+      },
+      {
+        "batch": 31,
+        "N": 1,
+        "max_absolute_error": 1.9073486328125e-06,
+        "max_relative_error": 2.6726160824931406e-06,
+        "max_probability_error": 8.546024998778989e-10
+      },
+      {
+        "batch": 32,
+        "N": 1,
+        "max_absolute_error": 1.1920928955078125e-06,
+        "max_relative_error": 6.905306279479268e-06,
+        "max_probability_error": 1.4443912732531317e-10
+      },
+      {
+        "batch": 33,
+        "N": 1,
+        "max_absolute_error": 2.86102294921875e-06,
+        "max_relative_error": 4.44168410027676e-06,
+        "max_probability_error": 1.1471774641336197e-09
+      },
+      {
+        "batch": 34,
+        "N": 1,
+        "max_absolute_error": 2.86102294921875e-06,
+        "max_relative_error": 3.956390834198921e-06,
+        "max_probability_error": 3.3397277166002937e-09
+      },
+      {
+        "batch": 35,
+        "N": 1,
+        "max_absolute_error": 6.67572021484375e-06,
+        "max_relative_error": 2.9440544602097955e-06,
+        "max_probability_error": 4.5053510921988504e-09
+      },
+      {
+        "batch": 36,
+        "N": 1,
+        "max_absolute_error": 2.86102294921875e-06,
+        "max_relative_error": 6.0955474721823244e-06,
+        "max_probability_error": 2.0764945318774153e-11
+      },
+      {
+        "batch": 37,
+        "N": 1,
+        "max_absolute_error": 2.518296241760254e-06,
+        "max_relative_error": 1.6004113720118356e-05,
+        "max_probability_error": 8.977529541298471e-11
+      },
+      {
+        "batch": 38,
+        "N": 1,
+        "max_absolute_error": 3.337860107421875e-06,
+        "max_relative_error": 2.135424161061497e-05,
+        "max_probability_error": 7.441456895129761e-08
+      },
+      {
+        "batch": 39,
+        "N": 1,
+        "max_absolute_error": 2.2649765014648438e-06,
+        "max_relative_error": 5.274768961649237e-06,
+        "max_probability_error": 1.055255882675965e-11
+      },
+      {
+        "batch": 40,
+        "N": 1,
+        "max_absolute_error": 2.86102294921875e-06,
+        "max_relative_error": 7.520115043857438e-06,
+        "max_probability_error": 2.9134031087618695e-07
+      },
+      {
+        "batch": 41,
+        "N": 1,
+        "max_absolute_error": 2.1457672119140625e-06,
+        "max_relative_error": 6.486196786392181e-06,
+        "max_probability_error": 3.200539833159155e-09
+      },
+      {
+        "batch": 42,
+        "N": 1,
+        "max_absolute_error": 1.1920928955078125e-06,
+        "max_relative_error": 5.84367639706963e-06,
+        "max_probability_error": 4.2215898355194015e-10
+      },
+      {
+        "batch": 43,
+        "N": 1,
+        "max_absolute_error": 2.1457672119140625e-06,
+        "max_relative_error": 5.720996019410128e-05,
+        "max_probability_error": 1.0515666115651356e-10
+      },
+      {
+        "batch": 44,
+        "N": 1,
+        "max_absolute_error": 1.9073486328125e-06,
+        "max_relative_error": 7.367094846311965e-07,
+        "max_probability_error": 1.2237595381492383e-09
+      },
+      {
+        "batch": 45,
+        "N": 1,
+        "max_absolute_error": 2.6226043701171875e-06,
+        "max_relative_error": 5.392182303801311e-06,
+        "max_probability_error": 1.0783220112187478e-09
+      },
+      {
+        "batch": 46,
+        "N": 1,
+        "max_absolute_error": 2.9802322387695312e-06,
+        "max_relative_error": 2.4038507766361088e-06,
+        "max_probability_error": 9.945888013174198e-08
+      },
+      {
+        "batch": 47,
+        "N": 1,
+        "max_absolute_error": 5.7220458984375e-06,
+        "max_relative_error": 7.436190974769376e-07,
+        "max_probability_error": 2.5777632806089912e-08
+      },
+      {
+        "batch": 48,
+        "N": 1,
+        "max_absolute_error": 1.9073486328125e-06,
+        "max_relative_error": 6.283164080600912e-06,
+        "max_probability_error": 5.238327660528341e-09
+      },
+      {
+        "batch": 49,
+        "N": 1,
+        "max_absolute_error": 2.0265579223632812e-06,
+        "max_relative_error": 3.664805022065562e-06,
+        "max_probability_error": 5.600511652744181e-10
+      },
+      {
+        "batch": 50,
+        "N": 1,
+        "max_absolute_error": 2.9206275939941406e-06,
+        "max_relative_error": 5.215178254792749e-06,
+        "max_probability_error": 4.7352549326085125e-08
+      },
+      {
+        "batch": 51,
+        "N": 1,
+        "max_absolute_error": 3.039836883544922e-06,
+        "max_relative_error": 3.2951006892316884e-06,
+        "max_probability_error": 2.5667733888866395e-10
+      },
+      {
+        "batch": 52,
+        "N": 1,
+        "max_absolute_error": 1.9073486328125e-06,
+        "max_relative_error": 1.8608059866422758e-06,
+        "max_probability_error": 4.5078818455834835e-10
+      },
+      {
+        "batch": 53,
+        "N": 1,
+        "max_absolute_error": 2.6226043701171875e-06,
+        "max_relative_error": 4.527961551843565e-06,
+        "max_probability_error": 7.987549843768704e-09
+      },
+      {
+        "batch": 54,
+        "N": 1,
+        "max_absolute_error": 2.8014183044433594e-06,
+        "max_relative_error": 4.986284946239538e-06,
+        "max_probability_error": 1.5787455765164504e-10
+      },
+      {
+        "batch": 55,
+        "N": 1,
+        "max_absolute_error": 1.9073486328125e-06,
+        "max_relative_error": 3.132992757681112e-06,
+        "max_probability_error": 1.0921026305510395e-09
+      },
+      {
+        "batch": 56,
+        "N": 1,
+        "max_absolute_error": 3.933906555175781e-06,
+        "max_relative_error": 2.860878931486241e-06,
+        "max_probability_error": 2.8584084876825955e-08
+      },
+      {
+        "batch": 57,
+        "N": 1,
+        "max_absolute_error": 2.0470470190048218e-06,
+        "max_relative_error": 0.00027753177031682814,
+        "max_probability_error": 6.890065185061189e-10
+      },
+      {
+        "batch": 58,
+        "N": 1,
+        "max_absolute_error": 5.245208740234375e-06,
+        "max_relative_error": 2.7948447954702365e-05,
+        "max_probability_error": 1.5876727710306682e-08
+      },
+      {
+        "batch": 59,
+        "N": 1,
+        "max_absolute_error": 7.152557373046875e-06,
+        "max_relative_error": 1.6529470610644753e-06,
+        "max_probability_error": 5.687324600156529e-08
+      },
+      {
+        "batch": 60,
+        "N": 1,
+        "max_absolute_error": 2.384185791015625e-06,
+        "max_relative_error": 2.085227019613456e-06,
+        "max_probability_error": 1.934370774669958e-08
+      },
+      {
+        "batch": 61,
+        "N": 1,
+        "max_absolute_error": 2.0265579223632812e-06,
+        "max_relative_error": 9.518499711843285e-06,
+        "max_probability_error": 8.183523303451068e-09
+      },
+      {
+        "batch": 62,
+        "N": 1,
+        "max_absolute_error": 2.6226043701171875e-06,
+        "max_relative_error": 6.420598342201508e-06,
+        "max_probability_error": 4.583958139736666e-07
+      },
+      {
+        "batch": 63,
+        "N": 1,
+        "max_absolute_error": 2.384185791015625e-06,
+        "max_relative_error": 2.481320170606552e-06,
+        "max_probability_error": 1.468746163579837e-07
+      },
+      {
+        "batch": 64,
+        "N": 1,
+        "max_absolute_error": 1.9669532775878906e-06,
+        "max_relative_error": 3.3432005025742137e-06,
+        "max_probability_error": 4.558806665500015e-10
+      },
+      {
+        "batch": 65,
+        "N": 1,
+        "max_absolute_error": 1.9073486328125e-06,
+        "max_relative_error": 2.097550009150562e-06,
+        "max_probability_error": 1.4095020706150763e-09
+      },
+      {
+        "batch": 66,
+        "N": 1,
+        "max_absolute_error": 2.1457672119140625e-06,
+        "max_relative_error": 9.024512658961585e-06,
+        "max_probability_error": 2.0423229774024776e-10
+      },
+      {
+        "batch": 67,
+        "N": 1,
+        "max_absolute_error": 2.0265579223632812e-06,
+        "max_relative_error": 1.7099995909154825e-06,
+        "max_probability_error": 3.7171542330294294e-08
+      },
+      {
+        "batch": 68,
+        "N": 1,
+        "max_absolute_error": 3.814697265625e-06,
+        "max_relative_error": 2.949261688382845e-06,
+        "max_probability_error": 2.0272782785824006e-08
+      },
+      {
+        "batch": 69,
+        "N": 1,
+        "max_absolute_error": 1.9073486328125e-06,
+        "max_relative_error": 1.9703662708065607e-05,
+        "max_probability_error": 1.561612283929037e-09
+      },
+      {
+        "batch": 70,
+        "N": 1,
+        "max_absolute_error": 8.344650268554688e-07,
+        "max_relative_error": 9.564233650696676e-07,
+        "max_probability_error": 1.546644812222553e-09
+      },
+      {
+        "batch": 71,
+        "N": 1,
+        "max_absolute_error": 1.7881393432617188e-06,
+        "max_relative_error": 4.585928841670806e-06,
+        "max_probability_error": 5.737870178990079e-10
+      },
+      {
+        "batch": 72,
+        "N": 1,
+        "max_absolute_error": 2.6226043701171875e-06,
+        "max_relative_error": 1.6600730842292763e-06,
+        "max_probability_error": 2.499001006128765e-11
+      },
+      {
+        "batch": 73,
+        "N": 1,
+        "max_absolute_error": 2.86102294921875e-06,
+        "max_relative_error": 1.950875650535743e-06,
+        "max_probability_error": 1.3113177210755111e-11
+      },
+      {
+        "batch": 74,
+        "N": 1,
+        "max_absolute_error": 3.814697265625e-06,
+        "max_relative_error": 7.359898032467945e-06,
+        "max_probability_error": 1.0437739561552917e-10
+      },
+      {
+        "batch": 75,
+        "N": 1,
+        "max_absolute_error": 1.5497207641601562e-06,
+        "max_relative_error": 6.9061882525404996e-06,
+        "max_probability_error": 6.438616442848259e-10
+      },
+      {
+        "batch": 76,
+        "N": 1,
+        "max_absolute_error": 2.0265579223632812e-06,
+        "max_relative_error": 3.5911550919790327e-06,
+        "max_probability_error": 4.110278783997501e-11
+      },
+      {
+        "batch": 77,
+        "N": 1,
+        "max_absolute_error": 1.9073486328125e-06,
+        "max_relative_error": 2.5385349607034788e-06,
+        "max_probability_error": 5.687139648102857e-11
+      },
+      {
+        "batch": 78,
+        "N": 1,
+        "max_absolute_error": 4.291534423828125e-06,
+        "max_relative_error": 8.549091017897523e-06,
+        "max_probability_error": 8.123454209307823e-08
+      },
+      {
+        "batch": 79,
+        "N": 1,
+        "max_absolute_error": 1.3113021850585938e-06,
+        "max_relative_error": 1.915663773143613e-06,
+        "max_probability_error": 2.9718945707135624e-09
+      },
+      {
+        "batch": 80,
+        "N": 1,
+        "max_absolute_error": 3.814697265625e-06,
+        "max_relative_error": 1.1178564084875856e-06,
+        "max_probability_error": 2.903566276302172e-12
+      },
+      {
+        "batch": 81,
+        "N": 1,
+        "max_absolute_error": 3.0100345611572266e-06,
+        "max_relative_error": 6.39374127428403e-06,
+        "max_probability_error": 4.5747183818889425e-11
+      },
+      {
+        "batch": 82,
+        "N": 1,
+        "max_absolute_error": 4.76837158203125e-06,
+        "max_relative_error": 8.21864061540228e-06,
+        "max_probability_error": 8.82129325141534e-09
+      },
+      {
+        "batch": 83,
+        "N": 1,
+        "max_absolute_error": 4.76837158203125e-06,
+        "max_relative_error": 1.0739369813779328e-05,
+        "max_probability_error": 2.23425722367665e-11
+      },
+      {
+        "batch": 84,
+        "N": 1,
+        "max_absolute_error": 3.814697265625e-06,
+        "max_relative_error": 4.566396547398308e-06,
+        "max_probability_error": 3.072097864986745e-08
+      },
+      {
+        "batch": 85,
+        "N": 1,
+        "max_absolute_error": 1.9073486328125e-06,
+        "max_relative_error": 1.3144069048114252e-05,
+        "max_probability_error": 1.5710643896937881e-10
+      },
+      {
+        "batch": 86,
+        "N": 1,
+        "max_absolute_error": 3.814697265625e-06,
+        "max_relative_error": 2.291396950150659e-06,
+        "max_probability_error": 8.895598702096663e-10
+      },
+      {
+        "batch": 87,
+        "N": 1,
+        "max_absolute_error": 3.814697265625e-06,
+        "max_relative_error": 2.025323364194287e-06,
+        "max_probability_error": 4.5272259718842633e-08
+      },
+      {
+        "batch": 88,
+        "N": 1,
+        "max_absolute_error": 2.7418136596679688e-06,
+        "max_relative_error": 8.239733994244013e-06,
+        "max_probability_error": 2.158162537568842e-12
+      },
+      {
+        "batch": 89,
+        "N": 1,
+        "max_absolute_error": 2.86102294921875e-06,
+        "max_relative_error": 3.139617564549513e-06,
+        "max_probability_error": 7.37232497272089e-11
+      },
+      {
+        "batch": 90,
+        "N": 1,
+        "max_absolute_error": 2.2649765014648438e-06,
+        "max_relative_error": 1.821436462067048e-05,
+        "max_probability_error": 1.4032832017230046e-07
+      },
+      {
+        "batch": 91,
+        "N": 1,
+        "max_absolute_error": 1.9073486328125e-06,
+        "max_relative_error": 3.029683035507601e-06,
+        "max_probability_error": 8.71399563617814e-09
+      },
+      {
+        "batch": 92,
+        "N": 1,
+        "max_absolute_error": 1.1920928955078125e-06,
+        "max_relative_error": 2.8314935703859752e-06,
+        "max_probability_error": 7.837099857965768e-10
+      },
+      {
+        "batch": 93,
+        "N": 1,
+        "max_absolute_error": 2.0712614059448242e-06,
+        "max_relative_error": 1.4958220828321701e-05,
+        "max_probability_error": 7.016363496800682e-08
+      },
+      {
+        "batch": 94,
+        "N": 1,
+        "max_absolute_error": 1.9073486328125e-06,
+        "max_relative_error": 1.4797736654009777e-05,
+        "max_probability_error": 1.6032449812186655e-09
+      },
+      {
+        "batch": 95,
+        "N": 1,
+        "max_absolute_error": 1.0728836059570312e-06,
+        "max_relative_error": 5.013298819556127e-06,
+        "max_probability_error": 1.4153633820512823e-09
+      },
+      {
+        "batch": 96,
+        "N": 1,
+        "max_absolute_error": 1.7881393432617188e-06,
+        "max_relative_error": 2.6511576002214642e-05,
+        "max_probability_error": 1.91026337439254e-08
+      },
+      {
+        "batch": 97,
+        "N": 1,
+        "max_absolute_error": 2.1457672119140625e-06,
+        "max_relative_error": 5.2163608978172755e-06,
+        "max_probability_error": 2.092985729174046e-08
+      },
+      {
+        "batch": 98,
+        "N": 1,
+        "max_absolute_error": 4.76837158203125e-06,
+        "max_relative_error": 3.496220745506355e-05,
+        "max_probability_error": 9.152793880012194e-09
+      },
+      {
+        "batch": 99,
+        "N": 1,
+        "max_absolute_error": 4.291534423828125e-06,
+        "max_relative_error": 7.1829894041151615e-06,
+        "max_probability_error": 4.7645593581613355e-08
+      },
+      {
+        "batch": 100,
+        "N": 32,
+        "max_absolute_error": 1.4901161193847656e-05,
+        "max_relative_error": 0.0010744780693894122,
+        "max_probability_error": 2.224638916692445e-06
+      },
+      {
+        "batch": 101,
+        "N": 32,
+        "max_absolute_error": 1.9073486328125e-05,
+        "max_relative_error": 0.000511224739038191,
+        "max_probability_error": 1.196041121476199e-06
+      },
+      {
+        "batch": 102,
+        "N": 32,
+        "max_absolute_error": 1.71661376953125e-05,
+        "max_relative_error": 6.480411964907266e-05,
+        "max_probability_error": 1.6715290322988352e-06
+      },
+      {
+        "batch": 103,
+        "N": 4,
+        "max_absolute_error": 4.947185516357422e-06,
+        "max_relative_error": 3.5940758243244205e-05,
+        "max_probability_error": 6.182453105019192e-08
+      },
+      {
+        "batch": 104,
+        "N": 2,
+        "max_absolute_error": 2.6971101760864258e-06,
+        "max_relative_error": 8.626605141337512e-05,
+        "max_probability_error": 8.629622438860451e-07
+      },
+      {
+        "batch": 105,
+        "N": 9,
+        "max_absolute_error": 4.172325134277344e-06,
+        "max_relative_error": 8.626605141337512e-05,
+        "max_probability_error": 7.304704457422595e-07
+      }
+    ],
+    "validation_predictions": [
+      {
+        "source_id": "vision-v1:c0/img_80662.jpg",
+        "class_id": "c0",
+        "driver_id": "p002",
+        "predicted_class": "c0",
+        "logits": [
+          1.8442738056182861,
+          -1.4782376289367676,
+          -1.4677212238311768,
+          -0.07381501793861389,
+          -0.46478646993637085,
+          1.088822603225708,
+          -0.9748008251190186,
+          -1.1025350093841553,
+          1.6058752536773682,
+          -0.03126772120594978
+        ]
+      },
+      {
+        "source_id": "vision-v1:c0/img_63140.jpg",
+        "class_id": "c0",
+        "driver_id": "p075",
+        "predicted_class": "c0",
+        "logits": [
+          3.6725215911865234,
+          -3.394150733947754,
+          -2.7159078121185303,
+          3.3540587425231934,
+          1.0101885795593262,
+          -1.9988501071929932,
+          0.36449840664863586,
+          0.5690149068832397,
+          -2.3350119590759277,
+          2.115860939025879
+        ]
+      },
+      {
+        "source_id": "vision-v1:c0/img_42336.jpg",
+        "class_id": "c0",
+        "driver_id": "p075",
+        "predicted_class": "c0",
+        "logits": [
+          3.1456661224365234,
+          -0.15371745824813843,
+          -0.43691420555114746,
+          -0.7245116233825684,
+          0.11016333103179932,
+          -0.9094530940055847,
+          -0.9354617595672607,
+          0.21264877915382385,
+          0.782137393951416,
+          -1.729068636894226
+        ]
+      },
+      {
+        "source_id": "vision-v1:c0/img_88140.jpg",
+        "class_id": "c0",
+        "driver_id": "p075",
+        "predicted_class": "c0",
+        "logits": [
+          4.837325096130371,
+          -1.1928750276565552,
+          -0.5679552555084229,
+          -0.9467847347259521,
+          0.5006582736968994,
+          -1.2151167392730713,
+          -0.9308054447174072,
+          0.11511728167533875,
+          -0.20613166689872742,
+          -0.9839281439781189
+        ]
+      },
+      {
+        "source_id": "vision-v1:c0/img_97506.jpg",
+        "class_id": "c0",
+        "driver_id": "p045",
+        "predicted_class": "c0",
+        "logits": [
+          5.962824821472168,
+          0.5474753379821777,
+          -1.6660633087158203,
+          -2.064612865447998,
+          -1.1859071254730225,
+          -1.16262948513031,
+          -1.7833576202392578,
+          -1.4336546659469604,
+          1.3945677280426025,
+          1.7141499519348145
+        ]
+      },
+      {
+        "source_id": "vision-v1:c0/img_25670.jpg",
+        "class_id": "c0",
+        "driver_id": "p002",
+        "predicted_class": "c0",
+        "logits": [
+          5.670250415802002,
+          -2.3803648948669434,
+          -2.1911511421203613,
+          -0.08777760714292526,
+          -0.22866608202457428,
+          0.8490132093429565,
+          -1.2830239534378052,
+          -1.9655964374542236,
+          -0.028400324285030365,
+          1.0007843971252441
+        ]
+      },
+      {
+        "source_id": "vision-v1:c0/img_42895.jpg",
+        "class_id": "c0",
+        "driver_id": "p002",
+        "predicted_class": "c0",
+        "logits": [
+          6.82987642288208,
+          -2.052191734313965,
+          -1.1534647941589355,
+          0.13905370235443115,
+          -0.27403098344802856,
+          -0.39449262619018555,
+          -1.7022501230239868,
+          -2.0734643936157227,
+          0.5896559357643127,
+          -0.03186439722776413
+        ]
+      },
+      {
+        "source_id": "vision-v1:c0/img_55933.jpg",
+        "class_id": "c0",
+        "driver_id": "p045",
+        "predicted_class": "c0",
+        "logits": [
+          4.682068824768066,
+          0.8703566789627075,
+          -1.2378026247024536,
+          -0.8050417900085449,
+          -0.9844078421592712,
+          -1.585871934890747,
+          -2.5568647384643555,
+          -0.9705392122268677,
+          2.0625524520874023,
+          1.1563084125518799
+        ]
+      },
+      {
+        "source_id": "vision-v1:c0/img_14313.jpg",
+        "class_id": "c0",
+        "driver_id": "p045",
+        "predicted_class": "c0",
+        "logits": [
+          4.708946704864502,
+          0.826389729976654,
+          -1.224726676940918,
+          -0.10992173850536346,
+          -0.9605491161346436,
+          -1.3982923030853271,
+          -2.3433754444122314,
+          -1.021080732345581,
+          2.013641357421875,
+          0.4160846471786499
+        ]
+      },
+      {
+        "source_id": "vision-v1:c0/img_26370.jpg",
+        "class_id": "c0",
+        "driver_id": "p075",
+        "predicted_class": "c3",
+        "logits": [
+          1.6119922399520874,
+          -1.9600865840911865,
+          -2.664217472076416,
+          6.496835231781006,
+          0.8403294086456299,
+          -1.5652929544448853,
+          -1.000035285949707,
+          -1.1539077758789062,
+          -1.2095950841903687,
+          1.9971610307693481
+        ]
+      },
+      {
+        "source_id": "vision-v1:c1/img_83470.jpg",
+        "class_id": "c1",
+        "driver_id": "p002",
+        "predicted_class": "c1",
+        "logits": [
+          -1.4242404699325562,
+          10.033369064331055,
+          -0.15907122194766998,
+          -0.9103888273239136,
+          -3.8304522037506104,
+          -0.5902535319328308,
+          -0.1035003662109375,
+          -2.3136706352233887,
+          0.8786983489990234,
+          1.000845193862915
+        ]
+      },
+      {
+        "source_id": "vision-v1:c1/img_93877.jpg",
+        "class_id": "c1",
+        "driver_id": "p041",
+        "predicted_class": "c1",
+        "logits": [
+          -1.025716781616211,
+          6.63804817199707,
+          0.12089242041110992,
+          -0.038003966212272644,
+          -1.2949424982070923,
+          -0.634445309638977,
+          -1.1326347589492798,
+          -1.8266494274139404,
+          -0.06761310994625092,
+          1.2841894626617432
+        ]
+      },
+      {
+        "source_id": "vision-v1:c1/img_17109.jpg",
+        "class_id": "c1",
+        "driver_id": "p041",
+        "predicted_class": "c1",
+        "logits": [
+          1.1229923963546753,
+          7.395559310913086,
+          -0.20170725882053375,
+          0.2852126359939575,
+          -0.9136039614677429,
+          -1.0641043186187744,
+          -1.2107454538345337,
+          -2.286139965057373,
+          -1.2504931688308716,
+          0.1226421445608139
+        ]
+      },
+      {
+        "source_id": "vision-v1:c1/img_42241.jpg",
+        "class_id": "c1",
+        "driver_id": "p075",
+        "predicted_class": "c1",
+        "logits": [
+          -1.5847539901733398,
+          8.963798522949219,
+          0.8808470964431763,
+          -0.17867618799209595,
+          -3.897010326385498,
+          -1.7576143741607666,
+          -0.30226725339889526,
+          -0.03298509120941162,
+          1.0372333526611328,
+          -0.642522394657135
+        ]
+      },
+      {
+        "source_id": "vision-v1:c1/img_31239.jpg",
+        "class_id": "c1",
+        "driver_id": "p002",
+        "predicted_class": "c1",
+        "logits": [
+          -1.6734719276428223,
+          8.936087608337402,
+          -0.7164611220359802,
+          0.27284207940101624,
+          -3.688878059387207,
+          -0.7451233267784119,
+          0.19257456064224243,
+          -2.092825412750244,
+          1.2026257514953613,
+          0.9074550867080688
+        ]
+      },
+      {
+        "source_id": "vision-v1:c1/img_24921.jpg",
+        "class_id": "c1",
+        "driver_id": "p041",
+        "predicted_class": "c1",
+        "logits": [
+          0.9107731580734253,
+          8.944331169128418,
+          0.25337883830070496,
+          -0.4703158140182495,
+          -1.2132539749145508,
+          -1.1250813007354736,
+          -0.6432026624679565,
+          -2.2505829334259033,
+          -1.7416918277740479,
+          -0.7331174612045288
+        ]
+      },
+      {
+        "source_id": "vision-v1:c1/img_4525.jpg",
+        "class_id": "c1",
+        "driver_id": "p075",
+        "predicted_class": "c1",
+        "logits": [
+          -2.2186832427978516,
+          8.131587028503418,
+          0.9215823411941528,
+          -0.5378128886222839,
+          -4.002328395843506,
+          -1.4515280723571777,
+          -0.22704645991325378,
+          0.178583025932312,
+          2.1633148193359375,
+          -0.4670029580593109
+        ]
+      },
+      {
+        "source_id": "vision-v1:c1/img_33203.jpg",
+        "class_id": "c1",
+        "driver_id": "p045",
+        "predicted_class": "c1",
+        "logits": [
+          0.03223336488008499,
+          7.051184177398682,
+          0.008085384964942932,
+          -0.941667914390564,
+          -1.367600679397583,
+          -1.3826156854629517,
+          1.119429588317871,
+          -1.5142537355422974,
+          -0.9674994349479675,
+          -0.46153149008750916
+        ]
+      },
+      {
+        "source_id": "vision-v1:c1/img_1119.jpg",
+        "class_id": "c1",
+        "driver_id": "p075",
+        "predicted_class": "c1",
+        "logits": [
+          -2.811819076538086,
+          8.379720687866211,
+          1.1251823902130127,
+          -0.2526969611644745,
+          -3.9369864463806152,
+          -1.9420340061187744,
+          0.19840039312839508,
+          1.3792157173156738,
+          0.6009208559989929,
+          0.033964917063713074
+        ]
+      },
+      {
+        "source_id": "vision-v1:c1/img_38371.jpg",
+        "class_id": "c1",
+        "driver_id": "p045",
+        "predicted_class": "c1",
+        "logits": [
+          -1.0549625158309937,
+          7.747849464416504,
+          -0.013917028903961182,
+          -1.0923547744750977,
+          -1.122437596321106,
+          -1.3124866485595703,
+          -0.274505078792572,
+          -1.6450133323669434,
+          0.05168069526553154,
+          1.0766876935958862
+        ]
+      },
+      {
+        "source_id": "vision-v1:c2/img_51343.jpg",
+        "class_id": "c2",
+        "driver_id": "p002",
+        "predicted_class": "c2",
+        "logits": [
+          -2.0389022827148438,
+          -0.6365062594413757,
+          4.581315994262695,
+          -2.2775559425354004,
+          -2.472388505935669,
+          -1.3367118835449219,
+          4.441736221313477,
+          -0.7759110331535339,
+          1.9930827617645264,
+          -0.6011439561843872
+        ]
+      },
+      {
+        "source_id": "vision-v1:c2/img_38445.jpg",
+        "class_id": "c2",
+        "driver_id": "p045",
+        "predicted_class": "c2",
+        "logits": [
+          -0.35863757133483887,
+          0.4002778232097626,
+          7.92050838470459,
+          -1.2989280223846436,
+          -1.847952127456665,
+          -2.7100837230682373,
+          -0.21139287948608398,
+          -0.039422519505023956,
+          1.285512089729309,
+          -1.0735100507736206
+        ]
+      },
+      {
+        "source_id": "vision-v1:c2/img_22889.jpg",
+        "class_id": "c2",
+        "driver_id": "p002",
+        "predicted_class": "c2",
+        "logits": [
+          -2.352917194366455,
+          -0.11846072971820831,
+          7.152240753173828,
+          -1.9317145347595215,
+          -1.5948829650878906,
+          -0.5142310857772827,
+          1.6868641376495361,
+          -1.5598831176757812,
+          2.1403591632843018,
+          -1.119207739830017
+        ]
+      },
+      {
+        "source_id": "vision-v1:c2/img_61091.jpg",
+        "class_id": "c2",
+        "driver_id": "p045",
+        "predicted_class": "c2",
+        "logits": [
+          -0.35408735275268555,
+          -0.11677311360836029,
+          6.593979835510254,
+          -1.767883062362671,
+          -1.3107428550720215,
+          -2.478991985321045,
+          -1.0202767848968506,
+          0.5333317518234253,
+          2.0919482707977295,
+          -0.33816421031951904
+        ]
+      },
+      {
+        "source_id": "vision-v1:c2/img_84638.jpg",
+        "class_id": "c2",
+        "driver_id": "p041",
+        "predicted_class": "c2",
+        "logits": [
+          0.6871516108512878,
+          -1.1351927518844604,
+          8.696453094482422,
+          -0.04715210199356079,
+          0.006924957036972046,
+          -2.2229270935058594,
+          0.3071538805961609,
+          -1.3114421367645264,
+          0.5135300755500793,
+          -3.4415876865386963
+        ]
+      },
+      {
+        "source_id": "vision-v1:c2/img_25667.jpg",
+        "class_id": "c2",
+        "driver_id": "p045",
+        "predicted_class": "c2",
+        "logits": [
+          0.3738783895969391,
+          0.7653543949127197,
+          7.875040531158447,
+          -1.6241323947906494,
+          -2.0548925399780273,
+          -2.675457715988159,
+          0.3876601457595825,
+          -0.3910893499851227,
+          0.7372508645057678,
+          -1.1081347465515137
+        ]
+      },
+      {
+        "source_id": "vision-v1:c2/img_31572.jpg",
+        "class_id": "c2",
+        "driver_id": "p075",
+        "predicted_class": "c2",
+        "logits": [
+          -0.7631008625030518,
+          -0.2374868243932724,
+          5.91591739654541,
+          -2.194380760192871,
+          -2.8752174377441406,
+          -3.3395984172821045,
+          2.728773832321167,
+          -0.7624638080596924,
+          5.502056121826172,
+          -2.250520944595337
+        ]
+      },
+      {
+        "source_id": "vision-v1:c2/img_2046.jpg",
+        "class_id": "c2",
+        "driver_id": "p045",
+        "predicted_class": "c2",
+        "logits": [
+          0.18111130595207214,
+          0.18343231081962585,
+          7.166830062866211,
+          -1.3781824111938477,
+          -1.6809866428375244,
+          -2.7878313064575195,
+          -0.009830944240093231,
+          0.30218666791915894,
+          1.5771591663360596,
+          -1.4589011669158936
+        ]
+      },
+      {
+        "source_id": "vision-v1:c2/img_32500.jpg",
+        "class_id": "c2",
+        "driver_id": "p002",
+        "predicted_class": "c2",
+        "logits": [
+          -2.9379992485046387,
+          0.22447489202022552,
+          6.440657615661621,
+          -2.0223898887634277,
+          -2.4398794174194336,
+          -0.4057590365409851,
+          2.0475070476531982,
+          -1.3569657802581787,
+          2.512481451034546,
+          -0.7576976418495178
+        ]
+      },
+      {
+        "source_id": "vision-v1:c2/img_1709.jpg",
+        "class_id": "c2",
+        "driver_id": "p075",
+        "predicted_class": "c2",
+        "logits": [
+          -1.8306812047958374,
+          -0.15739712119102478,
+          5.467890739440918,
+          -1.9051653146743774,
+          -2.777571678161621,
+          -3.0605340003967285,
+          3.2288546562194824,
+          -0.38553956151008606,
+          5.429505348205566,
+          -2.172616481781006
+        ]
+      },
+      {
+        "source_id": "vision-v1:c3/img_36017.jpg",
+        "class_id": "c3",
+        "driver_id": "p045",
+        "predicted_class": "c3",
+        "logits": [
+          -0.8876678943634033,
+          0.5280095338821411,
+          -1.3362512588500977,
+          9.956618309020996,
+          0.0396135151386261,
+          -0.7875963449478149,
+          -0.9523909091949463,
+          -0.3792831301689148,
+          -1.747532844543457,
+          -2.0294222831726074
+        ]
+      },
+      {
+        "source_id": "vision-v1:c3/img_40982.jpg",
+        "class_id": "c3",
+        "driver_id": "p045",
+        "predicted_class": "c3",
+        "logits": [
+          0.5617349147796631,
+          0.9246892929077148,
+          -1.7659560441970825,
+          9.666299819946289,
+          -0.3456798493862152,
+          -0.8379731178283691,
+          -1.0589628219604492,
+          -1.1238601207733154,
+          -2.0294930934906006,
+          -1.5690069198608398
+        ]
+      },
+      {
+        "source_id": "vision-v1:c3/img_22374.jpg",
+        "class_id": "c3",
+        "driver_id": "p002",
+        "predicted_class": "c3",
+        "logits": [
+          -2.1148314476013184,
+          -0.5856019854545593,
+          -1.4001375436782837,
+          10.307828903198242,
+          0.49376142024993896,
+          0.1661616861820221,
+          -1.0957159996032715,
+          -0.8015960454940796,
+          -0.5520151853561401,
+          -3.0471863746643066
+        ]
+      },
+      {
+        "source_id": "vision-v1:c3/img_42539.jpg",
+        "class_id": "c3",
+        "driver_id": "p045",
+        "predicted_class": "c3",
+        "logits": [
+          -0.9495426416397095,
+          0.41830378770828247,
+          -1.852148413658142,
+          9.500303268432617,
+          -0.7053183317184448,
+          -0.27509605884552,
+          -1.2825982570648193,
+          -0.6580121517181396,
+          -1.4699864387512207,
+          -0.8049601912498474
+        ]
+      },
+      {
+        "source_id": "vision-v1:c3/img_40945.jpg",
+        "class_id": "c3",
+        "driver_id": "p045",
+        "predicted_class": "c3",
+        "logits": [
+          -1.5115176439285278,
+          1.0363080501556396,
+          -1.7844693660736084,
+          8.798447608947754,
+          -0.8608524799346924,
+          -0.5826659202575684,
+          -1.447354793548584,
+          -0.6013370752334595,
+          -0.5998769998550415,
+          -0.5875532627105713
+        ]
+      },
+      {
+        "source_id": "vision-v1:c3/img_42080.jpg",
+        "class_id": "c3",
+        "driver_id": "p002",
+        "predicted_class": "c3",
+        "logits": [
+          -2.335090398788452,
+          0.6936082243919373,
+          -1.4048058986663818,
+          9.456083297729492,
+          -0.12902817130088806,
+          1.093274712562561,
+          -0.534741997718811,
+          -1.3539478778839111,
+          -1.3592724800109863,
+          -2.3933591842651367
+        ]
+      },
+      {
+        "source_id": "vision-v1:c3/img_48914.jpg",
+        "class_id": "c3",
+        "driver_id": "p075",
+        "predicted_class": "c3",
+        "logits": [
+          -0.2542397081851959,
+          -0.47638022899627686,
+          -0.9324665665626526,
+          13.39344596862793,
+          -0.3304601311683655,
+          -1.8965542316436768,
+          -0.6316366791725159,
+          -0.16837453842163086,
+          -1.8942416906356812,
+          -3.865924596786499
+        ]
+      },
+      {
+        "source_id": "vision-v1:c3/img_80493.jpg",
+        "class_id": "c3",
+        "driver_id": "p075",
+        "predicted_class": "c3",
+        "logits": [
+          -0.2798194885253906,
+          -0.1573505401611328,
+          -0.6675549745559692,
+          10.199785232543945,
+          -0.14827591180801392,
+          -1.7507538795471191,
+          -0.52906334400177,
+          0.8396488428115845,
+          -1.2018229961395264,
+          -4.163441181182861
+        ]
+      },
+      {
+        "source_id": "vision-v1:c3/img_101745.jpg",
+        "class_id": "c3",
+        "driver_id": "p075",
+        "predicted_class": "c3",
+        "logits": [
+          -0.2743471562862396,
+          0.8220263123512268,
+          1.4772998094558716,
+          6.314144134521484,
+          -0.8809666633605957,
+          -1.6667684316635132,
+          -0.09734629839658737,
+          1.1713836193084717,
+          0.1751079112291336,
+          -4.939862251281738
+        ]
+      },
+      {
+        "source_id": "vision-v1:c3/img_9309.jpg",
+        "class_id": "c3",
+        "driver_id": "p075",
+        "predicted_class": "c3",
+        "logits": [
+          -0.8595208525657654,
+          -1.1473326683044434,
+          -1.5522563457489014,
+          13.57414436340332,
+          -0.4294005036354065,
+          -1.9570412635803223,
+          -0.8269511461257935,
+          0.3163509964942932,
+          -2.110962390899658,
+          -2.252102851867676
+        ]
+      },
+      {
+        "source_id": "vision-v1:c4/img_4967.jpg",
+        "class_id": "c4",
+        "driver_id": "p075",
+        "predicted_class": "c4",
+        "logits": [
+          0.23579756915569305,
+          0.09897598624229431,
+          1.7269209623336792,
+          -1.2341281175613403,
+          3.4077506065368652,
+          -2.785397529602051,
+          0.3851461410522461,
+          0.1364436149597168,
+          1.0379945039749146,
+          -1.9970176219940186
+        ]
+      },
+      {
+        "source_id": "vision-v1:c4/img_78917.jpg",
+        "class_id": "c4",
+        "driver_id": "p075",
+        "predicted_class": "c4",
+        "logits": [
+          -0.6836545467376709,
+          -1.2023837566375732,
+          1.0931334495544434,
+          -1.320469617843628,
+          8.426513671875,
+          -2.198181629180908,
+          0.1285349279642105,
+          -1.076621174812317,
+          0.12061244249343872,
+          -2.632354259490967
+        ]
+      },
+      {
+        "source_id": "vision-v1:c4/img_23296.jpg",
+        "class_id": "c4",
+        "driver_id": "p002",
+        "predicted_class": "c4",
+        "logits": [
+          -2.462563991546631,
+          -2.5782318115234375,
+          -0.5721958875656128,
+          -1.7427598237991333,
+          8.307249069213867,
+          0.28463971614837646,
+          -0.5316823124885559,
+          -2.2812418937683105,
+          1.0567512512207031,
+          0.20399588346481323
+        ]
+      },
+      {
+        "source_id": "vision-v1:c4/img_53802.jpg",
+        "class_id": "c4",
+        "driver_id": "p041",
+        "predicted_class": "c4",
+        "logits": [
+          0.5757933855056763,
+          -2.214893341064453,
+          -1.9296633005142212,
+          0.01552930474281311,
+          11.673492431640625,
+          -1.42782461643219,
+          -1.7183990478515625,
+          -2.581451892852783,
+          -1.1302051544189453,
+          -2.129141092300415
+        ]
+      },
+      {
+        "source_id": "vision-v1:c4/img_31318.jpg",
+        "class_id": "c4",
+        "driver_id": "p045",
+        "predicted_class": "c4",
+        "logits": [
+          -0.7682685852050781,
+          -1.9523892402648926,
+          -1.108224868774414,
+          -0.14566132426261902,
+          8.647806167602539,
+          -0.9942668676376343,
+          -1.0835989713668823,
+          -1.5941107273101807,
+          -0.9708796739578247,
+          -0.48041534423828125
+        ]
+      },
+      {
+        "source_id": "vision-v1:c4/img_38813.jpg",
+        "class_id": "c4",
+        "driver_id": "p002",
+        "predicted_class": "c4",
+        "logits": [
+          -1.9288148880004883,
+          -2.2642107009887695,
+          -0.25482186675071716,
+          -1.3046388626098633,
+          8.281131744384766,
+          0.48637422919273376,
+          -0.7414135932922363,
+          -2.5186586380004883,
+          0.40971508622169495,
+          -0.32632097601890564
+        ]
+      },
+      {
+        "source_id": "vision-v1:c4/img_47456.jpg",
+        "class_id": "c4",
+        "driver_id": "p075",
+        "predicted_class": "c8",
+        "logits": [
+          -1.2397772073745728,
+          -0.4688127338886261,
+          0.9267992973327637,
+          -1.8889093399047852,
+          3.18001127243042,
+          -2.540349245071411,
+          -0.933678150177002,
+          -0.4663446247577667,
+          6.453620910644531,
+          -2.3705694675445557
+        ]
+      },
+      {
+        "source_id": "vision-v1:c4/img_89950.jpg",
+        "class_id": "c4",
+        "driver_id": "p041",
+        "predicted_class": "c4",
+        "logits": [
+          2.7618279457092285,
+          -2.558507204055786,
+          -2.015791416168213,
+          2.293001174926758,
+          8.703193664550781,
+          -1.4824199676513672,
+          -0.8015474677085876,
+          -1.6679792404174805,
+          -2.385620355606079,
+          -3.743065357208252
+        ]
+      },
+      {
+        "source_id": "vision-v1:c4/img_14981.jpg",
+        "class_id": "c4",
+        "driver_id": "p075",
+        "predicted_class": "c4",
+        "logits": [
+          0.766895055770874,
+          -1.6839224100112915,
+          1.4887152910232544,
+          -0.6632707118988037,
+          8.253841400146484,
+          -3.006239414215088,
+          -0.46164119243621826,
+          -0.7851021885871887,
+          -0.12332405149936676,
+          -3.151397228240967
+        ]
+      },
+      {
+        "source_id": "vision-v1:c4/img_63575.jpg",
+        "class_id": "c4",
+        "driver_id": "p002",
+        "predicted_class": "c4",
+        "logits": [
+          -2.290790557861328,
+          -2.632566452026367,
+          -0.5204521417617798,
+          -0.791519284248352,
+          9.935890197753906,
+          1.9369730949401855,
+          -0.3826548755168915,
+          -3.0572926998138428,
+          -1.230899691581726,
+          -1.3501546382904053
+        ]
+      },
+      {
+        "source_id": "vision-v1:c5/img_27454.jpg",
+        "class_id": "c5",
+        "driver_id": "p045",
+        "predicted_class": "c0",
+        "logits": [
+          6.2991485595703125,
+          0.5600274205207825,
+          -1.3370698690414429,
+          -0.9351099133491516,
+          -0.8144590854644775,
+          -0.5357057452201843,
+          -2.356907844543457,
+          -1.2403957843780518,
+          -1.2954586744308472,
+          2.247570037841797
+        ]
+      },
+      {
+        "source_id": "vision-v1:c5/img_44591.jpg",
+        "class_id": "c5",
+        "driver_id": "p075",
+        "predicted_class": "c5",
+        "logits": [
+          -1.4947164058685303,
+          -2.2131245136260986,
+          -1.8547937870025635,
+          1.3698005676269531,
+          -0.702737033367157,
+          9.455789566040039,
+          -0.20898497104644775,
+          -1.7531511783599854,
+          -0.9225353598594666,
+          -3.2493958473205566
+        ]
+      },
+      {
+        "source_id": "vision-v1:c5/img_8852.jpg",
+        "class_id": "c5",
+        "driver_id": "p075",
+        "predicted_class": "c5",
+        "logits": [
+          -1.3103151321411133,
+          -2.5013937950134277,
+          -1.6646811962127686,
+          0.680639922618866,
+          -0.7854795455932617,
+          8.892852783203125,
+          -0.8328207731246948,
+          -0.9403445720672607,
+          -0.8564570546150208,
+          -2.4262471199035645
+        ]
+      },
+      {
+        "source_id": "vision-v1:c5/img_9539.jpg",
+        "class_id": "c5",
+        "driver_id": "p002",
+        "predicted_class": "c5",
+        "logits": [
+          -0.8761134743690491,
+          -1.3311996459960938,
+          -1.4675501585006714,
+          -1.7817918062210083,
+          0.5792046189308167,
+          5.980932235717773,
+          -1.5154305696487427,
+          -2.190201997756958,
+          0.4358125925064087,
+          1.1522077322006226
+        ]
+      },
+      {
+        "source_id": "vision-v1:c5/img_30214.jpg",
+        "class_id": "c5",
+        "driver_id": "p075",
+        "predicted_class": "c5",
+        "logits": [
+          -1.0854105949401855,
+          -2.3343915939331055,
+          -1.6532849073410034,
+          0.242061585187912,
+          0.6676380038261414,
+          10.035127639770508,
+          -0.46511682868003845,
+          -1.8970820903778076,
+          -1.3626742362976074,
+          -4.069365501403809
+        ]
+      },
+      {
+        "source_id": "vision-v1:c5/img_42904.jpg",
+        "class_id": "c5",
+        "driver_id": "p075",
+        "predicted_class": "c5",
+        "logits": [
+          -1.4152683019638062,
+          -2.856370449066162,
+          -1.7172293663024902,
+          1.1615524291992188,
+          -0.5136719346046448,
+          9.456298828125,
+          1.05595862865448,
+          -1.4648206233978271,
+          -1.5253429412841797,
+          -3.7552120685577393
+        ]
+      },
+      {
+        "source_id": "vision-v1:c5/img_83292.jpg",
+        "class_id": "c5",
+        "driver_id": "p045",
+        "predicted_class": "c5",
+        "logits": [
+          -2.740435838699341,
+          -1.8408013582229614,
+          -1.2938344478607178,
+          -2.3646302223205566,
+          -1.9098588228225708,
+          7.4857258796691895,
+          -0.20446443557739258,
+          0.41725462675094604,
+          -1.1667287349700928,
+          1.6093559265136719
+        ]
+      },
+      {
+        "source_id": "vision-v1:c5/img_35012.jpg",
+        "class_id": "c5",
+        "driver_id": "p002",
+        "predicted_class": "c5",
+        "logits": [
+          -1.638763427734375,
+          -1.5456809997558594,
+          -1.4888556003570557,
+          -1.3775086402893066,
+          0.26033249497413635,
+          9.12545394897461,
+          -0.6076810359954834,
+          -2.8667798042297363,
+          -0.007377948611974716,
+          -1.6278879642486572
+        ]
+      },
+      {
+        "source_id": "vision-v1:c5/img_69634.jpg",
+        "class_id": "c5",
+        "driver_id": "p041",
+        "predicted_class": "c5",
+        "logits": [
+          1.8318166732788086,
+          -2.733403444290161,
+          -2.454149007797241,
+          1.5923566818237305,
+          -0.6249464154243469,
+          8.597082138061523,
+          -0.07891076803207397,
+          -1.8622095584869385,
+          -2.0695998668670654,
+          -3.658543586730957
+        ]
+      },
+      {
+        "source_id": "vision-v1:c5/img_84874.jpg",
+        "class_id": "c5",
+        "driver_id": "p041",
+        "predicted_class": "c5",
+        "logits": [
+          2.0652573108673096,
+          -2.2177224159240723,
+          -1.9374308586120605,
+          0.6851316690444946,
+          -1.5737626552581787,
+          7.519601821899414,
+          -0.09563231468200684,
+          -1.5453088283538818,
+          -0.9630611538887024,
+          -2.9320969581604004
+        ]
+      },
+      {
+        "source_id": "vision-v1:c6/img_57549.jpg",
+        "class_id": "c6",
+        "driver_id": "p045",
+        "predicted_class": "c6",
+        "logits": [
+          -2.6995849609375,
+          -1.4436224699020386,
+          0.157213032245636,
+          -1.302661418914795,
+          -2.592916965484619,
+          -2.1151115894317627,
+          8.75783634185791,
+          0.5555732250213623,
+          3.296832799911499,
+          -2.0917205810546875
+        ]
+      },
+      {
+        "source_id": "vision-v1:c6/img_66485.jpg",
+        "class_id": "c6",
+        "driver_id": "p041",
+        "predicted_class": "c6",
+        "logits": [
+          0.21447238326072693,
+          -0.1174132227897644,
+          0.16244256496429443,
+          -0.530358076095581,
+          -0.3214383125305176,
+          -2.0747716426849365,
+          7.403363227844238,
+          -2.049661159515381,
+          -0.4517892599105835,
+          -1.4570691585540771
+        ]
+      },
+      {
+        "source_id": "vision-v1:c6/img_80795.jpg",
+        "class_id": "c6",
+        "driver_id": "p002",
+        "predicted_class": "c6",
+        "logits": [
+          -2.6179451942443848,
+          -1.688848614692688,
+          0.10095575451850891,
+          -1.974901556968689,
+          -2.450998067855835,
+          -0.8933625817298889,
+          7.370052814483643,
+          -1.0474773645401,
+          5.74038028717041,
+          -2.714928150177002
+        ]
+      },
+      {
+        "source_id": "vision-v1:c6/img_90814.jpg",
+        "class_id": "c6",
+        "driver_id": "p002",
+        "predicted_class": "c6",
+        "logits": [
+          -2.8997159004211426,
+          -1.2343475818634033,
+          0.396353155374527,
+          -2.747246742248535,
+          -2.604165554046631,
+          -1.444117546081543,
+          8.596900939941406,
+          -1.0308172702789307,
+          5.939411640167236,
+          -2.4535768032073975
+        ]
+      },
+      {
+        "source_id": "vision-v1:c6/img_75866.jpg",
+        "class_id": "c6",
+        "driver_id": "p045",
+        "predicted_class": "c6",
+        "logits": [
+          -1.7418956756591797,
+          -1.1367006301879883,
+          -0.9728199243545532,
+          -2.2573986053466797,
+          -0.4680679440498352,
+          -1.8717212677001953,
+          9.512361526489258,
+          -0.5883424282073975,
+          0.8852810263633728,
+          -1.2181546688079834
+        ]
+      },
+      {
+        "source_id": "vision-v1:c6/img_97195.jpg",
+        "class_id": "c6",
+        "driver_id": "p041",
+        "predicted_class": "c6",
+        "logits": [
+          -0.6445150375366211,
+          -1.3182146549224854,
+          0.2819010317325592,
+          -0.9064843058586121,
+          -0.45784056186676025,
+          -2.0508880615234375,
+          8.687989234924316,
+          -1.6933526992797852,
+          -0.3978275954723358,
+          -1.0032070875167847
+        ]
+      },
+      {
+        "source_id": "vision-v1:c6/img_91532.jpg",
+        "class_id": "c6",
+        "driver_id": "p075",
+        "predicted_class": "c6",
+        "logits": [
+          -2.984006404876709,
+          -1.9446662664413452,
+          1.0301746129989624,
+          -1.9506981372833252,
+          -1.2658989429473877,
+          -1.7593612670898438,
+          10.794730186462402,
+          0.09659358859062195,
+          1.2676013708114624,
+          -2.4499456882476807
+        ]
+      },
+      {
+        "source_id": "vision-v1:c6/img_26953.jpg",
+        "class_id": "c6",
+        "driver_id": "p002",
+        "predicted_class": "c6",
+        "logits": [
+          -2.885349750518799,
+          -1.9219448566436768,
+          -0.38608893752098083,
+          -2.5345680713653564,
+          -2.7911291122436523,
+          -0.9062681198120117,
+          8.55887222290039,
+          -1.2192463874816895,
+          6.184751510620117,
+          -2.15903639793396
+        ]
+      },
+      {
+        "source_id": "vision-v1:c6/img_67827.jpg",
+        "class_id": "c6",
+        "driver_id": "p045",
+        "predicted_class": "c6",
+        "logits": [
+          -1.222436547279358,
+          -0.45472684502601624,
+          -0.8947449922561646,
+          -2.2052528858184814,
+          -0.6833628416061401,
+          -1.6936012506484985,
+          7.188871383666992,
+          -0.8699900507926941,
+          1.3068000078201294,
+          -0.33526545763015747
+        ]
+      },
+      {
+        "source_id": "vision-v1:c6/img_2602.jpg",
+        "class_id": "c6",
+        "driver_id": "p041",
+        "predicted_class": "c6",
+        "logits": [
+          0.07714039832353592,
+          -2.2073073387145996,
+          0.7873439192771912,
+          0.5260576009750366,
+          0.5395350456237793,
+          -2.415637254714966,
+          8.673039436340332,
+          -1.2641409635543823,
+          -1.123460054397583,
+          -2.6910910606384277
+        ]
+      },
+      {
+        "source_id": "vision-v1:c7/img_52923.jpg",
+        "class_id": "c7",
+        "driver_id": "p045",
+        "predicted_class": "c7",
+        "logits": [
+          -1.386863112449646,
+          -1.792168378829956,
+          -1.729241132736206,
+          -0.8101638555526733,
+          -1.144005537033081,
+          -1.40226149559021,
+          -0.24598512053489685,
+          7.304164886474609,
+          -1.5336570739746094,
+          1.3008971214294434
+        ]
+      },
+      {
+        "source_id": "vision-v1:c7/img_18244.jpg",
+        "class_id": "c7",
+        "driver_id": "p045",
+        "predicted_class": "c7",
+        "logits": [
+          -1.4443399906158447,
+          -0.31010347604751587,
+          -1.921295404434204,
+          -1.1056430339813232,
+          -1.292916178703308,
+          -1.440518856048584,
+          -1.035736083984375,
+          7.612449645996094,
+          -0.6532983183860779,
+          -0.3899204730987549
+        ]
+      },
+      {
+        "source_id": "vision-v1:c7/img_91287.jpg",
+        "class_id": "c7",
+        "driver_id": "p075",
+        "predicted_class": "c7",
+        "logits": [
+          -3.240095376968384,
+          -2.0602641105651855,
+          -2.096359968185425,
+          -1.563896894454956,
+          -2.487987995147705,
+          -1.5694459676742554,
+          -1.1573237180709839,
+          12.355487823486328,
+          -1.220766305923462,
+          0.2814008295536041
+        ]
+      },
+      {
+        "source_id": "vision-v1:c7/img_31627.jpg",
+        "class_id": "c7",
+        "driver_id": "p075",
+        "predicted_class": "c7",
+        "logits": [
+          -4.400859832763672,
+          -2.6952109336853027,
+          -2.1748831272125244,
+          -0.8887872695922852,
+          -2.1966569423675537,
+          -1.4665355682373047,
+          -0.34425079822540283,
+          12.947704315185547,
+          -1.2492599487304688,
+          -0.42055749893188477
+        ]
+      },
+      {
+        "source_id": "vision-v1:c7/img_57733.jpg",
+        "class_id": "c7",
+        "driver_id": "p075",
+        "predicted_class": "c7",
+        "logits": [
+          -5.498286247253418,
+          -2.7687385082244873,
+          -1.8645532131195068,
+          0.42517176270484924,
+          -0.966399073600769,
+          -0.7478033900260925,
+          0.9328941702842712,
+          12.044118881225586,
+          -1.1478792428970337,
+          -3.831665515899658
+        ]
+      },
+      {
+        "source_id": "vision-v1:c7/img_78913.jpg",
+        "class_id": "c7",
+        "driver_id": "p041",
+        "predicted_class": "c7",
+        "logits": [
+          -0.9764851331710815,
+          -1.3728647232055664,
+          -0.8709903955459595,
+          -1.105020523071289,
+          -1.239998698234558,
+          -0.7383279204368591,
+          -0.545494794845581,
+          7.237699508666992,
+          -1.6385152339935303,
+          0.04477100074291229
+        ]
+      },
+      {
+        "source_id": "vision-v1:c7/img_36425.jpg",
+        "class_id": "c7",
+        "driver_id": "p075",
+        "predicted_class": "c7",
+        "logits": [
+          -4.355919361114502,
+          -2.8016512393951416,
+          -1.7737789154052734,
+          -0.6099452376365662,
+          -0.996638298034668,
+          -1.9270944595336914,
+          -0.195021390914917,
+          11.997943878173828,
+          -1.0832569599151611,
+          -1.0703405141830444
+        ]
+      },
+      {
+        "source_id": "vision-v1:c7/img_77857.jpg",
+        "class_id": "c7",
+        "driver_id": "p075",
+        "predicted_class": "c7",
+        "logits": [
+          -4.4950270652771,
+          -2.2549924850463867,
+          -1.9668002128601074,
+          -0.3691733479499817,
+          -1.6218523979187012,
+          -0.8426288962364197,
+          -0.02494737133383751,
+          11.475627899169922,
+          -0.8336499929428101,
+          -1.952925682067871
+        ]
+      },
+      {
+        "source_id": "vision-v1:c7/img_71872.jpg",
+        "class_id": "c7",
+        "driver_id": "p002",
+        "predicted_class": "c7",
+        "logits": [
+          -4.05211067199707,
+          -0.7897032499313354,
+          -0.8144643306732178,
+          -0.1708165556192398,
+          -1.5135573148727417,
+          -0.5908865928649902,
+          0.3376702666282654,
+          6.962059020996094,
+          2.410116672515869,
+          -2.9443397521972656
+        ]
+      },
+      {
+        "source_id": "vision-v1:c7/img_47220.jpg",
+        "class_id": "c7",
+        "driver_id": "p045",
+        "predicted_class": "c7",
+        "logits": [
+          -1.3124200105667114,
+          -0.3422572612762451,
+          -0.8593620657920837,
+          -1.4880235195159912,
+          -1.6448099613189697,
+          -1.0088980197906494,
+          -1.2443151473999023,
+          5.173683166503906,
+          -0.28630730509757996,
+          1.5446913242340088
+        ]
+      },
+      {
+        "source_id": "vision-v1:c8/img_75852.jpg",
+        "class_id": "c8",
+        "driver_id": "p045",
+        "predicted_class": "c8",
+        "logits": [
+          -0.4798838198184967,
+          -2.8360302448272705,
+          -1.3768682479858398,
+          -2.2179675102233887,
+          -2.2216198444366455,
+          -2.4405083656311035,
+          -3.3313870429992676,
+          -1.1680364608764648,
+          15.766189575195312,
+          1.3105319738388062
+        ]
+      },
+      {
+        "source_id": "vision-v1:c8/img_3171.jpg",
+        "class_id": "c8",
+        "driver_id": "p041",
+        "predicted_class": "c8",
+        "logits": [
+          0.7824471592903137,
+          -2.5174007415771484,
+          0.3855822682380676,
+          -2.0932748317718506,
+          -1.1767208576202393,
+          -3.1295933723449707,
+          -0.762501060962677,
+          -1.7857435941696167,
+          11.810525894165039,
+          -0.4707812964916229
+        ]
+      },
+      {
+        "source_id": "vision-v1:c8/img_77015.jpg",
+        "class_id": "c8",
+        "driver_id": "p002",
+        "predicted_class": "c8",
+        "logits": [
+          -0.35237929224967957,
+          -2.779923677444458,
+          0.22308677434921265,
+          -2.254523515701294,
+          -1.5865063667297363,
+          -1.8989078998565674,
+          0.4121165871620178,
+          -0.12510445713996887,
+          8.187394142150879,
+          0.5192009210586548
+        ]
+      },
+      {
+        "source_id": "vision-v1:c8/img_90501.jpg",
+        "class_id": "c8",
+        "driver_id": "p045",
+        "predicted_class": "c8",
+        "logits": [
+          0.1540171056985855,
+          -2.8277711868286133,
+          -0.9172323942184448,
+          -2.4673209190368652,
+          -2.544039011001587,
+          -1.7581686973571777,
+          -2.21160626411438,
+          -1.540360450744629,
+          13.965882301330566,
+          1.3496029376983643
+        ]
+      },
+      {
+        "source_id": "vision-v1:c8/img_99437.jpg",
+        "class_id": "c8",
+        "driver_id": "p002",
+        "predicted_class": "c8",
+        "logits": [
+          -3.7184579372406006,
+          -2.511568546295166,
+          -2.1194891929626465,
+          -0.7932447195053101,
+          -1.129998803138733,
+          0.3524262607097626,
+          -0.7577403783798218,
+          -1.2256221771240234,
+          8.507003784179688,
+          3.8870038986206055
+        ]
+      },
+      {
+        "source_id": "vision-v1:c8/img_43372.jpg",
+        "class_id": "c8",
+        "driver_id": "p041",
+        "predicted_class": "c8",
+        "logits": [
+          1.913014531135559,
+          -3.061077117919922,
+          0.6076252460479736,
+          -2.169827938079834,
+          -1.82223641872406,
+          -3.5633468627929688,
+          0.07709121704101562,
+          -1.442895770072937,
+          11.062986373901367,
+          -1.2360975742340088
+        ]
+      },
+      {
+        "source_id": "vision-v1:c8/img_3967.jpg",
+        "class_id": "c8",
+        "driver_id": "p002",
+        "predicted_class": "c8",
+        "logits": [
+          -2.4733569622039795,
+          -2.716259717941284,
+          -1.4951796531677246,
+          -1.9938993453979492,
+          -1.4732520580291748,
+          -1.399989128112793,
+          -1.088758945465088,
+          -0.9364471435546875,
+          11.339962005615234,
+          2.5176761150360107
+        ]
+      },
+      {
+        "source_id": "vision-v1:c8/img_47986.jpg",
+        "class_id": "c8",
+        "driver_id": "p002",
+        "predicted_class": "c8",
+        "logits": [
+          -2.3504977226257324,
+          -2.521836519241333,
+          -2.3256759643554688,
+          -1.4214624166488647,
+          -1.1476047039031982,
+          -0.23442551493644714,
+          -0.5591652989387512,
+          -1.26458740234375,
+          7.96409273147583,
+          3.693127393722534
+        ]
+      },
+      {
+        "source_id": "vision-v1:c8/img_19450.jpg",
+        "class_id": "c8",
+        "driver_id": "p041",
+        "predicted_class": "c8",
+        "logits": [
+          0.7651703357696533,
+          -1.7070897817611694,
+          0.07685983180999756,
+          -1.7545294761657715,
+          -2.3764827251434326,
+          -2.619384765625,
+          -2.019232988357544,
+          -2.0849623680114746,
+          13.599996566772461,
+          -1.029491662979126
+        ]
+      },
+      {
+        "source_id": "vision-v1:c8/img_9578.jpg",
+        "class_id": "c8",
+        "driver_id": "p045",
+        "predicted_class": "c8",
+        "logits": [
+          -0.21832454204559326,
+          -2.618025541305542,
+          -0.3907948136329651,
+          -2.441610336303711,
+          -1.3612641096115112,
+          -2.0516738891601562,
+          -1.4878718852996826,
+          -1.7507965564727783,
+          12.395849227905273,
+          0.8296480178833008
+        ]
+      },
+      {
+        "source_id": "vision-v1:c9/img_66298.jpg",
+        "class_id": "c9",
+        "driver_id": "p041",
+        "predicted_class": "c9",
+        "logits": [
+          0.17397990822792053,
+          -1.6275782585144043,
+          1.4115240573883057,
+          -3.452843427658081,
+          -1.0546544790267944,
+          -1.2031153440475464,
+          1.8842065334320068,
+          -0.09448876231908798,
+          0.0947071760892868,
+          4.172657012939453
+        ]
+      },
+      {
+        "source_id": "vision-v1:c9/img_91430.jpg",
+        "class_id": "c9",
+        "driver_id": "p075",
+        "predicted_class": "c9",
+        "logits": [
+          -1.3590600490570068,
+          -2.312910556793213,
+          -2.090348243713379,
+          -0.4384576380252838,
+          -2.5471911430358887,
+          0.3147759735584259,
+          -0.8151122331619263,
+          2.3474555015563965,
+          0.4702707529067993,
+          6.5854692459106445
+        ]
+      },
+      {
+        "source_id": "vision-v1:c9/img_95184.jpg",
+        "class_id": "c9",
+        "driver_id": "p045",
+        "predicted_class": "c9",
+        "logits": [
+          0.8300492763519287,
+          -0.9597858786582947,
+          -1.774245262145996,
+          -2.749488592147827,
+          -1.3514529466629028,
+          -0.9614627361297607,
+          -1.4052785634994507,
+          0.6422357559204102,
+          -0.2736586034297943,
+          8.296140670776367
+        ]
+      },
+      {
+        "source_id": "vision-v1:c9/img_69539.jpg",
+        "class_id": "c9",
+        "driver_id": "p075",
+        "predicted_class": "c9",
+        "logits": [
+          -0.9431523084640503,
+          -1.8959136009216309,
+          -2.7870655059814453,
+          0.1384718418121338,
+          -0.7918205857276917,
+          1.557159185409546,
+          -0.5858791470527649,
+          -0.5570701956748962,
+          1.8330576419830322,
+          3.526254177093506
+        ]
+      },
+      {
+        "source_id": "vision-v1:c9/img_55733.jpg",
+        "class_id": "c9",
+        "driver_id": "p045",
+        "predicted_class": "c9",
+        "logits": [
+          0.2710656225681305,
+          -0.35913893580436707,
+          -1.5613423585891724,
+          -2.4430041313171387,
+          -1.363396167755127,
+          -0.5602954626083374,
+          -1.4480462074279785,
+          0.04632081836462021,
+          -0.23285679519176483,
+          7.961735725402832
+        ]
+      },
+      {
+        "source_id": "vision-v1:c9/img_75520.jpg",
+        "class_id": "c9",
+        "driver_id": "p045",
+        "predicted_class": "c9",
+        "logits": [
+          0.8469045162200928,
+          -0.727698802947998,
+          -1.4660418033599854,
+          -2.525986671447754,
+          -1.3250499963760376,
+          -0.8766961693763733,
+          -1.470491647720337,
+          0.14267095923423767,
+          -0.255859911441803,
+          7.983538627624512
+        ]
+      },
+      {
+        "source_id": "vision-v1:c9/img_16688.jpg",
+        "class_id": "c9",
+        "driver_id": "p075",
+        "predicted_class": "c9",
+        "logits": [
+          -1.1853135824203491,
+          -1.9576005935668945,
+          -2.3728883266448975,
+          -0.6215972900390625,
+          -2.9676570892333984,
+          -0.39545220136642456,
+          0.04833865165710449,
+          1.9016118049621582,
+          1.2692298889160156,
+          6.410618782043457
+        ]
+      },
+      {
+        "source_id": "vision-v1:c9/img_57865.jpg",
+        "class_id": "c9",
+        "driver_id": "p075",
+        "predicted_class": "c9",
+        "logits": [
+          -0.31422656774520874,
+          -1.7084680795669556,
+          -1.9146835803985596,
+          0.9532879590988159,
+          -2.530681848526001,
+          -0.49044138193130493,
+          -0.8703314065933228,
+          1.7578587532043457,
+          0.24439078569412231,
+          5.567635536193848
+        ]
+      },
+      {
+        "source_id": "vision-v1:c9/img_33032.jpg",
+        "class_id": "c9",
+        "driver_id": "p075",
+        "predicted_class": "c9",
+        "logits": [
+          -1.1149516105651855,
+          -2.095486640930176,
+          -2.180767774581909,
+          -0.5002559423446655,
+          -2.4520881175994873,
+          -0.08374688029289246,
+          -0.9223111271858215,
+          1.8637800216674805,
+          0.973197877407074,
+          6.706937789916992
+        ]
+      },
+      {
+        "source_id": "vision-v1:c9/img_92741.jpg",
+        "class_id": "c9",
+        "driver_id": "p075",
+        "predicted_class": "c9",
+        "logits": [
+          -1.349858045578003,
+          -2.261059522628784,
+          -1.8758294582366943,
+          -0.7659607529640198,
+          -2.374573230743408,
+          0.1704140603542328,
+          -0.6743348240852356,
+          2.0645291805267334,
+          0.33607253432273865,
+          7.037591457366943
+        ]
+      }
+    ],
+    "identity": "RN-HPO42",
+    "tensor_sha256": "07adb0f1a37281659c298bb79e5404fa770cdea511d5ccb99710966b48a8d42e"
+  },
+  "action": "parity",
+  "identity": "RN-HPO42",
+  "resources": {
+    "available_ram_bytes": 9595682816,
+    "free_disk_bytes": 323438768128
+  },
+  "elapsed_nanoseconds": 12202343167,
+  "protected_before": {
+    "ml/outputs/vision/mobilenetv3_large_vision.pt": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+    "ml/outputs/vision/mobilenetv3_large_vision.onnx": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "ml/outputs/telemetry/xgb_telemetry.json": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+    "docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md": "0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0"
+  },
+  "protected_after": {
+    "ml/outputs/vision/mobilenetv3_large_vision.pt": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+    "ml/outputs/vision/mobilenetv3_large_vision.onnx": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "ml/outputs/telemetry/xgb_telemetry.json": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+    "docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md": "0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0"
+  },
+  "git_before": {
+    "root": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1",
+    "branch": "fyp2/ml-training",
+    "head": "335da4e3de203836c045452f84cc291bcd352a26",
+    "dirty": "M docs/fyp2/ml/ML_TRACK_PROGRESS.md\n?? docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md\n?? docs/fyp2/ml/ML_RESULTS_REVIEW_CONTEXT.md\n?? ml/configs/e1_preparation.json\n?? ml/configs/p4_protocol.json\n?? ml/experiments/e1_generators.py\n?? ml/experiments/p4_core.py\n?? ml/experiments/p4_data.py\n?? ml/experiments/p4_preflight.py\n?? ml/experiments/p4_qc.py\n?? ml/experiments/run_e1_preparation.py\n?? ml/experiments/run_p4.py\n?? ml/outputs/runs/e1_preparation_20261019/\n?? ml/outputs/runs/e1_preparation_20261019_record_missingness/\n?? ml/outputs/runs/p3_vision_20261018/search/\n?? ml/outputs/runs/p3_vision_20261018/search_config.json\n?? ml/outputs/runs/p3_vision_20261018/search_state.json\n?? ml/outputs/runs/p3_vision_20261018/selection_log.json\n?? ml/outputs/runs/p3_vision_20261018/verification/\n?? ml/outputs/runs/p4a_20261021/\n?? ml/tests/test_e1_generators.py\n?? ml/tests/test_e1_preparation.py\n?? ml/tests/test_p4_core.py\n?? ml/tests/test_p4_data.py\n?? ml/tests/test_p4_preflight.py\n?? ml/tests/test_p4_qc.py",
+    "staged": ""
+  },
+  "git_after": {
+    "root": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1",
+    "branch": "fyp2/ml-training",
+    "head": "335da4e3de203836c045452f84cc291bcd352a26",
+    "dirty": "M docs/fyp2/ml/ML_TRACK_PROGRESS.md\n?? docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md\n?? docs/fyp2/ml/ML_RESULTS_REVIEW_CONTEXT.md\n?? ml/configs/e1_preparation.json\n?? ml/configs/p4_protocol.json\n?? ml/experiments/e1_generators.py\n?? ml/experiments/p4_core.py\n?? ml/experiments/p4_data.py\n?? ml/experiments/p4_preflight.py\n?? ml/experiments/p4_qc.py\n?? ml/experiments/run_e1_preparation.py\n?? ml/experiments/run_p4.py\n?? ml/outputs/runs/e1_preparation_20261019/\n?? ml/outputs/runs/e1_preparation_20261019_record_missingness/\n?? ml/outputs/runs/p3_vision_20261018/search/\n?? ml/outputs/runs/p3_vision_20261018/search_config.json\n?? ml/outputs/runs/p3_vision_20261018/search_state.json\n?? ml/outputs/runs/p3_vision_20261018/selection_log.json\n?? ml/outputs/runs/p3_vision_20261018/verification/\n?? ml/outputs/runs/p4a_20261021/\n?? ml/tests/test_e1_generators.py\n?? ml/tests/test_e1_preparation.py\n?? ml/tests/test_p4_core.py\n?? ml/tests/test_p4_data.py\n?? ml/tests/test_p4_preflight.py\n?? ml/tests/test_p4_qc.py",
+    "staged": ""
+  },
+  "source_sha256": "ffdfa6637bace58c9818ade3b9a84e812a59d2f681543927b10403061301dece",
+  "threadpools": [
+    {
+      "user_api": "openmp",
+      "internal_api": "openmp",
+      "num_threads": 2,
+      "prefix": "libomp",
+      "filepath": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/torch/lib/libomp.dylib",
+      "version": null
+    }
+  ],
+  "ru_maxrss_native": 1359495168,
+  "ru_maxrss_units": "bytes on macOS; whole worker lifetime high-water mark",
+  "sampled_rss": "Parent BudgetSupervisor 20ms process-tree samples",
+  "test_images_opened": 0,
+  "test_telemetry_rows_read": 0
+}

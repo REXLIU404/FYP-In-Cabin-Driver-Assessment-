@@ -1,0 +1,143 @@
+FFF.                                                                     [100%]
+=================================== FAILURES ===================================
+___________ test_v2_formal_dispatch_has_no_reviewers_or_manual_wait ____________
+
+core = <module 'ml.experiments.p4_core' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_core.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-133/test_v2_formal_dispatch_has_no0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10ad06650>
+
+    def test_v2_formal_dispatch_has_no_reviewers_or_manual_wait(core,tmp_path,monkeypatch):
+        from ml.experiments import run_p4
+        protocol=run_p4.ROOT/'ml/configs/p4_protocol.json';frozen=run_p4.binding_for(protocol,'synthetic_v2_dispatch')
+        approval_path=tmp_path/'synthetic_approval.json'
+        approval_path.write_text(json.dumps(dict(frozen,phase='P4-B',authorized=True,human_approval='SYNTHETIC_ONLY')))
+        spec=tmp_path/'execution_spec.json';spec.write_text('{}')
+        calls=[]
+        class Supervisor:
+            def __init__(self,path,**kwargs):
+                assert kwargs['min_available_ram']==4*1024**3
+                Path(path).mkdir(parents=True);self.path=path
+            def run(self,command,**limits):calls.append((command,limits));return {'returncode':0}
+        monkeypatch.setattr(run_p4,'ROOT',tmp_path)
+        monkeypatch.setattr(run_p4,'formal_provenance',lambda:{'protected_hashes':{'synthetic':'stable'}})
+        monkeypatch.setattr(run_p4,'BudgetSupervisor',Supervisor)
+>       assert run_p4.main(['formal','--protocol',str(protocol),'--run-id',frozen['run_id'],
+            '--approval',str(approval_path),'--execution-spec',str(spec)])==0
+
+ml/tests/test_p4_core.py:508: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/experiments/run_p4.py:715: in main
+    if args.mode=='formal':return formal(args)
+                                  ^^^^^^^^^^^^
+ml/experiments/run_p4.py:641: in formal
+    supervisor=BudgetSupervisor(run) # Resource gate precedes model loading/export/forward.
+               ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_p4_core.test_v2_formal_dispatch_has_no_reviewers_or_manual_wait.<locals>.Supervisor object at 0x10aca5550>
+path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-133/test_v2_formal_dispatch_has_no0/ml/outputs/runs/synthetic_v2_dispatch')
+kwargs = {}
+
+    def __init__(self,path,**kwargs):
+>       assert kwargs['min_available_ram']==4*1024**3
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'min_available_ram'
+
+ml/tests/test_p4_core.py:502: KeyError
+_ test_v2_cached_aggregation_cli_needs_only_external_approval_and_remaining_budget _
+
+core = <module 'ml.experiments.p4_core' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_core.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-133/test_v2_cached_aggregation_cli0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10a9068b0>
+
+    def test_v2_cached_aggregation_cli_needs_only_external_approval_and_remaining_budget(core,tmp_path,monkeypatch):
+        from ml.experiments import run_p4
+        protocol=run_p4.ROOT/'ml/configs/p4_protocol.json';frozen=run_p4.binding_for(protocol,'synthetic_cached_v2')
+        run=tmp_path/frozen['run_id'];run.mkdir()
+        approval_path=tmp_path/'synthetic_approval.json'
+        approval_path.write_text(json.dumps(dict(frozen,phase='P4-B',authorized=True,human_approval='SYNTHETIC_ONLY')))
+        spec=run/'execution_spec.json'
+        spec.write_text(json.dumps(dict(binding=frozen,protocol_path=str(protocol),run_dir=str(run),approval_path=str(approval_path))))
+        (run/'completion.json').write_text(json.dumps({'status':'MACHINE_EVALUATION_COMPLETED'}))
+        (run/'budget_state.json').write_text(json.dumps({'total_used_seconds':100.,'stage_used_seconds':{'aggregation':20.}}))
+        calls=[]
+        class Supervisor:
+            def __init__(self,path,**settings):
+                assert settings['min_available_ram']==4*1024**3
+                Path(path).mkdir();self.total_used=1.;self.stage_used={'aggregation':1.}
+                assert settings['total_seconds']==14300.
+                assert settings['stage_caps']=={'aggregation':1180.}
+            def run(self,command,**limits):calls.append((command,limits))
+        monkeypatch.setattr(run_p4,'BudgetSupervisor',Supervisor)
+        monkeypatch.setattr(run_p4,'formal_provenance',lambda:{'protected_hashes':{}})
+>       assert run_p4.main(['aggregate-cached','--execution-spec',str(spec),'--approval',str(approval_path)])==0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_core.py:622: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/experiments/run_p4.py:716: in main
+    if args.mode=='aggregate-cached':return aggregate_cached(args)
+                                            ^^^^^^^^^^^^^^^^^^^^^^
+ml/experiments/run_p4.py:688: in aggregate_cached
+    supervisor=BudgetSupervisor(directory,total_seconds=remaining_total,stage_caps={'aggregation':remaining_stage},output_root=run)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_p4_core.test_v2_cached_aggregation_cli_needs_only_external_approval_and_remaining_budget.<locals>.Supervisor object at 0x10aca57f0>
+path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-133/test_v2_cached_aggregation_cli0/synthetic_cached_v2/cached_aggregation')
+settings = {'output_root': PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-133/test_v2_cached_aggregation_cli0/synthetic_cached_v2'), 'stage_caps': {'aggregation': 1180.0}, 'total_seconds': 14300.0}
+
+    def __init__(self,path,**settings):
+>       assert settings['min_available_ram']==4*1024**3
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'min_available_ram'
+
+ml/tests/test_p4_core.py:615: KeyError
+__ test_user_relaxed_ram_policy_allows_six_gib_but_keeps_lower_guard[6-True] ___
+
+core = <module 'ml.experiments.p4_core' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_core.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-133/test_user_relaxed_ram_policy_a0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10ac0a330>
+available_gib = 6, allowed = True
+
+    @pytest.mark.parametrize('available_gib,allowed',[(6,True),(3,False)])
+    def test_user_relaxed_ram_policy_allows_six_gib_but_keeps_lower_guard(core,tmp_path,monkeypatch,available_gib,allowed):
+        from types import SimpleNamespace
+        from ml.experiments import run_p4
+        protocol=json.loads((run_p4.ROOT/'ml/configs/p4_protocol.json').read_text())
+        monkeypatch.setattr(core.psutil,'virtual_memory',lambda:SimpleNamespace(available=available_gib*1024**3))
+        def startup():
+            return core.BudgetSupervisor(tmp_path/'budget',min_available_ram=protocol['budgets']['minimum_available_ram_bytes'])
+        if allowed:
+>           supervisor=startup()
+                       ^^^^^^^^^
+
+ml/tests/test_p4_core.py:653: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_p4_core.py:651: in startup
+    return core.BudgetSupervisor(tmp_path/'budget',min_available_ram=protocol['budgets']['minimum_available_ram_bytes'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <ml.experiments.p4_core.BudgetSupervisor object at 0x10aca52b0>
+path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-133/test_user_relaxed_ram_policy_a0/budget')
+
+    def __init__(self,path,*,total_seconds=14400,stage_caps=None,min_free_bytes=20*GIB,
+                 min_available_ram=8*GIB,disk_cap_bytes=20*GIB,output_root=None):
+        self.started=time.monotonic();self.human_wait_seconds=0.;self.last_worker_end=self.started
+        self.path=Path(path);self.path.mkdir(parents=True,exist_ok=False)
+        self.output_root=Path(output_root) if output_root is not None else self.path
+        self.total_cap=total_seconds;self.stage_caps=stage_caps or STAGE_CAPS.copy()
+        self.disk_cap=disk_cap_bytes;self.total_used=0.;self.stage_used={};self.model_used={};self.stopped=False
+        self.minimum_free=min_free_bytes;self.minimum_ram=min_available_ram;self.workers=[]
+        if psutil.disk_usage(self.path).free<min_free_bytes or psutil.virtual_memory().available<min_available_ram:
+>           self.stopped=True;self._save('BLOCKED','INSUFFICIENT_STARTUP_RESOURCES');raise BudgetExceeded('INSUFFICIENT_STARTUP_RESOURCES')
+                                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           ml.experiments.p4_core.BudgetExceeded: INSUFFICIENT_STARTUP_RESOURCES
+
+ml/experiments/p4_core.py:293: BudgetExceeded
+=========================== short test summary info ============================
+FAILED ml/tests/test_p4_core.py::test_v2_formal_dispatch_has_no_reviewers_or_manual_wait
+FAILED ml/tests/test_p4_core.py::test_v2_cached_aggregation_cli_needs_only_external_approval_and_remaining_budget
+FAILED ml/tests/test_p4_core.py::test_user_relaxed_ram_policy_allows_six_gib_but_keeps_lower_guard[6-True]
+3 failed, 1 passed, 46 deselected in 0.25s

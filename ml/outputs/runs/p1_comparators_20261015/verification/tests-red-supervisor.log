@@ -1,0 +1,10 @@
+..................................F                                      [100%]
+=================================== FAILURES ===================================
+______________ test_supervisor_rejects_hpo_without_creating_a_run ______________
+ml/tests/test_comparator_pipeline.py:211: in test_supervisor_rejects_hpo_without_creating_a_run
+    assert 'unrecognized arguments: --hpo' in result.stderr
+E   assert 'unrecognized arguments: --hpo' in "/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_p1_smoke.py': [Errno 2] No such file or directory\n"
+E    +  where "/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_p1_smoke.py': [Errno 2] No such file or directory\n" = CompletedProcess(args=['/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python', '-B', '/Users/liu/Desk.../liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_p1_smoke.py': [Errno 2] No such file or directory\n").stderr
+=========================== short test summary info ============================
+FAILED ml/tests/test_comparator_pipeline.py::test_supervisor_rejects_hpo_without_creating_a_run
+1 failed, 34 passed in 5.25s

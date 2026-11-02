@@ -1,0 +1,278 @@
+{
+  "run_id": "p1_comparators_20261015",
+  "phase": "P1",
+  "status": "VERIFIED_PASS",
+  "used_wall_seconds": 26.110907416965347,
+  "attempts": [
+    {
+      "model": "resnet18",
+      "attempt": 1,
+      "status": "VERIFIED_PASS",
+      "source_hashes": {
+        "ml/experiments/comparator_common.py": "8ede7aa5a0604232ff5b3c54735bd9f2e5479b18a2e80e5091bfa2b07644805d",
+        "ml/experiments/run_p1_smoke.py": "2b7a2d2608ba0f59b2823fa8e8250508d70f517791c7fcc41fbcc08ee6dc5c79",
+        "ml/vision/train_resnet18.py": "78fcc7be98e05bca4ff861e99ebc91ac1ca0f0e770061a9f0488d104af2d1731",
+        "ml/telemetry/train_comparator.py": "dee70f78a76e3b8e8fb9a7cc3988190730537406fe15d46580efca899c53b634"
+      },
+      "fix_note": "",
+      "execution": {
+        "status": "VERIFIED_PASS",
+        "returncode": 0,
+        "wall_seconds": 21.757676250010263,
+        "timeout_seconds": 600,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/vision/train_resnet18.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/resnet18/attempt_01",
+          "--data-root",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-"
+        ],
+        "log": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/resnet18/attempt_01/execution.log"
+      },
+      "metrics": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/resnet18/attempt_01/validation_metrics.json",
+      "artifact_records": [
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/resnet18/attempt_01/class_report.json",
+          "sha256": "74d306cf66c66b3c2fd0699da35d44b7d332abcc19b83919630311a1cba813c8",
+          "bytes": 1256
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/resnet18/attempt_01/config.json",
+          "sha256": "ec19c2d97c2c209c39dcb1f7172737c7b0a0b5fcbd62104f41b83b565df69aa1",
+          "bytes": 3522
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/resnet18/attempt_01/execution.log",
+          "sha256": "c656ea929d43be022eadc9c871c811cfff192f67e479e2451895a49cdfad6e33",
+          "bytes": 96
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/resnet18/attempt_01/predictions_validation.csv",
+          "sha256": "d852bde738d3ce8141a728594334d97035a7a9e625f8adfb9ad91b81cd96700e",
+          "bytes": 25594
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/resnet18/attempt_01/resnet18_smoke.pt",
+          "sha256": "a0e82bdb55266554a821b4cf8142d2e049be7d21c71ec2afa81f32265bae9640",
+          "bytes": 44803723
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/resnet18/attempt_01/sample_manifest.csv",
+          "sha256": "be693422cf666316badc6388f44d5f59a3dbca59690133682eecc60b8a0cff15",
+          "bytes": 68675
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/resnet18/attempt_01/selection_log.json",
+          "sha256": "72759ae66a507fbc02dd5d2c75804ab53b53e8cd6f8262302ba8dc3ea0921091",
+          "bytes": 90
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/resnet18/attempt_01/timing_samples.csv",
+          "sha256": "2bd08c2f79f5262e3e5acbc876af573d0bf9c2207cd150061aafce5610e7bc74",
+          "bytes": 839
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/resnet18/attempt_01/trials.csv",
+          "sha256": "d8145246f7e8914099dbef11cf40e7dbf3d7bf702e525301cd8d0762abdd4684",
+          "bytes": 120
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/resnet18/attempt_01/validation_metrics.json",
+          "sha256": "e2621534e95caaa26d324a129a06c8e0a27c6b1b63806ba9af197e0af237f93d",
+          "bytes": 2560
+        }
+      ],
+      "formal_hpo_trials": 0
+    },
+    {
+      "model": "random_forest",
+      "attempt": 1,
+      "status": "VERIFIED_PASS",
+      "source_hashes": {
+        "ml/experiments/comparator_common.py": "8ede7aa5a0604232ff5b3c54735bd9f2e5479b18a2e80e5091bfa2b07644805d",
+        "ml/experiments/run_p1_smoke.py": "2b7a2d2608ba0f59b2823fa8e8250508d70f517791c7fcc41fbcc08ee6dc5c79",
+        "ml/vision/train_resnet18.py": "78fcc7be98e05bca4ff861e99ebc91ac1ca0f0e770061a9f0488d104af2d1731",
+        "ml/telemetry/train_comparator.py": "dee70f78a76e3b8e8fb9a7cc3988190730537406fe15d46580efca899c53b634"
+      },
+      "fix_note": "",
+      "execution": {
+        "status": "VERIFIED_PASS",
+        "returncode": 0,
+        "wall_seconds": 1.5419308750424534,
+        "timeout_seconds": 120,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_comparator.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/random_forest/attempt_01",
+          "--data-root",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-",
+          "--model",
+          "random_forest"
+        ],
+        "log": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/random_forest/attempt_01/execution.log"
+      },
+      "metrics": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/random_forest/attempt_01/validation_metrics.json",
+      "artifact_records": [
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/random_forest/attempt_01/class_report.json",
+          "sha256": "9024812cb5c42803e98fa2bdc53da252cc6f5d56554239b6020402da01ed8dde",
+          "bytes": 737
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/random_forest/attempt_01/config.json",
+          "sha256": "7be083e2937c2b37ee1650d4d286b7ca6e57535af1e1b2ca8df662e36292b4ae",
+          "bytes": 3056
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/random_forest/attempt_01/execution.log",
+          "sha256": "db93e359929f66c7124e860db4ce33aa1ed9aa06934db8a96a9e1e598ccb6ce3",
+          "bytes": 70
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/random_forest/attempt_01/predictions_validation.csv",
+          "sha256": "726ebc0e4d2fce55fd867b5aa508a70f2ade2143c7694f8060446806ee20cdd2",
+          "bytes": 10747
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/random_forest/attempt_01/random_forest_smoke.joblib",
+          "sha256": "3e8ef64f91446ac5a4978653008da75f04753753dc6a91b62ba3f5900691175c",
+          "bytes": 51274
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/random_forest/attempt_01/sample_manifest.csv",
+          "sha256": "88ddba6d94be992562fe5f9f19b3149dcd10ba1f03947ee82e226dffea52812d",
+          "bytes": 42445
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/random_forest/attempt_01/selection_log.json",
+          "sha256": "b70c1e13d8f7e83d69ab956c9f45fe44a5dd5fb9b39de2671dc434b015939662",
+          "bytes": 89
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/random_forest/attempt_01/timing_samples.csv",
+          "sha256": "3a9b37a561c3a567fd55ec1273e603e2a3cc9469dfe6cb5c226ae8027ce1e16f",
+          "bytes": 151
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/random_forest/attempt_01/train_statistics.json",
+          "sha256": "08f59bc0bf8da09ad1a3fc3d4ea83b85cc65942ae21faa5b2b9ba03d955ffb1a",
+          "bytes": 537
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/random_forest/attempt_01/trials.csv",
+          "sha256": "c5fd4590c66d0c5cf26a0c39cb7628ce20faf6d565cb1c68d7d10170a5c75499",
+          "bytes": 66
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/random_forest/attempt_01/validation_metrics.json",
+          "sha256": "98d1138e4d9454982265719ffbef7b38b89ba13a420a759c267555c07f7904fb",
+          "bytes": 1740
+        }
+      ],
+      "formal_hpo_trials": 0
+    },
+    {
+      "model": "logistic_regression",
+      "attempt": 1,
+      "status": "VERIFIED_PASS",
+      "source_hashes": {
+        "ml/experiments/comparator_common.py": "8ede7aa5a0604232ff5b3c54735bd9f2e5479b18a2e80e5091bfa2b07644805d",
+        "ml/experiments/run_p1_smoke.py": "2b7a2d2608ba0f59b2823fa8e8250508d70f517791c7fcc41fbcc08ee6dc5c79",
+        "ml/vision/train_resnet18.py": "78fcc7be98e05bca4ff861e99ebc91ac1ca0f0e770061a9f0488d104af2d1731",
+        "ml/telemetry/train_comparator.py": "dee70f78a76e3b8e8fb9a7cc3988190730537406fe15d46580efca899c53b634"
+      },
+      "fix_note": "",
+      "execution": {
+        "status": "VERIFIED_PASS",
+        "returncode": 0,
+        "wall_seconds": 1.4643225420149975,
+        "timeout_seconds": 120,
+        "command": [
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+          "-B",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_comparator.py",
+          "--run-dir",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/logistic_regression/attempt_01",
+          "--data-root",
+          "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-",
+          "--model",
+          "logistic_regression"
+        ],
+        "log": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/logistic_regression/attempt_01/execution.log"
+      },
+      "metrics": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/logistic_regression/attempt_01/validation_metrics.json",
+      "artifact_records": [
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/logistic_regression/attempt_01/class_report.json",
+          "sha256": "64e81f62ace9a5f0ba5f3054659cbbf9850ef8f1587e048928c6d3e4c6887ec1",
+          "bytes": 704
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/logistic_regression/attempt_01/config.json",
+          "sha256": "535fd435a5baed2304dbfce49c16087a2985293d2b25add4873de6e62308dec0",
+          "bytes": 2877
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/logistic_regression/attempt_01/execution.log",
+          "sha256": "bbb1623dd252a025e970c6d37defb82a46b67cca83440f584b033d513394d87d",
+          "bytes": 76
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/logistic_regression/attempt_01/logistic_regression_smoke.joblib",
+          "sha256": "0b5b3af85033a678770d4c57526a32fc7e6c47690a91edd58df01db652c475d1",
+          "bytes": 2449
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/logistic_regression/attempt_01/predictions_validation.csv",
+          "sha256": "10119f6470d02ff3c181c8091ebca093978d67360163a34d62bfda0bca109ecf",
+          "bytes": 13893
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/logistic_regression/attempt_01/sample_manifest.csv",
+          "sha256": "88ddba6d94be992562fe5f9f19b3149dcd10ba1f03947ee82e226dffea52812d",
+          "bytes": 42445
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/logistic_regression/attempt_01/selection_log.json",
+          "sha256": "b70c1e13d8f7e83d69ab956c9f45fe44a5dd5fb9b39de2671dc434b015939662",
+          "bytes": 89
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/logistic_regression/attempt_01/timing_samples.csv",
+          "sha256": "d7af2441b40346167620f41397e35789c171359a5bc03ecd842e27da3b29e0ab",
+          "bytes": 155
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/logistic_regression/attempt_01/train_statistics.json",
+          "sha256": "71c81f7c7dc547ac873f4a722a01b066f607dba00866b569a1ff055c4e4d1338",
+          "bytes": 965
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/logistic_regression/attempt_01/trials.csv",
+          "sha256": "c5fd4590c66d0c5cf26a0c39cb7628ce20faf6d565cb1c68d7d10170a5c75499",
+          "bytes": 66
+        },
+        {
+          "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/logistic_regression/attempt_01/validation_metrics.json",
+          "sha256": "78768f283b33450f34ef286829550cc88b9f37b68dd0aca0742469dfeafd8fca",
+          "bytes": 1746
+        }
+      ],
+      "formal_hpo_trials": 0
+    }
+  ],
+  "formal_hpo_trials": 0,
+  "test_predictions": 0,
+  "protected_hashes_after": {
+    "ml/outputs/vision/mobilenetv3_large_vision.pt": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+    "ml/outputs/vision/mobilenetv3_large_vision.onnx": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "ml/outputs/telemetry/xgb_telemetry.json": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+    "docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md": "0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0"
+  },
+  "rf_lr_identical_samples": true,
+  "finished_at": "2026-10-15T03:08:11.147418+08:00"
+}

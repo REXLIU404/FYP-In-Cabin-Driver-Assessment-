@@ -1,0 +1,14 @@
+evaluated 16/3657
+evaluated 336/3657
+evaluated 656/3657
+evaluated 976/3657
+evaluated 1296/3657
+evaluated 1616/3657
+evaluated 1936/3657
+evaluated 2256/3657
+evaluated 2576/3657
+evaluated 2896/3657
+evaluated 3216/3657
+evaluated 3536/3657
+{"evaluation": {"split": "test", "runtime": "onnxruntime_cpu", "checkpoint_sha256": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7", "onnx_sha256": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf", "preprocess": "PIL RGB, bilinear Resize(224,224), ToTensor, ImageNet mean/std", "seconds_including_decode_and_parity": 84.60726904199691, "samples": 3657, "accuracy": 0.8988241728192508, "macro_f1": 0.8746408408872671, "distraction_threshold": 0.5, "binary_distraction_recall": 0.972101673899566, "safe_false_positive_rate": 0.09048723897911833, "binary_brier_score": 0.029045164585113525}, "onnx_parity": {"samples": 128, "max_abs_logit_difference": 2.86102294921875e-05, "max_abs_probability_difference": 4.172325134277344e-06, "argmax_disagreements": 0, "sampling": "seed42 class-stratified", "classes": ["c0", "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9"]}}
+Saved docs/evidence/2026-09-28/vision-stratified-parity.json

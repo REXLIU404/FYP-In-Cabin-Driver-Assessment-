@@ -1,0 +1,100 @@
+{
+  "record_type": "TASK10A_CX0_USER_APPROVAL",
+  "status": "APPROVED",
+  "user_statement": "都批准",
+  "authority": "Direct human message in this chat, approving FUD-01 through FUD-06 from the immediately preceding CX-0 delivery.",
+  "recorded_at": "2026-10-26T12:56:55.974477+08:00",
+  "recorded_at_timezone": "Asia/Kuala_Lumpur",
+  "user_message_timestamp": null,
+  "observed_live_head": "4ca3c69e6fae38c76635b360754ba0468755d0dd",
+  "original_preflight_head": "7e64c4d0632923d7bb90c1c8f6b7cb757ca5ea65",
+  "approved_decisions": [
+    {
+      "id": "FUD-01",
+      "status": "APPROVED",
+      "subject": "Stage-1 三模型数值容差",
+      "proposal": "每个有参照的集合分别要求 max_abs_prob_delta <= 1e-4 且 argmax_agreement == 1.0；200 帧 per_class_mode_equals_label 单独评估；超限如实失败，不事后放宽。",
+      "source": "分析 §3 U-1；tolerance_predeclaration.md",
+      "approved": true,
+      "approved_by": "user",
+      "approval_recorded_at": "2026-10-26T12:56:55.974477+08:00"
+    },
+    {
+      "id": "FUD-02",
+      "status": "APPROVED",
+      "subject": "Stage-2 输入及顺序",
+      "proposal": "stable200：c0..c9 各类 filename 升序取 validation 前20，按10个连续类别块运行；P4A100/211只作历史附录。",
+      "source": "分析 §3 U-3、C-9",
+      "approved": true,
+      "approved_by": "user",
+      "approval_recorded_at": "2026-10-26T12:56:55.974477+08:00"
+    },
+    {
+      "id": "FUD-03",
+      "status": "APPROVED",
+      "subject": "Stage-2 时间与观测策略",
+      "proposal": "固定UTC合成起点2026-10-25T00:00:00Z，间隔100ms；200窗口i=0..199；同一epoch=1，frame.index=i+1，telemetry_seq=i+1，两种源时间均等于该窗口注入时间。",
+      "source": "分析 C-9；本草案提议",
+      "approved": true,
+      "approved_by": "user",
+      "approval_recorded_at": "2026-10-26T12:56:55.974477+08:00"
+    },
+    {
+      "id": "FUD-04",
+      "status": "APPROVED",
+      "subject": "固定遥测配对",
+      "proposal": "所有窗口使用 prepared_sessions/session_001/telemetry.csv 第一数据行的8项原始特征；只更新合成时间与seq，运行稳定XGB，不采用CSV中的预设概率。",
+      "source": "分析 C-9；本草案提议",
+      "approved": true,
+      "approved_by": "user",
+      "approval_recorded_at": "2026-10-26T12:56:55.974477+08:00"
+    },
+    {
+      "id": "FUD-05",
+      "status": "APPROVED",
+      "subject": "Stage-2 协议整体批准",
+      "proposal": "批准正式协议及其sha256后才允许runner运行；每模型一子进程+独立临时SQLite、真实provider+TestClient /infer、固定融合配置、描述性比较，Stage5由用户作替换决定。",
+      "source": "计划 Phase2 Step1；规格 Stage2；本草案",
+      "approved": true,
+      "approved_by": "user",
+      "approval_recorded_at": "2026-10-26T12:56:55.974477+08:00"
+    },
+    {
+      "id": "FUD-06",
+      "status": "APPROVED",
+      "subject": "Stage-3 规格措辞更正",
+      "proposal": "将规格中“延迟JSON与perf02同构”更正为perf01；perf02用于日志完整性。该项属于后续Stage3，不阻断Phase0依赖预检。",
+      "source": "分析 C-6、§3 U-2；规格由用户维护",
+      "approved": true,
+      "approved_by": "user",
+      "approval_recorded_at": "2026-10-26T12:56:55.974477+08:00"
+    }
+  ],
+  "approved_protocol": {
+    "file": "comparison_protocol.approved.json",
+    "official_destination": "docs/fyp2/task10a/comparison_protocol.json",
+    "sha256": "b63050221c467ac7ed1ced0ae5e4af95ca734a7ba15fe4d7af94c948074c988f",
+    "methodology_changed_from_presented_draft": false,
+    "status_only_changes": "Approval metadata and gate status recorded; input, timing, identity, telemetry, configuration, comparison quantities and descriptive decision policy unchanged."
+  },
+  "presented_protocol_draft": {
+    "file": "comparison_protocol.draft.json",
+    "sha256": "9ad6f312fed402afae2da5cc77d7b8102770d0d70dca03900943fd7821a9000a",
+    "preserved_unchanged": true
+  },
+  "approved_tolerance": {
+    "file": "tolerance_predeclaration.md",
+    "sha256": "61e3057980d0fd5ac7d697b2a198c1fa7e4c657a3d83b0c1094e37e6616e0666",
+    "max_abs_prob_delta": 0.0001,
+    "argmax_agreement": 1.0,
+    "effective": true
+  },
+  "original_tolerance": {
+    "file": "tolerance_predeclaration.preapproval_20261026.md",
+    "sha256": "0743274d2c86d139b941597036e8a504a4e66e59eb1868c963a541cd053d295e"
+  },
+  "preflight_original_before_approval_appendix_sha256": "e35b0e87fff2ba5320ebbf2e593c63982b66bfdcc3a4e275f3969a2c7282c4d2",
+  "scope_boundary": "All six choices approved; no certification of Stage-1 implementation/audit, no Stage-5 release choice, no new training/HPO/export/benchmark, no authorization to modify tracked files in this CX-0 role.",
+  "handoff": "Claude publishes the approved protocol byte-for-byte with this approval record; DS-1 uses the approved tolerance. Existing U-1 and Stage-5 gates remain.",
+  "execution": "No provider forward or comparison runner executed by CX-0."
+}

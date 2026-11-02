@@ -1,0 +1,39 @@
+{
+  "id": "BUILD",
+  "argv": [
+    "npm",
+    "run",
+    "build"
+  ],
+  "cwd": "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd/frontend-check",
+  "start_utc": "2026-10-09T11:45:40.069510+00:00",
+  "duration_s": 1.671,
+  "timeout_s": 120,
+  "exit_code": 1,
+  "environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "TMPDIR": "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd",
+    "PYTHONPATH": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/backend",
+    "DRA_DATABASE_URL": "sqlite:////var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd/fallback.db",
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "VECLIB_MAXIMUM_THREADS": "2"
+  },
+  "log": "evidence/BUILD.log"
+}
+
+
+> fyp-in-cabin-driver-assessment@0.1.0 build
+> tsc -b && vite build
+
+failed to load config from /private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd/frontend-check/vite.config.ts
+error during build:
+Error: EPERM: operation not permitted, open '/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd/frontend-check/node_modules/.vite-temp/vite.config.ts.timestamp-1791546341726-08435d133b656.mjs'
+    at async open (node:internal/fs/promises:633:25)
+    at async Object.writeFile (node:internal/fs/promises:1207:14)
+    at async loadConfigFromBundledFile (file:///Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/node_modules/vite/dist/node/chunks/dep-Dq2t6Dq0.js:49483:5)
+    at async bundleAndLoadConfigFile (file:///Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/node_modules/vite/dist/node/chunks/dep-Dq2t6Dq0.js:49328:22)
+    at async loadConfigFromFile (file:///Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/node_modules/vite/dist/node/chunks/dep-Dq2t6Dq0.js:49291:44)
+    at async resolveConfig (file:///Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/node_modules/vite/dist/node/chunks/dep-Dq2t6Dq0.js:48786:24)
+    at async createBuilder (file:///Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/node_modules/vite/dist/node/chunks/dep-Dq2t6Dq0.js:46761:18)
+    at async CAC.<anonymous> (file:///Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/node_modules/vite/dist/node/cli.js:862:23)

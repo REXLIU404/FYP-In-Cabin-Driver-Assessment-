@@ -1,0 +1,36 @@
+{
+  "executed_utc": "2026-10-10T03:01:45.692038+00:00",
+  "command": "python3 /tmp/fyp2_validate_documents.py",
+  "exit_code": 0,
+  "required_documents": [
+    "00_AUDIT_EXECUTIVE_SUMMARY.md",
+    "01_MODULE_AND_ARCHITECTURE_INVENTORY.md",
+    "02_TEST_CASE_INVENTORY_AND_CRITIQUE.md",
+    "03_EVALUATION_COVERAGE_MATRIX.md",
+    "04_ML_COMPARISON_AND_TUNING_AUDIT.md",
+    "05_RUBRIC_TRACEABILITY_AND_REPORT_MAP.md",
+    "06_WEEK7_CRITICAL_PATH_AND_ACTION_PLAN.md",
+    "07_EVIDENCE_MANIFEST.md",
+    "08_OPEN_DECISIONS_FOR_SUPERVISOR.md"
+  ],
+  "review_scope": "Substantive audit mapped in07; automated checks verify existence, bounded refs, links, tables, result/schema counts and unchanged source. Structure checks alone are not project acceptance.",
+  "source_files_checked": 144,
+  "source_references_checked": 74,
+  "local_links_checked": 46,
+  "test_cases_checked": 60,
+  "coverage": {
+    "all_nine_named_master_outputs": true,
+    "source_scope_explicit": true,
+    "all_weekly_gates": true,
+    "five_required_models": true,
+    "all_evaluation_categories": true,
+    "minimum_test_prefixes": true,
+    "report_claim_matrix": true,
+    "master_completion_map": true,
+    "source_snapshot_files_unchanged": true,
+    "docs_only_changes": true
+  },
+  "errors": [],
+  "application_source_changes": [],
+  "git_status": "?? docs/fyp2/"
+}

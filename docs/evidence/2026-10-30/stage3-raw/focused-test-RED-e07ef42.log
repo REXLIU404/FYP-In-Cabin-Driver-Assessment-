@@ -1,0 +1,4 @@
+# 2026-10-30T06:32:24Z the test file of the fix against scripts/perf01.py of e07ef42 (before 1cd5660): RED expected
+E       KeyError: 'raw_timings'
+tests/test_perf_scripts.py:159: KeyError
+1 failed, 28 deselected in 0.24s

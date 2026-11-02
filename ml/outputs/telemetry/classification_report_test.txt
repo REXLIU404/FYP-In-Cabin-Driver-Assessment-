@@ -1,0 +1,9 @@
+              precision    recall  f1-score   support
+
+        Safe     0.9993    1.0000    0.9997      1500
+  Aggressive     0.9987    1.0000    0.9993      1500
+  Distracted     1.0000    0.9980    0.9990      1500
+
+    accuracy                         0.9993      4500
+   macro avg     0.9993    0.9993    0.9993      4500
+weighted avg     0.9993    0.9993    0.9993      4500

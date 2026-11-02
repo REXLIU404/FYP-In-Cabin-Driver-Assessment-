@@ -1,0 +1,15 @@
+### Ran Playwright code
+```js
+await (async (page) => {
+  const response = await page.waitForResponse(r => r.url().endsWith("/infer") && r.status() === 201);
+  const record = await response.json();
+  if (record.provenance.provider !== "MobileNetV3ONNX+XGBoost" || record.provenance.telemetry_source !== "prepared_replay" || record.provenance.vision_source !== "camera_frame") throw new Error("Incorrect runtime sources");
+  if (record.visual_top_classes.length !== 10 || record.telemetry_behavior_classes.length !== 3) throw new Error("Missing model classes");
+  await page.screenshot({path: "output/playwright/live-runtime.png", fullPage: true});
+  await page.getByRole("button", {name: "Signal Inspector", exact: true}).click();
+  const next = await (await page.waitForResponse(r => r.url().endsWith("/infer") && r.status() === 201)).json();
+  if (next.provenance.vision_source !== "camera_frame") throw new Error("Camera stopped when changing view");
+  await page.getByRole("button", {name: "Pause", exact: true}).click();
+  console.log(JSON.stringify({check: "real_models_and_camera_survive_view_switch", record, next_window_id: next.window_id}));
+})(page);
+```

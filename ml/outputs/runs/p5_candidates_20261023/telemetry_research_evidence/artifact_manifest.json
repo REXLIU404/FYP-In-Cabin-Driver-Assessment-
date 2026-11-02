@@ -1,0 +1,46 @@
+{
+  "files": {
+    "class_report.json": {
+      "bytes": 746,
+      "sha256": "b699e91e86fe09ed52e203868b9c77de3d22dd9920b823695c2cbb99b2f3c4e9"
+    },
+    "config.json": {
+      "bytes": 3089,
+      "sha256": "d2d75015708981b3bad4efcfb6cbe0d8caa03e897789bb30abc65add6f40ee0d"
+    },
+    "evaluation_metrics.json": {
+      "bytes": 12670,
+      "sha256": "3f4512d04839c381916d3ed700f62289c1d9bed2ba7bd28fd3c8cd8f6765e3b0"
+    },
+    "frozen_selection_log.json": {
+      "bytes": 2260,
+      "sha256": "591aadf2b32d8252551c943dbbf7c9f094cad1d8bab43952759f0edc86ccbebd"
+    },
+    "predictions_test_clean.csv": {
+      "bytes": 1301130,
+      "sha256": "d06e76ff69f725e4355396e5e39a2fd07869cc7f71b8ea7d790f54bd9f27816d"
+    },
+    "predictions_validation.csv": {
+      "bytes": 598219,
+      "sha256": "cd9f38a160c129095f876b06a55759493769c13d7d2908b718b79496bb25c6d9"
+    },
+    "selection_log.json": {
+      "bytes": 184,
+      "sha256": "3171dccbe79a79cdcbbdcbb0bb275141b523574a20136b85642ec4a26db03796"
+    },
+    "source_hashes.json": {
+      "bytes": 2495,
+      "sha256": "568e50bcf9e17457a6bb5447d37961a435402450bfc26bbd6af0d58aa2a4e6e7"
+    },
+    "train_statistics.json": {
+      "bytes": 622,
+      "sha256": "381160e3a4acf914565b23e1ac1c5d522b591ba6b4fe06126744ad8763b7038a"
+    },
+    "validation_metrics.json": {
+      "bytes": 1550,
+      "sha256": "ea0d3a62966ac1ad957b286b68be0a733fa982c77f97b4fae8dbfbed90c282d2"
+    }
+  },
+  "schema": 1,
+  "scope": "Self-contained candidate delivery; all file references here are relative to this directory."
+}

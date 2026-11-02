@@ -1,0 +1,37 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.3, pytest-9.0.3, pluggy-1.6.0 -- /Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python
+rootdir: /Users/liu/Desktop/FYP2-Live-System/backend
+plugins: anyio-4.13.0
+collecting ... collected 12 items
+
+tests/test_live_e2e.py::TestStLiveE2E01::test_01_the_run_completed_and_every_request_was_a_distinct_stored_window PASSED
+tests/test_live_e2e.py::TestStLiveE2E01::test_02_contract PASSED
+tests/test_live_e2e.py::TestStLiveE2E01::test_03_r10_on_the_wire PASSED
+tests/test_live_e2e.py::TestStLiveE2E01::test_04_five_homes_agree_on_every_field_of_every_window PASSED
+tests/test_live_e2e.py::TestStLiveE2E01::test_05_the_latest_panel_shows_risk_latest PASSED
+tests/test_live_e2e.py::TestStLiveE2E01::test_06_the_five_views_open_and_show_what_the_backend_recorded PASSED
+tests/test_live_e2e.py::TestStLiveE2E01::test_07_a_flag_set_in_the_ui_reaches_the_database_the_api_and_both_exports PASSED
+tests/test_live_e2e.py::TestStLiveE2E01::test_08_no_console_errors_and_nothing_failed_on_the_server PASSED
+tests/test_live_e2e.py::test_e2_transport_faults_stop_the_loop_and_retry_resumes_the_same_session PASSED
+tests/test_live_e2e.py::test_e2_a_failed_new_session_makes_retry_create_a_new_session PASSED
+tests/test_live_e2e.py::test_e2_an_unexpected_camera_loss_and_stop_camera_read_differently_and_neither_stops_the_loop PASSED
+tests/test_live_e2e.py::test_e3_rvfc_behaviour_on_the_fake_camera_is_recorded E3-MEASUREMENT {"camera": "--use-fake-device-for-media-stream (default pattern generator)", "captured_at_source_in_requests": {"capture_time": 60}, "chromium": "148.0.7778.96", "drawImage_ms": {"max": 0.9, "median": 0.4, "min": 0.3, "n": 121, "p95": 0.6}, "frame_age_when_request_reached_the_tap_ms": {"max": 62.923, "median": 33.68, "min": 15.959, "n": 60, "p95": 58.258}, "image_base64_chars": {"max": 15103.0, "median": 12565.0, "min": 10671.0, "n": 60, "p95": 15043.0}, "loop_timing_buffer_ms": {"capture_to_send": {"max": 1, "median": 0.0, "min": 0, "n": 60, "p95": 0}, "network_including_server": {"max": 29, "median": 24.0, "min": 18, "n": 60, "p95": 27}, "render": {"max": 13, "median": 3.0, "min": 3, "n": 60, "p95": 4}, "windows": 60}, "per_callback_ms": {"max": 2.6, "median": 2, "min": 1.6, "n": 121, "p95": 2.4}, "requests_answered": 60, "requests_with_vision_frame": 60, "rvfc": {"callbacks": 121, "callbacks_on_a_video_in_the_document": 121, "captureTime_absent": 0, "captureTime_present": 121, "capture_to_callback_lag_ms": {"max": 15.7, "median": 11.9, "min": 0.4, "n": 121, "p95": 14.4}, "presented_frames_first_last": [2, 122], "rate_hz": 19.96, "registered_on_a_video_in_the_document": [true, true, true], "registrations": 122, "span_s": 6.012, "supported": true}, "toDataURL_ms": {"max": 2.1, "median": 1.5, "min": 1.2, "n": 121, "p95": 1.8}, "vision_obs_in_responses": {"new": 60}}
+PASSED
+
+============================== slowest durations ===============================
+13.79s setup    tests/test_live_e2e.py::TestStLiveE2E01::test_01_the_run_completed_and_every_request_was_a_distinct_stored_window
+7.21s call     tests/test_live_e2e.py::test_e3_rvfc_behaviour_on_the_fake_camera_is_recorded
+6.97s call     tests/test_live_e2e.py::test_e2_transport_faults_stop_the_loop_and_retry_resumes_the_same_session
+2.68s call     tests/test_live_e2e.py::TestStLiveE2E01::test_06_the_five_views_open_and_show_what_the_backend_recorded
+2.38s call     tests/test_live_e2e.py::test_e2_an_unexpected_camera_loss_and_stop_camera_read_differently_and_neither_stops_the_loop
+2.29s call     tests/test_live_e2e.py::test_e2_a_failed_new_session_makes_retry_create_a_new_session
+0.92s call     tests/test_live_e2e.py::TestStLiveE2E01::test_07_a_flag_set_in_the_ui_reaches_the_database_the_api_and_both_exports
+0.25s teardown tests/test_live_e2e.py::test_e3_rvfc_behaviour_on_the_fake_camera_is_recorded
+0.06s call     tests/test_live_e2e.py::TestStLiveE2E01::test_05_the_latest_panel_shows_risk_latest
+0.06s call     tests/test_live_e2e.py::TestStLiveE2E01::test_04_five_homes_agree_on_every_field_of_every_window
+0.04s call     tests/test_live_e2e.py::TestStLiveE2E01::test_02_contract
+0.03s teardown tests/test_live_e2e.py::TestStLiveE2E01::test_08_no_console_errors_and_nothing_failed_on_the_server
+
+(24 durations < 0.005s hidden.  Use -vv to show these durations.)
+============================= 12 passed in 36.77s ==============================
+exit 0

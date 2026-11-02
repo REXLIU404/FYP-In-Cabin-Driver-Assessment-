@@ -1,0 +1,97 @@
+{
+  "camera": "--use-fake-device-for-media-stream (default pattern generator)",
+  "captured_at_source_in_requests": {
+    "capture_time": 60
+  },
+  "chromium": "148.0.7778.96",
+  "drawImage_ms": {
+    "max": 1.6,
+    "median": 0.5,
+    "min": 0.3,
+    "n": 121,
+    "p95": 1.2
+  },
+  "frame_age_when_request_reached_the_tap_ms": {
+    "max": 61.956,
+    "median": 31.924,
+    "min": 9.633,
+    "n": 60,
+    "p95": 53.17
+  },
+  "image_base64_chars": {
+    "max": 15103.0,
+    "median": 12745.0,
+    "min": 10671.0,
+    "n": 60,
+    "p95": 15043.0
+  },
+  "loop_timing_buffer_ms": {
+    "capture_to_send": {
+      "max": 1,
+      "median": 0.0,
+      "min": 0,
+      "n": 60,
+      "p95": 0
+    },
+    "network_including_server": {
+      "max": 53,
+      "median": 28.0,
+      "min": 19,
+      "n": 60,
+      "p95": 39
+    },
+    "render": {
+      "max": 17,
+      "median": 4.0,
+      "min": 3,
+      "n": 60,
+      "p95": 7
+    },
+    "windows": 60
+  },
+  "per_callback_ms": {
+    "max": 5.2,
+    "median": 2,
+    "min": 1.4,
+    "n": 121,
+    "p95": 3.2
+  },
+  "requests_answered": 60,
+  "requests_with_vision_frame": 60,
+  "rvfc": {
+    "callbacks": 121,
+    "callbacks_on_a_video_in_the_document": 121,
+    "captureTime_absent": 0,
+    "captureTime_present": 121,
+    "capture_to_callback_lag_ms": {
+      "max": 28.9,
+      "median": 4.9,
+      "min": 0.6,
+      "n": 121,
+      "p95": 6.4
+    },
+    "presented_frames_first_last": [
+      2,
+      122
+    ],
+    "rate_hz": 20.0,
+    "registered_on_a_video_in_the_document": [
+      true,
+      true,
+      true
+    ],
+    "registrations": 122,
+    "span_s": 6.0,
+    "supported": true
+  },
+  "toDataURL_ms": {
+    "max": 2.9,
+    "median": 1.5,
+    "min": 1.1,
+    "n": 121,
+    "p95": 2.1
+  },
+  "vision_obs_in_responses": {
+    "new": 60
+  }
+}

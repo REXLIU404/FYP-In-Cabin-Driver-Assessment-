@@ -1,0 +1,393 @@
+{
+  "environment": {
+    "PIL": "12.2.0",
+    "numpy": "2.4.6",
+    "onnxruntime": "1.26.0",
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "python": "3.13.3",
+    "xgboost": "3.2.0"
+  },
+  "model": {
+    "onnx_sha256_actual": "5e226722e0712824c78aa0976afa6fa5b8dc6100b147a7f523a09048171d8cf3",
+    "onnx_sha256_expected": "5e226722e0712824c78aa0976afa6fa5b8dc6100b147a7f523a09048171d8cf3",
+    "onnx_sha256_match": true,
+    "preprocess_identity": "rgb_resize_224_bilinear_no_crop_div255_imagenet"
+  },
+  "model_id": "resnet18_search004_seed42",
+  "parity100_reference_comparison": {
+    "comparison": {
+      "argmax_agreement": 1.0,
+      "argmax_mismatches": [],
+      "max_abs_prob_delta": 1.539635465785949e-07,
+      "missing_fresh": [],
+      "missing_reference": [],
+      "n_compared": 100,
+      "pass_numeric": true,
+      "worst": {
+        "fresh_argmax": 6,
+        "fresh_image_sha256": "20973dbe535fa15a5afc142b5b2601adf61291df6a38c35fedfb72f9b718ad74",
+        "fresh_probs": [
+          1.0519734132685699e-05,
+          3.6937057302566245e-05,
+          0.00018310343148186803,
+          4.2528608901193365e-05,
+          1.1703880772984121e-05,
+          1.887289181468077e-05,
+          0.9951753616333008,
+          0.00027271066210232675,
+          0.004228788893669844,
+          1.931954648171086e-05
+        ],
+        "max_delta": 1.539635465785949e-07,
+        "per_class_deltas": [
+          1.6930677424132267e-12,
+          1.0207754434744202e-11,
+          1.903797548752882e-11,
+          1.5424522383899585e-11,
+          7.186435001837782e-12,
+          2.4549862332910385e-12,
+          1.539635465785949e-07,
+          2.891810689563748e-11,
+          2.590923023002012e-10,
+          2.3334025107903025e-12
+        ],
+        "reference_argmax": 6,
+        "reference_probs": [
+          1.0519735825753441e-05,
+          3.693706751032068e-05,
+          0.00018310341244389254,
+          4.252859347667098e-05,
+          1.1703887959419123e-05,
+          1.8872889359694537e-05,
+          0.9951755155968474,
+          0.00027271063318421986,
+          0.004228788634577541,
+          1.931954881511337e-05
+        ],
+        "source_id": "vision-v1:c6/img_57549.jpg",
+        "top1_top2_margin_fresh": 0.9909465727396309,
+        "top1_top2_margin_reference": 0.9909467269622698
+      }
+    },
+    "reference": {
+      "expected_sha256": "3885dbf8b87120382f0663f1aaad84d715f2c59cbb49f63006740e002c8c8cf9",
+      "kind": "p4a_ort_logits",
+      "n": 100,
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p4a_20261021/parity_RN-HPO42.json",
+      "sha256": "3885dbf8b87120382f0663f1aaad84d715f2c59cbb49f63006740e002c8c8cf9",
+      "sha256_match": true
+    }
+  },
+  "preprocess_rejected": {},
+  "probability_sanity_problems": {},
+  "problems": [],
+  "provider": {
+    "name": "VisionCandidateONNX+XGBoost",
+    "vision": {
+      "architecture": "resnet18",
+      "classes": [
+        "safe_driving",
+        "texting_right",
+        "talking_phone_right",
+        "texting_left",
+        "talking_phone_left",
+        "operating_radio",
+        "drinking",
+        "reaching_behind",
+        "hair_makeup",
+        "talking_to_passenger"
+      ],
+      "input": "RGB NCHW float32 224x224",
+      "mean": [
+        0.485,
+        0.456,
+        0.406
+      ],
+      "model_id": "resnet18_search004_seed42",
+      "run_id": "p5_resnet18_search004_seed42_20261023",
+      "runtime": "onnxruntime_cpu",
+      "sha256": "5e226722e0712824c78aa0976afa6fa5b8dc6100b147a7f523a09048171d8cf3",
+      "source": "candidate:p5_resnet18_search004_seed42_20261023",
+      "std": [
+        0.229,
+        0.224,
+        0.225
+      ]
+    }
+  },
+  "stable200_behavior": {
+    "all_unique_modes_equal_label": true,
+    "missing_source_ids": [],
+    "n_behavior": 200,
+    "n_missing": 0,
+    "per_class": {
+      "c0": {
+        "counts": [
+          16,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          2,
+          1
+        ],
+        "n": 20,
+        "pass": true,
+        "winners": [
+          0
+        ]
+      },
+      "c1": {
+        "counts": [
+          0,
+          20,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "n": 20,
+        "pass": true,
+        "winners": [
+          1
+        ]
+      },
+      "c2": {
+        "counts": [
+          0,
+          0,
+          20,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "n": 20,
+        "pass": true,
+        "winners": [
+          2
+        ]
+      },
+      "c3": {
+        "counts": [
+          0,
+          0,
+          0,
+          20,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "n": 20,
+        "pass": true,
+        "winners": [
+          3
+        ]
+      },
+      "c4": {
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          19,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        "n": 20,
+        "pass": true,
+        "winners": [
+          4
+        ]
+      },
+      "c5": {
+        "counts": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          19,
+          0,
+          0,
+          0,
+          0
+        ],
+        "n": 20,
+        "pass": true,
+        "winners": [
+          5
+        ]
+      },
+      "c6": {
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          20,
+          0,
+          0,
+          0
+        ],
+        "n": 20,
+        "pass": true,
+        "winners": [
+          6
+        ]
+      },
+      "c7": {
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          18,
+          2,
+          0
+        ],
+        "n": 20,
+        "pass": true,
+        "winners": [
+          7
+        ]
+      },
+      "c8": {
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          20,
+          0
+        ],
+        "n": 20,
+        "pass": true,
+        "winners": [
+          8
+        ]
+      },
+      "c9": {
+        "counts": [
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          17
+        ],
+        "n": 20,
+        "pass": true,
+        "winners": [
+          9
+        ]
+      }
+    }
+  },
+  "stable200_pytorch_comparison": {
+    "comparison": {
+      "argmax_agreement": 1.0,
+      "argmax_mismatches": [],
+      "max_abs_prob_delta": 1.478684234612615e-06,
+      "missing_fresh": [],
+      "missing_reference": [],
+      "n_compared": 200,
+      "pass_numeric": true,
+      "worst": {
+        "fresh_argmax": 2,
+        "fresh_image_sha256": "ac9f2f3ea1935132100ab94fd94b8fc669c8a9b3c61c065dca129185ebe5768f",
+        "fresh_probs": [
+          0.0002285549562657252,
+          0.0011732151033356786,
+          0.7691888213157654,
+          0.0003011502849403769,
+          0.00026562518905848265,
+          0.0003129671677015722,
+          0.22228145599365234,
+          0.0005129306809976697,
+          0.005056485068053007,
+          0.0006787765887565911
+        ],
+        "max_delta": 1.478684234612615e-06,
+        "per_class_deltas": [
+          2.0626572520311692e-10,
+          3.3356785215932216e-12,
+          1.478684234612615e-06,
+          5.549403768543432e-10,
+          4.890584826217417e-10,
+          7.677015721806006e-10,
+          1.4759936523556227e-06,
+          7.80997669747735e-10,
+          1.906805300721376e-08,
+          3.4875659109777357e-10
+        ],
+        "reference_argmax": 2,
+        "reference_probs": [
+          0.00022855475,
+          0.0011732151,
+          0.7691903,
+          0.00030114973,
+          0.0002656247,
+          0.0003129664,
+          0.22227998,
+          0.0005129299,
+          0.005056466,
+          0.00067877624
+        ],
+        "source_id": "vision-v1:c2/img_101016.jpg",
+        "top1_top2_margin_fresh": 0.546907365322113,
+        "top1_top2_margin_reference": 0.5469103200000001
+      }
+    },
+    "reference": {
+      "expected_sha256": "c7d233c813a01d54ff286a836e5c6cab069558b52a9ee547953052fc92a0787d",
+      "kind": "pytorch_csv_probabilities",
+      "n": 200,
+      "path": "/Users/liu/Desktop/FYP2-DeepSeek/ml/outputs/candidates/p5_resnet18_search004_seed42_20261023/validation/stable200_saved_predictions.csv",
+      "sha256": "c7d233c813a01d54ff286a836e5c6cab069558b52a9ee547953052fc92a0787d",
+      "sha256_match": true
+    }
+  },
+  "status": "PASS",
+  "worker": {
+    "command": [
+      "/Users/liu/Desktop/FYP2-Live-System/.venv/bin/python",
+      "/Users/liu/Desktop/FYP2-DeepSeek/scripts/verify_stable200.py",
+      "--worker",
+      "/Users/liu/Desktop/FYP2-DeepSeek/docs/evidence/2026-10-26/stable200/worker_spec_resnet18_search004_seed42.json",
+      "/Users/liu/Desktop/FYP2-DeepSeek/docs/evidence/2026-10-26/stable200/worker_out_resnet18_search004_seed42.json"
+    ],
+    "duration_s": 17.03,
+    "exit_code": 0,
+    "stderr_tail": []
+  }
+}

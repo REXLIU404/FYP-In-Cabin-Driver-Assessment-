@@ -1,0 +1,229 @@
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF                                          [100%]
+=================================== FAILURES ===================================
+____________ test_budget_gate_rejects_expansion[resnet18-override0] ____________
+ml/tests/test_comparator_pipeline.py:24: in test_budget_gate_rejects_expansion
+    common.validate_smoke_budget(model, override)
+ml/experiments/comparator_common.py:9: in validate_smoke_budget
+    raise NotImplementedError
+E   NotImplementedError
+____________ test_budget_gate_rejects_expansion[resnet18-override1] ____________
+ml/tests/test_comparator_pipeline.py:24: in test_budget_gate_rejects_expansion
+    common.validate_smoke_budget(model, override)
+ml/experiments/comparator_common.py:9: in validate_smoke_budget
+    raise NotImplementedError
+E   NotImplementedError
+____________ test_budget_gate_rejects_expansion[resnet18-override2] ____________
+ml/tests/test_comparator_pipeline.py:24: in test_budget_gate_rejects_expansion
+    common.validate_smoke_budget(model, override)
+ml/experiments/comparator_common.py:9: in validate_smoke_budget
+    raise NotImplementedError
+E   NotImplementedError
+____________ test_budget_gate_rejects_expansion[resnet18-override3] ____________
+ml/tests/test_comparator_pipeline.py:24: in test_budget_gate_rejects_expansion
+    common.validate_smoke_budget(model, override)
+ml/experiments/comparator_common.py:9: in validate_smoke_budget
+    raise NotImplementedError
+E   NotImplementedError
+_________ test_budget_gate_rejects_expansion[random_forest-override4] __________
+ml/tests/test_comparator_pipeline.py:24: in test_budget_gate_rejects_expansion
+    common.validate_smoke_budget(model, override)
+ml/experiments/comparator_common.py:9: in validate_smoke_budget
+    raise NotImplementedError
+E   NotImplementedError
+_________ test_budget_gate_rejects_expansion[random_forest-override5] __________
+ml/tests/test_comparator_pipeline.py:24: in test_budget_gate_rejects_expansion
+    common.validate_smoke_budget(model, override)
+ml/experiments/comparator_common.py:9: in validate_smoke_budget
+    raise NotImplementedError
+E   NotImplementedError
+______ test_budget_gate_rejects_expansion[logistic_regression-override6] _______
+ml/tests/test_comparator_pipeline.py:24: in test_budget_gate_rejects_expansion
+    common.validate_smoke_budget(model, override)
+ml/experiments/comparator_common.py:9: in validate_smoke_budget
+    raise NotImplementedError
+E   NotImplementedError
+_________ test_stratification_preserves_each_class_and_is_reproducible _________
+ml/tests/test_comparator_pipeline.py:30: in test_stratification_preserves_each_class_and_is_reproducible
+    sample = common.stratified_sample(frame, 'class_id', 200, 42, [f'c{i}' for i in range(10)])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ml/experiments/comparator_common.py:13: in stratified_sample
+    raise NotImplementedError
+E   NotImplementedError
+____ test_sampling_rejects_missing_class_instead_of_silently_undersampling _____
+ml/tests/test_comparator_pipeline.py:41: in test_sampling_rejects_missing_class_instead_of_silently_undersampling
+    common.stratified_sample(frame, 'label', 9, 42, ['Safe', 'Aggressive', 'Distracted'])
+ml/experiments/comparator_common.py:13: in stratified_sample
+    raise NotImplementedError
+E   NotImplementedError
+_ test_validation_extremes_do_not_refit_training_median_or_scaler[random_forest] _
+ml/tests/test_comparator_pipeline.py:46: in test_validation_extremes_do_not_refit_training_median_or_scaler
+    pipeline = common.telemetry_pipeline(model)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ml/experiments/comparator_common.py:17: in telemetry_pipeline
+    raise NotImplementedError
+E   NotImplementedError
+_ test_validation_extremes_do_not_refit_training_median_or_scaler[logistic_regression] _
+ml/tests/test_comparator_pipeline.py:46: in test_validation_extremes_do_not_refit_training_median_or_scaler
+    pipeline = common.telemetry_pipeline(model)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ml/experiments/comparator_common.py:17: in telemetry_pipeline
+    raise NotImplementedError
+E   NotImplementedError
+___________ test_evaluation_transform_has_rgb_224_imagenet_contract ____________
+ml/tests/test_comparator_pipeline.py:63: in test_evaluation_transform_has_rgb_224_imagenet_contract
+    tensor = common.vision_transforms()(image)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+ml/experiments/comparator_common.py:25: in vision_transforms
+    raise NotImplementedError
+E   NotImplementedError
+_ test_probability_contract_rejects_wrong_shape_nonfinite_order_or_sum[probabilities0-actual_classes0] _
+ml/tests/test_comparator_pipeline.py:77: in test_probability_contract_rejects_wrong_shape_nonfinite_order_or_sum
+    common.validate_probabilities(np.array(probabilities), 1, ['Safe', 'Aggressive', 'Distracted'], actual_classes)
+ml/experiments/comparator_common.py:29: in validate_probabilities
+    raise NotImplementedError
+E   NotImplementedError
+_ test_probability_contract_rejects_wrong_shape_nonfinite_order_or_sum[probabilities1-actual_classes1] _
+ml/tests/test_comparator_pipeline.py:77: in test_probability_contract_rejects_wrong_shape_nonfinite_order_or_sum
+    common.validate_probabilities(np.array(probabilities), 1, ['Safe', 'Aggressive', 'Distracted'], actual_classes)
+ml/experiments/comparator_common.py:29: in validate_probabilities
+    raise NotImplementedError
+E   NotImplementedError
+_ test_probability_contract_rejects_wrong_shape_nonfinite_order_or_sum[probabilities2-actual_classes2] _
+ml/tests/test_comparator_pipeline.py:77: in test_probability_contract_rejects_wrong_shape_nonfinite_order_or_sum
+    common.validate_probabilities(np.array(probabilities), 1, ['Safe', 'Aggressive', 'Distracted'], actual_classes)
+ml/experiments/comparator_common.py:29: in validate_probabilities
+    raise NotImplementedError
+E   NotImplementedError
+_ test_probability_contract_rejects_wrong_shape_nonfinite_order_or_sum[probabilities3-actual_classes3] _
+ml/tests/test_comparator_pipeline.py:77: in test_probability_contract_rejects_wrong_shape_nonfinite_order_or_sum
+    common.validate_probabilities(np.array(probabilities), 1, ['Safe', 'Aggressive', 'Distracted'], actual_classes)
+ml/experiments/comparator_common.py:29: in validate_probabilities
+    raise NotImplementedError
+E   NotImplementedError
+______ test_telemetry_loader_uses_train_val_only_and_keeps_feature_order _______
+ml/tests/test_comparator_pipeline.py:92: in test_telemetry_loader_uses_train_val_only_and_keeps_feature_order
+    frames, sources = common.load_telemetry(tmp_path, expected)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ml/experiments/comparator_common.py:33: in load_telemetry
+    raise NotImplementedError
+E   NotImplementedError
+_____________________ test_existing_run_is_not_overwritten _____________________
+ml/tests/test_comparator_pipeline.py:100: in test_existing_run_is_not_overwritten
+    path = common.create_run_directory('p1_test', tmp_path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ml/experiments/comparator_common.py:45: in create_run_directory
+    raise NotImplementedError
+E   NotImplementedError
+_____________ test_vision_membership_loader_excludes_test_records ______________
+ml/tests/test_comparator_pipeline.py:117: in test_vision_membership_loader_excludes_test_records
+    frames, sources, names = common.load_vision(tmp_path, {str(path): hashlib.sha256(path.read_bytes()).hexdigest()})
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ml/experiments/comparator_common.py:37: in load_vision
+    raise NotImplementedError
+E   NotImplementedError
+____________ test_validation_step_budget_includes_reload_prediction ____________
+ml/tests/test_comparator_pipeline.py:126: in test_validation_step_budget_includes_reload_prediction
+    assert common.steps_for_samples(200, 16, 16) == 13
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ml/experiments/comparator_common.py:41: in steps_for_samples
+    raise NotImplementedError
+E   NotImplementedError
+___________ test_run_directory_cannot_escape_output_root[../vision] ____________
+ml/tests/test_comparator_pipeline.py:135: in test_run_directory_cannot_escape_output_root
+    common.create_run_directory(run_id, tmp_path)
+ml/experiments/comparator_common.py:45: in create_run_directory
+    raise NotImplementedError
+E   NotImplementedError
+______________ test_run_directory_cannot_escape_output_root[a/b] _______________
+ml/tests/test_comparator_pipeline.py:135: in test_run_directory_cannot_escape_output_root
+    common.create_run_directory(run_id, tmp_path)
+ml/experiments/comparator_common.py:45: in create_run_directory
+    raise NotImplementedError
+E   NotImplementedError
+_______________ test_run_directory_cannot_escape_output_root[..] _______________
+ml/tests/test_comparator_pipeline.py:135: in test_run_directory_cannot_escape_output_root
+    common.create_run_directory(run_id, tmp_path)
+ml/experiments/comparator_common.py:45: in create_run_directory
+    raise NotImplementedError
+E   NotImplementedError
+________________ test_run_directory_cannot_escape_output_root[] ________________
+ml/tests/test_comparator_pipeline.py:135: in test_run_directory_cannot_escape_output_root
+    common.create_run_directory(run_id, tmp_path)
+ml/experiments/comparator_common.py:45: in create_run_directory
+    raise NotImplementedError
+E   NotImplementedError
+_____________________ test_symlink_output_root_is_rejected _____________________
+ml/tests/test_comparator_pipeline.py:144: in test_symlink_output_root_is_rejected
+    common.create_run_directory('p1_test', linked)
+ml/experiments/comparator_common.py:45: in create_run_directory
+    raise NotImplementedError
+E   NotImplementedError
+__________ test_deadline_boundary_stops_before_another_training_step ___________
+ml/tests/test_comparator_pipeline.py:149: in test_deadline_boundary_stops_before_another_training_step
+    common.check_deadline(10.0, now=9.999)
+ml/experiments/comparator_common.py:49: in check_deadline
+    raise NotImplementedError
+E   NotImplementedError
+_________ test_supervisor_kills_a_stalled_process_and_reports_timeout __________
+ml/tests/test_comparator_pipeline.py:155: in test_supervisor_kills_a_stalled_process_and_reports_timeout
+    result = common.run_bounded_command([sys.executable, '-c', 'import time; time.sleep(10)'],
+ml/experiments/comparator_common.py:53: in run_bounded_command
+    raise NotImplementedError
+E   NotImplementedError
+_____ test_rerun_requires_fix_note_and_changed_source_and_is_allowed_once ______
+ml/tests/test_comparator_pipeline.py:166: in test_rerun_requires_fix_note_and_changed_source_and_is_allowed_once
+    common.next_attempt(ledger, 'resnet18')
+ml/experiments/comparator_common.py:57: in next_attempt
+    raise NotImplementedError
+E   NotImplementedError
+___ test_success_or_timeout_cannot_trigger_an_extra_smoke_run[VERIFIED_PASS] ___
+ml/tests/test_comparator_pipeline.py:179: in test_success_or_timeout_cannot_trigger_an_extra_smoke_run
+    common.next_attempt(ledger, 'random_forest', 'arbitrary change', {'trainer': 'new'})
+ml/experiments/comparator_common.py:57: in next_attempt
+    raise NotImplementedError
+E   NotImplementedError
+_ test_success_or_timeout_cannot_trigger_an_extra_smoke_run[TIME_BUDGET_EXCEEDED] _
+ml/tests/test_comparator_pipeline.py:179: in test_success_or_timeout_cannot_trigger_an_extra_smoke_run
+    common.next_attempt(ledger, 'random_forest', 'arbitrary change', {'trainer': 'new'})
+ml/experiments/comparator_common.py:57: in next_attempt
+    raise NotImplementedError
+E   NotImplementedError
+______________ test_combined_budget_exhaustion_blocks_a_new_model ______________
+ml/tests/test_comparator_pipeline.py:184: in test_combined_budget_exhaustion_blocks_a_new_model
+    common.next_attempt({'used_wall_seconds': 1200.0, 'attempts': []}, 'logistic_regression')
+ml/experiments/comparator_common.py:57: in next_attempt
+    raise NotImplementedError
+E   NotImplementedError
+=========================== short test summary info ============================
+FAILED ml/tests/test_comparator_pipeline.py::test_budget_gate_rejects_expansion[resnet18-override0]
+FAILED ml/tests/test_comparator_pipeline.py::test_budget_gate_rejects_expansion[resnet18-override1]
+FAILED ml/tests/test_comparator_pipeline.py::test_budget_gate_rejects_expansion[resnet18-override2]
+FAILED ml/tests/test_comparator_pipeline.py::test_budget_gate_rejects_expansion[resnet18-override3]
+FAILED ml/tests/test_comparator_pipeline.py::test_budget_gate_rejects_expansion[random_forest-override4]
+FAILED ml/tests/test_comparator_pipeline.py::test_budget_gate_rejects_expansion[random_forest-override5]
+FAILED ml/tests/test_comparator_pipeline.py::test_budget_gate_rejects_expansion[logistic_regression-override6]
+FAILED ml/tests/test_comparator_pipeline.py::test_stratification_preserves_each_class_and_is_reproducible
+FAILED ml/tests/test_comparator_pipeline.py::test_sampling_rejects_missing_class_instead_of_silently_undersampling
+FAILED ml/tests/test_comparator_pipeline.py::test_validation_extremes_do_not_refit_training_median_or_scaler[random_forest]
+FAILED ml/tests/test_comparator_pipeline.py::test_validation_extremes_do_not_refit_training_median_or_scaler[logistic_regression]
+FAILED ml/tests/test_comparator_pipeline.py::test_evaluation_transform_has_rgb_224_imagenet_contract
+FAILED ml/tests/test_comparator_pipeline.py::test_probability_contract_rejects_wrong_shape_nonfinite_order_or_sum[probabilities0-actual_classes0]
+FAILED ml/tests/test_comparator_pipeline.py::test_probability_contract_rejects_wrong_shape_nonfinite_order_or_sum[probabilities1-actual_classes1]
+FAILED ml/tests/test_comparator_pipeline.py::test_probability_contract_rejects_wrong_shape_nonfinite_order_or_sum[probabilities2-actual_classes2]
+FAILED ml/tests/test_comparator_pipeline.py::test_probability_contract_rejects_wrong_shape_nonfinite_order_or_sum[probabilities3-actual_classes3]
+FAILED ml/tests/test_comparator_pipeline.py::test_telemetry_loader_uses_train_val_only_and_keeps_feature_order
+FAILED ml/tests/test_comparator_pipeline.py::test_existing_run_is_not_overwritten
+FAILED ml/tests/test_comparator_pipeline.py::test_vision_membership_loader_excludes_test_records
+FAILED ml/tests/test_comparator_pipeline.py::test_validation_step_budget_includes_reload_prediction
+FAILED ml/tests/test_comparator_pipeline.py::test_run_directory_cannot_escape_output_root[../vision]
+FAILED ml/tests/test_comparator_pipeline.py::test_run_directory_cannot_escape_output_root[a/b]
+FAILED ml/tests/test_comparator_pipeline.py::test_run_directory_cannot_escape_output_root[..]
+FAILED ml/tests/test_comparator_pipeline.py::test_run_directory_cannot_escape_output_root[]
+FAILED ml/tests/test_comparator_pipeline.py::test_symlink_output_root_is_rejected
+FAILED ml/tests/test_comparator_pipeline.py::test_deadline_boundary_stops_before_another_training_step
+FAILED ml/tests/test_comparator_pipeline.py::test_supervisor_kills_a_stalled_process_and_reports_timeout
+FAILED ml/tests/test_comparator_pipeline.py::test_rerun_requires_fix_note_and_changed_source_and_is_allowed_once
+FAILED ml/tests/test_comparator_pipeline.py::test_success_or_timeout_cannot_trigger_an_extra_smoke_run[VERIFIED_PASS]
+FAILED ml/tests/test_comparator_pipeline.py::test_success_or_timeout_cannot_trigger_an_extra_smoke_run[TIME_BUDGET_EXCEEDED]
+FAILED ml/tests/test_comparator_pipeline.py::test_combined_budget_exhaustion_blocks_a_new_model
+31 failed in 0.55s

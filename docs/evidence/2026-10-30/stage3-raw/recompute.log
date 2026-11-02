@@ -1,0 +1,9 @@
+# 2026-10-30T06:32:16Z python3 recompute_raw.py docs/evidence/2026-10-30/stage3-raw
+resnet18_search004_seed42-r1 resnet18_search004_seed42 rows 600 sha_ok True recompute==summary True {'max': 125, 'median': 42.0, 'min': 39, 'n': 600, 'p95': 45}
+resnet18_search004_seed42-r2 resnet18_search004_seed42 rows 600 sha_ok True recompute==summary True {'max': 63, 'median': 41.0, 'min': 38, 'n': 600, 'p95': 44}
+resnet18_search004_seed42-r3 resnet18_search004_seed42 rows 600 sha_ok True recompute==summary True {'max': 75, 'median': 41.0, 'min': 39, 'n': 600, 'p95': 43}
+stable-r1 stable_mobilenet_v3_large rows 600 sha_ok True recompute==summary True {'max': 127, 'median': 27.0, 'min': 20, 'n': 600, 'p95': 31}
+stable-r2 stable_mobilenet_v3_large rows 600 sha_ok True recompute==summary True {'max': 63, 'median': 28.0, 'min': 19, 'n': 600, 'p95': 31}
+stable-r3 stable_mobilenet_v3_large rows 600 sha_ok True recompute==summary True {'max': 58, 'median': 28.0, 'min': 19, 'n': 600, 'p95': 31}
+ALL OK
+exit: 0

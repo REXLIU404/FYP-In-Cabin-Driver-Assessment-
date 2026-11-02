@@ -1,0 +1,54 @@
+{
+  "D1_server_seen": {
+    "completeness": 1.0,
+    "denominator": 211,
+    "logged": 211,
+    "meets_99_percent": true,
+    "not_logged": []
+  },
+  "D2_all_logical": {
+    "client_side_only": [],
+    "completeness": 1.0,
+    "denominator": 211,
+    "logged": 211,
+    "meets_99_percent": true
+  },
+  "client": {
+    "deliveries": 216,
+    "deliveries_by_attempt_index": {
+      "1": 211,
+      "2": 2,
+      "3": 2,
+      "4": 1
+    },
+    "delivery_outcomes": {
+      "aborted": 2,
+      "ok": 211,
+      "unreachable": 3
+    },
+    "http_status_of_answered": {
+      "201": 210,
+      "422": 1
+    },
+    "logical_requests": 211
+  },
+  "duplicate_request_ids_in_database": 0,
+  "generated_utc": "2026-10-22T14:25:30+00:00",
+  "phases_windows_after": {
+    "1_normal": 100,
+    "2_transport_burst": 150,
+    "3_backend_restart": 200
+  },
+  "server": {
+    "fault_rows": 1,
+    "faults_by_category": {
+      "input_validation": 1
+    },
+    "stored_windows": 210,
+    "unavailable_windows_counted_as_accepted": 2
+  },
+  "session": "S0f34076c6d1047889da9806f47ea16f5",
+  "stop_panel_after_backend_stop": "Monitoring stopped: The backend cannot be reached\n\nThe network request failed. Check that the backend is running and reachable, then use Retry.\n\nCategory: transport\nRequest id: 7c9326de-7089-48d9-a25d-915f1308e8c4\nDeliveries: 3 of 3\n\nDetails: Failed to fetch\n\nRetry re-sends this same request to the same session.\n\nRetry",
+  "stop_panel_after_rejected_request": "Monitoring stopped: The server rejected the request as invalid\n\nThe same request would be rejected again. Check the camera frame and the telemetry input, then use Start Monitoring.\n\nCategory: input (HTTP 422)\nRequest id: 73a3c0c8-8bde-4e9b-ae32-e386e428acd3\nDeliveries: 1 of 3\n\nServer message: Value error, telemetry_seq requires telemetry feature values\n\nRetry re-sends this same request to the same session.\n\nRetry",
+  "stored_without_a_201_seen_by_the_page": []
+}

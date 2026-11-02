@@ -1,0 +1,33 @@
+GATE: eslint
+STATUS: PASS
+EXIT CODE: 0
+STARTED (UTC): 2026-10-23T05:13:14Z
+FINISHED (UTC): 2026-10-23T05:13:16Z
+DURATION (s): 1.94
+ARGV: ["./node_modules/.bin/eslint", "."]
+CWD: /Users/liu/Desktop/FYP2-Live-System
+ENV (selected):
+  PYTHONDONTWRITEBYTECODE=1
+  PYTHONPATH=(unset)
+  TMPDIR=/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/
+  DRA_REQUIRE_MODELS=1
+  DRA_DATABASE_URL=(unset)
+  FYP_DATA_ROOT=(unset)
+  NODE_ENV=(unset)
+  CI=(unset)
+  VIRTUAL_ENV=(unset)
+TOOL VERSIONS:
+  python (this script): 3.13.3
+  python (.venv): Python 3.13.3
+  pytest: pytest 9.0.3
+  node: v24.1.0
+  npm: 11.4.2
+  vitest: vitest/2.1.9 darwin-arm64 node-v24.1.0
+  tsc: Version 5.9.3
+  eslint: v9.39.4
+----- STDOUT -----
+
+----- END STDOUT -----
+----- STDERR -----
+
+----- END STDERR -----

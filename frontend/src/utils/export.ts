@@ -1,8 +1,4 @@
-import type { DominantEvidence, RiskUpdate, TelemetryFeatures } from "../types";
-
-interface ExportOptions {
-  includeEvidenceInterpretation: boolean;
-}
+import type { DominantEvidence, RiskUpdate } from "../types";
 
 const downloadText = (filename: string, text: string, mimeType: string) => {
   const blob = new Blob([text], { type: mimeType });
@@ -27,48 +23,169 @@ const getTopVisualClass = (record: RiskUpdate) => {
     (a, b) => b.probability - a.probability,
   )[0];
 
-  return top?.label ?? "unavailable";
+  return top?.label ?? null;
 };
 
-const telemetryCueScores = (telemetry: TelemetryFeatures) => [
-  { label: "speed", value: Math.max(0, (telemetry.speed - 45) / 45) },
-  { label: "acceleration", value: Math.abs(telemetry.acceleration) / 3 },
-  { label: "steering_angle", value: Math.abs(telemetry.steering_angle) / 18 },
-  { label: "brake_usage", value: telemetry.brake_usage },
-  { label: "lane_deviation", value: telemetry.lane_deviation },
-];
+// null (not 0) when the class is absent: a window without telemetry has no
+// P(Safe), and 0 would read as "certainly not safe".
+const getTelemetryProbability = (record: RiskUpdate, label: string) =>
+  record.telemetry_behavior_classes.find((item) => item.label === label)
+    ?.probability ?? null;
 
-const getTopTelemetryCue = (record: RiskUpdate) => {
-  if (!record.telemetry_features) return "unavailable";
+const getTopTelemetryBehavior = (record: RiskUpdate) =>
+  [...record.telemetry_behavior_classes].sort(
+    (a, b) => b.probability - a.probability,
+  )[0]?.label ?? null;
 
-  return telemetryCueScores(record.telemetry_features).sort(
-    (a, b) => b.value - a.value,
-  )[0].label;
-};
+const getTopTelemetryFeatureContribution = (record: RiskUpdate) =>
+  [...(record.telemetry_feature_contributions ?? [])].sort(
+    (a, b) => Math.abs(b.contribution) - Math.abs(a.contribution),
+  )[0];
 
-const baseExportRecord = (record: RiskUpdate) => ({
+type Cell = string | number | boolean | null;
+
+// Column order is the export contract. New columns are APPENDED after the
+// pre-existing ones so positional readers keep working.
+const BASE_COLUMNS = [
+  "window_id",
+  "risk_score",
+  "risk_level",
+  "alert_severity",
+  "system_health",
+  "assessment_available",
+] as const;
+
+const EVIDENCE_COLUMNS = [
+  "window_id",
+  "risk_score",
+  "risk_level",
+  "p_distraction",
+  "p_telemetry_anomaly",
+  "dominant_evidence",
+  "top_visual_class",
+  "top_telemetry_behavior",
+  "top_telemetry_feature",
+  "top_telemetry_feature_contribution",
+  "p_telemetry_safe",
+  "p_telemetry_aggressive",
+  "p_telemetry_distracted",
+  "latency_ms",
+  "alert_severity",
+  "system_health",
+  "assessment_available",
+  "vision_freshness",
+  "telemetry_freshness",
+  "vision_expired",
+  "vision_age_s",
+  "telemetry_expired",
+  "telemetry_age_s",
+] as const;
+
+// The unavailable representation is a cross-stack contract shared with the
+// backend export (backend/app/routers/export.py):
+//   RiskScore / RiskLevel / DominantEvidence / AlertSeverity -> JSON null, CSV empty cell
+//   assessment_available                                     -> lowercase true / false
+//   SystemHealth                                             -> "UNAVAILABLE"
+// An empty cell is ambiguous on its own (it could also be a missing field), so
+// `assessment_available` and `system_health` are in EVERY export, evidence
+// interpretation on or off, and always hold a value.
+const baseExportRecord = (
+  record: RiskUpdate,
+): Record<(typeof BASE_COLUMNS)[number], Cell> => ({
   window_id: record.window_id,
   risk_score: record.RiskScore,
   risk_level: record.RiskLevel,
+  alert_severity: record.AlertSeverity,
+  system_health: record.SystemHealth,
+  assessment_available: record.assessment_available,
 });
 
-const evidenceExportRecord = (record: RiskUpdate) => ({
-  ...baseExportRecord(record),
+const evidenceExportRecord = (
+  record: RiskUpdate,
+): Record<(typeof EVIDENCE_COLUMNS)[number], Cell> => ({
+  window_id: record.window_id,
+  risk_score: record.RiskScore,
+  risk_level: record.RiskLevel,
   p_distraction: record.P_distraction,
   p_telemetry_anomaly: record.P_telemetry_anomaly,
-  dominant_evidence: dominantEvidenceLabel[record.DominantEvidence],
+  // Always present as a key. `dominantEvidenceLabel[null]` is `undefined`, and
+  // JSON.stringify drops an undefined member, which would give an unavailable
+  // record a different shape from an available one.
+  dominant_evidence:
+    record.DominantEvidence == null
+      ? null
+      : dominantEvidenceLabel[record.DominantEvidence],
   top_visual_class: getTopVisualClass(record),
-  top_telemetry_cue: getTopTelemetryCue(record),
+  top_telemetry_behavior: getTopTelemetryBehavior(record),
+  top_telemetry_feature:
+    getTopTelemetryFeatureContribution(record)?.feature ?? null,
+  top_telemetry_feature_contribution:
+    getTopTelemetryFeatureContribution(record)?.contribution ?? null,
+  p_telemetry_safe: getTelemetryProbability(record, "Safe"),
+  p_telemetry_aggressive: getTelemetryProbability(record, "Aggressive"),
+  p_telemetry_distracted: getTelemetryProbability(record, "Distracted"),
   latency_ms: record.latency_ms,
+  alert_severity: record.AlertSeverity,
+  system_health: record.SystemHealth,
+  assessment_available: record.assessment_available,
+  // A missing branch carries P = 0.0 in the record; these two columns say when
+  // that 0 is not a reading.
+  vision_freshness: record.modality_freshness.vision,
+  telemetry_freshness: record.modality_freshness.telemetry,
+  // Ruling A (D13): an EXPIRED branch is stored as `missing`, so the pair above
+  // cannot say "too old" from "never arrived". The reason and the age come from the
+  // record's provenance. A record written before ruling A has none of these fields:
+  // null (an empty CSV cell), never a fabricated false / 0.
+  vision_expired: record.provenance?.vision_expired ?? null,
+  vision_age_s: record.provenance?.vision_age_s ?? null,
+  telemetry_expired: record.provenance?.telemetry_expired ?? null,
+  telemetry_age_s: record.provenance?.telemetry_age_s ?? null,
 });
 
 const formatRecords = (
   records: RiskUpdate[],
-  { includeEvidenceInterpretation }: ExportOptions,
-) =>
+  includeEvidenceInterpretation: boolean,
+): { columns: readonly string[]; rows: Array<Record<string, Cell>> } =>
   includeEvidenceInterpretation
-    ? records.map(evidenceExportRecord)
-    : records.map(baseExportRecord);
+    ? { columns: EVIDENCE_COLUMNS, rows: records.map(evidenceExportRecord) }
+    : { columns: BASE_COLUMNS, rows: records.map(baseExportRecord) };
+
+export const buildSessionLogJSON = (
+  sessionId: string,
+  records: RiskUpdate[],
+  includeEvidenceInterpretation: boolean,
+): string =>
+  JSON.stringify(
+    {
+      session_id: sessionId,
+      record_count: records.length,
+      evidence_interpretation_enabled: includeEvidenceInterpretation,
+      records: formatRecords(records, includeEvidenceInterpretation).rows,
+    },
+    null,
+    2,
+  );
+
+// null / undefined -> empty cell; booleans stay lowercase (String(false)).
+const csvCell = (value: Cell | undefined) => {
+  if (value === null || value === undefined) return "";
+  const text = String(value);
+  return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+};
+
+export const buildSessionLogCSV = (
+  records: RiskUpdate[],
+  includeEvidenceInterpretation: boolean,
+): string => {
+  const { columns, rows } = formatRecords(
+    records,
+    includeEvidenceInterpretation,
+  );
+  return [
+    columns.join(","),
+    ...rows.map((row) => columns.map((key) => csvCell(row[key])).join(",")),
+  ].join("\n");
+};
 
 export const exportSessionLogJSON = (
   sessionId: string,
@@ -77,23 +194,9 @@ export const exportSessionLogJSON = (
 ) => {
   downloadText(
     `${sessionId}_session_log.json`,
-    JSON.stringify(
-      {
-        session_id: sessionId,
-        record_count: records.length,
-        evidence_interpretation_enabled: includeEvidenceInterpretation,
-        records: formatRecords(records, { includeEvidenceInterpretation }),
-      },
-      null,
-      2,
-    ),
+    buildSessionLogJSON(sessionId, records, includeEvidenceInterpretation),
     "application/json",
   );
-};
-
-const csvCell = (value: string | number | boolean) => {
-  const text = String(value);
-  return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
 };
 
 export const exportSessionLogCSV = (
@@ -101,29 +204,9 @@ export const exportSessionLogCSV = (
   records: RiskUpdate[],
   includeEvidenceInterpretation: boolean,
 ) => {
-  const formatted = formatRecords(records, { includeEvidenceInterpretation });
-  const header = includeEvidenceInterpretation
-    ? [
-        "window_id",
-        "risk_score",
-        "risk_level",
-        "p_distraction",
-        "p_telemetry_anomaly",
-        "dominant_evidence",
-        "top_visual_class",
-        "top_telemetry_cue",
-        "latency_ms",
-      ]
-    : ["window_id", "risk_score", "risk_level"];
-  const rows = formatted.map((record) =>
-    header
-      .map((key) => csvCell(record[key as keyof typeof record] ?? ""))
-      .join(","),
-  );
-
   downloadText(
     `${sessionId}_session_log.csv`,
-    [header.join(","), ...rows].join("\n"),
+    buildSessionLogCSV(records, includeEvidenceInterpretation),
     "text/csv",
   );
 };

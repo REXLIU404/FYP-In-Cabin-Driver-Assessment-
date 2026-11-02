@@ -11,4 +11,4 @@ Prototype AI contract and deterministic inference logic for the in-cabin driver 
 
 ## FYP2 Integration Boundary
 
-The current implementation is deterministic prototype logic. Future MobileNetV3 and XGBoost inference can replace the prepared-session adapter while preserving the same `RiskUpdate` contract for the frontend and backend.
+The current implementation is deterministic prototype logic. Future MobileNetV3 and XGBoost inference can replace the prepared-session adapter while preserving the same `RiskUpdate` contract for the frontend and backend. In the current telemetry branch, the model output is interpreted as `P(Safe)`, `P(Aggressive)`, and `P(Distracted)`, with `P_telemetry_anomaly = 1 - P(Safe)`.

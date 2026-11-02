@@ -1,0 +1,87 @@
+{
+  "status": "COMPLETED",
+  "error": null,
+  "result": {
+    "vision_input_count": 69483,
+    "vision_prediction_count": 208449,
+    "margin": 1.25,
+    "by_model": {
+      "MN-HPO42": {
+        "clean_seconds": 28.641054513674998,
+        "stress_seconds": 515.53898124615,
+        "fits_model_caps": true
+      },
+      "RN-HPO42": {
+        "clean_seconds": 110.0083464253875,
+        "stress_seconds": 1980.150235656975,
+        "fits_model_caps": true
+      },
+      "MN-STABLE": {
+        "clean_seconds": 28.46769938848125,
+        "stress_seconds": 512.4185889926625,
+        "fits_model_caps": true
+      }
+    },
+    "vision_clean_seconds": 167.11710032754374,
+    "vision_stress_seconds": 3008.1078058957874,
+    "generation_seconds": 122.53530470625,
+    "total_with_other_stage_caps_seconds": 8097.760210929581,
+    "stage_caps_seconds": {
+      "preflight": 600,
+      "preparation": 1200,
+      "vision_clean": 1200,
+      "vision_stress": 7200,
+      "telemetry": 1200,
+      "runtime": 1800,
+      "aggregation": 1200
+    },
+    "per_model_caps_seconds": {
+      "vision_clean": 400,
+      "vision_stress": 2400
+    },
+    "proposed_total_cap_seconds": 14400,
+    "fits_proposed_caps": true,
+    "uncertainty": "Extrapolation from 100 validation sources, excludes formal cache/QC write costs; not a measured full-run duration.",
+    "formal_runtime_benchmark_completed": false
+  },
+  "action": "projection",
+  "identity": null,
+  "resources": {
+    "available_ram_bytes": 9667264512,
+    "free_disk_bytes": 323432218624
+  },
+  "elapsed_nanoseconds": 19112167,
+  "protected_before": {
+    "ml/outputs/vision/mobilenetv3_large_vision.pt": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+    "ml/outputs/vision/mobilenetv3_large_vision.onnx": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "ml/outputs/telemetry/xgb_telemetry.json": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+    "docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md": "0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0"
+  },
+  "protected_after": {
+    "ml/outputs/vision/mobilenetv3_large_vision.pt": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+    "ml/outputs/vision/mobilenetv3_large_vision.onnx": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "ml/outputs/telemetry/xgb_telemetry.json": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+    "docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md": "0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0"
+  },
+  "git_before": {
+    "root": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1",
+    "branch": "fyp2/ml-training",
+    "head": "335da4e3de203836c045452f84cc291bcd352a26",
+    "dirty": "M docs/fyp2/ml/ML_TRACK_PROGRESS.md\n?? docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md\n?? docs/fyp2/ml/ML_RESULTS_REVIEW_CONTEXT.md\n?? ml/configs/e1_preparation.json\n?? ml/configs/p4_protocol.json\n?? ml/experiments/e1_generators.py\n?? ml/experiments/p4_core.py\n?? ml/experiments/p4_data.py\n?? ml/experiments/p4_preflight.py\n?? ml/experiments/p4_qc.py\n?? ml/experiments/run_e1_preparation.py\n?? ml/experiments/run_p4.py\n?? ml/outputs/runs/e1_preparation_20261019/\n?? ml/outputs/runs/e1_preparation_20261019_record_missingness/\n?? ml/outputs/runs/p3_vision_20261018/search/\n?? ml/outputs/runs/p3_vision_20261018/search_config.json\n?? ml/outputs/runs/p3_vision_20261018/search_state.json\n?? ml/outputs/runs/p3_vision_20261018/selection_log.json\n?? ml/outputs/runs/p3_vision_20261018/verification/\n?? ml/outputs/runs/p4a_20261021/\n?? ml/tests/test_e1_generators.py\n?? ml/tests/test_e1_preparation.py\n?? ml/tests/test_p4_core.py\n?? ml/tests/test_p4_data.py\n?? ml/tests/test_p4_preflight.py\n?? ml/tests/test_p4_qc.py",
+    "staged": ""
+  },
+  "git_after": {
+    "root": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1",
+    "branch": "fyp2/ml-training",
+    "head": "335da4e3de203836c045452f84cc291bcd352a26",
+    "dirty": "M docs/fyp2/ml/ML_TRACK_PROGRESS.md\n?? docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md\n?? docs/fyp2/ml/ML_RESULTS_REVIEW_CONTEXT.md\n?? ml/configs/e1_preparation.json\n?? ml/configs/p4_protocol.json\n?? ml/experiments/e1_generators.py\n?? ml/experiments/p4_core.py\n?? ml/experiments/p4_data.py\n?? ml/experiments/p4_preflight.py\n?? ml/experiments/p4_qc.py\n?? ml/experiments/run_e1_preparation.py\n?? ml/experiments/run_p4.py\n?? ml/outputs/runs/e1_preparation_20261019/\n?? ml/outputs/runs/e1_preparation_20261019_record_missingness/\n?? ml/outputs/runs/p3_vision_20261018/search/\n?? ml/outputs/runs/p3_vision_20261018/search_config.json\n?? ml/outputs/runs/p3_vision_20261018/search_state.json\n?? ml/outputs/runs/p3_vision_20261018/selection_log.json\n?? ml/outputs/runs/p3_vision_20261018/verification/\n?? ml/outputs/runs/p4a_20261021/\n?? ml/tests/test_e1_generators.py\n?? ml/tests/test_e1_preparation.py\n?? ml/tests/test_p4_core.py\n?? ml/tests/test_p4_data.py\n?? ml/tests/test_p4_preflight.py\n?? ml/tests/test_p4_qc.py",
+    "staged": ""
+  },
+  "source_sha256": "ffdfa6637bace58c9818ade3b9a84e812a59d2f681543927b10403061301dece",
+  "threadpools": [],
+  "ru_maxrss_native": 68812800,
+  "ru_maxrss_units": "bytes on macOS; whole worker lifetime high-water mark",
+  "sampled_rss": "Parent BudgetSupervisor 20ms process-tree samples",
+  "test_images_opened": 0,
+  "test_telemetry_rows_read": 0
+}

@@ -1,0 +1,93 @@
+{
+  "status": "VERIFIED_PASS",
+  "phase": "S3",
+  "execution_commit": "335da4e3de203836c045452f84cc291bcd352a26",
+  "audits": {
+    "artifacts": {
+      "passed": 5276,
+      "failures": 0,
+      "runtime_seconds": 1.5101802080171183
+    },
+    "predictions": {
+      "passed": 2249,
+      "failures": 0,
+      "runtime_seconds": 0.6962025000248104
+    },
+    "protocol": {
+      "passed": 557,
+      "total": 557
+    }
+  },
+  "artifacts": {
+    "validation_metrics.json": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/verification/validation_metrics.json",
+      "sha256": "b7ee37fdcc3cd85d44be22538e6befde6795988014e64c5a85e7f4447310879b",
+      "bytes": 7201
+    },
+    "artifacts/verify_artifacts.py": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/verification/artifacts/verify_artifacts.py",
+      "sha256": "3fc7c99fb7612d5990f43569508cedc6d159b0fc1d6a5db89e02522eb2e599bc",
+      "bytes": 7031
+    },
+    "artifacts/verification.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/verification/artifacts/verification.log",
+      "sha256": "93645e113e9987ab1a43502cbfeb19354a59972a79406a499049498ed167586d",
+      "bytes": 6795
+    },
+    "protocol/config.json": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/verification/protocol/config.json",
+      "sha256": "87c297599d3e12888800f8fb078503e317b561d1da920b71ac53c0506dc4f56f",
+      "bytes": 93604
+    },
+    "protocol/verify_protocol.py": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/verification/protocol/verify_protocol.py",
+      "sha256": "f88ab2426f850b0cbc2abc21d05e5c19a3e571adae79d9058b8e820e31466d84",
+      "bytes": 15011
+    },
+    "protocol/artifact_manifest.json": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/verification/protocol/artifact_manifest.json",
+      "sha256": "7a1a367d09eed76ce3d22342e5106dff7bf2b45247588755fcbcc06ae4b6d1c3",
+      "bytes": 707
+    },
+    "protocol/verification.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/verification/protocol/verification.log",
+      "sha256": "2aa08e629a845885ed1107204bf2a2f19ff0e35ff5836edc368689a341da4f65",
+      "bytes": 9449
+    },
+    "predictions/initial_validator.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/verification/predictions/initial_validator.log",
+      "sha256": "950f0c84eb48d9ac3bfc720e29fa7e17852fd2b4340989565f8957cd3fe665b2",
+      "bytes": 12161
+    },
+    "predictions/config.json": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/verification/predictions/config.json",
+      "sha256": "885ad26bff18336b38dad21cf7369250b07dc89eb561ff8fec5612bdfa0c7f94",
+      "bytes": 291136
+    },
+    "predictions/execution.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/verification/predictions/execution.log",
+      "sha256": "b75f7b3d5434f643ad937698a27eb93a446b1946517e27992e00548bdffa22f8",
+      "bytes": 9575
+    },
+    "predictions/artifact_manifest.json": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/verification/predictions/artifact_manifest.json",
+      "sha256": "81026aa52d6bdaae26dbc2760de0a73ec7e3ec0649a2d35e1dfdd507c6f6b45c",
+      "bytes": 18333
+    },
+    "predictions/verify_predictions.py": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/verification/predictions/verify_predictions.py",
+      "sha256": "7a2f32466b580fa062383aff7cb565250e5164ef589e7886b0796cebad9af662",
+      "bytes": 15571
+    }
+  },
+  "new_fits": 0,
+  "new_forward_calls": 0,
+  "held_out_test_or_e1_executed": false,
+  "protected_hashes_after": {
+    "ml/outputs/vision/mobilenetv3_large_vision.pt": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+    "ml/outputs/vision/mobilenetv3_large_vision.onnx": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "ml/outputs/telemetry/xgb_telemetry.json": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+    "docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md": "0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0"
+  },
+  "outstanding": "P3 R4 E1 generator/QC preparation incomplete; P4/P5 not authorized"
+}
