@@ -150,9 +150,9 @@ describe("Data mode: saved sessions are Live-only", () => {
     );
   });
 
-  it("the hook's clearSession clears the error and the loop's session", () => {
+  it("the hook's clearSession clears the error, the ended state and the loop's session", () => {
     expect(liveSessionSource).toMatch(
-      /const clearSession = useCallback\(\(\) => \{\s*setError\(null\);\s*loop\.clear\(\);\s*\}, \[loop\]\);/,
+      /const clearSession = useCallback\(\(\) => \{\s*setError\(null\);\s*setEnded\(false\);\s*loop\.clear\(\);\s*\}, \[loop\]\);/,
     );
   });
 });

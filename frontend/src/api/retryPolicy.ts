@@ -37,7 +37,7 @@ const failure = (
 ): FailureClass => ({ category, status, retryable, counted });
 
 /**
- * 409 is overloaded (four server-side causes), so the detail decides. The
+ * 409 is overloaded (five server-side causes), so the detail decides. The
  * out-of-order case is the only one that is not a failure: a late frame is dropped.
  * An observation conflict - an identity the server already holds, sent again with
  * different content or time - is a client error that no re-send can fix, so it stops.
@@ -47,6 +47,10 @@ const failure = (
  */
 function classifyConflict(detail: string): FailureClass {
   const text = detail.toLowerCase();
+  // The session was ended. Stopping is immediate; a retry would only receive the
+  // same 409, so this spends none of the delivery budget.
+  if (text.includes("session is closed") || text.includes("session_closed"))
+    return failure("session_closed", false, false, 409);
   if (text.includes("observation identity"))
     return failure("observation_conflict", false, true, 409);
   if (text.includes("out-of-order"))
@@ -174,6 +178,11 @@ export const FAULT_TEXT: Record<
     title: "This session belongs to another Data mode",
     advice:
       "The session was created in another Data mode. Use New Session to start one in the mode selected now.",
+  },
+  session_closed: {
+    title: "This session has ended",
+    advice:
+      "The session was ended, so the server refuses further frames. Start Monitoring to begin a new session.",
   },
   conflict_stale_frame: {
     title: "A late frame was dropped",

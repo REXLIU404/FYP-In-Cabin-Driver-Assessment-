@@ -16,7 +16,8 @@ router = APIRouter(prefix="/api/sessions", tags=["sessions"])
 
 
 def _to_out(s, count):
-    return SessionOut(id=s.id, created_at=s.created_at.isoformat(), total_windows=count, operation_mode=s.operation_mode)
+    return SessionOut(id=s.id, created_at=s.created_at.isoformat(), total_windows=count,
+                      operation_mode=s.operation_mode, status=s.status or "ACTIVE")
 
 
 @router.post("", response_model=SessionOut, status_code=201)
@@ -49,6 +50,20 @@ def get_session(session_id: str, db: Session = Depends(get_db)):
     s = db.get(models.SessionMeta, session_id)
     if not s:
         raise HTTPException(404, "session not found")
+    count = db.query(func.count(models.InferenceRecord.id)).filter_by(session_id=session_id).scalar()
+    return _to_out(s, count)
+
+
+@router.post("/{session_id}/close", response_model=SessionOut)
+def close_session(session_id: str, db: Session = Depends(get_db)):
+    """End a session. Idempotent: closing an already CLOSED session returns it unchanged."""
+    s = db.get(models.SessionMeta, session_id)
+    if not s:
+        raise HTTPException(404, "session not found")
+    if s.status != "CLOSED":
+        s.status = "CLOSED"
+        db.commit()
+        db.refresh(s)
     count = db.query(func.count(models.InferenceRecord.id)).filter_by(session_id=session_id).scalar()
     return _to_out(s, count)
 

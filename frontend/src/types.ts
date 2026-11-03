@@ -9,6 +9,7 @@ export type {
   RiskLevel,
   RiskUpdate,
   SessionMeta,
+  SessionStatus,
   SystemHealth,
   TelemetryBehaviorLabel,
   TelemetryBehaviorProbability,

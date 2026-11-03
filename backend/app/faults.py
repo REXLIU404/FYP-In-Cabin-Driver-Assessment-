@@ -1,4 +1,5 @@
-"""Persistent fault events for ``POST /api/sessions/{id}/infer``.
+"""Persistent fault events for ``POST /api/sessions/{id}/infer`` (and the closed-session
+refusal of the legacy ``/windows`` route).
 
 Why this is its own module with its own table
 ---------------------------------------------
@@ -62,6 +63,7 @@ CATEGORY_OUT_OF_ORDER_EVIDENCE = "out_of_order_evidence"
 # as either neighbour: it is not the same request_id reused (idempotency_conflict) and not an
 # older stamp (out_of_order_evidence), so the client can word it exactly.
 CATEGORY_OBSERVATION_CONFLICT = "observation_conflict"
+CATEGORY_SESSION_CLOSED = "session_closed"                  # 409, not retryable: the session ended
 CATEGORY_MODELS_UNAVAILABLE = "models_unavailable"          # 503, not retryable
 CATEGORY_MODEL_RUNTIME = "model_runtime"                    # 500, retryable
 CATEGORY_STORAGE = "storage"                                # 500, retryable
@@ -69,7 +71,7 @@ CATEGORY_TRANSPORT_TIMEOUT = "transport_timeout"            # client-side only; 
 CATEGORY_UNKNOWN = "unknown"
 ERROR_CATEGORIES = (CATEGORY_INPUT_VALIDATION, CATEGORY_MODE_CONFLICT, CATEGORY_NOT_FOUND,
                     CATEGORY_IDEMPOTENCY_CONFLICT, CATEGORY_OUT_OF_ORDER_EVIDENCE,
-                    CATEGORY_OBSERVATION_CONFLICT,
+                    CATEGORY_OBSERVATION_CONFLICT, CATEGORY_SESSION_CLOSED,
                     CATEGORY_MODELS_UNAVAILABLE, CATEGORY_MODEL_RUNTIME, CATEGORY_STORAGE,
                     CATEGORY_TRANSPORT_TIMEOUT, CATEGORY_UNKNOWN)
 
@@ -81,6 +83,7 @@ RETRYABLE = {
     CATEGORY_IDEMPOTENCY_CONFLICT: False,
     CATEGORY_OUT_OF_ORDER_EVIDENCE: False,
     CATEGORY_OBSERVATION_CONFLICT: False,  # the same identity with other content stays a conflict
+    CATEGORY_SESSION_CLOSED: False,        # an ended session never accepts another window
     CATEGORY_MODELS_UNAVAILABLE: False,   # a missing file does not appear by itself
     CATEGORY_MODEL_RUNTIME: True,
     CATEGORY_STORAGE: True,

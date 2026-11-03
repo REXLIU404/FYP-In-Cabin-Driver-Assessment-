@@ -190,6 +190,11 @@ export const api = {
     request<SessionMeta[]>("/sessions?limit=100", { signal }),
   session: (sid: string, signal?: AbortSignal) =>
     request<SessionMeta>(`/sessions/${encodeURIComponent(sid)}`, { signal }),
+  closeSession: (sid: string, signal?: AbortSignal) =>
+    request<SessionMeta>(`/sessions/${encodeURIComponent(sid)}/close`, {
+      method: "POST",
+      signal,
+    }),
   latest: (sid: string, signal?: AbortSignal) =>
     request<StoredRiskUpdate>(
       `/sessions/${encodeURIComponent(sid)}/risk/latest`,

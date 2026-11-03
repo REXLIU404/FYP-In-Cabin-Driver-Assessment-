@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Pause, Play, RotateCw } from "lucide-react";
+import { Pause, Play, RotateCw, Square } from "lucide-react";
 import { AlertBanner } from "./components/AlertBanner";
 import { CameraPreview } from "./components/CameraPreview";
 import { ScenarioPlayer } from "./components/ScenarioPlayer";
@@ -30,6 +30,7 @@ import {
 import { runtimeStaleNoticeShown } from "./utils/display";
 import { describeSelection, selectRecord } from "./utils/selection";
 import { describeVisionModel } from "./utils/modelInfo";
+import { canEndSession, savedSessionLabel } from "./utils/sessionLifecycle";
 import { exportSessionLogCSV, exportSessionLogJSON } from "./utils/export";
 import { retryHandler } from "./utils/runtimeNotices";
 import {
@@ -206,6 +207,10 @@ export default function App() {
     replay.pause();
     live.pause();
   };
+  const endSession = () => {
+    pause();
+    void live.endSession();
+  };
   const start = async (restart = false) => {
     if (isLiveLikeMode) {
       const startedIn = config.operationMode;
@@ -284,6 +289,7 @@ export default function App() {
                 monitoring ||
                 live.busy ||
                 live.retrying ||
+                live.ending ||
                 (isLive && camera.status === "requesting") ||
                 (isScenario && scenario.status !== "ready")
               }
@@ -295,7 +301,7 @@ export default function App() {
               type="button"
               className="button"
               onClick={pause}
-              disabled={!monitoring && !live.busy}
+              disabled={(!monitoring && !live.busy) || live.ending}
             >
               <Pause size={16} />
               Pause
@@ -307,6 +313,7 @@ export default function App() {
               disabled={
                 live.busy ||
                 live.retrying ||
+                live.ending ||
                 camera.status === "requesting" ||
                 (isScenario && scenario.status !== "ready")
               }
@@ -314,6 +321,29 @@ export default function App() {
               <RotateCw size={16} />
               New Session
             </button>
+            <button
+              type="button"
+              className="button"
+              onClick={endSession}
+              disabled={
+                !canEndSession({
+                  liveLike: isLiveLikeMode,
+                  hasSession: Boolean(live.sessionId),
+                  busy: live.busy,
+                  retrying: live.retrying,
+                  ending: live.ending,
+                  ended: live.ended,
+                })
+              }
+            >
+              <Square size={16} />
+              End Session
+            </button>
+            {live.ended && (
+              <span className="session-status" role="status">
+                Session ended
+              </span>
+            )}
           </div>
         </header>
 
@@ -366,7 +396,7 @@ export default function App() {
                     <option value="">Select a session…</option>
                     {live.sessions.map((s) => (
                       <option key={s.id} value={s.id}>
-                        {s.id} · {s.total_windows} windows
+                        {savedSessionLabel(s)}
                       </option>
                     ))}
                   </select>

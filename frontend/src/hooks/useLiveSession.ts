@@ -111,6 +111,10 @@ export function useLiveSession(
 
   const [sessions, setSessions] = useState<SessionMeta[]>([]);
   const [error, setError] = useState<string | null>(null);
+  // The current session was ended through the API: its display stays, but no frame
+  // may be sent until Start creates the next session.
+  const [ended, setEnded] = useState(false);
+  const [ending, setEnding] = useState(false);
   const [now, setNow] = useState(Date.now());
 
   useEffect(() => {
@@ -138,17 +142,46 @@ export function useLiveSession(
   // control that could retry or clear it).
   const clearSession = useCallback(() => {
     setError(null);
+    setEnded(false);
     loop.clear();
   }, [loop]);
 
   const loadSession = useCallback(
     async (sid: string) => {
       setError(null);
+      setEnded(false);
       const message = await loop.loadSession(sid);
       if (message) setError(message);
     },
     [loop],
   );
+
+  const start = useCallback(
+    async (restart = false) => {
+      setEnded(false);
+      await loop.start(restart);
+    },
+    [loop],
+  );
+
+  const endSession = useCallback(async () => {
+    const state = loop.getState();
+    if (!state.sessionId || state.busy || state.retrying) return;
+    setError(null);
+    setEnding(true);
+    // Stop acquisition before the server session is closed, so no frame can be
+    // accepted between the pause and the close.
+    loop.pause();
+    try {
+      await api.closeSession(state.sessionId);
+      loop.detach();
+      setEnded(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "End session failed");
+    } finally {
+      setEnding(false);
+    }
+  }, [loop]);
 
   const flag = useCallback(
     async (id: number, flagged: boolean) => {
@@ -209,7 +242,10 @@ export function useLiveSession(
     imagelessRequests: live.imagelessRequests,
     lastCaptureMiss: live.lastCaptureMiss,
     stale,
-    start: loop.start,
+    start,
+    endSession,
+    ending,
+    ended,
     pause: loop.pause,
     retry: loop.retry,
     flag,
