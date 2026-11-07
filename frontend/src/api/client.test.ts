@@ -121,6 +121,25 @@ describe("api client normalises RiskUpdate payloads at the network boundary", ()
   });
 });
 
+describe("closeSession() ends a session through the close endpoint", () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  it("POSTs to /sessions/{id}/close and returns the updated session", async () => {
+    respondWith({
+      id: "s 1",
+      created_at: "2026-01-01T12:00:00+00:00",
+      total_windows: 2,
+      operation_mode: "LIVE_MODEL_RUNTIME",
+      status: "CLOSED",
+    });
+    const closed = await api.closeSession("s 1");
+    expect(closed.status).toBe("CLOSED");
+    const [url, init] = vi.mocked(fetch).mock.calls[0];
+    expect(url).toBe("/api/sessions/s%201/close");
+    expect((init as RequestInit).method).toBe("POST");
+  });
+});
+
 const livePayload = {
   request_id: "r-1",
   image_base64: "data:image/jpeg;base64,AAAA",
@@ -232,6 +251,7 @@ describe("every call can be cancelled", () => {
     ["create", (s: AbortSignal) => api.create({ ...DEFAULT_CONFIG }, s)],
     ["sessions", (s: AbortSignal) => api.sessions(s)],
     ["session", (s: AbortSignal) => api.session("s1", s)],
+    ["closeSession", (s: AbortSignal) => api.closeSession("s1", s)],
     ["latest", (s: AbortSignal) => api.latest("s1", s)],
     ["windows", (s: AbortSignal) => api.windows("s1", 0, s)],
     ["flag", (s: AbortSignal) => api.flag("s1", 1, true, s)],

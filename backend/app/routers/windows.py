@@ -23,6 +23,7 @@ router = APIRouter(prefix="/api/sessions", tags=["windows"])
 # The detail texts the client classifies a 409 on (retryPolicy.ts / test_retry_contract.py).
 OUT_OF_ORDER_DETAIL = "Out-of-order evidence timestamp"
 OBSERVATION_CONFLICT_DETAIL = "Observation identity already registered with different content or acquisition time"
+SESSION_CLOSED_DETAIL = "Session is closed"
 
 
 @dataclass(frozen=True)
@@ -102,6 +103,11 @@ def _out_of_order() -> FaultHTTPException:
 def _observation_conflict() -> FaultHTTPException:
     return FaultHTTPException(409, OBSERVATION_CONFLICT_DETAIL,
                               error_category=faults.CATEGORY_OBSERVATION_CONFLICT, origin=faults.ORIGIN_SESSION)
+
+
+def _session_closed() -> FaultHTTPException:
+    return FaultHTTPException(409, SESSION_CLOSED_DETAIL,
+                              error_category=faults.CATEGORY_SESSION_CLOSED, origin=faults.ORIGIN_SESSION)
 
 
 def _advance_watermark(state: dict, key: str, stamp: str) -> None:
@@ -213,14 +219,20 @@ def _persist_window(db, sid, w, *, mode, provenance=None, request_id=None, diges
     took and in the same transaction as the window record: the registry, the watermarks, the
     FSM memory and the window counter all commit together or not at all."""
     # Atomic UPDATE obtains the SQLite writer lock before reading temporal state.
-    # No count/max race, and deletion never causes identifier reuse.
-    number = db.execute(update(models.SessionMeta).where(models.SessionMeta.id == sid)
-                        .values(next_window_id=models.SessionMeta.next_window_id + 1)
-                        .returning(models.SessionMeta.next_window_id)).scalar_one_or_none()
+    # No count/max race, and deletion never causes identifier reuse. The status
+    # predicate makes the close/allocate decision atomic too: a closed session
+    # consumes no window number and its runtime state is never touched.
+    number = db.execute(
+        update(models.SessionMeta)
+        .where(models.SessionMeta.id == sid, models.SessionMeta.status == "ACTIVE")
+        .values(next_window_id=models.SessionMeta.next_window_id + 1)
+        .returning(models.SessionMeta.next_window_id)).scalar_one_or_none()
     if number is None:
         db.rollback()
-        raise FaultHTTPException(404, "session not found", error_category=faults.CATEGORY_NOT_FOUND,
-                                 origin=faults.ORIGIN_SESSION)
+        if db.get(models.SessionMeta, sid) is None:
+            raise FaultHTTPException(404, "session not found", error_category=faults.CATEGORY_NOT_FOUND,
+                                     origin=faults.ORIGIN_SESSION)
+        raise _session_closed()
     sess = db.get(models.SessionMeta, sid)
     db.refresh(sess)
     if sess.operation_mode != mode:
@@ -284,8 +296,21 @@ def _save_window(db, sid, w, **kwargs):
 
 
 @router.post("/{session_id}/windows", response_model=RiskUpdate, status_code=201)
-def add_window(session_id: str, w: WindowInput, db: Session = Depends(get_db)):
-    return _save_window(db, session_id, w, mode="PREPARED_SESSION_RUNTIME")
+def add_window(session_id: str, w: WindowInput, db: Session = Depends(get_db),
+               sink: FaultSink = Depends(get_fault_sink)):
+    try:
+        return _save_window(db, session_id, w, mode="PREPARED_SESSION_RUNTIME")
+    except FaultHTTPException as exc:
+        # /infer records every failure in its own handler. This legacy route has no
+        # such handler, so the closed-session refusal is recorded here; its other
+        # failures keep their previous behaviour.
+        if exc.error_category == faults.CATEGORY_SESSION_CLOSED:
+            info = faults.classify_exception(exc)
+            faults.record_fault(db, session_id=session_id, request_id=None, attempt_index=None,
+                                origin=info.origin, error_category=info.error_category,
+                                http_status=info.http_status, retryable=info.retryable,
+                                detail=info.detail, sink=sink)
+        raise
 
 
 def _run_models(payload: LiveInput):
@@ -310,6 +335,8 @@ def _infer(db, session_id: str, payload: LiveInput):
     if not sess:
         raise FaultHTTPException(404, "session not found", error_category=faults.CATEGORY_NOT_FOUND,
                                  origin=faults.ORIGIN_SESSION)
+    if sess.status != "ACTIVE":
+        raise _session_closed()
     # Read before the rollback below expires the row; _persist_window also re-checks this mode
     # against the session's, and writes it on the record.
     mode = sess.operation_mode

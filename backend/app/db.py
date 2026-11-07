@@ -35,6 +35,7 @@ def initialize_database():
         "sessions": {
             "next_window_id": "INTEGER NOT NULL DEFAULT 0",
             "operation_mode": "VARCHAR NOT NULL DEFAULT 'PREPARED_SESSION_RUNTIME'",
+            "status": "VARCHAR NOT NULL DEFAULT 'ACTIVE'",
             "runtime_state": "JSON NOT NULL DEFAULT '{}'",
             "runtime_config": "JSON NOT NULL DEFAULT '{}'",
         },
@@ -51,6 +52,9 @@ def initialize_database():
                 if name not in existing:
                     conn.execute(text(f"ALTER TABLE {table} ADD COLUMN {name} {ddl}"))
         conn.execute(text("UPDATE sessions SET next_window_id = MAX(next_window_id, COALESCE((SELECT MAX(window_id) FROM inference_records WHERE session_id=sessions.id),0))"))
+        # ALTER TABLE ... DEFAULT fills existing rows, and this keeps a status column added
+        # by hand (or an older partial migration) from leaving a NULL behind.
+        conn.execute(text("UPDATE sessions SET status = 'ACTIVE' WHERE status IS NULL"))
         duplicates = conn.execute(text("SELECT session_id, window_id FROM inference_records GROUP BY session_id, window_id HAVING COUNT(*)>1 LIMIT 1")).first()
         if duplicates:
             raise RuntimeError("Existing duplicate window IDs need manual reconciliation before migration; no records were deleted")

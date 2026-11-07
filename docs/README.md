@@ -31,15 +31,6 @@
 | `docs/evidence/<date>/` | 按日期归档的门禁、浏览器与实验证据（Chapter 5） |
 | `docs/evidence/README.md` | Chapter 5 证据索引 |
 
-## 历史快照（已被取代，仅供追溯）
-
-| 文件 | 被什么取代 |
-|---|---|
-| `docs/DEVELOPMENT_SCHEDULE.md` | 实施计划 + roadmap |
-| `docs/IMPLEMENTATION_PROGRESS.zh.md` | roadmap 的 progress |
-| `docs/CLAUDE_HANDOFF_PROMPT.zh.md`、`docs/FYP2_CLAUDE_DEVELOPMENT_HANDBOOK.zh.md` | 实施计划 + roadmap |
-| `docs/PROJECT_ASSESSMENT_AND_TEST_PLAN.zh.md` | 审计 03 / 04 与 Codex 独立审阅（E1–E5 命名以审计为准） |
-
 ## 已删除（2026-10-13，用户批准）
 
 以下 5 个文件没有任何文档或代码引用，内容已被取代，经用户批准删除。需要时可从 git 历史取回（例如 `git show 9632812:Changelog.md`）：
@@ -59,3 +50,19 @@
 审计文档仍按路径引用其中的规格文件（`docs/fyp2/03_EVALUATION_COVERAGE_MATRIX.md`、`07_EVIDENCE_MANIFEST.md`、`findings.md`，以及 `docs/fyp2/evidence/` 下的 `audit_commands.md`、`repository_discovery.json`、`source_inventory.json`）。审计文档是冻结证据，这些引用作为历史记录原样保留。没有任何代码读取这个文件夹。
 
 需要时可从 git 历史取回：在 `fyp2/live-system` 上，删除前最后一个包含它的提交是 `90a2f2f`，例如 `git show 90a2f2f:FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_EVALUATION_AND_TESTCASE_SPEC.md`；整个文件夹可用 `git checkout 90a2f2f -- FYP2_Codex_ClaudeCode_Audit_Package_v2/` 恢复。
+
+## 已删除（2026-11-07，用户批准）
+
+以下 9 个文件已被取代或不再需要，经用户批准删除。需要时可从 git 历史取回（例如 `git show ec2ed32:docs/DEVELOPMENT_SCHEDULE.md`）：
+
+- `docs/DEVELOPMENT_SCHEDULE.md`
+- `docs/IMPLEMENTATION_PROGRESS.zh.md`
+- `docs/FYP2_CLAUDE_DEVELOPMENT_HANDBOOK.zh.md`
+- `docs/CLAUDE_HANDOFF_PROMPT.zh.md`
+- `docs/PROJECT_ASSESSMENT_AND_TEST_PLAN.zh.md`
+- `docs/superpowers/plans/2026-10-22-constructed-scenario.md`
+- `docs/superpowers/plans/2026-10-22-constructed-scenario.HANDOFF.md`
+- `docs/fyp2/SYSTEM_TRACK_HANDOFF_GUIDE.zh.md`
+- `docs/fyp2/review/CODEX_REVIEW_PROMPT.md`
+
+冻结的审计证据、计划和任务报告中仍有这些路径，它们记录的是当时的状态，不随之修改。

@@ -21,6 +21,7 @@ SystemHealth = Literal["FULL", "DEGRADED", "UNAVAILABLE"]
 # stale on WindowInput, which the pipeline then treats as expired.
 FreshnessStatus = Literal["fresh", "stale", "missing"]
 OperationMode = Literal["PREPARED_SESSION_RUNTIME", "LIVE_MODEL_RUNTIME", "CONSTRUCTED_SCENARIO_RUNTIME"]
+SessionStatus = Literal["ACTIVE", "CLOSED"]
 
 # The Live-like modes: LIVE_MODEL_RUNTIME runs the R10 observation pipeline on the real camera
 # and sensors; CONSTRUCTED_SCENARIO_RUNTIME replays a prepared scenario bundle through the SAME
@@ -307,6 +308,7 @@ class SessionOut(BaseModel):
     created_at: str
     total_windows: int
     operation_mode: OperationMode = "PREPARED_SESSION_RUNTIME"
+    status: SessionStatus = "ACTIVE"
 
 
 class FaultEventOut(BaseModel):

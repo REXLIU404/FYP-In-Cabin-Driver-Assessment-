@@ -368,6 +368,7 @@ describe("one failure is enough for errors that a re-send cannot fix", () => {
       "observation_conflict",
     ],
     [new ApiError("Create a live model session first", 409), "conflict_mode"],
+    [new ApiError("Session is closed", 409), "session_closed"],
     [
       new ApiError(
         "Value error, timestamp is in the future; check device clock",
@@ -398,6 +399,29 @@ describe("one failure is enough for errors that a re-send cannot fix", () => {
     const bad = rig({ script: [new ApiError("Bad Request", 400)] });
     await bad.begin();
     expect(bad.get().fault?.newSessionOnRetry).toBe(false);
+  });
+});
+
+describe("ending the current session detaches it from acquisition", () => {
+  it("keeps the displayed session but the next start creates a new one", async () => {
+    const r = rig();
+    await r.begin();
+    expect(r.get().sessionId).toBe("sess-1");
+    expect(r.get().history.map((record) => record.window_id)).toEqual([1]);
+
+    r.loop.detach();
+    expect(r.get().sessionId).toBe("sess-1");
+    expect(r.get().history.map((record) => record.window_id)).toEqual([1]);
+    expect(r.get().running).toBe(false);
+    expect(r.get().busy).toBe(false);
+
+    await r.loop.start();
+    await r.time.advance(0);
+    expect(r.api.create).toHaveBeenCalledTimes(2);
+    expect(r.get().sessionId).toBe("sess-2");
+    // A fresh session history, not the old one with a new record appended. (The
+    // rig's fake API keeps a global window counter, so the id itself is not 1.)
+    expect(r.get().history).toHaveLength(1);
   });
 });
 

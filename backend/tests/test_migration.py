@@ -154,6 +154,26 @@ def test_migration_never_erases_a_row_whose_payload_is_unusable(tmp_path, monkey
     engine.dispose()
 
 
+def test_migration_adds_session_status_and_backfills_legacy_rows_as_active(tmp_path, monkeypatch):
+    """An old sessions table has no status column. The additive migration must create it
+    and make every existing row ACTIVE; repeating the upgrade changes nothing and a
+    session created afterwards is ACTIVE as well."""
+    from app import db
+    engine = make_legacy_engine(tmp_path)
+    with engine.begin() as conn:
+        conn.execute(text("INSERT INTO sessions VALUES ('legacy-2', '2026-09-29T00:00:00', 'also keep me')"))
+    monkeypatch.setattr(db, "engine", engine)
+    db.initialize_database()
+    db.initialize_database()
+    with engine.connect() as conn:
+        columns = {column["name"] for column in inspect(conn).get_columns("sessions")}
+        assert "status" in columns
+        statuses = conn.execute(text(
+            "SELECT id, status FROM sessions ORDER BY id")).all()
+        assert statuses == [("legacy", "ACTIVE"), ("legacy-2", "ACTIVE")]
+    engine.dispose()
+
+
 def test_migrated_legacy_rows_export_as_json_booleans_and_nulls(tmp_path, monkeypatch):
     """End to end: the export streams the stored blob verbatim, so the migration must
     have written real JSON true/false/null - an integer would leak onto the wire."""

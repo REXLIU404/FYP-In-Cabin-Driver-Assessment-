@@ -134,6 +134,17 @@ describe("classifyFailure: the three kinds of 409 (T1, T2)", () => {
     },
   );
 
+  // The server's detail is SESSION_CLOSED_DETAIL (backend/app/routers/windows.py),
+  // restated here as a literal on purpose.
+  it("a closed session is a stop that spends no retry budget (session_closed)", () => {
+    expect(http(409, "Session is closed")).toEqual({
+      category: "session_closed",
+      status: 409,
+      retryable: false,
+      counted: false,
+    });
+  });
+
   // R10. The server's text is OBSERVATION_CONFLICT_DETAIL (backend/app/routers/windows.py);
   // it is restated here as a literal on purpose.
   const OBSERVATION_CONFLICT =
@@ -264,6 +275,7 @@ describe("FAULT_TEXT: what the stop panel says", () => {
     "conflict_mode",
     "conflict_stale_frame",
     "observation_conflict",
+    "session_closed",
     "models_unavailable",
     "model_runtime",
     "storage",
@@ -456,6 +468,7 @@ describe("faultAdvice: the sentence follows why the loop stopped (K8)", () => {
       "conflict_mode",
       "conflict_stale_frame",
       "observation_conflict",
+      "session_closed",
       "models_unavailable",
       "storage",
       "transport",

@@ -1,6 +1,7 @@
 export type RiskLevel = "Low" | "Medium" | "High";
 export type AlertSeverity = "NORMAL" | "CAUTION" | "HIGH_ALERT";
 export type SystemHealth = "FULL" | "DEGRADED" | "UNAVAILABLE";
+export type SessionStatus = "ACTIVE" | "CLOSED";
 export type OperationMode =
   | "PREPARED_SESSION_RUNTIME"
   | "LIVE_MODEL_RUNTIME"
@@ -171,6 +172,8 @@ export interface SessionMeta {
   created_at: string;
   total_windows: number;
   operation_mode?: OperationMode;
+  /** Absent on locally persisted metadata and on responses from before the lifecycle existed. */
+  status?: SessionStatus;
 }
 
 export interface AppConfig {

@@ -13,7 +13,8 @@ reach it, and are recorded here instead:
 Both handlers return exactly the response FastAPI / Starlette would have produced,
 so status codes and bodies are unchanged; they only add a fault row. They record
 ``POST /api/sessions/{id}/infer`` and nothing else - the replay ``/windows`` route
-is not part of the live failure model.
+is not part of the live failure model and records only its own closed-session
+refusal (``routers/windows.py``).
 """
 import inspect
 import re

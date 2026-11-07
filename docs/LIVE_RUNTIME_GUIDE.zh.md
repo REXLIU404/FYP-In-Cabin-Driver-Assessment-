@@ -97,7 +97,7 @@ API 文档：http://127.0.0.1:8000/docs。`GET /api/health` 检查进程；`GET 
 
 - SQLite 自动进行 additive migration，保留旧 session/window；旧窗口若存在重复编号，启动会报错要求人工核对，不会删除记录“修复”。
 - Session 保存自己的融合配置和 EMA/FSM 状态，编号单调增加；重启或删除单条记录不会重用编号。重复相同 request ID/输入返回原记录，冲突返回 409。
-- 测试：[IMPLEMENTATION_PROGRESS.zh.md](IMPLEMENTATION_PROGRESS.zh.md) 与 [浏览器/前端证据](evidence/2026-10-05)、[最终后端/HTTP 证据](evidence/2026-10-09)。浏览器使用模拟 camera，模型与数据库真实运行。
+- 测试：[证据索引](evidence/README.md) 与 [浏览器/前端证据](evidence/2026-10-05)、[最终后端/HTTP 证据](evidence/2026-10-09)。浏览器使用模拟 camera，模型与数据库真实运行。
 - 下一步是实际 camera/权限验收、带标签正面视频评估与指定 edge device 的时延/掉帧/持续运行测试。State Farm 测试集 accuracy 不能代表正面实拍准确率。
 - Vision 当前是整帧分类器，没有额外人脸/驾驶员存在检测；空座位/非驾驶场景仍可能给出类别概率。真实特征 SHAP 尚未接入，Live 的 feature-contribution 项显示 unavailable；不使用 demo 的人工贡献值冒充解释。
-- EfficientNet 等对比按用户要求暂停；精度改善方案保留在 [初始分析与实验计划](PROJECT_ASSESSMENT_AND_TEST_PLAN.zh.md)。
+- EfficientNet 等对比按用户要求暂停。

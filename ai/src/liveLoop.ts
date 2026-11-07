@@ -66,6 +66,7 @@ export type FaultCategory =
   | "conflict_mode"
   | "conflict_stale_frame"
   | "observation_conflict"
+  | "session_closed"
   | "models_unavailable"
   | "model_runtime"
   | "storage"
@@ -453,6 +454,12 @@ export interface LiveLoop<TModels> {
    * sent; the next `start()` creates a new session.
    */
   clear(): void;
+  /**
+   * The session was ended through the API: stop, drop any frozen request and detach it,
+   * so the next `start()` creates a new session. The displayed session and its history
+   * stay readable.
+   */
+  detach(): void;
   /** Swap one history entry for a newer copy of the same window (a flag toggle). */
   replaceRecord(record: RiskUpdate): void;
   /**
@@ -706,7 +713,9 @@ export function createLiveLoop<TModels = unknown>(
     err: unknown,
     manual: boolean,
   ): void {
-    if (!failure.counted) {
+    // A closed session is a stop, not a droppable frame: it spends no retry budget,
+    // but carrying on would only send more frames the server refuses.
+    if (!failure.counted && failure.category !== "session_closed") {
       // Not a failure of the request: a late frame the server refused, or an
       // abort nobody asked for. Discard the frame and carry on with the next tick.
       pending = null;
@@ -722,7 +731,8 @@ export function createLiveLoop<TModels = unknown>(
       scheduleTick(g, intervalMs() - (deps.now() - sentAt));
       return;
     }
-    const newSessionOnRetry = failure.category === "not_found";
+    const newSessionOnRetry =
+      failure.category === "not_found" || failure.category === "session_closed";
     if (newSessionOnRetry) activeSid = "";
     const fault: LiveFault = {
       category: failure.category,
@@ -940,6 +950,21 @@ export function createLiveLoop<TModels = unknown>(
     });
   }
 
+  function detach(): void {
+    cancel();
+    pending = null;
+    completions = [];
+    activeSid = "";
+    configKey = "";
+    patch({
+      running: false,
+      busy: false,
+      retrying: false,
+      fault: null,
+      effectiveFps: null,
+    });
+  }
+
   function replaceRecord(record: RiskUpdate): void {
     if (!state.history.some((r) => r.window_id === record.window_id)) return;
     patch({
@@ -960,6 +985,7 @@ export function createLiveLoop<TModels = unknown>(
     retry,
     loadSession,
     clear,
+    detach,
     replaceRecord,
     getTimings: () => timings?.snapshot() ?? [],
     markRendered(windowId) {

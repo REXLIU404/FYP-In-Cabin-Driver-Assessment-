@@ -25,6 +25,7 @@ class SessionMeta(Base):
     description = Column(String, default="")
     next_window_id = Column(Integer, nullable=False, default=0, server_default="0")
     operation_mode = Column(String, nullable=False, default="PREPARED_SESSION_RUNTIME", server_default="PREPARED_SESSION_RUNTIME")
+    status = Column(String, nullable=False, default="ACTIVE", server_default="ACTIVE")
     runtime_state = Column(JSON, nullable=False, default=dict, server_default="{}")
     runtime_config = Column(JSON, nullable=False, default=dict, server_default="{}")
 
