@@ -75,8 +75,7 @@ proxies `/api` to it; one Ctrl-C stops both. `npm run dev` alone starts only Vit
 a backend the page reports "The backend cannot be reached".
 
 - [Runtime guide, inputs and limitations (中文)](docs/LIVE_RUNTIME_GUIDE.zh.md)
-- [Completed work, verified tests and next steps (中文)](docs/IMPLEMENTATION_PROGRESS.zh.md)
-- [Initial audit and accuracy/edge experiment plan (中文)](docs/PROJECT_ASSESSMENT_AND_TEST_PLAN.zh.md)
+- [Document index (中文)](docs/README.md)
 - [Backend API and persistence](backend/README.md)
 - [Browser/frontend evidence](docs/evidence/2026-10-05/) and [final backend/HTTP evidence](docs/evidence/2026-10-09/)
 

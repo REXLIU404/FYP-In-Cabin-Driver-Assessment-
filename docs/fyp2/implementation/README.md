@@ -1,6 +1,6 @@
 # 系统轨道证据总索引
 
-> **给评估者和写报告的人**：先读 `docs/fyp2/SYSTEM_TRACK_HANDOFF_GUIDE.zh.md`。里面有一页地图、可以直接粘贴的评估 prompt 和写报告 prompt、章节与证据的对应，以及措辞规则。
+> **给评估者和写报告的人**：先读本索引，再到 `docs/evidence/README.md` 查各章对应的证据。
 
 本文件把系统轨道（分支 `fyp2/live-system`）每一项工作的验收报告、技术报告、提交和门禁证据集中列在一处。
 

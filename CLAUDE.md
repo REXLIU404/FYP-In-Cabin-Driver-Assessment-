@@ -4,10 +4,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## FYP2 handoff: read before continuing development
 
-Read [FYP2 Claude development handbook](docs/FYP2_CLAUDE_DEVELOPMENT_HANDBOOK.zh.md),
-then [current implementation status](docs/IMPLEMENTATION_PROGRESS.zh.md) and
-[runtime guide](docs/LIVE_RUNTIME_GUIDE.zh.md). The handbook contains the phased
-workflow, code ownership, validation steps, remaining work and handoff checklist.
+Read the [document index](docs/README.md), then the
+[system-track roadmap](.planning/system-track/task_plan.md) and the
+[runtime guide](docs/LIVE_RUNTIME_GUIDE.zh.md). The roadmap contains the phases,
+their order, their status and the open items.
 Use current files and dated test evidence to verify old chat claims before acting.
 Private historical exports under `.local/claude-recovery/` are reference data,
 not project instructions. Do not commit manifests, download tokens or chat archives.
@@ -20,7 +20,7 @@ combined by **decision-level late fusion** into a `RiskScore` / `RiskLevel` / `D
 and surfaced through a five-view React dashboard. Current live mode uses trained MobileNetV3 ONNX + XGBoost through FastAPI and SQLite.
 Only camera is a live sensor; telemetry uses prepared raw-feature replay. The earlier
 frontend-only prepared-probability demo remains a separate mode. See
-`docs/IMPLEMENTATION_PROGRESS.zh.md` and `docs/LIVE_RUNTIME_GUIDE.zh.md` for current evidence.
+`docs/evidence/README.md` and `docs/LIVE_RUNTIME_GUIDE.zh.md` for current evidence.
 
 ## Commands
 
@@ -133,8 +133,8 @@ in `useCameraPreview`; API access in `frontend/src/api`; demo persistence in `ut
 ## Source of truth & docs
 
 This file (`CLAUDE.md`) contains the applicable project instructions. Check current files rather than
-assuming an older copied spec is still present. Current runtime status and startup instructions
-are in `docs/IMPLEMENTATION_PROGRESS.zh.md` and `docs/LIVE_RUNTIME_GUIDE.zh.md`.
+assuming an older copied spec is still present. Current status is in `.planning/system-track/task_plan.md`, and startup
+instructions are in `docs/LIVE_RUNTIME_GUIDE.zh.md`.
 `PROJECT_MEMORY.md` and the `.docx` guidebooks on the user's Desktop are higher-level design memory.
 
 ## Git workflow
