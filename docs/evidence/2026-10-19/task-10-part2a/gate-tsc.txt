@@ -1,0 +1,2 @@
+COMMAND: ./node_modules/.bin/tsc --noEmit
+EXIT: 0

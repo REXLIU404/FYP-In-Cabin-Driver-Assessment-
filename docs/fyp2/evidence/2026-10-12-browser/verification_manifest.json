@@ -1,0 +1,40 @@
+{
+  "checked_utc_date": "2026-10-12",
+  "source_root": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1",
+  "source_head": "845b43a086e296d96835bf82e4ef8366c636e105",
+  "db": "/tmp/fyp2-browser-oct10/validation.db",
+  "main_session": "S8d4e616a597b4dd5973d31a9ad417049",
+  "main_session_records": 811,
+  "camera_records": 645,
+  "camera_argmax_counts": {
+    "hair_makeup": 642,
+    "reaching_behind": 3
+  },
+  "system_health_counts": {
+    "FULL": 585,
+    "DEGRADED": 226
+  },
+  "json_equals_db_all_fields": true,
+  "csv_equals_json_all_exported_fields": true,
+  "flag_753_persisted_and_exported": true,
+  "independent_fusion_formula_checked_records": 811,
+  "download_sha256": {
+    "S8d4e616a597b4dd5973d31a9ad417049 (1).json": "e49de9f290d5e3b7c53f137dc966a283adf1bde9062c99f87ef82dcdbd83619e",
+    "S8d4e616a597b4dd5973d31a9ad417049 (1).csv": "e6d9341b755bbfa3c99accda3589f0b3d3f43f73de6c835f18d2281f98184a17"
+  },
+  "model_sha256": {
+    "vision_model_sha256": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "telemetry_model_sha256": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07"
+  },
+  "diagnostic_session": "S05a3faf1461640c2855f6830a7282f2d",
+  "trace_equals_db_request_window_timestamp_probabilities": true,
+  "diagnostic_record_count": 394,
+  "diagnostic_unique_image_hashes": 394,
+  "unchanged_application_and_training_source_files_checked": 59,
+  "changed_application_and_training_source_files": [],
+  "limits": [
+    "No saved camera images or controlled ground-truth labels.",
+    "No formal end-to-end latency percentile, edge-device or long-duration benchmark.",
+    "No app code or training changes."
+  ]
+}

@@ -1,0 +1,51 @@
+START xgboost_01 P2 42 {'max_depth': 3, 'learning_rate': 0.03, 'subsample': 0.8}
+END xgboost_01 COMPLETED
+START xgboost_02 P3 42 {'max_depth': 3, 'learning_rate': 0.03, 'subsample': 1.0}
+END xgboost_02 COMPLETED
+START xgboost_03 P3 42 {'max_depth': 3, 'learning_rate': 0.1, 'subsample': 0.8}
+END xgboost_03 COMPLETED
+START xgboost_04 P3 42 {'max_depth': 3, 'learning_rate': 0.1, 'subsample': 1.0}
+END xgboost_04 COMPLETED
+START xgboost_05 P3 42 {'max_depth': 6, 'learning_rate': 0.03, 'subsample': 0.8}
+END xgboost_05 COMPLETED
+START xgboost_06 P3 42 {'max_depth': 6, 'learning_rate': 0.03, 'subsample': 1.0}
+END xgboost_06 COMPLETED
+START xgboost_07 P3 42 {'max_depth': 6, 'learning_rate': 0.1, 'subsample': 0.8}
+END xgboost_07 COMPLETED
+START xgboost_08 P3 42 {'max_depth': 6, 'learning_rate': 0.1, 'subsample': 1.0}
+END xgboost_08 COMPLETED
+START xgboost_09 P3 43 {'max_depth': 3, 'learning_rate': 0.03, 'subsample': 1.0}
+END xgboost_09 COMPLETED
+START xgboost_10 P3 44 {'max_depth': 3, 'learning_rate': 0.03, 'subsample': 1.0}
+END xgboost_10 COMPLETED
+START random_forest_01 P2 42 {'n_estimators': 200, 'max_depth': None}
+END random_forest_01 COMPLETED
+START random_forest_02 P3 42 {'n_estimators': 200, 'max_depth': 12}
+END random_forest_02 COMPLETED
+START random_forest_03 P3 42 {'n_estimators': 200, 'max_depth': 24}
+END random_forest_03 COMPLETED
+START random_forest_04 P3 42 {'n_estimators': 400, 'max_depth': None}
+END random_forest_04 COMPLETED
+START random_forest_05 P3 42 {'n_estimators': 400, 'max_depth': 12}
+END random_forest_05 COMPLETED
+START random_forest_06 P3 42 {'n_estimators': 400, 'max_depth': 24}
+END random_forest_06 COMPLETED
+START random_forest_07 P3 43 {'n_estimators': 400, 'max_depth': 24}
+END random_forest_07 COMPLETED
+START random_forest_08 P3 44 {'n_estimators': 400, 'max_depth': 24}
+END random_forest_08 COMPLETED
+START logistic_regression_01 P2 42 {'C': 0.01}
+END logistic_regression_01 COMPLETED
+START logistic_regression_02 P3 42 {'C': 0.1}
+END logistic_regression_02 COMPLETED
+START logistic_regression_03 P3 42 {'C': 1}
+END logistic_regression_03 COMPLETED
+START logistic_regression_04 P3 42 {'C': 10}
+END logistic_regression_04 COMPLETED
+START logistic_regression_05 P3 42 {'C': 100}
+END logistic_regression_05 COMPLETED
+START logistic_regression_06 P3 42 {'C': 1000}
+END logistic_regression_06 COMPLETED
+START logistic_regression_07 P3 43 {'C': 1000}
+END logistic_regression_07 COMPLETED
+{"run_id": "p3_telemetry_20261018", "status": "COMPLETED", "used_wall_seconds": 66.14878750010394}

@@ -1,0 +1,34 @@
+{
+  "id": "ML-VISION-SMOKE",
+  "argv": [
+    "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+    "ml/experiments/vision_benchmark.py",
+    "--mode",
+    "evaluate",
+    "--limit",
+    "20",
+    "--parity-samples",
+    "20",
+    "--output",
+    "/Users/liu/.codex/worktrees/d39a/FYP-In-Cabin-Driver-Assessment--1/docs/fyp2/evidence/vision_smoke.json"
+  ],
+  "cwd": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1",
+  "start_utc": "2026-10-09T11:47:00.446806+00:00",
+  "duration_s": 3.086,
+  "timeout_s": 90,
+  "exit_code": 0,
+  "environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "TMPDIR": "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd",
+    "PYTHONPATH": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/backend",
+    "DRA_DATABASE_URL": "sqlite:////var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd/fallback.db",
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "VECLIB_MAXIMUM_THREADS": "2"
+  },
+  "log": "evidence/ML-VISION-SMOKE.log"
+}
+
+evaluated 16/20
+{"evaluation": {"split": "test", "runtime": "onnxruntime_cpu", "checkpoint_sha256": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7", "onnx_sha256": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf", "preprocess": "PIL RGB, bilinear Resize(224,224), ToTensor, ImageNet mean/std", "seconds_including_decode_and_parity": 0.5234834580041934, "samples": 20, "accuracy": 0.9, "macro_f1": 0.6575757575757576, "distraction_threshold": 0.5, "binary_distraction_recall": 1.0, "safe_false_positive_rate": 0.16666666666666666, "binary_brier_score": 0.035480789840221405}, "onnx_parity": {"samples": 16, "max_abs_logit_difference": 2.6702880859375e-05, "max_abs_probability_difference": 1.7285346984863281e-06, "argmax_disagreements": 0, "sampling": "seed42 class-stratified", "classes": ["c0", "c2", "c3", "c4", "c5", "c6", "c7", "c8"]}}
+Saved /Users/liu/.codex/worktrees/d39a/FYP-In-Cabin-Driver-Assessment--1/docs/fyp2/evidence/vision_smoke.json

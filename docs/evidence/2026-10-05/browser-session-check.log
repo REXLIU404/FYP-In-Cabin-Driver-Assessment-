@@ -1,0 +1,37 @@
+### Result
+{"check":"pause_resume_new_camera_loss_history","original_id":"Sa1353659bd6f45dd85738b0b813f1859","resumed_window":170,"new_session":"S671205414ad24eda940cc04a14dce402","degraded":{"session_id":"S671205414ad24eda940cc04a14dce402","window_id":2,"timestamp":"2026-10-05T08:32:01.800337+00:00","P_distraction":0,"P_telemetry_anomaly":0.00022095441818237305,"RiskScore":0,"RiskLevel":"Low","DominantEvidence":"Partial evidence","AlertSeverity":"NORMAL","SystemHealth":"DEGRADED","operation_mode":"LIVE_MODEL_RUNTIME","modality_freshness":{"vision":"missing","telemetry":"fresh"},"latency_ms":2,"visual_top_classes":[],"telemetry_behavior_classes":[{"label":"Safe","probability":0.9997790455818176},{"label":"Aggressive","probability":0.00006998491153353825},{"label":"Distracted","probability":0.00015100445307325572}],"telemetry_feature_contributions":[],"telemetry_features":{"speed_kmph":34,"accel_x":0.3,"accel_y":0.1,"brake_pressure":12,"steering_angle":-2,"throttle":30,"lane_deviation":0.3,"headway_distance":26},"explanation":"Output is based on partial evidence; one modality is stale or missing.","flagged":false,"provenance":{"provider":"MobileNetV3ONNX+XGBoost","request_id":"36b18b91-7963-4aba-b4a6-18bb87054e8c","vision_source":"missing","telemetry_source":"prepared_replay","vision_model_sha256":"b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf","telemetry_model_sha256":"9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07","captured_at":null,"telemetry_timestamp":"2026-10-05T08:32:01.796000+00:00","processed_at":"2026-10-05T08:32:01.799289+00:00","timing_ms":{"telemetry_ms":0.45541703002527356},"P_distraction_raw":0,"P_telemetry_raw":0.00022095441818237305,"fusion_config":{"weight_vision":0.5,"weight_telemetry":0.5,"ema_alpha":0.35,"threshold_low":30,"threshold_high":60,"freshness_tolerance_s":3}}},"original_records":170}
+### Ran Playwright code
+```js
+await (async (page) => {
+  const sessions = await (await page.request.get("http://127.0.0.1:8011/api/sessions")).json();
+  const original = sessions[0];
+  await page.getByRole("button", {name:"Live Monitor", exact:true}).click();
+  await page.getByRole("heading", {name:"Assessment unavailable", exact:true}).waitFor();
+  await page.screenshot({path:"output/playwright/paused-stale.png", fullPage:true});
+  let pending = page.waitForResponse(r => r.url().endsWith("/infer") && r.status() === 201);
+  await page.getByRole("button", {name:"Start Monitoring", exact:true}).click();
+  const resumed = await (await pending).json();
+  if (resumed.session_id !== original.id || resumed.window_id <= original.total_windows) throw new Error("Resume lost sequence");
+  pending = page.waitForResponse(r => r.url().endsWith("/infer") && r.status() === 201 && !r.url().includes(original.id));
+  await page.getByRole("button", {name:"New Session", exact:true}).click();
+  const created = await (await pending).json();
+  if (created.window_id !== 1) throw new Error("New session counter did not start at 1");
+  await page.getByRole("button", {name:"Stop Camera", exact:true}).click();
+  let missing;
+  for (let i=0;i<5;i++) {
+    missing = await (await page.waitForResponse(r => r.url().endsWith("/infer") && r.status() === 201)).json();
+    if(missing.modality_freshness.vision === "missing") break;
+  }
+  if (missing.modality_freshness.vision !== "missing" || missing.SystemHealth !== "DEGRADED") throw new Error("Stopped camera not marked missing");
+  await page.screenshot({path:"output/playwright/camera-stopped.png", fullPage:true});
+  await page.getByRole("button", {name:"Pause", exact:true}).click();
+  await page.getByRole("button", {name:"Refresh saved sessions", exact:true}).click();
+  await page.getByRole("combobox", {name:"Saved live sessions", exact:true}).selectOption(original.id);
+  await page.getByRole("button", {name:"Signal Inspector", exact:true}).click();
+  await page.getByRole("button", {name:"Window 1", exact:true}).click();
+  await page.getByRole("button", {name:"Unflag", exact:true}).waitFor();
+  const exportResult = await (await page.request.get("http://127.0.0.1:8011/api/sessions/"+original.id+"/export")).json();
+  if (!exportResult.records.find(r=>r.window_id===1).flagged) throw new Error("Historical flag lost");
+  return {check:"pause_resume_new_camera_loss_history", original_id:original.id, resumed_window:resumed.window_id, new_session:created.session_id, degraded:missing, original_records:exportResult.records.length};
+})(page);
+```

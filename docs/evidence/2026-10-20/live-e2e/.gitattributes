@@ -1,0 +1,4 @@
+# The exports are archived byte for byte as the page downloaded them (the CSV exporter writes CRLF);
+# do not let core.autocrlf rewrite them.
+session-export.csv -text
+session-export.json -text

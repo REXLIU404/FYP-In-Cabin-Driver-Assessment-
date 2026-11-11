@@ -5,3 +5,49 @@ tsconfig.tsbuildinfo
 *.local
 .playwright-cli
 .vscode
+
+# local agent team config — keep out of the pushed repo
+.claude/
+.codex/
+.superpowers/
+.local/
+
+# Local environments, credentials and tool caches
+.venv/
+.env
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
+
+# backend runtime artifacts
+backend/*.db
+backend/logs/
+backend/**/__pycache__/
+__pycache__/
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+
+# local report assembly artifacts
+docs/chapter5_report_ready/
+
+# Private Claude export manifests, source archives and recovered conversations
+.local/claude-recovery/
+
+# local run output (Playwright screenshots, ad-hoc exports) — not tracked
+output/
+backend.dev.log
+
+# Task 10A: candidate model packages are copied here, never committed
+ml/outputs/candidates/
+
+# Constructed scenario bundles: generated dataset images, never committed
+demo/bundles/

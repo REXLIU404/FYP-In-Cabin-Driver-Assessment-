@@ -1,0 +1,34 @@
+{
+  "checks": {
+    "all_time_model_stage_rss_disk_caps_unchanged": true,
+    "cached_supervisor_explicitly_consumes_protocol_minimum": true,
+    "formal_supervisor_explicitly_consumes_protocol_minimum": true,
+    "frozen_inputs_models_seed_qc_removal_unchanged": true,
+    "generic_supervisor_default_8_gib_unchanged": true,
+    "protocol_only_changes_are_8_to_4_gib_minimum_and_resource_amendment": true,
+    "source_and_protocol_hash_bindings_change_old_approval_cannot_be_reused": true,
+    "synthetic_tests_cover_6_gib_allow_and_3_gib_refuse_and_both_consumers": true,
+    "validate_protocol_requires_4_gib": true
+  },
+  "findings": [],
+  "limits": [
+    "Static review only; root owns software-suite execution.",
+    "Lower startup RAM does not guarantee full-run memory feasibility; existing RSS/time/disk stop rules remain.",
+    "Root must bind separately granted P4-B authorization to current source/protocol hashes; previous bindings are obsolete."
+  ],
+  "patch_sha256": "46d3e031d3df7c099c0e78a89adc93311e3c0636584302c9caece35ada2f16de",
+  "review_execution": {
+    "exports": 0,
+    "heldout_observations_read": 0,
+    "model_forward_calls": 0,
+    "tests_run": 0
+  },
+  "reviewed_at_utc": "2026-10-22T10:34:47.733802+00:00",
+  "source_sha256_match": {
+    "ml/configs/p4_protocol.json": true,
+    "ml/experiments/run_p4.py": true,
+    "ml/tests/test_p4_core.py": true
+  },
+  "status": "PASS_SCOPED_STATIC_RAM_ONLY_REVIEW",
+  "unchanged_core_sha256": "87c7daee65d6e763f5ce80f7a82bdd90d541c74970f7ac89d02221b97911ac68"
+}

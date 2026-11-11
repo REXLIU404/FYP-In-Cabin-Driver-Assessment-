@@ -1,0 +1,7 @@
+-r requirements.txt
+numpy>=1.26
+Pillow>=10.0
+onnxruntime>=1.17
+xgboost>=2.0
+# end-to-end (browser) verification of the live dashboard
+playwright>=1.60

@@ -1,0 +1,19 @@
+{
+  "status": "READY_FOR_AUTHORIZED_P4B_LAUNCH",
+  "available_ram_gib": 5.8436737060546875,
+  "minimum_ram_gib": 4,
+  "free_disk_gib": 290.4143257141113,
+  "power_plugged": true,
+  "binding": {
+    "protocol_sha256": "08cbbc25685a4c6a68781ebff2b174f747c68090bb0f24176f8277ee47a9e9de",
+    "run_id": "p4b_20261022",
+    "source_sha256": "8a41c99e1fd47e91e1e4f75522cb9e6eb3948eca9fd6d7f771278bdf32a80d5f"
+  },
+  "old_approval_invalidated": true,
+  "source_snapshot_count": 13,
+  "full_ml_suite": "280 passed in 23.20s",
+  "formal_budget_seconds": 14400,
+  "new_training_hpo_exports": 0,
+  "heldout_observations_opened": 0,
+  "git_head": "335da4e3de203836c045452f84cc291bcd352a26"
+}

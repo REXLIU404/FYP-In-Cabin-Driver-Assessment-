@@ -1,0 +1,354 @@
+FFFFFFFFFFFFF                                                            [100%]
+=================================== FAILURES ===================================
+___________________ test_reuse_preserves_original_statistics ___________________
+
+preparation = <test_e1_preparation.preparation.<locals>.Missing object at 0x1084ec590>
+
+    def test_reuse_preserves_original_statistics(preparation):
+        frozen=toy_stats();before=copy.deepcopy(frozen)
+>       assert preparation.verify_reused_statistics(frozen,toy_stats())=='REUSED_AND_VERIFIED'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_preparation.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_preparation.preparation.<locals>.Missing object at 0x1084ec590>
+name = 'verify_reused_statistics'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing validation-only E1 preparation evidence runner')
+E       Failed: Missing validation-only E1 preparation evidence runner
+
+ml/tests/test_e1_preparation.py:20: Failed
+____________ test_corrupted_train_statistics_refuse[fit_split-val] _____________
+
+preparation = <test_e1_preparation.preparation.<locals>.Missing object at 0x1084ec440>
+field = 'fit_split', value = 'val'
+
+    @pytest.mark.parametrize('field,value',[
+        ('fit_split','val'),('train_split_sha256','changed'),('fit_rows',4),
+        ('median',[0.]*8),('sd_ddof0',[1.]*8),('mean_global',[1.]*8),
+        ('mean_by_class',{'Safe':[0.]*8})])
+    def test_corrupted_train_statistics_refuse(preparation,field,value):
+        frozen=toy_stats();frozen[field]=value
+        with pytest.raises(ValueError,match='statistics'):
+>           preparation.verify_reused_statistics(frozen,toy_stats())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_preparation.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_preparation.preparation.<locals>.Missing object at 0x1084ec440>
+name = 'verify_reused_statistics'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing validation-only E1 preparation evidence runner')
+E       Failed: Missing validation-only E1 preparation evidence runner
+
+ml/tests/test_e1_preparation.py:20: Failed
+______ test_corrupted_train_statistics_refuse[train_split_sha256-changed] ______
+
+preparation = <test_e1_preparation.preparation.<locals>.Missing object at 0x111469940>
+field = 'train_split_sha256', value = 'changed'
+
+    @pytest.mark.parametrize('field,value',[
+        ('fit_split','val'),('train_split_sha256','changed'),('fit_rows',4),
+        ('median',[0.]*8),('sd_ddof0',[1.]*8),('mean_global',[1.]*8),
+        ('mean_by_class',{'Safe':[0.]*8})])
+    def test_corrupted_train_statistics_refuse(preparation,field,value):
+        frozen=toy_stats();frozen[field]=value
+        with pytest.raises(ValueError,match='statistics'):
+>           preparation.verify_reused_statistics(frozen,toy_stats())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_preparation.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_preparation.preparation.<locals>.Missing object at 0x111469940>
+name = 'verify_reused_statistics'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing validation-only E1 preparation evidence runner')
+E       Failed: Missing validation-only E1 preparation evidence runner
+
+ml/tests/test_e1_preparation.py:20: Failed
+______________ test_corrupted_train_statistics_refuse[fit_rows-4] ______________
+
+preparation = <test_e1_preparation.preparation.<locals>.Missing object at 0x111469fd0>
+field = 'fit_rows', value = 4
+
+    @pytest.mark.parametrize('field,value',[
+        ('fit_split','val'),('train_split_sha256','changed'),('fit_rows',4),
+        ('median',[0.]*8),('sd_ddof0',[1.]*8),('mean_global',[1.]*8),
+        ('mean_by_class',{'Safe':[0.]*8})])
+    def test_corrupted_train_statistics_refuse(preparation,field,value):
+        frozen=toy_stats();frozen[field]=value
+        with pytest.raises(ValueError,match='statistics'):
+>           preparation.verify_reused_statistics(frozen,toy_stats())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_preparation.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_preparation.preparation.<locals>.Missing object at 0x111469fd0>
+name = 'verify_reused_statistics'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing validation-only E1 preparation evidence runner')
+E       Failed: Missing validation-only E1 preparation evidence runner
+
+ml/tests/test_e1_preparation.py:20: Failed
+____________ test_corrupted_train_statistics_refuse[median-value3] _____________
+
+preparation = <test_e1_preparation.preparation.<locals>.Missing object at 0x11146a120>
+field = 'median', value = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, ...]
+
+    @pytest.mark.parametrize('field,value',[
+        ('fit_split','val'),('train_split_sha256','changed'),('fit_rows',4),
+        ('median',[0.]*8),('sd_ddof0',[1.]*8),('mean_global',[1.]*8),
+        ('mean_by_class',{'Safe':[0.]*8})])
+    def test_corrupted_train_statistics_refuse(preparation,field,value):
+        frozen=toy_stats();frozen[field]=value
+        with pytest.raises(ValueError,match='statistics'):
+>           preparation.verify_reused_statistics(frozen,toy_stats())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_preparation.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_preparation.preparation.<locals>.Missing object at 0x11146a120>
+name = 'verify_reused_statistics'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing validation-only E1 preparation evidence runner')
+E       Failed: Missing validation-only E1 preparation evidence runner
+
+ml/tests/test_e1_preparation.py:20: Failed
+___________ test_corrupted_train_statistics_refuse[sd_ddof0-value4] ____________
+
+preparation = <test_e1_preparation.preparation.<locals>.Missing object at 0x11146a270>
+field = 'sd_ddof0', value = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, ...]
+
+    @pytest.mark.parametrize('field,value',[
+        ('fit_split','val'),('train_split_sha256','changed'),('fit_rows',4),
+        ('median',[0.]*8),('sd_ddof0',[1.]*8),('mean_global',[1.]*8),
+        ('mean_by_class',{'Safe':[0.]*8})])
+    def test_corrupted_train_statistics_refuse(preparation,field,value):
+        frozen=toy_stats();frozen[field]=value
+        with pytest.raises(ValueError,match='statistics'):
+>           preparation.verify_reused_statistics(frozen,toy_stats())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_preparation.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_preparation.preparation.<locals>.Missing object at 0x11146a270>
+name = 'verify_reused_statistics'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing validation-only E1 preparation evidence runner')
+E       Failed: Missing validation-only E1 preparation evidence runner
+
+ml/tests/test_e1_preparation.py:20: Failed
+__________ test_corrupted_train_statistics_refuse[mean_global-value5] __________
+
+preparation = <test_e1_preparation.preparation.<locals>.Missing object at 0x11146a3c0>
+field = 'mean_global', value = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, ...]
+
+    @pytest.mark.parametrize('field,value',[
+        ('fit_split','val'),('train_split_sha256','changed'),('fit_rows',4),
+        ('median',[0.]*8),('sd_ddof0',[1.]*8),('mean_global',[1.]*8),
+        ('mean_by_class',{'Safe':[0.]*8})])
+    def test_corrupted_train_statistics_refuse(preparation,field,value):
+        frozen=toy_stats();frozen[field]=value
+        with pytest.raises(ValueError,match='statistics'):
+>           preparation.verify_reused_statistics(frozen,toy_stats())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_preparation.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_preparation.preparation.<locals>.Missing object at 0x11146a3c0>
+name = 'verify_reused_statistics'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing validation-only E1 preparation evidence runner')
+E       Failed: Missing validation-only E1 preparation evidence runner
+
+ml/tests/test_e1_preparation.py:20: Failed
+_________ test_corrupted_train_statistics_refuse[mean_by_class-value6] _________
+
+preparation = <test_e1_preparation.preparation.<locals>.Missing object at 0x11146a510>
+field = 'mean_by_class', value = {'Safe': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, ...]}
+
+    @pytest.mark.parametrize('field,value',[
+        ('fit_split','val'),('train_split_sha256','changed'),('fit_rows',4),
+        ('median',[0.]*8),('sd_ddof0',[1.]*8),('mean_global',[1.]*8),
+        ('mean_by_class',{'Safe':[0.]*8})])
+    def test_corrupted_train_statistics_refuse(preparation,field,value):
+        frozen=toy_stats();frozen[field]=value
+        with pytest.raises(ValueError,match='statistics'):
+>           preparation.verify_reused_statistics(frozen,toy_stats())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_preparation.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_preparation.preparation.<locals>.Missing object at 0x11146a510>
+name = 'verify_reused_statistics'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing validation-only E1 preparation evidence runner')
+E       Failed: Missing validation-only E1 preparation evidence runner
+
+ml/tests/test_e1_preparation.py:20: Failed
+_ test_profile_cannot_expand_preparation_scope[formal_execution_authorized-True] _
+
+preparation = <test_e1_preparation.preparation.<locals>.Missing object at 0x11146a660>
+field = 'formal_execution_authorized', value = True
+
+    @pytest.mark.parametrize('field,value',[
+        ('formal_execution_authorized',True),('source_split','test'),('seed',43),
+        ('vision_source_count',1000),('telemetry_source_count',4500)])
+    def test_profile_cannot_expand_preparation_scope(preparation,field,value):
+        profile={'formal_execution_authorized':False,'source_split':'val','seed':42,
+                 'vision_source_count':10,'telemetry_source_count':30}
+        profile[field]=value
+        with pytest.raises(ValueError,match='preparation'):
+>           preparation.validate_profile(profile)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_preparation.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_preparation.preparation.<locals>.Missing object at 0x11146a660>
+name = 'validate_profile'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing validation-only E1 preparation evidence runner')
+E       Failed: Missing validation-only E1 preparation evidence runner
+
+ml/tests/test_e1_preparation.py:20: Failed
+_______ test_profile_cannot_expand_preparation_scope[source_split-test] ________
+
+preparation = <test_e1_preparation.preparation.<locals>.Missing object at 0x11146a7b0>
+field = 'source_split', value = 'test'
+
+    @pytest.mark.parametrize('field,value',[
+        ('formal_execution_authorized',True),('source_split','test'),('seed',43),
+        ('vision_source_count',1000),('telemetry_source_count',4500)])
+    def test_profile_cannot_expand_preparation_scope(preparation,field,value):
+        profile={'formal_execution_authorized':False,'source_split':'val','seed':42,
+                 'vision_source_count':10,'telemetry_source_count':30}
+        profile[field]=value
+        with pytest.raises(ValueError,match='preparation'):
+>           preparation.validate_profile(profile)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_preparation.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_preparation.preparation.<locals>.Missing object at 0x11146a7b0>
+name = 'validate_profile'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing validation-only E1 preparation evidence runner')
+E       Failed: Missing validation-only E1 preparation evidence runner
+
+ml/tests/test_e1_preparation.py:20: Failed
+____________ test_profile_cannot_expand_preparation_scope[seed-43] _____________
+
+preparation = <test_e1_preparation.preparation.<locals>.Missing object at 0x11146a900>
+field = 'seed', value = 43
+
+    @pytest.mark.parametrize('field,value',[
+        ('formal_execution_authorized',True),('source_split','test'),('seed',43),
+        ('vision_source_count',1000),('telemetry_source_count',4500)])
+    def test_profile_cannot_expand_preparation_scope(preparation,field,value):
+        profile={'formal_execution_authorized':False,'source_split':'val','seed':42,
+                 'vision_source_count':10,'telemetry_source_count':30}
+        profile[field]=value
+        with pytest.raises(ValueError,match='preparation'):
+>           preparation.validate_profile(profile)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_preparation.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_preparation.preparation.<locals>.Missing object at 0x11146a900>
+name = 'validate_profile'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing validation-only E1 preparation evidence runner')
+E       Failed: Missing validation-only E1 preparation evidence runner
+
+ml/tests/test_e1_preparation.py:20: Failed
+____ test_profile_cannot_expand_preparation_scope[vision_source_count-1000] ____
+
+preparation = <test_e1_preparation.preparation.<locals>.Missing object at 0x1084ec440>
+field = 'vision_source_count', value = 1000
+
+    @pytest.mark.parametrize('field,value',[
+        ('formal_execution_authorized',True),('source_split','test'),('seed',43),
+        ('vision_source_count',1000),('telemetry_source_count',4500)])
+    def test_profile_cannot_expand_preparation_scope(preparation,field,value):
+        profile={'formal_execution_authorized':False,'source_split':'val','seed':42,
+                 'vision_source_count':10,'telemetry_source_count':30}
+        profile[field]=value
+        with pytest.raises(ValueError,match='preparation'):
+>           preparation.validate_profile(profile)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_preparation.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_preparation.preparation.<locals>.Missing object at 0x1084ec440>
+name = 'validate_profile'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing validation-only E1 preparation evidence runner')
+E       Failed: Missing validation-only E1 preparation evidence runner
+
+ml/tests/test_e1_preparation.py:20: Failed
+__ test_profile_cannot_expand_preparation_scope[telemetry_source_count-4500] ___
+
+preparation = <test_e1_preparation.preparation.<locals>.Missing object at 0x11146a7b0>
+field = 'telemetry_source_count', value = 4500
+
+    @pytest.mark.parametrize('field,value',[
+        ('formal_execution_authorized',True),('source_split','test'),('seed',43),
+        ('vision_source_count',1000),('telemetry_source_count',4500)])
+    def test_profile_cannot_expand_preparation_scope(preparation,field,value):
+        profile={'formal_execution_authorized':False,'source_split':'val','seed':42,
+                 'vision_source_count':10,'telemetry_source_count':30}
+        profile[field]=value
+        with pytest.raises(ValueError,match='preparation'):
+>           preparation.validate_profile(profile)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_e1_preparation.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_e1_preparation.preparation.<locals>.Missing object at 0x11146a7b0>
+name = 'validate_profile'
+
+    def __getattr__(self, name):
+>       pytest.fail('Missing validation-only E1 preparation evidence runner')
+E       Failed: Missing validation-only E1 preparation evidence runner
+
+ml/tests/test_e1_preparation.py:20: Failed
+=========================== short test summary info ============================
+FAILED ml/tests/test_e1_preparation.py::test_reuse_preserves_original_statistics
+FAILED ml/tests/test_e1_preparation.py::test_corrupted_train_statistics_refuse[fit_split-val]
+FAILED ml/tests/test_e1_preparation.py::test_corrupted_train_statistics_refuse[train_split_sha256-changed]
+FAILED ml/tests/test_e1_preparation.py::test_corrupted_train_statistics_refuse[fit_rows-4]
+FAILED ml/tests/test_e1_preparation.py::test_corrupted_train_statistics_refuse[median-value3]
+FAILED ml/tests/test_e1_preparation.py::test_corrupted_train_statistics_refuse[sd_ddof0-value4]
+FAILED ml/tests/test_e1_preparation.py::test_corrupted_train_statistics_refuse[mean_global-value5]
+FAILED ml/tests/test_e1_preparation.py::test_corrupted_train_statistics_refuse[mean_by_class-value6]
+FAILED ml/tests/test_e1_preparation.py::test_profile_cannot_expand_preparation_scope[formal_execution_authorized-True]
+FAILED ml/tests/test_e1_preparation.py::test_profile_cannot_expand_preparation_scope[source_split-test]
+FAILED ml/tests/test_e1_preparation.py::test_profile_cannot_expand_preparation_scope[seed-43]
+FAILED ml/tests/test_e1_preparation.py::test_profile_cannot_expand_preparation_scope[vision_source_count-1000]
+FAILED ml/tests/test_e1_preparation.py::test_profile_cannot_expand_preparation_scope[telemetry_source_count-4500]
+13 failed in 1.43s

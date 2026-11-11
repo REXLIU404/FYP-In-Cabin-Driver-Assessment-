@@ -1,0 +1,130 @@
+{
+  "status": "COMPLETED",
+  "error": null,
+  "result": {
+    "scope": "BOUNDED_VAL_ONLY_THROUGHPUT_PREFLIGHT",
+    "batch_size": 32,
+    "warmup_images": 100,
+    "measured_images": 200,
+    "rounds": [
+      {
+        "round": 0,
+        "warmup": true,
+        "images": 100,
+        "batch_sizes": [
+          32,
+          32,
+          32,
+          4
+        ],
+        "batch_nanoseconds": [
+          207536584,
+          208100792,
+          199406875,
+          24300084
+        ],
+        "loop_nanoseconds": 639470792,
+        "images_per_second": 156.3793080951225
+      },
+      {
+        "round": 1,
+        "warmup": false,
+        "images": 100,
+        "batch_sizes": [
+          32,
+          32,
+          32,
+          4
+        ],
+        "batch_nanoseconds": [
+          199469292,
+          200301375,
+          196816333,
+          24188709
+        ],
+        "loop_nanoseconds": 620906334,
+        "images_per_second": 161.05488786977006
+      },
+      {
+        "round": 2,
+        "warmup": false,
+        "images": 100,
+        "batch_sizes": [
+          32,
+          32,
+          32,
+          4
+        ],
+        "batch_nanoseconds": [
+          201628166,
+          198602375,
+          199362167,
+          24894708
+        ],
+        "loop_nanoseconds": 624604167,
+        "images_per_second": 160.10139746634127
+      }
+    ],
+    "batch_nanoseconds": [
+      199469292,
+      200301375,
+      196816333,
+      24188709,
+      201628166,
+      198602375,
+      199362167,
+      24894708
+    ],
+    "p50_batch_ms": 198.982271,
+    "p95_batch_ms": 201.16378915,
+    "images_per_second": 160.57672724511215,
+    "seconds_per_100": 0.6227552505,
+    "formal_runtime_benchmark_completed": false,
+    "identity": "MN-STABLE",
+    "session_load_nanoseconds": 73622958,
+    "rss_baseline_bytes": 204013568,
+    "rss_after_load_bytes": 654966784,
+    "threadpools": [],
+    "tensor_sha256": "07adb0f1a37281659c298bb79e5404fa770cdea511d5ccb99710966b48a8d42e"
+  },
+  "action": "throughput",
+  "identity": "MN-STABLE",
+  "resources": {
+    "available_ram_bytes": 9644032000,
+    "free_disk_bytes": 323419979776
+  },
+  "elapsed_nanoseconds": 2153939625,
+  "protected_before": {
+    "ml/outputs/vision/mobilenetv3_large_vision.pt": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+    "ml/outputs/vision/mobilenetv3_large_vision.onnx": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "ml/outputs/telemetry/xgb_telemetry.json": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+    "docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md": "0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0"
+  },
+  "protected_after": {
+    "ml/outputs/vision/mobilenetv3_large_vision.pt": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+    "ml/outputs/vision/mobilenetv3_large_vision.onnx": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "ml/outputs/telemetry/xgb_telemetry.json": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+    "docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md": "0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0"
+  },
+  "git_before": {
+    "root": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1",
+    "branch": "fyp2/ml-training",
+    "head": "335da4e3de203836c045452f84cc291bcd352a26",
+    "dirty": "M docs/fyp2/ml/ML_TRACK_PROGRESS.md\n?? docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md\n?? docs/fyp2/ml/ML_RESULTS_REVIEW_CONTEXT.md\n?? ml/configs/e1_preparation.json\n?? ml/configs/p4_protocol.json\n?? ml/experiments/e1_generators.py\n?? ml/experiments/p4_core.py\n?? ml/experiments/p4_data.py\n?? ml/experiments/p4_preflight.py\n?? ml/experiments/p4_qc.py\n?? ml/experiments/run_e1_preparation.py\n?? ml/experiments/run_p4.py\n?? ml/outputs/runs/e1_preparation_20261019/\n?? ml/outputs/runs/e1_preparation_20261019_record_missingness/\n?? ml/outputs/runs/p3_vision_20261018/search/\n?? ml/outputs/runs/p3_vision_20261018/search_config.json\n?? ml/outputs/runs/p3_vision_20261018/search_state.json\n?? ml/outputs/runs/p3_vision_20261018/selection_log.json\n?? ml/outputs/runs/p3_vision_20261018/verification/\n?? ml/outputs/runs/p4a_20261021/\n?? ml/tests/test_e1_generators.py\n?? ml/tests/test_e1_preparation.py\n?? ml/tests/test_p4_core.py\n?? ml/tests/test_p4_data.py\n?? ml/tests/test_p4_preflight.py\n?? ml/tests/test_p4_qc.py",
+    "staged": ""
+  },
+  "git_after": {
+    "root": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1",
+    "branch": "fyp2/ml-training",
+    "head": "335da4e3de203836c045452f84cc291bcd352a26",
+    "dirty": "M docs/fyp2/ml/ML_TRACK_PROGRESS.md\n?? docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md\n?? docs/fyp2/ml/ML_RESULTS_REVIEW_CONTEXT.md\n?? ml/configs/e1_preparation.json\n?? ml/configs/p4_protocol.json\n?? ml/experiments/e1_generators.py\n?? ml/experiments/p4_core.py\n?? ml/experiments/p4_data.py\n?? ml/experiments/p4_preflight.py\n?? ml/experiments/p4_qc.py\n?? ml/experiments/run_e1_preparation.py\n?? ml/experiments/run_p4.py\n?? ml/outputs/runs/e1_preparation_20261019/\n?? ml/outputs/runs/e1_preparation_20261019_record_missingness/\n?? ml/outputs/runs/p3_vision_20261018/search/\n?? ml/outputs/runs/p3_vision_20261018/search_config.json\n?? ml/outputs/runs/p3_vision_20261018/search_state.json\n?? ml/outputs/runs/p3_vision_20261018/selection_log.json\n?? ml/outputs/runs/p3_vision_20261018/verification/\n?? ml/outputs/runs/p4a_20261021/\n?? ml/tests/test_e1_generators.py\n?? ml/tests/test_e1_preparation.py\n?? ml/tests/test_p4_core.py\n?? ml/tests/test_p4_data.py\n?? ml/tests/test_p4_preflight.py\n?? ml/tests/test_p4_qc.py",
+    "staged": ""
+  },
+  "source_sha256": "ffdfa6637bace58c9818ade3b9a84e812a59d2f681543927b10403061301dece",
+  "threadpools": [],
+  "ru_maxrss_native": 775471104,
+  "ru_maxrss_units": "bytes on macOS; whole worker lifetime high-water mark",
+  "sampled_rss": "Parent BudgetSupervisor 20ms process-tree samples",
+  "test_images_opened": 0,
+  "test_telemetry_rows_read": 0
+}

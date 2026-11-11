@@ -1,0 +1,61 @@
+{
+  "files": {
+    "ml/configs/bounded_hpo.json": {
+      "bytes": 8374,
+      "sha256": "913e4852c0b00588e4372951807650282e46b8dbf1cc6de4675f63dca0976e5d"
+    },
+    "ml/configs/e1_preparation.json": {
+      "bytes": 2585,
+      "sha256": "d53f1de9c2327d7d2796fb5050cf1d6d9cfabb5d5758152739833bb754a1c783"
+    },
+    "ml/configs/p4_protocol.json": {
+      "bytes": 7862,
+      "sha256": "08cbbc25685a4c6a68781ebff2b174f747c68090bb0f24176f8277ee47a9e9de"
+    },
+    "ml/experiments/comparator_common.py": {
+      "bytes": 14336,
+      "sha256": "8ede7aa5a0604232ff5b3c54735bd9f2e5479b18a2e80e5091bfa2b07644805d"
+    },
+    "ml/experiments/e1_generators.py": {
+      "bytes": 13129,
+      "sha256": "b0b92519ef093ba0370b6e258a7cfaba9434f2e2de8ed113d333ffd6d1b10ce3"
+    },
+    "ml/experiments/p4_core.py": {
+      "bytes": 25337,
+      "sha256": "87c7daee65d6e763f5ce80f7a82bdd90d541c74970f7ac89d02221b97911ac68"
+    },
+    "ml/experiments/p4_data.py": {
+      "bytes": 12467,
+      "sha256": "9773621240881355f730ac75665c255a7db98f83afd7b26de10c8b337a477448"
+    },
+    "ml/experiments/p4_preflight.py": {
+      "bytes": 31626,
+      "sha256": "ffdfa6637bace58c9818ade3b9a84e812a59d2f681543927b10403061301dece"
+    },
+    "ml/experiments/package_candidates.py": {
+      "bytes": 34034,
+      "sha256": "b52350198c1b13e8d5fde8d48797f984413f6db50091a2b92c2507c18d5a1403"
+    },
+    "ml/experiments/run_e1_preparation.py": {
+      "bytes": 10324,
+      "sha256": "507c4cfa2105256648f427a322d7cf40c283d67a086c9d0c9e8920860499793a"
+    },
+    "ml/experiments/run_p4.py": {
+      "bytes": 49906,
+      "sha256": "2760446943c7067e2a1fb852f6ae1f570ba1e4b997ab5b13711a5bdf5e61a640"
+    },
+    "ml/telemetry/train_hpo.py": {
+      "bytes": 11253,
+      "sha256": "273dc3021003f00265213c2f4b4004c9a9208602137b26e24462ee0670b818a4"
+    },
+    "ml/tests/test_candidate_package.py": {
+      "bytes": 9703,
+      "sha256": "3dee8de808ff1e1840f0fc0bd31d2541105f30b79794f551eecffe3972aeb13d"
+    },
+    "ml/vision/train_hpo.py": {
+      "bytes": 14023,
+      "sha256": "06c465cb3115dad5f3e5e6a63ab0b308c50e4edca41b538d5b33361d4667b4d9"
+    }
+  },
+  "scope": "Executed P5 source, tests and relevant existing dependencies; no clean commit claim"
+}

@@ -1,0 +1,65 @@
+{
+  "DRA_ACTIVE_VISION": "resnet18_search004_seed42",
+  "port": 57205,
+  "models": {
+    "models_loaded": true,
+    "provider": "VisionCandidateONNX+XGBoost",
+    "vision": {
+      "architecture": "resnet18",
+      "model_id": "resnet18_search004_seed42",
+      "run_id": "p5_resnet18_search004_seed42_20261023",
+      "source": "candidate:p5_resnet18_search004_seed42_20261023",
+      "sha256": "5e226722e0712824c78aa0976afa6fa5b8dc6100b147a7f523a09048171d8cf3",
+      "runtime": "onnxruntime_cpu",
+      "classes": [
+        "safe_driving",
+        "texting_right",
+        "talking_phone_right",
+        "texting_left",
+        "talking_phone_left",
+        "operating_radio",
+        "drinking",
+        "reaching_behind",
+        "hair_makeup",
+        "talking_to_passenger"
+      ],
+      "input": "RGB NCHW float32 224x224",
+      "mean": [
+        0.485,
+        0.456,
+        0.406
+      ],
+      "std": [
+        0.229,
+        0.224,
+        0.225
+      ]
+    },
+    "telemetry": {
+      "architecture": "xgboost",
+      "sha256": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+      "classes": [
+        "Safe",
+        "Aggressive",
+        "Distracted"
+      ],
+      "features": [
+        "speed_kmph",
+        "accel_x",
+        "accel_y",
+        "brake_pressure",
+        "steering_angle",
+        "throttle",
+        "lane_deviation",
+        "headway_distance"
+      ],
+      "iteration_range": [
+        0,
+        91
+      ]
+    },
+    "scope": "Frontal-camera inference is experimental; source dataset metrics do not validate frontal reliability"
+  },
+  "server_stopped": true,
+  "leftover_pids": null
+}

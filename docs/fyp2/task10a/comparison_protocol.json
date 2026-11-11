@@ -1,0 +1,2041 @@
+{
+  "protocol_id": "task10a-stage2-stable200-comparison",
+  "version": 1,
+  "status": "APPROVED",
+  "created_date": "2026-10-26",
+  "timezone": "Asia/Kuala_Lumpur",
+  "author": "Codex/CX-0",
+  "execution_authorized": false,
+  "runner_execution": "NOT_RUN",
+  "approval": {
+    "status": "APPROVED",
+    "approved_by": "user",
+    "approved_at": "2026-10-26T12:56:55.974477+08:00",
+    "decision_ids": [
+      "FUD-02",
+      "FUD-03",
+      "FUD-04",
+      "FUD-05"
+    ],
+    "required": "Protocol approval is complete. Claude publishes this exact approved content to docs/fyp2/task10a/comparison_protocol.json. The existing Stage-1 user audit and implementation prerequisites must pass before the comparison runner runs; unchanged methodology needs no repeat protocol approval.",
+    "hash_binding": "The expected SHA256 of the final approved protocol is recorded in a separate user decision record and supplied to the runner, never embedded as this file's own hash.",
+    "approved_at_semantics": "Time this direct user approval was recorded; exact user-message timestamp unavailable.",
+    "user_statement": "都批准",
+    "approval_record": "approval_record.json"
+  },
+  "scope": {
+    "evidence_kind": "CONSTRUCTED_EVALUATION_SCENARIO",
+    "d06_reference": "D06 2026-10-23; analysis C-9",
+    "display_label": "Constructed evaluation scenario · not live",
+    "purpose": "Describe how fixed source-domain still images and a fixed synthetic pairing propagate through the unchanged R10/EMA/fusion/FSM pipeline when only the vision model changes.",
+    "not_claims": [
+      "live synchronized driving event",
+      "target-camera accuracy",
+      "safety improvement",
+      "driver-side intervention",
+      "edge latency acceptance",
+      "E2/E5 evaluation completion",
+      "new training/HPO/export/benchmark"
+    ],
+    "chapter6_policy": "Never promote demo/rehearsal hit rates or RiskLevel counts into Live evaluation results. Any future use as a constructed protocol diagnostic requires explicit provenance and limitations; no Live or safety label."
+  },
+  "authority": {
+    "plan": "/Users/liu/Desktop/FYP2-Live-System/docs/plans/2026-10-25-task-10a-candidate-integration.md",
+    "corrections": "/Users/liu/Desktop/FYP2-Live-System/docs/plans/2026-10-26-task-10a-analysis-and-collaboration.zh.md#sections-1-3",
+    "spec": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/docs/fyp2/11_SYSTEM_INTEGRATION_STAGE_PLAN_AND_AUDIT.md",
+    "precedence": "Direct user instructions and C-1..C-12 govern this draft."
+  },
+  "preflight_context": {
+    "observed_live_head": "7e64c4d0632923d7bb90c1c8f6b7cb757ca5ea65",
+    "observed_ml_head": "ba1046c9debc9fda9f87bd55016ad42e6eb360cf",
+    "xgb_diff_baseline": "2745348f3d4587e14c1d4a7e53a2bfc4d72225d5",
+    "runner_head": null,
+    "note": "Runner must record its own implemented HEAD/dirty state; the observed preflight HEAD has no candidate integration."
+  },
+  "prerequisites": [
+    "Stage-1 provider integration and three-model behavior evidence complete and independently audited; user's U-1 Stage-1 audit passed",
+    "FUD-01 tolerance approved before any Stage-1 comparisons",
+    "User approves and freezes this protocol before runner execution",
+    "Candidate copies are real directories in Live System with validated manifest/hash; stable vision and stable telemetry remain unchanged",
+    "All input, model, metadata and fixed telemetry hashes reverified; failure means BLOCKED/FAILED with exact path, no substitutions"
+  ],
+  "input_set": {
+    "name": "stable200",
+    "split": "val",
+    "n": 200,
+    "classes": [
+      "c0",
+      "c1",
+      "c2",
+      "c3",
+      "c4",
+      "c5",
+      "c6",
+      "c7",
+      "c8",
+      "c9"
+    ],
+    "per_class": 20,
+    "selection_rule": "From frozen validation metadata, group c0..c9; sort filename ascending within each class; take first20.",
+    "sequence_rule": "Concatenate c0 first20, c1 first20, ..., c9 first20; no shuffle, no interleaving, no duplication, no class-boundary reset.",
+    "annotations_source": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p5_candidates_20261023/p5_resnet18_search004_seed42_20261023/validation/stable200_annotations.csv",
+    "annotations_sha256": "ef33129727fcfabdfc5dcec6dd69ceaea783e9af3480b296b0fba978fa7b39a5",
+    "second_package_annotations": "Must be identical to the RN annotations; same sha256 in today's preflight.",
+    "metadata_path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/vision/vision_metadata_with_split.csv",
+    "metadata_sha256": "b4f8e90dec769bb419eaa490aea869668bed6484089cebe4d545c7667baa8ea4",
+    "data_root": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train",
+    "path_rule": "<data_root>/<class_id>/<filename>",
+    "membership_sha256": "601dc3ed6b99e9030f6eb5287e711baf529ea6c0c5b2facab0acd9c3f9373be9",
+    "membership_hash_rule": "sha256(UTF8('\\n'.join(sorted(filename for all200 annotations)))); no trailing newline. This is the frozen filename membership hash, not the CSV bytes hash and not the source_id hash.",
+    "source_ids_sha256": "2697d288e384f340cb51f002ce39fca024827c6969de9dc9f2db9682246c5d75",
+    "source_ids_hash_rule": "sha256(UTF8('\\n'.join(sorted(source_id for all200 annotations)))); no trailing newline.",
+    "image_bytes_manifest_sha256": "4393095e7fd619b7df5cae8e7b4c020e29cb874af0f4ab4bee2198c5ad59eb3c",
+    "image_bytes_manifest_hash_rule": "For all200 source_ids sorted lexicographically, concatenate source_id+'\\t'+sha256(original JPEG bytes), join with '\\n' and no trailing newline; hash UTF-8 bytes.",
+    "image_hashes_status": "MEASURED_READ_ONLY_IN_CX0_2026-10-26; these new input-byte pins are not historical model benchmark results",
+    "hash_verification": "Verify metadata, both annotations, frozen membership, source-id hash, every original JPEG sha256, and image manifest aggregate before each model run; reject any missing/mismatch with exact path. Persist recomputed hashes in results.",
+    "transport": "base64 of the exact original JPEG bytes, with no decode/re-encode, crop, canvas, mirroring or augmentation.",
+    "ordered_samples": [
+      {
+        "sequence_index": 0,
+        "source_id": "vision-v1:c0/img_10012.jpg",
+        "class_id": "c0",
+        "filename": "img_10012.jpg",
+        "bytes": 40251,
+        "sha256": "7560b00e6c4f2503324d1836155ef0e592c4f9c95847bd7e0e9e730ea05aaab1"
+      },
+      {
+        "sequence_index": 1,
+        "source_id": "vision-v1:c0/img_100605.jpg",
+        "class_id": "c0",
+        "filename": "img_100605.jpg",
+        "bytes": 40012,
+        "sha256": "29d645c156de3961dbcb060e3ef6236ae001240b58db0861498110fc2b44f2e8"
+      },
+      {
+        "sequence_index": 2,
+        "source_id": "vision-v1:c0/img_100828.jpg",
+        "class_id": "c0",
+        "filename": "img_100828.jpg",
+        "bytes": 46159,
+        "sha256": "a2f0e32c64c09f14f6110f5e67042893bbd14f2f8ea23c20acdd01f25236bbf6"
+      },
+      {
+        "sequence_index": 3,
+        "source_id": "vision-v1:c0/img_101392.jpg",
+        "class_id": "c0",
+        "filename": "img_101392.jpg",
+        "bytes": 45479,
+        "sha256": "2f4836f0d69542d75c29f5350ef9cd573ef117440151026c69c65be414c3298f"
+      },
+      {
+        "sequence_index": 4,
+        "source_id": "vision-v1:c0/img_10175.jpg",
+        "class_id": "c0",
+        "filename": "img_10175.jpg",
+        "bytes": 44499,
+        "sha256": "cf05f06a57cbd6ab2524db02914dfbf7253de45fa885ef4a3fd27c008ce80c7a"
+      },
+      {
+        "sequence_index": 5,
+        "source_id": "vision-v1:c0/img_102025.jpg",
+        "class_id": "c0",
+        "filename": "img_102025.jpg",
+        "bytes": 43004,
+        "sha256": "17135bda805cc4edd2acc7fcb22a02cfd016a60f9fe5aa826289370cc9fbd3bc"
+      },
+      {
+        "sequence_index": 6,
+        "source_id": "vision-v1:c0/img_10446.jpg",
+        "class_id": "c0",
+        "filename": "img_10446.jpg",
+        "bytes": 47910,
+        "sha256": "3db97b52e9cf73c6756223ffca128165b63703a52477f4a5d4aa11ec800bbeb0"
+      },
+      {
+        "sequence_index": 7,
+        "source_id": "vision-v1:c0/img_10627.jpg",
+        "class_id": "c0",
+        "filename": "img_10627.jpg",
+        "bytes": 40147,
+        "sha256": "925131720b3f7adcbc07e677277a1fe11b94a583b5081ecb08e4f4136dd2db38"
+      },
+      {
+        "sequence_index": 8,
+        "source_id": "vision-v1:c0/img_10741.jpg",
+        "class_id": "c0",
+        "filename": "img_10741.jpg",
+        "bytes": 43177,
+        "sha256": "cb9f061eced6316ca4cbdb03aa782adef7f11efa566e9c3ab99ad50e24805b30"
+      },
+      {
+        "sequence_index": 9,
+        "source_id": "vision-v1:c0/img_10792.jpg",
+        "class_id": "c0",
+        "filename": "img_10792.jpg",
+        "bytes": 45029,
+        "sha256": "fa68bfac6c9361fa4459f4330a7842801ec743df03d52ee363bd1dad1246d6a3"
+      },
+      {
+        "sequence_index": 10,
+        "source_id": "vision-v1:c0/img_11582.jpg",
+        "class_id": "c0",
+        "filename": "img_11582.jpg",
+        "bytes": 40257,
+        "sha256": "e0bea4d977699c47656193924b0fc5498b2a0d3671fdb9571b5c44a80b07c74c"
+      },
+      {
+        "sequence_index": 11,
+        "source_id": "vision-v1:c0/img_1230.jpg",
+        "class_id": "c0",
+        "filename": "img_1230.jpg",
+        "bytes": 45645,
+        "sha256": "8e9f7ef10d07cdb0098dea5ea5e8ab6b03fcb96c9f2c28854194621af7fb0242"
+      },
+      {
+        "sequence_index": 12,
+        "source_id": "vision-v1:c0/img_1236.jpg",
+        "class_id": "c0",
+        "filename": "img_1236.jpg",
+        "bytes": 44157,
+        "sha256": "c93357cbd1be3be4217aecc523d4077fd82f7f033aafc1b8a317ae5cb38a5ca8"
+      },
+      {
+        "sequence_index": 13,
+        "source_id": "vision-v1:c0/img_12772.jpg",
+        "class_id": "c0",
+        "filename": "img_12772.jpg",
+        "bytes": 41587,
+        "sha256": "b8f32c4ff74df2dacd6c98236f528af34bb36bd8ae5a539765a0b6871d73b6fc"
+      },
+      {
+        "sequence_index": 14,
+        "source_id": "vision-v1:c0/img_13073.jpg",
+        "class_id": "c0",
+        "filename": "img_13073.jpg",
+        "bytes": 40583,
+        "sha256": "ead0339ca6d41806db15f29fe40db61a8c8a62b2269aa304dd3b5486f2d8b2a2"
+      },
+      {
+        "sequence_index": 15,
+        "source_id": "vision-v1:c0/img_13328.jpg",
+        "class_id": "c0",
+        "filename": "img_13328.jpg",
+        "bytes": 43395,
+        "sha256": "a63fbe1fb67da5f35ea2f685af327563d5deb10fd6f36b90fbe4a756f1df5ff8"
+      },
+      {
+        "sequence_index": 16,
+        "source_id": "vision-v1:c0/img_13585.jpg",
+        "class_id": "c0",
+        "filename": "img_13585.jpg",
+        "bytes": 40271,
+        "sha256": "bcaf10895e565a7f65b3de58e6fb3045d32e8fd88feff30622f1f596b245da96"
+      },
+      {
+        "sequence_index": 17,
+        "source_id": "vision-v1:c0/img_1363.jpg",
+        "class_id": "c0",
+        "filename": "img_1363.jpg",
+        "bytes": 42461,
+        "sha256": "537f3cc6150745920deb353bde67f3ab89773fcfdb05ade0bd22b568f128b787"
+      },
+      {
+        "sequence_index": 18,
+        "source_id": "vision-v1:c0/img_13696.jpg",
+        "class_id": "c0",
+        "filename": "img_13696.jpg",
+        "bytes": 42274,
+        "sha256": "6fc5d2a94e63e0d0632ac85eb8ee7158e506b451f5929be2e5671e8682988d3b"
+      },
+      {
+        "sequence_index": 19,
+        "source_id": "vision-v1:c0/img_14313.jpg",
+        "class_id": "c0",
+        "filename": "img_14313.jpg",
+        "bytes": 42870,
+        "sha256": "97c8182accbbda858b12d5d4c70da57aa7eadbe94f6a2433a9754d8891e50a7e"
+      },
+      {
+        "sequence_index": 20,
+        "source_id": "vision-v1:c1/img_100348.jpg",
+        "class_id": "c1",
+        "filename": "img_100348.jpg",
+        "bytes": 47818,
+        "sha256": "8a7ddc825c3da4bced5a6c0ded6c941564cafa36dabfd2179d03d47b24628d5d"
+      },
+      {
+        "sequence_index": 21,
+        "source_id": "vision-v1:c1/img_100358.jpg",
+        "class_id": "c1",
+        "filename": "img_100358.jpg",
+        "bytes": 44658,
+        "sha256": "568a5681ae295aedf2c42b08638e28755b5a96256aa98a1b0901f6154a4ece45"
+      },
+      {
+        "sequence_index": 22,
+        "source_id": "vision-v1:c1/img_100594.jpg",
+        "class_id": "c1",
+        "filename": "img_100594.jpg",
+        "bytes": 49158,
+        "sha256": "ba565f0befeea9c35e7901d49a9cc08c4fc37070e61d2d118f03a1630cd78a56"
+      },
+      {
+        "sequence_index": 23,
+        "source_id": "vision-v1:c1/img_100777.jpg",
+        "class_id": "c1",
+        "filename": "img_100777.jpg",
+        "bytes": 40464,
+        "sha256": "0a492fa01e4cda382dc71faf405fb2e3b9bbe3c7db2fac38e4946266453416f4"
+      },
+      {
+        "sequence_index": 24,
+        "source_id": "vision-v1:c1/img_101681.jpg",
+        "class_id": "c1",
+        "filename": "img_101681.jpg",
+        "bytes": 48627,
+        "sha256": "de929f77e8c65924575203f5ab338f6242f758dee7e3e3812c5904d28d4740ca"
+      },
+      {
+        "sequence_index": 25,
+        "source_id": "vision-v1:c1/img_10229.jpg",
+        "class_id": "c1",
+        "filename": "img_10229.jpg",
+        "bytes": 45156,
+        "sha256": "b5fa6f5f52b8a0621c9692b2acc133e446012a8898ad0eaf86565a45f2a9301b"
+      },
+      {
+        "sequence_index": 26,
+        "source_id": "vision-v1:c1/img_1043.jpg",
+        "class_id": "c1",
+        "filename": "img_1043.jpg",
+        "bytes": 48082,
+        "sha256": "9080de18951314f9f820950b06ae72ffb9cbd2ca766b51c40c787d2eb5dc9887"
+      },
+      {
+        "sequence_index": 27,
+        "source_id": "vision-v1:c1/img_1119.jpg",
+        "class_id": "c1",
+        "filename": "img_1119.jpg",
+        "bytes": 47839,
+        "sha256": "9c78fb28c506c9e3491f1b4d7d46845246af91062ea029eb1132006f9c9ae97b"
+      },
+      {
+        "sequence_index": 28,
+        "source_id": "vision-v1:c1/img_11478.jpg",
+        "class_id": "c1",
+        "filename": "img_11478.jpg",
+        "bytes": 44412,
+        "sha256": "45fc51715e17283ad160bf03bf7b47a82c0ecd4317dbb689bbdb0d8672ab262b"
+      },
+      {
+        "sequence_index": 29,
+        "source_id": "vision-v1:c1/img_11776.jpg",
+        "class_id": "c1",
+        "filename": "img_11776.jpg",
+        "bytes": 39200,
+        "sha256": "d752ea13429ccb788f97497a3924208ddeec925adafd68bdc923fc61fd063856"
+      },
+      {
+        "sequence_index": 30,
+        "source_id": "vision-v1:c1/img_1182.jpg",
+        "class_id": "c1",
+        "filename": "img_1182.jpg",
+        "bytes": 49069,
+        "sha256": "fbd5eb580b9d2a9986f730ed70962d5bfa52b6fbe4f18be09d2bcc365b3c9da2"
+      },
+      {
+        "sequence_index": 31,
+        "source_id": "vision-v1:c1/img_12140.jpg",
+        "class_id": "c1",
+        "filename": "img_12140.jpg",
+        "bytes": 45230,
+        "sha256": "b3dbca9d5e5653b6a21292d49a4f0f347c38fc1fe8dd7b2f7d19ef3cc5df6b42"
+      },
+      {
+        "sequence_index": 32,
+        "source_id": "vision-v1:c1/img_12216.jpg",
+        "class_id": "c1",
+        "filename": "img_12216.jpg",
+        "bytes": 45215,
+        "sha256": "2a8d6026bdda359afabdbdeb3479b1c55126c23fa72da8f25f9af4263b57e0d9"
+      },
+      {
+        "sequence_index": 33,
+        "source_id": "vision-v1:c1/img_13160.jpg",
+        "class_id": "c1",
+        "filename": "img_13160.jpg",
+        "bytes": 41736,
+        "sha256": "1fa2b025214556bcccb2fd3c0ffa80d1b5a4ec14cf5bfab859f0115d36d7fc2f"
+      },
+      {
+        "sequence_index": 34,
+        "source_id": "vision-v1:c1/img_13840.jpg",
+        "class_id": "c1",
+        "filename": "img_13840.jpg",
+        "bytes": 40544,
+        "sha256": "ed37fe49bf98065b87660de0b2dcad058f54bb0c58ba30959ba3c8c0ccc6f3ee"
+      },
+      {
+        "sequence_index": 35,
+        "source_id": "vision-v1:c1/img_14298.jpg",
+        "class_id": "c1",
+        "filename": "img_14298.jpg",
+        "bytes": 33700,
+        "sha256": "3c4f6a6066877eb223b06b6c59fb9562cc21adbcf5a1e40586de3cdc4249ce93"
+      },
+      {
+        "sequence_index": 36,
+        "source_id": "vision-v1:c1/img_14450.jpg",
+        "class_id": "c1",
+        "filename": "img_14450.jpg",
+        "bytes": 46526,
+        "sha256": "265014dfa6c948146fbf6485cf892c64ac042f0116f0c39f48438bca77463550"
+      },
+      {
+        "sequence_index": 37,
+        "source_id": "vision-v1:c1/img_14659.jpg",
+        "class_id": "c1",
+        "filename": "img_14659.jpg",
+        "bytes": 45563,
+        "sha256": "27c2e0caaf3f7eafcce58278bf207330565f1dffc92ac2230bcb3edd8de3ca1a"
+      },
+      {
+        "sequence_index": 38,
+        "source_id": "vision-v1:c1/img_1472.jpg",
+        "class_id": "c1",
+        "filename": "img_1472.jpg",
+        "bytes": 42046,
+        "sha256": "8faa0ea0ca207f019c1e6ae6f6a60a940d809f32742cf1ad50ea569cac8428dc"
+      },
+      {
+        "sequence_index": 39,
+        "source_id": "vision-v1:c1/img_14746.jpg",
+        "class_id": "c1",
+        "filename": "img_14746.jpg",
+        "bytes": 45662,
+        "sha256": "ed27a11f6c85e080cfd64eaa6ae132697e85875894b0021e1311088f181bfb63"
+      },
+      {
+        "sequence_index": 40,
+        "source_id": "vision-v1:c2/img_100242.jpg",
+        "class_id": "c2",
+        "filename": "img_100242.jpg",
+        "bytes": 43530,
+        "sha256": "95d6017624853463df939e7ba7b2e3f99cc8d8d7e39db890947564b80b2e4b59"
+      },
+      {
+        "sequence_index": 41,
+        "source_id": "vision-v1:c2/img_100246.jpg",
+        "class_id": "c2",
+        "filename": "img_100246.jpg",
+        "bytes": 42178,
+        "sha256": "3cbeaa581f68177e2a9a8725169da524aa8f0f72381bc00db941538b5c191314"
+      },
+      {
+        "sequence_index": 42,
+        "source_id": "vision-v1:c2/img_100813.jpg",
+        "class_id": "c2",
+        "filename": "img_100813.jpg",
+        "bytes": 43804,
+        "sha256": "20517cc6066bbc1dca1bd835db7b61454ee1f0c58f7a00c574720d9705abbb05"
+      },
+      {
+        "sequence_index": 43,
+        "source_id": "vision-v1:c2/img_101016.jpg",
+        "class_id": "c2",
+        "filename": "img_101016.jpg",
+        "bytes": 42746,
+        "sha256": "ac9f2f3ea1935132100ab94fd94b8fc669c8a9b3c61c065dca129185ebe5768f"
+      },
+      {
+        "sequence_index": 44,
+        "source_id": "vision-v1:c2/img_101258.jpg",
+        "class_id": "c2",
+        "filename": "img_101258.jpg",
+        "bytes": 41807,
+        "sha256": "cfbfa56a402920e1e07e9b235c09faeae6f4634e124eba65f5b1452f2158eed9"
+      },
+      {
+        "sequence_index": 45,
+        "source_id": "vision-v1:c2/img_101503.jpg",
+        "class_id": "c2",
+        "filename": "img_101503.jpg",
+        "bytes": 43252,
+        "sha256": "ba8c1fa5bbc846c8e7fbfc4b37acb80961486ecc07004e4314ff015cc86ac55b"
+      },
+      {
+        "sequence_index": 46,
+        "source_id": "vision-v1:c2/img_101653.jpg",
+        "class_id": "c2",
+        "filename": "img_101653.jpg",
+        "bytes": 40985,
+        "sha256": "ff9e9eb3dec159cd660fc9535c4204819393dd9e9bb7bfa4445c3a5d6da37300"
+      },
+      {
+        "sequence_index": 47,
+        "source_id": "vision-v1:c2/img_101898.jpg",
+        "class_id": "c2",
+        "filename": "img_101898.jpg",
+        "bytes": 42076,
+        "sha256": "5b827e3970360d856774d4e4ed41e18781be7f3f9fc92e00e59c94505e02e243"
+      },
+      {
+        "sequence_index": 48,
+        "source_id": "vision-v1:c2/img_10564.jpg",
+        "class_id": "c2",
+        "filename": "img_10564.jpg",
+        "bytes": 42362,
+        "sha256": "5de7621a22cd47db033ba334bae41f1233e91ad8b943ff07b2955c01220e2e7f"
+      },
+      {
+        "sequence_index": 49,
+        "source_id": "vision-v1:c2/img_10697.jpg",
+        "class_id": "c2",
+        "filename": "img_10697.jpg",
+        "bytes": 43138,
+        "sha256": "c263c33b21e48019b0dbe725cbaeb041b4a1768a8a0fc6441e825a6b3360f445"
+      },
+      {
+        "sequence_index": 50,
+        "source_id": "vision-v1:c2/img_11202.jpg",
+        "class_id": "c2",
+        "filename": "img_11202.jpg",
+        "bytes": 43375,
+        "sha256": "016e04b67c6bd892a99c022ddcb7624819729ad7ad346b33a7db798a1ce35de4"
+      },
+      {
+        "sequence_index": 51,
+        "source_id": "vision-v1:c2/img_11319.jpg",
+        "class_id": "c2",
+        "filename": "img_11319.jpg",
+        "bytes": 45070,
+        "sha256": "ed3b971d24cc4b5e2b3fa532bf9125c7e384b69164ac2a78e02e76bb269dcc5f"
+      },
+      {
+        "sequence_index": 52,
+        "source_id": "vision-v1:c2/img_11553.jpg",
+        "class_id": "c2",
+        "filename": "img_11553.jpg",
+        "bytes": 43483,
+        "sha256": "912601544bfed8eaf60bd2f8b8ba1db77bb2404820789d9405cb3c8695e5af08"
+      },
+      {
+        "sequence_index": 53,
+        "source_id": "vision-v1:c2/img_12573.jpg",
+        "class_id": "c2",
+        "filename": "img_12573.jpg",
+        "bytes": 42830,
+        "sha256": "9ed0841ab8e955dfa1da844652978b4bf1fbf21ffd967cf24b0871f0bd37a938"
+      },
+      {
+        "sequence_index": 54,
+        "source_id": "vision-v1:c2/img_12784.jpg",
+        "class_id": "c2",
+        "filename": "img_12784.jpg",
+        "bytes": 42776,
+        "sha256": "6a482c5573ed768741c1421ac12aff2a4639958ac5c13a3b166d3fbab52f7a6d"
+      },
+      {
+        "sequence_index": 55,
+        "source_id": "vision-v1:c2/img_12908.jpg",
+        "class_id": "c2",
+        "filename": "img_12908.jpg",
+        "bytes": 45280,
+        "sha256": "402ba33c11f3ed77992022912644b8a1be274335074dd94f4f32579144f6e617"
+      },
+      {
+        "sequence_index": 56,
+        "source_id": "vision-v1:c2/img_13241.jpg",
+        "class_id": "c2",
+        "filename": "img_13241.jpg",
+        "bytes": 44847,
+        "sha256": "1b0f42265a17ac47f9ca89688acd6f6d37c75288d1c32c8a3b453dfed38c66a0"
+      },
+      {
+        "sequence_index": 57,
+        "source_id": "vision-v1:c2/img_13894.jpg",
+        "class_id": "c2",
+        "filename": "img_13894.jpg",
+        "bytes": 44416,
+        "sha256": "865e3a9ce2f58503f0ffe62fbf9b174f9c04a34b8dcfd548f2add86e5188518b"
+      },
+      {
+        "sequence_index": 58,
+        "source_id": "vision-v1:c2/img_13923.jpg",
+        "class_id": "c2",
+        "filename": "img_13923.jpg",
+        "bytes": 43210,
+        "sha256": "c5a4fa091d1ee16d4d677d32a3f7c37bfa8822b92b98217713ca23654f4783bd"
+      },
+      {
+        "sequence_index": 59,
+        "source_id": "vision-v1:c2/img_14087.jpg",
+        "class_id": "c2",
+        "filename": "img_14087.jpg",
+        "bytes": 43066,
+        "sha256": "422c80c5299fa44e20a5f793b739fce86c0f60aa5d63b6c1576a92d1516d0887"
+      },
+      {
+        "sequence_index": 60,
+        "source_id": "vision-v1:c3/img_10034.jpg",
+        "class_id": "c3",
+        "filename": "img_10034.jpg",
+        "bytes": 39395,
+        "sha256": "ec4effaa039b32d4b8fc9a4a5144190dfbce5828e0e0b6a4b7d8dd7708d38172"
+      },
+      {
+        "sequence_index": 61,
+        "source_id": "vision-v1:c3/img_100503.jpg",
+        "class_id": "c3",
+        "filename": "img_100503.jpg",
+        "bytes": 41027,
+        "sha256": "45354cfbd3946c442d6e0fde8c138e8f5ac737bda75fc3207bd9c5ffe312aa7e"
+      },
+      {
+        "sequence_index": 62,
+        "source_id": "vision-v1:c3/img_100611.jpg",
+        "class_id": "c3",
+        "filename": "img_100611.jpg",
+        "bytes": 41510,
+        "sha256": "199e18e3b92a0ffe5485c86650921ed2b27dfbaf6cea452b47efc9de7e33666f"
+      },
+      {
+        "sequence_index": 63,
+        "source_id": "vision-v1:c3/img_10068.jpg",
+        "class_id": "c3",
+        "filename": "img_10068.jpg",
+        "bytes": 41750,
+        "sha256": "c603adada65893be25152b5b2ab514c9e677eed58b14cd934a1671637410971e"
+      },
+      {
+        "sequence_index": 64,
+        "source_id": "vision-v1:c3/img_101021.jpg",
+        "class_id": "c3",
+        "filename": "img_101021.jpg",
+        "bytes": 45646,
+        "sha256": "90a58b30c58ab9e9ad12d62588e2b50f099de57c06152c14d9b16a894dcbc674"
+      },
+      {
+        "sequence_index": 65,
+        "source_id": "vision-v1:c3/img_101063.jpg",
+        "class_id": "c3",
+        "filename": "img_101063.jpg",
+        "bytes": 42563,
+        "sha256": "e66f906db101f9b921c99f69466f12135869343f8f3f9977420d06e68dacb412"
+      },
+      {
+        "sequence_index": 66,
+        "source_id": "vision-v1:c3/img_101130.jpg",
+        "class_id": "c3",
+        "filename": "img_101130.jpg",
+        "bytes": 46240,
+        "sha256": "2bd028047536e1aaabe9aa397dc9cbe037a6fa076c2caa3833e8458f84b08ae0"
+      },
+      {
+        "sequence_index": 67,
+        "source_id": "vision-v1:c3/img_101134.jpg",
+        "class_id": "c3",
+        "filename": "img_101134.jpg",
+        "bytes": 38266,
+        "sha256": "ea7e1fbaa291cb650326df5ef9947b74a1efa61038c1fee48447dd0c5b51ce9b"
+      },
+      {
+        "sequence_index": 68,
+        "source_id": "vision-v1:c3/img_101208.jpg",
+        "class_id": "c3",
+        "filename": "img_101208.jpg",
+        "bytes": 45195,
+        "sha256": "77a06f01c9508df4b6c07af70ef845134a53efcb56df93311e2b620f02a86036"
+      },
+      {
+        "sequence_index": 69,
+        "source_id": "vision-v1:c3/img_101310.jpg",
+        "class_id": "c3",
+        "filename": "img_101310.jpg",
+        "bytes": 40620,
+        "sha256": "0d4699ceef766f10835d8674f606cdd9065670bac5b42e55763b387fc1ead62b"
+      },
+      {
+        "sequence_index": 70,
+        "source_id": "vision-v1:c3/img_101499.jpg",
+        "class_id": "c3",
+        "filename": "img_101499.jpg",
+        "bytes": 38766,
+        "sha256": "bb1f7170f097b37911f6890939b620f01b801819d7ad7f4114a480af463b7c4a"
+      },
+      {
+        "sequence_index": 71,
+        "source_id": "vision-v1:c3/img_101745.jpg",
+        "class_id": "c3",
+        "filename": "img_101745.jpg",
+        "bytes": 41673,
+        "sha256": "9472f4b26e6c904e4afaa7bf7758db6f3aad2bfb8c3c440f66805a072e7f0703"
+      },
+      {
+        "sequence_index": 72,
+        "source_id": "vision-v1:c3/img_101906.jpg",
+        "class_id": "c3",
+        "filename": "img_101906.jpg",
+        "bytes": 41385,
+        "sha256": "55de6e71cabbdd74962113cb87577c0cecc08a8b1794e50db890c404afa4372c"
+      },
+      {
+        "sequence_index": 73,
+        "source_id": "vision-v1:c3/img_11162.jpg",
+        "class_id": "c3",
+        "filename": "img_11162.jpg",
+        "bytes": 41084,
+        "sha256": "9047a6313a24dee5d2ce04dfcb6fd3c4ce39486ef3749a16abb32ed5bdf7616b"
+      },
+      {
+        "sequence_index": 74,
+        "source_id": "vision-v1:c3/img_11230.jpg",
+        "class_id": "c3",
+        "filename": "img_11230.jpg",
+        "bytes": 34228,
+        "sha256": "e3790e13ece8edabe824d8d1c71c84751292d5b3483e962ead0975ab05a9e1d5"
+      },
+      {
+        "sequence_index": 75,
+        "source_id": "vision-v1:c3/img_11813.jpg",
+        "class_id": "c3",
+        "filename": "img_11813.jpg",
+        "bytes": 40438,
+        "sha256": "b3b1eaeea22878f22bd7ea95a87ac29140bbd5251548d4b7d8013e5742a21f90"
+      },
+      {
+        "sequence_index": 76,
+        "source_id": "vision-v1:c3/img_11982.jpg",
+        "class_id": "c3",
+        "filename": "img_11982.jpg",
+        "bytes": 39296,
+        "sha256": "c85bb4ca74d292b53160977f1836f5ded7fe661e0bd1b86885fbecd2f1452e6b"
+      },
+      {
+        "sequence_index": 77,
+        "source_id": "vision-v1:c3/img_12214.jpg",
+        "class_id": "c3",
+        "filename": "img_12214.jpg",
+        "bytes": 45319,
+        "sha256": "04e0f08455876af0369b1668a4fda180db59a41c05c3fcfacb5328e6a8b6ba5d"
+      },
+      {
+        "sequence_index": 78,
+        "source_id": "vision-v1:c3/img_12346.jpg",
+        "class_id": "c3",
+        "filename": "img_12346.jpg",
+        "bytes": 38737,
+        "sha256": "a1eaa0c332bda7b6c456bb8f4dbea89ed1a184dc2e2d9a7429c1ee8dcc1bc032"
+      },
+      {
+        "sequence_index": 79,
+        "source_id": "vision-v1:c3/img_12520.jpg",
+        "class_id": "c3",
+        "filename": "img_12520.jpg",
+        "bytes": 47199,
+        "sha256": "14d3d24ee6f1c463bb666a1f5271d62efc7ce59558d65f09a6659ec188855987"
+      },
+      {
+        "sequence_index": 80,
+        "source_id": "vision-v1:c4/img_10025.jpg",
+        "class_id": "c4",
+        "filename": "img_10025.jpg",
+        "bytes": 40018,
+        "sha256": "19c0ca5240f95c8e30d0238274c8fdb2213e1612feae6f17eab8f71102547404"
+      },
+      {
+        "sequence_index": 81,
+        "source_id": "vision-v1:c4/img_100343.jpg",
+        "class_id": "c4",
+        "filename": "img_100343.jpg",
+        "bytes": 38685,
+        "sha256": "124e4ab49f9d5d2d2509add95a56b9d424f4472619ba614997d948d98c782e08"
+      },
+      {
+        "sequence_index": 82,
+        "source_id": "vision-v1:c4/img_100361.jpg",
+        "class_id": "c4",
+        "filename": "img_100361.jpg",
+        "bytes": 41926,
+        "sha256": "5e602d3f26f993085b72d2b3e567a1a76ffa764d5aad7459f55d7bdcdfec6669"
+      },
+      {
+        "sequence_index": 83,
+        "source_id": "vision-v1:c4/img_100371.jpg",
+        "class_id": "c4",
+        "filename": "img_100371.jpg",
+        "bytes": 45567,
+        "sha256": "1f871b4e8ad6e334934215666138075a81a01ce5415b067581596f505f8790e0"
+      },
+      {
+        "sequence_index": 84,
+        "source_id": "vision-v1:c4/img_100561.jpg",
+        "class_id": "c4",
+        "filename": "img_100561.jpg",
+        "bytes": 40873,
+        "sha256": "e49476a4b3a9151d91d7f5f176605af5ba76cb1255fe244c2b2f49526274e6a6"
+      },
+      {
+        "sequence_index": 85,
+        "source_id": "vision-v1:c4/img_101298.jpg",
+        "class_id": "c4",
+        "filename": "img_101298.jpg",
+        "bytes": 40927,
+        "sha256": "4ee9ddb799295a91ffc381c72e10096074b2815b57365949b03534c577d1d17d"
+      },
+      {
+        "sequence_index": 86,
+        "source_id": "vision-v1:c4/img_101437.jpg",
+        "class_id": "c4",
+        "filename": "img_101437.jpg",
+        "bytes": 40898,
+        "sha256": "b5df9bd4079177b01e3b4c0776ca7e1086e3182d3215fe49868f7776ef8938d5"
+      },
+      {
+        "sequence_index": 87,
+        "source_id": "vision-v1:c4/img_101507.jpg",
+        "class_id": "c4",
+        "filename": "img_101507.jpg",
+        "bytes": 39581,
+        "sha256": "1f9131af694803eaa7b69815a947c032c5f684cae828f81bc17ff86c90b7ea78"
+      },
+      {
+        "sequence_index": 88,
+        "source_id": "vision-v1:c4/img_101528.jpg",
+        "class_id": "c4",
+        "filename": "img_101528.jpg",
+        "bytes": 40147,
+        "sha256": "cc5c2b201a8c0499d4af69e5b226afad1e7429243c7ff2f36411743e2c04a615"
+      },
+      {
+        "sequence_index": 89,
+        "source_id": "vision-v1:c4/img_102043.jpg",
+        "class_id": "c4",
+        "filename": "img_102043.jpg",
+        "bytes": 46329,
+        "sha256": "f7012d6bc52fa8bd5c63bf7b89a56009f1023a29ade9df19d8b70c8d40c3c533"
+      },
+      {
+        "sequence_index": 90,
+        "source_id": "vision-v1:c4/img_102083.jpg",
+        "class_id": "c4",
+        "filename": "img_102083.jpg",
+        "bytes": 38315,
+        "sha256": "4290ffad32b1559ada3df2d42b4cd8360c8e9b2253e316d49f9e0b5862bd585f"
+      },
+      {
+        "sequence_index": 91,
+        "source_id": "vision-v1:c4/img_102118.jpg",
+        "class_id": "c4",
+        "filename": "img_102118.jpg",
+        "bytes": 42052,
+        "sha256": "2d9aa5a123e8ebc8fae24bb6d33d0b6f8d57a73ec2b1c2a2ac215c1b1c55da54"
+      },
+      {
+        "sequence_index": 92,
+        "source_id": "vision-v1:c4/img_1073.jpg",
+        "class_id": "c4",
+        "filename": "img_1073.jpg",
+        "bytes": 41840,
+        "sha256": "40c59a0206cb978d65d65689b6dd03828250a80715c0b7435522096350735c42"
+      },
+      {
+        "sequence_index": 93,
+        "source_id": "vision-v1:c4/img_10758.jpg",
+        "class_id": "c4",
+        "filename": "img_10758.jpg",
+        "bytes": 38814,
+        "sha256": "4b045c143f5ccea563c50587a7bcbce734a8775b6707028bba4b5f4260511f5a"
+      },
+      {
+        "sequence_index": 94,
+        "source_id": "vision-v1:c4/img_11270.jpg",
+        "class_id": "c4",
+        "filename": "img_11270.jpg",
+        "bytes": 41869,
+        "sha256": "a644fd379572e709e7d1f62f319f56c4ce739c521b88ea1528454b4030acf966"
+      },
+      {
+        "sequence_index": 95,
+        "source_id": "vision-v1:c4/img_12057.jpg",
+        "class_id": "c4",
+        "filename": "img_12057.jpg",
+        "bytes": 41692,
+        "sha256": "e9c9be3d4d764884fa83299846ebe7ae93dacd9f68047ea844792d2cc6c965e0"
+      },
+      {
+        "sequence_index": 96,
+        "source_id": "vision-v1:c4/img_12474.jpg",
+        "class_id": "c4",
+        "filename": "img_12474.jpg",
+        "bytes": 42491,
+        "sha256": "11c366e8f10e2baf6f87f931509c92ef5e50a8d41cf28fdb61b43990f0309798"
+      },
+      {
+        "sequence_index": 97,
+        "source_id": "vision-v1:c4/img_12553.jpg",
+        "class_id": "c4",
+        "filename": "img_12553.jpg",
+        "bytes": 45757,
+        "sha256": "06d43b9a22a96e920d81f5d950dd7b751569be440e7a6b45a614e9c783ee1e41"
+      },
+      {
+        "sequence_index": 98,
+        "source_id": "vision-v1:c4/img_12715.jpg",
+        "class_id": "c4",
+        "filename": "img_12715.jpg",
+        "bytes": 38745,
+        "sha256": "677c10c9e89992fd98c6c9e9e5e8af8ea2d1ad7cd0c6a903bca89651262c6c4d"
+      },
+      {
+        "sequence_index": 99,
+        "source_id": "vision-v1:c4/img_12834.jpg",
+        "class_id": "c4",
+        "filename": "img_12834.jpg",
+        "bytes": 43422,
+        "sha256": "1e5076eb604b85c8d0cb7a6d759a65a9f561744c4b7c4fe25cd252c0a4364d2a"
+      },
+      {
+        "sequence_index": 100,
+        "source_id": "vision-v1:c5/img_10052.jpg",
+        "class_id": "c5",
+        "filename": "img_10052.jpg",
+        "bytes": 46243,
+        "sha256": "d0a76dda39d62457b9f2f0d1ea7c939debb61dce9c8a238cca617bc0a93fedef"
+      },
+      {
+        "sequence_index": 101,
+        "source_id": "vision-v1:c5/img_100871.jpg",
+        "class_id": "c5",
+        "filename": "img_100871.jpg",
+        "bytes": 40991,
+        "sha256": "997ac4028b5d325dc716f858dac3948b35b81a52721101f285a999768082e893"
+      },
+      {
+        "sequence_index": 102,
+        "source_id": "vision-v1:c5/img_100905.jpg",
+        "class_id": "c5",
+        "filename": "img_100905.jpg",
+        "bytes": 42971,
+        "sha256": "122044a76f6a326c8533e2132a627c6a038de51bbad3f9b065ec6069bbce357c"
+      },
+      {
+        "sequence_index": 103,
+        "source_id": "vision-v1:c5/img_101578.jpg",
+        "class_id": "c5",
+        "filename": "img_101578.jpg",
+        "bytes": 44084,
+        "sha256": "29b46b21f60247a407f6b311fdd79d7dd0b162ec1943f5a6741d3b604c493b99"
+      },
+      {
+        "sequence_index": 104,
+        "source_id": "vision-v1:c5/img_10318.jpg",
+        "class_id": "c5",
+        "filename": "img_10318.jpg",
+        "bytes": 44145,
+        "sha256": "4e7a68cfc7f61c245f4edabe60b2136ff263922a2cffdf6e6738462c4630e7e0"
+      },
+      {
+        "sequence_index": 105,
+        "source_id": "vision-v1:c5/img_10406.jpg",
+        "class_id": "c5",
+        "filename": "img_10406.jpg",
+        "bytes": 39158,
+        "sha256": "2ed0175559aeacd505158803857ffa18b084eb7ad168a160eebaab892d7f3b0c"
+      },
+      {
+        "sequence_index": 106,
+        "source_id": "vision-v1:c5/img_10516.jpg",
+        "class_id": "c5",
+        "filename": "img_10516.jpg",
+        "bytes": 46868,
+        "sha256": "44751eff01a12c34e3b89ff7f927f5d36606bf4d92489a9b39365446213a0b88"
+      },
+      {
+        "sequence_index": 107,
+        "source_id": "vision-v1:c5/img_10773.jpg",
+        "class_id": "c5",
+        "filename": "img_10773.jpg",
+        "bytes": 38762,
+        "sha256": "1876a13d69070c3c261c2b6d5c6bd73ad47058531168669928abcf588613613f"
+      },
+      {
+        "sequence_index": 108,
+        "source_id": "vision-v1:c5/img_11747.jpg",
+        "class_id": "c5",
+        "filename": "img_11747.jpg",
+        "bytes": 42945,
+        "sha256": "403de9cc028177fcd4264765c41c5c71b0d7c623fb79611f06bd6cc4a0d2fdf8"
+      },
+      {
+        "sequence_index": 109,
+        "source_id": "vision-v1:c5/img_11748.jpg",
+        "class_id": "c5",
+        "filename": "img_11748.jpg",
+        "bytes": 42661,
+        "sha256": "7bca48ec1e94771c4a91a802043599a11b19d02de430df6e6fa39994a41f135f"
+      },
+      {
+        "sequence_index": 110,
+        "source_id": "vision-v1:c5/img_11842.jpg",
+        "class_id": "c5",
+        "filename": "img_11842.jpg",
+        "bytes": 38552,
+        "sha256": "079055a680f100de4ea5bde6486684cc30730903ca82d682053ac706c51212e2"
+      },
+      {
+        "sequence_index": 111,
+        "source_id": "vision-v1:c5/img_11892.jpg",
+        "class_id": "c5",
+        "filename": "img_11892.jpg",
+        "bytes": 41378,
+        "sha256": "b22957605dad7c4a6a1592939805510c8535352d0c493cd9b5a22c2209e16ab5"
+      },
+      {
+        "sequence_index": 112,
+        "source_id": "vision-v1:c5/img_120.jpg",
+        "class_id": "c5",
+        "filename": "img_120.jpg",
+        "bytes": 44834,
+        "sha256": "c63266ff828614a0eb44a80bb8a50ef3492c501bc30f03d5317116438fbc9361"
+      },
+      {
+        "sequence_index": 113,
+        "source_id": "vision-v1:c5/img_12442.jpg",
+        "class_id": "c5",
+        "filename": "img_12442.jpg",
+        "bytes": 45695,
+        "sha256": "fa15c7607531862d3386c5236f77bb4212df3a0ffbe3f32e4c423c7ef73e95a3"
+      },
+      {
+        "sequence_index": 114,
+        "source_id": "vision-v1:c5/img_1290.jpg",
+        "class_id": "c5",
+        "filename": "img_1290.jpg",
+        "bytes": 39684,
+        "sha256": "91f937af3cccbec42d1a40e6fa26f7d47fcc237700959cd3cd2ffd2930475d7d"
+      },
+      {
+        "sequence_index": 115,
+        "source_id": "vision-v1:c5/img_13216.jpg",
+        "class_id": "c5",
+        "filename": "img_13216.jpg",
+        "bytes": 45399,
+        "sha256": "4fe3487a7963f16d7117eeff33bcc55bd8b9e7962a134090d5189338f9387d9c"
+      },
+      {
+        "sequence_index": 116,
+        "source_id": "vision-v1:c5/img_138.jpg",
+        "class_id": "c5",
+        "filename": "img_138.jpg",
+        "bytes": 46244,
+        "sha256": "6f6ef32254902bd7069df5db0972062087593fa09b87cec12d9c516f53731d39"
+      },
+      {
+        "sequence_index": 117,
+        "source_id": "vision-v1:c5/img_1388.jpg",
+        "class_id": "c5",
+        "filename": "img_1388.jpg",
+        "bytes": 38792,
+        "sha256": "dae5d79bf4845128d81fbbe26efc36ae1353503e092af29a7cb641c695bc4ebc"
+      },
+      {
+        "sequence_index": 118,
+        "source_id": "vision-v1:c5/img_14774.jpg",
+        "class_id": "c5",
+        "filename": "img_14774.jpg",
+        "bytes": 45792,
+        "sha256": "144ab4464439f71cdd09deee6ee1c246fef11822e189956f3ada9dba421e14cf"
+      },
+      {
+        "sequence_index": 119,
+        "source_id": "vision-v1:c5/img_14921.jpg",
+        "class_id": "c5",
+        "filename": "img_14921.jpg",
+        "bytes": 40879,
+        "sha256": "6e1213a8ecd287fdf193704c6e4687a7cc8522bb9b51b8773c1afd1d6cf96805"
+      },
+      {
+        "sequence_index": 120,
+        "source_id": "vision-v1:c6/img_100116.jpg",
+        "class_id": "c6",
+        "filename": "img_100116.jpg",
+        "bytes": 39351,
+        "sha256": "e471a1493e1d16a00887666c2713b653aff2b946c715bfa9bbb473e162dfdf23"
+      },
+      {
+        "sequence_index": 121,
+        "source_id": "vision-v1:c6/img_100634.jpg",
+        "class_id": "c6",
+        "filename": "img_100634.jpg",
+        "bytes": 48682,
+        "sha256": "2491d8dc2cc1a732159b718708e384d0ed793941f9d6498fc029341bb95213e5"
+      },
+      {
+        "sequence_index": 122,
+        "source_id": "vision-v1:c6/img_101713.jpg",
+        "class_id": "c6",
+        "filename": "img_101713.jpg",
+        "bytes": 38467,
+        "sha256": "02cd90f387da901347d31df79f46a421a1cf638580945028858d9ee0c481fcf6"
+      },
+      {
+        "sequence_index": 123,
+        "source_id": "vision-v1:c6/img_101719.jpg",
+        "class_id": "c6",
+        "filename": "img_101719.jpg",
+        "bytes": 47052,
+        "sha256": "328734f29dc57bff71216ca79164017e3df05dee989e681f20417203b85ba03c"
+      },
+      {
+        "sequence_index": 124,
+        "source_id": "vision-v1:c6/img_10383.jpg",
+        "class_id": "c6",
+        "filename": "img_10383.jpg",
+        "bytes": 41940,
+        "sha256": "734df7e3506758aa5024cb996045c57231b558bdd0cef380f4ccdb768528111f"
+      },
+      {
+        "sequence_index": 125,
+        "source_id": "vision-v1:c6/img_10739.jpg",
+        "class_id": "c6",
+        "filename": "img_10739.jpg",
+        "bytes": 47029,
+        "sha256": "18c7dd0998d5e16d0e9c0613bb4a06fafa420980d6bafe4ece1a6ffc83692fa7"
+      },
+      {
+        "sequence_index": 126,
+        "source_id": "vision-v1:c6/img_10777.jpg",
+        "class_id": "c6",
+        "filename": "img_10777.jpg",
+        "bytes": 47317,
+        "sha256": "385506cf17dd02370e84117218e8dee2d4fc4102adb5442aff3b4a304b0ca65a"
+      },
+      {
+        "sequence_index": 127,
+        "source_id": "vision-v1:c6/img_10918.jpg",
+        "class_id": "c6",
+        "filename": "img_10918.jpg",
+        "bytes": 41876,
+        "sha256": "a6e4d8630d5414046fb4471a664e868502dc8dcdba93c39d0b7de0485b0584b8"
+      },
+      {
+        "sequence_index": 128,
+        "source_id": "vision-v1:c6/img_10979.jpg",
+        "class_id": "c6",
+        "filename": "img_10979.jpg",
+        "bytes": 45269,
+        "sha256": "9b0c59aa9a2142ec530832e8ae233fa15cd925a2d79a8c9ed98132ef2bd49074"
+      },
+      {
+        "sequence_index": 129,
+        "source_id": "vision-v1:c6/img_1098.jpg",
+        "class_id": "c6",
+        "filename": "img_1098.jpg",
+        "bytes": 41648,
+        "sha256": "423972c1ca8de13aaac3a18220d18d1d744a20601b82e6b69c953f67c496c488"
+      },
+      {
+        "sequence_index": 130,
+        "source_id": "vision-v1:c6/img_11189.jpg",
+        "class_id": "c6",
+        "filename": "img_11189.jpg",
+        "bytes": 47281,
+        "sha256": "880f6603c1a0606bf59b0a1087155a8c3c5768af198a9efc07cda2c93977d48d"
+      },
+      {
+        "sequence_index": 131,
+        "source_id": "vision-v1:c6/img_11409.jpg",
+        "class_id": "c6",
+        "filename": "img_11409.jpg",
+        "bytes": 42071,
+        "sha256": "f2770fbc5cc91671e2dcc1f3d92d982dc098dca2c029b587ecb8f2d4dc49742a"
+      },
+      {
+        "sequence_index": 132,
+        "source_id": "vision-v1:c6/img_1207.jpg",
+        "class_id": "c6",
+        "filename": "img_1207.jpg",
+        "bytes": 40853,
+        "sha256": "222f259c4f614deab4437fd5f3a07295f9fa289dcd7e6ce8663c672de6dbda5e"
+      },
+      {
+        "sequence_index": 133,
+        "source_id": "vision-v1:c6/img_13053.jpg",
+        "class_id": "c6",
+        "filename": "img_13053.jpg",
+        "bytes": 45696,
+        "sha256": "efef14fa0ba13cb7fbbf0ea0bccea7a6f9439a363fd3e4bbc491c1108b7b0180"
+      },
+      {
+        "sequence_index": 134,
+        "source_id": "vision-v1:c6/img_13067.jpg",
+        "class_id": "c6",
+        "filename": "img_13067.jpg",
+        "bytes": 44454,
+        "sha256": "6e375629ec3dcee375f3d5da579370491d1d769029530d8d06dc644dc59b1624"
+      },
+      {
+        "sequence_index": 135,
+        "source_id": "vision-v1:c6/img_13137.jpg",
+        "class_id": "c6",
+        "filename": "img_13137.jpg",
+        "bytes": 38221,
+        "sha256": "67b3b04dce10338b381f4c17e0b43e24ab525796578e2e3ebeeb7a8fb90f52e1"
+      },
+      {
+        "sequence_index": 136,
+        "source_id": "vision-v1:c6/img_13590.jpg",
+        "class_id": "c6",
+        "filename": "img_13590.jpg",
+        "bytes": 42320,
+        "sha256": "74ab56d358820de503ceee45c10b85c00f5ceb0f6437de0c45c4f267b25f1525"
+      },
+      {
+        "sequence_index": 137,
+        "source_id": "vision-v1:c6/img_14166.jpg",
+        "class_id": "c6",
+        "filename": "img_14166.jpg",
+        "bytes": 38248,
+        "sha256": "9eeaad04e3954c6b7fe2bdd09a1625258bfffb95ead4028480bde5918c4323bf"
+      },
+      {
+        "sequence_index": 138,
+        "source_id": "vision-v1:c6/img_14168.jpg",
+        "class_id": "c6",
+        "filename": "img_14168.jpg",
+        "bytes": 44585,
+        "sha256": "bad9587f7e093b08f761b526af125242dbdbc2c44043d4fec4d9130b0200a42c"
+      },
+      {
+        "sequence_index": 139,
+        "source_id": "vision-v1:c6/img_14364.jpg",
+        "class_id": "c6",
+        "filename": "img_14364.jpg",
+        "bytes": 41283,
+        "sha256": "3751189296543c0e63504fad4a161f41cb4a8501a500f0e29bc500399161e9c6"
+      },
+      {
+        "sequence_index": 140,
+        "source_id": "vision-v1:c7/img_100057.jpg",
+        "class_id": "c7",
+        "filename": "img_100057.jpg",
+        "bytes": 40998,
+        "sha256": "86f63db025a0b26abe6a3066d1610606a6ceb72a0ad04ca5370ed509c6d8883a"
+      },
+      {
+        "sequence_index": 141,
+        "source_id": "vision-v1:c7/img_100164.jpg",
+        "class_id": "c7",
+        "filename": "img_100164.jpg",
+        "bytes": 47393,
+        "sha256": "32f186c0266890371dd20e88f83ce4749420362d565bc6e7e021491c4abe293d"
+      },
+      {
+        "sequence_index": 142,
+        "source_id": "vision-v1:c7/img_100167.jpg",
+        "class_id": "c7",
+        "filename": "img_100167.jpg",
+        "bytes": 45085,
+        "sha256": "57e4a243fe020d2656cd2dbbd8c57dfdf0a7d826934cd2eec42899294bdc30cc"
+      },
+      {
+        "sequence_index": 143,
+        "source_id": "vision-v1:c7/img_100702.jpg",
+        "class_id": "c7",
+        "filename": "img_100702.jpg",
+        "bytes": 47359,
+        "sha256": "73b75be835b1fdd05271a33d16b9894b019bc7f9b91f8ef592f964d1da75b073"
+      },
+      {
+        "sequence_index": 144,
+        "source_id": "vision-v1:c7/img_101357.jpg",
+        "class_id": "c7",
+        "filename": "img_101357.jpg",
+        "bytes": 44895,
+        "sha256": "a81be87f5759d58c6a764bf34f772add97d66b55dbfde3a6499fe37f97c498bf"
+      },
+      {
+        "sequence_index": 145,
+        "source_id": "vision-v1:c7/img_101505.jpg",
+        "class_id": "c7",
+        "filename": "img_101505.jpg",
+        "bytes": 43999,
+        "sha256": "46903ee0e8e82076901cec3b40af6d18333d2d2f117c6117b37dbe7ebaac244d"
+      },
+      {
+        "sequence_index": 146,
+        "source_id": "vision-v1:c7/img_101868.jpg",
+        "class_id": "c7",
+        "filename": "img_101868.jpg",
+        "bytes": 50068,
+        "sha256": "232b35519eac10d402ab336ce2bfbb5114e6bf55f5321fd67be896a8a7920f98"
+      },
+      {
+        "sequence_index": 147,
+        "source_id": "vision-v1:c7/img_101905.jpg",
+        "class_id": "c7",
+        "filename": "img_101905.jpg",
+        "bytes": 45956,
+        "sha256": "e0e2abc9870fae5afb52321fdd13c9ac67b04e24402183a76bed5f61ddff3d96"
+      },
+      {
+        "sequence_index": 148,
+        "source_id": "vision-v1:c7/img_10233.jpg",
+        "class_id": "c7",
+        "filename": "img_10233.jpg",
+        "bytes": 45245,
+        "sha256": "0971e2a87bc7a1e77a29f6e60bbd635d081c4a42b13e4c844526fc41b99cddb5"
+      },
+      {
+        "sequence_index": 149,
+        "source_id": "vision-v1:c7/img_10478.jpg",
+        "class_id": "c7",
+        "filename": "img_10478.jpg",
+        "bytes": 47188,
+        "sha256": "c829eff59496a4b4bd743e4b0bc39adeaadd3361095b6a0bd2e02e1d83182d9d"
+      },
+      {
+        "sequence_index": 150,
+        "source_id": "vision-v1:c7/img_10479.jpg",
+        "class_id": "c7",
+        "filename": "img_10479.jpg",
+        "bytes": 47468,
+        "sha256": "6bc9e4cf592816bed01ff554e1ea37841a1aefb0830628dcfbc7aed7a9413815"
+      },
+      {
+        "sequence_index": 151,
+        "source_id": "vision-v1:c7/img_10535.jpg",
+        "class_id": "c7",
+        "filename": "img_10535.jpg",
+        "bytes": 47453,
+        "sha256": "6b4ab20817ade6b2404025e138041add15f0f8794f05419a1615018e48780b11"
+      },
+      {
+        "sequence_index": 152,
+        "source_id": "vision-v1:c7/img_10696.jpg",
+        "class_id": "c7",
+        "filename": "img_10696.jpg",
+        "bytes": 44950,
+        "sha256": "10d6aae283e547c7a92fedd771ed97b7b9d8f3b63abbfcc6bb5a9f007919db7d"
+      },
+      {
+        "sequence_index": 153,
+        "source_id": "vision-v1:c7/img_1086.jpg",
+        "class_id": "c7",
+        "filename": "img_1086.jpg",
+        "bytes": 47340,
+        "sha256": "218e796b14e6913e6828eda28636ea06b7c90bebe9ebc3c4dfe0653a3facd385"
+      },
+      {
+        "sequence_index": 154,
+        "source_id": "vision-v1:c7/img_10950.jpg",
+        "class_id": "c7",
+        "filename": "img_10950.jpg",
+        "bytes": 46724,
+        "sha256": "4e5fea115106aee167a812f44db0c029f569c46f5d44a2cd38bfe8a8b2ac999d"
+      },
+      {
+        "sequence_index": 155,
+        "source_id": "vision-v1:c7/img_11057.jpg",
+        "class_id": "c7",
+        "filename": "img_11057.jpg",
+        "bytes": 43448,
+        "sha256": "272312554d1d118b2d47f85c9a91ddbb1edfc741644b61c64128c1a4471d0fc7"
+      },
+      {
+        "sequence_index": 156,
+        "source_id": "vision-v1:c7/img_11196.jpg",
+        "class_id": "c7",
+        "filename": "img_11196.jpg",
+        "bytes": 45510,
+        "sha256": "556683c2d8b0aad5b19d63bb2302dbee8d34a6af78f61cdb5b6e48277b9e1193"
+      },
+      {
+        "sequence_index": 157,
+        "source_id": "vision-v1:c7/img_11423.jpg",
+        "class_id": "c7",
+        "filename": "img_11423.jpg",
+        "bytes": 45242,
+        "sha256": "4693fed19b6e4f9145e3a679f7601f4015d9a2eccb22bc281b30bf200cd2f84c"
+      },
+      {
+        "sequence_index": 158,
+        "source_id": "vision-v1:c7/img_1148.jpg",
+        "class_id": "c7",
+        "filename": "img_1148.jpg",
+        "bytes": 48292,
+        "sha256": "284455d7e8b72177daa3853051ea76f76efa59843dd34b1cdad60f24bb7919f2"
+      },
+      {
+        "sequence_index": 159,
+        "source_id": "vision-v1:c7/img_12479.jpg",
+        "class_id": "c7",
+        "filename": "img_12479.jpg",
+        "bytes": 44047,
+        "sha256": "b35810f5548b37664821d0064545df13cd91c6594cd376c6fa22de205f79e833"
+      },
+      {
+        "sequence_index": 160,
+        "source_id": "vision-v1:c8/img_100368.jpg",
+        "class_id": "c8",
+        "filename": "img_100368.jpg",
+        "bytes": 42705,
+        "sha256": "42dddc5a55f2658d9e5c2e21e0b93e8f7f2d7e4206afbfdaf875efb09c2ac72c"
+      },
+      {
+        "sequence_index": 161,
+        "source_id": "vision-v1:c8/img_100846.jpg",
+        "class_id": "c8",
+        "filename": "img_100846.jpg",
+        "bytes": 45461,
+        "sha256": "0f818da873cfd98522f93ae047667852dc2c729598c0fe89e027d555ca9f9173"
+      },
+      {
+        "sequence_index": 162,
+        "source_id": "vision-v1:c8/img_100961.jpg",
+        "class_id": "c8",
+        "filename": "img_100961.jpg",
+        "bytes": 45369,
+        "sha256": "514655191c9d07c1d65dd593d7d2194ee8859784f9b59d0dff4a43f6d07278ec"
+      },
+      {
+        "sequence_index": 163,
+        "source_id": "vision-v1:c8/img_102114.jpg",
+        "class_id": "c8",
+        "filename": "img_102114.jpg",
+        "bytes": 42037,
+        "sha256": "e6e41a2fbd2137c338e3df773a882c76eaf3dfd9bb1c3cde6bcd9a82f32241a0"
+      },
+      {
+        "sequence_index": 164,
+        "source_id": "vision-v1:c8/img_10361.jpg",
+        "class_id": "c8",
+        "filename": "img_10361.jpg",
+        "bytes": 45993,
+        "sha256": "b3fbb8f47f3d5bf7bbd8ef8fac82b0f0650e653c715be768e4c2c0b16e9695bf"
+      },
+      {
+        "sequence_index": 165,
+        "source_id": "vision-v1:c8/img_10420.jpg",
+        "class_id": "c8",
+        "filename": "img_10420.jpg",
+        "bytes": 51318,
+        "sha256": "aa10ac803665925a478137f903970ac1356beeebf5864a873f45c622035c495d"
+      },
+      {
+        "sequence_index": 166,
+        "source_id": "vision-v1:c8/img_11315.jpg",
+        "class_id": "c8",
+        "filename": "img_11315.jpg",
+        "bytes": 48317,
+        "sha256": "d1d61e7472886ae83e90cfbfc0da41b6a8ba4e742b478eeb4dd308f8ecdc6bf8"
+      },
+      {
+        "sequence_index": 167,
+        "source_id": "vision-v1:c8/img_11470.jpg",
+        "class_id": "c8",
+        "filename": "img_11470.jpg",
+        "bytes": 41119,
+        "sha256": "48ff7554d2de40debb6b6d0fef19382c5792c9d94d6d26c5585fc3c5619e8cb0"
+      },
+      {
+        "sequence_index": 168,
+        "source_id": "vision-v1:c8/img_12008.jpg",
+        "class_id": "c8",
+        "filename": "img_12008.jpg",
+        "bytes": 44440,
+        "sha256": "6750fdaa94c2230e03d2bfe97f4806bed01252aad91fa28b331fa0ff2eb5acde"
+      },
+      {
+        "sequence_index": 169,
+        "source_id": "vision-v1:c8/img_12047.jpg",
+        "class_id": "c8",
+        "filename": "img_12047.jpg",
+        "bytes": 47954,
+        "sha256": "d8957dd54f275bf7438a176b4695253b875a1512f7de5714e4584f42984be748"
+      },
+      {
+        "sequence_index": 170,
+        "source_id": "vision-v1:c8/img_12575.jpg",
+        "class_id": "c8",
+        "filename": "img_12575.jpg",
+        "bytes": 42220,
+        "sha256": "2097eded9bc87f9561fb1aafbf3c5ae34e6213b5ecb3da022bdca2151911e371"
+      },
+      {
+        "sequence_index": 171,
+        "source_id": "vision-v1:c8/img_12731.jpg",
+        "class_id": "c8",
+        "filename": "img_12731.jpg",
+        "bytes": 41410,
+        "sha256": "f315e275287d7a43eefeb1845963463f6d3f4e7edec644b726e40d7cfe81e39d"
+      },
+      {
+        "sequence_index": 172,
+        "source_id": "vision-v1:c8/img_12886.jpg",
+        "class_id": "c8",
+        "filename": "img_12886.jpg",
+        "bytes": 40274,
+        "sha256": "cea600a19715874f0f38dba892b83cb6d335b31709b9bab37a78a5ad9681f137"
+      },
+      {
+        "sequence_index": 173,
+        "source_id": "vision-v1:c8/img_13090.jpg",
+        "class_id": "c8",
+        "filename": "img_13090.jpg",
+        "bytes": 42556,
+        "sha256": "148a2f412408b10cd872c92fe8370d89617e4b51978fcb6eb541a9c5d5a7a31a"
+      },
+      {
+        "sequence_index": 174,
+        "source_id": "vision-v1:c8/img_13308.jpg",
+        "class_id": "c8",
+        "filename": "img_13308.jpg",
+        "bytes": 41796,
+        "sha256": "57b2ec668822788af3682737da09916a5719d005c94c4ebe9d5223ec7a0a63c6"
+      },
+      {
+        "sequence_index": 175,
+        "source_id": "vision-v1:c8/img_1338.jpg",
+        "class_id": "c8",
+        "filename": "img_1338.jpg",
+        "bytes": 42052,
+        "sha256": "c87728d86dd56247958022e33109091508ffc9dfffe134e5d40b0f6a278c229e"
+      },
+      {
+        "sequence_index": 176,
+        "source_id": "vision-v1:c8/img_13465.jpg",
+        "class_id": "c8",
+        "filename": "img_13465.jpg",
+        "bytes": 45129,
+        "sha256": "49275891adfadd5fcde87388f2bec4a0cd5d84a43ead09570ca571b68bf4ddce"
+      },
+      {
+        "sequence_index": 177,
+        "source_id": "vision-v1:c8/img_13480.jpg",
+        "class_id": "c8",
+        "filename": "img_13480.jpg",
+        "bytes": 45473,
+        "sha256": "cbc3c92342c23ece468a741ca8fd908849529cb3affcf2760bc10c5baab764e5"
+      },
+      {
+        "sequence_index": 178,
+        "source_id": "vision-v1:c8/img_13495.jpg",
+        "class_id": "c8",
+        "filename": "img_13495.jpg",
+        "bytes": 42575,
+        "sha256": "4c2009ae72fa753825d5d29d893c87a1540dd45463cf7887351c2234f7a06cfb"
+      },
+      {
+        "sequence_index": 179,
+        "source_id": "vision-v1:c8/img_13505.jpg",
+        "class_id": "c8",
+        "filename": "img_13505.jpg",
+        "bytes": 47626,
+        "sha256": "f09967b174d0a39f3372348b58f8889b63ef63cc748f126e9c08859145cd8e2f"
+      },
+      {
+        "sequence_index": 180,
+        "source_id": "vision-v1:c9/img_100286.jpg",
+        "class_id": "c9",
+        "filename": "img_100286.jpg",
+        "bytes": 44436,
+        "sha256": "bc6f3185bc179cb62861d3239868ce532c2583bd7b372e4d9e5edc9775654ca9"
+      },
+      {
+        "sequence_index": 181,
+        "source_id": "vision-v1:c9/img_100294.jpg",
+        "class_id": "c9",
+        "filename": "img_100294.jpg",
+        "bytes": 44603,
+        "sha256": "8a2b3ae1a504ee2c51f5fdca6dd0f13f1dab54a9c857b2f525f350e9401913c1"
+      },
+      {
+        "sequence_index": 182,
+        "source_id": "vision-v1:c9/img_100428.jpg",
+        "class_id": "c9",
+        "filename": "img_100428.jpg",
+        "bytes": 49604,
+        "sha256": "338f637fad01fb16d3c0c8376e4cc3619ad68ab3499457a474e2b0ad5618b165"
+      },
+      {
+        "sequence_index": 183,
+        "source_id": "vision-v1:c9/img_100429.jpg",
+        "class_id": "c9",
+        "filename": "img_100429.jpg",
+        "bytes": 46576,
+        "sha256": "22a1a6c3f05ac487d712d7e6e4045f20c8176a1b9fd7093551ce6c7cb24c27d3"
+      },
+      {
+        "sequence_index": 184,
+        "source_id": "vision-v1:c9/img_101501.jpg",
+        "class_id": "c9",
+        "filename": "img_101501.jpg",
+        "bytes": 49788,
+        "sha256": "687b02c2b59e01c8b247ebfc448e735ef4f2a21d88c4678fb8d9a10434de4372"
+      },
+      {
+        "sequence_index": 185,
+        "source_id": "vision-v1:c9/img_10731.jpg",
+        "class_id": "c9",
+        "filename": "img_10731.jpg",
+        "bytes": 44824,
+        "sha256": "7480113ce0d495f09649a5da41f809c8e5fecfc182cbe851a089c7a6291fbdf9"
+      },
+      {
+        "sequence_index": 186,
+        "source_id": "vision-v1:c9/img_11577.jpg",
+        "class_id": "c9",
+        "filename": "img_11577.jpg",
+        "bytes": 50311,
+        "sha256": "df9210f8ebfb3c83c26f27848dcbfd7db133c70784541b61ba37d828d9d64f82"
+      },
+      {
+        "sequence_index": 187,
+        "source_id": "vision-v1:c9/img_12046.jpg",
+        "class_id": "c9",
+        "filename": "img_12046.jpg",
+        "bytes": 44396,
+        "sha256": "b701eab5c5a158ddbae631f155585a4b9e3d68c89e8595d5c94d9d7962912bf1"
+      },
+      {
+        "sequence_index": 188,
+        "source_id": "vision-v1:c9/img_13318.jpg",
+        "class_id": "c9",
+        "filename": "img_13318.jpg",
+        "bytes": 41375,
+        "sha256": "01b062b2af6a89c6717ec11d98729eedf382d16f1379a053bde82aeb362e60a2"
+      },
+      {
+        "sequence_index": 189,
+        "source_id": "vision-v1:c9/img_13982.jpg",
+        "class_id": "c9",
+        "filename": "img_13982.jpg",
+        "bytes": 45815,
+        "sha256": "f906579946948eef00ca4f7f73c0f621035dd24dfba2c856d7f22dcea66cdbf8"
+      },
+      {
+        "sequence_index": 190,
+        "source_id": "vision-v1:c9/img_14413.jpg",
+        "class_id": "c9",
+        "filename": "img_14413.jpg",
+        "bytes": 41690,
+        "sha256": "cc841ec877a654971d604d3a169bf4782661135c9298d1db9e5a11b6e69bd6da"
+      },
+      {
+        "sequence_index": 191,
+        "source_id": "vision-v1:c9/img_14657.jpg",
+        "class_id": "c9",
+        "filename": "img_14657.jpg",
+        "bytes": 49650,
+        "sha256": "7f9eb2c2ce6d49a88bb481e975a14de69d279ee024b5ebd4f145cabd4ac28907"
+      },
+      {
+        "sequence_index": 192,
+        "source_id": "vision-v1:c9/img_15013.jpg",
+        "class_id": "c9",
+        "filename": "img_15013.jpg",
+        "bytes": 50009,
+        "sha256": "6d14700e489a18380874ab536615b8a34191f968b05d735094ffd147c9e2db50"
+      },
+      {
+        "sequence_index": 193,
+        "source_id": "vision-v1:c9/img_154.jpg",
+        "class_id": "c9",
+        "filename": "img_154.jpg",
+        "bytes": 45875,
+        "sha256": "62c0dcf41af05c8814974f301934b39b1a8340469be7bfdd738195b270e87bfc"
+      },
+      {
+        "sequence_index": 194,
+        "source_id": "vision-v1:c9/img_15496.jpg",
+        "class_id": "c9",
+        "filename": "img_15496.jpg",
+        "bytes": 45496,
+        "sha256": "14022e0a45950d567a968f4d2cd44befb1f8c0f326c61974e298d009ad5537c5"
+      },
+      {
+        "sequence_index": 195,
+        "source_id": "vision-v1:c9/img_15564.jpg",
+        "class_id": "c9",
+        "filename": "img_15564.jpg",
+        "bytes": 44596,
+        "sha256": "391b10abc5d86a51f585caa1d0b0632fc8141c4259ea6e55b83fbd2775315149"
+      },
+      {
+        "sequence_index": 196,
+        "source_id": "vision-v1:c9/img_15827.jpg",
+        "class_id": "c9",
+        "filename": "img_15827.jpg",
+        "bytes": 49796,
+        "sha256": "c91158f1802e2e1499d245b009ea0cbda6868a8729c19a6962f10ff8a5cedbf4"
+      },
+      {
+        "sequence_index": 197,
+        "source_id": "vision-v1:c9/img_16661.jpg",
+        "class_id": "c9",
+        "filename": "img_16661.jpg",
+        "bytes": 44033,
+        "sha256": "b705e70bb4ac1a896222fed2ef3f0f0c05b8078d2600f66bb0207a4753b32229"
+      },
+      {
+        "sequence_index": 198,
+        "source_id": "vision-v1:c9/img_16668.jpg",
+        "class_id": "c9",
+        "filename": "img_16668.jpg",
+        "bytes": 50163,
+        "sha256": "7589c3e475842b68787b15c6d3bd474ce4356fe0d47f8076a88e4a3448dda502"
+      },
+      {
+        "sequence_index": 199,
+        "source_id": "vision-v1:c9/img_16688.jpg",
+        "class_id": "c9",
+        "filename": "img_16688.jpg",
+        "bytes": 49104,
+        "sha256": "fbb4a56aaee40978d6017f6d458efd9b55c00b4791adf12624ef7dd622f18ffe"
+      }
+    ]
+  },
+  "time_basis": {
+    "status": "APPROVED",
+    "decision_id": "FUD-03",
+    "kind": "INJECTED_SYNTHETIC_UTC",
+    "t0": "2026-10-25T00:00:00+00:00",
+    "interval_ms": 100,
+    "indices": "i=0..199",
+    "timestamp_formula": "t_i = t0 + i*100 milliseconds using integer milliseconds / timedelta; ISO8601 UTC serialization",
+    "last_timestamp_offset_ms": 19900,
+    "injection": "In each child, patch app.inference.datetime to an isolated clock whose now() returns t_i before each synchronous TestClient POST, following backend/tests/test_temporal_contract.py:fake_clock. Also align the provider processed_at metadata clock (app.providers.trained.datetime); do not change real perf_counter or model math. Verify exported timestamp and freshness ages equal the declared policy.",
+    "source_times": {
+      "captured_at": "t_i",
+      "telemetry_timestamp": "t_i"
+    },
+    "captured_at_source": "client_clock",
+    "wall_execution": "No real-time sleep or playback pacing. Synthetic event time advances only between completed synchronous requests. Host elapsed timings, if recorded, are diagnostics and excluded from the model behavior comparison.",
+    "validation": "t0 is in the past relative to the run date, so the unchanged schemas.normalize_timestamp future guard accepts it. Require all returned windows fresh, age0 and assessment_available=true; if not, fail runner validity.",
+    "fsm_interpretation": "20 images per class cover 1.9s between first and last observation; adjacent blocks begin 2.0s apart. Changes at block boundaries reflect this constructed order and EMA carry. No inter-frame motion or real dwell time exists. A single Low class block cannot demonstrate10s sustained Low recovery."
+  },
+  "observation_identity": {
+    "epoch_policy": "epoch=1 for the single synthetic acquisition stream in each isolated session; only a restarted stream would increment epoch. index increases per frame.",
+    "vision_frame": {
+      "epoch": 1,
+      "index": "i+1"
+    },
+    "telemetry_seq": "i+1",
+    "request_id": "task10a_w0001 through task10a_w0200; unique within the session; same aligned IDs allowed across isolated model runs",
+    "source_identity": "source_id from ordered_samples; driver_id is dataset provenance only, never face/biometric inference.",
+    "r10_policy": "Every window declares new frame identity and a new synthetic telemetry observation; no retries, repeats or missing modalities are scheduled. Equal telemetry values with increasing seq/time are intentionally new synthetic samples.",
+    "verification": "Assert provenance.vision_obs=new and telemetry_obs=new, exactly200 persisted monotonically numbered windows, canonical acquisition times equal t_i and model hashes match selected identity."
+  },
+  "telemetry_pairing": {
+    "status": "APPROVED",
+    "decision_id": "FUD-04",
+    "kind": "FIXED_RAW_FEATURE_ROW_REPEATED_AS_NEW_SYNTHETIC_SAMPLES",
+    "source_file": "/Users/liu/Desktop/FYP2-Live-System/ai/prototype-data/prepared_sessions/session_001/telemetry.csv",
+    "source_file_sha256": "3be8432a0ed36ac62989af9c6e04b69121e4ed6a3eb568ab4389a76687724f7e",
+    "selection": "First data row, CSV window_id=1; chosen by row position before model results, not by desired risk output.",
+    "feature_order": [
+      "speed_kmph",
+      "accel_x",
+      "accel_y",
+      "brake_pressure",
+      "steering_angle",
+      "throttle",
+      "lane_deviation",
+      "headway_distance"
+    ],
+    "features": {
+      "speed_kmph": 34,
+      "accel_x": 0.3,
+      "accel_y": 0.1,
+      "brake_pressure": 12,
+      "steering_angle": -2,
+      "throttle": 30,
+      "lane_deviation": 0.3,
+      "headway_distance": 26
+    },
+    "features_sha256": "0d9e4d8d116ee48f0288bbd8b714e8edeb9d5442937104119f9369b9043fd58b",
+    "features_hash_rule": "Convert all eight values to Python float, then sha256(UTF8(json.dumps(features,sort_keys=True,separators=(',',':'),ensure_ascii=False))); preserve float encoding e.g.34.0.",
+    "telemetry_source": "prepared_replay",
+    "probabilities": "Compute using unchanged XGB-STABLE for each raw input; ignore CSV p_safe,p_aggressive,p_distracted. No expected P(Safe) or fused risk values are invented in this draft.",
+    "rationale": "Keep the telemetry branch identical across all windows and all models, isolating the vision-model change. This pairing is constructed, not an observed joint driving event."
+  },
+  "fixed_configuration": {
+    "runtime_config": {
+      "weight_vision": 0.5,
+      "weight_telemetry": 0.5,
+      "ema_alpha": 0.35,
+      "threshold_low": 30,
+      "threshold_high": 60,
+      "freshness_tolerance_s": 3
+    },
+    "fusion_weights_aliases": {
+      "w_v": 0.5,
+      "w_t": 0.5
+    },
+    "RiskScore_scale": "0..100",
+    "fusion": "Existing decision-level late fusion; weights are transparent design parameters, not learned safety weights.",
+    "vision_probability": "P_distraction=1-P(c0), logits softmax exactly once",
+    "freshness": "Ruling A unchanged: age>3s => missing/factor0, no stale scoring;3s is a design threshold, not a validated safety threshold.",
+    "ema": "Existing R10 NEW-only vision EMA; fresh empty initial state, seed on first sample; no reset within200windows, including class boundaries.",
+    "fsm": "Existing R10 server-time AND NEW-source-span rules;2s High,10s Low; repeat observations do not advance source span and last advancing modality must still support the level.",
+    "telemetry": {
+      "model_id": "XGB-STABLE",
+      "path": "/Users/liu/Desktop/FYP2-Live-System/ml/outputs/telemetry/xgb_telemetry.json",
+      "sha256": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+      "iteration_range": [
+        0,
+        91
+      ],
+      "research_preference_not_loaded": "xgboost_02; RF/LR never loaded"
+    },
+    "inference_threads": 2
+  },
+  "compared_identities": [
+    {
+      "model_id": "stable_mobilenet_v3_large",
+      "env_value": "stable",
+      "architecture": "mobilenet_v3_large",
+      "role": "STABLE_DEFAULT_AND_ROLLBACK",
+      "onnx_path": "/Users/liu/Desktop/FYP2-Live-System/ml/outputs/vision/mobilenetv3_large_vision.onnx",
+      "sha256": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+      "parity_tag": "MN-STABLE",
+      "parity_sha256": "bcecf7d0afcafa48213c0a4f9b85eb6f56ea05e5f463e24881cdf914888af0f8"
+    },
+    {
+      "model_id": "resnet18_search004_seed42",
+      "env_value": "resnet18_search004_seed42",
+      "architecture": "resnet18",
+      "role": "VALIDATION_PREFERRED",
+      "source_package": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p5_candidates_20261023/p5_resnet18_search004_seed42_20261023",
+      "sha256": "5e226722e0712824c78aa0976afa6fa5b8dc6100b147a7f523a09048171d8cf3",
+      "zip_sha256": "9fb9551f49aeb3582dfc7cb76c9050b7690a8856621944eb363fecd73ea35029",
+      "parity_tag": "RN-HPO42",
+      "parity_sha256": "3885dbf8b87120382f0663f1aaad84d715f2c59cbb49f63006740e002c8c8cf9"
+    },
+    {
+      "model_id": "mobilenet_v3_large_search006_seed42",
+      "env_value": "mobilenet_v3_large_search006_seed42",
+      "architecture": "mobilenet_v3_large",
+      "role": "RETAINED_COMPARATOR",
+      "source_package": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p5_candidates_20261023/p5_mobilenet_v3_large_search006_seed42_20261023",
+      "sha256": "9ee60abb78007773cc625af80c313049c1970f63c1f041bed9f5b2539a384828",
+      "zip_sha256": "ae887dabe3588969576ecfb54fead41d0f03bd02267028a8a80f73311811ae13",
+      "parity_tag": "MN-HPO42",
+      "parity_sha256": "a8544656b264a5e0698418999c05bf2fe8e869af1b03e24041d2bbf6548fd73b"
+    }
+  ],
+  "isolation": {
+    "status": "APPROVED",
+    "mechanism": "Run one fresh OS subprocess per compared identity, sequentially in the declared model order. Set all DRA_* variables before importing app.*; no backend.app.* duplicate imports.",
+    "model_env": "DRA_ACTIVE_VISION from compared_identities.env_value; stable is default",
+    "database": "A different newly created temporary directory and DRA_DATABASE_URL=sqlite:////<absolute-temporary-path>/comparison.sqlite per model. No user driver_risk.db path is opened.",
+    "state": "A fresh provider singleton, application/cache state, session and SQLite per child. Maintain EMA/FSM across all200windows within that child only. No shared in-memory session or reused SQLite.",
+    "application": "fastapi.testclient.TestClient against app.main:app, create LIVE_MODEL_RUNTIME session with explicit fixed runtime_config; POST /api/sessions/{session_id}/infer for every window, real provider (no probability stubs in evidence runs).",
+    "ports": "No TCP listener needed; never use port8000.",
+    "logging": "Any fault sink/export path configured by the runner must also resolve inside that child's isolated temporary/evidence directory.",
+    "identity_check": "Read /api/models and each result's vision_model_id/sha256, plus stable telemetry hash, before accepting results; missing/mismatched identity => failed validity, no fallback.",
+    "provenance_note": "Current backend emits vision_source=camera_frame for any image. Preserve server values; explicitly label this run as constructed dataset input in the enclosing protocol/results. Do not spoof unsupported client dataset_replay fields or claim the input came from a camera."
+  },
+  "comparison_quantities": [
+    {
+      "quantity": "Raw vision probabilities",
+      "fields": [
+        "10 class probabilities in canonical c0..c9 order",
+        "P_distraction_raw",
+        "argmax"
+      ],
+      "summaries": [
+        "per-window aligned probabilities and model pair deltas",
+        "per-class argmax sequence and count distribution",
+        "agreement and disagreement source IDs"
+      ],
+      "meaning": "Model-output behavior; argmax agreement between models is not accuracy."
+    },
+    {
+      "quantity": "RiskScore",
+      "fields": [
+        "RiskScore",
+        "P_distraction after EMA",
+        "P_telemetry_anomaly"
+      ],
+      "summaries": [
+        "all200per-window values",
+        "min,max,mean,p25,median,p75,p95 on available values; NumPy quantile(method=linear)",
+        "RN-minus-stable and MN-candidate-minus-stable paired deltas, no significance claim"
+      ],
+      "meaning": "Operational0..100risk values under fixed synthetic pairing, not accident severity."
+    },
+    {
+      "quantity": "RiskLevel",
+      "fields": [
+        "RiskLevel",
+        "assessment_available",
+        "SystemHealth",
+        "modality_freshness"
+      ],
+      "summaries": [
+        "full sequence",
+        "category counts",
+        "aligned disagreement windows and class-boundary positions"
+      ]
+    },
+    {
+      "quantity": "DominantEvidence",
+      "fields": [
+        "DominantEvidence",
+        "effective weights and provenance"
+      ],
+      "summaries": [
+        "full sequence",
+        "counts and aligned differences"
+      ],
+      "meaning": "Unchanged existing evidence rule; no redesigned weighting or dominance rule."
+    },
+    {
+      "quantity": "Alert FSM",
+      "fields": [
+        "AlertSeverity"
+      ],
+      "summaries": [
+        "full sequence",
+        "initial state separately",
+        "every transition with window,source_id,t_i,from,to and class-boundary context"
+      ],
+      "meaning": "Constructed sequence response; not a real-world alert-delay or false-alarm evaluation."
+    },
+    {
+      "quantity": "Complementarity/attenuation context",
+      "fields": [
+        "raw and EMA vision non-safe probability",
+        "stable telemetry non-safe probability",
+        "configured/effective weights",
+        "fused RiskScore"
+      ],
+      "summaries": [
+        "describe relative branch contribution and attenuation under the chosen fixed telemetry value"
+      ],
+      "meaning": "Descriptive diagnostic only. A single fixed telemetry row cannot establish general multimodal benefit."
+    }
+  ],
+  "operational_reference_policy": {
+    "d06": "Predeclared constructed evaluation scenario",
+    "reference": "Execute the current committed fusion/EMA/R10/FSM policy with the declared configuration. Dataset class labels only group visual outputs; no per-class ground-truth RiskLevel/AlertSeverity labels are assigned.",
+    "correctness_scope": "Existing regression tests and Stage-1 checks establish implementation contracts separately. Stage-2 differences are described; no single metric wins.",
+    "known_weakness_context": "Read frozen P4 clean/E1 evidence for c9 as a historical context check. Do not force stable200 to reproduce pooled test metrics or p050 outcomes; stable200 is a different validation subset."
+  },
+  "decision_rule": {
+    "type": "DESCRIPTIVE_ONLY",
+    "single_score_threshold": null,
+    "automatic_winner_selection": false,
+    "automatic_active_model_change": false,
+    "replacement_authority": "USER_STAGE_5",
+    "requires_recorded_reasons": true,
+    "no_safety_equivalence": "Higher Macro-F1, lower RiskScore or fewer alerts does not prove safer driving."
+  },
+  "result_contract": {
+    "path": "docs/evidence/<run-date>/comparison/comparison_results.json",
+    "required_fields": [
+      "run_start_utc,run_end_utc,commands,exit_codes,environment",
+      "implemented_head,dirty_state",
+      "approved_protocol_path,protocol_sha256,approval_reference",
+      "protocol_mtime_ns,run_start_epoch_ns,output_mtime_ns",
+      "recomputed_membership_sha256,recomputed_source_ids_sha256,recomputed_image_bytes_manifest_sha256",
+      "model_id,model_sha256,telemetry_model_sha256,manifest_sha256",
+      "database_path,subprocess_pid,session_id",
+      "per-window source_id,class_id,window_id,request_id,synthetic_timestamp,vision_frame,telemetry_seq",
+      "RiskScore,RiskLevel,DominantEvidence,AlertSeverity,assessment_available,SystemHealth,raw_and_smoothed_vision_probability,telemetry_probability,argmax,all10probabilities,provenance",
+      "per-model sequences,paired summaries,failures_and_limitations"
+    ],
+    "protocol_first": "Before loading models, require status=APPROVED, recorded explicit user approval, expected protocol SHA, and protocol_mtime_ns < run_start_epoch_ns. Recompute SHA after run; it must match. Record output_mtime_ns > run_start_epoch_ns. File mtime alone is not approval.",
+    "probability_alignment": "Map runtime safe_driving alias back to c0; align all10labels explicitly; never rely on display sorting or top-k truncation."
+  },
+  "validity_and_failure_policy": {
+    "missing_input": "BLOCKED with exact missing path; no synthetic replacement inputs.",
+    "hash_or_manifest_mismatch": "FAILED/BLOCKED with exact path and expected/actual hashes; no silent substitution.",
+    "inference_failure": "Record HTTP error/exit code and failed validity; no prepared-probability or stable fallback.",
+    "identical_results": "If all raw probabilities and all downstream results are identical across identities, withhold interpretation and investigate loading/selection/caching. Equality of coarse RiskLevel or argmax alone is possible and not by itself proof of a broken runner.",
+    "expected_valid_run": "Exactly200 successful persisted windows per model; real selected identities, same image bytes/telemetry/config/clock schedule. Missing modalities, unavailable results, repeated observations or cross-run leakage invalidate this prescribed scenario.",
+    "posthoc_changes": "No threshold, ordering, telemetry row or timing change after seeing outputs. Any revised approved protocol gets a new version/hash before a new authorized run."
+  },
+  "limitations": [
+    "Validation subset, not a new independent held-out test; no reselecting trials/seeds from these outputs.",
+    "Still-image class blocks and synthetic timestamps create FSM transitions; temporal coherence and real driver dwell times are absent.",
+    "Fixed telemetry is not synchronized with image actions and cannot measure general complementarity.",
+    "No real camera, frontend capture/render or physical device is exercised by TestClient.",
+    "No conclusion about frontal-camera reliability, UAT, edge performance, vehicle-grade deployment or safety.",
+    "P4A100/211 parity is historical and distinct from both200member smoke and this future paired system comparison."
+  ],
+  "for_user_decision": [
+    {
+      "id": "FUD-01",
+      "status": "APPROVED",
+      "subject": "Stage-1 三模型数值容差",
+      "proposal": "每个有参照的集合分别要求 max_abs_prob_delta <= 1e-4 且 argmax_agreement == 1.0；200 帧 per_class_mode_equals_label 单独评估；超限如实失败，不事后放宽。",
+      "source": "分析 §3 U-1；tolerance_predeclaration.md",
+      "approved": true,
+      "approved_by": "user",
+      "approval_recorded_at": "2026-10-26T12:56:55.974477+08:00"
+    },
+    {
+      "id": "FUD-02",
+      "status": "APPROVED",
+      "subject": "Stage-2 输入及顺序",
+      "proposal": "stable200：c0..c9 各类 filename 升序取 validation 前20，按10个连续类别块运行；P4A100/211只作历史附录。",
+      "source": "分析 §3 U-3、C-9",
+      "approved": true,
+      "approved_by": "user",
+      "approval_recorded_at": "2026-10-26T12:56:55.974477+08:00"
+    },
+    {
+      "id": "FUD-03",
+      "status": "APPROVED",
+      "subject": "Stage-2 时间与观测策略",
+      "proposal": "固定UTC合成起点2026-10-25T00:00:00Z，间隔100ms；200窗口i=0..199；同一epoch=1，frame.index=i+1，telemetry_seq=i+1，两种源时间均等于该窗口注入时间。",
+      "source": "分析 C-9；本草案提议",
+      "approved": true,
+      "approved_by": "user",
+      "approval_recorded_at": "2026-10-26T12:56:55.974477+08:00"
+    },
+    {
+      "id": "FUD-04",
+      "status": "APPROVED",
+      "subject": "固定遥测配对",
+      "proposal": "所有窗口使用 prepared_sessions/session_001/telemetry.csv 第一数据行的8项原始特征；只更新合成时间与seq，运行稳定XGB，不采用CSV中的预设概率。",
+      "source": "分析 C-9；本草案提议",
+      "approved": true,
+      "approved_by": "user",
+      "approval_recorded_at": "2026-10-26T12:56:55.974477+08:00"
+    },
+    {
+      "id": "FUD-05",
+      "status": "APPROVED",
+      "subject": "Stage-2 协议整体批准",
+      "proposal": "批准正式协议及其sha256后才允许runner运行；每模型一子进程+独立临时SQLite、真实provider+TestClient /infer、固定融合配置、描述性比较，Stage5由用户作替换决定。",
+      "source": "计划 Phase2 Step1；规格 Stage2；本草案",
+      "approved": true,
+      "approved_by": "user",
+      "approval_recorded_at": "2026-10-26T12:56:55.974477+08:00"
+    },
+    {
+      "id": "FUD-06",
+      "status": "APPROVED",
+      "subject": "Stage-3 规格措辞更正",
+      "proposal": "将规格中“延迟JSON与perf02同构”更正为perf01；perf02用于日志完整性。该项属于后续Stage3，不阻断Phase0依赖预检。",
+      "source": "分析 C-6、§3 U-2；规格由用户维护",
+      "approved": true,
+      "approved_by": "user",
+      "approval_recorded_at": "2026-10-26T12:56:55.974477+08:00"
+    }
+  ],
+  "execution_gate": {
+    "protocol_approved": true,
+    "tolerance_approved": true,
+    "stage1_user_audit_passed": false,
+    "official_protocol_published": false,
+    "observed_gate_source": "BOARD U-1 TODO at approval recording; official publication not performed by CX-0",
+    "permission": "This approval authorizes the unchanged protocol conditionally on existing Stage-1 audit and official publication prerequisites. No additional protocol approval is required when these gates pass.",
+    "runner_execution": "NOT_RUN"
+  }
+}

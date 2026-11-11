@@ -1,0 +1,234 @@
+{
+  "status": "VERIFIED_PASS",
+  "suite": "./.venv/bin/python -B -m pytest -q ml/tests -p no:cacheprovider",
+  "tests_passed": 103,
+  "tests_failed": 0,
+  "tests_wall_seconds": 16.46,
+  "checks": [
+    {
+      "check": "syntax:ml/experiments/hpo_protocol.py",
+      "passed": true
+    },
+    {
+      "check": "syntax:ml/experiments/run_telemetry_hpo.py",
+      "passed": true
+    },
+    {
+      "check": "syntax:ml/telemetry/train_hpo.py",
+      "passed": true
+    },
+    {
+      "check": "syntax:ml/experiments/run_vision_hpo.py",
+      "passed": true
+    },
+    {
+      "check": "syntax:ml/vision/train_hpo.py",
+      "passed": true
+    },
+    {
+      "check": "ignored:checkpoint.pt",
+      "passed": true
+    },
+    {
+      "check": "ignored:checkpoint.joblib",
+      "passed": true
+    },
+    {
+      "check": "ignored:probabilities_validation.npy",
+      "passed": true
+    },
+    {
+      "check": "ignored:checkpoint.ubj",
+      "passed": true
+    },
+    {
+      "check": "ignored:checkpoint.json",
+      "passed": true
+    },
+    {
+      "check": "metadata_trackable:config.json",
+      "passed": true
+    },
+    {
+      "check": "metadata_trackable:weights_manifest.json",
+      "passed": true
+    },
+    {
+      "check": "metadata_trackable:budget_proposal.json",
+      "passed": true
+    },
+    {
+      "check": "metadata_trackable:probe_state.json",
+      "passed": true
+    },
+    {
+      "check": "metadata_trackable:search_state.json",
+      "passed": true
+    },
+    {
+      "check": "vision_approval_absent",
+      "passed": true
+    },
+    {
+      "check": "no_real_vision_run",
+      "passed": true
+    },
+    {
+      "check": "protected_models_and_review",
+      "passed": true
+    },
+    {
+      "check": "tests-green.log",
+      "passed": true
+    },
+    {
+      "check": "week3-tests.log",
+      "passed": true
+    },
+    {
+      "check": "week3_artifact_records",
+      "passed": true
+    },
+    {
+      "check": "independent_artifact_audit",
+      "passed": true
+    },
+    {
+      "check": "as_executed_snapshot",
+      "passed": true
+    }
+  ],
+  "week3": {
+    "week3": "VERIFIED_PASS_WITHIN_APPROVED_COMPARATOR_SMOKE_SCOPE",
+    "artifact_hash_records": 32,
+    "p1_source_files_unchanged": 4,
+    "models": [
+      {
+        "model": "resnet18",
+        "stratified_sample_counts": {
+          "train": 200,
+          "val": 100
+        },
+        "prediction_rows": 100,
+        "metrics": {
+          "accuracy": 0.1,
+          "macro_f1": 0.01818181818181818,
+          "log_loss": 2.9089953899383545
+        },
+        "saved_reload_evidence": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/resnet18/attempt_01/validation_metrics.json"
+      },
+      {
+        "model": "random_forest",
+        "stratified_sample_counts": {
+          "train": 300,
+          "val": 90
+        },
+        "prediction_rows": 90,
+        "metrics": {
+          "accuracy": 0.9666666666666667,
+          "macro_f1": 0.9666574048346762,
+          "log_loss": 0.13214261177082928
+        },
+        "saved_reload_evidence": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/random_forest/attempt_01/validation_metrics.json"
+      },
+      {
+        "model": "logistic_regression",
+        "stratified_sample_counts": {
+          "train": 300,
+          "val": 90
+        },
+        "prediction_rows": 90,
+        "metrics": {
+          "accuracy": 0.9888888888888889,
+          "macro_f1": 0.9888858016115588,
+          "log_loss": 0.04611736536629261
+        },
+        "saved_reload_evidence": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p1_comparators_20261015/logistic_regression/attempt_01/validation_metrics.json"
+      }
+    ],
+    "p1_original_combined_wall_seconds": 26.110907416965347,
+    "new_smoke_fits": 0,
+    "independent_model_forward_this_check": 0,
+    "test_access": false,
+    "limitations": [
+      "Original save/reload logs and binaries verified; no new P1 reload or numerical retraining",
+      "ResNet18 random-initialized smoke is not valid for formal model comparison"
+    ]
+  },
+  "telemetry_independent_checks": 4987,
+  "telemetry_training_source": "source_snapshot exactly matches original run config; current supervisor contains post-run fixes",
+  "source_hashes": {
+    "ml/experiments/hpo_protocol.py": "dd047b7ca57654a47637e2268266014ba67bf878252ae8839dfbd1f39c8b09e5",
+    "ml/experiments/run_telemetry_hpo.py": "fa8a1e19f7aa0b524a6b7800cfbb337d05df1f2d001f58af4a40c3bb1b0bfa47",
+    "ml/telemetry/train_hpo.py": "273dc3021003f00265213c2f4b4004c9a9208602137b26e24462ee0670b818a4",
+    "ml/experiments/run_vision_hpo.py": "8e2770f02c44bb501f4fd35ff42c05367e6b134513c844c3a5d9d7703c6abb2f",
+    "ml/vision/train_hpo.py": "06c465cb3115dad5f3e5e6a63ab0b308c50e4edca41b538d5b33361d4667b4d9"
+  },
+  "protected_hashes": {
+    "ml/outputs/vision/mobilenetv3_large_vision.pt": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+    "ml/outputs/vision/mobilenetv3_large_vision.onnx": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "ml/outputs/telemetry/xgb_telemetry.json": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+    "docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md": "0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0"
+  },
+  "test_csv_opened_by_software_verification": false,
+  "new_model_fits_after_original_run": 0,
+  "new_vision_training_runs": 0,
+  "downloads": 0,
+  "logs": {
+    "week3-verification.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/software_verification/week3-verification.log",
+      "sha256": "9c05398ca35132104403c4468073012ea25b91f4490a3d5d37e2507d1250d2c1",
+      "bytes": 1941
+    },
+    "tests-green.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/software_verification/tests-green.log",
+      "sha256": "979d7721d47b5d553e3ec5d9baf7b7da2c6655c30fdcbf2f333a902065b45a87",
+      "bytes": 181
+    },
+    "tests-red-timeout.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/software_verification/tests-red-timeout.log",
+      "sha256": "1fdefd4a0203393ca7c8c55ddcec93acdf7e7691325ee9a257d9ee03a70d327f",
+      "bytes": 1099
+    },
+    "tests-red-worker.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/software_verification/tests-red-worker.log",
+      "sha256": "dee0b3136f9250052d05f29a22325e34fa3d5f35afea9c1ad74524d593f7a4fd",
+      "bytes": 16438
+    },
+    "tests-red-runners.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/software_verification/tests-red-runners.log",
+      "sha256": "60097ec3c44b64e3260f4de0cde80588c8de7a126697797745ea1cb895251b99",
+      "bytes": 45817
+    },
+    "tests-red-nested.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/software_verification/tests-red-nested.log",
+      "sha256": "49d98b35723491a372559f45d9aa3a22a88b19d1f46bef9c8a41129414314ff5",
+      "bytes": 2657
+    },
+    "tests-red-integrity.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/software_verification/tests-red-integrity.log",
+      "sha256": "27cdae3675bce100b218e08eb4376d391b9e076ee6037b81d379e1f8eb0b3d85",
+      "bytes": 3097
+    },
+    "tests-red-overhead.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/software_verification/tests-red-overhead.log",
+      "sha256": "3111432ea01d38e1c50eab6b129702bc5f4d1c72300220a44a749f66af5d3aa8",
+      "bytes": 2402
+    },
+    "verify_week3.py": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/software_verification/verify_week3.py",
+      "sha256": "73b4d9e240a3a4a481dcfd97be6729e929ce0acc477ed7b21d289339a55aef9f",
+      "bytes": 3617
+    },
+    "tests-red-protocol.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/software_verification/tests-red-protocol.log",
+      "sha256": "263c5f9492bafb20a44f1095055d57790fbe5c20c2ef4974bc3daa78cd781789",
+      "bytes": 37579
+    },
+    "week3-tests.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_telemetry_20261018/software_verification/week3-tests.log",
+      "sha256": "b587c498114c15f56aabe3af91380552d85df6f13d921207f01bc85611d1eeee",
+      "bytes": 99
+    }
+  }
+}

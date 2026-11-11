@@ -1,0 +1,23 @@
+{
+  "status": "VERIFIED_PASS",
+  "checks_passed": 557,
+  "checks_total": 557,
+  "command": "./.venv/bin/python -B ml/outputs/runs/p3_vision_20261018/verification/protocol/verify_protocol.py",
+  "training_started": false,
+  "model_loaded": false,
+  "test_data_opened": false,
+  "artifacts": {
+    "config.json": {
+      "sha256": "87c297599d3e12888800f8fb078503e317b561d1da920b71ac53c0506dc4f56f",
+      "bytes": 93604
+    },
+    "verify_protocol.py": {
+      "sha256": "f88ab2426f850b0cbc2abc21d05e5c19a3e571adae79d9058b8e820e31466d84",
+      "bytes": 15011
+    },
+    "verification.log": {
+      "sha256": "2aa08e629a845885ed1107204bf2a2f19ff0e35ff5836edc368689a341da4f65",
+      "bytes": 9449
+    }
+  }
+}

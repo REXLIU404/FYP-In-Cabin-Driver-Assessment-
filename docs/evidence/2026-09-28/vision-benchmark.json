@@ -1,0 +1,344 @@
+{
+  "environment": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "processor": "arm",
+    "python": "3.13.3",
+    "torch": "2.12.0",
+    "onnxruntime": "1.26.0",
+    "threads": 2,
+    "mps_available": false
+  },
+  "command_config": {
+    "mode": "all",
+    "data_root": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-",
+    "checkpoint": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/vision/mobilenetv3_large_vision.pt",
+    "onnx": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/vision/mobilenetv3_large_vision.onnx",
+    "output": "docs/evidence/2026-09-28/vision-benchmark.json",
+    "threads": 2,
+    "warmup": 20,
+    "iterations": 100,
+    "batch": 16,
+    "split": "test",
+    "limit": 0,
+    "parity_samples": 128
+  },
+  "latency": [
+    {
+      "architecture": "mobilenet_v3_large",
+      "runtime": "pytorch_cpu",
+      "batch": 1,
+      "input_shape": [
+        1,
+        3,
+        224,
+        224
+      ],
+      "dtype": "float32",
+      "weight_status": "trained_driver_checkpoint",
+      "parameters": 4214842,
+      "tensor_weights_mib": 16.078346252441406,
+      "warmup": 20,
+      "iterations": 100,
+      "mean_ms": 50.989919969579205,
+      "p50_ms": 46.42266649170779,
+      "p95_ms": 69.7761371891829,
+      "p99_ms": 116.4081673946932,
+      "serial_model_only_fps": 19.61171934760055
+    },
+    {
+      "architecture": "mobilenet_v3_small",
+      "runtime": "pytorch_cpu",
+      "batch": 1,
+      "input_shape": [
+        1,
+        3,
+        224,
+        224
+      ],
+      "dtype": "float32",
+      "weight_status": "random_latency_only",
+      "parameters": 1528106,
+      "tensor_weights_mib": 5.829261779785156,
+      "warmup": 20,
+      "iterations": 100,
+      "mean_ms": 30.30531873111613,
+      "p50_ms": 30.12685450084973,
+      "p95_ms": 32.84112019027816,
+      "p99_ms": 45.00470492581379,
+      "serial_model_only_fps": 32.99750808999891
+    },
+    {
+      "architecture": "efficientnet_b0",
+      "runtime": "pytorch_cpu",
+      "batch": 1,
+      "input_shape": [
+        1,
+        3,
+        224,
+        224
+      ],
+      "dtype": "float32",
+      "weight_status": "random_latency_only",
+      "parameters": 4020358,
+      "tensor_weights_mib": 15.336448669433594,
+      "warmup": 20,
+      "iterations": 100,
+      "mean_ms": 94.0485078515485,
+      "p50_ms": 90.11385399207938,
+      "p95_ms": 128.03995596186724,
+      "p99_ms": 156.44541977118942,
+      "serial_model_only_fps": 10.632810906244858
+    },
+    {
+      "architecture": "mobilenet_v3_large",
+      "runtime": "onnxruntime_cpu",
+      "batch": 1,
+      "weight_status": "trained_driver_checkpoint",
+      "file_mib": 16.068819046020508,
+      "warmup": 20,
+      "iterations": 100,
+      "mean_ms": 7.5929408392403275,
+      "p50_ms": 7.488333503715694,
+      "p95_ms": 8.256037172395736,
+      "p99_ms": 8.842398991109803,
+      "serial_model_only_fps": 131.70127637923883
+    }
+  ],
+  "latency_scope": "CPU forward-pass only; synthetic preprocessed input; excludes camera/decode/resize/network/queue/fusion/UI; not target-device FPS",
+  "split_audit": {
+    "metadata_sha256": "b4f8e90dec769bb419eaa490aea869668bed6484089cebe4d545c7667baa8ea4",
+    "driver_overlap": {
+      "train_val": [],
+      "train_test": [],
+      "val_test": []
+    },
+    "driver_counts": {
+      "train": 18,
+      "val": 4,
+      "test": 4
+    },
+    "rows": {
+      "train": 15899,
+      "test": 3657,
+      "val": 2868
+    }
+  },
+  "evaluation": {
+    "split": "test",
+    "runtime": "onnxruntime_cpu",
+    "checkpoint_sha256": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+    "onnx_sha256": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "preprocess": "PIL RGB, bilinear Resize(224,224), ToTensor, ImageNet mean/std",
+    "seconds_including_decode_and_parity": 41.18037904202356,
+    "samples": 3657,
+    "accuracy": 0.8988241728192508,
+    "macro_f1": 0.8746408408872671,
+    "per_class": {
+      "0": {
+        "precision": 0.810204081632653,
+        "recall": 0.9211136890951276,
+        "f1-score": 0.8621064060803475,
+        "support": 431.0
+      },
+      "1": {
+        "precision": 0.9813084112149533,
+        "recall": 0.9,
+        "f1-score": 0.9388971684053651,
+        "support": 350.0
+      },
+      "2": {
+        "precision": 0.989041095890411,
+        "recall": 1.0,
+        "f1-score": 0.9944903581267218,
+        "support": 361.0
+      },
+      "3": {
+        "precision": 0.9851851851851852,
+        "recall": 0.9803439803439803,
+        "f1-score": 0.9827586206896551,
+        "support": 407.0
+      },
+      "4": {
+        "precision": 0.9482758620689655,
+        "recall": 0.9746835443037974,
+        "f1-score": 0.9612983770287141,
+        "support": 395.0
+      },
+      "5": {
+        "precision": 0.90744920993228,
+        "recall": 0.9901477832512315,
+        "f1-score": 0.9469964664310954,
+        "support": 406.0
+      },
+      "6": {
+        "precision": 0.9101941747572816,
+        "recall": 0.9894459102902374,
+        "f1-score": 0.9481668773704172,
+        "support": 379.0
+      },
+      "7": {
+        "precision": 0.850253807106599,
+        "recall": 0.9940652818991098,
+        "f1-score": 0.9165526675786594,
+        "support": 337.0
+      },
+      "8": {
+        "precision": 0.7664473684210527,
+        "recall": 0.8321428571428572,
+        "f1-score": 0.797945205479452,
+        "support": 280.0
+      },
+      "9": {
+        "precision": 0.7264957264957265,
+        "recall": 0.2733118971061093,
+        "f1-score": 0.397196261682243,
+        "support": 311.0
+      },
+      "accuracy": 0.8988241728192508,
+      "macro avg": {
+        "precision": 0.8874854922705108,
+        "recall": 0.8855254943432451,
+        "f1-score": 0.8746408408872671,
+        "support": 3657.0
+      },
+      "weighted avg": {
+        "precision": 0.8930019177389833,
+        "recall": 0.8988241728192508,
+        "f1-score": 0.8855770474648978,
+        "support": 3657.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        397,
+        0,
+        0,
+        0,
+        0,
+        3,
+        0,
+        0,
+        0,
+        31
+      ],
+      [
+        1,
+        315,
+        0,
+        0,
+        0,
+        0,
+        34,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        361,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        3,
+        1,
+        399,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        5,
+        0,
+        0,
+        4,
+        385,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        4,
+        0,
+        0,
+        0,
+        0,
+        402,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        2,
+        2,
+        0,
+        0,
+        375,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        335,
+        0,
+        0
+      ],
+      [
+        9,
+        0,
+        0,
+        0,
+        18,
+        18,
+        0,
+        1,
+        233,
+        1
+      ],
+      [
+        72,
+        3,
+        0,
+        0,
+        2,
+        18,
+        2,
+        58,
+        71,
+        85
+      ]
+    ],
+    "distraction_threshold": 0.5,
+    "binary_distraction_recall": 0.972101673899566,
+    "safe_false_positive_rate": 0.09048723897911833,
+    "binary_brier_score": 0.029045164585113525
+  },
+  "onnx_parity": {
+    "samples": 128,
+    "max_abs_logit_difference": 3.719329833984375e-05,
+    "max_abs_probability_difference": 3.7550926208496094e-06,
+    "argmax_disagreements": 0
+  }
+}

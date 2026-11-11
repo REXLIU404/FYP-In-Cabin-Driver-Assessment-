@@ -1,0 +1,56 @@
+{
+  "trial_id": "xgboost_08",
+  "model": "xgboost",
+  "phase": "P3",
+  "role": "SEARCH",
+  "seed": 42,
+  "config": {
+    "max_depth": 6,
+    "learning_rate": 0.1,
+    "subsample": 1.0
+  },
+  "threads": 2,
+  "train_rows": 21000,
+  "validation_rows": 4500,
+  "data_root": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-",
+  "context": {
+    "run_id": "p3_telemetry_20261018",
+    "phase": "P2_P3",
+    "environment": {
+      "git": {
+        "branch": "fyp2/ml-training",
+        "head": "07d33905a0db5f90d36f6470b11a9b729b0fbddf",
+        "dirty_state": "M docs/fyp2/ml/ML_TRACK_PROGRESS.md\n?? docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md\n?? ml/experiments/hpo_protocol.py\n?? ml/experiments/run_telemetry_hpo.py\n?? ml/experiments/run_vision_hpo.py\n?? ml/telemetry/train_hpo.py\n?? ml/tests/test_hpo_protocol.py\n?? ml/tests/test_telemetry_hpo.py\n?? ml/tests/test_vision_hpo.py",
+        "staged_paths": ""
+      },
+      "protected_hashes": {
+        "ml/outputs/vision/mobilenetv3_large_vision.pt": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+        "ml/outputs/vision/mobilenetv3_large_vision.onnx": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+        "ml/outputs/telemetry/xgb_telemetry.json": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+        "docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md": "0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0",
+        "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/vision/vision_metadata_with_split.csv": "b4f8e90dec769bb419eaa490aea869668bed6484089cebe4d545c7667baa8ea4",
+        "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_train.csv": "97dd20ee9c0832ba33455e5c31088f9b4abb65c198bf988699a959d545d1e5b5",
+        "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/eda_outputs/processed/telemetry/telemetry_val.csv": "1b02792df846b5af138bae59e4f4ccfa8fa421fbb4fd6d42fad88d57722774f1"
+      },
+      "test_split_integrity": "P0 reference; startup byte hash checked separately; not reopened here"
+    },
+    "source_hashes": {
+      "ml/experiments/run_telemetry_hpo.py": "5b09dbf42e04da2fd032ed85a77a603bc92f0ce72932a917571cde7b1f8ac2e7",
+      "ml/telemetry/train_hpo.py": "273dc3021003f00265213c2f4b4004c9a9208602137b26e24462ee0670b818a4",
+      "ml/experiments/hpo_protocol.py": "dd047b7ca57654a47637e2268266014ba67bf878252ae8839dfbd1f39c8b09e5",
+      "ml/experiments/comparator_common.py": "8ede7aa5a0604232ff5b3c54735bd9f2e5479b18a2e80e5091bfa2b07644805d",
+      "ml/configs/bounded_hpo.json": "913e4852c0b00588e4372951807650282e46b8dbf1cc6de4675f63dca0976e5d"
+    },
+    "data_root": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-",
+    "budget": {
+      "scope": "telemetry_only",
+      "per_trial": 300,
+      "per_model": null,
+      "total": 2700,
+      "threads": 2,
+      "vision_search": "requires separately approved_vision_budget.json with explicit numeric per_trial/per_model/total"
+    },
+    "test_csv_opened": false,
+    "test_hash_startup_only": true
+  }
+}

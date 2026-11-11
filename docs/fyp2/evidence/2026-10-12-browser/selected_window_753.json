@@ -1,0 +1,113 @@
+{
+  "session_id": "S8d4e616a597b4dd5973d31a9ad417049",
+  "window_id": 753,
+  "timestamp": "2026-10-12T03:20:26.532002+00:00",
+  "P_distraction": 1.0,
+  "P_telemetry_anomaly": 0.9998903870582581,
+  "RiskScore": 100.0,
+  "RiskLevel": "High",
+  "DominantEvidence": "Combined evidence",
+  "AlertSeverity": "HIGH_ALERT",
+  "SystemHealth": "FULL",
+  "operation_mode": "LIVE_MODEL_RUNTIME",
+  "modality_freshness": {
+    "vision": "fresh",
+    "telemetry": "fresh"
+  },
+  "latency_ms": 18,
+  "visual_top_classes": [
+    {
+      "label": "safe_driving",
+      "probability": 1.464500742898167e-10
+    },
+    {
+      "label": "texting_right",
+      "probability": 1.0607098153373601e-13
+    },
+    {
+      "label": "talking_phone_right",
+      "probability": 1.7798394702506215e-11
+    },
+    {
+      "label": "texting_left",
+      "probability": 1.608275253424385e-12
+    },
+    {
+      "label": "talking_phone_left",
+      "probability": 1.4698535791279888e-11
+    },
+    {
+      "label": "operating_radio",
+      "probability": 3.8083237952069027e-11
+    },
+    {
+      "label": "drinking",
+      "probability": 5.8328060263679316e-12
+    },
+    {
+      "label": "reaching_behind",
+      "probability": 2.6421445586954917e-10
+    },
+    {
+      "label": "hair_makeup",
+      "probability": 0.9999983310699463
+    },
+    {
+      "label": "talking_to_passenger",
+      "probability": 1.6915532796701882e-06
+    }
+  ],
+  "telemetry_behavior_classes": [
+    {
+      "label": "Safe",
+      "probability": 0.00010958389611914754
+    },
+    {
+      "label": "Aggressive",
+      "probability": 0.9996510744094849
+    },
+    {
+      "label": "Distracted",
+      "probability": 0.0002393301692791283
+    }
+  ],
+  "telemetry_feature_contributions": [],
+  "telemetry_features": {
+    "speed_kmph": 74.0,
+    "accel_x": 2.8,
+    "accel_y": 0.9,
+    "brake_pressure": 70.0,
+    "steering_angle": -15.0,
+    "throttle": 78.0,
+    "lane_deviation": 0.95,
+    "headway_distance": 9.5
+  },
+  "explanation": "Vision and telemetry evidence both contribute to the high risk output.",
+  "flagged": true,
+  "provenance": {
+    "provider": "MobileNetV3ONNX+XGBoost",
+    "request_id": "400b17af-2cfd-443e-bc31-fbb6f4e04bd3",
+    "vision_source": "camera_frame",
+    "telemetry_source": "prepared_replay",
+    "vision_model_sha256": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "telemetry_model_sha256": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+    "captured_at": "2026-10-12T03:20:26.509000+00:00",
+    "telemetry_timestamp": "2026-10-12T03:20:26.509000+00:00",
+    "processed_at": "2026-10-12T03:20:26.530411+00:00",
+    "timing_ms": {
+      "preprocess_ms": 3.3142500033136457,
+      "vision_ms": 10.568917001364753,
+      "telemetry_ms": 0.9117079898715019
+    },
+    "P_distraction_raw": 1.0,
+    "P_telemetry_raw": 0.9998903870582581,
+    "fusion_config": {
+      "weight_vision": 0.5,
+      "weight_telemetry": 0.5,
+      "ema_alpha": 0.35,
+      "threshold_low": 30.0,
+      "threshold_high": 60.0,
+      "freshness_tolerance_s": 3.0
+    }
+  }
+}

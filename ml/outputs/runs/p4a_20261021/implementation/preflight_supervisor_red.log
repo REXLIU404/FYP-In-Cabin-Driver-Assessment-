@@ -1,0 +1,94 @@
+.................FFF                                                     [100%]
+=================================== FAILURES ===================================
+_ test_supervised_preflight_runs_exact_two_exports_then_three_parity_before_timing _
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-87/test_supervised_preflight_runs0')
+
+    def test_supervised_preflight_runs_exact_two_exports_then_three_parity_before_timing(tmp_path):
+        p = module()
+        calls = []
+        class Supervisor:
+            def __init__(self, path, **settings):
+                assert settings['total_seconds'] == 1200
+                assert settings['stage_caps'] == {'preflight': 600, 'timing': 600}
+                assert settings['output_root'] == tmp_path
+            def run(self, command, **limits):
+                action = command[5]
+                calls.append((action, command, limits))
+                return {'returncode': 0}
+>       p.run_preflight(tmp_path, supervisor_factory=Supervisor)
+        ^^^^^^^^^^^^^^^
+E       AttributeError: module 'ml.experiments.p4_preflight' has no attribute 'run_preflight'
+
+ml/tests/test_p4_preflight.py:235: AttributeError
+_ test_supervised_parity_failure_stops_before_timing_and_never_retries_export __
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-87/test_supervised_parity_failure0')
+
+    def test_supervised_parity_failure_stops_before_timing_and_never_retries_export(tmp_path):
+        p = module()
+        calls = []
+        class Supervisor:
+            def __init__(self, *args, **kwargs): pass
+            def run(self, command, **limits):
+                action = command[5]
+                calls.append(action)
+                if action == 'parity': raise RuntimeError('failed parity')
+        with pytest.raises(RuntimeError, match='parity'):
+>           p.run_preflight(tmp_path, supervisor_factory=Supervisor)
+            ^^^^^^^^^^^^^^^
+E           AttributeError: module 'ml.experiments.p4_preflight' has no attribute 'run_preflight'
+
+ml/tests/test_p4_preflight.py:255: AttributeError
+__________________ test_cli_refuses_unsupervised_model_worker __________________
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-87/test_cli_refuses_unsupervised_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10c2eed50>
+
+    def test_cli_refuses_unsupervised_model_worker(tmp_path, monkeypatch):
+        p = module()
+        monkeypatch.setattr(p, 'RUN', tmp_path)
+        monkeypatch.delenv('P4_BUDGET_WORKER', raising=False)
+        with pytest.raises(ValueError, match='supervis'):
+>           p.main(['export', '--identity', 'MN-HPO42', '--run-dir', str(tmp_path)])
+
+ml/tests/test_p4_preflight.py:264: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/experiments/p4_preflight.py:535: in main
+    elif args.action == 'export': result = export_model(run, args.identity)
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ml/experiments/p4_preflight.py:401: in export_model
+    model = torch_model(identity, run)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+ml/experiments/p4_preflight.py:349: in torch_model
+    records = json.loads((run / 'validation/validation_manifest.json').read_text())['records']
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-87/test_cli_refuses_unsupervised_0/validation/validation_manifest.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-87/test_cli_refuses_unsupervised_0/validation/validation_manifest.json'
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_local.py:537: FileNotFoundError
+=========================== short test summary info ============================
+FAILED ml/tests/test_p4_preflight.py::test_supervised_preflight_runs_exact_two_exports_then_three_parity_before_timing
+FAILED ml/tests/test_p4_preflight.py::test_supervised_parity_failure_stops_before_timing_and_never_retries_export
+FAILED ml/tests/test_p4_preflight.py::test_cli_refuses_unsupervised_model_worker
+3 failed, 17 passed in 2.77s

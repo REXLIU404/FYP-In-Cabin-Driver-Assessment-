@@ -1,9 +1,9 @@
 import { Camera, CameraOff, RefreshCw, Square } from "lucide-react";
-import type { RefObject } from "react";
+import type { Ref } from "react";
 import type { CameraStatus } from "../types";
 
 interface CameraPreviewProps {
-  videoRef: RefObject<HTMLVideoElement>;
+  videoRef: Ref<HTMLVideoElement>;
   status: CameraStatus;
   onStart: () => void;
   onStop: () => void;
@@ -24,6 +24,10 @@ export function CameraPreview({
   onStop,
 }: CameraPreviewProps) {
   const isLive = status === "live";
+  // While the permission request is pending there IS something to stop: the pending request.
+  // Only that action applies then; a disabled Start Camera painted over a running preview, or a
+  // Stop Camera with nothing to stop, would read as broken controls.
+  const canStop = isLive || status === "requesting";
 
   return (
     <div className={`camera-preview camera-preview--${status}`}>
@@ -43,19 +47,24 @@ export function CameraPreview({
           <strong>{statusText[status]}</strong>
         </div>
       ) : null}
+      {/* Only the action that applies: while the camera runs (or a permission request is
+          pending) the user can stop; in idle / denied / error, Start Camera is the retry. */}
       <div className="camera-actions">
-        <button
-          type="button"
-          className="button button--primary"
-          onClick={onStart}
-        >
-          <RefreshCw size={16} />
-          Start Camera
-        </button>
-        <button type="button" className="button" onClick={onStop}>
-          <Square size={16} />
-          Stop Camera
-        </button>
+        {canStop ? (
+          <button type="button" className="button" onClick={onStop}>
+            <Square size={16} />
+            Stop Camera
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="button button--primary"
+            onClick={onStart}
+          >
+            <RefreshCw size={16} />
+            Start Camera
+          </button>
+        )}
       </div>
     </div>
   );

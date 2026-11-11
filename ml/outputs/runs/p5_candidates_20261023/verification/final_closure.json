@@ -1,0 +1,92 @@
+{
+  "acceptance_date": "2026-10-24",
+  "clean_commit_reproducibility": false,
+  "elapsed_seconds": 1.7033761249913368,
+  "environment_metadata_files_unchanged": 315,
+  "environment_package_inventory_unchanged": 144,
+  "formal_experiments_added": 0,
+  "full_independent_numerical_rerun": false,
+  "git": {
+    "branch": "fyp2/ml-training",
+    "head": "335da4e3de203836c045452f84cc291bcd352a26",
+    "staged": "",
+    "status": "M .gitignore\n M docs/fyp2/ml/ML_TRACK_PROGRESS.md\n?? .codex/\n?? AGENTS.md\n?? docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md\n?? docs/fyp2/ml/ML_RESULTS_REVIEW_CONTEXT.md\n?? docs/fyp2/ml/reports/\n?? docs/fyp2/ml/research_notes/\n?? driver_risk.db-shm\n?? driver_risk.db-wal\n?? ml/configs/e1_preparation.json\n?? ml/configs/p4_protocol.json\n?? ml/experiments/e1_generators.py\n?? ml/experiments/p4_core.py\n?? ml/experiments/p4_data.py\n?? ml/experiments/p4_preflight.py\n?? ml/experiments/p4_qc.py\n?? ml/experiments/package_candidates.py\n?? ml/experiments/run_e1_preparation.py\n?? ml/experiments/run_p4.py\n?? ml/outputs/runs/e1_preparation_20261019/\n?? ml/outputs/runs/e1_preparation_20261019_record_missingness/\n?? ml/outputs/runs/p3_vision_20261018/search/\n?? ml/outputs/runs/p3_vision_20261018/search_config.json\n?? ml/outputs/runs/p3_vision_20261018/search_state.json\n?? ml/outputs/runs/p3_vision_20261018/selection_log.json\n?? ml/outputs/runs/p3_vision_20261018/verification/\n?? ml/outputs/runs/p4a_20261021/\n?? ml/outputs/runs/p4b_20261022/\n?? ml/outputs/runs/p5_candidates_20261023/\n?? ml/tests/test_candidate_package.py\n?? ml/tests/test_e1_generators.py\n?? ml/tests/test_e1_preparation.py\n?? ml/tests/test_p4_core.py\n?? ml/tests/test_p4_data.py\n?? ml/tests/test_p4_preflight.py\n?? ml/tests/test_p4_qc.py"
+  },
+  "git_diff_check_exit": 0,
+  "new_benchmarks": 0,
+  "new_exports": 0,
+  "new_model_forwards": 0,
+  "new_training": 0,
+  "official_stable200_behavior": "NOT_RUN",
+  "protected_evidence_files": 369,
+  "protected_hashes_unchanged": true,
+  "provider_load_forward": "NOT_RUN",
+  "run_id": "p5_candidates_20261023",
+  "scope": "P5_COPY_ONLY_PACKAGING",
+  "source_snapshot_files": 14,
+  "source_snapshot_unchanged": true,
+  "status": "PASS",
+  "system_integration": "BLOCKED_NOT_IMPLEMENTED",
+  "verification_artifacts": {
+    "build.log": {
+      "bytes": 2166,
+      "sha256": "7f9d5afff7847f4417a6296aa6e2639328bacfc0863f187c709e4b13166651e3"
+    },
+    "build_command.json": {
+      "bytes": 493,
+      "sha256": "73de62343be303bd2321528253693df56cf5b4a079f930a24c0a3125da6d4240"
+    },
+    "contract_pin.json": {
+      "bytes": 880,
+      "sha256": "b9fdc7653a864871dd3f339591d93c20f30d9950d6431dbac89a3de8b79b512e"
+    },
+    "environment_after.json": {
+      "bytes": 55930,
+      "sha256": "79bd63fef49cc8f0ef550d87788e5b779bea4e875b12e2c5f3df9b40a5857769"
+    },
+    "environment_before.json": {
+      "bytes": 56054,
+      "sha256": "1ba3e413c73905c16e4c87abb51c2750314e14140fa6ddd940d75a7da4ce8d4a"
+    },
+    "final_package_check.json": {
+      "bytes": 2166,
+      "sha256": "b9450e7ab0591be27a0967de0a56cccd00f6132b4e0ac1fcab54d7ef97f4cfa1"
+    },
+    "full_ml_suite.log": {
+      "bytes": 421,
+      "sha256": "f88f5a7eb33f3f8c20b7845ef1eef4a9ec440ef2d27182389a6edca5aa5db08a"
+    },
+    "full_ml_suite_command.json": {
+      "bytes": 423,
+      "sha256": "0d78dae37982c243f82d8e5c75a16060e1ca47fcb4484f46c52433df631c9849"
+    },
+    "preservation_after.json": {
+      "bytes": 147192,
+      "sha256": "429932a0f04162df17d298a081d25fb0b6c59530761a4e33fccbe856eb66b5fa"
+    },
+    "source_copy_log.json": {
+      "bytes": 19399,
+      "sha256": "b15d954e9246c5c268db3037f9cdc2f16a6441986e841d213bfe40d87cf98884"
+    },
+    "source_manifest.json": {
+      "bytes": 2229,
+      "sha256": "416cc8590340686f1e00518a257a15180fadfe74aff981b92901b6ecfd811c7e"
+    },
+    "startup_snapshot.json": {
+      "bytes": 74279,
+      "sha256": "b8073c8deed71c35af9466add2d5e76f25a71a4b1829626c64a137b7d4aed8ed"
+    },
+    "tdd_green.log": {
+      "bytes": 99,
+      "sha256": "ae1b0b39b7a1527e0da9efb38d6b452c8202e61c5e3b9100555f48e7fd1a6a56"
+    },
+    "tdd_red.log": {
+      "bytes": 43875,
+      "sha256": "6f54df06f851e01259dab44497a61c6283580d488732585cfd89fbb932ffce25"
+    },
+    "validator_commands.json": {
+      "bytes": 3598,
+      "sha256": "c638f41cc382e563e5bd0e614cfc7e9363c6b950ceae8e748c82386fe3f192de"
+    }
+  }
+}

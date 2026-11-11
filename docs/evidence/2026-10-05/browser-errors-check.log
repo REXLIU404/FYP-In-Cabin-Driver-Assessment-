@@ -1,0 +1,32 @@
+### Result
+{"check":"replay_timer_and_no_fallback_recovery","replay_min_windows":2,"provider":"MobileNetV3ONNX+XGBoost","telemetry_source":"prepared_replay","session_id":"S2a43008a0a3e4466a013622ce2c6aee9"}
+### Ran Playwright code
+```js
+await (async (page) => {
+  await page.getByRole("button",{name:"Start Monitoring",exact:true}).click();
+  await page.getByText("Monitoring active",{exact:true}).waitFor();
+  await page.getByRole("button",{name:"Signal Inspector",exact:true}).click();
+  await page.getByRole("button",{name:"Window 2",exact:true}).waitFor();
+  await page.getByRole("button",{name:"Pause",exact:true}).click();
+  await page.getByRole("combobox",{name:"Data mode",exact:true}).selectOption("LIVE_MODEL_RUNTIME");
+  await page.getByRole("button",{name:"Live Monitor",exact:true}).click();
+  await page.route("**/api/sessions/*/infer", route => route.fulfill({status:503,contentType:"application/json",body:JSON.stringify({detail:"Test model outage"})}),{times:1});
+  await page.getByRole("button",{name:"Start Monitoring",exact:true}).click();
+  await page.getByRole("alert").filter({hasText:"Test model outage"}).waitFor();
+  if(await page.getByRole("button",{name:"Start Monitoring",exact:true}).isDisabled()) throw new Error("Failed inference stayed running");
+  if(await page.getByRole("combobox",{name:"Data mode",exact:true}).inputValue()!=="LIVE_MODEL_RUNTIME") throw new Error("Silent replay fallback");
+  const pending=page.waitForResponse(r=>r.url().endsWith("/infer") && r.status()===201);
+  await page.getByRole("button",{name:"Start Monitoring",exact:true}).click();
+  const recovered=await(await pending).json();
+  await page.getByText("Monitoring active",{exact:true}).waitFor();
+  await page.getByRole("button",{name:"Pause",exact:true}).click();
+  await page.getByRole("button",{name:"Stop Camera",exact:true}).click();
+  return {check:"replay_timer_and_no_fallback_recovery", replay_min_windows:2, provider:recovered.provenance.provider, telemetry_source:recovered.provenance.telemetry_source, session_id:recovered.session_id};
+})(page);
+```
+### Page
+- Page URL: http://127.0.0.1:8011/
+- Page Title: In-Cabin Multi-Modal Driver Monitoring & Risk Assessment
+- Console: 1 errors, 0 warnings
+### Events
+- New console entries: .playwright-cli/console-2026-10-05T08-29-46-927Z.log#L2

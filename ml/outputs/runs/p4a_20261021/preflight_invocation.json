@@ -1,0 +1,12 @@
+{
+  "scope": "P4-A validation/synthetic only",
+  "maximum_exports": 2,
+  "stage_caps": {
+    "preflight": 600,
+    "timing": 600
+  },
+  "total_seconds": 1200,
+  "source_sha256": "ffdfa6637bace58c9818ade3b9a84e812a59d2f681543927b10403061301dece",
+  "started_unix_seconds": 1792593537.246829,
+  "formal_runtime_benchmark_completed": false
+}

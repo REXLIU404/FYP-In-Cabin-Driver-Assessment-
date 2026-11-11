@@ -2,29 +2,29 @@ import { BarChart3 } from "lucide-react";
 import { DistributionChart } from "../components/DistributionChart";
 import { Pill } from "../components/Pill";
 import { TrendChart } from "../components/TrendChart";
-import type { DistributionDatum, RiskLevel, RiskUpdate } from "../types";
-import { getEvidenceType } from "../../../ai/src/evidence";
-import { formatRiskScore, formatTimestamp } from "../utils/format";
+import type { RiskUpdate } from "../types";
+import { resolveDominantEvidence } from "../utils/display";
+import {
+  UNAVAILABLE_LABEL,
+  formatRiskScore,
+  formatTimestamp,
+} from "../utils/format";
+import { distribution, riskRowClassName } from "./riskDistribution";
+import { CONTRACT_TOOLTIP } from "../utils/contractTooltips";
 
 interface RiskTrendsProps {
   history: RiskUpdate[];
   selectedWindowId: number;
   thresholdLow: number;
+  thresholdHigh: number;
   onSelectWindow: (windowId: number) => void;
 }
-
-const riskLevels: RiskLevel[] = ["Low", "Medium", "High"];
-
-const distribution = (history: RiskUpdate[]): DistributionDatum[] =>
-  riskLevels.map((label) => ({
-    label,
-    count: history.filter((record) => record.RiskLevel === label).length,
-  }));
 
 export function RiskTrends({
   history,
   selectedWindowId,
   thresholdLow,
+  thresholdHigh,
   onSelectWindow,
 }: RiskTrendsProps) {
   return (
@@ -37,7 +37,11 @@ export function RiskTrends({
           </div>
           <BarChart3 size={20} />
         </div>
-        <TrendChart history={history} />
+        <TrendChart
+          history={history}
+          thresholdLow={thresholdLow}
+          thresholdHigh={thresholdHigh}
+        />
       </section>
 
       <section className="panel">
@@ -51,7 +55,17 @@ export function RiskTrends({
       </section>
 
       <section className="panel panel--full">
-        <div className="table-wrap">
+        <div className="section-header">
+          <div>
+            <p className="eyebrow">Window log</p>
+            <h2>{history.length} windows, newest first</h2>
+            <p>
+              Click a row to pin that window in Signal Inspector, Risk Trends
+              and Explanation.
+            </p>
+          </div>
+        </div>
+        <div className="table-wrap table-wrap--scroll">
           <table>
             <thead>
               <tr>
@@ -59,8 +73,10 @@ export function RiskTrends({
                 <th>Time</th>
                 <th>RiskScore</th>
                 <th>RiskLevel</th>
-                <th>Alert</th>
-                <th>Evidence Type</th>
+                <th title={CONTRACT_TOOLTIP.AlertSeverity}>AlertSeverity</th>
+                <th title={CONTRACT_TOOLTIP.DominantEvidence}>
+                  DominantEvidence
+                </th>
                 <th>Flag</th>
               </tr>
             </thead>
@@ -68,10 +84,7 @@ export function RiskTrends({
               {[...history].reverse().map((record) => (
                 <tr
                   key={record.window_id}
-                  className={[
-                    record.window_id === selectedWindowId ? "is-selected" : "",
-                    record.RiskLevel === "High" ? "is-high-risk" : "",
-                  ].join(" ")}
+                  className={riskRowClassName(record, selectedWindowId)}
                   onClick={() => onSelectWindow(record.window_id)}
                 >
                   <td>{record.window_id}</td>
@@ -86,7 +99,10 @@ export function RiskTrends({
                       tone={record.AlertSeverity}
                     />
                   </td>
-                  <td>{getEvidenceType(record, thresholdLow)}</td>
+                  <td>
+                    {resolveDominantEvidence(record, thresholdLow) ??
+                      UNAVAILABLE_LABEL}
+                  </td>
                   <td>
                     {record.flagged ? (
                       <Pill label="flagged" tone="flagged" />

@@ -1,0 +1,7 @@
+{
+  "status": "AWAITING_MODEL_SEARCH_COMPLETION",
+  "trial_id": "logistic_regression_01",
+  "selection_split": "val",
+  "test_predictions": "NOT_YET_DUE",
+  "confirmation_cannot_reselect": true
+}

@@ -1,0 +1,8 @@
+{
+  "status": "SUPERSEDED_FOR_D3_MISSINGNESS_SEMANTICS",
+  "reason": "User explicitly requires affected records each missing exactly one feature; initial preparation used independent per-feature probabilities",
+  "replacement_run_id": "e1_preparation_20261019_record_missingness",
+  "original_outputs_and_logs_preserved": true,
+  "original_current_source_references_must_resolve_to_snapshot": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/e1_preparation_20261019/source_snapshot/artifact_manifest.json",
+  "not_a_training_or_formal_E1_failure": true
+}

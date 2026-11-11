@@ -1,0 +1,128 @@
+{
+  "scope": "software tests and legacy probe recovery only; no model fitting or weight download",
+  "run_id": "p3_vision_20261018",
+  "git_head": "c6d1f659b64ffd65a5baac31728a1fccbd19ac3a",
+  "before_state": {
+    "signature": "f472de690c86990cbbad4d36ce7c9d51e6d777cedb10801c6a699dbb05bb6da2",
+    "phase": "probe",
+    "status": "IMPLEMENTATION_FAILED",
+    "attempts": [
+      {
+        "key": "mobilenet_v3_large/probe_001",
+        "plan": {
+          "trial_id": "probe_001",
+          "model": "mobilenet_v3_large",
+          "role": "PROBE",
+          "seed": 42,
+          "config": {
+            "learning_rate": 0.0008,
+            "weight_decay": 0.0001
+          },
+          "max_epochs": 1,
+          "is_p2": false
+        },
+        "directory": "probe/mobilenet_v3_large/probe_001/attempt_01",
+        "status": "INTERRUPTED",
+        "wall_seconds": 30.797756583080627,
+        "timeout_seconds": 1200,
+        "started_wall_time": 1792320228.4701738
+      },
+      {
+        "key": "mobilenet_v3_large/probe_001",
+        "plan": {
+          "trial_id": "probe_001",
+          "model": "mobilenet_v3_large",
+          "role": "PROBE",
+          "seed": 42,
+          "config": {
+            "learning_rate": 0.0008,
+            "weight_decay": 0.0001
+          },
+          "max_epochs": 1,
+          "is_p2": false
+        },
+        "directory": "probe/mobilenet_v3_large/probe_001/attempt_02",
+        "status": "IMPLEMENTATION_FAILED",
+        "wall_seconds": 27.519550209050067,
+        "timeout_seconds": 1169.2022434169194,
+        "started_wall_time": 1792320349.090271,
+        "execution": {
+          "status": "IMPLEMENTATION_FAILED",
+          "returncode": -15,
+          "wall_seconds": 27.51805025001522,
+          "timeout_seconds": 1169.2013827079209
+        }
+      }
+    ],
+    "trials": {
+      "mobilenet_v3_large/probe_001": {
+        "status": "IMPLEMENTATION_FAILED",
+        "attempt": "probe/mobilenet_v3_large/probe_001/attempt_02"
+      }
+    },
+    "selection": {},
+    "used_wall_seconds": 78.09884787490591
+  },
+  "unchanged_files": {
+    "probe_config.json": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/probe_config.json",
+      "sha256": "11160fefb25fa9a94cbaa228630e7304d46ce0224b313513a599d3b56a0e29ba",
+      "bytes": 2594
+    },
+    "weights_manifest.json": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/weights_manifest.json",
+      "sha256": "d8892af4bdb007a91737fde29daeb814f9a20c11ce8fca2d564508ca1b9915b4",
+      "bytes": 591
+    },
+    "probe/mobilenet_v3_large/probe_001/attempt_01/sample_manifest.csv": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/probe/mobilenet_v3_large/probe_001/attempt_01/sample_manifest.csv",
+      "sha256": "b3af5aaa2d1aeb450cb5c3dcb28f9edc28bda918cab22d00571f568b112534a3",
+      "bytes": 865423
+    },
+    "probe/mobilenet_v3_large/probe_001/attempt_01/config.json": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/probe/mobilenet_v3_large/probe_001/attempt_01/config.json",
+      "sha256": "18112bdd6914832e96cf761e3b05a8e9a55d6c6a195180549386884525a86edc",
+      "bytes": 2981
+    },
+    "probe/mobilenet_v3_large/probe_001/attempt_01/execution.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/probe/mobilenet_v3_large/probe_001/attempt_01/execution.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "probe/mobilenet_v3_large/probe_001/attempt_01/process.json": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/probe/mobilenet_v3_large/probe_001/attempt_01/process.json",
+      "sha256": "db59840f327e00a3f46748582bf5170d78332167279414095b7d08383d26371b",
+      "bytes": 370
+    },
+    "probe/mobilenet_v3_large/probe_001/attempt_02/sample_manifest.csv": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/probe/mobilenet_v3_large/probe_001/attempt_02/sample_manifest.csv",
+      "sha256": "b3af5aaa2d1aeb450cb5c3dcb28f9edc28bda918cab22d00571f568b112534a3",
+      "bytes": 865423
+    },
+    "probe/mobilenet_v3_large/probe_001/attempt_02/config.json": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/probe/mobilenet_v3_large/probe_001/attempt_02/config.json",
+      "sha256": "6c20992f97b074b3b389795a46c7896e0636c084169cb89683330fb2c7b5c753",
+      "bytes": 2995
+    },
+    "probe/mobilenet_v3_large/probe_001/attempt_02/execution.log": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/probe/mobilenet_v3_large/probe_001/attempt_02/execution.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "probe/mobilenet_v3_large/probe_001/attempt_02/process.json": {
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/outputs/runs/p3_vision_20261018/probe/mobilenet_v3_large/probe_001/attempt_02/process.json",
+      "sha256": "3f6760dec6734340852417d7719e8e08dd3c2afbe024bc1642c662460f84f6ef",
+      "bytes": 370
+    }
+  },
+  "protected_hashes": {
+    "ml/outputs/vision/mobilenetv3_large_vision.pt": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+    "ml/outputs/vision/mobilenetv3_large_vision.onnx": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "ml/outputs/telemetry/xgb_telemetry.json": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+    "docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md": "0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0"
+  },
+  "red_command": "./.venv/bin/python -B -m pytest -q ml/tests/test_vision_hpo.py -k 'second_launcher or external_sigterm or signal_interruption or live_controller or failed_run_retry or legacy' -p no:cacheprovider",
+  "vision_green_command": "./.venv/bin/python -B -m pytest -q ml/tests/test_vision_hpo.py -p no:cacheprovider",
+  "suite_command": "./.venv/bin/python -B -m pytest -q ml/tests -p no:cacheprovider",
+  "recovery_command": "./.venv/bin/python -B ml/experiments/run_vision_hpo.py recover-interrupted --run-id p3_vision_20261018"
+}

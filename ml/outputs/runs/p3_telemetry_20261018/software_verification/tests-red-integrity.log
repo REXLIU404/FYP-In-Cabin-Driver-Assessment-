@@ -1,0 +1,44 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+__ test_completed_checkpoint_damage_refuses_resume_without_retraining[delete] __
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-37/test_completed_checkpoint_dama0')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+damage = 'delete'
+
+    @pytest.mark.parametrize('damage',['delete','change'])
+    def test_completed_checkpoint_damage_refuses_resume_without_retraining(vision,tmp_path,context,damage):
+        budget={'per_trial':10.,'per_model':20.,'total':30.}
+        state=vision.run_plan(tmp_path,'search',[plan()],budget,context,runner=synthetic_worker)
+        checkpoint=tmp_path/state['attempts'][0]['directory']/'checkpoint.pt'
+        if damage=='delete':checkpoint.unlink()
+        else:checkpoint.write_bytes(b'changed')
+>       with pytest.raises(ValueError,match='artifact|checkpoint|integrity'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+ml/tests/test_vision_hpo.py:218: Failed
+__ test_completed_checkpoint_damage_refuses_resume_without_retraining[change] __
+
+vision = <module 'ml.experiments.run_vision_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/run_vision_hpo.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-37/test_completed_checkpoint_dama1')
+context = {'data_root': '/synthetic/not-opened', 'environment': {'git': {'dirty_state': '', 'head': 'synthetic'}}, 'protocol_sha256': 'synthetic', 'source_hashes': {}, ...}
+damage = 'change'
+
+    @pytest.mark.parametrize('damage',['delete','change'])
+    def test_completed_checkpoint_damage_refuses_resume_without_retraining(vision,tmp_path,context,damage):
+        budget={'per_trial':10.,'per_model':20.,'total':30.}
+        state=vision.run_plan(tmp_path,'search',[plan()],budget,context,runner=synthetic_worker)
+        checkpoint=tmp_path/state['attempts'][0]['directory']/'checkpoint.pt'
+        if damage=='delete':checkpoint.unlink()
+        else:checkpoint.write_bytes(b'changed')
+>       with pytest.raises(ValueError,match='artifact|checkpoint|integrity'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+ml/tests/test_vision_hpo.py:218: Failed
+=========================== short test summary info ============================
+FAILED ml/tests/test_vision_hpo.py::test_completed_checkpoint_damage_refuses_resume_without_retraining[delete]
+FAILED ml/tests/test_vision_hpo.py::test_completed_checkpoint_damage_refuses_resume_without_retraining[change]
+2 failed, 15 deselected in 1.22s

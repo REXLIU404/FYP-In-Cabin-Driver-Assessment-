@@ -1,0 +1,60 @@
+GATE: pytest
+STATUS: PASS
+EXIT CODE: 0
+STARTED (UTC): 2026-10-29T09:57:39Z
+FINISHED (UTC): 2026-10-29T10:01:06Z
+DURATION (s): 206.95
+ARGV: ["../.venv/bin/python", "-m", "pytest", "tests", "-q", "-p", "no:cacheprovider"]
+CWD: /Users/liu/Desktop/FYP2-Live-System/backend
+ENV (selected):
+  PYTHONDONTWRITEBYTECODE=1
+  PYTHONPATH=.
+  TMPDIR=/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/dra-gate-pytest-fyblq1ee
+  DRA_REQUIRE_MODELS=1
+  DRA_DATABASE_URL=(unset)
+  FYP_DATA_ROOT=(unset)
+  NODE_ENV=(unset)
+  CI=(unset)
+  VIRTUAL_ENV=(unset)
+TOOL VERSIONS:
+  python (this script): 3.13.3
+  python (.venv): Python 3.13.3
+  pytest: pytest 9.0.3
+  node: v24.1.0
+  npm: 11.4.2
+  vitest: vitest/2.1.9 darwin-arm64 node-v24.1.0
+  tsc: Version 5.9.3
+  eslint: v9.39.4
+PYTEST SKIPPED: 0
+----- STDOUT -----
+........................................................................ [  5%]
+........................................................................ [ 10%]
+........................................................................ [ 15%]
+........................................................................ [ 21%]
+........................................................................ [ 26%]
+........................................................................ [ 31%]
+........................................................................ [ 37%]
+........................................................................ [ 42%]
+........................................................................ [ 47%]
+........................................................................ [ 53%]
+........................................................................ [ 58%]
+........................................................................ [ 63%]
+........................................................................ [ 69%]
+........................................................................ [ 74%]
+........................................................................ [ 79%]
+........................................................................ [ 84%]
+........................................................................ [ 90%]
+........................................................................ [ 95%]
+............................................................             [100%]
+=============================== warnings summary ===============================
+../.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /Users/liu/Desktop/FYP2-Live-System/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+DRA_REQUIRE_MODELS=1: no model-dependent test was skipped.
+1356 passed, 8 deselected, 1 warning in 205.34s (0:03:25)
+----- END STDOUT -----
+----- STDERR -----
+
+----- END STDERR -----

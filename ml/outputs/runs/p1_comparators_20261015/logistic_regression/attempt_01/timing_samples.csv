@@ -1,0 +1,4 @@
+phase,samples,seconds,warmup
+fit,300,0.017811042023822665,False
+validation,90,0.0006811670027673244,False
+reload_validation,90,0.0005268339882604778,False

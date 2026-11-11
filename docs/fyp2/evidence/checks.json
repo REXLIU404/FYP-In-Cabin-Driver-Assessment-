@@ -1,0 +1,249 @@
+[
+  {
+    "id": "ENV",
+    "argv": [
+      "/bin/zsh",
+      "-c",
+      "uname -m && sw_vers && sysctl -n machdep.cpu.brand_string hw.memsize && node --version && npm --version"
+    ],
+    "cwd": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1",
+    "start_utc": "2026-10-09T11:45:20.779424+00:00",
+    "duration_s": 0.02,
+    "timeout_s": 120,
+    "exit_code": 1,
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "TMPDIR": "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd",
+      "PYTHONPATH": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/backend",
+      "DRA_DATABASE_URL": "sqlite:////var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd/fallback.db",
+      "OMP_NUM_THREADS": "2",
+      "OPENBLAS_NUM_THREADS": "2",
+      "VECLIB_MAXIMUM_THREADS": "2"
+    },
+    "log": "evidence/ENV.log"
+  },
+  {
+    "id": "PYTEST",
+    "argv": [
+      "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+      "-m",
+      "pytest",
+      "backend/tests",
+      "-vv",
+      "-p",
+      "no:cacheprovider",
+      "--basetemp",
+      "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd/pytest"
+    ],
+    "cwd": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1",
+    "start_utc": "2026-10-09T11:45:20.800412+00:00",
+    "duration_s": 18.455,
+    "timeout_s": 120,
+    "exit_code": 0,
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "TMPDIR": "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd",
+      "PYTHONPATH": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/backend",
+      "DRA_DATABASE_URL": "sqlite:////var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd/fallback.db",
+      "OMP_NUM_THREADS": "2",
+      "OPENBLAS_NUM_THREADS": "2",
+      "VECLIB_MAXIMUM_THREADS": "2"
+    },
+    "log": "evidence/PYTEST.log"
+  },
+  {
+    "id": "VITEST",
+    "argv": [
+      "npm",
+      "test",
+      "--",
+      "--no-cache"
+    ],
+    "cwd": "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd/frontend-check",
+    "start_utc": "2026-10-09T11:45:39.278652+00:00",
+    "duration_s": 0.79,
+    "timeout_s": 120,
+    "exit_code": 0,
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "TMPDIR": "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd",
+      "PYTHONPATH": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/backend",
+      "DRA_DATABASE_URL": "sqlite:////var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd/fallback.db",
+      "OMP_NUM_THREADS": "2",
+      "OPENBLAS_NUM_THREADS": "2",
+      "VECLIB_MAXIMUM_THREADS": "2"
+    },
+    "log": "evidence/VITEST.log"
+  },
+  {
+    "id": "BUILD",
+    "argv": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "cwd": "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd/frontend-check",
+    "start_utc": "2026-10-09T11:45:40.069510+00:00",
+    "duration_s": 1.671,
+    "timeout_s": 120,
+    "exit_code": 1,
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "TMPDIR": "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd",
+      "PYTHONPATH": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/backend",
+      "DRA_DATABASE_URL": "sqlite:////var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd/fallback.db",
+      "OMP_NUM_THREADS": "2",
+      "OPENBLAS_NUM_THREADS": "2",
+      "VECLIB_MAXIMUM_THREADS": "2"
+    },
+    "log": "evidence/BUILD.log"
+  },
+  {
+    "id": "LINT",
+    "argv": [
+      "npm",
+      "run",
+      "linc"
+    ],
+    "cwd": "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd/frontend-check",
+    "start_utc": "2026-10-09T11:45:41.741404+00:00",
+    "duration_s": 1.231,
+    "timeout_s": 120,
+    "exit_code": 0,
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "TMPDIR": "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd",
+      "PYTHONPATH": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/backend",
+      "DRA_DATABASE_URL": "sqlite:////var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd/fallback.db",
+      "OMP_NUM_THREADS": "2",
+      "OPENBLAS_NUM_THREADS": "2",
+      "VECLIB_MAXIMUM_THREADS": "2"
+    },
+    "log": "evidence/LINT.log"
+  },
+  {
+    "id": "ENV-VERSIONS",
+    "argv": [
+      "/bin/zsh",
+      "-c",
+      "node --version && npm --version"
+    ],
+    "cwd": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1",
+    "start_utc": "2026-10-09T11:46:52.849249+00:00",
+    "duration_s": 0.093,
+    "timeout_s": 120,
+    "exit_code": 0,
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "TMPDIR": "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd",
+      "PYTHONPATH": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/backend",
+      "DRA_DATABASE_URL": "sqlite:////var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd/fallback.db",
+      "OMP_NUM_THREADS": "2",
+      "OPENBLAS_NUM_THREADS": "2",
+      "VECLIB_MAXIMUM_THREADS": "2"
+    },
+    "log": "evidence/ENV-VERSIONS.log"
+  },
+  {
+    "id": "BUILD-RUNNER",
+    "argv": [
+      "npm",
+      "run",
+      "build",
+      "--",
+      "--configLoader",
+      "runner"
+    ],
+    "cwd": "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd/frontend-check",
+    "start_utc": "2026-10-09T11:46:52.943672+00:00",
+    "duration_s": 4.154,
+    "timeout_s": 120,
+    "exit_code": 0,
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "TMPDIR": "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd",
+      "PYTHONPATH": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/backend",
+      "DRA_DATABASE_URL": "sqlite:////var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd/fallback.db",
+      "OMP_NUM_THREADS": "2",
+      "OPENBLAS_NUM_THREADS": "2",
+      "VECLIB_MAXIMUM_THREADS": "2"
+    },
+    "log": "evidence/BUILD-RUNNER.log"
+  },
+  {
+    "id": "ML-TELEMETRY",
+    "argv": [
+      "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+      "ml/experiments/telemetry_benchmark.py",
+      "--output",
+      "/Users/liu/.codex/worktrees/d39a/FYP-In-Cabin-Driver-Assessment--1/docs/fyp2/evidence/telemetry_recheck.json"
+    ],
+    "cwd": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1",
+    "start_utc": "2026-10-09T11:46:57.098505+00:00",
+    "duration_s": 3.348,
+    "timeout_s": 90,
+    "exit_code": 0,
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "TMPDIR": "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd",
+      "PYTHONPATH": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/backend",
+      "DRA_DATABASE_URL": "sqlite:////var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd/fallback.db",
+      "OMP_NUM_THREADS": "2",
+      "OPENBLAS_NUM_THREADS": "2",
+      "VECLIB_MAXIMUM_THREADS": "2"
+    },
+    "log": "evidence/ML-TELEMETRY.log"
+  },
+  {
+    "id": "ML-VISION-SMOKE",
+    "argv": [
+      "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+      "ml/experiments/vision_benchmark.py",
+      "--mode",
+      "evaluate",
+      "--limit",
+      "20",
+      "--parity-samples",
+      "20",
+      "--output",
+      "/Users/liu/.codex/worktrees/d39a/FYP-In-Cabin-Driver-Assessment--1/docs/fyp2/evidence/vision_smoke.json"
+    ],
+    "cwd": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1",
+    "start_utc": "2026-10-09T11:47:00.446806+00:00",
+    "duration_s": 3.086,
+    "timeout_s": 90,
+    "exit_code": 0,
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "TMPDIR": "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd",
+      "PYTHONPATH": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/backend",
+      "DRA_DATABASE_URL": "sqlite:////var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd/fallback.db",
+      "OMP_NUM_THREADS": "2",
+      "OPENBLAS_NUM_THREADS": "2",
+      "VECLIB_MAXIMUM_THREADS": "2"
+    },
+    "log": "evidence/ML-VISION-SMOKE.log"
+  },
+  {
+    "id": "DIAGNOSTICS",
+    "argv": [
+      "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+      "/tmp/fyp2_audit_diagnostics.py"
+    ],
+    "cwd": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1",
+    "start_utc": "2026-10-09T17:03:04.247046+00:00",
+    "duration_s": 3.555,
+    "timeout_s": 30,
+    "exit_code": 0,
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "TMPDIR": "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd",
+      "PYTHONPATH": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/backend",
+      "DRA_DATABASE_URL": "sqlite:////var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd/fallback.db",
+      "OMP_NUM_THREADS": "2",
+      "OPENBLAS_NUM_THREADS": "2",
+      "VECLIB_MAXIMUM_THREADS": "2"
+    },
+    "log": "evidence/DIAGNOSTICS.log"
+  }
+]

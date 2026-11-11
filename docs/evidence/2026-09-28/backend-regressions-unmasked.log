@@ -1,0 +1,207 @@
+..FFFFFFFFFF                                                             [100%]
+=================================== FAILURES ===================================
+_______________________ test_latest_reflects_flag_update _______________________
+
+api = (<starlette.testclient.TestClient object at 0x10cc2b390>, 'audit-test_latest_reflects_flag_upda0')
+
+    @pytest.mark.xfail(strict=True, reason="flag_window does not invalidate latest cache")
+    def test_latest_reflects_flag_update(api):
+        client, sid = api
+        client.post(f"/api/sessions/{sid}/windows", json=window())
+        flagged = client.patch(f"/api/sessions/{sid}/windows/1/flag?flagged=true")
+        assert flagged.json()["flagged"] is True
+>       assert client.get(f"/api/sessions/{sid}/risk/latest").json()["flagged"] is True
+E       assert False is True
+
+backend/tests/test_audit_regressions.py:78: AssertionError
+____________________ test_latest_falls_back_after_deletion _____________________
+
+api = (<starlette.testclient.TestClient object at 0x10cccc3e0>, 'audit-test_latest_falls_back_after_d0')
+
+    @pytest.mark.xfail(strict=True, reason="delete_window leaves deleted latest record cached")
+    def test_latest_falls_back_after_deletion(api):
+        client, sid = api
+        client.post(f"/api/sessions/{sid}/windows", json=window(0.1))
+        client.post(f"/api/sessions/{sid}/windows", json=window(0.9))
+        assert client.delete(f"/api/sessions/{sid}/windows/2").status_code == 204
+>       assert client.get(f"/api/sessions/{sid}/risk/latest").json()["window_id"] == 1
+E       assert 2 == 1
+
+backend/tests/test_audit_regressions.py:87: AssertionError
+________________ test_latest_is_empty_after_all_windows_deleted ________________
+
+api = (<starlette.testclient.TestClient object at 0x10ccccb00>, 'audit-test_latest_is_empty_after_all0')
+
+    @pytest.mark.xfail(strict=True, reason="latest endpoint returns a deleted sole window")
+    def test_latest_is_empty_after_all_windows_deleted(api):
+        client, sid = api
+        client.post(f"/api/sessions/{sid}/windows", json=window())
+        assert client.delete(f"/api/sessions/{sid}/windows/1").status_code == 204
+>       assert client.get(f"/api/sessions/{sid}/risk/latest").status_code == 404
+E       AssertionError: assert 200 == 404
+E        +  where 200 = <Response [200 OK]>.status_code
+E        +    where <Response [200 OK]> = get('/api/sessions/audit-test_latest_is_empty_after_all0/risk/latest')
+E        +      where get = <starlette.testclient.TestClient object at 0x10ccccb00>.get
+
+backend/tests/test_audit_regressions.py:95: AssertionError
+______________ test_concurrent_writers_receive_unique_window_ids _______________
+
+api = (<starlette.testclient.TestClient object at 0x10ad939b0>, 'audit-test_concurrent_writers_receiv0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10cf32b10>
+
+    @pytest.mark.xfail(strict=True, reason="max(window_id)+1 races without unique constraint")
+    def test_concurrent_writers_receive_unique_window_ids(api, monkeypatch):
+        from app import inference
+    
+        client, sid = api
+        infer = inference.run_inference
+        barrier = threading.Barrier(2, timeout=10)
+    
+        def after_id_allocation(*args, **kwargs):
+            barrier.wait()
+            return infer(*args, **kwargs)
+    
+        monkeypatch.setattr(inference, "run_inference", after_id_allocation)
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            futures = [
+                executor.submit(
+                    client.post, f"/api/sessions/{sid}/windows", json=window()
+                )
+                for _ in range(2)
+            ]
+            responses = [future.result(timeout=15) for future in futures]
+        assert all(response.status_code == 201 for response in responses)
+>       assert sorted(response.json()["window_id"] for response in responses) == [1, 2]
+E       assert [1, 1] == [1, 2]
+E         
+E         At index 1 diff: 1 != 2
+E         Use -v to get more diff
+
+backend/tests/test_audit_regressions.py:120: AssertionError
+______________________ test_invalid_timestamp_is_rejected ______________________
+
+api = (<starlette.testclient.TestClient object at 0x10ccfd480>, 'audit-test_invalid_timestamp_is_reje0')
+
+    @pytest.mark.xfail(strict=True, reason="timestamp is an unconstrained string")
+    def test_invalid_timestamp_is_rejected(api):
+        client, sid = api
+        response = client.post(
+            f"/api/sessions/{sid}/windows", json=window(timestamp="not-a-timestamp")
+        )
+>       assert response.status_code == 422
+E       assert 201 == 422
+E        +  where 201 = <Response [201 Created]>.status_code
+
+backend/tests/test_audit_regressions.py:129: AssertionError
+_______________ test_old_capture_timestamp_cannot_be_full_health _______________
+
+api = (<starlette.testclient.TestClient object at 0x10ccfdbf0>, 'audit-test_old_capture_timestamp_can0')
+
+    @pytest.mark.xfail(strict=True, reason="freshness_tolerance_s is unused; client freshness is trusted")
+    def test_old_capture_timestamp_cannot_be_full_health(api):
+        client, sid = api
+        response = client.post(
+            f"/api/sessions/{sid}/windows",
+            json=window(timestamp="2000-01-01T00:00:00Z"),
+        )
+        assert response.status_code == 201
+>       assert response.json()["SystemHealth"] != "FULL"
+E       AssertionError: assert 'FULL' != 'FULL'
+
+backend/tests/test_audit_regressions.py:140: AssertionError
+_____________ test_first_high_window_observes_alert_sustain_period _____________
+
+api = (<starlette.testclient.TestClient object at 0x10ccdb850>, 'audit-test_first_high_window_observe0')
+
+    @pytest.mark.xfail(strict=True, reason="backend uses instantaneous mapping; frontend requires 2 seconds")
+    def test_first_high_window_observes_alert_sustain_period(api):
+        client, sid = api
+        response = client.post(f"/api/sessions/{sid}/windows", json=window(1.0, 1.0))
+        assert response.status_code == 201
+>       assert response.json()["AlertSeverity"] == "CAUTION"
+E       AssertionError: assert 'HIGH_ALERT' == 'CAUTION'
+E         
+E         - CAUTION
+E         + HIGH_ALERT
+
+backend/tests/test_audit_regressions.py:148: AssertionError
+______________________ test_second_window_uses_vision_ema ______________________
+
+api = (<starlette.testclient.TestClient object at 0x10ccdbe50>, 'audit-test_second_window_uses_vision0')
+
+    @pytest.mark.xfail(strict=True, reason="backend does not apply the frontend vision EMA")
+    def test_second_window_uses_vision_ema(api):
+        client, sid = api
+        client.post(f"/api/sessions/{sid}/windows", json=window(0.2))
+        response = client.post(f"/api/sessions/{sid}/windows", json=window(1.0))
+        assert response.status_code == 201
+>       assert response.json()["P_distraction"] == pytest.approx(0.35 * 1.0 + 0.65 * 0.2)
+E       assert 1.0 == 0.48 ± 4.8e-07
+E         
+E         comparison failed
+E         Obtained: 1.0
+E         Expected: 0.48 ± 4.8e-07
+
+backend/tests/test_audit_regressions.py:157: AssertionError
+___________ test_invalid_measurements_are_rejected[negative-latency] ___________
+
+api = (<starlette.testclient.TestClient object at 0x10cf36f30>, 'audit-test_invalid_measurements_are_0')
+overrides = {'latency_ms': -100}
+
+    @pytest.mark.parametrize(
+        "overrides",
+        [
+            {"latency_ms": -100},
+            {"visual_top_classes": [{"label": "safe_driving", "probability": 2.0}]},
+        ],
+        ids=["negative-latency", "class-probability-over-one"],
+    )
+    @pytest.mark.xfail(strict=True, reason="nested probability and latency lack value bounds")
+    def test_invalid_measurements_are_rejected(api, overrides):
+        client, sid = api
+        response = client.post(f"/api/sessions/{sid}/windows", json=window(**overrides))
+>       assert response.status_code == 422
+E       assert 201 == 422
+E        +  where 201 = <Response [201 Created]>.status_code
+
+backend/tests/test_audit_regressions.py:172: AssertionError
+______ test_invalid_measurements_are_rejected[class-probability-over-one] ______
+
+api = (<starlette.testclient.TestClient object at 0x10cce7980>, 'audit-test_invalid_measurements_are_1')
+overrides = {'visual_top_classes': [{'label': 'safe_driving', 'probability': 2.0}]}
+
+    @pytest.mark.parametrize(
+        "overrides",
+        [
+            {"latency_ms": -100},
+            {"visual_top_classes": [{"label": "safe_driving", "probability": 2.0}]},
+        ],
+        ids=["negative-latency", "class-probability-over-one"],
+    )
+    @pytest.mark.xfail(strict=True, reason="nested probability and latency lack value bounds")
+    def test_invalid_measurements_are_rejected(api, overrides):
+        client, sid = api
+        response = client.post(f"/api/sessions/{sid}/windows", json=window(**overrides))
+>       assert response.status_code == 422
+E       assert 201 == 422
+E        +  where 201 = <Response [201 Created]>.status_code
+
+backend/tests/test_audit_regressions.py:172: AssertionError
+=============================== warnings summary ===============================
+backend/tests/test_audit_regressions.py::test_primary_probability_bounds_are_enforced
+  /Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED backend/tests/test_audit_regressions.py::test_latest_reflects_flag_update
+FAILED backend/tests/test_audit_regressions.py::test_latest_falls_back_after_deletion
+FAILED backend/tests/test_audit_regressions.py::test_latest_is_empty_after_all_windows_deleted
+FAILED backend/tests/test_audit_regressions.py::test_concurrent_writers_receive_unique_window_ids
+FAILED backend/tests/test_audit_regressions.py::test_invalid_timestamp_is_rejected
+FAILED backend/tests/test_audit_regressions.py::test_old_capture_timestamp_cannot_be_full_health
+FAILED backend/tests/test_audit_regressions.py::test_first_high_window_observes_alert_sustain_period
+FAILED backend/tests/test_audit_regressions.py::test_second_window_uses_vision_ema
+FAILED backend/tests/test_audit_regressions.py::test_invalid_measurements_are_rejected[negative-latency]
+FAILED backend/tests/test_audit_regressions.py::test_invalid_measurements_are_rejected[class-probability-over-one]
+10 failed, 2 passed, 1 warning in 0.68s

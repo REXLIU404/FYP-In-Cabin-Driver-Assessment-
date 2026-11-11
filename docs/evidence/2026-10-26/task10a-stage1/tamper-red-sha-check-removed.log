@@ -1,0 +1,77 @@
+$ /Users/liu/Desktop/FYP2-Live-System/.venv/bin/python -m pytest tests/test_vision_candidates.py -q -p no:cacheprovider -k tampered or refused
+(cwd /var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/stage1-mut-6r8cg5vi/repo/backend)
+exit=1  2.6s
+----- stdout -----
+...F..F                                                                  [100%]
+=================================== FAILURES ===================================
+_______________________ test_a_tampered_hash_is_refused ________________________
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-212/test_a_tampered_hash_is_refuse0')
+
+    def test_a_tampered_hash_is_refused(tmp_path):
+        _package(tmp_path, manifest_edit=lambda m: m["model"].update(sha256="f" * 64))
+>       with pytest.raises(ModelUnavailable, match="sha256 mismatch"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'app.providers.trained.ModelUnavailable'>
+
+tests/test_vision_candidates.py:126: Failed
+_____________ test_a_refused_candidate_raises_and_never_falls_back _____________
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-212/test_a_refused_candidate_raise0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10cebc550>
+
+    def test_a_refused_candidate_raises_and_never_falls_back(tmp_path, monkeypatch):
+        """No model files at all are needed: the stable ONNX is absent from this model root, so a fallback
+        would fail differently; the candidate's own reason must surface."""
+        from app.config import settings
+        from app.providers.trained import TrainedProvider
+        _package(tmp_path / "candidates", manifest_edit=lambda m: m["model"].update(sha256="f" * 64))
+        monkeypatch.setattr(settings, "model_root", _metadata_only_root(tmp_path, with_xgb=False))
+        monkeypatch.setattr(settings, "vision_candidates_root", tmp_path / "candidates")
+        monkeypatch.setattr(settings, "active_vision", "synthetic")
+        with pytest.raises(ModelUnavailable, match="sha256 mismatch"):
+>           TrainedProvider()
+
+tests/test_vision_candidates.py:295: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+app/providers/trained.py:92: in __init__
+    self.telemetry.load_model(telemetry_path)
+/Users/liu/Desktop/FYP2-Live-System/.venv/lib/python3.13/site-packages/xgboost/core.py:3050: in load_model
+    _check_call(_LIB.XGBoosterLoadModel(self.handle, c_str(fname)))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ret = -1
+
+    def _check_call(ret: int) -> None:
+        """Check the return value of C API call
+    
+        This function will raise exception when error occurs.
+        Wrap every API call with this function
+    
+        Parameters
+        ----------
+        ret :
+            return value from API calls
+        """
+        if ret != 0:
+>           raise XGBoostError(py_str(_LIB.XGBGetLastError()))
+E           xgboost.core.XGBoostError: [19:30:42] /Users/runner/work/xgboost/xgboost/src/common/io.cc:144: Opening /private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-212/test_a_refused_candidate_raise0/model_root/telemetry/xgb_telemetry.json failed: No such file or directory
+E           Stack trace:
+E             [bt] (0) 1   libxgboost.dylib                    0x00000001169e7dd8 dmlc::LogMessageFatal::~LogMessageFatal() + 124
+E             [bt] (1) 2   libxgboost.dylib                    0x0000000116ae3fb4 xgboost::common::LoadSequentialFile(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>) + 716
+E             [bt] (2) 3   libxgboost.dylib                    0x0000000116a78f28 XGBoosterLoadModel::$_8::operator()() const + 152
+E             [bt] (3) 4   libxgboost.dylib                    0x0000000116a788dc XGBoosterLoadModel + 824
+E             [bt] (4) 5   libffi.dylib                        0x00000001a3d68050 ffi_call_SYSV + 80
+E             [bt] (5) 6   libffi.dylib                        0x00000001a3d715b8 ffi_call_int + 1220
+E             [bt] (6) 7   _ctypes.cpython-313-darwin.so       0x000000010a0678ac _ctypes_callproc + 1068
+E             [bt] (7) 8   _ctypes.cpython-313-darwin.so       0x000000010a05d4ec PyCFuncPtr_call + 256
+E             [bt] (8) 9   Python                              0x0000000103eba018 _PyEval_EvalFrameDefault + 45740
+
+/Users/liu/Desktop/FYP2-Live-System/.venv/lib/python3.13/site-packages/xgboost/core.py:324: XGBoostError
+DRA_REQUIRE_MODELS=1: no model-dependent test was skipped.
+=========================== short test summary info ============================
+FAILED tests/test_vision_candidates.py::test_a_tampered_hash_is_refused - Fai...
+FAILED tests/test_vision_candidates.py::test_a_refused_candidate_raises_and_never_falls_back
+2 failed, 5 passed, 10 deselected in 1.95s
+
+----- stderr -----

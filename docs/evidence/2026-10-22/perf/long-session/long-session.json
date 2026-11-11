@@ -1,0 +1,323 @@
+{
+  "minutes": 15.0,
+  "per_minute": [
+    {
+      "db_bytes": 6602472,
+      "dom_nodes": 1394,
+      "js_heap_used_bytes": 25123400,
+      "minute": 1.01,
+      "network_including_server_ms": {
+        "max": 105,
+        "median": 25.0,
+        "min": 20,
+        "n": 500,
+        "p95": 29
+      },
+      "render_ms": {
+        "max": 6,
+        "median": 3.5,
+        "min": 2,
+        "n": 500,
+        "p95": 4
+      },
+      "windows": 600
+    },
+    {
+      "db_bytes": 9277256,
+      "dom_nodes": 1418,
+      "js_heap_used_bytes": 25274136,
+      "minute": 2.02,
+      "network_including_server_ms": {
+        "max": 121,
+        "median": 25.0,
+        "min": 21,
+        "n": 500,
+        "p95": 32
+      },
+      "render_ms": {
+        "max": 20,
+        "median": 3.0,
+        "min": 2,
+        "n": 500,
+        "p95": 4
+      },
+      "windows": 1196
+    },
+    {
+      "db_bytes": 11902792,
+      "dom_nodes": 1178,
+      "js_heap_used_bytes": 18022128,
+      "minute": 3.01,
+      "network_including_server_ms": {
+        "max": 131,
+        "median": 24.0,
+        "min": 19,
+        "n": 500,
+        "p95": 31
+      },
+      "render_ms": {
+        "max": 11,
+        "median": 3.0,
+        "min": 2,
+        "n": 500,
+        "p95": 4
+      },
+      "windows": 1780
+    },
+    {
+      "db_bytes": 14561240,
+      "dom_nodes": 1298,
+      "js_heap_used_bytes": 23551668,
+      "minute": 4.01,
+      "network_including_server_ms": {
+        "max": 109,
+        "median": 24.0,
+        "min": 21,
+        "n": 500,
+        "p95": 28
+      },
+      "render_ms": {
+        "max": 5,
+        "median": 3.0,
+        "min": 3,
+        "n": 500,
+        "p95": 4
+      },
+      "windows": 2375
+    },
+    {
+      "db_bytes": 17203160,
+      "dom_nodes": 1334,
+      "js_heap_used_bytes": 23460744,
+      "minute": 5.01,
+      "network_including_server_ms": {
+        "max": 103,
+        "median": 24.0,
+        "min": 20,
+        "n": 500,
+        "p95": 30
+      },
+      "render_ms": {
+        "max": 6,
+        "median": 3.0,
+        "min": 2,
+        "n": 500,
+        "p95": 4
+      },
+      "windows": 2961
+    },
+    {
+      "db_bytes": 19873752,
+      "dom_nodes": 1328,
+      "js_heap_used_bytes": 22853940,
+      "minute": 6.01,
+      "network_including_server_ms": {
+        "max": 128,
+        "median": 24.0,
+        "min": 20,
+        "n": 500,
+        "p95": 37
+      },
+      "render_ms": {
+        "max": 15,
+        "median": 3.0,
+        "min": 2,
+        "n": 500,
+        "p95": 4
+      },
+      "windows": 3557
+    },
+    {
+      "db_bytes": 22560728,
+      "dom_nodes": 1202,
+      "js_heap_used_bytes": 20902532,
+      "minute": 7.0,
+      "network_including_server_ms": {
+        "max": 82,
+        "median": 25.0,
+        "min": 19,
+        "n": 500,
+        "p95": 29
+      },
+      "render_ms": {
+        "max": 7,
+        "median": 3.0,
+        "min": 2,
+        "n": 500,
+        "p95": 4
+      },
+      "windows": 4142
+    },
+    {
+      "db_bytes": 25186264,
+      "dom_nodes": 1298,
+      "js_heap_used_bytes": 23708952,
+      "minute": 8.01,
+      "network_including_server_ms": {
+        "max": 253,
+        "median": 33.0,
+        "min": 20,
+        "n": 500,
+        "p95": 40
+      },
+      "render_ms": {
+        "max": 19,
+        "median": 3.0,
+        "min": 2,
+        "n": 500,
+        "p95": 6
+      },
+      "windows": 4736
+    },
+    {
+      "db_bytes": 27819992,
+      "dom_nodes": 1232,
+      "js_heap_used_bytes": 20615304,
+      "minute": 9.0,
+      "network_including_server_ms": {
+        "max": 99,
+        "median": 26.0,
+        "min": 18,
+        "n": 500,
+        "p95": 33
+      },
+      "render_ms": {
+        "max": 7,
+        "median": 3.0,
+        "min": 2,
+        "n": 500,
+        "p95": 6
+      },
+      "windows": 5321
+    },
+    {
+      "db_bytes": 30474200,
+      "dom_nodes": 1298,
+      "js_heap_used_bytes": 23488352,
+      "minute": 10.01,
+      "network_including_server_ms": {
+        "max": 122,
+        "median": 26.0,
+        "min": 19,
+        "n": 500,
+        "p95": 39
+      },
+      "render_ms": {
+        "max": 16,
+        "median": 3.0,
+        "min": 2,
+        "n": 500,
+        "p95": 5
+      },
+      "windows": 5917
+    },
+    {
+      "db_bytes": 33136600,
+      "dom_nodes": 1388,
+      "js_heap_used_bytes": 29076636,
+      "minute": 11.0,
+      "network_including_server_ms": {
+        "max": 205,
+        "median": 26.0,
+        "min": 21,
+        "n": 500,
+        "p95": 35
+      },
+      "render_ms": {
+        "max": 7,
+        "median": 3.0,
+        "min": 2,
+        "n": 500,
+        "p95": 5
+      },
+      "windows": 6501
+    },
+    {
+      "db_bytes": 35422168,
+      "dom_nodes": 1238,
+      "js_heap_used_bytes": 21592916,
+      "minute": 12.01,
+      "network_including_server_ms": {
+        "max": 220,
+        "median": 26.0,
+        "min": 20,
+        "n": 500,
+        "p95": 31
+      },
+      "render_ms": {
+        "max": 7,
+        "median": 3.0,
+        "min": 3,
+        "n": 500,
+        "p95": 4
+      },
+      "windows": 7094
+    },
+    {
+      "db_bytes": 38084568,
+      "dom_nodes": 1358,
+      "js_heap_used_bytes": 25196928,
+      "minute": 13.02,
+      "network_including_server_ms": {
+        "max": 147,
+        "median": 27.0,
+        "min": 21,
+        "n": 500,
+        "p95": 32
+      },
+      "render_ms": {
+        "max": 24,
+        "median": 3.0,
+        "min": 2,
+        "n": 500,
+        "p95": 4
+      },
+      "windows": 7688
+    },
+    {
+      "db_bytes": 40746968,
+      "dom_nodes": 1058,
+      "js_heap_used_bytes": 16396924,
+      "minute": 14.01,
+      "network_including_server_ms": {
+        "max": 106,
+        "median": 25.0,
+        "min": 20,
+        "n": 500,
+        "p95": 29
+      },
+      "render_ms": {
+        "max": 6,
+        "median": 3.0,
+        "min": 2,
+        "n": 500,
+        "p95": 4
+      },
+      "windows": 8273
+    },
+    {
+      "db_bytes": 43397080,
+      "dom_nodes": 1298,
+      "js_heap_used_bytes": 24710432,
+      "minute": 15.01,
+      "network_including_server_ms": {
+        "max": 222,
+        "median": 24.0,
+        "min": 20,
+        "n": 500,
+        "p95": 28
+      },
+      "render_ms": {
+        "max": 5,
+        "median": 3.0,
+        "min": 2,
+        "n": 500,
+        "p95": 4
+      },
+      "windows": 8867
+    }
+  ],
+  "rate_hz": 9.85,
+  "sampled_windows_reconciled": 112,
+  "windows": 8867
+}

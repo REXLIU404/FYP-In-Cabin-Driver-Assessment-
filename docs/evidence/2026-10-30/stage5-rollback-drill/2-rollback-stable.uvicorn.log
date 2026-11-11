@@ -1,0 +1,12 @@
+INFO:     Started server process [93093]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:63424 - "GET /api/models HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63425 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63426 - "POST /api/sessions HTTP/1.1" 201 Created
+INFO:     127.0.0.1:63427 - "POST /api/sessions/drill-2-rollback-stable/infer HTTP/1.1" 201 Created
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [93093]

@@ -1,0 +1,19 @@
+{
+  "python": "3.13.3 (v3.13.3:6280bb54784, Apr  8 2025, 10:47:54) [Clang 15.0.0 (clang-1500.3.9.4)]",
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "packages": {
+    "torch": "2.12.0",
+    "torchvision": "0.27.0",
+    "onnx": "1.21.0",
+    "onnxruntime": "1.26.0",
+    "numpy": "2.4.6",
+    "pillow": "12.2.0",
+    "psutil": "7.2.2",
+    "scikit-learn": "1.9.0",
+    "xgboost": "3.2.0",
+    "threadpoolctl": "3.6.0"
+  },
+  "recorded_after_bounded_run": true,
+  "environment_modifications": "NONE"
+}

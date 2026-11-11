@@ -1,0 +1,35 @@
+{
+  "fit_split": "train",
+  "fit_rows": 21000,
+  "feature_order": [
+    "speed_kmph",
+    "accel_x",
+    "accel_y",
+    "brake_pressure",
+    "steering_angle",
+    "throttle",
+    "lane_deviation",
+    "headway_distance"
+  ],
+  "median": [
+    57.93860519149476,
+    0.8300853419168045,
+    0.3137491543991106,
+    39.967699559836454,
+    -0.07318666029168115,
+    49.93226973097789,
+    0.45681715216094565,
+    20.131901680895577
+  ],
+  "missing_values_per_feature": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "train_csv_sha256": "97dd20ee9c0832ba33455e5c31088f9b4abb65c198bf988699a959d545d1e5b5"
+}

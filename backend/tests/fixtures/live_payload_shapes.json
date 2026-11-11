@@ -1,0 +1,111 @@
+{
+  "accepted": {
+    "frame_and_telemetry": {
+      "request_id": "contract-frame-telemetry",
+      "image_base64": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAEB",
+      "captured_at": "2025-01-01T11:59:59.970Z",
+      "captured_at_source": "capture_time",
+      "vision_frame": { "epoch": 1735732800000, "index": 241 },
+      "telemetry_features": {
+        "speed_kmph": 34,
+        "accel_x": 0.3,
+        "accel_y": 0.1,
+        "brake_pressure": 12,
+        "steering_angle": -2,
+        "throttle": 30,
+        "lane_deviation": 0.3,
+        "headway_distance": 26
+      },
+      "telemetry_timestamp": "2025-01-01T12:00:00.000Z",
+      "telemetry_seq": 0,
+      "telemetry_source": "prepared_replay"
+    },
+    "no_frame": {
+      "request_id": "contract-no-frame",
+      "image_base64": null,
+      "captured_at": null,
+      "telemetry_features": {
+        "speed_kmph": 36,
+        "accel_x": 0.42,
+        "accel_y": 0.12,
+        "brake_pressure": 15,
+        "steering_angle": -3.1,
+        "throttle": 33,
+        "lane_deviation": 0.35,
+        "headway_distance": 24
+      },
+      "telemetry_timestamp": "2025-01-01T12:00:02.000Z",
+      "telemetry_seq": 1,
+      "telemetry_source": "prepared_replay"
+    },
+    "no_telemetry": {
+      "request_id": "contract-no-telemetry",
+      "image_base64": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAIC",
+      "captured_at": "2025-01-01T11:59:59.980Z",
+      "captured_at_source": "callback",
+      "vision_frame": { "epoch": 1735732800000, "index": 242 },
+      "telemetry_features": null,
+      "telemetry_timestamp": null,
+      "telemetry_source": "missing"
+    },
+    "fallback_mode": {
+      "request_id": "contract-fallback",
+      "image_base64": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAMD",
+      "captured_at": "2025-01-01T12:00:00.000Z",
+      "captured_at_source": "client_clock",
+      "telemetry_features": {
+        "speed_kmph": 34,
+        "accel_x": 0.3,
+        "accel_y": 0.1,
+        "brake_pressure": 12,
+        "steering_angle": -2,
+        "throttle": 30,
+        "lane_deviation": 0.3,
+        "headway_distance": 26
+      },
+      "telemetry_timestamp": "2025-01-01T12:00:00.000Z",
+      "telemetry_seq": 0,
+      "telemetry_source": "prepared_replay"
+    },
+    "nothing": {
+      "request_id": "contract-nothing",
+      "image_base64": null,
+      "captured_at": null,
+      "telemetry_features": null,
+      "telemetry_timestamp": null,
+      "telemetry_source": "missing"
+    }
+  },
+  "rejected": {
+    "no_frame_but_vision_frame": {
+      "request_id": "contract-no-frame",
+      "image_base64": null,
+      "captured_at": null,
+      "vision_frame": { "epoch": 1735732800000, "index": 243 },
+      "telemetry_features": {
+        "speed_kmph": 36,
+        "accel_x": 0.42,
+        "accel_y": 0.12,
+        "brake_pressure": 15,
+        "steering_angle": -3.1,
+        "throttle": 33,
+        "lane_deviation": 0.35,
+        "headway_distance": 24
+      },
+      "telemetry_timestamp": "2025-01-01T12:00:02.000Z",
+      "telemetry_seq": 1,
+      "telemetry_source": "prepared_replay"
+    },
+    "no_telemetry_but_telemetry_seq": {
+      "request_id": "contract-no-telemetry",
+      "image_base64": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAIC",
+      "captured_at": "2025-01-01T11:59:59.980Z",
+      "captured_at_source": "callback",
+      "vision_frame": { "epoch": 1735732800000, "index": 242 },
+      "telemetry_features": null,
+      "telemetry_timestamp": null,
+      "telemetry_seq": 13,
+      "telemetry_source": "missing"
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "id": "ML-TELEMETRY",
+  "argv": [
+    "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/.venv/bin/python",
+    "ml/experiments/telemetry_benchmark.py",
+    "--output",
+    "/Users/liu/.codex/worktrees/d39a/FYP-In-Cabin-Driver-Assessment--1/docs/fyp2/evidence/telemetry_recheck.json"
+  ],
+  "cwd": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1",
+  "start_utc": "2026-10-09T11:46:57.098505+00:00",
+  "duration_s": 3.348,
+  "timeout_s": 90,
+  "exit_code": 0,
+  "environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "TMPDIR": "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd",
+    "PYTHONPATH": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/backend",
+    "DRA_DATABASE_URL": "sqlite:////var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/fyp2-audit-pomj5ymd/fallback.db",
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "VECLIB_MAXIMUM_THREADS": "2"
+  },
+  "log": "evidence/ML-TELEMETRY.log"
+}
+
+{
+  "runtime": "xgboost_cpu",
+  "version": "3.2.0",
+  "threads": 2,
+  "model_sha256": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+  "data_sha256": "3bc3d47680a87359e1470fd8ffaf5ff330dc4419b37cc645e5736d51a91c96de",
+  "samples": 4500,
+  "classes": [
+    "Safe",
+    "Aggressive",
+    "Distracted"
+  ],
+  "features": [
+    "speed_kmph",
+    "accel_x",
+    "accel_y",
+    "brake_pressure",
+    "steering_angle",
+    "throttle",
+    "lane_deviation",
+    "headway_distance"
+  ],
+  "best_iteration": 90,
+  "iteration_range": [
+    0,
+    91
+  ],
+  "accuracy": 0.9993333333333333,
+  "macro_f1": 0.999333184740477,
+  "all_trees_accuracy": 0.9993333333333333,
+  "all_trees_max_probability_difference": 0.07924103736877441,
+  "single_row_forward_only": {
+    "warmup": 20,
+    "iterations": 100,
+    "mean_ms": 0.03662540082586929,
+    "p50_ms": 0.0338749960064888,
+    "p95_ms": 0.04200414987280965,
+    "p99_ms": 0.04853783437283793,
+    "serial_model_only_fps": 27303.455455801562
+  },
+  "scope": "Synthetic rule-generated dataset; not field accuracy. Timing excludes feature extraction and DMatrix construction."
+}

@@ -1,0 +1,153 @@
+{
+  "model": "XGBoost multi:softprob",
+  "branch": "telemetry",
+  "classes": [
+    "Safe",
+    "Aggressive",
+    "Distracted"
+  ],
+  "n_features": 8,
+  "features": [
+    "speed_kmph",
+    "accel_x",
+    "accel_y",
+    "brake_pressure",
+    "steering_angle",
+    "throttle",
+    "lane_deviation",
+    "headway_distance"
+  ],
+  "split_sizes": {
+    "train": 21000,
+    "val": 4500,
+    "test": 4500
+  },
+  "best_iteration": 90,
+  "metrics": {
+    "val": {
+      "accuracy": 0.9984444444444445,
+      "macro_f1": 0.9984444432338747,
+      "weighted_f1": 0.9984444432338748,
+      "log_loss": 0.004827126860618591,
+      "macro_auc_ovr": 0.9999942962962963,
+      "per_class": {
+        "Safe": {
+          "precision": 0.998003992015968,
+          "recall": 1.0,
+          "f1": 0.999000999000999,
+          "support": 1500.0
+        },
+        "Aggressive": {
+          "precision": 1.0,
+          "recall": 0.9973333333333333,
+          "f1": 0.9986648865153538,
+          "support": 1500.0
+        },
+        "Distracted": {
+          "precision": 0.9973351099267155,
+          "recall": 0.998,
+          "f1": 0.9976674441852715,
+          "support": 1500.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          1500,
+          0,
+          0
+        ],
+        [
+          0,
+          1496,
+          4
+        ],
+        [
+          3,
+          0,
+          1497
+        ]
+      ]
+    },
+    "test": {
+      "accuracy": 0.9993333333333333,
+      "macro_f1": 0.999333184740477,
+      "weighted_f1": 0.999333184740477,
+      "log_loss": 0.003712159115821123,
+      "macro_auc_ovr": 0.9999868148148149,
+      "per_class": {
+        "Safe": {
+          "precision": 0.9993337774816788,
+          "recall": 1.0,
+          "f1": 0.9996667777407531,
+          "support": 1500.0
+        },
+        "Aggressive": {
+          "precision": 0.9986684420772304,
+          "recall": 1.0,
+          "f1": 0.9993337774816788,
+          "support": 1500.0
+        },
+        "Distracted": {
+          "precision": 1.0,
+          "recall": 0.998,
+          "f1": 0.998998998998999,
+          "support": 1500.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          1500,
+          0,
+          0
+        ],
+        [
+          0,
+          1500,
+          0
+        ],
+        [
+          1,
+          2,
+          1497
+        ]
+      ]
+    }
+  },
+  "feature_importance_gain": [
+    {
+      "feature": "accel_x",
+      "importance": 0.27472785115242004
+    },
+    {
+      "feature": "brake_pressure",
+      "importance": 0.23925398290157318
+    },
+    {
+      "feature": "lane_deviation",
+      "importance": 0.2391422837972641
+    },
+    {
+      "feature": "throttle",
+      "importance": 0.15869881212711334
+    },
+    {
+      "feature": "headway_distance",
+      "importance": 0.041432201862335205
+    },
+    {
+      "feature": "speed_kmph",
+      "importance": 0.02330506592988968
+    },
+    {
+      "feature": "accel_y",
+      "importance": 0.022344721481204033
+    },
+    {
+      "feature": "steering_angle",
+      "importance": 0.0010951247531920671
+    }
+  ],
+  "data_root": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-",
+  "xgboost_version": "3.2.0",
+  "caveat": "Driver_Behavior.csv is synthetic/near-separable; metrics show the pipeline, not field accuracy."
+}

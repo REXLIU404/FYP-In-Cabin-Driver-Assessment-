@@ -1,0 +1,29 @@
+### Result
+{"check":"flag_five_views_and_downloads","session_id":"Sa1353659bd6f45dd85738b0b813f1859","flagged_window":1,"flagged":true}
+### Ran Playwright code
+```js
+await (async (page) => {
+  const pending = page.waitForResponse(r => r.url().includes("/flag?") && r.request().method() === "PATCH");
+  await page.getByRole("button", {name: "Flag", exact: true}).click();
+  const flagged = await (await pending).json();
+  if (!flagged.flagged) throw new Error("Flag not persisted");
+  await page.getByRole("button", {name: "Risk Trends", exact: true}).click();
+  await page.getByRole("heading", {name: "RiskScore and modality traces", exact: true}).waitFor();
+  await page.getByRole("button", {name: "Explanation", exact: true}).click();
+  await page.getByRole("heading", {name: "Current Window Explanation", exact: true}).waitFor();
+  await page.getByRole("button", {name: "Configuration", exact: true}).click();
+  await page.getByRole("heading", {name: "Runtime configuration and output", exact: true}).waitFor();
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", {name: "Export JSON", exact: true}).click();
+  await (await download).saveAs("output/playwright/live-session.json");
+  const csvDownload = page.waitForEvent("download");
+  await page.getByRole("button", {name: "Export CSV", exact: true}).click();
+  await (await csvDownload).saveAs("output/playwright/live-session.csv");
+  return {check: "flag_five_views_and_downloads", session_id: flagged.session_id, flagged_window: flagged.window_id, flagged: flagged.flagged};
+})(page);
+```
+### Events
+- Downloading file Sa1353659bd6f45dd85738b0b813f1859.json ...
+- Downloaded file Sa1353659bd6f45dd85738b0b813f1859.json to ".playwright-cli/Sa1353659bd6f45dd85738b0b813f1859.json"
+- Downloading file Sa1353659bd6f45dd85738b0b813f1859.csv ...
+- Downloaded file Sa1353659bd6f45dd85738b0b813f1859.csv to ".playwright-cli/Sa1353659bd6f45dd85738b0b813f1859.csv"

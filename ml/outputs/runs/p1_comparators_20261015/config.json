@@ -1,0 +1,74 @@
+{
+  "run_id": "p1_comparators_20261015",
+  "phase": "P1",
+  "scope": "NON_COMPARATIVE_PIPELINE_SMOKE_ONLY",
+  "approval": "User approved exact P1 budget and confirmed seven audit-package deletions",
+  "approved_budgets": {
+    "resnet18": {
+      "train_samples": 200,
+      "validation_samples": 100,
+      "seed": 42,
+      "epochs": 1,
+      "batch_size": 16,
+      "training_steps": 16,
+      "validation_steps": 8,
+      "threads": 2,
+      "wall_seconds": 600
+    },
+    "random_forest": {
+      "train_samples": 300,
+      "validation_samples": 90,
+      "seed": 42,
+      "n_estimators": 20,
+      "max_depth": 6,
+      "n_jobs": 2,
+      "fits": 1,
+      "wall_seconds": 120
+    },
+    "logistic_regression": {
+      "train_samples": 300,
+      "validation_samples": 90,
+      "seed": 42,
+      "max_iter": 200,
+      "solver": "lbfgs",
+      "fits": 1,
+      "wall_seconds": 120
+    }
+  },
+  "combined_wall_seconds": 1200,
+  "data_root": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-",
+  "started_at": "2026-10-15T03:07:46.312838+08:00",
+  "git": {
+    "branch": "fyp2/ml-training",
+    "head": "efb3ea604d584d2c5d1b1684742996e95125a8ec",
+    "dirty_state": "D FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_CROSS_REVIEW_PROMPT.md\n D FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_DEVELOPMENT_AND_REPORT_MAP.md\n D FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_Development_and_Report_Map.docx\n D FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_EVALUATION_AND_TESTCASE_SPEC.md\n D FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_Evaluation_and_Testcase_Spec.docx\n D FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_MASTER_REPOSITORY_AUDIT_PROMPT.md\n D \"FYP2_Codex_ClaudeCode_Audit_Package_v2/README_\\344\\275\\277\\347\\224\\250\\350\\257\\264\\346\\230\\216.md\"\n M ml/.gitignore\n?? docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md\n?? docs/fyp2/ml/\n?? ml/configs/\n?? ml/experiments/comparator_common.py\n?? ml/experiments/run_p1_smoke.py\n?? ml/outputs/runs/\n?? ml/telemetry/train_comparator.py\n?? ml/tests/\n?? ml/vision/train_resnet18.py",
+    "staged_paths": ""
+  },
+  "source_hashes": {
+    "ml/experiments/comparator_common.py": "8ede7aa5a0604232ff5b3c54735bd9f2e5479b18a2e80e5091bfa2b07644805d",
+    "ml/experiments/run_p1_smoke.py": "2b7a2d2608ba0f59b2823fa8e8250508d70f517791c7fcc41fbcc08ee6dc5c79",
+    "ml/vision/train_resnet18.py": "78fcc7be98e05bca4ff861e99ebc91ac1ca0f0e770061a9f0488d104af2d1731",
+    "ml/telemetry/train_comparator.py": "dee70f78a76e3b8e8fb9a7cc3988190730537406fe15d46580efca899c53b634"
+  },
+  "protected_hashes_before": {
+    "ml/outputs/vision/mobilenetv3_large_vision.pt": "196ca7b151d84e0c4a8eac87128da9dd8f22c894984a991ef611536bb523e7c7",
+    "ml/outputs/vision/mobilenetv3_large_vision.onnx": "b3a42e8dd4553355b1fd7d9e7fe3d28e318decb894e76eb029489b7ff2e90bcf",
+    "ml/outputs/telemetry/xgb_telemetry.json": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+    "docs/fyp2/09_INDEPENDENT_AUDIT_REVIEW.md": "0731ebfbe8c49ef08452a23688a6fce26a13f9c3497d53ec898da91d9866daf0"
+  },
+  "formal_hpo_trials": 0,
+  "test_access_for_training_or_selection": false,
+  "pretrained_downloads": false,
+  "candidate_package": false,
+  "automatic_reruns": false,
+  "authorities": {
+    "CODEX_ML_TRACK_PROMPT.md": {
+      "ref": "fyp2/live-system:docs/fyp2/review/CODEX_ML_TRACK_PROMPT.md",
+      "sha256": "53c53b82777d6376189a3e6e208d18977dc0047fa4359538c103f01d8c509b48"
+    },
+    "CODEX_ML_TRACK_ADDENDUM_R4.md": {
+      "ref": "fyp2/live-system:docs/fyp2/review/CODEX_ML_TRACK_ADDENDUM_R4.md",
+      "sha256": "5a46fec48facec1fb8f92fea4446956089f6d3c2573fefe53296d59865dc55ff"
+    }
+  }
+}

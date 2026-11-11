@@ -1,0 +1,205 @@
+Task 10 part 2b - mutation runs (isolated copies of HEAD b7d68dd + this item's test files; real worktree never mutated)
+Each block: the patch, the red tests, the first assertion, and the byte-compare of the restored file against `git show HEAD:<path>`.
+
+====================================================================================================
+M0  (M0)  baseline: the UNMUTATED isolated copy, both e2e files
+pytest args: tests/test_live_e2e.py tests/test_live_single_branch.py
+  result: 29 passed in 116.61s (0:01:56)
+  # pytest exit 0 after 117s
+
+====================================================================================================
+B-M1  (B-M1)  fusion.py: the single-branch denominator is w_v + w_t instead of the effective weight
+pytest args: tests/test_live_single_branch.py
+  patch backend/app/fusion.py
+    - '    score = (eff_v * _clamp(p_distraction) + eff_t * _clamp(p_telemetry_anomaly)) / total\n'
+    + '    score = (eff_v * _clamp(p_distraction) + eff_t * _clamp(p_telemetry_anomaly)) / (weight_vision + weight_telemetry)\n'
+  result: 4 failed, 13 passed in 86.29s (0:01:26)
+  RED  test_live_single_branch.py::TestStBranchTSmoke::test_02_telemetry_only_windows_score_the_frozen_probability
+  RED  test_live_single_branch.py::TestStBranchTContinuity::test_03_branch_values_and_the_unavailable_windows
+  RED  test_live_single_branch.py::TestStBranchTContinuity::test_04_alert_severity_follows_the_r10_rule
+  RED  test_live_single_branch.py::TestStBranchV::test_02_vision_only_windows_score_the_distraction_probability
+  first assertion: E       AssertionError: 74 problems, first ['window 21: RiskScore 33.8 != round_half_up(100 x P_t, 1) = 67.7', 'window 21: RiskLevel Medium for score 33.8', 'window 22: RiskScore 33.8 != round_half_up(100 x P_t, 1) = 67.7', 'window 22: RiskLevel Medium for score 33.8', 'window 23: RiskScore 33.8 != round_half_up(100 x P_t, 1) = 67.7', 'window 23: RiskLevel Medium for score 33.8', 'window 24: RiskScore 33.8 != round_h
+  # restored backend/app/fusion.py: byte-identical to HEAD = True
+  # pytest exit 1 after 87s
+
+====================================================================================================
+B-M2  (B-M2)  providers/trained.py: P_t = 1 - probs[1] (wrong class)
+pytest args: tests/test_live_single_branch.py
+  patch backend/app/providers/trained.py
+    - '            pt = float(1 - probs[0])\n'
+    + '            pt = float(1 - probs[1])\n'
+  result: 4 failed, 13 passed in 85.47s (0:01:25)
+  RED  test_live_single_branch.py::TestStBranchTSmoke::test_02_telemetry_only_windows_score_the_frozen_probability
+  RED  test_live_single_branch.py::TestStBranchTContinuity::test_03_branch_values_and_the_unavailable_windows
+  RED  test_live_single_branch.py::TestStBranchTContinuity::test_04_alert_severity_follows_the_r10_rule
+  RED  test_live_single_branch.py::TestStBranchZero::test_02_after_stop_camera_every_window_is_unavailable_and_nothing_leaks
+  first assertion: E       AssertionError: 53 problems, first ['window 5: P_telemetry_anomaly 0.9999300241470337 != frozen row 0 0.00022095441818237305', 'window 6: P_telemetry_anomaly 0.9999300241470337 != frozen row 0 0.00022095441818237305', 'window 7: P_telemetry_anomaly 0.9999300241470337 != frozen row 0 0.00022095441818237305', 'window 8: P_telemetry_anomaly 0.9999300241470337 != frozen row 0 0.00022095441818237305', 'window 9: P
+  # restored backend/app/providers/trained.py: byte-identical to HEAD = True
+  # pytest exit 1 after 86s
+
+====================================================================================================
+B-M3  (B-M3)  inference.py: an unavailable window emits the held severity instead of null
+pytest args: tests/test_live_single_branch.py
+  patch backend/app/inference.py
+    - '        _clear_segments(state)\n        return None\n\n    severity = state.get("last_severity") or state.get("severity") or "NORMAL"\n    if state.pop("unavailable_since", None) is not None:\n        _clear_segments(state)  # resume'
+    + '        _clear_segments(state)\n        return state.get("last_severity") or "NORMAL"\n\n    severity = state.get("last_severity") or state.get("severity") or "NORMAL"\n    if state.pop("unavailable_since", None) is not None:\n        _clear_segments(state)  # resume'
+  result: 14 failed, 3 passed in 65.39s (0:01:05)
+  RED  test_live_single_branch.py::TestStBranchTContinuity::test_01_the_loop_never_stopped_and_no_picture_was_ever_sent
+  RED  test_live_single_branch.py::TestStBranchTContinuity::test_02_every_cursor_position_appears_and_maps_to_its_replay_row
+  RED  test_live_single_branch.py::TestStBranchTContinuity::test_03_branch_values_and_the_unavailable_windows
+  RED  test_live_single_branch.py::TestStBranchTContinuity::test_04_alert_severity_follows_the_r10_rule
+  RED  test_live_single_branch.py::TestStBranchTContinuity::test_05_common_assertions_and_five_way_reconciliation
+  RED  test_live_single_branch.py::TestStBranchV::test_01_the_server_saw_vision_only_and_the_rewrite_is_deterministic
+  RED  test_live_single_branch.py::TestStBranchV::test_02_vision_only_windows_score_the_distraction_probability
+  RED  test_live_single_branch.py::TestStBranchV::test_03_the_ema_chain_is_new_only_and_reseeds_after_unavailable_windows
+  RED  test_live_single_branch.py::TestStBranchV::test_04_picture_less_windows_are_unavailable
+  RED  test_live_single_branch.py::TestStBranchV::test_05_common_assertions_and_five_way_reconciliation
+  RED  test_live_single_branch.py::TestStBranchZero::test_01_the_weights_were_applied_and_the_loop_carried_on
+  RED  test_live_single_branch.py::TestStBranchZero::test_02_after_stop_camera_every_window_is_unavailable_and_nothing_leaks
+  RED  test_live_single_branch.py::TestStBranchZero::test_03_before_the_stop_vision_alone_decides
+  RED  test_live_single_branch.py::TestStBranchZero::test_04_common_assertions_and_five_way_reconciliation
+  first assertion: E       AssertionError: while waiting for telemetry_seq 27 (about 56 s of monitoring): the app stopped monitoring:
+  # restored backend/app/inference.py: byte-identical to HEAD = True
+  # pytest exit 1 after 66s
+
+====================================================================================================
+B-M3b  (B-M3b)  (same kind, reaches the assertion) inference.py: an unavailable window writes None back into last_severity, so the latch is lost
+pytest args: tests/test_live_single_branch.py
+  patch backend/app/inference.py
+    - '        _clear_segments(state)\n        return None\n\n    severity = state.get("last_severity") or state.get("severity") or "NORMAL"\n    if state.pop("unavailable_since", None) is not None:\n        _clear_segments(state)  # resume'
+    + '        _clear_segments(state)\n        state["last_severity"] = None\n        return None\n\n    severity = state.get("last_severity") or state.get("severity") or "NORMAL"\n    if state.pop("unavailable_since", None) is not None:\n        _clear_segments(state)  # resume'
+  result: 1 failed, 16 passed in 82.92s (0:01:22)
+  RED  test_live_single_branch.py::TestStBranchTContinuity::test_04_alert_severity_follows_the_r10_rule
+  first assertion: E       AssertionError: ["seq 14: expected every window HIGH_ALERT, got ['CAUTION'] (20 windows)", "seq 17: expected every window HIGH_ALERT, got ['CAUTION'] (20 windows)"]
+  # restored backend/app/inference.py: byte-identical to HEAD = True
+  # pytest exit 1 after 83s
+
+====================================================================================================
+B-M4  (B-M4)  inference.py: the live High segment completes on two consecutive High windows (no dual condition)
+pytest args: tests/test_live_single_branch.py
+  patch backend/app/inference.py
+    - '    state.pop("high_since", None)\n    state.pop("low_since", None)\n    if level is None:\n        if state.get("unavailable_since") is None:\n            state["unavailable_since"] = now_ms\n        _clear_segments(state)\n        return None\n'
+    + '    state.pop("high_since", None)\n    state.pop("low_since", None)\n    if level != "High":\n        state["m_high_n"] = 0\n    if level is None:\n        if state.get("unavailable_since") is None:\n            state["unavailable_since"] = now_ms\n        _clear_segments(state)\n        return Non
+  patch backend/app/inference.py
+    - '        done = _advance_segment(state, "high", "High", ALERT_SUSTAIN_MS, now_us, signals, config)\n'
+    + '        _advance_segment(state, "high", "High", ALERT_SUSTAIN_MS, now_us, signals, config)\n        state["m_high_n"] = state.get("m_high_n", 0) + 1\n        done = state["m_high_n"] >= 2\n'
+  result: 1 failed, 16 passed in 82.34s (0:01:22)
+  RED  test_live_single_branch.py::TestStBranchTContinuity::test_04_alert_severity_follows_the_r10_rule
+  first assertion: E       AssertionError: ["seq 1: expected every window CAUTION, got ['CAUTION', 'HIGH_ALERT'] (20 windows)"]
+  # restored backend/app/inference.py: byte-identical to HEAD = True
+  # pytest exit 1 after 83s
+
+====================================================================================================
+B-M5  (B-M5)  preparedSessionInput.ts: the telemetry cursor row is seq % (rows - 1), i.e. % 24
+pytest args: tests/test_live_single_branch.py
+  patch frontend/src/data/preparedSessionInput.ts
+    - '        features: rows[seq % rows.length].telemetry_features,\n'
+    + '        features: rows[seq % (rows.length - 1)].telemetry_features,\n'
+  result: 2 failed, 15 passed in 81.92s (0:01:21)
+  RED  test_live_single_branch.py::TestStBranchTContinuity::test_02_every_cursor_position_appears_and_maps_to_its_replay_row
+  RED  test_live_single_branch.py::TestStBranchTContinuity::test_03_branch_values_and_the_unavailable_windows
+  first assertion: E       AssertionError: 61 problems, first ['window 476: its features are replay row 0, but telemetry_seq 24 is row 24', 'window 477: its features are replay row 0, but telemetry_seq 24 is row 24', 'window 478: its features are replay row 0, but telemetry_seq 24 is row 24', 'window 479: its features are replay row 0, but telemetry_seq 24 is row 24', 'window 480: its features are replay row 0, but telemetry_seq 24 is 
+  # restored frontend/src/data/preparedSessionInput.ts: byte-identical to HEAD = True
+  # pytest exit 1 after 82s
+
+====================================================================================================
+B-M6  (B-M6)  inference.py: the EMA also advances (and smooths) on REPEAT windows
+pytest args: tests/test_live_single_branch.py
+  patch backend/app/inference.py
+    - '    if live and v_obs is not None and v_obs.kind == "repeat" and vstatus == "fresh":\n        # R10: only a NEW'
+    + '    if False and live and v_obs is not None and v_obs.kind == "repeat" and vstatus == "fresh":\n        # R10: only a NEW'
+  patch backend/app/inference.py
+    - '    elif v_obs.kind == "new":\n        chain = pd\n'
+    + '    elif v_obs.kind in ("new", "repeat"):\n        chain = pd\n'
+  result: 1 failed, 16 passed in 82.43s (0:01:22)
+  RED  test_live_single_branch.py::TestStBranchV::test_03_the_ema_chain_is_new_only_and_reseeds_after_unavailable_windows
+  first assertion: E       AssertionError: 22 problems, first ['window 2: REPEAT shows P 0.201 / raw 0.2010502815246582, its observation was registered with 0.2010502815246582 / 0.2010502815246582', 'window 4: REPEAT shows P 0.254 / raw 0.29324859380722046, its observation was registered with 0.233 / 0.29324859380722046', 'window 5: NEW P_distraction 0.218, expected 0.204 (EMA of raw 0.15108084678649902 and 0.233)', 'window 6: REPEAT s
+  # restored backend/app/inference.py: byte-identical to HEAD = True
+  # pytest exit 1 after 83s
+
+====================================================================================================
+B-M7  (B-M7)  inference.py: the EMA chain survives an unavailable / non-fresh window (no reseed)
+pytest args: tests/test_live_single_branch.py
+  patch backend/app/inference.py
+    - '    elif vstatus != "fresh" or level is None:\n        chain = None  # missing, expired or unavailable: the chain is broken\n'
+    + '    elif vstatus != "fresh" or level is None:\n        chain = scratch.get("previous_vision")  # MUTATION: the chain survives a broken window\n'
+  result: 1 failed, 16 passed in 84.57s (0:01:24)
+  RED  test_live_single_branch.py::TestStBranchV::test_03_the_ema_chain_is_new_only_and_reseeds_after_unavailable_windows
+  first assertion: E       AssertionError: 12 problems, first ['window 23: NEW P_distraction 0.206, expected 0.2010502815246582 (seed = raw)', 'window 24: REPEAT shows P 0.206 / raw 0.2010502815246582, its observation was registered with 0.2010502815246582 / 0.2010502815246582', 'window 25: NEW P_distraction 0.237, expected 0.233 (EMA of raw 0.29324859380722046 and 0.2010502815246582)', 'window 26: REPEAT shows P 0.237 / raw 0.29324859
+  # restored backend/app/inference.py: byte-identical to HEAD = True
+  # pytest exit 1 after 85s
+
+====================================================================================================
+B-M8  (B-M8)  fusion.py: a zero configured weight is ignored (effective weights fall back to freshness only)
+pytest args: tests/test_live_single_branch.py
+  patch backend/app/fusion.py
+    - '    eff_t = w_t * freshness_weight(telemetry_status)\n    return eff_v, eff_t, eff_v + eff_t\n'
+    + '    eff_t = w_t * freshness_weight(telemetry_status)\n    if eff_v + eff_t <= FUSION_EPSILON:  # MUTATION: a zero configured weight is ignored\n        eff_v, eff_t = freshness_weight(vision_status), freshness_weight(telemetry_status)\n    return eff_v, eff_t, eff_v + eff_t\n'
+  result: 1 failed, 16 passed in 83.57s (0:01:23)
+  RED  test_live_single_branch.py::TestStBranchZero::test_02_after_stop_camera_every_window_is_unavailable_and_nothing_leaks
+  first assertion: E       AssertionError: 174 problems, first ['window 4: assessment_available=True SystemHealth=DEGRADED', "window 4: a risk field is set: [0.0, 'Low', 'Partial evidence', 'NORMAL']", 'window 4: RiskScore equals round_half_up(100 x P_t, 1) = 0.0', 'window 5: assessment_available=True SystemHealth=DEGRADED', "window 5: a risk field is set: [0.0, 'Low', 'Partial evidence', 'NORMAL']", 'window 5: RiskScore equals round_h
+  # restored backend/app/fusion.py: byte-identical to HEAD = True
+  # pytest exit 1 after 84s
+
+====================================================================================================
+B-M9  (B-M9)  fusion.py: determine_dominant_evidence checks 'Low observed risk' before 'Partial evidence'
+pytest args: tests/test_live_single_branch.py
+  patch backend/app/fusion.py
+    - '    if system_health != "FULL":\n        return "Partial evidence"\n    if risk_score < low:\n        return "Low observed risk"\n'
+    + '    if risk_score < low:\n        return "Low observed risk"\n    if system_health != "FULL":\n        return "Partial evidence"\n'
+  result: 3 failed, 14 passed in 84.62s (0:01:24)
+  RED  test_live_single_branch.py::TestStBranchTSmoke::test_03_common_assertions_and_five_way_reconciliation
+  RED  test_live_single_branch.py::TestStBranchTContinuity::test_05_common_assertions_and_five_way_reconciliation
+  RED  test_live_single_branch.py::TestStBranchV::test_05_common_assertions_and_five_way_reconciliation
+  first assertion: E       AssertionError: 17 problems, first ["window 5: DominantEvidence 'Low observed risk' with assessment_available=True", "window 6: DominantEvidence 'Low observed risk' with assessment_available=True", "window 7: DominantEvidence 'Low observed risk' with assessment_available=True", "window 8: DominantEvidence 'Low observed risk' with assessment_available=True", "window 9: DominantEvidence 'Low observed risk' with
+  # restored backend/app/fusion.py: byte-identical to HEAD = True
+  # pytest exit 1 after 85s
+
+====================================================================================================
+B-M10  (B-M10-e3)  routers/export.py: the CSV drops the request_id identity column (E3 test only)
+pytest args: tests/test_live_e2e.py -k test_e3
+  patch backend/app/routers/export.py
+    - '**{k: columns_from.get(k, "") for k in _COLUMNS if k in columns_from},'
+    + '**{k: columns_from.get(k, "") for k in _COLUMNS if k in columns_from and k != "request_id"},'
+  result: 1 failed, 11 deselected in 14.25s
+  RED  test_live_e2e.py::test_e3_rvfc_behaviour_on_the_fake_camera_is_recorded
+  first assertion: E       AssertionError: 60 differences, first ["window 1: csv request_id: cell '' for value '315af837-7355-478f-bc20-5dc3988fe48c'", "window 2: csv request_id: cell '' for value 'b922e3e8-bf08-42b9-b751-05e3a075baea'", "window 3: csv request_id: cell '' for value 'a5c76e46-3120-47f7-a256-b9a45f64d392'", "window 4: csv request_id: cell '' for value 'f785a25a-4621-4b7d-aff3-98a1cfe1994e'", "window 5: csv request_id: ce
+  # restored backend/app/routers/export.py: byte-identical to HEAD = True
+  # pytest exit 1 after 15s
+
+====================================================================================================
+B-M10  (B-M10-all)  routers/export.py: the CSV drops the request_id identity column (whole test_live_e2e.py)
+pytest args: tests/test_live_e2e.py
+  patch backend/app/routers/export.py
+    - '**{k: columns_from.get(k, "") for k in _COLUMNS if k in columns_from},'
+    + '**{k: columns_from.get(k, "") for k in _COLUMNS if k in columns_from and k != "request_id"},'
+  result: 3 failed, 9 passed in 35.01s
+  RED  test_live_e2e.py::TestStLiveE2E01::test_04_five_homes_agree_on_every_field_of_every_window
+  RED  test_live_e2e.py::TestStLiveE2E01::test_07_a_flag_set_in_the_ui_reaches_the_database_the_api_and_both_exports
+  RED  test_live_e2e.py::test_e3_rvfc_behaviour_on_the_fake_camera_is_recorded
+  first assertion: E       AssertionError: 60 differences, first ["window 1: csv request_id: cell '' for value '7b183413-7c57-4123-9ea5-94da81005323'", "window 2: csv request_id: cell '' for value 'cb4297c4-3423-457c-b5a9-7831b0b55bff'", "window 3: csv request_id: cell '' for value 'e750f4ac-2968-4183-a12b-40f23c3dfdeb'", "window 4: csv request_id: cell '' for value 'c3e36719-a195-4a63-9b15-701cd393fbd0'", "window 5: csv request_id: ce
+  # restored backend/app/routers/export.py: byte-identical to HEAD = True
+  # pytest exit 1 after 35s
+
+====================================================================================================
+X-M1 (extra, not in the brief)  fixture telemetry_pt_by_row.json: recorded telemetry_model_sha256 altered 9802cb06 -> 9802cb07
+pytest args: tests/test_live_single_branch.py -k TestStBranchTSmoke
+  E       AssertionError: the frozen fixture does not match the model: telemetry_pt_by_row.json was made for xgb_telemetry.json 9802cb07, the file on disk is 9802cb06. Regenerate it with fixtures/make_telemetry_pt_fixture.py only as part of a deliberate model change.
+  E       AssertionError: the frozen fixture does not match the model: telemetry_pt_by_row.json was made for xgb_telemetry.json 9802cb07, the file on disk is 9802cb06. Regenerate it with fixtures/make_telemetry_pt_fixture.py only as part of a deliberate model change.
+  FAILED tests/test_live_single_branch.py::TestStBranchTSmoke::test_02_telemetry_only_windows_score_the_frozen_probability
+  FAILED tests/test_live_single_branch.py::TestStBranchTSmoke::test_03_common_assertions_and_five_way_reconciliation
+  2 failed, 1 passed, 14 deselected in 13.82s
+  restored: byte-identical to the working-tree fixture
+
+==========================================================================================
+Controller fixes (87bdc3f), isolated copies of c2191c0 + the fix diff; .venv / node_modules / models linked; worktree untouched
+==========================================================================================
+HM1  ai/src/liveLoop.ts  HISTORY_LIMIT 500 -> 400 (dist rebuilt by the e2e session)
+     RED TestStBranchTContinuity::test_06 (1 failed, 5 passed in 61.94 s): AssertionError: (400, [534, 533, 532], [137, 136, 135])
+HM2  backend/app/routers/export.py  .order_by(window_id).limit(500).yield_per(100)
+     RED TestStBranchTContinuity::test_05 and test_06 (2 failed, 4 passed in 62.00 s): window ids of the export != 1..N
+CM   backend/app/routers/export.py  _COLUMNS without "request_id"
+     RED test_e3_rvfc_behaviour_on_the_fake_camera_is_recorded (-k test_e3, 13.41 s):
+     "60 differences, first [\"window 1: csv: column 'request_id' is missing from the export\", ...]"  (was KeyError before the fix)
+ST-BRANCH-ZERO scope widening (test_02 / test_04 now cover every picture-less window, start-up not_ready included):
+     no mutation; the reviewer's probe found 0 such start-up windows in both ZERO and T-SMOKE runs, so the widening is literal coverage.

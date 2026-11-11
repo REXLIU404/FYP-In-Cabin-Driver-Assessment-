@@ -1,0 +1,808 @@
+FFFFFFFFFFFFFFFFFFFFFF                                                   [100%]
+=================================== FAILURES ===================================
+__________________ test_valid_self_contained_delivery_passes ___________________
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_valid_self_contained_deli0')
+contract = <module 'candidate_contract_test' from '/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_valid_self_contained_deli0/runtime_manifest.py'>
+
+    def test_valid_self_contained_delivery_passes(tmp_path, contract):
+>       result = api().validate_candidate(package(tmp_path), contract)
+                 ^^^^^
+
+ml/tests/test_candidate_package.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_candidate_package.py:18: in api
+    return importlib.import_module("ml.experiments.package_candidates")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.package_candidates'
+import_ = <function _gcd_import at 0x1050c04a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.package_candidates'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_missing_delivery_evidence_is_rejected[validation/predictions_validation.csv] _
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_missing_delivery_evidence0')
+contract = <module 'candidate_contract_test' from '/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_missing_delivery_evidence0/runtime_manifest.py'>
+missing = 'validation/predictions_validation.csv'
+
+    @pytest.mark.parametrize("missing", ["validation/predictions_validation.csv", "evidence/selection_log.json", "predictions_test_clean.csv"])
+    def test_missing_delivery_evidence_is_rejected(tmp_path, contract, missing):
+        root = package(tmp_path)
+        (root / missing).unlink()
+        seal(root)
+        with pytest.raises(ValueError, match="required"):
+>           api().validate_candidate(root, contract)
+            ^^^^^
+
+ml/tests/test_candidate_package.py:94: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_candidate_package.py:18: in api
+    return importlib.import_module("ml.experiments.package_candidates")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.package_candidates'
+import_ = <function _gcd_import at 0x1050c04a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.package_candidates'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+___ test_missing_delivery_evidence_is_rejected[evidence/selection_log.json] ____
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_missing_delivery_evidence1')
+contract = <module 'candidate_contract_test' from '/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_missing_delivery_evidence1/runtime_manifest.py'>
+missing = 'evidence/selection_log.json'
+
+    @pytest.mark.parametrize("missing", ["validation/predictions_validation.csv", "evidence/selection_log.json", "predictions_test_clean.csv"])
+    def test_missing_delivery_evidence_is_rejected(tmp_path, contract, missing):
+        root = package(tmp_path)
+        (root / missing).unlink()
+        seal(root)
+        with pytest.raises(ValueError, match="required"):
+>           api().validate_candidate(root, contract)
+            ^^^^^
+
+ml/tests/test_candidate_package.py:94: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_candidate_package.py:18: in api
+    return importlib.import_module("ml.experiments.package_candidates")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.package_candidates'
+import_ = <function _gcd_import at 0x1050c04a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.package_candidates'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+____ test_missing_delivery_evidence_is_rejected[predictions_test_clean.csv] ____
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_missing_delivery_evidence2')
+contract = <module 'candidate_contract_test' from '/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_missing_delivery_evidence2/runtime_manifest.py'>
+missing = 'predictions_test_clean.csv'
+
+    @pytest.mark.parametrize("missing", ["validation/predictions_validation.csv", "evidence/selection_log.json", "predictions_test_clean.csv"])
+    def test_missing_delivery_evidence_is_rejected(tmp_path, contract, missing):
+        root = package(tmp_path)
+        (root / missing).unlink()
+        seal(root)
+        with pytest.raises(ValueError, match="required"):
+>           api().validate_candidate(root, contract)
+            ^^^^^
+
+ml/tests/test_candidate_package.py:94: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_candidate_package.py:18: in api
+    return importlib.import_module("ml.experiments.package_candidates")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.package_candidates'
+import_ = <function _gcd_import at 0x1050c04a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.package_candidates'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_____________ test_loading_contract_errors_reject_package[metric] ______________
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_loading_contract_errors_r0')
+contract = <module 'candidate_contract_test' from '/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_loading_contract_errors_r0/runtime_manifest.py'>
+change = 'metric'
+
+    @pytest.mark.parametrize("change", ["metric", "class", "run", "escape", "hash"])
+    def test_loading_contract_errors_reject_package(tmp_path, contract, change):
+        root = package(tmp_path)
+        f = root / "runtime_manifest.json"
+        m = json.loads(f.read_text())
+        if change == "metric": m["provenance"] = {"nested": [{"macro_f1": 0.9}]}
+        if change == "class": m["class_to_idx"]["c0"] = 1
+        if change == "run": m["run_id"] = "other"
+        if change == "escape": m["model"]["path"] = "../outside.onnx"
+        if change == "hash": m["model"]["sha256"] = "0" * 64
+        f.write_text(json.dumps(m)); seal(root)
+>       with pytest.raises(ValueError): api().validate_candidate(root, contract)
+                                        ^^^^^
+
+ml/tests/test_candidate_package.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_candidate_package.py:18: in api
+    return importlib.import_module("ml.experiments.package_candidates")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.package_candidates'
+import_ = <function _gcd_import at 0x1050c04a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.package_candidates'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+______________ test_loading_contract_errors_reject_package[class] ______________
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_loading_contract_errors_r1')
+contract = <module 'candidate_contract_test' from '/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_loading_contract_errors_r1/runtime_manifest.py'>
+change = 'class'
+
+    @pytest.mark.parametrize("change", ["metric", "class", "run", "escape", "hash"])
+    def test_loading_contract_errors_reject_package(tmp_path, contract, change):
+        root = package(tmp_path)
+        f = root / "runtime_manifest.json"
+        m = json.loads(f.read_text())
+        if change == "metric": m["provenance"] = {"nested": [{"macro_f1": 0.9}]}
+        if change == "class": m["class_to_idx"]["c0"] = 1
+        if change == "run": m["run_id"] = "other"
+        if change == "escape": m["model"]["path"] = "../outside.onnx"
+        if change == "hash": m["model"]["sha256"] = "0" * 64
+        f.write_text(json.dumps(m)); seal(root)
+>       with pytest.raises(ValueError): api().validate_candidate(root, contract)
+                                        ^^^^^
+
+ml/tests/test_candidate_package.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_candidate_package.py:18: in api
+    return importlib.import_module("ml.experiments.package_candidates")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.package_candidates'
+import_ = <function _gcd_import at 0x1050c04a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.package_candidates'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_______________ test_loading_contract_errors_reject_package[run] _______________
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_loading_contract_errors_r2')
+contract = <module 'candidate_contract_test' from '/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_loading_contract_errors_r2/runtime_manifest.py'>
+change = 'run'
+
+    @pytest.mark.parametrize("change", ["metric", "class", "run", "escape", "hash"])
+    def test_loading_contract_errors_reject_package(tmp_path, contract, change):
+        root = package(tmp_path)
+        f = root / "runtime_manifest.json"
+        m = json.loads(f.read_text())
+        if change == "metric": m["provenance"] = {"nested": [{"macro_f1": 0.9}]}
+        if change == "class": m["class_to_idx"]["c0"] = 1
+        if change == "run": m["run_id"] = "other"
+        if change == "escape": m["model"]["path"] = "../outside.onnx"
+        if change == "hash": m["model"]["sha256"] = "0" * 64
+        f.write_text(json.dumps(m)); seal(root)
+>       with pytest.raises(ValueError): api().validate_candidate(root, contract)
+                                        ^^^^^
+
+ml/tests/test_candidate_package.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_candidate_package.py:18: in api
+    return importlib.import_module("ml.experiments.package_candidates")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.package_candidates'
+import_ = <function _gcd_import at 0x1050c04a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.package_candidates'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_____________ test_loading_contract_errors_reject_package[escape] ______________
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_loading_contract_errors_r3')
+contract = <module 'candidate_contract_test' from '/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_loading_contract_errors_r3/runtime_manifest.py'>
+change = 'escape'
+
+    @pytest.mark.parametrize("change", ["metric", "class", "run", "escape", "hash"])
+    def test_loading_contract_errors_reject_package(tmp_path, contract, change):
+        root = package(tmp_path)
+        f = root / "runtime_manifest.json"
+        m = json.loads(f.read_text())
+        if change == "metric": m["provenance"] = {"nested": [{"macro_f1": 0.9}]}
+        if change == "class": m["class_to_idx"]["c0"] = 1
+        if change == "run": m["run_id"] = "other"
+        if change == "escape": m["model"]["path"] = "../outside.onnx"
+        if change == "hash": m["model"]["sha256"] = "0" * 64
+        f.write_text(json.dumps(m)); seal(root)
+>       with pytest.raises(ValueError): api().validate_candidate(root, contract)
+                                        ^^^^^
+
+ml/tests/test_candidate_package.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_candidate_package.py:18: in api
+    return importlib.import_module("ml.experiments.package_candidates")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.package_candidates'
+import_ = <function _gcd_import at 0x1050c04a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.package_candidates'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+______________ test_loading_contract_errors_reject_package[hash] _______________
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_loading_contract_errors_r4')
+contract = <module 'candidate_contract_test' from '/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_loading_contract_errors_r4/runtime_manifest.py'>
+change = 'hash'
+
+    @pytest.mark.parametrize("change", ["metric", "class", "run", "escape", "hash"])
+    def test_loading_contract_errors_reject_package(tmp_path, contract, change):
+        root = package(tmp_path)
+        f = root / "runtime_manifest.json"
+        m = json.loads(f.read_text())
+        if change == "metric": m["provenance"] = {"nested": [{"macro_f1": 0.9}]}
+        if change == "class": m["class_to_idx"]["c0"] = 1
+        if change == "run": m["run_id"] = "other"
+        if change == "escape": m["model"]["path"] = "../outside.onnx"
+        if change == "hash": m["model"]["sha256"] = "0" * 64
+        f.write_text(json.dumps(m)); seal(root)
+>       with pytest.raises(ValueError): api().validate_candidate(root, contract)
+                                        ^^^^^
+
+ml/tests/test_candidate_package.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_candidate_package.py:18: in api
+    return importlib.import_module("ml.experiments.package_candidates")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.package_candidates'
+import_ = <function _gcd_import at 0x1050c04a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.package_candidates'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_______________ test_forbidden_delivery_files_rejected[symlink] ________________
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_forbidden_delivery_files_0')
+contract = <module 'candidate_contract_test' from '/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_forbidden_delivery_files_0/runtime_manifest.py'>
+unsafe = 'symlink'
+
+    @pytest.mark.parametrize("unsafe", ["symlink", "checkpoint.joblib", "checkpoint.pt", "comparator.pkl", "random_forest/model.json", "logistic_regression/model.json"])
+    def test_forbidden_delivery_files_rejected(tmp_path, contract, unsafe):
+        root = package(tmp_path)
+        if unsafe == "symlink": (root / "alias.json").symlink_to(root / "evaluation_metrics.json")
+        else:
+            p = root / unsafe; p.parent.mkdir(exist_ok=True); p.write_bytes(b"not loaded")
+        seal(root)
+>       with pytest.raises(ValueError): api().validate_candidate(root, contract)
+                                        ^^^^^
+
+ml/tests/test_candidate_package.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_candidate_package.py:18: in api
+    return importlib.import_module("ml.experiments.package_candidates")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.package_candidates'
+import_ = <function _gcd_import at 0x1050c04a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.package_candidates'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+__________ test_forbidden_delivery_files_rejected[checkpoint.joblib] ___________
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_forbidden_delivery_files_1')
+contract = <module 'candidate_contract_test' from '/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_forbidden_delivery_files_1/runtime_manifest.py'>
+unsafe = 'checkpoint.joblib'
+
+    @pytest.mark.parametrize("unsafe", ["symlink", "checkpoint.joblib", "checkpoint.pt", "comparator.pkl", "random_forest/model.json", "logistic_regression/model.json"])
+    def test_forbidden_delivery_files_rejected(tmp_path, contract, unsafe):
+        root = package(tmp_path)
+        if unsafe == "symlink": (root / "alias.json").symlink_to(root / "evaluation_metrics.json")
+        else:
+            p = root / unsafe; p.parent.mkdir(exist_ok=True); p.write_bytes(b"not loaded")
+        seal(root)
+>       with pytest.raises(ValueError): api().validate_candidate(root, contract)
+                                        ^^^^^
+
+ml/tests/test_candidate_package.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_candidate_package.py:18: in api
+    return importlib.import_module("ml.experiments.package_candidates")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.package_candidates'
+import_ = <function _gcd_import at 0x1050c04a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.package_candidates'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+____________ test_forbidden_delivery_files_rejected[checkpoint.pt] _____________
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_forbidden_delivery_files_2')
+contract = <module 'candidate_contract_test' from '/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_forbidden_delivery_files_2/runtime_manifest.py'>
+unsafe = 'checkpoint.pt'
+
+    @pytest.mark.parametrize("unsafe", ["symlink", "checkpoint.joblib", "checkpoint.pt", "comparator.pkl", "random_forest/model.json", "logistic_regression/model.json"])
+    def test_forbidden_delivery_files_rejected(tmp_path, contract, unsafe):
+        root = package(tmp_path)
+        if unsafe == "symlink": (root / "alias.json").symlink_to(root / "evaluation_metrics.json")
+        else:
+            p = root / unsafe; p.parent.mkdir(exist_ok=True); p.write_bytes(b"not loaded")
+        seal(root)
+>       with pytest.raises(ValueError): api().validate_candidate(root, contract)
+                                        ^^^^^
+
+ml/tests/test_candidate_package.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_candidate_package.py:18: in api
+    return importlib.import_module("ml.experiments.package_candidates")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.package_candidates'
+import_ = <function _gcd_import at 0x1050c04a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.package_candidates'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+____________ test_forbidden_delivery_files_rejected[comparator.pkl] ____________
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_forbidden_delivery_files_3')
+contract = <module 'candidate_contract_test' from '/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_forbidden_delivery_files_3/runtime_manifest.py'>
+unsafe = 'comparator.pkl'
+
+    @pytest.mark.parametrize("unsafe", ["symlink", "checkpoint.joblib", "checkpoint.pt", "comparator.pkl", "random_forest/model.json", "logistic_regression/model.json"])
+    def test_forbidden_delivery_files_rejected(tmp_path, contract, unsafe):
+        root = package(tmp_path)
+        if unsafe == "symlink": (root / "alias.json").symlink_to(root / "evaluation_metrics.json")
+        else:
+            p = root / unsafe; p.parent.mkdir(exist_ok=True); p.write_bytes(b"not loaded")
+        seal(root)
+>       with pytest.raises(ValueError): api().validate_candidate(root, contract)
+                                        ^^^^^
+
+ml/tests/test_candidate_package.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_candidate_package.py:18: in api
+    return importlib.import_module("ml.experiments.package_candidates")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.package_candidates'
+import_ = <function _gcd_import at 0x1050c04a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.package_candidates'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_______ test_forbidden_delivery_files_rejected[random_forest/model.json] _______
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_forbidden_delivery_files_4')
+contract = <module 'candidate_contract_test' from '/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_forbidden_delivery_files_4/runtime_manifest.py'>
+unsafe = 'random_forest/model.json'
+
+    @pytest.mark.parametrize("unsafe", ["symlink", "checkpoint.joblib", "checkpoint.pt", "comparator.pkl", "random_forest/model.json", "logistic_regression/model.json"])
+    def test_forbidden_delivery_files_rejected(tmp_path, contract, unsafe):
+        root = package(tmp_path)
+        if unsafe == "symlink": (root / "alias.json").symlink_to(root / "evaluation_metrics.json")
+        else:
+            p = root / unsafe; p.parent.mkdir(exist_ok=True); p.write_bytes(b"not loaded")
+        seal(root)
+>       with pytest.raises(ValueError): api().validate_candidate(root, contract)
+                                        ^^^^^
+
+ml/tests/test_candidate_package.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_candidate_package.py:18: in api
+    return importlib.import_module("ml.experiments.package_candidates")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.package_candidates'
+import_ = <function _gcd_import at 0x1050c04a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.package_candidates'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+____ test_forbidden_delivery_files_rejected[logistic_regression/model.json] ____
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_forbidden_delivery_files_5')
+contract = <module 'candidate_contract_test' from '/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_forbidden_delivery_files_5/runtime_manifest.py'>
+unsafe = 'logistic_regression/model.json'
+
+    @pytest.mark.parametrize("unsafe", ["symlink", "checkpoint.joblib", "checkpoint.pt", "comparator.pkl", "random_forest/model.json", "logistic_regression/model.json"])
+    def test_forbidden_delivery_files_rejected(tmp_path, contract, unsafe):
+        root = package(tmp_path)
+        if unsafe == "symlink": (root / "alias.json").symlink_to(root / "evaluation_metrics.json")
+        else:
+            p = root / unsafe; p.parent.mkdir(exist_ok=True); p.write_bytes(b"not loaded")
+        seal(root)
+>       with pytest.raises(ValueError): api().validate_candidate(root, contract)
+                                        ^^^^^
+
+ml/tests/test_candidate_package.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_candidate_package.py:18: in api
+    return importlib.import_module("ml.experiments.package_candidates")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.package_candidates'
+import_ = <function _gcd_import at 0x1050c04a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.package_candidates'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+______________ test_evidence_tamper_and_inventory_escape_rejected ______________
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_evidence_tamper_and_inven0')
+contract = <module 'candidate_contract_test' from '/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_evidence_tamper_and_inven0/runtime_manifest.py'>
+
+    def test_evidence_tamper_and_inventory_escape_rejected(tmp_path, contract):
+        root = package(tmp_path)
+        (root / "evaluation_metrics.json").write_text('{"changed":true}')
+>       with pytest.raises(ValueError, match="hash|integrity"): api().validate_candidate(root, contract)
+                                                                ^^^^^
+
+ml/tests/test_candidate_package.py:124: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_candidate_package.py:18: in api
+    return importlib.import_module("ml.experiments.package_candidates")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.package_candidates'
+import_ = <function _gcd_import at 0x1050c04a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.package_candidates'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+___________ test_graph_contract_requires_dynamic_raw_logits[softmax] ___________
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_graph_contract_requires_d0')
+kind = 'softmax'
+
+    @pytest.mark.parametrize("kind", ["softmax", "fixed_batch"])
+    def test_graph_contract_requires_dynamic_raw_logits(tmp_path, kind):
+        p = tmp_path / "model.onnx"; graph(p, softmax=kind == "softmax", dynamic=kind != "fixed_batch")
+>       with pytest.raises(ValueError): api().check_onnx_graph(p)
+                                        ^^^^^
+
+ml/tests/test_candidate_package.py:134: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_candidate_package.py:18: in api
+    return importlib.import_module("ml.experiments.package_candidates")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.package_candidates'
+import_ = <function _gcd_import at 0x1050c04a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.package_candidates'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_________ test_graph_contract_requires_dynamic_raw_logits[fixed_batch] _________
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_graph_contract_requires_d1')
+kind = 'fixed_batch'
+
+    @pytest.mark.parametrize("kind", ["softmax", "fixed_batch"])
+    def test_graph_contract_requires_dynamic_raw_logits(tmp_path, kind):
+        p = tmp_path / "model.onnx"; graph(p, softmax=kind == "softmax", dynamic=kind != "fixed_batch")
+>       with pytest.raises(ValueError): api().check_onnx_graph(p)
+                                        ^^^^^
+
+ml/tests/test_candidate_package.py:134: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_candidate_package.py:18: in api
+    return importlib.import_module("ml.experiments.package_candidates")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.package_candidates'
+import_ = <function _gcd_import at 0x1050c04a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.package_candidates'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+______ test_cache_extract_is_readonly_preserves_logits_and_checks_counts _______
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_cache_extract_is_readonly0')
+
+    def test_cache_extract_is_readonly_preserves_logits_and_checks_counts(tmp_path):
+        db = cache_fixture(tmp_path); before = db.read_bytes()
+>       rows = api().read_cached_predictions(db, "RN-HPO42", "a" * 64, "clean", 1)
+               ^^^^^
+
+ml/tests/test_candidate_package.py:154: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_candidate_package.py:18: in api
+    return importlib.import_module("ml.experiments.package_candidates")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.package_candidates'
+import_ = <function _gcd_import at 0x1050c04a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.package_candidates'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+__________________ test_cache_tamper_rejected_before_delivery __________________
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_cache_tamper_rejected_bef0')
+
+    def test_cache_tamper_rejected_before_delivery(tmp_path):
+        with pytest.raises(ValueError, match="SHA|tamper"):
+>           api().read_cached_predictions(cache_fixture(tmp_path, True), "RN-HPO42", "a" * 64, "clean", 1)
+            ^^^^^
+
+ml/tests/test_candidate_package.py:163: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_candidate_package.py:18: in api
+    return importlib.import_module("ml.experiments.package_candidates")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.package_candidates'
+import_ = <function _gcd_import at 0x1050c04a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.package_candidates'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+____ test_smoke_membership_uses_filename_order_and_labels_saved_diagnostic _____
+
+    def test_smoke_membership_uses_filename_order_and_labels_saved_diagnostic():
+        rows = [{"filename": f"{name}.jpg", "class_id": f"c{i}", "class_name": "normal_driving" if i == 0 else "action",
+                 "driver_id": "driver", "split": split} for i in range(10) for name, split in [("b", "val"), ("a", "val"), ("0", "test")]]
+        predictions = [{"source_id": f"vision-v1:c{i}/a.jpg", "true_label_index": str(i), "predicted_label_index": str(i)} for i in range(10)]
+>       annotations, saved, diagnostic = api().stable_smoke(rows, predictions, per_class=1)
+                                         ^^^^^
+
+ml/tests/test_candidate_package.py:170: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_candidate_package.py:18: in api
+    return importlib.import_module("ml.experiments.package_candidates")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.package_candidates'
+import_ = <function _gcd_import at 0x1050c04a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.package_candidates'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_____________ test_archive_is_repeatable_and_contains_package_root _____________
+
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-67/test_archive_is_repeatable_and0')
+
+    def test_archive_is_repeatable_and_contains_package_root(tmp_path):
+        root = package(tmp_path)
+        a, b = tmp_path / "a.zip", tmp_path / "b.zip"
+>       api().deterministic_zip(root, a); api().deterministic_zip(root, b)
+        ^^^^^
+
+ml/tests/test_candidate_package.py:181: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/tests/test_candidate_package.py:18: in api
+    return importlib.import_module("ml.experiments.package_candidates")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.package_candidates'
+import_ = <function _gcd_import at 0x1050c04a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.package_candidates'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED ml/tests/test_candidate_package.py::test_valid_self_contained_delivery_passes
+FAILED ml/tests/test_candidate_package.py::test_missing_delivery_evidence_is_rejected[validation/predictions_validation.csv]
+FAILED ml/tests/test_candidate_package.py::test_missing_delivery_evidence_is_rejected[evidence/selection_log.json]
+FAILED ml/tests/test_candidate_package.py::test_missing_delivery_evidence_is_rejected[predictions_test_clean.csv]
+FAILED ml/tests/test_candidate_package.py::test_loading_contract_errors_reject_package[metric]
+FAILED ml/tests/test_candidate_package.py::test_loading_contract_errors_reject_package[class]
+FAILED ml/tests/test_candidate_package.py::test_loading_contract_errors_reject_package[run]
+FAILED ml/tests/test_candidate_package.py::test_loading_contract_errors_reject_package[escape]
+FAILED ml/tests/test_candidate_package.py::test_loading_contract_errors_reject_package[hash]
+FAILED ml/tests/test_candidate_package.py::test_forbidden_delivery_files_rejected[symlink]
+FAILED ml/tests/test_candidate_package.py::test_forbidden_delivery_files_rejected[checkpoint.joblib]
+FAILED ml/tests/test_candidate_package.py::test_forbidden_delivery_files_rejected[checkpoint.pt]
+FAILED ml/tests/test_candidate_package.py::test_forbidden_delivery_files_rejected[comparator.pkl]
+FAILED ml/tests/test_candidate_package.py::test_forbidden_delivery_files_rejected[random_forest/model.json]
+FAILED ml/tests/test_candidate_package.py::test_forbidden_delivery_files_rejected[logistic_regression/model.json]
+FAILED ml/tests/test_candidate_package.py::test_evidence_tamper_and_inventory_escape_rejected
+FAILED ml/tests/test_candidate_package.py::test_graph_contract_requires_dynamic_raw_logits[softmax]
+FAILED ml/tests/test_candidate_package.py::test_graph_contract_requires_dynamic_raw_logits[fixed_batch]
+FAILED ml/tests/test_candidate_package.py::test_cache_extract_is_readonly_preserves_logits_and_checks_counts
+FAILED ml/tests/test_candidate_package.py::test_cache_tamper_rejected_before_delivery
+FAILED ml/tests/test_candidate_package.py::test_smoke_membership_uses_filename_order_and_labels_saved_diagnostic
+FAILED ml/tests/test_candidate_package.py::test_archive_is_repeatable_and_contains_package_root
+22 failed in 1.13s

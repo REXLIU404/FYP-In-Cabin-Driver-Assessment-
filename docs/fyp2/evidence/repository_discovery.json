@@ -1,0 +1,477 @@
+{
+  "command_id": "DISCOVERY-FINAL",
+  "start_utc": "2026-10-09T17:14:47.411973+00:00",
+  "finished_utc": "2026-10-09T17:14:47.461794+00:00",
+  "command": "python3 /tmp/fyp2_finalize_evidence.py (script preserved in evidence/audit_commands.md)",
+  "source_root": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1",
+  "metadata_only_paths": [
+    {
+      "path": "ai/README.md",
+      "bytes": 957
+    },
+    {
+      "path": "ai/prototype-data/prepared_sessions/session_001/README.md",
+      "bytes": 860
+    },
+    {
+      "path": "ai/prototype-data/prepared_sessions/session_001/session_metadata.json",
+      "bytes": 254
+    },
+    {
+      "path": "ai/reference/risk_logic.py",
+      "bytes": 4995
+    },
+    {
+      "path": "ai/src/evidence.ts",
+      "bytes": 3009
+    },
+    {
+      "path": "ai/src/alertFsm.test.ts",
+      "bytes": 2202
+    },
+    {
+      "path": "ai/src/riskLogic.test.ts",
+      "bytes": 2730
+    },
+    {
+      "path": "ai/src/alertFsm.ts",
+      "bytes": 2365
+    },
+    {
+      "path": "ai/src/types.ts",
+      "bytes": 3241
+    },
+    {
+      "path": "ai/src/riskLogic.ts",
+      "bytes": 6492
+    },
+    {
+      "path": "backend/README.md",
+      "bytes": 3597
+    },
+    {
+      "path": "backend/COMPLETION_PLAN.md",
+      "bytes": 2164
+    },
+    {
+      "path": "backend/app/db.py",
+      "bytes": 2737
+    },
+    {
+      "path": "backend/app/config.py",
+      "bytes": 1425
+    },
+    {
+      "path": "backend/app/models.py",
+      "bytes": 2176
+    },
+    {
+      "path": "backend/app/cache.py",
+      "bytes": 399
+    },
+    {
+      "path": "backend/app/__init__.py",
+      "bytes": 0
+    },
+    {
+      "path": "backend/app/schemas.py",
+      "bytes": 6913
+    },
+    {
+      "path": "backend/app/fusion.py",
+      "bytes": 3348
+    },
+    {
+      "path": "backend/app/inference.py",
+      "bytes": 4166
+    },
+    {
+      "path": "backend/app/main.py",
+      "bytes": 1857
+    },
+    {
+      "path": "backend/app/routers/sessions.py",
+      "bytes": 2567
+    },
+    {
+      "path": "backend/app/routers/__init__.py",
+      "bytes": 0
+    },
+    {
+      "path": "backend/app/routers/export.py",
+      "bytes": 2931
+    },
+    {
+      "path": "backend/app/routers/risk.py",
+      "bytes": 916
+    },
+    {
+      "path": "backend/app/routers/windows.py",
+      "bytes": 6572
+    },
+    {
+      "path": "backend/app/routers/status.py",
+      "bytes": 2086
+    },
+    {
+      "path": "backend/app/providers/mock_ai.py",
+      "bytes": 1157
+    },
+    {
+      "path": "backend/app/providers/__init__.py",
+      "bytes": 0
+    },
+    {
+      "path": "backend/app/providers/trained.py",
+      "bytes": 8279
+    },
+    {
+      "path": "backend/.pytest_cache/README.md",
+      "bytes": 302
+    },
+    {
+      "path": "backend/tests/test_live_inference.py",
+      "bytes": 9992
+    },
+    {
+      "path": "backend/tests/test_audit_regressions.py",
+      "bytes": 5413
+    },
+    {
+      "path": "backend/tests/test_migration.py",
+      "bytes": 1845
+    },
+    {
+      "path": "backend/tests/test_restart.py",
+      "bytes": 1926
+    },
+    {
+      "path": "backend/tests/test_api.py",
+      "bytes": 3750
+    },
+    {
+      "path": "frontend/README.md",
+      "bytes": 799
+    },
+    {
+      "path": "frontend/src/App.tsx",
+      "bytes": 13474
+    },
+    {
+      "path": "frontend/src/main.tsx",
+      "bytes": 215
+    },
+    {
+      "path": "frontend/src/types.ts",
+      "bytes": 504
+    },
+    {
+      "path": "frontend/src/vite-env.d.ts",
+      "bytes": 38
+    },
+    {
+      "path": "frontend/src/utils/persistence.test.ts",
+      "bytes": 1139
+    },
+    {
+      "path": "frontend/src/utils/export.ts",
+      "bytes": 4303
+    },
+    {
+      "path": "frontend/src/utils/format.ts",
+      "bytes": 513
+    },
+    {
+      "path": "frontend/src/utils/persistence.ts",
+      "bytes": 4525
+    },
+    {
+      "path": "frontend/src/components/TelemetrySummary.tsx",
+      "bytes": 1090
+    },
+    {
+      "path": "frontend/src/components/VehicleDynamics.tsx",
+      "bytes": 5063
+    },
+    {
+      "path": "frontend/src/components/CameraPreview.tsx",
+      "bytes": 1642
+    },
+    {
+      "path": "frontend/src/components/TrendChart.tsx",
+      "bytes": 2678
+    },
+    {
+      "path": "frontend/src/components/StatusBadge.tsx",
+      "bytes": 427
+    },
+    {
+      "path": "frontend/src/components/DistributionChart.tsx",
+      "bytes": 893
+    },
+    {
+      "path": "frontend/src/components/MetricTile.tsx",
+      "bytes": 325
+    },
+    {
+      "path": "frontend/src/components/Pill.tsx",
+      "bytes": 404
+    },
+    {
+      "path": "frontend/src/components/ModalityCard.tsx",
+      "bytes": 703
+    },
+    {
+      "path": "frontend/src/components/AlertBanner.tsx",
+      "bytes": 1535
+    },
+    {
+      "path": "frontend/src/components/Sidebar.tsx",
+      "bytes": 2225
+    },
+    {
+      "path": "frontend/src/components/ScoreGauge.tsx",
+      "bytes": 1108
+    },
+    {
+      "path": "frontend/src/hooks/useSessionLog.ts",
+      "bytes": 834
+    },
+    {
+      "path": "frontend/src/hooks/useCameraPreview.ts",
+      "bytes": 3596
+    },
+    {
+      "path": "frontend/src/hooks/useMonitoringSession.ts",
+      "bytes": 795
+    },
+    {
+      "path": "frontend/src/hooks/useLiveSession.ts",
+      "bytes": 9110
+    },
+    {
+      "path": "frontend/src/api/client.ts",
+      "bytes": 3483
+    },
+    {
+      "path": "frontend/src/data/preparedSessionInput.test.ts",
+      "bytes": 2276
+    },
+    {
+      "path": "frontend/src/data/preparedSessionInput.ts",
+      "bytes": 9236
+    },
+    {
+      "path": "frontend/src/views/ExplanationView.tsx",
+      "bytes": 14084
+    },
+    {
+      "path": "frontend/src/views/ConfigurationView.tsx",
+      "bytes": 6135
+    },
+    {
+      "path": "frontend/src/views/RiskTrends.tsx",
+      "bytes": 3520
+    },
+    {
+      "path": "frontend/src/views/SignalInspector.tsx",
+      "bytes": 5351
+    },
+    {
+      "path": "frontend/src/views/LiveMonitor.tsx",
+      "bytes": 5963
+    },
+    {
+      "path": "ml/README.md",
+      "bytes": 5209
+    },
+    {
+      "path": "ml/experiments/vision_benchmark.py",
+      "bytes": 11994
+    },
+    {
+      "path": "ml/experiments/linear_probe.py",
+      "bytes": 7121
+    },
+    {
+      "path": "ml/experiments/robustness_probe.py",
+      "bytes": 2572
+    },
+    {
+      "path": "ml/experiments/telemetry_benchmark.py",
+      "bytes": 2726
+    },
+    {
+      "path": "ml/experiments/README.md",
+      "bytes": 4980
+    },
+    {
+      "path": "ml/experiments/cache/mobilenet_v3_large-linear-head.npz",
+      "bytes": 55120
+    },
+    {
+      "path": "ml/experiments/cache/mobilenet_v3_large-5513f8f1d11333dc.npz",
+      "bytes": 79684732
+    },
+    {
+      "path": "ml/experiments/cache/efficientnet_b0_rwightman-7f5810bc.pth",
+      "bytes": 21444401
+    },
+    {
+      "path": "ml/experiments/cache/efficientnet_b0-imagenet-backbone.onnx",
+      "bytes": 16002634
+    },
+    {
+      "path": "ml/experiments/cache/mobilenet_v3_large-imagenet-backbone.onnx",
+      "bytes": 11870691
+    },
+    {
+      "path": "ml/vision/train_vision.ipynb",
+      "bytes": 1205187
+    },
+    {
+      "path": "ml/telemetry/train_telemetry.ipynb",
+      "bytes": 81657
+    },
+    {
+      "path": "ml/outputs/vision/mobilenetv3_large_vision.onnx",
+      "bytes": 16849378
+    },
+    {
+      "path": "ml/outputs/vision/metrics.json",
+      "bytes": 9037
+    },
+    {
+      "path": "ml/outputs/vision/mobilenetv3_large_vision.pt",
+      "bytes": 17066477
+    },
+    {
+      "path": "ml/outputs/telemetry/metrics.json",
+      "bytes": 3290
+    },
+    {
+      "path": "ml/outputs/telemetry/xgb_telemetry.json",
+      "bytes": 629723
+    },
+    {
+      "path": "docs/LIVE_RUNTIME_GUIDE.zh.md",
+      "bytes": 7328
+    },
+    {
+      "path": "docs/system-explanation-script.zh.md",
+      "bytes": 3591
+    },
+    {
+      "path": "docs/figma-wireframe-fit-analysis.md",
+      "bytes": 2274
+    },
+    {
+      "path": "docs/explanation-implementation-guide.zh.md",
+      "bytes": 9656
+    },
+    {
+      "path": "docs/CLAUDE_HANDOFF_PROMPT.zh.md",
+      "bytes": 1889
+    },
+    {
+      "path": "docs/FYP2_CLAUDE_DEVELOPMENT_HANDBOOK.zh.md",
+      "bytes": 12995
+    },
+    {
+      "path": "docs/IMPLEMENTATION_PROGRESS.zh.md",
+      "bytes": 9688
+    },
+    {
+      "path": "docs/prototype-summary.md",
+      "bytes": 4536
+    },
+    {
+      "path": "docs/DEVELOPMENT_SCHEDULE.md",
+      "bytes": 10581
+    },
+    {
+      "path": "docs/PROJECT_ASSESSMENT_AND_TEST_PLAN.zh.md",
+      "bytes": 23538
+    },
+    {
+      "path": "docs/evidence/README.md",
+      "bytes": 2266
+    },
+    {
+      "path": "docs/evidence/sample-export.json",
+      "bytes": 3141
+    },
+    {
+      "path": "docs/evidence/2026-09-28/telemetry-benchmark.json",
+      "bytes": 1136
+    },
+    {
+      "path": "docs/evidence/2026-09-28/vision-benchmark.json",
+      "bytes": 7713
+    },
+    {
+      "path": "docs/evidence/2026-09-28/robustness-probe.json",
+      "bytes": 11978
+    },
+    {
+      "path": "docs/evidence/2026-09-28/vision-stratified-parity.json",
+      "bytes": 5587
+    },
+    {
+      "path": "docs/evidence/2026-09-28/environment.json",
+      "bytes": 1517
+    },
+    {
+      "path": "docs/evidence/2026-09-28/linear-probe.json",
+      "bytes": 6246
+    },
+    {
+      "path": "docs/evidence/2026-10-09/verification-manifest.json",
+      "bytes": 7878
+    },
+    {
+      "path": "docs/evidence/2026-10-09/http-runtime-check.json",
+      "bytes": 3529
+    },
+    {
+      "path": "prototype-tests/README.md",
+      "bytes": 666
+    },
+    {
+      "path": "FYP2_Codex_ClaudeCode_Audit_Package_v2/README_\u4f7f\u7528\u8bf4\u660e.md",
+      "bytes": 3495
+    },
+    {
+      "path": "FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_Evaluation_and_Testcase_Spec.docx",
+      "bytes": 48099
+    },
+    {
+      "path": "FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_MASTER_REPOSITORY_AUDIT_PROMPT.md",
+      "bytes": 27379
+    },
+    {
+      "path": "FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_CROSS_REVIEW_PROMPT.md",
+      "bytes": 3525
+    },
+    {
+      "path": "FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_EVALUATION_AND_TESTCASE_SPEC.md",
+      "bytes": 16185
+    },
+    {
+      "path": "FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_Development_and_Report_Map.docx",
+      "bytes": 42347
+    },
+    {
+      "path": "FYP2_Codex_ClaudeCode_Audit_Package_v2/FYP2_DEVELOPMENT_AND_REPORT_MAP.md",
+      "bytes": 8200
+    }
+  ],
+  "changed_since_source_inventory": [],
+  "source_git_head": "17c4b41bcfe517c8311b7f6fc2a327f616a916fe",
+  "source_git_status": " M .gitignore\n M AGENTS.md\n M CLAUDE.md\n M README.md\n M ai/src/alertFsm.test.ts\n M ai/src/riskLogic.ts\n M ai/src/types.ts\n M backend/README.md\n M backend/app/config.py\n M backend/app/db.py\n M backend/app/inference.py\n M backend/app/main.py\n M backend/app/models.py\n M backend/app/routers/export.py\n M backend/app/routers/risk.py\n M backend/app/routers/sessions.py\n M backend/app/routers/status.py\n M backend/app/routers/windows.py\n M backend/app/schemas.py\n M docs/DEVELOPMENT_SCHEDULE.md\n M docs/prototype-summary.md\n M docs/system-explanation-script.zh.md\n M frontend/src/App.tsx\n M frontend/src/components/AlertBanner.tsx\n M frontend/src/components/CameraPreview.tsx\n M frontend/src/components/ModalityCard.tsx\n M frontend/src/components/ScoreGauge.tsx\n M frontend/src/components/TrendChart.tsx\n M frontend/src/hooks/useCameraPreview.ts\n M frontend/src/hooks/useMonitoringSession.ts\n M frontend/src/styles.css\n M frontend/src/utils/persistence.ts\n M frontend/src/views/ConfigurationView.tsx\n M frontend/src/views/LiveMonitor.tsx\n M frontend/src/views/RiskTrends.tsx\n M vite.config.ts\n?? FYP2_Codex_ClaudeCode_Audit_Package_v2/\n?? backend/app/providers/trained.py\n?? backend/requirements-inference.txt\n?? backend/tests/test_audit_regressions.py\n?? backend/tests/test_live_inference.py\n?? backend/tests/test_migration.py\n?? backend/tests/test_restart.py\n?? docs/CLAUDE_HANDOFF_PROMPT.zh.md\n?? docs/FYP2_CLAUDE_DEVELOPMENT_HANDBOOK.zh.md\n?? docs/IMPLEMENTATION_PROGRESS.zh.md\n?? docs/LIVE_RUNTIME_GUIDE.zh.md\n?? docs/PROJECT_ASSESSMENT_AND_TEST_PLAN.zh.md\n?? docs/evidence/2026-09-28/\n?? docs/evidence/2026-10-05/\n?? docs/evidence/2026-10-09/\n?? frontend/src/api/\n?? frontend/src/hooks/useLiveSession.ts\n?? ml/experiments/\n?? output/\n",
+  "output_git_status": "?? docs/fyp2/\n",
+  "checks": {
+    "source_144_snapshot_files_unchanged": true,
+    "no_primary_github_workflow": true
+  }
+}

@@ -1,14 +1,19 @@
 import { Database, Timer, Video } from "lucide-react";
+import { BranchStatusPill } from "../components/BranchStatusPill";
 import { CameraPreview } from "../components/CameraPreview";
 import { ModalityCard } from "../components/ModalityCard";
 import { Pill } from "../components/Pill";
+import { ScenarioPlayer } from "../components/ScenarioPlayer";
 import { ScoreGauge } from "../components/ScoreGauge";
 import { VehicleDynamics } from "../components/VehicleDynamics";
 import { TrendChart } from "../components/TrendChart";
 import type { useCameraPreview } from "../hooks/useCameraPreview";
-import type { RiskUpdate } from "../types";
-import { getEvidenceType } from "../../../ai/src/evidence";
+import type { OperationMode, RiskUpdate } from "../types";
+import { alertHoldNote } from "../utils/display";
 import { formatTimestamp } from "../utils/format";
+import { buildLiveMonitorModel } from "./liveMonitorModel";
+import type { ScenarioPlayerModel } from "./scenarioPlayerModel";
+import { CONTRACT_TOOLTIP } from "../utils/contractTooltips";
 
 interface LiveMonitorProps {
   latest: RiskUpdate;
@@ -16,8 +21,20 @@ interface LiveMonitorProps {
   sessionId: string;
   recordCount: number;
   isMonitoring: boolean;
+  /** Not running because a fault stopped it (the FaultPanel is showing), not because of Pause. */
+  stopped?: boolean;
   camera: ReturnType<typeof useCameraPreview>;
   thresholdLow: number;
+  thresholdHigh: number;
+  stale?: boolean;
+  /** Which data mode the record came from: the latency row must not claim a server ran (review R26). */
+  mode?: OperationMode;
+  /** Constructed scenario player data: renders instead of the camera preview. */
+  scenario?: {
+    model: ScenarioPlayerModel;
+    frameSrc: string | null;
+    finishedText: string | null;
+  };
 }
 
 export function LiveMonitor({
@@ -26,10 +43,26 @@ export function LiveMonitor({
   sessionId,
   recordCount,
   isMonitoring,
+  stopped = false,
   camera,
   thresholdLow,
+  thresholdHigh,
+  stale = false,
+  mode = "LIVE_MODEL_RUNTIME",
+  scenario,
 }: LiveMonitorProps) {
-  const evidenceType = getEvidenceType(latest, thresholdLow);
+  // Everything below is the record's OWN value (see liveMonitorModel.ts): `stale`
+  // describes the record's age and must not rewrite what the record says.
+  const {
+    displayState,
+    systemHealth,
+    vision: visionFreshness,
+    telemetry: telemetryFreshness,
+    visionExpiry,
+    telemetryExpiry,
+    evidenceType,
+  } = buildLiveMonitorModel(latest, stale, thresholdLow);
+  const holdNote = alertHoldNote(latest.RiskLevel, latest.AlertSeverity);
 
   return (
     <div className="page-grid page-grid--live">
@@ -40,14 +73,22 @@ export function LiveMonitor({
             <h2>Camera preview and current risk output</h2>
           </div>
           <Pill
-            label={isMonitoring ? "Monitoring active" : "Monitoring paused"}
+            label={
+              isMonitoring
+                ? "Monitoring active"
+                : stopped
+                  ? "Monitoring stopped"
+                  : "Monitoring paused"
+            }
           />
         </div>
 
         <div className="session-strip">
           <div>
             <span>Session</span>
-            <strong>{sessionId}</strong>
+            <strong className="session-id" title={sessionId}>
+              {sessionId}
+            </strong>
           </div>
           <div>
             <span>Window</span>
@@ -64,30 +105,95 @@ export function LiveMonitor({
         </div>
 
         <div className="live-layout">
-          <CameraPreview
-            videoRef={camera.videoRef}
-            status={camera.status}
-            onStart={camera.start}
-            onStop={camera.stop}
-          />
+          {scenario ? (
+            <ScenarioPlayer
+              model={scenario.model}
+              frameSrc={scenario.frameSrc}
+              finishedText={scenario.finishedText}
+            />
+          ) : mode === "CONSTRUCTED_SCENARIO_RUNTIME" ? (
+            <div className="camera-placeholder scenario-placeholder">
+              <strong>Choose a scenario to load its frames.</strong>
+            </div>
+          ) : (
+            <CameraPreview
+              videoRef={camera.videoRef}
+              status={camera.status}
+              onStart={camera.start}
+              onStop={camera.stop}
+            />
+          )}
 
           <div className="risk-summary">
-            <ScoreGauge score={latest.RiskScore} label="RiskScore" />
-            <div className="risk-badges">
-              <Pill label={latest.RiskLevel} tone={latest.RiskLevel} />
-              <Pill label={evidenceType} />
-              <Pill label={latest.AlertSeverity} tone={latest.AlertSeverity} />
-            </div>
+            {displayState === "unavailable" ? (
+              <div className="empty-state">
+                <h2>Assessment unavailable</h2>
+                <p>
+                  This window has no usable evidence, so no RiskScore, RiskLevel
+                  or alert is reported for it. Earlier windows remain available
+                  in Signal Inspector.
+                </p>
+              </div>
+            ) : displayState === "stale" ? (
+              <div className="empty-state">
+                <h2>Latest result is stale</h2>
+                <p>
+                  Waiting for fresh input. The last assessment is historical and
+                  is not shown as current; it remains available in Signal
+                  Inspector.
+                </p>
+              </div>
+            ) : (
+              <>
+                <ScoreGauge
+                  score={latest.RiskScore}
+                  label="RiskScore"
+                  thresholdLow={thresholdLow}
+                  thresholdHigh={thresholdHigh}
+                />
+                <div className="risk-badges">
+                  <span
+                    className="badge-field"
+                    title={CONTRACT_TOOLTIP.RiskLevel}
+                  >
+                    <span>RiskLevel</span>
+                    <Pill label={latest.RiskLevel} tone={latest.RiskLevel} />
+                  </span>
+                  <span
+                    className="badge-field"
+                    title={CONTRACT_TOOLTIP.DominantEvidence}
+                  >
+                    <span>DominantEvidence</span>
+                    <Pill label={evidenceType} />
+                  </span>
+                  <span
+                    className="badge-field"
+                    title={CONTRACT_TOOLTIP.AlertSeverity}
+                  >
+                    <span>AlertSeverity</span>
+                    <Pill
+                      label={latest.AlertSeverity}
+                      tone={latest.AlertSeverity}
+                    />
+                  </span>
+                </div>
+                {holdNote === null ? null : (
+                  <p className="alert-note">{holdNote}</p>
+                )}
+              </>
+            )}
             <div className="modality-grid">
               <ModalityCard
                 title="Visual Distraction"
                 probability={latest.P_distraction}
-                freshness={latest.modality_freshness.vision}
+                freshness={visionFreshness}
+                expiry={visionExpiry}
               />
               <ModalityCard
                 title="Telemetry Non-Safe"
                 probability={latest.P_telemetry_anomaly}
-                freshness={latest.modality_freshness.telemetry}
+                freshness={telemetryFreshness}
+                expiry={telemetryExpiry}
               />
             </div>
           </div>
@@ -98,7 +204,14 @@ export function LiveMonitor({
         <div className="section-header">
           <div>
             <p className="eyebrow">Vehicle Signals</p>
-            <h2>What the car is doing now</h2>
+            {/* The constructed scenario shows the signals with no source heading. */}
+            {mode === "CONSTRUCTED_SCENARIO_RUNTIME" ? (
+              <p>
+                Truth: {latest.provenance?.replay?.telemetry_label ?? "unknown"}
+              </p>
+            ) : (
+              <h2>Prepared telemetry replay</h2>
+            )}
           </div>
           <Database size={20} />
         </div>
@@ -113,29 +226,41 @@ export function LiveMonitor({
           </div>
           <Timer size={20} />
         </div>
-        <div className="stat-list">
-          <div>
+        <div className="stat-list stat-list--compact">
+          <div title={CONTRACT_TOOLTIP.SystemHealth}>
             <span>SystemHealth</span>
-            <Pill label={latest.SystemHealth} tone={latest.SystemHealth} />
+            <Pill label={systemHealth} tone={systemHealth} />
+          </div>
+          <div>
+            <span>Result age</span>
+            {stale ? (
+              <Pill label="Stale" tone="stale" />
+            ) : (
+              <Pill label="Current" tone="fresh" />
+            )}
           </div>
           <div>
             <span>Vision freshness</span>
-            <Pill
-              label={latest.modality_freshness.vision}
-              tone={latest.modality_freshness.vision}
-            />
+            <BranchStatusPill status={visionFreshness} expiry={visionExpiry} />
           </div>
           <div>
             <span>Telemetry freshness</span>
-            <Pill
-              label={latest.modality_freshness.telemetry}
-              tone={latest.modality_freshness.telemetry}
+            <BranchStatusPill
+              status={telemetryFreshness}
+              expiry={telemetryExpiry}
             />
           </div>
-          <div>
-            <span>Latency</span>
-            <strong>{latest.latency_ms} ms</strong>
-          </div>
+          {mode === "PREPARED_SESSION_RUNTIME" ? (
+            <div title="Synthetic latency of the prepared replay input; no server or database ran for this window">
+              <span>Prepared latency (synthetic)</span>
+              <strong>{latest.latency_ms} ms</strong>
+            </div>
+          ) : (
+            <div title="Time the server spent on this window, measured before it was written to the database">
+              <span>Server processing time</span>
+              <strong>{latest.latency_ms} ms</strong>
+            </div>
+          )}
         </div>
       </section>
 
@@ -147,7 +272,11 @@ export function LiveMonitor({
           </div>
           <Video size={20} />
         </div>
-        <TrendChart history={history.slice(-12)} />
+        <TrendChart
+          history={history.slice(-12)}
+          thresholdLow={thresholdLow}
+          thresholdHigh={thresholdHigh}
+        />
       </section>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface UseMonitoringSessionOptions {
   deltaT: number;
@@ -10,12 +10,17 @@ export function useMonitoringSession({
   onTick,
 }: UseMonitoringSessionOptions) {
   const [isMonitoring, setIsMonitoring] = useState(false);
+  const tickRef = useRef(onTick);
+
+  useEffect(() => {
+    tickRef.current = onTick;
+  }, [onTick]);
 
   useEffect(() => {
     if (!isMonitoring) return undefined;
-    const interval = window.setInterval(onTick, deltaT * 1000);
+    const interval = window.setInterval(() => tickRef.current(), deltaT * 1000);
     return () => window.clearInterval(interval);
-  }, [deltaT, isMonitoring, onTick]);
+  }, [deltaT, isMonitoring]);
 
   const start = useCallback(() => setIsMonitoring(true), []);
   const pause = useCallback(() => setIsMonitoring(false), []);

@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fyp2/runtime_manifest/1",
+  "title": "Runtime manifest of a vision classifier package (Task 10A)",
+  "description": "What the loader may rely on, and nothing else. Evaluation metrics belong in evaluation_metrics.json beside it and are not allowed here.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["manifest_version", "kind", "run_id", "architecture", "model", "input", "preprocess", "output", "classes", "class_to_idx", "safe_class", "contract_smoke_set"],
+  "properties": {
+    "manifest_version": {"const": 1},
+    "kind": {"const": "vision_classifier"},
+    "run_id": {"type": "string", "pattern": "^[A-Za-z0-9_.-]{1,100}$"},
+    "architecture": {"type": "string", "minLength": 1, "maxLength": 100},
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "format", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "format": {"const": "onnx"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["shape", "dtype", "layout", "color"],
+      "properties": {
+        "shape": {"const": [1, 3, 224, 224]},
+        "dtype": {"const": "float32"},
+        "layout": {"const": "NCHW"},
+        "color": {"const": "RGB"}
+      }
+    },
+    "preprocess": {"const": "rgb_resize_224_bilinear_no_crop_div255_imagenet"},
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "shape"],
+      "properties": {
+        "kind": {"const": "logits"},
+        "shape": {"type": "array", "prefixItems": [{"const": 1}, {"type": "integer", "minimum": 2}], "items": false, "minItems": 2}
+      }
+    },
+    "classes": {"type": "array", "items": {"type": "string", "pattern": "^c[0-9]$"}, "minItems": 2, "uniqueItems": true},
+    "class_to_idx": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "safe_class": {"type": "string"},
+    "contract_smoke_set": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["split", "selection", "n", "sample_ids_sha256", "rule"],
+      "properties": {
+        "split": {"enum": ["train", "val"]},
+        "selection": {"type": "string", "minLength": 1},
+        "n": {"type": "integer", "minimum": 1},
+        "sample_ids_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "rule": {"const": "per_class_mode_equals_label"}
+      }
+    },
+    "provenance": {"type": "object"}
+  }
+}

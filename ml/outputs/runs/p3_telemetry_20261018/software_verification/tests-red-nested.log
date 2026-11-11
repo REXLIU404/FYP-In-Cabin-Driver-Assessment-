@@ -1,0 +1,41 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____________ test_global_deadline_kills_nested_term_ignoring_worker ____________
+
+modules = (<module 'ml.experiments.run_telemetry_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/...module 'ml.telemetry.train_hpo' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/telemetry/train_hpo.py'>)
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-36/test_global_deadline_kills_nes0')
+
+    def test_global_deadline_kills_nested_term_ignoring_worker(modules,tmp_path):
+        import os
+        import signal
+        runner,_=modules
+        beat=tmp_path/'heartbeat';pidfile=tmp_path/'worker.pid'
+        worker=tmp_path/'worker.py'
+        worker.write_text('import os,signal,time\nfrom pathlib import Path\n'
+            'signal.signal(signal.SIGTERM,signal.SIG_IGN)\n'
+            f'Path({str(pidfile)!r}).write_text(str(os.getpid()))\n'
+            f'path=Path({str(beat)!r})\n'
+            'while True:\n path.write_text(str(time.monotonic()));time.sleep(.01)\n')
+        coordinator=tmp_path/'coordinator.py'
+        coordinator.write_text('import sys,time,signal,os\n'
+            f'sys.path.insert(0,{str(common.ROOT)!r})\n'
+            'from ml.experiments.run_telemetry_hpo import supervise_command\n'
+            'def stop(s,f):raise KeyboardInterrupt\n'
+            'signal.signal(signal.SIGTERM,stop)\n'
+            f'supervise_command([sys.executable,{str(worker)!r}],{str(tmp_path/"nested.log")!r},time.monotonic()+30,dict(os.environ,FYP_TELEMETRY_NESTED="1"))\n')
+        try:
+            result=runner.supervise_command([sys.executable,'-B',str(coordinator)],tmp_path/'outer.log',time.monotonic()+3)
+            assert result['status']=='TIME_BUDGET_EXCEEDED'
+            assert beat.exists(),'Synthetic worker must start to exercise the nested termination boundary'
+            first=beat.read_text();time.sleep(.08)
+>           assert beat.read_text()==first,'Worker survived global deadline and continued work'
+E           AssertionError: Worker survived global deadline and continued work
+E           assert '694375.812244916' == '694375.724987833'
+E             
+E             - 694375.724987833
+E             + 694375.812244916
+
+ml/tests/test_telemetry_hpo.py:238: AssertionError
+=========================== short test summary info ============================
+FAILED ml/tests/test_telemetry_hpo.py::test_global_deadline_kills_nested_term_ignoring_worker
+1 failed, 22 deselected in 5.31s

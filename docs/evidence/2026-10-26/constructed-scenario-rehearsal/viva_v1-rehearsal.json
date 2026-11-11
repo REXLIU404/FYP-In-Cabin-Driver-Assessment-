@@ -1,0 +1,275 @@
+{
+  "duration_ms": 136000,
+  "frame_period_ms": 200,
+  "scenario_id": "viva_v1",
+  "segments": [
+    {
+      "alert_severity_transitions": [
+        [
+          1,
+          "NORMAL"
+        ]
+      ],
+      "distinct_frames": 100,
+      "driver_id": "p050",
+      "index": 0,
+      "manifest_frames": 100,
+      "manifest_telemetry_rows": 10,
+      "risk_levels": {
+        "Low": 197
+      },
+      "telemetry_agreement": {
+        "agreed": 197,
+        "rate": 1.0,
+        "windows": 197
+      },
+      "title": "Baseline",
+      "truth_telemetry": "Safe",
+      "truth_vision": "safe_driving",
+      "vision_agreement": {
+        "agreed": 197,
+        "rate": 1.0,
+        "windows": 197
+      },
+      "windows": 197
+    },
+    {
+      "alert_severity_transitions": [
+        [
+          198,
+          "NORMAL"
+        ],
+        [
+          202,
+          "CAUTION"
+        ]
+      ],
+      "distinct_frames": 80,
+      "driver_id": "p026",
+      "index": 1,
+      "manifest_frames": 80,
+      "manifest_telemetry_rows": 8,
+      "risk_levels": {
+        "Low": 4,
+        "Medium": 153
+      },
+      "telemetry_agreement": {
+        "agreed": 157,
+        "rate": 1.0,
+        "windows": 157
+      },
+      "title": "Vision only",
+      "truth_telemetry": "Safe",
+      "truth_vision": "texting_right",
+      "vision_agreement": {
+        "agreed": 0,
+        "rate": 0.0,
+        "windows": 157
+      },
+      "windows": 157
+    },
+    {
+      "alert_severity_transitions": [
+        [
+          355,
+          "CAUTION"
+        ],
+        [
+          375,
+          "HIGH_ALERT"
+        ]
+      ],
+      "distinct_frames": 80,
+      "driver_id": "p035",
+      "index": 2,
+      "manifest_frames": 80,
+      "manifest_telemetry_rows": 8,
+      "risk_levels": {
+        "High": 158
+      },
+      "telemetry_agreement": {
+        "agreed": 0,
+        "rate": 0.0,
+        "windows": 158
+      },
+      "title": "Both",
+      "truth_telemetry": "Distracted",
+      "truth_vision": "talking_phone_left",
+      "vision_agreement": {
+        "agreed": 0,
+        "rate": 0.0,
+        "windows": 158
+      },
+      "windows": 158
+    },
+    {
+      "alert_severity_transitions": [
+        [
+          513,
+          "CAUTION"
+        ]
+      ],
+      "distinct_frames": 130,
+      "driver_id": "p026",
+      "index": 3,
+      "manifest_frames": 130,
+      "manifest_telemetry_rows": 13,
+      "risk_levels": {
+        "Low": 232,
+        "Medium": 24
+      },
+      "telemetry_agreement": {
+        "agreed": 256,
+        "rate": 1.0,
+        "windows": 256
+      },
+      "title": "Recovery",
+      "truth_telemetry": "Safe",
+      "truth_vision": "safe_driving",
+      "vision_agreement": {
+        "agreed": 256,
+        "rate": 1.0,
+        "windows": 256
+      },
+      "windows": 256
+    },
+    {
+      "alert_severity_transitions": [
+        [
+          769,
+          "CAUTION"
+        ]
+      ],
+      "distinct_frames": 80,
+      "driver_id": "p012",
+      "index": 4,
+      "manifest_frames": 80,
+      "manifest_telemetry_rows": 8,
+      "risk_levels": {
+        "Medium": 158
+      },
+      "telemetry_agreement": {
+        "agreed": 0,
+        "rate": 0.0,
+        "windows": 158
+      },
+      "title": "Telemetry only",
+      "truth_telemetry": "Aggressive",
+      "truth_vision": "safe_driving",
+      "vision_agreement": {
+        "agreed": 158,
+        "rate": 1.0,
+        "windows": 158
+      },
+      "windows": 158
+    },
+    {
+      "alert_severity_transitions": [
+        [
+          927,
+          "CAUTION"
+        ],
+        [
+          947,
+          "HIGH_ALERT"
+        ]
+      ],
+      "distinct_frames": 80,
+      "driver_id": "p035",
+      "index": 5,
+      "manifest_frames": 80,
+      "manifest_telemetry_rows": 8,
+      "risk_levels": {
+        "High": 157
+      },
+      "telemetry_agreement": {
+        "agreed": 0,
+        "rate": 0.0,
+        "windows": 157
+      },
+      "title": "Both",
+      "truth_telemetry": "Distracted",
+      "truth_vision": "reaching_behind",
+      "vision_agreement": {
+        "agreed": 0,
+        "rate": 0.0,
+        "windows": 157
+      },
+      "windows": 157
+    },
+    {
+      "alert_severity_transitions": [
+        [
+          1084,
+          "CAUTION"
+        ],
+        [
+          1187,
+          "NORMAL"
+        ]
+      ],
+      "distinct_frames": 130,
+      "driver_id": "p050",
+      "index": 6,
+      "manifest_frames": 130,
+      "manifest_telemetry_rows": 13,
+      "risk_levels": {
+        "Low": 256,
+        "Medium": 2
+      },
+      "telemetry_agreement": {
+        "agreed": 258,
+        "rate": 1.0,
+        "windows": 258
+      },
+      "title": "Recovery",
+      "truth_telemetry": "Safe",
+      "truth_vision": "safe_driving",
+      "vision_agreement": {
+        "agreed": 258,
+        "rate": 1.0,
+        "windows": 258
+      },
+      "windows": 258
+    }
+  ],
+  "session_id": "S4892a94caeee4a84b3da95083cb22872",
+  "session_total_windows": 1341,
+  "telemetry_period_ms": 2000,
+  "whole_run_alert_severity_transitions": [
+    [
+      1,
+      "NORMAL"
+    ],
+    [
+      202,
+      "CAUTION"
+    ],
+    [
+      375,
+      "HIGH_ALERT"
+    ],
+    [
+      513,
+      "CAUTION"
+    ],
+    [
+      947,
+      "HIGH_ALERT"
+    ],
+    [
+      1084,
+      "CAUTION"
+    ],
+    [
+      1187,
+      "NORMAL"
+    ]
+  ],
+  "whole_run_risk_levels": {
+    "High": 315,
+    "Low": 689,
+    "Medium": 337
+  },
+  "windows_received": 1341
+}

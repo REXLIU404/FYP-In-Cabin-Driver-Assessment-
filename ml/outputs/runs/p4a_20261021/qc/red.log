@@ -1,0 +1,472 @@
+EEEEEEEEEEEE                                                             [100%]
+==================================== ERRORS ====================================
+__ ERROR at setup of test_test_metadata_and_telemetry_are_denied_before_open ___
+
+    @pytest.fixture
+    def data():
+        try:
+>           return importlib.import_module('ml.experiments.p4_data')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_data.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.p4_data', import_ = <function _gcd_import at 0x1046984a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.p4_data'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture
+    def data():
+        try:
+            return importlib.import_module('ml.experiments.p4_data')
+        except ModuleNotFoundError as error:
+            if error.name != 'ml.experiments.p4_data':
+                raise
+>           pytest.fail('Missing gated P4 data adapters')
+E           Failed: Missing gated P4 data adapters
+
+ml/tests/test_p4_data.py:19: Failed
+_ ERROR at setup of test_metadata_proves_validation_before_images_and_preserves_row_identity _
+
+    @pytest.fixture
+    def data():
+        try:
+>           return importlib.import_module('ml.experiments.p4_data')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_data.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.p4_data', import_ = <function _gcd_import at 0x1046984a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.p4_data'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture
+    def data():
+        try:
+            return importlib.import_module('ml.experiments.p4_data')
+        except ModuleNotFoundError as error:
+            if error.name != 'ml.experiments.p4_data':
+                raise
+>           pytest.fail('Missing gated P4 data adapters')
+E           Failed: Missing gated P4 data adapters
+
+ml/tests/test_p4_data.py:19: Failed
+____ ERROR at setup of test_telemetry_ids_assigned_before_any_order_changes ____
+
+    @pytest.fixture
+    def data():
+        try:
+>           return importlib.import_module('ml.experiments.p4_data')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_data.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.p4_data', import_ = <function _gcd_import at 0x1046984a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.p4_data'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture
+    def data():
+        try:
+            return importlib.import_module('ml.experiments.p4_data')
+        except ModuleNotFoundError as error:
+            if error.name != 'ml.experiments.p4_data':
+                raise
+>           pytest.fail('Missing gated P4 data adapters')
+E           Failed: Missing gated P4 data adapters
+
+ml/tests/test_p4_data.py:19: Failed
+_ ERROR at setup of test_shared_vision_bank_retains_pixels_provenance_and_p3_guard _
+
+    @pytest.fixture
+    def data():
+        try:
+>           return importlib.import_module('ml.experiments.p4_data')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_data.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.p4_data', import_ = <function _gcd_import at 0x1046984a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.p4_data'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture
+    def data():
+        try:
+            return importlib.import_module('ml.experiments.p4_data')
+        except ModuleNotFoundError as error:
+            if error.name != 'ml.experiments.p4_data':
+                raise
+>           pytest.fail('Missing gated P4 data adapters')
+E           Failed: Missing gated P4 data adapters
+
+ml/tests/test_p4_data.py:19: Failed
+_ ERROR at setup of test_rotation_six_signed_angles_have_no_fill_after_frozen_crop _
+
+    @pytest.fixture
+    def data():
+        try:
+>           return importlib.import_module('ml.experiments.p4_data')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_data.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.p4_data', import_ = <function _gcd_import at 0x1046984a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.p4_data'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture
+    def data():
+        try:
+            return importlib.import_module('ml.experiments.p4_data')
+        except ModuleNotFoundError as error:
+            if error.name != 'ml.experiments.p4_data':
+                raise
+>           pytest.fail('Missing gated P4 data adapters')
+E           Failed: Missing gated P4 data adapters
+
+ml/tests/test_p4_data.py:19: Failed
+_ ERROR at setup of test_train_stats_reuse_verifies_full_arrays_and_hpo_medians _
+
+    @pytest.fixture
+    def data():
+        try:
+>           return importlib.import_module('ml.experiments.p4_data')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_data.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.p4_data', import_ = <function _gcd_import at 0x1046984a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.p4_data'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture
+    def data():
+        try:
+            return importlib.import_module('ml.experiments.p4_data')
+        except ModuleNotFoundError as error:
+            if error.name != 'ml.experiments.p4_data':
+                raise
+>           pytest.fail('Missing gated P4 data adapters')
+E           Failed: Missing gated P4 data adapters
+
+ml/tests/test_p4_data.py:19: Failed
+__ ERROR at setup of test_telemetry_nested_record_masks_and_multistage_bounds __
+
+    @pytest.fixture
+    def data():
+        try:
+>           return importlib.import_module('ml.experiments.p4_data')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_data.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.p4_data', import_ = <function _gcd_import at 0x1046984a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.p4_data'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture
+    def data():
+        try:
+            return importlib.import_module('ml.experiments.p4_data')
+        except ModuleNotFoundError as error:
+            if error.name != 'ml.experiments.p4_data':
+                raise
+>           pytest.fail('Missing gated P4 data adapters')
+E           Failed: Missing gated P4 data adapters
+
+ml/tests/test_p4_data.py:19: Failed
+____ ERROR at setup of test_source_nan_fails_without_imputing_or_refitting _____
+
+    @pytest.fixture
+    def data():
+        try:
+>           return importlib.import_module('ml.experiments.p4_data')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_data.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.p4_data', import_ = <function _gcd_import at 0x1046984a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.p4_data'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture
+    def data():
+        try:
+            return importlib.import_module('ml.experiments.p4_data')
+        except ModuleNotFoundError as error:
+            if error.name != 'ml.experiments.p4_data':
+                raise
+>           pytest.fail('Missing gated P4 data adapters')
+E           Failed: Missing gated P4 data adapters
+
+ml/tests/test_p4_data.py:19: Failed
+_ ERROR at setup of test_selection_is_hash_ranked_capped_and_order_independent _
+
+    @pytest.fixture
+    def qc():
+>       try:return importlib.import_module('ml.experiments.p4_qc')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_qc.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.p4_qc', import_ = <function _gcd_import at 0x1046984a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.p4_qc'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture
+    def qc():
+        try:return importlib.import_module('ml.experiments.p4_qc')
+        except ModuleNotFoundError as error:
+            if error.name!='ml.experiments.p4_qc':raise
+>           pytest.fail('Missing blinded P4 QC workflow')
+E           Failed: Missing blinded P4 QC workflow
+
+ml/tests/test_p4_qc.py:14: Failed
+_ ERROR at setup of test_blind_kit_has_no_source_label_driver_condition_or_prediction _
+
+    @pytest.fixture
+    def qc():
+>       try:return importlib.import_module('ml.experiments.p4_qc')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_qc.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.p4_qc', import_ = <function _gcd_import at 0x1046984a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.p4_qc'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture
+    def qc():
+        try:return importlib.import_module('ml.experiments.p4_qc')
+        except ModuleNotFoundError as error:
+            if error.name!='ml.experiments.p4_qc':raise
+>           pytest.fail('Missing blinded P4 QC workflow')
+E           Failed: Missing blinded P4 QC workflow
+
+ml/tests/test_p4_qc.py:14: Failed
+_ ERROR at setup of test_reveal_requires_two_distinct_locked_independent_judgments _
+
+    @pytest.fixture
+    def qc():
+>       try:return importlib.import_module('ml.experiments.p4_qc')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_qc.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.p4_qc', import_ = <function _gcd_import at 0x1046984a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.p4_qc'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture
+    def qc():
+        try:return importlib.import_module('ml.experiments.p4_qc')
+        except ModuleNotFoundError as error:
+            if error.name!='ml.experiments.p4_qc':raise
+>           pytest.fail('Missing blinded P4 QC workflow')
+E           Failed: Missing blinded P4 QC workflow
+
+ml/tests/test_p4_qc.py:14: Failed
+_ ERROR at setup of test_consensus_and_common_family_support_never_invent_validity _
+
+    @pytest.fixture
+    def qc():
+>       try:return importlib.import_module('ml.experiments.p4_qc')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ml/tests/test_p4_qc.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ml.experiments.p4_qc', import_ = <function _gcd_import at 0x1046984a0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'ml.experiments.p4_qc'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture
+    def qc():
+        try:return importlib.import_module('ml.experiments.p4_qc')
+        except ModuleNotFoundError as error:
+            if error.name!='ml.experiments.p4_qc':raise
+>           pytest.fail('Missing blinded P4 QC workflow')
+E           Failed: Missing blinded P4 QC workflow
+
+ml/tests/test_p4_qc.py:14: Failed
+=========================== short test summary info ============================
+ERROR ml/tests/test_p4_data.py::test_test_metadata_and_telemetry_are_denied_before_open
+ERROR ml/tests/test_p4_data.py::test_metadata_proves_validation_before_images_and_preserves_row_identity
+ERROR ml/tests/test_p4_data.py::test_telemetry_ids_assigned_before_any_order_changes
+ERROR ml/tests/test_p4_data.py::test_shared_vision_bank_retains_pixels_provenance_and_p3_guard
+ERROR ml/tests/test_p4_data.py::test_rotation_six_signed_angles_have_no_fill_after_frozen_crop
+ERROR ml/tests/test_p4_data.py::test_train_stats_reuse_verifies_full_arrays_and_hpo_medians
+ERROR ml/tests/test_p4_data.py::test_telemetry_nested_record_masks_and_multistage_bounds
+ERROR ml/tests/test_p4_data.py::test_source_nan_fails_without_imputing_or_refitting
+ERROR ml/tests/test_p4_qc.py::test_selection_is_hash_ranked_capped_and_order_independent
+ERROR ml/tests/test_p4_qc.py::test_blind_kit_has_no_source_label_driver_condition_or_prediction
+ERROR ml/tests/test_p4_qc.py::test_reveal_requires_two_distinct_locked_independent_judgments
+ERROR ml/tests/test_p4_qc.py::test_consensus_and_common_family_support_never_invent_validity
+12 errors in 0.37s

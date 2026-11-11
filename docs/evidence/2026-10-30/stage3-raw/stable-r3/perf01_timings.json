@@ -1,0 +1,5402 @@
+[
+ {
+  "windowId": 21,
+  "capturedAtMs": 1793338928969,
+  "renderedAtMs": 1793338928998,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 22,
+  "capturedAtMs": 1793338929070,
+  "renderedAtMs": 1793338929097,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 23,
+  "capturedAtMs": 1793338929171,
+  "renderedAtMs": 1793338929200,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 24,
+  "capturedAtMs": 1793338929272,
+  "renderedAtMs": 1793338929298,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 25,
+  "capturedAtMs": 1793338929373,
+  "renderedAtMs": 1793338929399,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 26,
+  "capturedAtMs": 1793338929474,
+  "renderedAtMs": 1793338929502,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 27,
+  "capturedAtMs": 1793338929576,
+  "renderedAtMs": 1793338929603,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 28,
+  "capturedAtMs": 1793338929680,
+  "renderedAtMs": 1793338929711,
+  "captureToSendMs": 0,
+  "networkMs": 28,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 29,
+  "capturedAtMs": 1793338929785,
+  "renderedAtMs": 1793338929811,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 30,
+  "capturedAtMs": 1793338929888,
+  "renderedAtMs": 1793338929914,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 31,
+  "capturedAtMs": 1793338929988,
+  "renderedAtMs": 1793338930014,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 32,
+  "capturedAtMs": 1793338930088,
+  "renderedAtMs": 1793338930115,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 33,
+  "capturedAtMs": 1793338930190,
+  "renderedAtMs": 1793338930218,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 34,
+  "capturedAtMs": 1793338930292,
+  "renderedAtMs": 1793338930319,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 35,
+  "capturedAtMs": 1793338930395,
+  "renderedAtMs": 1793338930423,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 36,
+  "capturedAtMs": 1793338930500,
+  "renderedAtMs": 1793338930530,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 37,
+  "capturedAtMs": 1793338930602,
+  "renderedAtMs": 1793338930632,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 38,
+  "capturedAtMs": 1793338930703,
+  "renderedAtMs": 1793338930730,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 39,
+  "capturedAtMs": 1793338930804,
+  "renderedAtMs": 1793338930833,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 40,
+  "capturedAtMs": 1793338930904,
+  "renderedAtMs": 1793338930932,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 41,
+  "capturedAtMs": 1793338931004,
+  "renderedAtMs": 1793338931032,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 42,
+  "capturedAtMs": 1793338931105,
+  "renderedAtMs": 1793338931132,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 43,
+  "capturedAtMs": 1793338931208,
+  "renderedAtMs": 1793338931234,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 44,
+  "capturedAtMs": 1793338931311,
+  "renderedAtMs": 1793338931340,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 45,
+  "capturedAtMs": 1793338931414,
+  "renderedAtMs": 1793338931444,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 46,
+  "capturedAtMs": 1793338931519,
+  "renderedAtMs": 1793338931547,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 47,
+  "capturedAtMs": 1793338931619,
+  "renderedAtMs": 1793338931647,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 48,
+  "capturedAtMs": 1793338931720,
+  "renderedAtMs": 1793338931746,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 49,
+  "capturedAtMs": 1793338931821,
+  "renderedAtMs": 1793338931848,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 50,
+  "capturedAtMs": 1793338931923,
+  "renderedAtMs": 1793338931953,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 51,
+  "capturedAtMs": 1793338932026,
+  "renderedAtMs": 1793338932053,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 52,
+  "capturedAtMs": 1793338932129,
+  "renderedAtMs": 1793338932158,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 53,
+  "capturedAtMs": 1793338932232,
+  "renderedAtMs": 1793338932261,
+  "captureToSendMs": 1,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 54,
+  "capturedAtMs": 1793338932338,
+  "renderedAtMs": 1793338932367,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 55,
+  "capturedAtMs": 1793338932440,
+  "renderedAtMs": 1793338932469,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 56,
+  "capturedAtMs": 1793338932542,
+  "renderedAtMs": 1793338932570,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 57,
+  "capturedAtMs": 1793338932643,
+  "renderedAtMs": 1793338932671,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 58,
+  "capturedAtMs": 1793338932744,
+  "renderedAtMs": 1793338932775,
+  "captureToSendMs": 0,
+  "networkMs": 28,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 59,
+  "capturedAtMs": 1793338932848,
+  "renderedAtMs": 1793338932875,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 60,
+  "capturedAtMs": 1793338932952,
+  "renderedAtMs": 1793338932980,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 61,
+  "capturedAtMs": 1793338933053,
+  "renderedAtMs": 1793338933079,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 62,
+  "capturedAtMs": 1793338933154,
+  "renderedAtMs": 1793338933181,
+  "captureToSendMs": 1,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 63,
+  "capturedAtMs": 1793338933258,
+  "renderedAtMs": 1793338933286,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 64,
+  "capturedAtMs": 1793338933362,
+  "renderedAtMs": 1793338933391,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 65,
+  "capturedAtMs": 1793338933468,
+  "renderedAtMs": 1793338933497,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 66,
+  "capturedAtMs": 1793338933569,
+  "renderedAtMs": 1793338933599,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 67,
+  "capturedAtMs": 1793338933669,
+  "renderedAtMs": 1793338933697,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 68,
+  "capturedAtMs": 1793338933769,
+  "renderedAtMs": 1793338933799,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 69,
+  "capturedAtMs": 1793338933871,
+  "renderedAtMs": 1793338933899,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 70,
+  "capturedAtMs": 1793338933971,
+  "renderedAtMs": 1793338934000,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 71,
+  "capturedAtMs": 1793338934073,
+  "renderedAtMs": 1793338934101,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 72,
+  "capturedAtMs": 1793338934175,
+  "renderedAtMs": 1793338934204,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 73,
+  "capturedAtMs": 1793338934278,
+  "renderedAtMs": 1793338934308,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 74,
+  "capturedAtMs": 1793338934381,
+  "renderedAtMs": 1793338934408,
+  "captureToSendMs": 1,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 75,
+  "capturedAtMs": 1793338934488,
+  "renderedAtMs": 1793338934514,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 76,
+  "capturedAtMs": 1793338934590,
+  "renderedAtMs": 1793338934619,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 77,
+  "capturedAtMs": 1793338934691,
+  "renderedAtMs": 1793338934716,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 78,
+  "capturedAtMs": 1793338934794,
+  "renderedAtMs": 1793338934819,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 79,
+  "capturedAtMs": 1793338934898,
+  "renderedAtMs": 1793338934926,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 80,
+  "capturedAtMs": 1793338935002,
+  "renderedAtMs": 1793338935030,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 81,
+  "capturedAtMs": 1793338935103,
+  "renderedAtMs": 1793338935130,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 82,
+  "capturedAtMs": 1793338935204,
+  "renderedAtMs": 1793338935233,
+  "captureToSendMs": 1,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 83,
+  "capturedAtMs": 1793338935308,
+  "renderedAtMs": 1793338935336,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 84,
+  "capturedAtMs": 1793338935410,
+  "renderedAtMs": 1793338935438,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 85,
+  "capturedAtMs": 1793338935514,
+  "renderedAtMs": 1793338935544,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 86,
+  "capturedAtMs": 1793338935619,
+  "renderedAtMs": 1793338935649,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 87,
+  "capturedAtMs": 1793338935720,
+  "renderedAtMs": 1793338935748,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 88,
+  "capturedAtMs": 1793338935821,
+  "renderedAtMs": 1793338935844,
+  "captureToSendMs": 0,
+  "networkMs": 21,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 89,
+  "capturedAtMs": 1793338935922,
+  "renderedAtMs": 1793338935947,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 90,
+  "capturedAtMs": 1793338936022,
+  "renderedAtMs": 1793338936048,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 91,
+  "capturedAtMs": 1793338936125,
+  "renderedAtMs": 1793338936153,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 92,
+  "capturedAtMs": 1793338936229,
+  "renderedAtMs": 1793338936258,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 93,
+  "capturedAtMs": 1793338936334,
+  "renderedAtMs": 1793338936364,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 94,
+  "capturedAtMs": 1793338936438,
+  "renderedAtMs": 1793338936468,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 95,
+  "capturedAtMs": 1793338936540,
+  "renderedAtMs": 1793338936568,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 96,
+  "capturedAtMs": 1793338936643,
+  "renderedAtMs": 1793338936672,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 97,
+  "capturedAtMs": 1793338936747,
+  "renderedAtMs": 1793338936777,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 98,
+  "capturedAtMs": 1793338936849,
+  "renderedAtMs": 1793338936878,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 99,
+  "capturedAtMs": 1793338936952,
+  "renderedAtMs": 1793338936979,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 100,
+  "capturedAtMs": 1793338937053,
+  "renderedAtMs": 1793338937080,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 101,
+  "capturedAtMs": 1793338937154,
+  "renderedAtMs": 1793338937180,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 102,
+  "capturedAtMs": 1793338937256,
+  "renderedAtMs": 1793338937284,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 103,
+  "capturedAtMs": 1793338937358,
+  "renderedAtMs": 1793338937381,
+  "captureToSendMs": 0,
+  "networkMs": 20,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 104,
+  "capturedAtMs": 1793338937461,
+  "renderedAtMs": 1793338937493,
+  "captureToSendMs": 0,
+  "networkMs": 29,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 105,
+  "capturedAtMs": 1793338937567,
+  "renderedAtMs": 1793338937597,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 106,
+  "capturedAtMs": 1793338937669,
+  "renderedAtMs": 1793338937697,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 107,
+  "capturedAtMs": 1793338937771,
+  "renderedAtMs": 1793338937799,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 108,
+  "capturedAtMs": 1793338937872,
+  "renderedAtMs": 1793338937900,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 109,
+  "capturedAtMs": 1793338937975,
+  "renderedAtMs": 1793338938005,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 110,
+  "capturedAtMs": 1793338938078,
+  "renderedAtMs": 1793338938110,
+  "captureToSendMs": 0,
+  "networkMs": 29,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 111,
+  "capturedAtMs": 1793338938179,
+  "renderedAtMs": 1793338938208,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 112,
+  "capturedAtMs": 1793338938284,
+  "renderedAtMs": 1793338938313,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 113,
+  "capturedAtMs": 1793338938388,
+  "renderedAtMs": 1793338938416,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 114,
+  "capturedAtMs": 1793338938488,
+  "renderedAtMs": 1793338938515,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 115,
+  "capturedAtMs": 1793338938589,
+  "renderedAtMs": 1793338938616,
+  "captureToSendMs": 1,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 116,
+  "capturedAtMs": 1793338938692,
+  "renderedAtMs": 1793338938716,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 117,
+  "capturedAtMs": 1793338938795,
+  "renderedAtMs": 1793338938817,
+  "captureToSendMs": 0,
+  "networkMs": 19,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 118,
+  "capturedAtMs": 1793338938899,
+  "renderedAtMs": 1793338938924,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 119,
+  "capturedAtMs": 1793338939002,
+  "renderedAtMs": 1793338939028,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 120,
+  "capturedAtMs": 1793338939103,
+  "renderedAtMs": 1793338939129,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 121,
+  "capturedAtMs": 1793338939204,
+  "renderedAtMs": 1793338939231,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 122,
+  "capturedAtMs": 1793338939306,
+  "renderedAtMs": 1793338939333,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 123,
+  "capturedAtMs": 1793338939408,
+  "renderedAtMs": 1793338939437,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 124,
+  "capturedAtMs": 1793338939513,
+  "renderedAtMs": 1793338939542,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 125,
+  "capturedAtMs": 1793338939618,
+  "renderedAtMs": 1793338939648,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 126,
+  "capturedAtMs": 1793338939719,
+  "renderedAtMs": 1793338939746,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 127,
+  "capturedAtMs": 1793338939819,
+  "renderedAtMs": 1793338939847,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 128,
+  "capturedAtMs": 1793338939920,
+  "renderedAtMs": 1793338939949,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 129,
+  "capturedAtMs": 1793338940022,
+  "renderedAtMs": 1793338940050,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 130,
+  "capturedAtMs": 1793338940125,
+  "renderedAtMs": 1793338940154,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 131,
+  "capturedAtMs": 1793338940228,
+  "renderedAtMs": 1793338940257,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 132,
+  "capturedAtMs": 1793338940333,
+  "renderedAtMs": 1793338940363,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 133,
+  "capturedAtMs": 1793338940438,
+  "renderedAtMs": 1793338940466,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 134,
+  "capturedAtMs": 1793338940538,
+  "renderedAtMs": 1793338940564,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 135,
+  "capturedAtMs": 1793338940639,
+  "renderedAtMs": 1793338940666,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 136,
+  "capturedAtMs": 1793338940741,
+  "renderedAtMs": 1793338940768,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 137,
+  "capturedAtMs": 1793338940844,
+  "renderedAtMs": 1793338940874,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 138,
+  "capturedAtMs": 1793338940948,
+  "renderedAtMs": 1793338940978,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 139,
+  "capturedAtMs": 1793338941052,
+  "renderedAtMs": 1793338941077,
+  "captureToSendMs": 1,
+  "networkMs": 21,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 140,
+  "capturedAtMs": 1793338941156,
+  "renderedAtMs": 1793338941181,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 141,
+  "capturedAtMs": 1793338941259,
+  "renderedAtMs": 1793338941285,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 142,
+  "capturedAtMs": 1793338941361,
+  "renderedAtMs": 1793338941391,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 143,
+  "capturedAtMs": 1793338941465,
+  "renderedAtMs": 1793338941492,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 144,
+  "capturedAtMs": 1793338941568,
+  "renderedAtMs": 1793338941596,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 145,
+  "capturedAtMs": 1793338941669,
+  "renderedAtMs": 1793338941695,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 146,
+  "capturedAtMs": 1793338941770,
+  "renderedAtMs": 1793338941801,
+  "captureToSendMs": 0,
+  "networkMs": 28,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 147,
+  "capturedAtMs": 1793338941871,
+  "renderedAtMs": 1793338941899,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 148,
+  "capturedAtMs": 1793338941973,
+  "renderedAtMs": 1793338942000,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 149,
+  "capturedAtMs": 1793338942074,
+  "renderedAtMs": 1793338942101,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 150,
+  "capturedAtMs": 1793338942175,
+  "renderedAtMs": 1793338942205,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 151,
+  "capturedAtMs": 1793338942278,
+  "renderedAtMs": 1793338942309,
+  "captureToSendMs": 0,
+  "networkMs": 28,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 152,
+  "capturedAtMs": 1793338942383,
+  "renderedAtMs": 1793338942413,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 153,
+  "capturedAtMs": 1793338942486,
+  "renderedAtMs": 1793338942516,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 154,
+  "capturedAtMs": 1793338942588,
+  "renderedAtMs": 1793338942615,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 155,
+  "capturedAtMs": 1793338942688,
+  "renderedAtMs": 1793338942715,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 156,
+  "capturedAtMs": 1793338942790,
+  "renderedAtMs": 1793338942817,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 157,
+  "capturedAtMs": 1793338942892,
+  "renderedAtMs": 1793338942921,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 158,
+  "capturedAtMs": 1793338942994,
+  "renderedAtMs": 1793338943022,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 159,
+  "capturedAtMs": 1793338943096,
+  "renderedAtMs": 1793338943123,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 160,
+  "capturedAtMs": 1793338943202,
+  "renderedAtMs": 1793338943228,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 161,
+  "capturedAtMs": 1793338943302,
+  "renderedAtMs": 1793338943330,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 162,
+  "capturedAtMs": 1793338943404,
+  "renderedAtMs": 1793338943431,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 163,
+  "capturedAtMs": 1793338943505,
+  "renderedAtMs": 1793338943533,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 164,
+  "capturedAtMs": 1793338943608,
+  "renderedAtMs": 1793338943636,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 165,
+  "capturedAtMs": 1793338943711,
+  "renderedAtMs": 1793338943741,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 166,
+  "capturedAtMs": 1793338943817,
+  "renderedAtMs": 1793338943847,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 167,
+  "capturedAtMs": 1793338943919,
+  "renderedAtMs": 1793338943947,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 168,
+  "capturedAtMs": 1793338944019,
+  "renderedAtMs": 1793338944049,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 169,
+  "capturedAtMs": 1793338944120,
+  "renderedAtMs": 1793338944149,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 170,
+  "capturedAtMs": 1793338944221,
+  "renderedAtMs": 1793338944248,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 171,
+  "capturedAtMs": 1793338944322,
+  "renderedAtMs": 1793338944349,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 172,
+  "capturedAtMs": 1793338944424,
+  "renderedAtMs": 1793338944452,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 173,
+  "capturedAtMs": 1793338944527,
+  "renderedAtMs": 1793338944558,
+  "captureToSendMs": 0,
+  "networkMs": 28,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 174,
+  "capturedAtMs": 1793338944630,
+  "renderedAtMs": 1793338944659,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 175,
+  "capturedAtMs": 1793338944738,
+  "renderedAtMs": 1793338944766,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 176,
+  "capturedAtMs": 1793338944839,
+  "renderedAtMs": 1793338944860,
+  "captureToSendMs": 0,
+  "networkMs": 19,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 177,
+  "capturedAtMs": 1793338944940,
+  "renderedAtMs": 1793338944964,
+  "captureToSendMs": 0,
+  "networkMs": 21,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 178,
+  "capturedAtMs": 1793338945043,
+  "renderedAtMs": 1793338945070,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 179,
+  "capturedAtMs": 1793338945146,
+  "renderedAtMs": 1793338945173,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 180,
+  "capturedAtMs": 1793338945251,
+  "renderedAtMs": 1793338945277,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 181,
+  "capturedAtMs": 1793338945352,
+  "renderedAtMs": 1793338945378,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 182,
+  "capturedAtMs": 1793338945454,
+  "renderedAtMs": 1793338945481,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 183,
+  "capturedAtMs": 1793338945557,
+  "renderedAtMs": 1793338945585,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 184,
+  "capturedAtMs": 1793338945661,
+  "renderedAtMs": 1793338945693,
+  "captureToSendMs": 0,
+  "networkMs": 30,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 185,
+  "capturedAtMs": 1793338945765,
+  "renderedAtMs": 1793338945795,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 186,
+  "capturedAtMs": 1793338945868,
+  "renderedAtMs": 1793338945898,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 187,
+  "capturedAtMs": 1793338945968,
+  "renderedAtMs": 1793338945996,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 188,
+  "capturedAtMs": 1793338946068,
+  "renderedAtMs": 1793338946097,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 189,
+  "capturedAtMs": 1793338946168,
+  "renderedAtMs": 1793338946195,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 190,
+  "capturedAtMs": 1793338946269,
+  "renderedAtMs": 1793338946296,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 191,
+  "capturedAtMs": 1793338946370,
+  "renderedAtMs": 1793338946398,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 192,
+  "capturedAtMs": 1793338946471,
+  "renderedAtMs": 1793338946497,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 193,
+  "capturedAtMs": 1793338946572,
+  "renderedAtMs": 1793338946600,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 194,
+  "capturedAtMs": 1793338946673,
+  "renderedAtMs": 1793338946700,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 195,
+  "capturedAtMs": 1793338946775,
+  "renderedAtMs": 1793338946804,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 196,
+  "capturedAtMs": 1793338946876,
+  "renderedAtMs": 1793338946905,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 197,
+  "capturedAtMs": 1793338946979,
+  "renderedAtMs": 1793338947008,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 198,
+  "capturedAtMs": 1793338947079,
+  "renderedAtMs": 1793338947108,
+  "captureToSendMs": 1,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 199,
+  "capturedAtMs": 1793338947185,
+  "renderedAtMs": 1793338947212,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 200,
+  "capturedAtMs": 1793338947288,
+  "renderedAtMs": 1793338947316,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 201,
+  "capturedAtMs": 1793338947389,
+  "renderedAtMs": 1793338947415,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 202,
+  "capturedAtMs": 1793338947491,
+  "renderedAtMs": 1793338947517,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 203,
+  "capturedAtMs": 1793338947593,
+  "renderedAtMs": 1793338947621,
+  "captureToSendMs": 1,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 204,
+  "capturedAtMs": 1793338947696,
+  "renderedAtMs": 1793338947719,
+  "captureToSendMs": 0,
+  "networkMs": 20,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 205,
+  "capturedAtMs": 1793338947801,
+  "renderedAtMs": 1793338947826,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 206,
+  "capturedAtMs": 1793338947902,
+  "renderedAtMs": 1793338947924,
+  "captureToSendMs": 0,
+  "networkMs": 19,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 207,
+  "capturedAtMs": 1793338948002,
+  "renderedAtMs": 1793338948025,
+  "captureToSendMs": 0,
+  "networkMs": 21,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 208,
+  "capturedAtMs": 1793338948102,
+  "renderedAtMs": 1793338948127,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 209,
+  "capturedAtMs": 1793338948203,
+  "renderedAtMs": 1793338948230,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 210,
+  "capturedAtMs": 1793338948304,
+  "renderedAtMs": 1793338948330,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 211,
+  "capturedAtMs": 1793338948405,
+  "renderedAtMs": 1793338948433,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 212,
+  "capturedAtMs": 1793338948506,
+  "renderedAtMs": 1793338948535,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 213,
+  "capturedAtMs": 1793338948606,
+  "renderedAtMs": 1793338948633,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 214,
+  "capturedAtMs": 1793338948708,
+  "renderedAtMs": 1793338948734,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 215,
+  "capturedAtMs": 1793338948812,
+  "renderedAtMs": 1793338948839,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 216,
+  "capturedAtMs": 1793338948913,
+  "renderedAtMs": 1793338948941,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 217,
+  "capturedAtMs": 1793338949018,
+  "renderedAtMs": 1793338949047,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 218,
+  "capturedAtMs": 1793338949119,
+  "renderedAtMs": 1793338949146,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 219,
+  "capturedAtMs": 1793338949221,
+  "renderedAtMs": 1793338949249,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 220,
+  "capturedAtMs": 1793338949321,
+  "renderedAtMs": 1793338949347,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 221,
+  "capturedAtMs": 1793338949423,
+  "renderedAtMs": 1793338949449,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 222,
+  "capturedAtMs": 1793338949525,
+  "renderedAtMs": 1793338949550,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 223,
+  "capturedAtMs": 1793338949628,
+  "renderedAtMs": 1793338949657,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 224,
+  "capturedAtMs": 1793338949731,
+  "renderedAtMs": 1793338949759,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 225,
+  "capturedAtMs": 1793338949837,
+  "renderedAtMs": 1793338949865,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 226,
+  "capturedAtMs": 1793338949939,
+  "renderedAtMs": 1793338949966,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 227,
+  "capturedAtMs": 1793338950040,
+  "renderedAtMs": 1793338950067,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 228,
+  "capturedAtMs": 1793338950142,
+  "renderedAtMs": 1793338950170,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 229,
+  "capturedAtMs": 1793338950245,
+  "renderedAtMs": 1793338950274,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 230,
+  "capturedAtMs": 1793338950349,
+  "renderedAtMs": 1793338950378,
+  "captureToSendMs": 1,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 231,
+  "capturedAtMs": 1793338950451,
+  "renderedAtMs": 1793338950480,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 232,
+  "capturedAtMs": 1793338950552,
+  "renderedAtMs": 1793338950580,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 233,
+  "capturedAtMs": 1793338950653,
+  "renderedAtMs": 1793338950683,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 234,
+  "capturedAtMs": 1793338950755,
+  "renderedAtMs": 1793338950781,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 235,
+  "capturedAtMs": 1793338950860,
+  "renderedAtMs": 1793338950899,
+  "captureToSendMs": 0,
+  "networkMs": 37,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 236,
+  "capturedAtMs": 1793338950965,
+  "renderedAtMs": 1793338950988,
+  "captureToSendMs": 0,
+  "networkMs": 21,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 237,
+  "capturedAtMs": 1793338951067,
+  "renderedAtMs": 1793338951092,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 238,
+  "capturedAtMs": 1793338951169,
+  "renderedAtMs": 1793338951194,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 239,
+  "capturedAtMs": 1793338951269,
+  "renderedAtMs": 1793338951296,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 240,
+  "capturedAtMs": 1793338951370,
+  "renderedAtMs": 1793338951398,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 241,
+  "capturedAtMs": 1793338951470,
+  "renderedAtMs": 1793338951495,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 242,
+  "capturedAtMs": 1793338951572,
+  "renderedAtMs": 1793338951598,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 243,
+  "capturedAtMs": 1793338951675,
+  "renderedAtMs": 1793338951701,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 244,
+  "capturedAtMs": 1793338951778,
+  "renderedAtMs": 1793338951806,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 245,
+  "capturedAtMs": 1793338951882,
+  "renderedAtMs": 1793338951909,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 246,
+  "capturedAtMs": 1793338951984,
+  "renderedAtMs": 1793338952013,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 247,
+  "capturedAtMs": 1793338952088,
+  "renderedAtMs": 1793338952116,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 248,
+  "capturedAtMs": 1793338952189,
+  "renderedAtMs": 1793338952216,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 249,
+  "capturedAtMs": 1793338952290,
+  "renderedAtMs": 1793338952316,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 250,
+  "capturedAtMs": 1793338952391,
+  "renderedAtMs": 1793338952420,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 251,
+  "capturedAtMs": 1793338952493,
+  "renderedAtMs": 1793338952524,
+  "captureToSendMs": 1,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 252,
+  "capturedAtMs": 1793338952595,
+  "renderedAtMs": 1793338952627,
+  "captureToSendMs": 0,
+  "networkMs": 29,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 253,
+  "capturedAtMs": 1793338952698,
+  "renderedAtMs": 1793338952724,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 254,
+  "capturedAtMs": 1793338952801,
+  "renderedAtMs": 1793338952827,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 255,
+  "capturedAtMs": 1793338952901,
+  "renderedAtMs": 1793338952929,
+  "captureToSendMs": 1,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 256,
+  "capturedAtMs": 1793338953003,
+  "renderedAtMs": 1793338953031,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 257,
+  "capturedAtMs": 1793338953105,
+  "renderedAtMs": 1793338953131,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 258,
+  "capturedAtMs": 1793338953208,
+  "renderedAtMs": 1793338953236,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 259,
+  "capturedAtMs": 1793338953312,
+  "renderedAtMs": 1793338953341,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 260,
+  "capturedAtMs": 1793338953418,
+  "renderedAtMs": 1793338953447,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 261,
+  "capturedAtMs": 1793338953518,
+  "renderedAtMs": 1793338953544,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 262,
+  "capturedAtMs": 1793338953618,
+  "renderedAtMs": 1793338953644,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 263,
+  "capturedAtMs": 1793338953720,
+  "renderedAtMs": 1793338953747,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 264,
+  "capturedAtMs": 1793338953821,
+  "renderedAtMs": 1793338953849,
+  "captureToSendMs": 1,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 265,
+  "capturedAtMs": 1793338953925,
+  "renderedAtMs": 1793338953944,
+  "captureToSendMs": 0,
+  "networkMs": 17,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 266,
+  "capturedAtMs": 1793338954025,
+  "renderedAtMs": 1793338954048,
+  "captureToSendMs": 0,
+  "networkMs": 21,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 267,
+  "capturedAtMs": 1793338954128,
+  "renderedAtMs": 1793338954153,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 268,
+  "capturedAtMs": 1793338954232,
+  "renderedAtMs": 1793338954256,
+  "captureToSendMs": 0,
+  "networkMs": 21,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 269,
+  "capturedAtMs": 1793338954337,
+  "renderedAtMs": 1793338954363,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 270,
+  "capturedAtMs": 1793338954437,
+  "renderedAtMs": 1793338954462,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 271,
+  "capturedAtMs": 1793338954537,
+  "renderedAtMs": 1793338954564,
+  "captureToSendMs": 1,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 272,
+  "capturedAtMs": 1793338954639,
+  "renderedAtMs": 1793338954664,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 273,
+  "capturedAtMs": 1793338954741,
+  "renderedAtMs": 1793338954767,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 274,
+  "capturedAtMs": 1793338954841,
+  "renderedAtMs": 1793338954868,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 275,
+  "capturedAtMs": 1793338954943,
+  "renderedAtMs": 1793338954970,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 276,
+  "capturedAtMs": 1793338955048,
+  "renderedAtMs": 1793338955079,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 277,
+  "capturedAtMs": 1793338955151,
+  "renderedAtMs": 1793338955179,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 278,
+  "capturedAtMs": 1793338955252,
+  "renderedAtMs": 1793338955280,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 279,
+  "capturedAtMs": 1793338955353,
+  "renderedAtMs": 1793338955376,
+  "captureToSendMs": 0,
+  "networkMs": 20,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 280,
+  "capturedAtMs": 1793338955453,
+  "renderedAtMs": 1793338955485,
+  "captureToSendMs": 0,
+  "networkMs": 29,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 281,
+  "capturedAtMs": 1793338955555,
+  "renderedAtMs": 1793338955583,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 282,
+  "capturedAtMs": 1793338955658,
+  "renderedAtMs": 1793338955685,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 283,
+  "capturedAtMs": 1793338955763,
+  "renderedAtMs": 1793338955789,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 284,
+  "capturedAtMs": 1793338955868,
+  "renderedAtMs": 1793338955897,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 285,
+  "capturedAtMs": 1793338955970,
+  "renderedAtMs": 1793338955998,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 286,
+  "capturedAtMs": 1793338956071,
+  "renderedAtMs": 1793338956099,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 287,
+  "capturedAtMs": 1793338956172,
+  "renderedAtMs": 1793338956199,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 288,
+  "capturedAtMs": 1793338956274,
+  "renderedAtMs": 1793338956302,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 289,
+  "capturedAtMs": 1793338956376,
+  "renderedAtMs": 1793338956406,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 290,
+  "capturedAtMs": 1793338956479,
+  "renderedAtMs": 1793338956508,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 291,
+  "capturedAtMs": 1793338956584,
+  "renderedAtMs": 1793338956615,
+  "captureToSendMs": 0,
+  "networkMs": 28,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 292,
+  "capturedAtMs": 1793338956687,
+  "renderedAtMs": 1793338956716,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 293,
+  "capturedAtMs": 1793338956788,
+  "renderedAtMs": 1793338956816,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 294,
+  "capturedAtMs": 1793338956889,
+  "renderedAtMs": 1793338956923,
+  "captureToSendMs": 0,
+  "networkMs": 31,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 295,
+  "capturedAtMs": 1793338956992,
+  "renderedAtMs": 1793338957014,
+  "captureToSendMs": 0,
+  "networkMs": 19,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 296,
+  "capturedAtMs": 1793338957097,
+  "renderedAtMs": 1793338957123,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 297,
+  "capturedAtMs": 1793338957202,
+  "renderedAtMs": 1793338957228,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 298,
+  "capturedAtMs": 1793338957302,
+  "renderedAtMs": 1793338957328,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 299,
+  "capturedAtMs": 1793338957403,
+  "renderedAtMs": 1793338957429,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 300,
+  "capturedAtMs": 1793338957505,
+  "renderedAtMs": 1793338957532,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 301,
+  "capturedAtMs": 1793338957606,
+  "renderedAtMs": 1793338957633,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 302,
+  "capturedAtMs": 1793338957708,
+  "renderedAtMs": 1793338957735,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 303,
+  "capturedAtMs": 1793338957812,
+  "renderedAtMs": 1793338957841,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 304,
+  "capturedAtMs": 1793338957918,
+  "renderedAtMs": 1793338957947,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 305,
+  "capturedAtMs": 1793338958018,
+  "renderedAtMs": 1793338958048,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 306,
+  "capturedAtMs": 1793338958118,
+  "renderedAtMs": 1793338958146,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 307,
+  "capturedAtMs": 1793338958220,
+  "renderedAtMs": 1793338958248,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 308,
+  "capturedAtMs": 1793338958320,
+  "renderedAtMs": 1793338958348,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 309,
+  "capturedAtMs": 1793338958420,
+  "renderedAtMs": 1793338958448,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 310,
+  "capturedAtMs": 1793338958520,
+  "renderedAtMs": 1793338958548,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 311,
+  "capturedAtMs": 1793338958620,
+  "renderedAtMs": 1793338958648,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 312,
+  "capturedAtMs": 1793338958721,
+  "renderedAtMs": 1793338958747,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 313,
+  "capturedAtMs": 1793338958823,
+  "renderedAtMs": 1793338958849,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 314,
+  "capturedAtMs": 1793338958926,
+  "renderedAtMs": 1793338958955,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 315,
+  "capturedAtMs": 1793338959027,
+  "renderedAtMs": 1793338959056,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 316,
+  "capturedAtMs": 1793338959132,
+  "renderedAtMs": 1793338959159,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 317,
+  "capturedAtMs": 1793338959237,
+  "renderedAtMs": 1793338959264,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 318,
+  "capturedAtMs": 1793338959337,
+  "renderedAtMs": 1793338959363,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 319,
+  "capturedAtMs": 1793338959439,
+  "renderedAtMs": 1793338959464,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 320,
+  "capturedAtMs": 1793338959542,
+  "renderedAtMs": 1793338959569,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 321,
+  "capturedAtMs": 1793338959644,
+  "renderedAtMs": 1793338959672,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 322,
+  "capturedAtMs": 1793338959749,
+  "renderedAtMs": 1793338959777,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 323,
+  "capturedAtMs": 1793338959851,
+  "renderedAtMs": 1793338959879,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 324,
+  "capturedAtMs": 1793338959955,
+  "renderedAtMs": 1793338959998,
+  "captureToSendMs": 0,
+  "networkMs": 41,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 325,
+  "capturedAtMs": 1793338960057,
+  "renderedAtMs": 1793338960078,
+  "captureToSendMs": 0,
+  "networkMs": 18,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 326,
+  "capturedAtMs": 1793338960162,
+  "renderedAtMs": 1793338960186,
+  "captureToSendMs": 0,
+  "networkMs": 21,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 327,
+  "capturedAtMs": 1793338960268,
+  "renderedAtMs": 1793338960293,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 328,
+  "capturedAtMs": 1793338960368,
+  "renderedAtMs": 1793338960394,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 329,
+  "capturedAtMs": 1793338960470,
+  "renderedAtMs": 1793338960497,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 330,
+  "capturedAtMs": 1793338960571,
+  "renderedAtMs": 1793338960598,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 331,
+  "capturedAtMs": 1793338960674,
+  "renderedAtMs": 1793338960702,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 332,
+  "capturedAtMs": 1793338960777,
+  "renderedAtMs": 1793338960807,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 333,
+  "capturedAtMs": 1793338960882,
+  "renderedAtMs": 1793338960911,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 334,
+  "capturedAtMs": 1793338960984,
+  "renderedAtMs": 1793338961016,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 5,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 335,
+  "capturedAtMs": 1793338961087,
+  "renderedAtMs": 1793338961115,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 336,
+  "capturedAtMs": 1793338961189,
+  "renderedAtMs": 1793338961216,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 337,
+  "capturedAtMs": 1793338961290,
+  "renderedAtMs": 1793338961317,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 338,
+  "capturedAtMs": 1793338961391,
+  "renderedAtMs": 1793338961418,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 339,
+  "capturedAtMs": 1793338961495,
+  "renderedAtMs": 1793338961523,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 340,
+  "capturedAtMs": 1793338961600,
+  "renderedAtMs": 1793338961628,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 341,
+  "capturedAtMs": 1793338961702,
+  "renderedAtMs": 1793338961728,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 342,
+  "capturedAtMs": 1793338961804,
+  "renderedAtMs": 1793338961835,
+  "captureToSendMs": 1,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 343,
+  "capturedAtMs": 1793338961906,
+  "renderedAtMs": 1793338961933,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 344,
+  "capturedAtMs": 1793338962008,
+  "renderedAtMs": 1793338962035,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 345,
+  "capturedAtMs": 1793338962112,
+  "renderedAtMs": 1793338962140,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 346,
+  "capturedAtMs": 1793338962218,
+  "renderedAtMs": 1793338962246,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 347,
+  "capturedAtMs": 1793338962318,
+  "renderedAtMs": 1793338962346,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 348,
+  "capturedAtMs": 1793338962420,
+  "renderedAtMs": 1793338962448,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 349,
+  "capturedAtMs": 1793338962520,
+  "renderedAtMs": 1793338962548,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 350,
+  "capturedAtMs": 1793338962620,
+  "renderedAtMs": 1793338962644,
+  "captureToSendMs": 0,
+  "networkMs": 21,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 351,
+  "capturedAtMs": 1793338962721,
+  "renderedAtMs": 1793338962745,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 352,
+  "capturedAtMs": 1793338962823,
+  "renderedAtMs": 1793338962845,
+  "captureToSendMs": 0,
+  "networkMs": 19,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 353,
+  "capturedAtMs": 1793338962926,
+  "renderedAtMs": 1793338962951,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 354,
+  "capturedAtMs": 1793338963030,
+  "renderedAtMs": 1793338963052,
+  "captureToSendMs": 0,
+  "networkMs": 19,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 355,
+  "capturedAtMs": 1793338963137,
+  "renderedAtMs": 1793338963160,
+  "captureToSendMs": 0,
+  "networkMs": 21,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 356,
+  "capturedAtMs": 1793338963237,
+  "renderedAtMs": 1793338963261,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 357,
+  "capturedAtMs": 1793338963337,
+  "renderedAtMs": 1793338963363,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 358,
+  "capturedAtMs": 1793338963438,
+  "renderedAtMs": 1793338963465,
+  "captureToSendMs": 1,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 359,
+  "capturedAtMs": 1793338963540,
+  "renderedAtMs": 1793338963568,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 360,
+  "capturedAtMs": 1793338963643,
+  "renderedAtMs": 1793338963671,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 361,
+  "capturedAtMs": 1793338963746,
+  "renderedAtMs": 1793338963774,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 362,
+  "capturedAtMs": 1793338963851,
+  "renderedAtMs": 1793338963880,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 363,
+  "capturedAtMs": 1793338963951,
+  "renderedAtMs": 1793338963980,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 364,
+  "capturedAtMs": 1793338964051,
+  "renderedAtMs": 1793338964079,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 365,
+  "capturedAtMs": 1793338964153,
+  "renderedAtMs": 1793338964180,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 366,
+  "capturedAtMs": 1793338964254,
+  "renderedAtMs": 1793338964282,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 367,
+  "capturedAtMs": 1793338964356,
+  "renderedAtMs": 1793338964383,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 368,
+  "capturedAtMs": 1793338964460,
+  "renderedAtMs": 1793338964490,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 369,
+  "capturedAtMs": 1793338964566,
+  "renderedAtMs": 1793338964598,
+  "captureToSendMs": 0,
+  "networkMs": 29,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 370,
+  "capturedAtMs": 1793338964668,
+  "renderedAtMs": 1793338964696,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 371,
+  "capturedAtMs": 1793338964770,
+  "renderedAtMs": 1793338964798,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 372,
+  "capturedAtMs": 1793338964870,
+  "renderedAtMs": 1793338964898,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 373,
+  "capturedAtMs": 1793338964971,
+  "renderedAtMs": 1793338965000,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 374,
+  "capturedAtMs": 1793338965072,
+  "renderedAtMs": 1793338965101,
+  "captureToSendMs": 1,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 375,
+  "capturedAtMs": 1793338965176,
+  "renderedAtMs": 1793338965204,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 376,
+  "capturedAtMs": 1793338965277,
+  "renderedAtMs": 1793338965304,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 377,
+  "capturedAtMs": 1793338965382,
+  "renderedAtMs": 1793338965411,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 378,
+  "capturedAtMs": 1793338965489,
+  "renderedAtMs": 1793338965519,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 379,
+  "capturedAtMs": 1793338965590,
+  "renderedAtMs": 1793338965620,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 380,
+  "capturedAtMs": 1793338965692,
+  "renderedAtMs": 1793338965719,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 381,
+  "capturedAtMs": 1793338965796,
+  "renderedAtMs": 1793338965821,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 382,
+  "capturedAtMs": 1793338965901,
+  "renderedAtMs": 1793338965927,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 383,
+  "capturedAtMs": 1793338966003,
+  "renderedAtMs": 1793338966044,
+  "captureToSendMs": 0,
+  "networkMs": 39,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 384,
+  "capturedAtMs": 1793338966104,
+  "renderedAtMs": 1793338966125,
+  "captureToSendMs": 0,
+  "networkMs": 19,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 385,
+  "capturedAtMs": 1793338966206,
+  "renderedAtMs": 1793338966230,
+  "captureToSendMs": 0,
+  "networkMs": 21,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 386,
+  "capturedAtMs": 1793338966310,
+  "renderedAtMs": 1793338966340,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 387,
+  "capturedAtMs": 1793338966416,
+  "renderedAtMs": 1793338966445,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 388,
+  "capturedAtMs": 1793338966517,
+  "renderedAtMs": 1793338966546,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 389,
+  "capturedAtMs": 1793338966618,
+  "renderedAtMs": 1793338966646,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 390,
+  "capturedAtMs": 1793338966719,
+  "renderedAtMs": 1793338966749,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 391,
+  "capturedAtMs": 1793338966819,
+  "renderedAtMs": 1793338966848,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 392,
+  "capturedAtMs": 1793338966920,
+  "renderedAtMs": 1793338966947,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 393,
+  "capturedAtMs": 1793338967021,
+  "renderedAtMs": 1793338967049,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 394,
+  "capturedAtMs": 1793338967123,
+  "renderedAtMs": 1793338967152,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 395,
+  "capturedAtMs": 1793338967226,
+  "renderedAtMs": 1793338967255,
+  "captureToSendMs": 1,
+  "networkMs": 24,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 396,
+  "capturedAtMs": 1793338967330,
+  "renderedAtMs": 1793338967358,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 397,
+  "capturedAtMs": 1793338967437,
+  "renderedAtMs": 1793338967466,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 398,
+  "capturedAtMs": 1793338967538,
+  "renderedAtMs": 1793338967566,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 399,
+  "capturedAtMs": 1793338967640,
+  "renderedAtMs": 1793338967666,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 400,
+  "capturedAtMs": 1793338967743,
+  "renderedAtMs": 1793338967770,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 401,
+  "capturedAtMs": 1793338967847,
+  "renderedAtMs": 1793338967875,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 402,
+  "capturedAtMs": 1793338967951,
+  "renderedAtMs": 1793338967978,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 403,
+  "capturedAtMs": 1793338968051,
+  "renderedAtMs": 1793338968079,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 404,
+  "capturedAtMs": 1793338968151,
+  "renderedAtMs": 1793338968179,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 405,
+  "capturedAtMs": 1793338968251,
+  "renderedAtMs": 1793338968280,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 406,
+  "capturedAtMs": 1793338968353,
+  "renderedAtMs": 1793338968383,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 407,
+  "capturedAtMs": 1793338968454,
+  "renderedAtMs": 1793338968483,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 408,
+  "capturedAtMs": 1793338968556,
+  "renderedAtMs": 1793338968584,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 409,
+  "capturedAtMs": 1793338968658,
+  "renderedAtMs": 1793338968687,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 410,
+  "capturedAtMs": 1793338968760,
+  "renderedAtMs": 1793338968789,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 411,
+  "capturedAtMs": 1793338968860,
+  "renderedAtMs": 1793338968890,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 412,
+  "capturedAtMs": 1793338968966,
+  "renderedAtMs": 1793338968995,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 413,
+  "capturedAtMs": 1793338969078,
+  "renderedAtMs": 1793338969132,
+  "captureToSendMs": 1,
+  "networkMs": 49,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 414,
+  "capturedAtMs": 1793338969184,
+  "renderedAtMs": 1793338969206,
+  "captureToSendMs": 0,
+  "networkMs": 19,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 415,
+  "capturedAtMs": 1793338969287,
+  "renderedAtMs": 1793338969311,
+  "captureToSendMs": 0,
+  "networkMs": 21,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 416,
+  "capturedAtMs": 1793338969388,
+  "renderedAtMs": 1793338969413,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 417,
+  "capturedAtMs": 1793338969489,
+  "renderedAtMs": 1793338969516,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 418,
+  "capturedAtMs": 1793338969590,
+  "renderedAtMs": 1793338969617,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 419,
+  "capturedAtMs": 1793338969692,
+  "renderedAtMs": 1793338969720,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 420,
+  "capturedAtMs": 1793338969796,
+  "renderedAtMs": 1793338969822,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 421,
+  "capturedAtMs": 1793338969901,
+  "renderedAtMs": 1793338969929,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 422,
+  "capturedAtMs": 1793338970003,
+  "renderedAtMs": 1793338970032,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 423,
+  "capturedAtMs": 1793338970104,
+  "renderedAtMs": 1793338970133,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 424,
+  "capturedAtMs": 1793338970206,
+  "renderedAtMs": 1793338970233,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 425,
+  "capturedAtMs": 1793338970309,
+  "renderedAtMs": 1793338970334,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 426,
+  "capturedAtMs": 1793338970413,
+  "renderedAtMs": 1793338970445,
+  "captureToSendMs": 0,
+  "networkMs": 29,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 427,
+  "capturedAtMs": 1793338970517,
+  "renderedAtMs": 1793338970547,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 428,
+  "capturedAtMs": 1793338970618,
+  "renderedAtMs": 1793338970650,
+  "captureToSendMs": 0,
+  "networkMs": 29,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 429,
+  "capturedAtMs": 1793338970719,
+  "renderedAtMs": 1793338970748,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 430,
+  "capturedAtMs": 1793338970820,
+  "renderedAtMs": 1793338970847,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 431,
+  "capturedAtMs": 1793338970921,
+  "renderedAtMs": 1793338970948,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 432,
+  "capturedAtMs": 1793338971023,
+  "renderedAtMs": 1793338971051,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 433,
+  "capturedAtMs": 1793338971126,
+  "renderedAtMs": 1793338971156,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 434,
+  "capturedAtMs": 1793338971229,
+  "renderedAtMs": 1793338971258,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 435,
+  "capturedAtMs": 1793338971334,
+  "renderedAtMs": 1793338971364,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 436,
+  "capturedAtMs": 1793338971437,
+  "renderedAtMs": 1793338971464,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 437,
+  "capturedAtMs": 1793338971538,
+  "renderedAtMs": 1793338971565,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 438,
+  "capturedAtMs": 1793338971639,
+  "renderedAtMs": 1793338971668,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 439,
+  "capturedAtMs": 1793338971741,
+  "renderedAtMs": 1793338971769,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 440,
+  "capturedAtMs": 1793338971844,
+  "renderedAtMs": 1793338971876,
+  "captureToSendMs": 0,
+  "networkMs": 29,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 441,
+  "capturedAtMs": 1793338971947,
+  "renderedAtMs": 1793338971977,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 442,
+  "capturedAtMs": 1793338972048,
+  "renderedAtMs": 1793338972078,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 443,
+  "capturedAtMs": 1793338972153,
+  "renderedAtMs": 1793338972174,
+  "captureToSendMs": 0,
+  "networkMs": 19,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 444,
+  "capturedAtMs": 1793338972254,
+  "renderedAtMs": 1793338972278,
+  "captureToSendMs": 0,
+  "networkMs": 21,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 445,
+  "capturedAtMs": 1793338972357,
+  "renderedAtMs": 1793338972384,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 446,
+  "capturedAtMs": 1793338972462,
+  "renderedAtMs": 1793338972491,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 447,
+  "capturedAtMs": 1793338972567,
+  "renderedAtMs": 1793338972598,
+  "captureToSendMs": 0,
+  "networkMs": 28,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 448,
+  "capturedAtMs": 1793338972667,
+  "renderedAtMs": 1793338972695,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 449,
+  "capturedAtMs": 1793338972768,
+  "renderedAtMs": 1793338972797,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 450,
+  "capturedAtMs": 1793338972869,
+  "renderedAtMs": 1793338972898,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 451,
+  "capturedAtMs": 1793338972969,
+  "renderedAtMs": 1793338972998,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 452,
+  "capturedAtMs": 1793338973070,
+  "renderedAtMs": 1793338973098,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 453,
+  "capturedAtMs": 1793338973171,
+  "renderedAtMs": 1793338973197,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 454,
+  "capturedAtMs": 1793338973272,
+  "renderedAtMs": 1793338973298,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 455,
+  "capturedAtMs": 1793338973374,
+  "renderedAtMs": 1793338973401,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 456,
+  "capturedAtMs": 1793338973475,
+  "renderedAtMs": 1793338973504,
+  "captureToSendMs": 1,
+  "networkMs": 26,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 457,
+  "capturedAtMs": 1793338973580,
+  "renderedAtMs": 1793338973611,
+  "captureToSendMs": 0,
+  "networkMs": 28,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 458,
+  "capturedAtMs": 1793338973687,
+  "renderedAtMs": 1793338973716,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 459,
+  "capturedAtMs": 1793338973787,
+  "renderedAtMs": 1793338973815,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 460,
+  "capturedAtMs": 1793338973888,
+  "renderedAtMs": 1793338973917,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 461,
+  "capturedAtMs": 1793338973990,
+  "renderedAtMs": 1793338974018,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 462,
+  "capturedAtMs": 1793338974092,
+  "renderedAtMs": 1793338974117,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 463,
+  "capturedAtMs": 1793338974195,
+  "renderedAtMs": 1793338974227,
+  "captureToSendMs": 0,
+  "networkMs": 28,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 464,
+  "capturedAtMs": 1793338974296,
+  "renderedAtMs": 1793338974327,
+  "captureToSendMs": 0,
+  "networkMs": 28,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 465,
+  "capturedAtMs": 1793338974400,
+  "renderedAtMs": 1793338974430,
+  "captureToSendMs": 1,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 466,
+  "capturedAtMs": 1793338974501,
+  "renderedAtMs": 1793338974529,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 467,
+  "capturedAtMs": 1793338974602,
+  "renderedAtMs": 1793338974630,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 468,
+  "capturedAtMs": 1793338974703,
+  "renderedAtMs": 1793338974730,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 469,
+  "capturedAtMs": 1793338974805,
+  "renderedAtMs": 1793338974833,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 470,
+  "capturedAtMs": 1793338974906,
+  "renderedAtMs": 1793338974933,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 471,
+  "capturedAtMs": 1793338975008,
+  "renderedAtMs": 1793338975036,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 472,
+  "capturedAtMs": 1793338975112,
+  "renderedAtMs": 1793338975143,
+  "captureToSendMs": 0,
+  "networkMs": 28,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 473,
+  "capturedAtMs": 1793338975218,
+  "renderedAtMs": 1793338975240,
+  "captureToSendMs": 0,
+  "networkMs": 19,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 474,
+  "capturedAtMs": 1793338975319,
+  "renderedAtMs": 1793338975341,
+  "captureToSendMs": 0,
+  "networkMs": 20,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 475,
+  "capturedAtMs": 1793338975420,
+  "renderedAtMs": 1793338975447,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 476,
+  "capturedAtMs": 1793338975521,
+  "renderedAtMs": 1793338975548,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 477,
+  "capturedAtMs": 1793338975623,
+  "renderedAtMs": 1793338975650,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 478,
+  "capturedAtMs": 1793338975727,
+  "renderedAtMs": 1793338975755,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 479,
+  "capturedAtMs": 1793338975830,
+  "renderedAtMs": 1793338975861,
+  "captureToSendMs": 0,
+  "networkMs": 28,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 480,
+  "capturedAtMs": 1793338975937,
+  "renderedAtMs": 1793338975967,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 481,
+  "capturedAtMs": 1793338976038,
+  "renderedAtMs": 1793338976067,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 482,
+  "capturedAtMs": 1793338976138,
+  "renderedAtMs": 1793338976167,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 483,
+  "capturedAtMs": 1793338976240,
+  "renderedAtMs": 1793338976267,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 484,
+  "capturedAtMs": 1793338976342,
+  "renderedAtMs": 1793338976370,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 485,
+  "capturedAtMs": 1793338976446,
+  "renderedAtMs": 1793338976474,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 486,
+  "capturedAtMs": 1793338976551,
+  "renderedAtMs": 1793338976576,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 487,
+  "capturedAtMs": 1793338976652,
+  "renderedAtMs": 1793338976678,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 488,
+  "capturedAtMs": 1793338976755,
+  "renderedAtMs": 1793338976782,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 489,
+  "capturedAtMs": 1793338976858,
+  "renderedAtMs": 1793338976885,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 490,
+  "capturedAtMs": 1793338976963,
+  "renderedAtMs": 1793338976991,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 491,
+  "capturedAtMs": 1793338977068,
+  "renderedAtMs": 1793338977094,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 492,
+  "capturedAtMs": 1793338977170,
+  "renderedAtMs": 1793338977196,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 493,
+  "capturedAtMs": 1793338977273,
+  "renderedAtMs": 1793338977301,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 494,
+  "capturedAtMs": 1793338977373,
+  "renderedAtMs": 1793338977399,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 495,
+  "capturedAtMs": 1793338977477,
+  "renderedAtMs": 1793338977505,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 496,
+  "capturedAtMs": 1793338977581,
+  "renderedAtMs": 1793338977611,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 497,
+  "capturedAtMs": 1793338977686,
+  "renderedAtMs": 1793338977714,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 498,
+  "capturedAtMs": 1793338977787,
+  "renderedAtMs": 1793338977814,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 499,
+  "capturedAtMs": 1793338977889,
+  "renderedAtMs": 1793338977917,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 500,
+  "capturedAtMs": 1793338977991,
+  "renderedAtMs": 1793338978019,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 501,
+  "capturedAtMs": 1793338978094,
+  "renderedAtMs": 1793338978128,
+  "captureToSendMs": 1,
+  "networkMs": 30,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 502,
+  "capturedAtMs": 1793338978200,
+  "renderedAtMs": 1793338978258,
+  "captureToSendMs": 0,
+  "networkMs": 55,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 503,
+  "capturedAtMs": 1793338978300,
+  "renderedAtMs": 1793338978321,
+  "captureToSendMs": 0,
+  "networkMs": 19,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 504,
+  "capturedAtMs": 1793338978400,
+  "renderedAtMs": 1793338978424,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 505,
+  "capturedAtMs": 1793338978500,
+  "renderedAtMs": 1793338978527,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 506,
+  "capturedAtMs": 1793338978601,
+  "renderedAtMs": 1793338978628,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 507,
+  "capturedAtMs": 1793338978701,
+  "renderedAtMs": 1793338978728,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 508,
+  "capturedAtMs": 1793338978801,
+  "renderedAtMs": 1793338978829,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 509,
+  "capturedAtMs": 1793338978902,
+  "renderedAtMs": 1793338978931,
+  "captureToSendMs": 1,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 510,
+  "capturedAtMs": 1793338979004,
+  "renderedAtMs": 1793338979031,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 511,
+  "capturedAtMs": 1793338979107,
+  "renderedAtMs": 1793338979133,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 512,
+  "capturedAtMs": 1793338979207,
+  "renderedAtMs": 1793338979236,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 513,
+  "capturedAtMs": 1793338979310,
+  "renderedAtMs": 1793338979335,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 514,
+  "capturedAtMs": 1793338979414,
+  "renderedAtMs": 1793338979441,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 515,
+  "capturedAtMs": 1793338979517,
+  "renderedAtMs": 1793338979545,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 516,
+  "capturedAtMs": 1793338979617,
+  "renderedAtMs": 1793338979645,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 517,
+  "capturedAtMs": 1793338979719,
+  "renderedAtMs": 1793338979747,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 518,
+  "capturedAtMs": 1793338979820,
+  "renderedAtMs": 1793338979848,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 519,
+  "capturedAtMs": 1793338979921,
+  "renderedAtMs": 1793338979948,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 520,
+  "capturedAtMs": 1793338980022,
+  "renderedAtMs": 1793338980051,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 521,
+  "capturedAtMs": 1793338980125,
+  "renderedAtMs": 1793338980151,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 522,
+  "capturedAtMs": 1793338980229,
+  "renderedAtMs": 1793338980259,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 523,
+  "capturedAtMs": 1793338980332,
+  "renderedAtMs": 1793338980362,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 524,
+  "capturedAtMs": 1793338980436,
+  "renderedAtMs": 1793338980465,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 525,
+  "capturedAtMs": 1793338980536,
+  "renderedAtMs": 1793338980565,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 526,
+  "capturedAtMs": 1793338980637,
+  "renderedAtMs": 1793338980663,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 527,
+  "capturedAtMs": 1793338980738,
+  "renderedAtMs": 1793338980765,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 528,
+  "capturedAtMs": 1793338980839,
+  "renderedAtMs": 1793338980867,
+  "captureToSendMs": 1,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 529,
+  "capturedAtMs": 1793338980940,
+  "renderedAtMs": 1793338980969,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 530,
+  "capturedAtMs": 1793338981042,
+  "renderedAtMs": 1793338981072,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 531,
+  "capturedAtMs": 1793338981147,
+  "renderedAtMs": 1793338981175,
+  "captureToSendMs": 1,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 532,
+  "capturedAtMs": 1793338981251,
+  "renderedAtMs": 1793338981308,
+  "captureToSendMs": 0,
+  "networkMs": 55,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 533,
+  "capturedAtMs": 1793338981351,
+  "renderedAtMs": 1793338981372,
+  "captureToSendMs": 0,
+  "networkMs": 19,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 534,
+  "capturedAtMs": 1793338981452,
+  "renderedAtMs": 1793338981475,
+  "captureToSendMs": 0,
+  "networkMs": 20,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 535,
+  "capturedAtMs": 1793338981554,
+  "renderedAtMs": 1793338981580,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 536,
+  "capturedAtMs": 1793338981657,
+  "renderedAtMs": 1793338981684,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 537,
+  "capturedAtMs": 1793338981761,
+  "renderedAtMs": 1793338981789,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 538,
+  "capturedAtMs": 1793338981867,
+  "renderedAtMs": 1793338981895,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 539,
+  "capturedAtMs": 1793338981969,
+  "renderedAtMs": 1793338981998,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 540,
+  "capturedAtMs": 1793338982070,
+  "renderedAtMs": 1793338982097,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 541,
+  "capturedAtMs": 1793338982171,
+  "renderedAtMs": 1793338982200,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 542,
+  "capturedAtMs": 1793338982273,
+  "renderedAtMs": 1793338982302,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 543,
+  "capturedAtMs": 1793338982377,
+  "renderedAtMs": 1793338982409,
+  "captureToSendMs": 0,
+  "networkMs": 29,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 544,
+  "capturedAtMs": 1793338982482,
+  "renderedAtMs": 1793338982513,
+  "captureToSendMs": 0,
+  "networkMs": 28,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 545,
+  "capturedAtMs": 1793338982584,
+  "renderedAtMs": 1793338982613,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 546,
+  "capturedAtMs": 1793338982687,
+  "renderedAtMs": 1793338982715,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 547,
+  "capturedAtMs": 1793338982788,
+  "renderedAtMs": 1793338982817,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 548,
+  "capturedAtMs": 1793338982888,
+  "renderedAtMs": 1793338982917,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 549,
+  "capturedAtMs": 1793338982991,
+  "renderedAtMs": 1793338983018,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 550,
+  "capturedAtMs": 1793338983095,
+  "renderedAtMs": 1793338983123,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 551,
+  "capturedAtMs": 1793338983199,
+  "renderedAtMs": 1793338983228,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 552,
+  "capturedAtMs": 1793338983301,
+  "renderedAtMs": 1793338983330,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 553,
+  "capturedAtMs": 1793338983402,
+  "renderedAtMs": 1793338983429,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 554,
+  "capturedAtMs": 1793338983504,
+  "renderedAtMs": 1793338983532,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 555,
+  "capturedAtMs": 1793338983607,
+  "renderedAtMs": 1793338983632,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 556,
+  "capturedAtMs": 1793338983709,
+  "renderedAtMs": 1793338983734,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 557,
+  "capturedAtMs": 1793338983814,
+  "renderedAtMs": 1793338983842,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 558,
+  "capturedAtMs": 1793338983917,
+  "renderedAtMs": 1793338983946,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 559,
+  "capturedAtMs": 1793338984017,
+  "renderedAtMs": 1793338984046,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 560,
+  "capturedAtMs": 1793338984119,
+  "renderedAtMs": 1793338984147,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 561,
+  "capturedAtMs": 1793338984220,
+  "renderedAtMs": 1793338984247,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 562,
+  "capturedAtMs": 1793338984322,
+  "renderedAtMs": 1793338984375,
+  "captureToSendMs": 0,
+  "networkMs": 50,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 563,
+  "capturedAtMs": 1793338984424,
+  "renderedAtMs": 1793338984446,
+  "captureToSendMs": 0,
+  "networkMs": 19,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 564,
+  "capturedAtMs": 1793338984528,
+  "renderedAtMs": 1793338984553,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 565,
+  "capturedAtMs": 1793338984636,
+  "renderedAtMs": 1793338984658,
+  "captureToSendMs": 0,
+  "networkMs": 20,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 566,
+  "capturedAtMs": 1793338984737,
+  "renderedAtMs": 1793338984763,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 567,
+  "capturedAtMs": 1793338984838,
+  "renderedAtMs": 1793338984864,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 568,
+  "capturedAtMs": 1793338984939,
+  "renderedAtMs": 1793338984965,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 569,
+  "capturedAtMs": 1793338985042,
+  "renderedAtMs": 1793338985072,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 570,
+  "capturedAtMs": 1793338985145,
+  "renderedAtMs": 1793338985171,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 571,
+  "capturedAtMs": 1793338985250,
+  "renderedAtMs": 1793338985276,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 572,
+  "capturedAtMs": 1793338985351,
+  "renderedAtMs": 1793338985375,
+  "captureToSendMs": 0,
+  "networkMs": 21,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 573,
+  "capturedAtMs": 1793338985452,
+  "renderedAtMs": 1793338985478,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 574,
+  "capturedAtMs": 1793338985555,
+  "renderedAtMs": 1793338985581,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 575,
+  "capturedAtMs": 1793338985658,
+  "renderedAtMs": 1793338985684,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 576,
+  "capturedAtMs": 1793338985760,
+  "renderedAtMs": 1793338985786,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 577,
+  "capturedAtMs": 1793338985862,
+  "renderedAtMs": 1793338985890,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 578,
+  "capturedAtMs": 1793338985967,
+  "renderedAtMs": 1793338985996,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 579,
+  "capturedAtMs": 1793338986067,
+  "renderedAtMs": 1793338986095,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 580,
+  "capturedAtMs": 1793338986167,
+  "renderedAtMs": 1793338986195,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 581,
+  "capturedAtMs": 1793338986268,
+  "renderedAtMs": 1793338986297,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 582,
+  "capturedAtMs": 1793338986368,
+  "renderedAtMs": 1793338986396,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 583,
+  "capturedAtMs": 1793338986469,
+  "renderedAtMs": 1793338986498,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 584,
+  "capturedAtMs": 1793338986571,
+  "renderedAtMs": 1793338986600,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 585,
+  "capturedAtMs": 1793338986673,
+  "renderedAtMs": 1793338986702,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 586,
+  "capturedAtMs": 1793338986776,
+  "renderedAtMs": 1793338986805,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 587,
+  "capturedAtMs": 1793338986881,
+  "renderedAtMs": 1793338986910,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 588,
+  "capturedAtMs": 1793338986983,
+  "renderedAtMs": 1793338987011,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 589,
+  "capturedAtMs": 1793338987087,
+  "renderedAtMs": 1793338987114,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 590,
+  "capturedAtMs": 1793338987188,
+  "renderedAtMs": 1793338987213,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 591,
+  "capturedAtMs": 1793338987289,
+  "renderedAtMs": 1793338987314,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 592,
+  "capturedAtMs": 1793338987391,
+  "renderedAtMs": 1793338987422,
+  "captureToSendMs": 0,
+  "networkMs": 28,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 593,
+  "capturedAtMs": 1793338987493,
+  "renderedAtMs": 1793338987516,
+  "captureToSendMs": 0,
+  "networkMs": 20,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 594,
+  "capturedAtMs": 1793338987598,
+  "renderedAtMs": 1793338987622,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 595,
+  "capturedAtMs": 1793338987701,
+  "renderedAtMs": 1793338987725,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 596,
+  "capturedAtMs": 1793338987802,
+  "renderedAtMs": 1793338987827,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 597,
+  "capturedAtMs": 1793338987905,
+  "renderedAtMs": 1793338987932,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 598,
+  "capturedAtMs": 1793338988008,
+  "renderedAtMs": 1793338988036,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 599,
+  "capturedAtMs": 1793338988109,
+  "renderedAtMs": 1793338988139,
+  "captureToSendMs": 0,
+  "networkMs": 27,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 600,
+  "capturedAtMs": 1793338988215,
+  "renderedAtMs": 1793338988245,
+  "captureToSendMs": 0,
+  "networkMs": 26,
+  "renderMs": 4,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 601,
+  "capturedAtMs": 1793338988317,
+  "renderedAtMs": 1793338988344,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 602,
+  "capturedAtMs": 1793338988419,
+  "renderedAtMs": 1793338988445,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 603,
+  "capturedAtMs": 1793338988520,
+  "renderedAtMs": 1793338988552,
+  "captureToSendMs": 0,
+  "networkMs": 29,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 604,
+  "capturedAtMs": 1793338988622,
+  "renderedAtMs": 1793338988647,
+  "captureToSendMs": 0,
+  "networkMs": 22,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 605,
+  "capturedAtMs": 1793338988724,
+  "renderedAtMs": 1793338988750,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 2,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 606,
+  "capturedAtMs": 1793338988826,
+  "renderedAtMs": 1793338988854,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 607,
+  "capturedAtMs": 1793338988931,
+  "renderedAtMs": 1793338988959,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 608,
+  "capturedAtMs": 1793338989033,
+  "renderedAtMs": 1793338989061,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 609,
+  "capturedAtMs": 1793338989137,
+  "renderedAtMs": 1793338989165,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 610,
+  "capturedAtMs": 1793338989238,
+  "renderedAtMs": 1793338989266,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 611,
+  "capturedAtMs": 1793338989340,
+  "renderedAtMs": 1793338989367,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 612,
+  "capturedAtMs": 1793338989444,
+  "renderedAtMs": 1793338989471,
+  "captureToSendMs": 0,
+  "networkMs": 24,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 613,
+  "capturedAtMs": 1793338989549,
+  "renderedAtMs": 1793338989577,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 614,
+  "capturedAtMs": 1793338989650,
+  "renderedAtMs": 1793338989678,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 615,
+  "capturedAtMs": 1793338989752,
+  "renderedAtMs": 1793338989780,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 616,
+  "capturedAtMs": 1793338989853,
+  "renderedAtMs": 1793338989881,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 617,
+  "capturedAtMs": 1793338989955,
+  "renderedAtMs": 1793338989983,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 618,
+  "capturedAtMs": 1793338990058,
+  "renderedAtMs": 1793338990086,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 619,
+  "capturedAtMs": 1793338990160,
+  "renderedAtMs": 1793338990186,
+  "captureToSendMs": 0,
+  "networkMs": 23,
+  "renderMs": 3,
+  "attemptIndex": 1
+ },
+ {
+  "windowId": 620,
+  "capturedAtMs": 1793338990265,
+  "renderedAtMs": 1793338990293,
+  "captureToSendMs": 0,
+  "networkMs": 25,
+  "renderMs": 3,
+  "attemptIndex": 1
+ }
+]

@@ -1,0 +1,3034 @@
+{
+  "protocol_sha256": "b63050221c467ac7ed1ced0ae5e4af95ca734a7ba15fe4d7af94c948074c988f",
+  "t0": "2026-10-25T00:00:00+00:00",
+  "interval_ms": 100,
+  "telemetry_source": "prepared_replay",
+  "features": {
+    "speed_kmph": 34,
+    "accel_x": 0.3,
+    "accel_y": 0.1,
+    "brake_pressure": 12,
+    "steering_angle": -2,
+    "throttle": 30,
+    "lane_deviation": 0.3,
+    "headway_distance": 26
+  },
+  "expected_telemetry_sha256": "9802cb06ca98f0c1befaf851fa7668cfec70e005cf8bb3884e49d7d45d7aec07",
+  "config": {
+    "weight_vision": 0.5,
+    "weight_telemetry": 0.5,
+    "ema_alpha": 0.35,
+    "threshold_low": 30,
+    "threshold_high": 60,
+    "freshness_tolerance_s": 3
+  },
+  "steps": [
+    {
+      "sequence_index": 0,
+      "source_id": "vision-v1:c0/img_10012.jpg",
+      "class_id": "c0",
+      "filename": "img_10012.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c0/img_10012.jpg",
+      "sha256": "7560b00e6c4f2503324d1836155ef0e592c4f9c95847bd7e0e9e730ea05aaab1",
+      "t_iso": "2026-10-25T00:00:00+00:00",
+      "request_id": "task10a_w0001",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 1
+      },
+      "telemetry_seq": 1
+    },
+    {
+      "sequence_index": 1,
+      "source_id": "vision-v1:c0/img_100605.jpg",
+      "class_id": "c0",
+      "filename": "img_100605.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c0/img_100605.jpg",
+      "sha256": "29d645c156de3961dbcb060e3ef6236ae001240b58db0861498110fc2b44f2e8",
+      "t_iso": "2026-10-25T00:00:00.100000+00:00",
+      "request_id": "task10a_w0002",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 2
+      },
+      "telemetry_seq": 2
+    },
+    {
+      "sequence_index": 2,
+      "source_id": "vision-v1:c0/img_100828.jpg",
+      "class_id": "c0",
+      "filename": "img_100828.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c0/img_100828.jpg",
+      "sha256": "a2f0e32c64c09f14f6110f5e67042893bbd14f2f8ea23c20acdd01f25236bbf6",
+      "t_iso": "2026-10-25T00:00:00.200000+00:00",
+      "request_id": "task10a_w0003",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 3
+      },
+      "telemetry_seq": 3
+    },
+    {
+      "sequence_index": 3,
+      "source_id": "vision-v1:c0/img_101392.jpg",
+      "class_id": "c0",
+      "filename": "img_101392.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c0/img_101392.jpg",
+      "sha256": "2f4836f0d69542d75c29f5350ef9cd573ef117440151026c69c65be414c3298f",
+      "t_iso": "2026-10-25T00:00:00.300000+00:00",
+      "request_id": "task10a_w0004",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 4
+      },
+      "telemetry_seq": 4
+    },
+    {
+      "sequence_index": 4,
+      "source_id": "vision-v1:c0/img_10175.jpg",
+      "class_id": "c0",
+      "filename": "img_10175.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c0/img_10175.jpg",
+      "sha256": "cf05f06a57cbd6ab2524db02914dfbf7253de45fa885ef4a3fd27c008ce80c7a",
+      "t_iso": "2026-10-25T00:00:00.400000+00:00",
+      "request_id": "task10a_w0005",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 5
+      },
+      "telemetry_seq": 5
+    },
+    {
+      "sequence_index": 5,
+      "source_id": "vision-v1:c0/img_102025.jpg",
+      "class_id": "c0",
+      "filename": "img_102025.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c0/img_102025.jpg",
+      "sha256": "17135bda805cc4edd2acc7fcb22a02cfd016a60f9fe5aa826289370cc9fbd3bc",
+      "t_iso": "2026-10-25T00:00:00.500000+00:00",
+      "request_id": "task10a_w0006",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 6
+      },
+      "telemetry_seq": 6
+    },
+    {
+      "sequence_index": 6,
+      "source_id": "vision-v1:c0/img_10446.jpg",
+      "class_id": "c0",
+      "filename": "img_10446.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c0/img_10446.jpg",
+      "sha256": "3db97b52e9cf73c6756223ffca128165b63703a52477f4a5d4aa11ec800bbeb0",
+      "t_iso": "2026-10-25T00:00:00.600000+00:00",
+      "request_id": "task10a_w0007",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 7
+      },
+      "telemetry_seq": 7
+    },
+    {
+      "sequence_index": 7,
+      "source_id": "vision-v1:c0/img_10627.jpg",
+      "class_id": "c0",
+      "filename": "img_10627.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c0/img_10627.jpg",
+      "sha256": "925131720b3f7adcbc07e677277a1fe11b94a583b5081ecb08e4f4136dd2db38",
+      "t_iso": "2026-10-25T00:00:00.700000+00:00",
+      "request_id": "task10a_w0008",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 8
+      },
+      "telemetry_seq": 8
+    },
+    {
+      "sequence_index": 8,
+      "source_id": "vision-v1:c0/img_10741.jpg",
+      "class_id": "c0",
+      "filename": "img_10741.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c0/img_10741.jpg",
+      "sha256": "cb9f061eced6316ca4cbdb03aa782adef7f11efa566e9c3ab99ad50e24805b30",
+      "t_iso": "2026-10-25T00:00:00.800000+00:00",
+      "request_id": "task10a_w0009",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 9
+      },
+      "telemetry_seq": 9
+    },
+    {
+      "sequence_index": 9,
+      "source_id": "vision-v1:c0/img_10792.jpg",
+      "class_id": "c0",
+      "filename": "img_10792.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c0/img_10792.jpg",
+      "sha256": "fa68bfac6c9361fa4459f4330a7842801ec743df03d52ee363bd1dad1246d6a3",
+      "t_iso": "2026-10-25T00:00:00.900000+00:00",
+      "request_id": "task10a_w0010",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 10
+      },
+      "telemetry_seq": 10
+    },
+    {
+      "sequence_index": 10,
+      "source_id": "vision-v1:c0/img_11582.jpg",
+      "class_id": "c0",
+      "filename": "img_11582.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c0/img_11582.jpg",
+      "sha256": "e0bea4d977699c47656193924b0fc5498b2a0d3671fdb9571b5c44a80b07c74c",
+      "t_iso": "2026-10-25T00:00:01+00:00",
+      "request_id": "task10a_w0011",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 11
+      },
+      "telemetry_seq": 11
+    },
+    {
+      "sequence_index": 11,
+      "source_id": "vision-v1:c0/img_1230.jpg",
+      "class_id": "c0",
+      "filename": "img_1230.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c0/img_1230.jpg",
+      "sha256": "8e9f7ef10d07cdb0098dea5ea5e8ab6b03fcb96c9f2c28854194621af7fb0242",
+      "t_iso": "2026-10-25T00:00:01.100000+00:00",
+      "request_id": "task10a_w0012",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 12
+      },
+      "telemetry_seq": 12
+    },
+    {
+      "sequence_index": 12,
+      "source_id": "vision-v1:c0/img_1236.jpg",
+      "class_id": "c0",
+      "filename": "img_1236.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c0/img_1236.jpg",
+      "sha256": "c93357cbd1be3be4217aecc523d4077fd82f7f033aafc1b8a317ae5cb38a5ca8",
+      "t_iso": "2026-10-25T00:00:01.200000+00:00",
+      "request_id": "task10a_w0013",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 13
+      },
+      "telemetry_seq": 13
+    },
+    {
+      "sequence_index": 13,
+      "source_id": "vision-v1:c0/img_12772.jpg",
+      "class_id": "c0",
+      "filename": "img_12772.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c0/img_12772.jpg",
+      "sha256": "b8f32c4ff74df2dacd6c98236f528af34bb36bd8ae5a539765a0b6871d73b6fc",
+      "t_iso": "2026-10-25T00:00:01.300000+00:00",
+      "request_id": "task10a_w0014",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 14
+      },
+      "telemetry_seq": 14
+    },
+    {
+      "sequence_index": 14,
+      "source_id": "vision-v1:c0/img_13073.jpg",
+      "class_id": "c0",
+      "filename": "img_13073.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c0/img_13073.jpg",
+      "sha256": "ead0339ca6d41806db15f29fe40db61a8c8a62b2269aa304dd3b5486f2d8b2a2",
+      "t_iso": "2026-10-25T00:00:01.400000+00:00",
+      "request_id": "task10a_w0015",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 15
+      },
+      "telemetry_seq": 15
+    },
+    {
+      "sequence_index": 15,
+      "source_id": "vision-v1:c0/img_13328.jpg",
+      "class_id": "c0",
+      "filename": "img_13328.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c0/img_13328.jpg",
+      "sha256": "a63fbe1fb67da5f35ea2f685af327563d5deb10fd6f36b90fbe4a756f1df5ff8",
+      "t_iso": "2026-10-25T00:00:01.500000+00:00",
+      "request_id": "task10a_w0016",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 16
+      },
+      "telemetry_seq": 16
+    },
+    {
+      "sequence_index": 16,
+      "source_id": "vision-v1:c0/img_13585.jpg",
+      "class_id": "c0",
+      "filename": "img_13585.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c0/img_13585.jpg",
+      "sha256": "bcaf10895e565a7f65b3de58e6fb3045d32e8fd88feff30622f1f596b245da96",
+      "t_iso": "2026-10-25T00:00:01.600000+00:00",
+      "request_id": "task10a_w0017",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 17
+      },
+      "telemetry_seq": 17
+    },
+    {
+      "sequence_index": 17,
+      "source_id": "vision-v1:c0/img_1363.jpg",
+      "class_id": "c0",
+      "filename": "img_1363.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c0/img_1363.jpg",
+      "sha256": "537f3cc6150745920deb353bde67f3ab89773fcfdb05ade0bd22b568f128b787",
+      "t_iso": "2026-10-25T00:00:01.700000+00:00",
+      "request_id": "task10a_w0018",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 18
+      },
+      "telemetry_seq": 18
+    },
+    {
+      "sequence_index": 18,
+      "source_id": "vision-v1:c0/img_13696.jpg",
+      "class_id": "c0",
+      "filename": "img_13696.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c0/img_13696.jpg",
+      "sha256": "6fc5d2a94e63e0d0632ac85eb8ee7158e506b451f5929be2e5671e8682988d3b",
+      "t_iso": "2026-10-25T00:00:01.800000+00:00",
+      "request_id": "task10a_w0019",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 19
+      },
+      "telemetry_seq": 19
+    },
+    {
+      "sequence_index": 19,
+      "source_id": "vision-v1:c0/img_14313.jpg",
+      "class_id": "c0",
+      "filename": "img_14313.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c0/img_14313.jpg",
+      "sha256": "97c8182accbbda858b12d5d4c70da57aa7eadbe94f6a2433a9754d8891e50a7e",
+      "t_iso": "2026-10-25T00:00:01.900000+00:00",
+      "request_id": "task10a_w0020",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 20
+      },
+      "telemetry_seq": 20
+    },
+    {
+      "sequence_index": 20,
+      "source_id": "vision-v1:c1/img_100348.jpg",
+      "class_id": "c1",
+      "filename": "img_100348.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c1/img_100348.jpg",
+      "sha256": "8a7ddc825c3da4bced5a6c0ded6c941564cafa36dabfd2179d03d47b24628d5d",
+      "t_iso": "2026-10-25T00:00:02+00:00",
+      "request_id": "task10a_w0021",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 21
+      },
+      "telemetry_seq": 21
+    },
+    {
+      "sequence_index": 21,
+      "source_id": "vision-v1:c1/img_100358.jpg",
+      "class_id": "c1",
+      "filename": "img_100358.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c1/img_100358.jpg",
+      "sha256": "568a5681ae295aedf2c42b08638e28755b5a96256aa98a1b0901f6154a4ece45",
+      "t_iso": "2026-10-25T00:00:02.100000+00:00",
+      "request_id": "task10a_w0022",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 22
+      },
+      "telemetry_seq": 22
+    },
+    {
+      "sequence_index": 22,
+      "source_id": "vision-v1:c1/img_100594.jpg",
+      "class_id": "c1",
+      "filename": "img_100594.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c1/img_100594.jpg",
+      "sha256": "ba565f0befeea9c35e7901d49a9cc08c4fc37070e61d2d118f03a1630cd78a56",
+      "t_iso": "2026-10-25T00:00:02.200000+00:00",
+      "request_id": "task10a_w0023",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 23
+      },
+      "telemetry_seq": 23
+    },
+    {
+      "sequence_index": 23,
+      "source_id": "vision-v1:c1/img_100777.jpg",
+      "class_id": "c1",
+      "filename": "img_100777.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c1/img_100777.jpg",
+      "sha256": "0a492fa01e4cda382dc71faf405fb2e3b9bbe3c7db2fac38e4946266453416f4",
+      "t_iso": "2026-10-25T00:00:02.300000+00:00",
+      "request_id": "task10a_w0024",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 24
+      },
+      "telemetry_seq": 24
+    },
+    {
+      "sequence_index": 24,
+      "source_id": "vision-v1:c1/img_101681.jpg",
+      "class_id": "c1",
+      "filename": "img_101681.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c1/img_101681.jpg",
+      "sha256": "de929f77e8c65924575203f5ab338f6242f758dee7e3e3812c5904d28d4740ca",
+      "t_iso": "2026-10-25T00:00:02.400000+00:00",
+      "request_id": "task10a_w0025",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 25
+      },
+      "telemetry_seq": 25
+    },
+    {
+      "sequence_index": 25,
+      "source_id": "vision-v1:c1/img_10229.jpg",
+      "class_id": "c1",
+      "filename": "img_10229.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c1/img_10229.jpg",
+      "sha256": "b5fa6f5f52b8a0621c9692b2acc133e446012a8898ad0eaf86565a45f2a9301b",
+      "t_iso": "2026-10-25T00:00:02.500000+00:00",
+      "request_id": "task10a_w0026",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 26
+      },
+      "telemetry_seq": 26
+    },
+    {
+      "sequence_index": 26,
+      "source_id": "vision-v1:c1/img_1043.jpg",
+      "class_id": "c1",
+      "filename": "img_1043.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c1/img_1043.jpg",
+      "sha256": "9080de18951314f9f820950b06ae72ffb9cbd2ca766b51c40c787d2eb5dc9887",
+      "t_iso": "2026-10-25T00:00:02.600000+00:00",
+      "request_id": "task10a_w0027",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 27
+      },
+      "telemetry_seq": 27
+    },
+    {
+      "sequence_index": 27,
+      "source_id": "vision-v1:c1/img_1119.jpg",
+      "class_id": "c1",
+      "filename": "img_1119.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c1/img_1119.jpg",
+      "sha256": "9c78fb28c506c9e3491f1b4d7d46845246af91062ea029eb1132006f9c9ae97b",
+      "t_iso": "2026-10-25T00:00:02.700000+00:00",
+      "request_id": "task10a_w0028",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 28
+      },
+      "telemetry_seq": 28
+    },
+    {
+      "sequence_index": 28,
+      "source_id": "vision-v1:c1/img_11478.jpg",
+      "class_id": "c1",
+      "filename": "img_11478.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c1/img_11478.jpg",
+      "sha256": "45fc51715e17283ad160bf03bf7b47a82c0ecd4317dbb689bbdb0d8672ab262b",
+      "t_iso": "2026-10-25T00:00:02.800000+00:00",
+      "request_id": "task10a_w0029",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 29
+      },
+      "telemetry_seq": 29
+    },
+    {
+      "sequence_index": 29,
+      "source_id": "vision-v1:c1/img_11776.jpg",
+      "class_id": "c1",
+      "filename": "img_11776.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c1/img_11776.jpg",
+      "sha256": "d752ea13429ccb788f97497a3924208ddeec925adafd68bdc923fc61fd063856",
+      "t_iso": "2026-10-25T00:00:02.900000+00:00",
+      "request_id": "task10a_w0030",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 30
+      },
+      "telemetry_seq": 30
+    },
+    {
+      "sequence_index": 30,
+      "source_id": "vision-v1:c1/img_1182.jpg",
+      "class_id": "c1",
+      "filename": "img_1182.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c1/img_1182.jpg",
+      "sha256": "fbd5eb580b9d2a9986f730ed70962d5bfa52b6fbe4f18be09d2bcc365b3c9da2",
+      "t_iso": "2026-10-25T00:00:03+00:00",
+      "request_id": "task10a_w0031",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 31
+      },
+      "telemetry_seq": 31
+    },
+    {
+      "sequence_index": 31,
+      "source_id": "vision-v1:c1/img_12140.jpg",
+      "class_id": "c1",
+      "filename": "img_12140.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c1/img_12140.jpg",
+      "sha256": "b3dbca9d5e5653b6a21292d49a4f0f347c38fc1fe8dd7b2f7d19ef3cc5df6b42",
+      "t_iso": "2026-10-25T00:00:03.100000+00:00",
+      "request_id": "task10a_w0032",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 32
+      },
+      "telemetry_seq": 32
+    },
+    {
+      "sequence_index": 32,
+      "source_id": "vision-v1:c1/img_12216.jpg",
+      "class_id": "c1",
+      "filename": "img_12216.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c1/img_12216.jpg",
+      "sha256": "2a8d6026bdda359afabdbdeb3479b1c55126c23fa72da8f25f9af4263b57e0d9",
+      "t_iso": "2026-10-25T00:00:03.200000+00:00",
+      "request_id": "task10a_w0033",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 33
+      },
+      "telemetry_seq": 33
+    },
+    {
+      "sequence_index": 33,
+      "source_id": "vision-v1:c1/img_13160.jpg",
+      "class_id": "c1",
+      "filename": "img_13160.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c1/img_13160.jpg",
+      "sha256": "1fa2b025214556bcccb2fd3c0ffa80d1b5a4ec14cf5bfab859f0115d36d7fc2f",
+      "t_iso": "2026-10-25T00:00:03.300000+00:00",
+      "request_id": "task10a_w0034",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 34
+      },
+      "telemetry_seq": 34
+    },
+    {
+      "sequence_index": 34,
+      "source_id": "vision-v1:c1/img_13840.jpg",
+      "class_id": "c1",
+      "filename": "img_13840.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c1/img_13840.jpg",
+      "sha256": "ed37fe49bf98065b87660de0b2dcad058f54bb0c58ba30959ba3c8c0ccc6f3ee",
+      "t_iso": "2026-10-25T00:00:03.400000+00:00",
+      "request_id": "task10a_w0035",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 35
+      },
+      "telemetry_seq": 35
+    },
+    {
+      "sequence_index": 35,
+      "source_id": "vision-v1:c1/img_14298.jpg",
+      "class_id": "c1",
+      "filename": "img_14298.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c1/img_14298.jpg",
+      "sha256": "3c4f6a6066877eb223b06b6c59fb9562cc21adbcf5a1e40586de3cdc4249ce93",
+      "t_iso": "2026-10-25T00:00:03.500000+00:00",
+      "request_id": "task10a_w0036",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 36
+      },
+      "telemetry_seq": 36
+    },
+    {
+      "sequence_index": 36,
+      "source_id": "vision-v1:c1/img_14450.jpg",
+      "class_id": "c1",
+      "filename": "img_14450.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c1/img_14450.jpg",
+      "sha256": "265014dfa6c948146fbf6485cf892c64ac042f0116f0c39f48438bca77463550",
+      "t_iso": "2026-10-25T00:00:03.600000+00:00",
+      "request_id": "task10a_w0037",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 37
+      },
+      "telemetry_seq": 37
+    },
+    {
+      "sequence_index": 37,
+      "source_id": "vision-v1:c1/img_14659.jpg",
+      "class_id": "c1",
+      "filename": "img_14659.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c1/img_14659.jpg",
+      "sha256": "27c2e0caaf3f7eafcce58278bf207330565f1dffc92ac2230bcb3edd8de3ca1a",
+      "t_iso": "2026-10-25T00:00:03.700000+00:00",
+      "request_id": "task10a_w0038",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 38
+      },
+      "telemetry_seq": 38
+    },
+    {
+      "sequence_index": 38,
+      "source_id": "vision-v1:c1/img_1472.jpg",
+      "class_id": "c1",
+      "filename": "img_1472.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c1/img_1472.jpg",
+      "sha256": "8faa0ea0ca207f019c1e6ae6f6a60a940d809f32742cf1ad50ea569cac8428dc",
+      "t_iso": "2026-10-25T00:00:03.800000+00:00",
+      "request_id": "task10a_w0039",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 39
+      },
+      "telemetry_seq": 39
+    },
+    {
+      "sequence_index": 39,
+      "source_id": "vision-v1:c1/img_14746.jpg",
+      "class_id": "c1",
+      "filename": "img_14746.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c1/img_14746.jpg",
+      "sha256": "ed27a11f6c85e080cfd64eaa6ae132697e85875894b0021e1311088f181bfb63",
+      "t_iso": "2026-10-25T00:00:03.900000+00:00",
+      "request_id": "task10a_w0040",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 40
+      },
+      "telemetry_seq": 40
+    },
+    {
+      "sequence_index": 40,
+      "source_id": "vision-v1:c2/img_100242.jpg",
+      "class_id": "c2",
+      "filename": "img_100242.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c2/img_100242.jpg",
+      "sha256": "95d6017624853463df939e7ba7b2e3f99cc8d8d7e39db890947564b80b2e4b59",
+      "t_iso": "2026-10-25T00:00:04+00:00",
+      "request_id": "task10a_w0041",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 41
+      },
+      "telemetry_seq": 41
+    },
+    {
+      "sequence_index": 41,
+      "source_id": "vision-v1:c2/img_100246.jpg",
+      "class_id": "c2",
+      "filename": "img_100246.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c2/img_100246.jpg",
+      "sha256": "3cbeaa581f68177e2a9a8725169da524aa8f0f72381bc00db941538b5c191314",
+      "t_iso": "2026-10-25T00:00:04.100000+00:00",
+      "request_id": "task10a_w0042",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 42
+      },
+      "telemetry_seq": 42
+    },
+    {
+      "sequence_index": 42,
+      "source_id": "vision-v1:c2/img_100813.jpg",
+      "class_id": "c2",
+      "filename": "img_100813.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c2/img_100813.jpg",
+      "sha256": "20517cc6066bbc1dca1bd835db7b61454ee1f0c58f7a00c574720d9705abbb05",
+      "t_iso": "2026-10-25T00:00:04.200000+00:00",
+      "request_id": "task10a_w0043",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 43
+      },
+      "telemetry_seq": 43
+    },
+    {
+      "sequence_index": 43,
+      "source_id": "vision-v1:c2/img_101016.jpg",
+      "class_id": "c2",
+      "filename": "img_101016.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c2/img_101016.jpg",
+      "sha256": "ac9f2f3ea1935132100ab94fd94b8fc669c8a9b3c61c065dca129185ebe5768f",
+      "t_iso": "2026-10-25T00:00:04.300000+00:00",
+      "request_id": "task10a_w0044",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 44
+      },
+      "telemetry_seq": 44
+    },
+    {
+      "sequence_index": 44,
+      "source_id": "vision-v1:c2/img_101258.jpg",
+      "class_id": "c2",
+      "filename": "img_101258.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c2/img_101258.jpg",
+      "sha256": "cfbfa56a402920e1e07e9b235c09faeae6f4634e124eba65f5b1452f2158eed9",
+      "t_iso": "2026-10-25T00:00:04.400000+00:00",
+      "request_id": "task10a_w0045",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 45
+      },
+      "telemetry_seq": 45
+    },
+    {
+      "sequence_index": 45,
+      "source_id": "vision-v1:c2/img_101503.jpg",
+      "class_id": "c2",
+      "filename": "img_101503.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c2/img_101503.jpg",
+      "sha256": "ba8c1fa5bbc846c8e7fbfc4b37acb80961486ecc07004e4314ff015cc86ac55b",
+      "t_iso": "2026-10-25T00:00:04.500000+00:00",
+      "request_id": "task10a_w0046",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 46
+      },
+      "telemetry_seq": 46
+    },
+    {
+      "sequence_index": 46,
+      "source_id": "vision-v1:c2/img_101653.jpg",
+      "class_id": "c2",
+      "filename": "img_101653.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c2/img_101653.jpg",
+      "sha256": "ff9e9eb3dec159cd660fc9535c4204819393dd9e9bb7bfa4445c3a5d6da37300",
+      "t_iso": "2026-10-25T00:00:04.600000+00:00",
+      "request_id": "task10a_w0047",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 47
+      },
+      "telemetry_seq": 47
+    },
+    {
+      "sequence_index": 47,
+      "source_id": "vision-v1:c2/img_101898.jpg",
+      "class_id": "c2",
+      "filename": "img_101898.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c2/img_101898.jpg",
+      "sha256": "5b827e3970360d856774d4e4ed41e18781be7f3f9fc92e00e59c94505e02e243",
+      "t_iso": "2026-10-25T00:00:04.700000+00:00",
+      "request_id": "task10a_w0048",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 48
+      },
+      "telemetry_seq": 48
+    },
+    {
+      "sequence_index": 48,
+      "source_id": "vision-v1:c2/img_10564.jpg",
+      "class_id": "c2",
+      "filename": "img_10564.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c2/img_10564.jpg",
+      "sha256": "5de7621a22cd47db033ba334bae41f1233e91ad8b943ff07b2955c01220e2e7f",
+      "t_iso": "2026-10-25T00:00:04.800000+00:00",
+      "request_id": "task10a_w0049",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 49
+      },
+      "telemetry_seq": 49
+    },
+    {
+      "sequence_index": 49,
+      "source_id": "vision-v1:c2/img_10697.jpg",
+      "class_id": "c2",
+      "filename": "img_10697.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c2/img_10697.jpg",
+      "sha256": "c263c33b21e48019b0dbe725cbaeb041b4a1768a8a0fc6441e825a6b3360f445",
+      "t_iso": "2026-10-25T00:00:04.900000+00:00",
+      "request_id": "task10a_w0050",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 50
+      },
+      "telemetry_seq": 50
+    },
+    {
+      "sequence_index": 50,
+      "source_id": "vision-v1:c2/img_11202.jpg",
+      "class_id": "c2",
+      "filename": "img_11202.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c2/img_11202.jpg",
+      "sha256": "016e04b67c6bd892a99c022ddcb7624819729ad7ad346b33a7db798a1ce35de4",
+      "t_iso": "2026-10-25T00:00:05+00:00",
+      "request_id": "task10a_w0051",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 51
+      },
+      "telemetry_seq": 51
+    },
+    {
+      "sequence_index": 51,
+      "source_id": "vision-v1:c2/img_11319.jpg",
+      "class_id": "c2",
+      "filename": "img_11319.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c2/img_11319.jpg",
+      "sha256": "ed3b971d24cc4b5e2b3fa532bf9125c7e384b69164ac2a78e02e76bb269dcc5f",
+      "t_iso": "2026-10-25T00:00:05.100000+00:00",
+      "request_id": "task10a_w0052",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 52
+      },
+      "telemetry_seq": 52
+    },
+    {
+      "sequence_index": 52,
+      "source_id": "vision-v1:c2/img_11553.jpg",
+      "class_id": "c2",
+      "filename": "img_11553.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c2/img_11553.jpg",
+      "sha256": "912601544bfed8eaf60bd2f8b8ba1db77bb2404820789d9405cb3c8695e5af08",
+      "t_iso": "2026-10-25T00:00:05.200000+00:00",
+      "request_id": "task10a_w0053",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 53
+      },
+      "telemetry_seq": 53
+    },
+    {
+      "sequence_index": 53,
+      "source_id": "vision-v1:c2/img_12573.jpg",
+      "class_id": "c2",
+      "filename": "img_12573.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c2/img_12573.jpg",
+      "sha256": "9ed0841ab8e955dfa1da844652978b4bf1fbf21ffd967cf24b0871f0bd37a938",
+      "t_iso": "2026-10-25T00:00:05.300000+00:00",
+      "request_id": "task10a_w0054",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 54
+      },
+      "telemetry_seq": 54
+    },
+    {
+      "sequence_index": 54,
+      "source_id": "vision-v1:c2/img_12784.jpg",
+      "class_id": "c2",
+      "filename": "img_12784.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c2/img_12784.jpg",
+      "sha256": "6a482c5573ed768741c1421ac12aff2a4639958ac5c13a3b166d3fbab52f7a6d",
+      "t_iso": "2026-10-25T00:00:05.400000+00:00",
+      "request_id": "task10a_w0055",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 55
+      },
+      "telemetry_seq": 55
+    },
+    {
+      "sequence_index": 55,
+      "source_id": "vision-v1:c2/img_12908.jpg",
+      "class_id": "c2",
+      "filename": "img_12908.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c2/img_12908.jpg",
+      "sha256": "402ba33c11f3ed77992022912644b8a1be274335074dd94f4f32579144f6e617",
+      "t_iso": "2026-10-25T00:00:05.500000+00:00",
+      "request_id": "task10a_w0056",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 56
+      },
+      "telemetry_seq": 56
+    },
+    {
+      "sequence_index": 56,
+      "source_id": "vision-v1:c2/img_13241.jpg",
+      "class_id": "c2",
+      "filename": "img_13241.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c2/img_13241.jpg",
+      "sha256": "1b0f42265a17ac47f9ca89688acd6f6d37c75288d1c32c8a3b453dfed38c66a0",
+      "t_iso": "2026-10-25T00:00:05.600000+00:00",
+      "request_id": "task10a_w0057",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 57
+      },
+      "telemetry_seq": 57
+    },
+    {
+      "sequence_index": 57,
+      "source_id": "vision-v1:c2/img_13894.jpg",
+      "class_id": "c2",
+      "filename": "img_13894.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c2/img_13894.jpg",
+      "sha256": "865e3a9ce2f58503f0ffe62fbf9b174f9c04a34b8dcfd548f2add86e5188518b",
+      "t_iso": "2026-10-25T00:00:05.700000+00:00",
+      "request_id": "task10a_w0058",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 58
+      },
+      "telemetry_seq": 58
+    },
+    {
+      "sequence_index": 58,
+      "source_id": "vision-v1:c2/img_13923.jpg",
+      "class_id": "c2",
+      "filename": "img_13923.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c2/img_13923.jpg",
+      "sha256": "c5a4fa091d1ee16d4d677d32a3f7c37bfa8822b92b98217713ca23654f4783bd",
+      "t_iso": "2026-10-25T00:00:05.800000+00:00",
+      "request_id": "task10a_w0059",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 59
+      },
+      "telemetry_seq": 59
+    },
+    {
+      "sequence_index": 59,
+      "source_id": "vision-v1:c2/img_14087.jpg",
+      "class_id": "c2",
+      "filename": "img_14087.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c2/img_14087.jpg",
+      "sha256": "422c80c5299fa44e20a5f793b739fce86c0f60aa5d63b6c1576a92d1516d0887",
+      "t_iso": "2026-10-25T00:00:05.900000+00:00",
+      "request_id": "task10a_w0060",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 60
+      },
+      "telemetry_seq": 60
+    },
+    {
+      "sequence_index": 60,
+      "source_id": "vision-v1:c3/img_10034.jpg",
+      "class_id": "c3",
+      "filename": "img_10034.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c3/img_10034.jpg",
+      "sha256": "ec4effaa039b32d4b8fc9a4a5144190dfbce5828e0e0b6a4b7d8dd7708d38172",
+      "t_iso": "2026-10-25T00:00:06+00:00",
+      "request_id": "task10a_w0061",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 61
+      },
+      "telemetry_seq": 61
+    },
+    {
+      "sequence_index": 61,
+      "source_id": "vision-v1:c3/img_100503.jpg",
+      "class_id": "c3",
+      "filename": "img_100503.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c3/img_100503.jpg",
+      "sha256": "45354cfbd3946c442d6e0fde8c138e8f5ac737bda75fc3207bd9c5ffe312aa7e",
+      "t_iso": "2026-10-25T00:00:06.100000+00:00",
+      "request_id": "task10a_w0062",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 62
+      },
+      "telemetry_seq": 62
+    },
+    {
+      "sequence_index": 62,
+      "source_id": "vision-v1:c3/img_100611.jpg",
+      "class_id": "c3",
+      "filename": "img_100611.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c3/img_100611.jpg",
+      "sha256": "199e18e3b92a0ffe5485c86650921ed2b27dfbaf6cea452b47efc9de7e33666f",
+      "t_iso": "2026-10-25T00:00:06.200000+00:00",
+      "request_id": "task10a_w0063",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 63
+      },
+      "telemetry_seq": 63
+    },
+    {
+      "sequence_index": 63,
+      "source_id": "vision-v1:c3/img_10068.jpg",
+      "class_id": "c3",
+      "filename": "img_10068.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c3/img_10068.jpg",
+      "sha256": "c603adada65893be25152b5b2ab514c9e677eed58b14cd934a1671637410971e",
+      "t_iso": "2026-10-25T00:00:06.300000+00:00",
+      "request_id": "task10a_w0064",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 64
+      },
+      "telemetry_seq": 64
+    },
+    {
+      "sequence_index": 64,
+      "source_id": "vision-v1:c3/img_101021.jpg",
+      "class_id": "c3",
+      "filename": "img_101021.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c3/img_101021.jpg",
+      "sha256": "90a58b30c58ab9e9ad12d62588e2b50f099de57c06152c14d9b16a894dcbc674",
+      "t_iso": "2026-10-25T00:00:06.400000+00:00",
+      "request_id": "task10a_w0065",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 65
+      },
+      "telemetry_seq": 65
+    },
+    {
+      "sequence_index": 65,
+      "source_id": "vision-v1:c3/img_101063.jpg",
+      "class_id": "c3",
+      "filename": "img_101063.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c3/img_101063.jpg",
+      "sha256": "e66f906db101f9b921c99f69466f12135869343f8f3f9977420d06e68dacb412",
+      "t_iso": "2026-10-25T00:00:06.500000+00:00",
+      "request_id": "task10a_w0066",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 66
+      },
+      "telemetry_seq": 66
+    },
+    {
+      "sequence_index": 66,
+      "source_id": "vision-v1:c3/img_101130.jpg",
+      "class_id": "c3",
+      "filename": "img_101130.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c3/img_101130.jpg",
+      "sha256": "2bd028047536e1aaabe9aa397dc9cbe037a6fa076c2caa3833e8458f84b08ae0",
+      "t_iso": "2026-10-25T00:00:06.600000+00:00",
+      "request_id": "task10a_w0067",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 67
+      },
+      "telemetry_seq": 67
+    },
+    {
+      "sequence_index": 67,
+      "source_id": "vision-v1:c3/img_101134.jpg",
+      "class_id": "c3",
+      "filename": "img_101134.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c3/img_101134.jpg",
+      "sha256": "ea7e1fbaa291cb650326df5ef9947b74a1efa61038c1fee48447dd0c5b51ce9b",
+      "t_iso": "2026-10-25T00:00:06.700000+00:00",
+      "request_id": "task10a_w0068",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 68
+      },
+      "telemetry_seq": 68
+    },
+    {
+      "sequence_index": 68,
+      "source_id": "vision-v1:c3/img_101208.jpg",
+      "class_id": "c3",
+      "filename": "img_101208.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c3/img_101208.jpg",
+      "sha256": "77a06f01c9508df4b6c07af70ef845134a53efcb56df93311e2b620f02a86036",
+      "t_iso": "2026-10-25T00:00:06.800000+00:00",
+      "request_id": "task10a_w0069",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 69
+      },
+      "telemetry_seq": 69
+    },
+    {
+      "sequence_index": 69,
+      "source_id": "vision-v1:c3/img_101310.jpg",
+      "class_id": "c3",
+      "filename": "img_101310.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c3/img_101310.jpg",
+      "sha256": "0d4699ceef766f10835d8674f606cdd9065670bac5b42e55763b387fc1ead62b",
+      "t_iso": "2026-10-25T00:00:06.900000+00:00",
+      "request_id": "task10a_w0070",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 70
+      },
+      "telemetry_seq": 70
+    },
+    {
+      "sequence_index": 70,
+      "source_id": "vision-v1:c3/img_101499.jpg",
+      "class_id": "c3",
+      "filename": "img_101499.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c3/img_101499.jpg",
+      "sha256": "bb1f7170f097b37911f6890939b620f01b801819d7ad7f4114a480af463b7c4a",
+      "t_iso": "2026-10-25T00:00:07+00:00",
+      "request_id": "task10a_w0071",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 71
+      },
+      "telemetry_seq": 71
+    },
+    {
+      "sequence_index": 71,
+      "source_id": "vision-v1:c3/img_101745.jpg",
+      "class_id": "c3",
+      "filename": "img_101745.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c3/img_101745.jpg",
+      "sha256": "9472f4b26e6c904e4afaa7bf7758db6f3aad2bfb8c3c440f66805a072e7f0703",
+      "t_iso": "2026-10-25T00:00:07.100000+00:00",
+      "request_id": "task10a_w0072",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 72
+      },
+      "telemetry_seq": 72
+    },
+    {
+      "sequence_index": 72,
+      "source_id": "vision-v1:c3/img_101906.jpg",
+      "class_id": "c3",
+      "filename": "img_101906.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c3/img_101906.jpg",
+      "sha256": "55de6e71cabbdd74962113cb87577c0cecc08a8b1794e50db890c404afa4372c",
+      "t_iso": "2026-10-25T00:00:07.200000+00:00",
+      "request_id": "task10a_w0073",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 73
+      },
+      "telemetry_seq": 73
+    },
+    {
+      "sequence_index": 73,
+      "source_id": "vision-v1:c3/img_11162.jpg",
+      "class_id": "c3",
+      "filename": "img_11162.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c3/img_11162.jpg",
+      "sha256": "9047a6313a24dee5d2ce04dfcb6fd3c4ce39486ef3749a16abb32ed5bdf7616b",
+      "t_iso": "2026-10-25T00:00:07.300000+00:00",
+      "request_id": "task10a_w0074",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 74
+      },
+      "telemetry_seq": 74
+    },
+    {
+      "sequence_index": 74,
+      "source_id": "vision-v1:c3/img_11230.jpg",
+      "class_id": "c3",
+      "filename": "img_11230.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c3/img_11230.jpg",
+      "sha256": "e3790e13ece8edabe824d8d1c71c84751292d5b3483e962ead0975ab05a9e1d5",
+      "t_iso": "2026-10-25T00:00:07.400000+00:00",
+      "request_id": "task10a_w0075",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 75
+      },
+      "telemetry_seq": 75
+    },
+    {
+      "sequence_index": 75,
+      "source_id": "vision-v1:c3/img_11813.jpg",
+      "class_id": "c3",
+      "filename": "img_11813.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c3/img_11813.jpg",
+      "sha256": "b3b1eaeea22878f22bd7ea95a87ac29140bbd5251548d4b7d8013e5742a21f90",
+      "t_iso": "2026-10-25T00:00:07.500000+00:00",
+      "request_id": "task10a_w0076",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 76
+      },
+      "telemetry_seq": 76
+    },
+    {
+      "sequence_index": 76,
+      "source_id": "vision-v1:c3/img_11982.jpg",
+      "class_id": "c3",
+      "filename": "img_11982.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c3/img_11982.jpg",
+      "sha256": "c85bb4ca74d292b53160977f1836f5ded7fe661e0bd1b86885fbecd2f1452e6b",
+      "t_iso": "2026-10-25T00:00:07.600000+00:00",
+      "request_id": "task10a_w0077",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 77
+      },
+      "telemetry_seq": 77
+    },
+    {
+      "sequence_index": 77,
+      "source_id": "vision-v1:c3/img_12214.jpg",
+      "class_id": "c3",
+      "filename": "img_12214.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c3/img_12214.jpg",
+      "sha256": "04e0f08455876af0369b1668a4fda180db59a41c05c3fcfacb5328e6a8b6ba5d",
+      "t_iso": "2026-10-25T00:00:07.700000+00:00",
+      "request_id": "task10a_w0078",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 78
+      },
+      "telemetry_seq": 78
+    },
+    {
+      "sequence_index": 78,
+      "source_id": "vision-v1:c3/img_12346.jpg",
+      "class_id": "c3",
+      "filename": "img_12346.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c3/img_12346.jpg",
+      "sha256": "a1eaa0c332bda7b6c456bb8f4dbea89ed1a184dc2e2d9a7429c1ee8dcc1bc032",
+      "t_iso": "2026-10-25T00:00:07.800000+00:00",
+      "request_id": "task10a_w0079",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 79
+      },
+      "telemetry_seq": 79
+    },
+    {
+      "sequence_index": 79,
+      "source_id": "vision-v1:c3/img_12520.jpg",
+      "class_id": "c3",
+      "filename": "img_12520.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c3/img_12520.jpg",
+      "sha256": "14d3d24ee6f1c463bb666a1f5271d62efc7ce59558d65f09a6659ec188855987",
+      "t_iso": "2026-10-25T00:00:07.900000+00:00",
+      "request_id": "task10a_w0080",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 80
+      },
+      "telemetry_seq": 80
+    },
+    {
+      "sequence_index": 80,
+      "source_id": "vision-v1:c4/img_10025.jpg",
+      "class_id": "c4",
+      "filename": "img_10025.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c4/img_10025.jpg",
+      "sha256": "19c0ca5240f95c8e30d0238274c8fdb2213e1612feae6f17eab8f71102547404",
+      "t_iso": "2026-10-25T00:00:08+00:00",
+      "request_id": "task10a_w0081",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 81
+      },
+      "telemetry_seq": 81
+    },
+    {
+      "sequence_index": 81,
+      "source_id": "vision-v1:c4/img_100343.jpg",
+      "class_id": "c4",
+      "filename": "img_100343.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c4/img_100343.jpg",
+      "sha256": "124e4ab49f9d5d2d2509add95a56b9d424f4472619ba614997d948d98c782e08",
+      "t_iso": "2026-10-25T00:00:08.100000+00:00",
+      "request_id": "task10a_w0082",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 82
+      },
+      "telemetry_seq": 82
+    },
+    {
+      "sequence_index": 82,
+      "source_id": "vision-v1:c4/img_100361.jpg",
+      "class_id": "c4",
+      "filename": "img_100361.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c4/img_100361.jpg",
+      "sha256": "5e602d3f26f993085b72d2b3e567a1a76ffa764d5aad7459f55d7bdcdfec6669",
+      "t_iso": "2026-10-25T00:00:08.200000+00:00",
+      "request_id": "task10a_w0083",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 83
+      },
+      "telemetry_seq": 83
+    },
+    {
+      "sequence_index": 83,
+      "source_id": "vision-v1:c4/img_100371.jpg",
+      "class_id": "c4",
+      "filename": "img_100371.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c4/img_100371.jpg",
+      "sha256": "1f871b4e8ad6e334934215666138075a81a01ce5415b067581596f505f8790e0",
+      "t_iso": "2026-10-25T00:00:08.300000+00:00",
+      "request_id": "task10a_w0084",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 84
+      },
+      "telemetry_seq": 84
+    },
+    {
+      "sequence_index": 84,
+      "source_id": "vision-v1:c4/img_100561.jpg",
+      "class_id": "c4",
+      "filename": "img_100561.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c4/img_100561.jpg",
+      "sha256": "e49476a4b3a9151d91d7f5f176605af5ba76cb1255fe244c2b2f49526274e6a6",
+      "t_iso": "2026-10-25T00:00:08.400000+00:00",
+      "request_id": "task10a_w0085",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 85
+      },
+      "telemetry_seq": 85
+    },
+    {
+      "sequence_index": 85,
+      "source_id": "vision-v1:c4/img_101298.jpg",
+      "class_id": "c4",
+      "filename": "img_101298.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c4/img_101298.jpg",
+      "sha256": "4ee9ddb799295a91ffc381c72e10096074b2815b57365949b03534c577d1d17d",
+      "t_iso": "2026-10-25T00:00:08.500000+00:00",
+      "request_id": "task10a_w0086",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 86
+      },
+      "telemetry_seq": 86
+    },
+    {
+      "sequence_index": 86,
+      "source_id": "vision-v1:c4/img_101437.jpg",
+      "class_id": "c4",
+      "filename": "img_101437.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c4/img_101437.jpg",
+      "sha256": "b5df9bd4079177b01e3b4c0776ca7e1086e3182d3215fe49868f7776ef8938d5",
+      "t_iso": "2026-10-25T00:00:08.600000+00:00",
+      "request_id": "task10a_w0087",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 87
+      },
+      "telemetry_seq": 87
+    },
+    {
+      "sequence_index": 87,
+      "source_id": "vision-v1:c4/img_101507.jpg",
+      "class_id": "c4",
+      "filename": "img_101507.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c4/img_101507.jpg",
+      "sha256": "1f9131af694803eaa7b69815a947c032c5f684cae828f81bc17ff86c90b7ea78",
+      "t_iso": "2026-10-25T00:00:08.700000+00:00",
+      "request_id": "task10a_w0088",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 88
+      },
+      "telemetry_seq": 88
+    },
+    {
+      "sequence_index": 88,
+      "source_id": "vision-v1:c4/img_101528.jpg",
+      "class_id": "c4",
+      "filename": "img_101528.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c4/img_101528.jpg",
+      "sha256": "cc5c2b201a8c0499d4af69e5b226afad1e7429243c7ff2f36411743e2c04a615",
+      "t_iso": "2026-10-25T00:00:08.800000+00:00",
+      "request_id": "task10a_w0089",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 89
+      },
+      "telemetry_seq": 89
+    },
+    {
+      "sequence_index": 89,
+      "source_id": "vision-v1:c4/img_102043.jpg",
+      "class_id": "c4",
+      "filename": "img_102043.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c4/img_102043.jpg",
+      "sha256": "f7012d6bc52fa8bd5c63bf7b89a56009f1023a29ade9df19d8b70c8d40c3c533",
+      "t_iso": "2026-10-25T00:00:08.900000+00:00",
+      "request_id": "task10a_w0090",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 90
+      },
+      "telemetry_seq": 90
+    },
+    {
+      "sequence_index": 90,
+      "source_id": "vision-v1:c4/img_102083.jpg",
+      "class_id": "c4",
+      "filename": "img_102083.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c4/img_102083.jpg",
+      "sha256": "4290ffad32b1559ada3df2d42b4cd8360c8e9b2253e316d49f9e0b5862bd585f",
+      "t_iso": "2026-10-25T00:00:09+00:00",
+      "request_id": "task10a_w0091",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 91
+      },
+      "telemetry_seq": 91
+    },
+    {
+      "sequence_index": 91,
+      "source_id": "vision-v1:c4/img_102118.jpg",
+      "class_id": "c4",
+      "filename": "img_102118.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c4/img_102118.jpg",
+      "sha256": "2d9aa5a123e8ebc8fae24bb6d33d0b6f8d57a73ec2b1c2a2ac215c1b1c55da54",
+      "t_iso": "2026-10-25T00:00:09.100000+00:00",
+      "request_id": "task10a_w0092",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 92
+      },
+      "telemetry_seq": 92
+    },
+    {
+      "sequence_index": 92,
+      "source_id": "vision-v1:c4/img_1073.jpg",
+      "class_id": "c4",
+      "filename": "img_1073.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c4/img_1073.jpg",
+      "sha256": "40c59a0206cb978d65d65689b6dd03828250a80715c0b7435522096350735c42",
+      "t_iso": "2026-10-25T00:00:09.200000+00:00",
+      "request_id": "task10a_w0093",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 93
+      },
+      "telemetry_seq": 93
+    },
+    {
+      "sequence_index": 93,
+      "source_id": "vision-v1:c4/img_10758.jpg",
+      "class_id": "c4",
+      "filename": "img_10758.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c4/img_10758.jpg",
+      "sha256": "4b045c143f5ccea563c50587a7bcbce734a8775b6707028bba4b5f4260511f5a",
+      "t_iso": "2026-10-25T00:00:09.300000+00:00",
+      "request_id": "task10a_w0094",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 94
+      },
+      "telemetry_seq": 94
+    },
+    {
+      "sequence_index": 94,
+      "source_id": "vision-v1:c4/img_11270.jpg",
+      "class_id": "c4",
+      "filename": "img_11270.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c4/img_11270.jpg",
+      "sha256": "a644fd379572e709e7d1f62f319f56c4ce739c521b88ea1528454b4030acf966",
+      "t_iso": "2026-10-25T00:00:09.400000+00:00",
+      "request_id": "task10a_w0095",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 95
+      },
+      "telemetry_seq": 95
+    },
+    {
+      "sequence_index": 95,
+      "source_id": "vision-v1:c4/img_12057.jpg",
+      "class_id": "c4",
+      "filename": "img_12057.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c4/img_12057.jpg",
+      "sha256": "e9c9be3d4d764884fa83299846ebe7ae93dacd9f68047ea844792d2cc6c965e0",
+      "t_iso": "2026-10-25T00:00:09.500000+00:00",
+      "request_id": "task10a_w0096",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 96
+      },
+      "telemetry_seq": 96
+    },
+    {
+      "sequence_index": 96,
+      "source_id": "vision-v1:c4/img_12474.jpg",
+      "class_id": "c4",
+      "filename": "img_12474.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c4/img_12474.jpg",
+      "sha256": "11c366e8f10e2baf6f87f931509c92ef5e50a8d41cf28fdb61b43990f0309798",
+      "t_iso": "2026-10-25T00:00:09.600000+00:00",
+      "request_id": "task10a_w0097",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 97
+      },
+      "telemetry_seq": 97
+    },
+    {
+      "sequence_index": 97,
+      "source_id": "vision-v1:c4/img_12553.jpg",
+      "class_id": "c4",
+      "filename": "img_12553.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c4/img_12553.jpg",
+      "sha256": "06d43b9a22a96e920d81f5d950dd7b751569be440e7a6b45a614e9c783ee1e41",
+      "t_iso": "2026-10-25T00:00:09.700000+00:00",
+      "request_id": "task10a_w0098",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 98
+      },
+      "telemetry_seq": 98
+    },
+    {
+      "sequence_index": 98,
+      "source_id": "vision-v1:c4/img_12715.jpg",
+      "class_id": "c4",
+      "filename": "img_12715.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c4/img_12715.jpg",
+      "sha256": "677c10c9e89992fd98c6c9e9e5e8af8ea2d1ad7cd0c6a903bca89651262c6c4d",
+      "t_iso": "2026-10-25T00:00:09.800000+00:00",
+      "request_id": "task10a_w0099",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 99
+      },
+      "telemetry_seq": 99
+    },
+    {
+      "sequence_index": 99,
+      "source_id": "vision-v1:c4/img_12834.jpg",
+      "class_id": "c4",
+      "filename": "img_12834.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c4/img_12834.jpg",
+      "sha256": "1e5076eb604b85c8d0cb7a6d759a65a9f561744c4b7c4fe25cd252c0a4364d2a",
+      "t_iso": "2026-10-25T00:00:09.900000+00:00",
+      "request_id": "task10a_w0100",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 100
+      },
+      "telemetry_seq": 100
+    },
+    {
+      "sequence_index": 100,
+      "source_id": "vision-v1:c5/img_10052.jpg",
+      "class_id": "c5",
+      "filename": "img_10052.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c5/img_10052.jpg",
+      "sha256": "d0a76dda39d62457b9f2f0d1ea7c939debb61dce9c8a238cca617bc0a93fedef",
+      "t_iso": "2026-10-25T00:00:10+00:00",
+      "request_id": "task10a_w0101",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 101
+      },
+      "telemetry_seq": 101
+    },
+    {
+      "sequence_index": 101,
+      "source_id": "vision-v1:c5/img_100871.jpg",
+      "class_id": "c5",
+      "filename": "img_100871.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c5/img_100871.jpg",
+      "sha256": "997ac4028b5d325dc716f858dac3948b35b81a52721101f285a999768082e893",
+      "t_iso": "2026-10-25T00:00:10.100000+00:00",
+      "request_id": "task10a_w0102",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 102
+      },
+      "telemetry_seq": 102
+    },
+    {
+      "sequence_index": 102,
+      "source_id": "vision-v1:c5/img_100905.jpg",
+      "class_id": "c5",
+      "filename": "img_100905.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c5/img_100905.jpg",
+      "sha256": "122044a76f6a326c8533e2132a627c6a038de51bbad3f9b065ec6069bbce357c",
+      "t_iso": "2026-10-25T00:00:10.200000+00:00",
+      "request_id": "task10a_w0103",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 103
+      },
+      "telemetry_seq": 103
+    },
+    {
+      "sequence_index": 103,
+      "source_id": "vision-v1:c5/img_101578.jpg",
+      "class_id": "c5",
+      "filename": "img_101578.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c5/img_101578.jpg",
+      "sha256": "29b46b21f60247a407f6b311fdd79d7dd0b162ec1943f5a6741d3b604c493b99",
+      "t_iso": "2026-10-25T00:00:10.300000+00:00",
+      "request_id": "task10a_w0104",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 104
+      },
+      "telemetry_seq": 104
+    },
+    {
+      "sequence_index": 104,
+      "source_id": "vision-v1:c5/img_10318.jpg",
+      "class_id": "c5",
+      "filename": "img_10318.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c5/img_10318.jpg",
+      "sha256": "4e7a68cfc7f61c245f4edabe60b2136ff263922a2cffdf6e6738462c4630e7e0",
+      "t_iso": "2026-10-25T00:00:10.400000+00:00",
+      "request_id": "task10a_w0105",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 105
+      },
+      "telemetry_seq": 105
+    },
+    {
+      "sequence_index": 105,
+      "source_id": "vision-v1:c5/img_10406.jpg",
+      "class_id": "c5",
+      "filename": "img_10406.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c5/img_10406.jpg",
+      "sha256": "2ed0175559aeacd505158803857ffa18b084eb7ad168a160eebaab892d7f3b0c",
+      "t_iso": "2026-10-25T00:00:10.500000+00:00",
+      "request_id": "task10a_w0106",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 106
+      },
+      "telemetry_seq": 106
+    },
+    {
+      "sequence_index": 106,
+      "source_id": "vision-v1:c5/img_10516.jpg",
+      "class_id": "c5",
+      "filename": "img_10516.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c5/img_10516.jpg",
+      "sha256": "44751eff01a12c34e3b89ff7f927f5d36606bf4d92489a9b39365446213a0b88",
+      "t_iso": "2026-10-25T00:00:10.600000+00:00",
+      "request_id": "task10a_w0107",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 107
+      },
+      "telemetry_seq": 107
+    },
+    {
+      "sequence_index": 107,
+      "source_id": "vision-v1:c5/img_10773.jpg",
+      "class_id": "c5",
+      "filename": "img_10773.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c5/img_10773.jpg",
+      "sha256": "1876a13d69070c3c261c2b6d5c6bd73ad47058531168669928abcf588613613f",
+      "t_iso": "2026-10-25T00:00:10.700000+00:00",
+      "request_id": "task10a_w0108",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 108
+      },
+      "telemetry_seq": 108
+    },
+    {
+      "sequence_index": 108,
+      "source_id": "vision-v1:c5/img_11747.jpg",
+      "class_id": "c5",
+      "filename": "img_11747.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c5/img_11747.jpg",
+      "sha256": "403de9cc028177fcd4264765c41c5c71b0d7c623fb79611f06bd6cc4a0d2fdf8",
+      "t_iso": "2026-10-25T00:00:10.800000+00:00",
+      "request_id": "task10a_w0109",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 109
+      },
+      "telemetry_seq": 109
+    },
+    {
+      "sequence_index": 109,
+      "source_id": "vision-v1:c5/img_11748.jpg",
+      "class_id": "c5",
+      "filename": "img_11748.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c5/img_11748.jpg",
+      "sha256": "7bca48ec1e94771c4a91a802043599a11b19d02de430df6e6fa39994a41f135f",
+      "t_iso": "2026-10-25T00:00:10.900000+00:00",
+      "request_id": "task10a_w0110",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 110
+      },
+      "telemetry_seq": 110
+    },
+    {
+      "sequence_index": 110,
+      "source_id": "vision-v1:c5/img_11842.jpg",
+      "class_id": "c5",
+      "filename": "img_11842.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c5/img_11842.jpg",
+      "sha256": "079055a680f100de4ea5bde6486684cc30730903ca82d682053ac706c51212e2",
+      "t_iso": "2026-10-25T00:00:11+00:00",
+      "request_id": "task10a_w0111",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 111
+      },
+      "telemetry_seq": 111
+    },
+    {
+      "sequence_index": 111,
+      "source_id": "vision-v1:c5/img_11892.jpg",
+      "class_id": "c5",
+      "filename": "img_11892.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c5/img_11892.jpg",
+      "sha256": "b22957605dad7c4a6a1592939805510c8535352d0c493cd9b5a22c2209e16ab5",
+      "t_iso": "2026-10-25T00:00:11.100000+00:00",
+      "request_id": "task10a_w0112",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 112
+      },
+      "telemetry_seq": 112
+    },
+    {
+      "sequence_index": 112,
+      "source_id": "vision-v1:c5/img_120.jpg",
+      "class_id": "c5",
+      "filename": "img_120.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c5/img_120.jpg",
+      "sha256": "c63266ff828614a0eb44a80bb8a50ef3492c501bc30f03d5317116438fbc9361",
+      "t_iso": "2026-10-25T00:00:11.200000+00:00",
+      "request_id": "task10a_w0113",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 113
+      },
+      "telemetry_seq": 113
+    },
+    {
+      "sequence_index": 113,
+      "source_id": "vision-v1:c5/img_12442.jpg",
+      "class_id": "c5",
+      "filename": "img_12442.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c5/img_12442.jpg",
+      "sha256": "fa15c7607531862d3386c5236f77bb4212df3a0ffbe3f32e4c423c7ef73e95a3",
+      "t_iso": "2026-10-25T00:00:11.300000+00:00",
+      "request_id": "task10a_w0114",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 114
+      },
+      "telemetry_seq": 114
+    },
+    {
+      "sequence_index": 114,
+      "source_id": "vision-v1:c5/img_1290.jpg",
+      "class_id": "c5",
+      "filename": "img_1290.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c5/img_1290.jpg",
+      "sha256": "91f937af3cccbec42d1a40e6fa26f7d47fcc237700959cd3cd2ffd2930475d7d",
+      "t_iso": "2026-10-25T00:00:11.400000+00:00",
+      "request_id": "task10a_w0115",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 115
+      },
+      "telemetry_seq": 115
+    },
+    {
+      "sequence_index": 115,
+      "source_id": "vision-v1:c5/img_13216.jpg",
+      "class_id": "c5",
+      "filename": "img_13216.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c5/img_13216.jpg",
+      "sha256": "4fe3487a7963f16d7117eeff33bcc55bd8b9e7962a134090d5189338f9387d9c",
+      "t_iso": "2026-10-25T00:00:11.500000+00:00",
+      "request_id": "task10a_w0116",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 116
+      },
+      "telemetry_seq": 116
+    },
+    {
+      "sequence_index": 116,
+      "source_id": "vision-v1:c5/img_138.jpg",
+      "class_id": "c5",
+      "filename": "img_138.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c5/img_138.jpg",
+      "sha256": "6f6ef32254902bd7069df5db0972062087593fa09b87cec12d9c516f53731d39",
+      "t_iso": "2026-10-25T00:00:11.600000+00:00",
+      "request_id": "task10a_w0117",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 117
+      },
+      "telemetry_seq": 117
+    },
+    {
+      "sequence_index": 117,
+      "source_id": "vision-v1:c5/img_1388.jpg",
+      "class_id": "c5",
+      "filename": "img_1388.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c5/img_1388.jpg",
+      "sha256": "dae5d79bf4845128d81fbbe26efc36ae1353503e092af29a7cb641c695bc4ebc",
+      "t_iso": "2026-10-25T00:00:11.700000+00:00",
+      "request_id": "task10a_w0118",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 118
+      },
+      "telemetry_seq": 118
+    },
+    {
+      "sequence_index": 118,
+      "source_id": "vision-v1:c5/img_14774.jpg",
+      "class_id": "c5",
+      "filename": "img_14774.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c5/img_14774.jpg",
+      "sha256": "144ab4464439f71cdd09deee6ee1c246fef11822e189956f3ada9dba421e14cf",
+      "t_iso": "2026-10-25T00:00:11.800000+00:00",
+      "request_id": "task10a_w0119",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 119
+      },
+      "telemetry_seq": 119
+    },
+    {
+      "sequence_index": 119,
+      "source_id": "vision-v1:c5/img_14921.jpg",
+      "class_id": "c5",
+      "filename": "img_14921.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c5/img_14921.jpg",
+      "sha256": "6e1213a8ecd287fdf193704c6e4687a7cc8522bb9b51b8773c1afd1d6cf96805",
+      "t_iso": "2026-10-25T00:00:11.900000+00:00",
+      "request_id": "task10a_w0120",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 120
+      },
+      "telemetry_seq": 120
+    },
+    {
+      "sequence_index": 120,
+      "source_id": "vision-v1:c6/img_100116.jpg",
+      "class_id": "c6",
+      "filename": "img_100116.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c6/img_100116.jpg",
+      "sha256": "e471a1493e1d16a00887666c2713b653aff2b946c715bfa9bbb473e162dfdf23",
+      "t_iso": "2026-10-25T00:00:12+00:00",
+      "request_id": "task10a_w0121",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 121
+      },
+      "telemetry_seq": 121
+    },
+    {
+      "sequence_index": 121,
+      "source_id": "vision-v1:c6/img_100634.jpg",
+      "class_id": "c6",
+      "filename": "img_100634.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c6/img_100634.jpg",
+      "sha256": "2491d8dc2cc1a732159b718708e384d0ed793941f9d6498fc029341bb95213e5",
+      "t_iso": "2026-10-25T00:00:12.100000+00:00",
+      "request_id": "task10a_w0122",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 122
+      },
+      "telemetry_seq": 122
+    },
+    {
+      "sequence_index": 122,
+      "source_id": "vision-v1:c6/img_101713.jpg",
+      "class_id": "c6",
+      "filename": "img_101713.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c6/img_101713.jpg",
+      "sha256": "02cd90f387da901347d31df79f46a421a1cf638580945028858d9ee0c481fcf6",
+      "t_iso": "2026-10-25T00:00:12.200000+00:00",
+      "request_id": "task10a_w0123",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 123
+      },
+      "telemetry_seq": 123
+    },
+    {
+      "sequence_index": 123,
+      "source_id": "vision-v1:c6/img_101719.jpg",
+      "class_id": "c6",
+      "filename": "img_101719.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c6/img_101719.jpg",
+      "sha256": "328734f29dc57bff71216ca79164017e3df05dee989e681f20417203b85ba03c",
+      "t_iso": "2026-10-25T00:00:12.300000+00:00",
+      "request_id": "task10a_w0124",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 124
+      },
+      "telemetry_seq": 124
+    },
+    {
+      "sequence_index": 124,
+      "source_id": "vision-v1:c6/img_10383.jpg",
+      "class_id": "c6",
+      "filename": "img_10383.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c6/img_10383.jpg",
+      "sha256": "734df7e3506758aa5024cb996045c57231b558bdd0cef380f4ccdb768528111f",
+      "t_iso": "2026-10-25T00:00:12.400000+00:00",
+      "request_id": "task10a_w0125",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 125
+      },
+      "telemetry_seq": 125
+    },
+    {
+      "sequence_index": 125,
+      "source_id": "vision-v1:c6/img_10739.jpg",
+      "class_id": "c6",
+      "filename": "img_10739.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c6/img_10739.jpg",
+      "sha256": "18c7dd0998d5e16d0e9c0613bb4a06fafa420980d6bafe4ece1a6ffc83692fa7",
+      "t_iso": "2026-10-25T00:00:12.500000+00:00",
+      "request_id": "task10a_w0126",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 126
+      },
+      "telemetry_seq": 126
+    },
+    {
+      "sequence_index": 126,
+      "source_id": "vision-v1:c6/img_10777.jpg",
+      "class_id": "c6",
+      "filename": "img_10777.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c6/img_10777.jpg",
+      "sha256": "385506cf17dd02370e84117218e8dee2d4fc4102adb5442aff3b4a304b0ca65a",
+      "t_iso": "2026-10-25T00:00:12.600000+00:00",
+      "request_id": "task10a_w0127",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 127
+      },
+      "telemetry_seq": 127
+    },
+    {
+      "sequence_index": 127,
+      "source_id": "vision-v1:c6/img_10918.jpg",
+      "class_id": "c6",
+      "filename": "img_10918.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c6/img_10918.jpg",
+      "sha256": "a6e4d8630d5414046fb4471a664e868502dc8dcdba93c39d0b7de0485b0584b8",
+      "t_iso": "2026-10-25T00:00:12.700000+00:00",
+      "request_id": "task10a_w0128",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 128
+      },
+      "telemetry_seq": 128
+    },
+    {
+      "sequence_index": 128,
+      "source_id": "vision-v1:c6/img_10979.jpg",
+      "class_id": "c6",
+      "filename": "img_10979.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c6/img_10979.jpg",
+      "sha256": "9b0c59aa9a2142ec530832e8ae233fa15cd925a2d79a8c9ed98132ef2bd49074",
+      "t_iso": "2026-10-25T00:00:12.800000+00:00",
+      "request_id": "task10a_w0129",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 129
+      },
+      "telemetry_seq": 129
+    },
+    {
+      "sequence_index": 129,
+      "source_id": "vision-v1:c6/img_1098.jpg",
+      "class_id": "c6",
+      "filename": "img_1098.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c6/img_1098.jpg",
+      "sha256": "423972c1ca8de13aaac3a18220d18d1d744a20601b82e6b69c953f67c496c488",
+      "t_iso": "2026-10-25T00:00:12.900000+00:00",
+      "request_id": "task10a_w0130",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 130
+      },
+      "telemetry_seq": 130
+    },
+    {
+      "sequence_index": 130,
+      "source_id": "vision-v1:c6/img_11189.jpg",
+      "class_id": "c6",
+      "filename": "img_11189.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c6/img_11189.jpg",
+      "sha256": "880f6603c1a0606bf59b0a1087155a8c3c5768af198a9efc07cda2c93977d48d",
+      "t_iso": "2026-10-25T00:00:13+00:00",
+      "request_id": "task10a_w0131",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 131
+      },
+      "telemetry_seq": 131
+    },
+    {
+      "sequence_index": 131,
+      "source_id": "vision-v1:c6/img_11409.jpg",
+      "class_id": "c6",
+      "filename": "img_11409.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c6/img_11409.jpg",
+      "sha256": "f2770fbc5cc91671e2dcc1f3d92d982dc098dca2c029b587ecb8f2d4dc49742a",
+      "t_iso": "2026-10-25T00:00:13.100000+00:00",
+      "request_id": "task10a_w0132",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 132
+      },
+      "telemetry_seq": 132
+    },
+    {
+      "sequence_index": 132,
+      "source_id": "vision-v1:c6/img_1207.jpg",
+      "class_id": "c6",
+      "filename": "img_1207.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c6/img_1207.jpg",
+      "sha256": "222f259c4f614deab4437fd5f3a07295f9fa289dcd7e6ce8663c672de6dbda5e",
+      "t_iso": "2026-10-25T00:00:13.200000+00:00",
+      "request_id": "task10a_w0133",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 133
+      },
+      "telemetry_seq": 133
+    },
+    {
+      "sequence_index": 133,
+      "source_id": "vision-v1:c6/img_13053.jpg",
+      "class_id": "c6",
+      "filename": "img_13053.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c6/img_13053.jpg",
+      "sha256": "efef14fa0ba13cb7fbbf0ea0bccea7a6f9439a363fd3e4bbc491c1108b7b0180",
+      "t_iso": "2026-10-25T00:00:13.300000+00:00",
+      "request_id": "task10a_w0134",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 134
+      },
+      "telemetry_seq": 134
+    },
+    {
+      "sequence_index": 134,
+      "source_id": "vision-v1:c6/img_13067.jpg",
+      "class_id": "c6",
+      "filename": "img_13067.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c6/img_13067.jpg",
+      "sha256": "6e375629ec3dcee375f3d5da579370491d1d769029530d8d06dc644dc59b1624",
+      "t_iso": "2026-10-25T00:00:13.400000+00:00",
+      "request_id": "task10a_w0135",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 135
+      },
+      "telemetry_seq": 135
+    },
+    {
+      "sequence_index": 135,
+      "source_id": "vision-v1:c6/img_13137.jpg",
+      "class_id": "c6",
+      "filename": "img_13137.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c6/img_13137.jpg",
+      "sha256": "67b3b04dce10338b381f4c17e0b43e24ab525796578e2e3ebeeb7a8fb90f52e1",
+      "t_iso": "2026-10-25T00:00:13.500000+00:00",
+      "request_id": "task10a_w0136",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 136
+      },
+      "telemetry_seq": 136
+    },
+    {
+      "sequence_index": 136,
+      "source_id": "vision-v1:c6/img_13590.jpg",
+      "class_id": "c6",
+      "filename": "img_13590.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c6/img_13590.jpg",
+      "sha256": "74ab56d358820de503ceee45c10b85c00f5ceb0f6437de0c45c4f267b25f1525",
+      "t_iso": "2026-10-25T00:00:13.600000+00:00",
+      "request_id": "task10a_w0137",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 137
+      },
+      "telemetry_seq": 137
+    },
+    {
+      "sequence_index": 137,
+      "source_id": "vision-v1:c6/img_14166.jpg",
+      "class_id": "c6",
+      "filename": "img_14166.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c6/img_14166.jpg",
+      "sha256": "9eeaad04e3954c6b7fe2bdd09a1625258bfffb95ead4028480bde5918c4323bf",
+      "t_iso": "2026-10-25T00:00:13.700000+00:00",
+      "request_id": "task10a_w0138",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 138
+      },
+      "telemetry_seq": 138
+    },
+    {
+      "sequence_index": 138,
+      "source_id": "vision-v1:c6/img_14168.jpg",
+      "class_id": "c6",
+      "filename": "img_14168.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c6/img_14168.jpg",
+      "sha256": "bad9587f7e093b08f761b526af125242dbdbc2c44043d4fec4d9130b0200a42c",
+      "t_iso": "2026-10-25T00:00:13.800000+00:00",
+      "request_id": "task10a_w0139",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 139
+      },
+      "telemetry_seq": 139
+    },
+    {
+      "sequence_index": 139,
+      "source_id": "vision-v1:c6/img_14364.jpg",
+      "class_id": "c6",
+      "filename": "img_14364.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c6/img_14364.jpg",
+      "sha256": "3751189296543c0e63504fad4a161f41cb4a8501a500f0e29bc500399161e9c6",
+      "t_iso": "2026-10-25T00:00:13.900000+00:00",
+      "request_id": "task10a_w0140",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 140
+      },
+      "telemetry_seq": 140
+    },
+    {
+      "sequence_index": 140,
+      "source_id": "vision-v1:c7/img_100057.jpg",
+      "class_id": "c7",
+      "filename": "img_100057.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c7/img_100057.jpg",
+      "sha256": "86f63db025a0b26abe6a3066d1610606a6ceb72a0ad04ca5370ed509c6d8883a",
+      "t_iso": "2026-10-25T00:00:14+00:00",
+      "request_id": "task10a_w0141",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 141
+      },
+      "telemetry_seq": 141
+    },
+    {
+      "sequence_index": 141,
+      "source_id": "vision-v1:c7/img_100164.jpg",
+      "class_id": "c7",
+      "filename": "img_100164.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c7/img_100164.jpg",
+      "sha256": "32f186c0266890371dd20e88f83ce4749420362d565bc6e7e021491c4abe293d",
+      "t_iso": "2026-10-25T00:00:14.100000+00:00",
+      "request_id": "task10a_w0142",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 142
+      },
+      "telemetry_seq": 142
+    },
+    {
+      "sequence_index": 142,
+      "source_id": "vision-v1:c7/img_100167.jpg",
+      "class_id": "c7",
+      "filename": "img_100167.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c7/img_100167.jpg",
+      "sha256": "57e4a243fe020d2656cd2dbbd8c57dfdf0a7d826934cd2eec42899294bdc30cc",
+      "t_iso": "2026-10-25T00:00:14.200000+00:00",
+      "request_id": "task10a_w0143",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 143
+      },
+      "telemetry_seq": 143
+    },
+    {
+      "sequence_index": 143,
+      "source_id": "vision-v1:c7/img_100702.jpg",
+      "class_id": "c7",
+      "filename": "img_100702.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c7/img_100702.jpg",
+      "sha256": "73b75be835b1fdd05271a33d16b9894b019bc7f9b91f8ef592f964d1da75b073",
+      "t_iso": "2026-10-25T00:00:14.300000+00:00",
+      "request_id": "task10a_w0144",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 144
+      },
+      "telemetry_seq": 144
+    },
+    {
+      "sequence_index": 144,
+      "source_id": "vision-v1:c7/img_101357.jpg",
+      "class_id": "c7",
+      "filename": "img_101357.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c7/img_101357.jpg",
+      "sha256": "a81be87f5759d58c6a764bf34f772add97d66b55dbfde3a6499fe37f97c498bf",
+      "t_iso": "2026-10-25T00:00:14.400000+00:00",
+      "request_id": "task10a_w0145",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 145
+      },
+      "telemetry_seq": 145
+    },
+    {
+      "sequence_index": 145,
+      "source_id": "vision-v1:c7/img_101505.jpg",
+      "class_id": "c7",
+      "filename": "img_101505.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c7/img_101505.jpg",
+      "sha256": "46903ee0e8e82076901cec3b40af6d18333d2d2f117c6117b37dbe7ebaac244d",
+      "t_iso": "2026-10-25T00:00:14.500000+00:00",
+      "request_id": "task10a_w0146",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 146
+      },
+      "telemetry_seq": 146
+    },
+    {
+      "sequence_index": 146,
+      "source_id": "vision-v1:c7/img_101868.jpg",
+      "class_id": "c7",
+      "filename": "img_101868.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c7/img_101868.jpg",
+      "sha256": "232b35519eac10d402ab336ce2bfbb5114e6bf55f5321fd67be896a8a7920f98",
+      "t_iso": "2026-10-25T00:00:14.600000+00:00",
+      "request_id": "task10a_w0147",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 147
+      },
+      "telemetry_seq": 147
+    },
+    {
+      "sequence_index": 147,
+      "source_id": "vision-v1:c7/img_101905.jpg",
+      "class_id": "c7",
+      "filename": "img_101905.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c7/img_101905.jpg",
+      "sha256": "e0e2abc9870fae5afb52321fdd13c9ac67b04e24402183a76bed5f61ddff3d96",
+      "t_iso": "2026-10-25T00:00:14.700000+00:00",
+      "request_id": "task10a_w0148",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 148
+      },
+      "telemetry_seq": 148
+    },
+    {
+      "sequence_index": 148,
+      "source_id": "vision-v1:c7/img_10233.jpg",
+      "class_id": "c7",
+      "filename": "img_10233.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c7/img_10233.jpg",
+      "sha256": "0971e2a87bc7a1e77a29f6e60bbd635d081c4a42b13e4c844526fc41b99cddb5",
+      "t_iso": "2026-10-25T00:00:14.800000+00:00",
+      "request_id": "task10a_w0149",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 149
+      },
+      "telemetry_seq": 149
+    },
+    {
+      "sequence_index": 149,
+      "source_id": "vision-v1:c7/img_10478.jpg",
+      "class_id": "c7",
+      "filename": "img_10478.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c7/img_10478.jpg",
+      "sha256": "c829eff59496a4b4bd743e4b0bc39adeaadd3361095b6a0bd2e02e1d83182d9d",
+      "t_iso": "2026-10-25T00:00:14.900000+00:00",
+      "request_id": "task10a_w0150",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 150
+      },
+      "telemetry_seq": 150
+    },
+    {
+      "sequence_index": 150,
+      "source_id": "vision-v1:c7/img_10479.jpg",
+      "class_id": "c7",
+      "filename": "img_10479.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c7/img_10479.jpg",
+      "sha256": "6bc9e4cf592816bed01ff554e1ea37841a1aefb0830628dcfbc7aed7a9413815",
+      "t_iso": "2026-10-25T00:00:15+00:00",
+      "request_id": "task10a_w0151",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 151
+      },
+      "telemetry_seq": 151
+    },
+    {
+      "sequence_index": 151,
+      "source_id": "vision-v1:c7/img_10535.jpg",
+      "class_id": "c7",
+      "filename": "img_10535.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c7/img_10535.jpg",
+      "sha256": "6b4ab20817ade6b2404025e138041add15f0f8794f05419a1615018e48780b11",
+      "t_iso": "2026-10-25T00:00:15.100000+00:00",
+      "request_id": "task10a_w0152",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 152
+      },
+      "telemetry_seq": 152
+    },
+    {
+      "sequence_index": 152,
+      "source_id": "vision-v1:c7/img_10696.jpg",
+      "class_id": "c7",
+      "filename": "img_10696.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c7/img_10696.jpg",
+      "sha256": "10d6aae283e547c7a92fedd771ed97b7b9d8f3b63abbfcc6bb5a9f007919db7d",
+      "t_iso": "2026-10-25T00:00:15.200000+00:00",
+      "request_id": "task10a_w0153",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 153
+      },
+      "telemetry_seq": 153
+    },
+    {
+      "sequence_index": 153,
+      "source_id": "vision-v1:c7/img_1086.jpg",
+      "class_id": "c7",
+      "filename": "img_1086.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c7/img_1086.jpg",
+      "sha256": "218e796b14e6913e6828eda28636ea06b7c90bebe9ebc3c4dfe0653a3facd385",
+      "t_iso": "2026-10-25T00:00:15.300000+00:00",
+      "request_id": "task10a_w0154",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 154
+      },
+      "telemetry_seq": 154
+    },
+    {
+      "sequence_index": 154,
+      "source_id": "vision-v1:c7/img_10950.jpg",
+      "class_id": "c7",
+      "filename": "img_10950.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c7/img_10950.jpg",
+      "sha256": "4e5fea115106aee167a812f44db0c029f569c46f5d44a2cd38bfe8a8b2ac999d",
+      "t_iso": "2026-10-25T00:00:15.400000+00:00",
+      "request_id": "task10a_w0155",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 155
+      },
+      "telemetry_seq": 155
+    },
+    {
+      "sequence_index": 155,
+      "source_id": "vision-v1:c7/img_11057.jpg",
+      "class_id": "c7",
+      "filename": "img_11057.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c7/img_11057.jpg",
+      "sha256": "272312554d1d118b2d47f85c9a91ddbb1edfc741644b61c64128c1a4471d0fc7",
+      "t_iso": "2026-10-25T00:00:15.500000+00:00",
+      "request_id": "task10a_w0156",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 156
+      },
+      "telemetry_seq": 156
+    },
+    {
+      "sequence_index": 156,
+      "source_id": "vision-v1:c7/img_11196.jpg",
+      "class_id": "c7",
+      "filename": "img_11196.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c7/img_11196.jpg",
+      "sha256": "556683c2d8b0aad5b19d63bb2302dbee8d34a6af78f61cdb5b6e48277b9e1193",
+      "t_iso": "2026-10-25T00:00:15.600000+00:00",
+      "request_id": "task10a_w0157",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 157
+      },
+      "telemetry_seq": 157
+    },
+    {
+      "sequence_index": 157,
+      "source_id": "vision-v1:c7/img_11423.jpg",
+      "class_id": "c7",
+      "filename": "img_11423.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c7/img_11423.jpg",
+      "sha256": "4693fed19b6e4f9145e3a679f7601f4015d9a2eccb22bc281b30bf200cd2f84c",
+      "t_iso": "2026-10-25T00:00:15.700000+00:00",
+      "request_id": "task10a_w0158",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 158
+      },
+      "telemetry_seq": 158
+    },
+    {
+      "sequence_index": 158,
+      "source_id": "vision-v1:c7/img_1148.jpg",
+      "class_id": "c7",
+      "filename": "img_1148.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c7/img_1148.jpg",
+      "sha256": "284455d7e8b72177daa3853051ea76f76efa59843dd34b1cdad60f24bb7919f2",
+      "t_iso": "2026-10-25T00:00:15.800000+00:00",
+      "request_id": "task10a_w0159",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 159
+      },
+      "telemetry_seq": 159
+    },
+    {
+      "sequence_index": 159,
+      "source_id": "vision-v1:c7/img_12479.jpg",
+      "class_id": "c7",
+      "filename": "img_12479.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c7/img_12479.jpg",
+      "sha256": "b35810f5548b37664821d0064545df13cd91c6594cd376c6fa22de205f79e833",
+      "t_iso": "2026-10-25T00:00:15.900000+00:00",
+      "request_id": "task10a_w0160",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 160
+      },
+      "telemetry_seq": 160
+    },
+    {
+      "sequence_index": 160,
+      "source_id": "vision-v1:c8/img_100368.jpg",
+      "class_id": "c8",
+      "filename": "img_100368.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c8/img_100368.jpg",
+      "sha256": "42dddc5a55f2658d9e5c2e21e0b93e8f7f2d7e4206afbfdaf875efb09c2ac72c",
+      "t_iso": "2026-10-25T00:00:16+00:00",
+      "request_id": "task10a_w0161",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 161
+      },
+      "telemetry_seq": 161
+    },
+    {
+      "sequence_index": 161,
+      "source_id": "vision-v1:c8/img_100846.jpg",
+      "class_id": "c8",
+      "filename": "img_100846.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c8/img_100846.jpg",
+      "sha256": "0f818da873cfd98522f93ae047667852dc2c729598c0fe89e027d555ca9f9173",
+      "t_iso": "2026-10-25T00:00:16.100000+00:00",
+      "request_id": "task10a_w0162",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 162
+      },
+      "telemetry_seq": 162
+    },
+    {
+      "sequence_index": 162,
+      "source_id": "vision-v1:c8/img_100961.jpg",
+      "class_id": "c8",
+      "filename": "img_100961.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c8/img_100961.jpg",
+      "sha256": "514655191c9d07c1d65dd593d7d2194ee8859784f9b59d0dff4a43f6d07278ec",
+      "t_iso": "2026-10-25T00:00:16.200000+00:00",
+      "request_id": "task10a_w0163",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 163
+      },
+      "telemetry_seq": 163
+    },
+    {
+      "sequence_index": 163,
+      "source_id": "vision-v1:c8/img_102114.jpg",
+      "class_id": "c8",
+      "filename": "img_102114.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c8/img_102114.jpg",
+      "sha256": "e6e41a2fbd2137c338e3df773a882c76eaf3dfd9bb1c3cde6bcd9a82f32241a0",
+      "t_iso": "2026-10-25T00:00:16.300000+00:00",
+      "request_id": "task10a_w0164",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 164
+      },
+      "telemetry_seq": 164
+    },
+    {
+      "sequence_index": 164,
+      "source_id": "vision-v1:c8/img_10361.jpg",
+      "class_id": "c8",
+      "filename": "img_10361.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c8/img_10361.jpg",
+      "sha256": "b3fbb8f47f3d5bf7bbd8ef8fac82b0f0650e653c715be768e4c2c0b16e9695bf",
+      "t_iso": "2026-10-25T00:00:16.400000+00:00",
+      "request_id": "task10a_w0165",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 165
+      },
+      "telemetry_seq": 165
+    },
+    {
+      "sequence_index": 165,
+      "source_id": "vision-v1:c8/img_10420.jpg",
+      "class_id": "c8",
+      "filename": "img_10420.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c8/img_10420.jpg",
+      "sha256": "aa10ac803665925a478137f903970ac1356beeebf5864a873f45c622035c495d",
+      "t_iso": "2026-10-25T00:00:16.500000+00:00",
+      "request_id": "task10a_w0166",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 166
+      },
+      "telemetry_seq": 166
+    },
+    {
+      "sequence_index": 166,
+      "source_id": "vision-v1:c8/img_11315.jpg",
+      "class_id": "c8",
+      "filename": "img_11315.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c8/img_11315.jpg",
+      "sha256": "d1d61e7472886ae83e90cfbfc0da41b6a8ba4e742b478eeb4dd308f8ecdc6bf8",
+      "t_iso": "2026-10-25T00:00:16.600000+00:00",
+      "request_id": "task10a_w0167",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 167
+      },
+      "telemetry_seq": 167
+    },
+    {
+      "sequence_index": 167,
+      "source_id": "vision-v1:c8/img_11470.jpg",
+      "class_id": "c8",
+      "filename": "img_11470.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c8/img_11470.jpg",
+      "sha256": "48ff7554d2de40debb6b6d0fef19382c5792c9d94d6d26c5585fc3c5619e8cb0",
+      "t_iso": "2026-10-25T00:00:16.700000+00:00",
+      "request_id": "task10a_w0168",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 168
+      },
+      "telemetry_seq": 168
+    },
+    {
+      "sequence_index": 168,
+      "source_id": "vision-v1:c8/img_12008.jpg",
+      "class_id": "c8",
+      "filename": "img_12008.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c8/img_12008.jpg",
+      "sha256": "6750fdaa94c2230e03d2bfe97f4806bed01252aad91fa28b331fa0ff2eb5acde",
+      "t_iso": "2026-10-25T00:00:16.800000+00:00",
+      "request_id": "task10a_w0169",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 169
+      },
+      "telemetry_seq": 169
+    },
+    {
+      "sequence_index": 169,
+      "source_id": "vision-v1:c8/img_12047.jpg",
+      "class_id": "c8",
+      "filename": "img_12047.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c8/img_12047.jpg",
+      "sha256": "d8957dd54f275bf7438a176b4695253b875a1512f7de5714e4584f42984be748",
+      "t_iso": "2026-10-25T00:00:16.900000+00:00",
+      "request_id": "task10a_w0170",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 170
+      },
+      "telemetry_seq": 170
+    },
+    {
+      "sequence_index": 170,
+      "source_id": "vision-v1:c8/img_12575.jpg",
+      "class_id": "c8",
+      "filename": "img_12575.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c8/img_12575.jpg",
+      "sha256": "2097eded9bc87f9561fb1aafbf3c5ae34e6213b5ecb3da022bdca2151911e371",
+      "t_iso": "2026-10-25T00:00:17+00:00",
+      "request_id": "task10a_w0171",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 171
+      },
+      "telemetry_seq": 171
+    },
+    {
+      "sequence_index": 171,
+      "source_id": "vision-v1:c8/img_12731.jpg",
+      "class_id": "c8",
+      "filename": "img_12731.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c8/img_12731.jpg",
+      "sha256": "f315e275287d7a43eefeb1845963463f6d3f4e7edec644b726e40d7cfe81e39d",
+      "t_iso": "2026-10-25T00:00:17.100000+00:00",
+      "request_id": "task10a_w0172",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 172
+      },
+      "telemetry_seq": 172
+    },
+    {
+      "sequence_index": 172,
+      "source_id": "vision-v1:c8/img_12886.jpg",
+      "class_id": "c8",
+      "filename": "img_12886.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c8/img_12886.jpg",
+      "sha256": "cea600a19715874f0f38dba892b83cb6d335b31709b9bab37a78a5ad9681f137",
+      "t_iso": "2026-10-25T00:00:17.200000+00:00",
+      "request_id": "task10a_w0173",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 173
+      },
+      "telemetry_seq": 173
+    },
+    {
+      "sequence_index": 173,
+      "source_id": "vision-v1:c8/img_13090.jpg",
+      "class_id": "c8",
+      "filename": "img_13090.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c8/img_13090.jpg",
+      "sha256": "148a2f412408b10cd872c92fe8370d89617e4b51978fcb6eb541a9c5d5a7a31a",
+      "t_iso": "2026-10-25T00:00:17.300000+00:00",
+      "request_id": "task10a_w0174",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 174
+      },
+      "telemetry_seq": 174
+    },
+    {
+      "sequence_index": 174,
+      "source_id": "vision-v1:c8/img_13308.jpg",
+      "class_id": "c8",
+      "filename": "img_13308.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c8/img_13308.jpg",
+      "sha256": "57b2ec668822788af3682737da09916a5719d005c94c4ebe9d5223ec7a0a63c6",
+      "t_iso": "2026-10-25T00:00:17.400000+00:00",
+      "request_id": "task10a_w0175",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 175
+      },
+      "telemetry_seq": 175
+    },
+    {
+      "sequence_index": 175,
+      "source_id": "vision-v1:c8/img_1338.jpg",
+      "class_id": "c8",
+      "filename": "img_1338.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c8/img_1338.jpg",
+      "sha256": "c87728d86dd56247958022e33109091508ffc9dfffe134e5d40b0f6a278c229e",
+      "t_iso": "2026-10-25T00:00:17.500000+00:00",
+      "request_id": "task10a_w0176",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 176
+      },
+      "telemetry_seq": 176
+    },
+    {
+      "sequence_index": 176,
+      "source_id": "vision-v1:c8/img_13465.jpg",
+      "class_id": "c8",
+      "filename": "img_13465.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c8/img_13465.jpg",
+      "sha256": "49275891adfadd5fcde87388f2bec4a0cd5d84a43ead09570ca571b68bf4ddce",
+      "t_iso": "2026-10-25T00:00:17.600000+00:00",
+      "request_id": "task10a_w0177",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 177
+      },
+      "telemetry_seq": 177
+    },
+    {
+      "sequence_index": 177,
+      "source_id": "vision-v1:c8/img_13480.jpg",
+      "class_id": "c8",
+      "filename": "img_13480.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c8/img_13480.jpg",
+      "sha256": "cbc3c92342c23ece468a741ca8fd908849529cb3affcf2760bc10c5baab764e5",
+      "t_iso": "2026-10-25T00:00:17.700000+00:00",
+      "request_id": "task10a_w0178",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 178
+      },
+      "telemetry_seq": 178
+    },
+    {
+      "sequence_index": 178,
+      "source_id": "vision-v1:c8/img_13495.jpg",
+      "class_id": "c8",
+      "filename": "img_13495.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c8/img_13495.jpg",
+      "sha256": "4c2009ae72fa753825d5d29d893c87a1540dd45463cf7887351c2234f7a06cfb",
+      "t_iso": "2026-10-25T00:00:17.800000+00:00",
+      "request_id": "task10a_w0179",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 179
+      },
+      "telemetry_seq": 179
+    },
+    {
+      "sequence_index": 179,
+      "source_id": "vision-v1:c8/img_13505.jpg",
+      "class_id": "c8",
+      "filename": "img_13505.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c8/img_13505.jpg",
+      "sha256": "f09967b174d0a39f3372348b58f8889b63ef63cc748f126e9c08859145cd8e2f",
+      "t_iso": "2026-10-25T00:00:17.900000+00:00",
+      "request_id": "task10a_w0180",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 180
+      },
+      "telemetry_seq": 180
+    },
+    {
+      "sequence_index": 180,
+      "source_id": "vision-v1:c9/img_100286.jpg",
+      "class_id": "c9",
+      "filename": "img_100286.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c9/img_100286.jpg",
+      "sha256": "bc6f3185bc179cb62861d3239868ce532c2583bd7b372e4d9e5edc9775654ca9",
+      "t_iso": "2026-10-25T00:00:18+00:00",
+      "request_id": "task10a_w0181",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 181
+      },
+      "telemetry_seq": 181
+    },
+    {
+      "sequence_index": 181,
+      "source_id": "vision-v1:c9/img_100294.jpg",
+      "class_id": "c9",
+      "filename": "img_100294.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c9/img_100294.jpg",
+      "sha256": "8a2b3ae1a504ee2c51f5fdca6dd0f13f1dab54a9c857b2f525f350e9401913c1",
+      "t_iso": "2026-10-25T00:00:18.100000+00:00",
+      "request_id": "task10a_w0182",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 182
+      },
+      "telemetry_seq": 182
+    },
+    {
+      "sequence_index": 182,
+      "source_id": "vision-v1:c9/img_100428.jpg",
+      "class_id": "c9",
+      "filename": "img_100428.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c9/img_100428.jpg",
+      "sha256": "338f637fad01fb16d3c0c8376e4cc3619ad68ab3499457a474e2b0ad5618b165",
+      "t_iso": "2026-10-25T00:00:18.200000+00:00",
+      "request_id": "task10a_w0183",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 183
+      },
+      "telemetry_seq": 183
+    },
+    {
+      "sequence_index": 183,
+      "source_id": "vision-v1:c9/img_100429.jpg",
+      "class_id": "c9",
+      "filename": "img_100429.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c9/img_100429.jpg",
+      "sha256": "22a1a6c3f05ac487d712d7e6e4045f20c8176a1b9fd7093551ce6c7cb24c27d3",
+      "t_iso": "2026-10-25T00:00:18.300000+00:00",
+      "request_id": "task10a_w0184",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 184
+      },
+      "telemetry_seq": 184
+    },
+    {
+      "sequence_index": 184,
+      "source_id": "vision-v1:c9/img_101501.jpg",
+      "class_id": "c9",
+      "filename": "img_101501.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c9/img_101501.jpg",
+      "sha256": "687b02c2b59e01c8b247ebfc448e735ef4f2a21d88c4678fb8d9a10434de4372",
+      "t_iso": "2026-10-25T00:00:18.400000+00:00",
+      "request_id": "task10a_w0185",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 185
+      },
+      "telemetry_seq": 185
+    },
+    {
+      "sequence_index": 185,
+      "source_id": "vision-v1:c9/img_10731.jpg",
+      "class_id": "c9",
+      "filename": "img_10731.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c9/img_10731.jpg",
+      "sha256": "7480113ce0d495f09649a5da41f809c8e5fecfc182cbe851a089c7a6291fbdf9",
+      "t_iso": "2026-10-25T00:00:18.500000+00:00",
+      "request_id": "task10a_w0186",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 186
+      },
+      "telemetry_seq": 186
+    },
+    {
+      "sequence_index": 186,
+      "source_id": "vision-v1:c9/img_11577.jpg",
+      "class_id": "c9",
+      "filename": "img_11577.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c9/img_11577.jpg",
+      "sha256": "df9210f8ebfb3c83c26f27848dcbfd7db133c70784541b61ba37d828d9d64f82",
+      "t_iso": "2026-10-25T00:00:18.600000+00:00",
+      "request_id": "task10a_w0187",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 187
+      },
+      "telemetry_seq": 187
+    },
+    {
+      "sequence_index": 187,
+      "source_id": "vision-v1:c9/img_12046.jpg",
+      "class_id": "c9",
+      "filename": "img_12046.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c9/img_12046.jpg",
+      "sha256": "b701eab5c5a158ddbae631f155585a4b9e3d68c89e8595d5c94d9d7962912bf1",
+      "t_iso": "2026-10-25T00:00:18.700000+00:00",
+      "request_id": "task10a_w0188",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 188
+      },
+      "telemetry_seq": 188
+    },
+    {
+      "sequence_index": 188,
+      "source_id": "vision-v1:c9/img_13318.jpg",
+      "class_id": "c9",
+      "filename": "img_13318.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c9/img_13318.jpg",
+      "sha256": "01b062b2af6a89c6717ec11d98729eedf382d16f1379a053bde82aeb362e60a2",
+      "t_iso": "2026-10-25T00:00:18.800000+00:00",
+      "request_id": "task10a_w0189",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 189
+      },
+      "telemetry_seq": 189
+    },
+    {
+      "sequence_index": 189,
+      "source_id": "vision-v1:c9/img_13982.jpg",
+      "class_id": "c9",
+      "filename": "img_13982.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c9/img_13982.jpg",
+      "sha256": "f906579946948eef00ca4f7f73c0f621035dd24dfba2c856d7f22dcea66cdbf8",
+      "t_iso": "2026-10-25T00:00:18.900000+00:00",
+      "request_id": "task10a_w0190",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 190
+      },
+      "telemetry_seq": 190
+    },
+    {
+      "sequence_index": 190,
+      "source_id": "vision-v1:c9/img_14413.jpg",
+      "class_id": "c9",
+      "filename": "img_14413.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c9/img_14413.jpg",
+      "sha256": "cc841ec877a654971d604d3a169bf4782661135c9298d1db9e5a11b6e69bd6da",
+      "t_iso": "2026-10-25T00:00:19+00:00",
+      "request_id": "task10a_w0191",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 191
+      },
+      "telemetry_seq": 191
+    },
+    {
+      "sequence_index": 191,
+      "source_id": "vision-v1:c9/img_14657.jpg",
+      "class_id": "c9",
+      "filename": "img_14657.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c9/img_14657.jpg",
+      "sha256": "7f9eb2c2ce6d49a88bb481e975a14de69d279ee024b5ebd4f145cabd4ac28907",
+      "t_iso": "2026-10-25T00:00:19.100000+00:00",
+      "request_id": "task10a_w0192",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 192
+      },
+      "telemetry_seq": 192
+    },
+    {
+      "sequence_index": 192,
+      "source_id": "vision-v1:c9/img_15013.jpg",
+      "class_id": "c9",
+      "filename": "img_15013.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c9/img_15013.jpg",
+      "sha256": "6d14700e489a18380874ab536615b8a34191f968b05d735094ffd147c9e2db50",
+      "t_iso": "2026-10-25T00:00:19.200000+00:00",
+      "request_id": "task10a_w0193",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 193
+      },
+      "telemetry_seq": 193
+    },
+    {
+      "sequence_index": 193,
+      "source_id": "vision-v1:c9/img_154.jpg",
+      "class_id": "c9",
+      "filename": "img_154.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c9/img_154.jpg",
+      "sha256": "62c0dcf41af05c8814974f301934b39b1a8340469be7bfdd738195b270e87bfc",
+      "t_iso": "2026-10-25T00:00:19.300000+00:00",
+      "request_id": "task10a_w0194",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 194
+      },
+      "telemetry_seq": 194
+    },
+    {
+      "sequence_index": 194,
+      "source_id": "vision-v1:c9/img_15496.jpg",
+      "class_id": "c9",
+      "filename": "img_15496.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c9/img_15496.jpg",
+      "sha256": "14022e0a45950d567a968f4d2cd44befb1f8c0f326c61974e298d009ad5537c5",
+      "t_iso": "2026-10-25T00:00:19.400000+00:00",
+      "request_id": "task10a_w0195",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 195
+      },
+      "telemetry_seq": 195
+    },
+    {
+      "sequence_index": 195,
+      "source_id": "vision-v1:c9/img_15564.jpg",
+      "class_id": "c9",
+      "filename": "img_15564.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c9/img_15564.jpg",
+      "sha256": "391b10abc5d86a51f585caa1d0b0632fc8141c4259ea6e55b83fbd2775315149",
+      "t_iso": "2026-10-25T00:00:19.500000+00:00",
+      "request_id": "task10a_w0196",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 196
+      },
+      "telemetry_seq": 196
+    },
+    {
+      "sequence_index": 196,
+      "source_id": "vision-v1:c9/img_15827.jpg",
+      "class_id": "c9",
+      "filename": "img_15827.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c9/img_15827.jpg",
+      "sha256": "c91158f1802e2e1499d245b009ea0cbda6868a8729c19a6962f10ff8a5cedbf4",
+      "t_iso": "2026-10-25T00:00:19.600000+00:00",
+      "request_id": "task10a_w0197",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 197
+      },
+      "telemetry_seq": 197
+    },
+    {
+      "sequence_index": 197,
+      "source_id": "vision-v1:c9/img_16661.jpg",
+      "class_id": "c9",
+      "filename": "img_16661.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c9/img_16661.jpg",
+      "sha256": "b705e70bb4ac1a896222fed2ef3f0f0c05b8078d2600f66bb0207a4753b32229",
+      "t_iso": "2026-10-25T00:00:19.700000+00:00",
+      "request_id": "task10a_w0198",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 198
+      },
+      "telemetry_seq": 198
+    },
+    {
+      "sequence_index": 198,
+      "source_id": "vision-v1:c9/img_16668.jpg",
+      "class_id": "c9",
+      "filename": "img_16668.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c9/img_16668.jpg",
+      "sha256": "7589c3e475842b68787b15c6d3bd474ce4356fe0d47f8076a88e4a3448dda502",
+      "t_iso": "2026-10-25T00:00:19.800000+00:00",
+      "request_id": "task10a_w0199",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 199
+      },
+      "telemetry_seq": 199
+    },
+    {
+      "sequence_index": 199,
+      "source_id": "vision-v1:c9/img_16688.jpg",
+      "class_id": "c9",
+      "filename": "img_16688.jpg",
+      "path": "/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment-/state-farm-distracted-driver-detection/imgs/train/c9/img_16688.jpg",
+      "sha256": "fbb4a56aaee40978d6017f6d458efd9b55c00b4791adf12624ef7dd622f18ffe",
+      "t_iso": "2026-10-25T00:00:19.900000+00:00",
+      "request_id": "task10a_w0200",
+      "vision_frame": {
+        "epoch": 1,
+        "index": 200
+      },
+      "telemetry_seq": 200
+    }
+  ],
+  "n": 200,
+  "protocol_path": "/Users/liu/Desktop/FYP2-DeepSeek/docs/fyp2/task10a/comparison_protocol.json",
+  "model_id": "resnet18_search004_seed42",
+  "expected_model_sha256": "5e226722e0712824c78aa0976afa6fa5b8dc6100b147a7f523a09048171d8cf3",
+  "session_id": "task10a-cmp-resnet18_search004_seed42",
+  "work_dir": "/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/task10a-cmp-resnet18_search004_seed42-i6gvhahm",
+  "db_url": "sqlite:////var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/task10a-cmp-resnet18_search004_seed42-i6gvhahm/comparison.sqlite"
+}

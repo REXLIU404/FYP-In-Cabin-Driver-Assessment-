@@ -1,0 +1,72 @@
+........FF....F                                                          [100%]
+=================================== FAILURES ===================================
+_______ test_mislabelled_heldout_path_and_frozen_sha_cannot_bypass_gate ________
+
+data = <module 'ml.experiments.p4_data' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_data.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-81/test_mislabelled_heldout_path_0')
+
+    def test_mislabelled_heldout_path_and_frozen_sha_cannot_bypass_gate(data,tmp_path):
+        with pytest.raises(PermissionError):
+>           data.read_telemetry_csv(tmp_path/'telemetry_test.csv',split='val',expected_sha256='irrelevant')
+
+ml/tests/test_p4_data.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ml/experiments/p4_data.py:89: in read_telemetry_csv
+    blob, sha = _verified_bytes(path, expected_sha256)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ml/experiments/p4_data.py:37: in _verified_bytes
+    blob = Path(path).read_bytes()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_abc.py:625: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-81/test_mislabelled_heldout_path_0/telemetry_test.csv')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-81/test_mislabelled_heldout_path_0/telemetry_test.csv'
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_local.py:537: FileNotFoundError
+_______ test_statistics_reuse_detects_changed_global_or_class_statistics _______
+
+data = <module 'ml.experiments.p4_data' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_data.py'>
+
+    def test_statistics_reuse_detects_changed_global_or_class_statistics(data):
+        computed=stats();computed['mean_global'][0]=99.
+        with pytest.raises(ValueError):
+>           data.verify_train_statistics(stats(),expected_train_sha256='train-sha',computed_statistics=computed)
+E           TypeError: verify_train_statistics() got an unexpected keyword argument 'computed_statistics'
+
+ml/tests/test_p4_data.py:129: TypeError
+___ test_finalization_requires_locked_choice_and_measured_postlock_cue_check ___
+
+qc = <module 'ml.experiments.p4_qc' from '/Users/liu/Desktop/FYP-In-Cabin-Driver-Assessment--1/ml/experiments/p4_qc.py'>
+tmp_path = PosixPath('/private/var/folders/0k/dtzqmkm53vqgg530vd7h3fmr0000gn/T/pytest-of-liu/pytest-81/test_finalization_requires_loc0')
+
+    def test_finalization_requires_locked_choice_and_measured_postlock_cue_check(qc,tmp_path):
+        manifest=qc.build_review_kit(cases(),tmp_path/'kit',reviewer='R1')
+        ids=[r['case_id'] for r in manifest['restricted_cases']]
+        locked=qc.lock_blind_judgments([judgement(i) for i in ids],reviewer='R1',case_ids=ids)
+        cue_checks=[{'case_id':i,'preserved_cue':True,'reason':'source action cue remains',
+                     'duration_seconds':1.,'timestamp':'2026-10-21T11:00:00+08:00'} for i in ids]
+>       finalized=qc.finalize_qc(manifest,locked,cue_checks)
+                  ^^^^^^^^^^^^^^
+E       AttributeError: module 'ml.experiments.p4_qc' has no attribute 'finalize_qc'
+
+ml/tests/test_p4_qc.py:77: AttributeError
+=========================== short test summary info ============================
+FAILED ml/tests/test_p4_data.py::test_mislabelled_heldout_path_and_frozen_sha_cannot_bypass_gate
+FAILED ml/tests/test_p4_data.py::test_statistics_reuse_detects_changed_global_or_class_statistics
+FAILED ml/tests/test_p4_qc.py::test_finalization_requires_locked_choice_and_measured_postlock_cue_check
+3 failed, 12 passed in 1.41s

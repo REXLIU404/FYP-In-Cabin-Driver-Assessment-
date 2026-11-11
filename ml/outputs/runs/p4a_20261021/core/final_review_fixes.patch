@@ -1,0 +1,213 @@
+--- snapshot/ml/experiments/run_p4.py
++++ ml/experiments/run_p4.py
+@@ -454,12 +454,95 @@
+         'ru_maxrss_scope':'Whole worker lifecycle; macOS bytes, not model exclusive memory.'}
+ 
+ 
++def telemetry_metadata_summary(rows):
++    """Summarize shared input metadata once, without predictions or label F1.
++
++    Missing rates use the actual condition's row count (cell rates use N*8).
++    None excesses remain unknown/missing, rather than becoming passing zeros.
++    The four stored stages preserve violations that an imputer later removes.
++    """
++    from collections import Counter
++    from ml.experiments.comparator_common import FEATURES
++    stages=('source','pre_mask','observed','imputed')
++    masks={'source':'source_missing_mask','injected':'injected_missing_mask','combined':'missing_mask'}
++    grouped={};seen=set()
++    for row in rows:
++        condition=condition_name(row);key=(condition,row['source_id'])
++        if key in seen:raise ValueError('Duplicate telemetry metadata source/condition')
++        seen.add(key)
++        if row.get('feature_order')!=FEATURES:raise ValueError('Telemetry metadata feature order mismatch')
++        for field in masks.values():
++            mask=row.get(field)
++            if not isinstance(mask,list) or len(mask)!=8 or any(type(v) is not bool for v in mask):
++                raise ValueError('Invalid telemetry metadata missing mask')
++        if row['missing_mask']!=[a or b for a,b in zip(row['source_missing_mask'],row['injected_missing_mask'])]:
++            raise ValueError('Telemetry metadata combined missing mask mismatch')
++        if type(row.get('record_affected')) is not bool:raise ValueError('Invalid record missingness flag')
++        for stage in stages:
++            flags=row.get('bounds',{}).get(stage,[])
++            if len(flags)!=8 or [f.get('feature') for f in flags]!=FEATURES:
++                raise ValueError('Telemetry metadata bounds feature/stage mismatch')
++        grouped.setdefault(condition,[]).append(row)
++
++    def excess_summary(flags,side):
++        known=[]
++        for flag in flags:
++            value=flag[side]
++            if value is None:continue
++            if type(value) not in (float,int) or not np.isfinite(value) or value<0:
++                raise ValueError('Invalid telemetry metadata bounds excess')
++            known.append(float(value))
++        return {'count':sum(v>0 for v in known),'sum':sum(known) if known else None,
++            'max':max(known) if known else None,'known_count':len(known),
++            'unknown_or_missing_count':len(flags)-len(known)}
++
++    result={'scope':'SHARED_TELEMETRY_INPUT_METADATA_ONLY_NO_FORWARD',
++        'feature_order':FEATURES.copy(),'condition_denominator':'Actual rows in each condition',
++        'bounds_policy':'REPORT_ONLY_NO_CLIP','conditions':{}}
++    for condition,group in sorted(grouped.items()):
++        n=len(group);affected=sum(row['record_affected'] for row in group)
++        summary={'record_count':n,'source_count':len({r['source_id'] for r in group}),
++            'record_affected':{'count':affected,'rate':affected/n},
++            'requested_record_missing_rates':sorted({r['requested_record_missing_rate'] for r in group}),
++            'missingness':{},'bounds':{},
++            'label_validity':'SOURCE_SYNTHETIC_LABEL' if condition=='D0' else 'LABEL_VALIDITY_UNVERIFIED',
++            'f1_eligible':condition=='D0'}
++        for name,field in masks.items():
++            mask=np.asarray([r[field] for r in group],dtype=bool)
++            count=int(mask.sum());record_count=int(mask.any(axis=1).sum())
++            summary['missingness'][name]={'cell_count':count,'cell_rate':count/(n*8),
++                'record_count':record_count,'record_rate':record_count/n,
++                'features':{feature:{'count':int(mask[:,i].sum()),'rate':float(mask[:,i].mean())}
++                    for i,feature in enumerate(FEATURES)}}
++        for stage in stages:
++            summary['bounds'][stage]={}
++            for i,feature in enumerate(FEATURES):
++                kinds={}
++                for kind in ('domain','empirical'):
++                    flags=[r['bounds'][stage][i][kind] for r in group]
++                    counts=dict(Counter(flag['status'] for flag in flags))
++                    kinds[kind]={'status_counts':counts,'status_rates':{status:count/n for status,count in counts.items()},
++                        'lower_excess':excess_summary(flags,'lower_excess'),
++                        'upper_excess':excess_summary(flags,'upper_excess')}
++                summary['bounds'][stage][feature]=kinds
++        result['conditions'][condition]=summary
++    return result
++
++
++def load_telemetry_metadata_summary(shared):
++    shared=Path(shared);path=shared/'telemetry_variants.json'
++    manifest=read_json(shared/'bank_manifest.json')
++    if sha256_file(path)!=manifest['metadata'][path.name]:raise ValueError('Shared telemetry metadata changed')
++    return telemetry_metadata_summary(read_json(path))
++
++
+ def aggregate(spec):
+     run=Path(spec['run_dir']);cache=PredictionCache.open_readonly(run/'cache',spec['binding'],{k:v['sha256'] for k,v in FROZEN_IDENTITIES.items()})
+     try:records=cache.records()
+     finally:cache.close()
+     if len(records)!=388449:raise ValueError('Incomplete full paired prediction coverage')
+     report={'protocol':spec['binding'],'formal_prediction_count':len(records),'models':{},
++        'telemetry_input_metadata':load_telemetry_metadata_summary(run/'shared_inputs'),
+         'limitations':['Only four State Farm test drivers; descriptive comparisons, no frame bootstrap or p-values.',
+         'Telemetry sources are synthetic; driver/trip/generator independence unknown.',
+         'Historical test split has been repeatedly evaluated; no directly test-driven parameter selection code was found.',
+@@ -483,7 +566,7 @@
+     # QC remains conditional on actual blinded R1 judgments. No fabricated
+     # human labels, inter-rater statistic, or automatic VALID defaults.
+     report['qc']={'policy':'SINGLE_REVIEWER_R1','status':'AWAITING_ACTUAL_REVIEW','full_10_class_macro_f1':'NOT_ESTIMABLE',
+-        'reason':'QC metrics require locked blinded R1 judgments; pilot38 spans at most two classes.'}
++        'reason':'QC metrics require locked blinded R1 judgments and source-cue checks for this run.'}
+     if spec.get('qc_lock') and spec.get('qc_cue_checks'):
+         from ml.experiments.p4_qc import finalize_qc,load_byte_attestation
+         authorization=authorize_p4b(read_json(spec['approval_path']),**spec['binding'])
+@@ -544,7 +627,7 @@
+     run=ROOT/'ml/outputs/runs'/args.run_id;reject_symlink(run)
+     spec.update(binding=binding,run_dir=str(run),protocol_path=str(protocol_path),approval_path=str(Path(args.approval).resolve()))
+     if spec.get('reviewers')!=['R1']:raise ValueError('Single-reviewer R1 policy requires explicit formal P4-B amendment approval')
+-    if not read_json(args.approval).get('single_reviewer_amendment_approved'):raise ValueError('P4-B single-reviewer protocol amendment approval required')
++    if read_json(args.approval).get('single_reviewer_amendment_approved') is not True:raise ValueError('P4-B single-reviewer protocol amendment approval required')
+     supervisor=BudgetSupervisor(run) # Resource gate precedes model loading/export/forward.
+     atomic_json(run/'provenance_before.json',provenance)
+     atomic_json(run/'execution_spec.json',spec);atomic_json(run/'source_manifest.json',source_manifest(SOURCES))
+--- snapshot/ml/tests/test_p4_core.py
++++ ml/tests/test_p4_core.py
+@@ -362,3 +362,94 @@
+     supervisor.run([sys.executable,'-c','pass'],stage='toy',model='toy',model_cap_seconds=1,
+         worker_cap_seconds=1,rss_cap_bytes=1024**3)
+     assert supervisor.total_used<.1
++
++
++def telemetry_metadata_fixture():
++    """Hand-checked metadata: one injected cell and one source-missing cell."""
++    from copy import deepcopy
++    from ml.experiments.comparator_common import FEATURES
++    unknown={'status':'UNKNOWN','lower_excess':None,'upper_excess':None}
++    within={'status':'WITHIN_BOUNDS','lower_excess':0.,'upper_excess':0.}
++    speed={'status':'WITHIN_KNOWN_BOUNDS_UPPER_UNKNOWN','lower_excess':0.,'upper_excess':None}
++    missing={'status':'MISSING','lower_excess':None,'upper_excess':None}
++    rows=[]
++    for index in range(2):
++        source_mask=[False]*8;injected_mask=[False]*8
++        if index==0:injected_mask[0]=True
++        else:source_mask[1]=True
++        bounds={stage:[{'feature':feature,'domain':deepcopy(speed if i==0 else unknown),
++            'empirical':deepcopy(within)} for i,feature in enumerate(FEATURES)]
++            for stage in ('source','pre_mask','observed','imputed')}
++        if index==0:
++            bounds['pre_mask'][0]['domain']={'status':'OUT_OF_BOUNDS','lower_excess':2.,'upper_excess':None}
++            bounds['pre_mask'][0]['empirical']={'status':'OUT_OF_BOUNDS','lower_excess':3.,'upper_excess':0.}
++            bounds['observed'][0].update(domain=deepcopy(missing),empirical=deepcopy(missing))
++        else:
++            for stage in ('source','pre_mask','observed'):
++                bounds[stage][1].update(domain=deepcopy(missing),empirical=deepcopy(missing))
++        rows.append(dict(source_id=f's{index}',domain='D3',severity=0,feature_order=FEATURES,
++            source_missing_mask=source_mask,injected_missing_mask=injected_mask,
++            missing_mask=[a or b for a,b in zip(source_mask,injected_mask)],
++            record_affected=index==0,requested_record_missing_rate=.5,bounds=bounds,
++            label_validity='LABEL_VALIDITY_UNVERIFIED',f1_eligible=False))
++    return rows
++
++
++def test_telemetry_metadata_summary_preserves_masks_and_pre_imputation_bounds(core):
++    from ml.experiments import run_p4
++    report=run_p4.telemetry_metadata_summary(telemetry_metadata_fixture())
++    condition=report['conditions']['D3:0']
++    assert condition['source_count']==2 and condition['record_count']==2
++    assert condition['record_affected']=={'count':1,'rate':.5}
++    missing=condition['missingness']
++    assert missing['source']['cell_count']==1 and missing['source']['cell_rate']==.0625
++    assert missing['injected']['record_count']==1 and missing['injected']['record_rate']==.5
++    assert missing['combined']['cell_count']==2 and missing['combined']['cell_rate']==.125
++    assert missing['combined']['record_count']==2 and missing['combined']['record_rate']==1.
++    assert missing['source']['features']['accel_x']=={'count':1,'rate':.5}
++    assert missing['injected']['features']['speed_kmph']=={'count':1,'rate':.5}
++    bounds=condition['bounds']
++    before=bounds['pre_mask']['speed_kmph']['domain']
++    assert before['status_counts']=={'OUT_OF_BOUNDS':1,'WITHIN_KNOWN_BOUNDS_UPPER_UNKNOWN':1}
++    assert before['lower_excess']=={'count':1,'sum':2.,'max':2.,'known_count':2,'unknown_or_missing_count':0}
++    assert before['upper_excess']=={'count':0,'sum':None,'max':None,'known_count':0,'unknown_or_missing_count':2}
++    assert bounds['pre_mask']['speed_kmph']['empirical']['lower_excess']['sum']==3.
++    assert bounds['observed']['speed_kmph']['domain']['status_counts']['MISSING']==1
++    assert bounds['imputed']['speed_kmph']['domain']['lower_excess']['count']==0
++    assert bounds['source']['accel_x']['domain']['status_counts']=={'UNKNOWN':1,'MISSING':1}
++    assert condition['label_validity']=='LABEL_VALIDITY_UNVERIFIED'
++    assert condition['f1_eligible'] is False and 'macro_f1' not in condition
++
++
++def test_telemetry_metadata_file_report_rejects_tamper_and_keeps_condition_denominators(core,tmp_path):
++    from ml.experiments import run_p4
++    from copy import deepcopy
++    rows=telemetry_metadata_fixture()
++    clean=deepcopy(rows[1]);clean.update(domain='D0',severity=0,record_affected=False,
++        label_validity='SOURCE_SYNTHETIC_LABEL',f1_eligible=True)
++    rows.append(clean)
++    path=tmp_path/'telemetry_variants.json';path.write_text(json.dumps(rows))
++    (tmp_path/'bank_manifest.json').write_text(json.dumps({'metadata':{path.name:core.sha256_file(path)}}))
++    report=run_p4.load_telemetry_metadata_summary(tmp_path)
++    assert report['conditions']['D0']['record_count']==1
++    assert report['conditions']['D3:0']['record_count']==2
++    assert report['conditions']['D0']['label_validity']=='SOURCE_SYNTHETIC_LABEL'
++    path.write_text('[]')
++    with pytest.raises(ValueError,match='metadata'):
++        run_p4.load_telemetry_metadata_summary(tmp_path)
++
++
++@pytest.mark.parametrize('value',['false','true',1,False,None])
++def test_formal_single_reviewer_approval_requires_literal_true(core,tmp_path,monkeypatch,value):
++    from ml.experiments import run_p4
++    protocol=Path(run_p4.ROOT)/'ml/configs/p4_protocol.json'
++    frozen=run_p4.binding_for(protocol,'synthetic_boolean_gate')
++    approval_path=tmp_path/'synthetic_approval.json'
++    approval_path.write_text(json.dumps(dict(frozen,phase='P4-B',authorized=True,
++        human_approval='SYNTHETIC_TEST_FIXTURE_ONLY',single_reviewer_amendment_approved=value)))
++    execution=tmp_path/'execution_spec.json';execution.write_text(json.dumps({'reviewers':['R1']}))
++    monkeypatch.setattr(run_p4,'formal_provenance',lambda:{})
++    monkeypatch.setattr(run_p4,'BudgetSupervisor',lambda *args,**kwargs:pytest.fail('resource/worker started without literal approval'))
++    with pytest.raises(ValueError,match='amendment approval'):
++        run_p4.main(['formal','--protocol',str(protocol),'--run-id',frozen['run_id'],
++            '--approval',str(approval_path),'--execution-spec',str(execution)])
