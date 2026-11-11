@@ -204,16 +204,13 @@ export function LiveMonitor({
         <div className="section-header">
           <div>
             <p className="eyebrow">Vehicle Signals</p>
-            <h2>
-              {mode === "CONSTRUCTED_SCENARIO_RUNTIME"
-                ? "Scenario telemetry"
-                : "Prepared telemetry replay"}
-            </h2>
-            {mode === "CONSTRUCTED_SCENARIO_RUNTIME" && (
+            {/* The constructed scenario shows the signals with no source heading. */}
+            {mode === "CONSTRUCTED_SCENARIO_RUNTIME" ? (
               <p>
-                Truth:{" "}
-                {latest.provenance?.replay?.telemetry_label ?? "unknown"}
+                Truth: {latest.provenance?.replay?.telemetry_label ?? "unknown"}
               </p>
+            ) : (
+              <h2>Prepared telemetry replay</h2>
             )}
           </div>
           <Database size={20} />

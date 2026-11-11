@@ -355,6 +355,22 @@ describe("Camera preview: only the action that applies is offered", () => {
       ]);
     },
   );
+
+  // .camera-placeholder is absolutely positioned to fill .camera-preview. The
+  // constructed-scenario placeholder reuses it outside any .camera-preview, so without
+  // its own box it is positioned against the page and covers the whole dashboard.
+  it("the constructed-scenario placeholder is its own box, not a page overlay", () => {
+    const stylesSource = readFileSync(
+      new URL("../styles.css", import.meta.url),
+      "utf8",
+    );
+    const rule = stylesSource.match(
+      /\.camera-placeholder\.scenario-placeholder \{[^}]*\}/,
+    );
+    expect(rule).toBeTruthy();
+    expect(rule![0]).toContain("position: relative");
+    expect(rule![0]).toContain("min-height: 330px");
+  });
 });
 
 describe("Selection bar: following the newest window vs a pinned one (deferred minor M1)", () => {

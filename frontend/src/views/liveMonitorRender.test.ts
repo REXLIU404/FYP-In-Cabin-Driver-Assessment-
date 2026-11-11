@@ -10,8 +10,8 @@ import { LiveMonitor } from "./LiveMonitor";
 
 // Static render (react-dom/server, node environment): in the constructed scenario
 // mode the Live Monitor swaps the camera preview for the scenario player and
-// renames the Vehicle Signals panel; in Live it stays exactly as it was. The
-// expected strings are literals.
+// drops the source heading of the Vehicle Signals panel; in Live it stays exactly
+// as it was. The expected strings are literals.
 
 const camera = {
   videoRef: null,
@@ -42,7 +42,18 @@ const playerModel: ScenarioPlayerModel = {
 // The record's own provenance carries the dataset replay block with the
 // ground-truth telemetry label (Task 2): the panel must read THAT, not a constant.
 const scenarioRecord = (): RiskUpdate => {
-  const record = makeRecord("fresh", "fresh", 1);
+  const record = makeRecord("fresh", "fresh", 1, {
+    telemetry_features: {
+      speed_kmph: 62,
+      accel_x: 0.4,
+      accel_y: 0.1,
+      brake_pressure: 0,
+      steering_angle: 2,
+      throttle: 18,
+      lane_deviation: 0.1,
+      headway_distance: 35,
+    },
+  });
   return {
     ...record,
     provenance: {
@@ -115,14 +126,20 @@ describe("LiveMonitor (static render)", () => {
     expect(html).toContain("Choose a scenario to load its frames.");
   });
 
-  it("the constructed scenario renames Vehicle Signals to Scenario telemetry and shows the truth label", () => {
+  // User decision 2026-11-10: the constructed scenario puts no source heading over the
+  // signals. The panel keeps its "Vehicle Signals" label, the signal rows and the telemetry
+  // truth label; "Prepared telemetry replay" belongs to Live only.
+  it("the constructed scenario shows the signals and the truth label under Vehicle Signals, with no source heading", () => {
     const html = render("CONSTRUCTED_SCENARIO_RUNTIME", scenarioRecord());
-    expect(html).toContain("Scenario telemetry");
+    expect(html).toContain("Vehicle Signals");
+    expect(html).toContain("Speed");
     expect(html).toContain("Truth: Safe");
+    expect(html).not.toContain("Prepared telemetry replay");
+    expect(html).not.toContain("Scenario telemetry");
   });
 
-  // User decision 2026-10-29: no "not live" disclaimers on the page; the panel heading
-  // ("Prepared telemetry replay" / "Scenario telemetry") already names the source.
+  // User decision 2026-10-29: no "not live" disclaimers on the page; in Live the panel
+  // heading ("Prepared telemetry replay") already names the source.
   it("neither mode carries a 'not live' disclaimer under Vehicle Signals", () => {
     for (const html of [
       render("LIVE_MODEL_RUNTIME", makeRecord("fresh", "fresh", 1)),
