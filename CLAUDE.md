@@ -139,5 +139,6 @@ instructions are in `docs/LIVE_RUNTIME_GUIDE.zh.md`.
 
 ## Git workflow
 
-`dev` is the stable prototype snapshot (safe fallback). `dev_cc` is the active build branch — do
-new work there. `main` is the baseline. Commit only when asked; branch off if on `main`.
+`dev_cc` is the active build branch — do new work there. `main` is the baseline. `dev` was merged
+with `main` on 2026-11-11 and is no longer the FYP1 prototype snapshot; that snapshot stays in its
+history at commit `b124801`. Commit only when asked; branch off if on `main`.
