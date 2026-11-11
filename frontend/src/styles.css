@@ -594,6 +594,22 @@ button {
     #e2e8f0;
 }
 
+/* The constructed-scenario placeholder stands where the camera preview would be but has
+   no .camera-preview around it, so it takes that box's size itself instead of filling
+   the page. */
+.camera-placeholder.scenario-placeholder {
+  position: relative;
+  inset: auto;
+  min-height: 330px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.empty-state > .scenario-placeholder {
+  max-width: 640px;
+  margin-top: 20px;
+}
+
 .camera-actions {
   position: absolute;
   right: 14px;
